@@ -67,6 +67,16 @@ public class StepServlet extends ForecastServlet
     out.println("  </head>");
     out.println("  <body>");
     out.println("  <form action=\"step\" method=\"POST\" id=\"stepForm\">");
+    out.println("  <table border=\"0\" width=\"1710\" height=\"75\" class=\"mainTable\">");
+    out.println("    <tr class=\"mainTable\">");
+    out.println("      <td class=\"mainTable\">");
+    out.println("        <img src=\"Logo Large.png\" height=\"70\"/>");
+    out.println("      </td>");
+    out.println("      <td class=\"mainTable\">");
+    out.println("        <a href=\"step?evalDate=20160630&scheduleName=default&resultFormat=text&patientDob=20150630&patientSex=F&vaccineDate1=20150826&vaccineCvx1=47&vaccineMvx1=&vaccineDate2=20151027&vaccineCvx2=47&vaccineMvx2=&vaccineDate3=20151229&vaccineCvx3=47&vaccineMvx3=\">Hib Example</a>");
+    out.println("      </td>");
+    out.println("    </tr>");
+    out.println("  </table>");
     out.println("  <table border=\"0\" width=\"1710\" class=\"mainTable\">");
     out.println("    <tr class=\"mainTable\">");
     out.println("      <td width=\"700\" valign=\"top\" class=\"mainTable\">");
