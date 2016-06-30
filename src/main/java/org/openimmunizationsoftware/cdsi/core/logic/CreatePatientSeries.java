@@ -39,7 +39,7 @@ public class CreatePatientSeries extends LogicStep
   public void printPre(PrintWriter out) throws Exception {
     out.println("   <h2>8.2 Create Patient Series</h2>");
     out.println("   <p>An antigen series is one way to reach perceived immunity against a disease.  "
-        + "An antigen series can be thought of as a “path to immunity” and is described in "
+        + "An antigen series can be thought of as a \"path to immunity\" and is described in "
         + "relative terms.  In many cases, a single antigen may have more than one successful "
         + "path to immunity and as such may have more than one antigen series.  Antigen "
         + "series are defined through supporting data spreadsheets defined in chapter 3.</p>");
@@ -74,7 +74,7 @@ public class CreatePatientSeries extends LogicStep
   public void printPost(PrintWriter out) throws Exception {
     out.println("   <h1>8.2 Create Patient Series</h2>");
     out.println("   <p>An antigen series is one way to reach perceived immunity against a disease.  "
-        + "An antigen series can be thought of as a “path to immunity” and is described in "
+        + "An antigen series can be thought of as a ï¿½path to immunityï¿½ and is described in "
         + "relative terms.  In many cases, a single antigen may have more than one successful "
         + "path to immunity and as such may have more than one antigen series.  Antigen "
         + "series are defined through supporting data spreadsheets defined in chapter 3.</p>");

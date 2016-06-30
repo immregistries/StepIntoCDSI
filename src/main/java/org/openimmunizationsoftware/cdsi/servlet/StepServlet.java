@@ -84,6 +84,7 @@ public class StepServlet extends ForecastServlet {
             out.println("<ul>");
             out.println("  <li>Nathan Bunker</li>");
             out.println("  <li>Jordan Coleman</li>");
+            out.println("  <li>Eric Ostrom</li>");
             out.println("</ul>");
             out.println("<h2>Demonstration Links</h2>");
             out.println("<ul>");
