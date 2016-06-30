@@ -384,7 +384,7 @@ public class DataModelLoader {
   private static Date parseDate(String dateString) {
     Date date = null;
     if (!dateString.equals("")) {
-      SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
       try {
         date = sdf.parse(dateString);
       } catch (ParseException pe) {
