@@ -1,6 +1,9 @@
 package org.openimmunizationsoftware.cdsi.core.data;
 
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +15,12 @@ import org.openimmunizationsoftware.cdsi.core.domain.AllowableVaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalNeed;
+import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkip;
+import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipCondition;
+import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipConditionType;
+import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipSet;
 import org.openimmunizationsoftware.cdsi.core.domain.Contraindication;
+import org.openimmunizationsoftware.cdsi.core.domain.DoseType;
 import org.openimmunizationsoftware.cdsi.core.domain.Immunity;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
@@ -23,7 +31,6 @@ import org.openimmunizationsoftware.cdsi.core.domain.Schedule;
 import org.openimmunizationsoftware.cdsi.core.domain.SeasonalRecommendation;
 import org.openimmunizationsoftware.cdsi.core.domain.SelectBestPatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
-import org.openimmunizationsoftware.cdsi.core.domain.SkipTargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.SubstituteDose;
 import org.openimmunizationsoftware.cdsi.core.domain.Vaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
@@ -34,8 +41,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class DataModelLoader
-{
+public class DataModelLoader {
   private static final String[] scheduleNames = { "Diphtheria", "HepA", "HepB", "Hib", "HPV", "Influenza", "MCV",
       "Measles", "Mumps", "PCV", "Pertussis", "Polio", "Rotavirus", "Rubella", "Tetanus", "Varicella" };
 
@@ -217,35 +223,63 @@ public class DataModelLoader
           Vaccine vaccine = allowableVaccine;
           readVaccine(dataModel, parentNode, vaccine);
           seriesDose.getAllowableVaccineList().add(allowableVaccine);
-        } else if (parentNode.getNodeName().equals("skipDose")) {
-          SkipTargetDose skipTargetDose = new SkipTargetDose();
+        } else if (parentNode.getNodeName().equals("conditionalSkip")) {
+          ConditionalSkip conditionalSkip = new ConditionalSkip();
           boolean populated = false;
           NodeList childNodeList = parentNode.getChildNodes();
           for (int j = 0; j < childNodeList.getLength(); j++) {
             Node childNode = childNodeList.item(j);
             if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-              if (childNode.getNodeName().equals("triggerAge")) {
-                String triggerAgeString = DomUtils.getInternalValue(childNode);
-                skipTargetDose.setTriggerAge(new TimePeriod(triggerAgeString));
-                if (triggerAgeString.length() > 0) {
-                  populated = true;
-                }
-              } else if (childNode.getNodeName().equals("triggerInt")) {
-                String triggerIntString = DomUtils.getInternalValue(childNode);
-                skipTargetDose.setTriggerInterval(new TimePeriod(triggerIntString));
-                if (triggerIntString.length() > 0) {
-                  populated = true;
-                }
-              } else if (childNode.getNodeName().equals("triggerTargetDose")) {
-                String doseNumber = DomUtils.getInternalValue(childNode);
-                if (doseNumber != null && doseNumber.length() > 0) {
-                  skipTargetDose.setSeriesDose(seriesDoseMap.get(doseNumber));
+              if (childNode.getNodeName().equals("setLogic")) {
+                String setLogic = DomUtils.getInternalValue(childNode);
+                conditionalSkip.setSetLogic(setLogic);
+              } else if (childNode.getNodeName().equals("set")) {
+                ConditionalSkipSet conditionalSkipSet = new ConditionalSkipSet();
+                conditionalSkip.getConditionalSkipSetList().add(conditionalSkipSet);
+                NodeList grandchildList = childNode.getChildNodes();
+                for (int k = 0; k < grandchildList.getLength(); k++) {
+                  Node grandchildNode = grandchildList.item(k);
+                  if (grandchildNode.getNodeType() == Node.ELEMENT_NODE) {
+                    if (grandchildNode.getNodeName().equals("setID")) {
+                      populated = true;
+                      conditionalSkipSet.setSetId(Integer.parseInt(DomUtils.getInternalValue(grandchildNode)));
+                    } else if (grandchildNode.getNodeName().equals("setDescription")) {
+                      conditionalSkipSet.setSetDescription(DomUtils.getInternalValue(grandchildNode));
+                    } else if (grandchildNode.getNodeName().equals("conditionLogic")) {
+                      conditionalSkipSet.setConditionLogic(DomUtils.getInternalValue(grandchildNode));
+                    } else if (grandchildNode.getNodeName().equals("condition")) {
+                      readCondition(conditionalSkipSet, grandchildNode);
+
+                    }
+                  }
                 }
               }
+
+              // if (childNode.getNodeName().equals("triggerAge")) {
+              // String triggerAgeString = DomUtils.getInternalValue(childNode);
+              // skipTargetDose.setTriggerAge(new TimePeriod(triggerAgeString));
+              // if (triggerAgeString.length() > 0) {
+              // populated = true;
+              // }
+              // } else if (childNode.getNodeName().equals("triggerInt")) {
+              // String triggerIntString = DomUtils.getInternalValue(childNode);
+              // skipTargetDose.setTriggerInterval(new
+              // TimePeriod(triggerIntString));
+              // if (triggerIntString.length() > 0) {
+              // populated = true;
+              // }
+              // } else if (childNode.getNodeName().equals("triggerTargetDose"))
+              // {
+              // String doseNumber = DomUtils.getInternalValue(childNode);
+              // if (doseNumber != null && doseNumber.length() > 0) {
+              // skipTargetDose.setSeriesDose(seriesDoseMap.get(doseNumber));
+              // }
+              // }
             }
           }
+
           if (populated) {
-            seriesDose.getSkipTargetDoseList().add(skipTargetDose);
+            seriesDose.getConditionalSkipList().add(conditionalSkip);
           }
         } else if (parentNode.getNodeName().equals("recurringDose")) {
           RecurringDose recurringDose = new RecurringDose();
@@ -296,6 +330,69 @@ public class DataModelLoader
         }
       }
     }
+  }
+
+  private static void readCondition(ConditionalSkipSet conditionalSkipSet, Node grandchildNode) {
+    ConditionalSkipCondition condition = new ConditionalSkipCondition();
+    conditionalSkipSet.getConditionList().add(condition);
+    NodeList greatgrandchildNodeList = grandchildNode.getChildNodes();
+    for (int m = 0; m < greatgrandchildNodeList.getLength(); m++) {
+      Node greatgrandchildNode = greatgrandchildNodeList.item(m);
+      if (greatgrandchildNode.getNodeType() == Node.ELEMENT_NODE) {
+        if (greatgrandchildNode.getNodeName().equals("conditionID")) {
+          condition.setConditionId(Integer.parseInt(DomUtils.getInternalValue(greatgrandchildNode)));
+        } else if (greatgrandchildNode.getNodeName().equals("conditionType")) {
+          ConditionalSkipConditionType conditionType = null;
+          String conditionTypeString = DomUtils.getInternalValue(greatgrandchildNode);
+          if (!conditionTypeString.equals("")) {
+            conditionType = ConditionalSkipConditionType.valueOf(conditionTypeString.toUpperCase().replaceAll("\\s", "_"));
+            condition.setConditionType(conditionType);
+          }
+        } else if (greatgrandchildNode.getNodeName().equals("startDate")) {
+          condition.setStartDate(parseDate(DomUtils.getInternalValue(greatgrandchildNode)));
+        } else if (greatgrandchildNode.getNodeName().equals("endDate")) {
+          condition.setEndDate(parseDate(DomUtils.getInternalValue(greatgrandchildNode)));
+        } else if (greatgrandchildNode.getNodeName().equals("beginAge")) {
+          condition.setBeginAge(new TimePeriod(DomUtils.getInternalValue(greatgrandchildNode)));
+        } else if (greatgrandchildNode.getNodeName().equals("endAge")) {
+          condition.setEndAge(new TimePeriod(DomUtils.getInternalValue(greatgrandchildNode)));
+        } else if (greatgrandchildNode.getNodeName().equals("interval")) {
+          condition.setInterval(new TimePeriod(DomUtils.getInternalValue(greatgrandchildNode)));
+        } else if (greatgrandchildNode.getNodeName().equals("doseCount")) {
+          String doseCountString = DomUtils.getInternalValue(greatgrandchildNode);
+          if (doseCountString.length() > 0)
+          {
+            condition.setDoseCount(Integer.parseInt(doseCountString));
+          }
+        } else if (greatgrandchildNode.getNodeName().equals("doseType")) {
+          DoseType doseType = null;
+          String doseTypeString = DomUtils.getInternalValue(greatgrandchildNode);
+          if (!doseTypeString.equals(""))
+          {
+            doseType = DoseType.valueOf(doseTypeString.toUpperCase().replaceAll("\\s", "_"));
+            condition.setDoseType(doseType);
+          }
+        } else if (greatgrandchildNode.getNodeName().equals("doseCountLogic")) {
+          condition.setDoseCountLogic(DomUtils.getInternalValue(greatgrandchildNode));
+        } else if (greatgrandchildNode.getNodeName().equals("vaccineTypes")) {
+          condition.setVaccineTypes(DomUtils.getInternalValue(greatgrandchildNode));
+        }
+      }
+    }
+  }
+
+  private static Date parseDate(String dateString) {
+    Date date = null;
+    if (!dateString.equals("")) {
+      SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+      try {
+        date = sdf.parse(dateString);
+      } catch (ParseException pe) {
+        System.err.println("This date is not parsable: " + dateString);
+        pe.printStackTrace();
+      }
+    }
+    return date;
   }
 
   private static void readVaccine(DataModel dataModel, Node parentNode, Vaccine vaccine) {

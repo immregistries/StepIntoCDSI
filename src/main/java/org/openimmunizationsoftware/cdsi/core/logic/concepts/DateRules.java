@@ -42,12 +42,12 @@ public class DateRules
       @Override
       protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep) {
         SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-        if (seriesDose.getSkipTargetDoseList().size() > 0) {
-          logicStep.log("  + skip target dose list has entries");
-          SkipTargetDose skipTargetDose = seriesDose.getSkipTargetDoseList().get(0);
-          logicStep.log("  + trigger age is " + skipTargetDose.getTriggerAge());
-          return skipTargetDose.getTriggerAge().getDateFrom(dataModel.getPatient().getDateOfBirth());
-        }
+//        if (seriesDose.getSkipTargetDoseList().size() > 0) {
+//          logicStep.log("  + skip target dose list has entries");
+//          SkipTargetDose skipTargetDose = seriesDose.getSkipTargetDoseList().get(0);
+//          logicStep.log("  + trigger age is " + skipTargetDose.getTriggerAge());
+//          return skipTargetDose.getTriggerAge().getDateFrom(dataModel.getPatient().getDateOfBirth());
+//        }
         return null;
       }
     };
@@ -79,13 +79,13 @@ public class DateRules
           logicStep.log("  + looking at satisfied dose on "
               + sdf.format(intervalTargetDose.getSatisifiedByVaccineDoseAdministered().getDateAdministered()));
           SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-          if (seriesDose.getSkipTargetDoseList().size() > 0) {
-            logicStep.log("  + skip target dose list has entries");
-            SkipTargetDose skipTargetDose = seriesDose.getSkipTargetDoseList().get(0);
-            logicStep.log("  + trigger interval is " + skipTargetDose.getTriggerInterval());
-            return skipTargetDose.getTriggerInterval().getDateFrom(
-                intervalTargetDose.getSatisifiedByVaccineDoseAdministered().getDateAdministered());
-          }
+//          if (seriesDose.getSkipTargetDoseList().size() > 0) {
+//            logicStep.log("  + skip target dose list has entries");
+//            SkipTargetDose skipTargetDose = seriesDose.getSkipTargetDoseList().get(0);
+//            logicStep.log("  + trigger interval is " + skipTargetDose.getTriggerInterval());
+//            return skipTargetDose.getTriggerInterval().getDateFrom(
+//                intervalTargetDose.getSatisifiedByVaccineDoseAdministered().getDateAdministered());
+//          }
         }
         return null;
       }

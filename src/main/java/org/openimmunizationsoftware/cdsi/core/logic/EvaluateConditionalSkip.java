@@ -65,30 +65,30 @@ public class EvaluateConditionalSkip extends LogicStep
     conditionAttributesList.add(caConditionalSkipDoseCountLogic);
     conditionAttributesList.add(caConditonalSkipDoseCount);
     
-
     AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
-    SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
     caDateAdministered.setInitialValue(aar.getDateAdministered());
     caAssessmentDate.setInitialValue(dataModel.getAssessmentDate());
     // caAdministeredDoseCount.setInitialValue(dataModel.getAntigenAdministeredRecord().get);
+    
 //    caTriggerAgeDate.setInitialValue(CALCDTSKIP_1.evaluate(dataModel, this));
 //    caTriggerIntervalDate.setInitialValue(CALCDTSKIP_2.evaluate(dataModel, this));
+    SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
     log("Looking to set Trigger values");
-    if (seriesDose.getSkipTargetDoseList().size() > 0) {
-      log("  + skip target dose list has entries");
-      SkipTargetDose skipTargetDose = seriesDose.getSkipTargetDoseList().get(0);
-      // caTriggerIntervalDate.setInitialValue(initialValue);
-      if (skipTargetDose.getTriggerSeriesDose() != null) {
-        log("  + trigger dose is specified, looking for dose " + skipTargetDose.getTriggerSeriesDose().getDoseNumber());
-        for (TargetDose targetDose : dataModel.getTargetDoseList()) {
-          if (targetDose.getTrackedSeriesDose() == skipTargetDose.getTriggerSeriesDose()) {
-            skipTargetDose.setTriggerTargetDose(targetDose);
-            log("  + found trigger target dose ");
-          }
-        }
-      }
-//      caTargetDose.setInitialValue(skipTargetDose.getTriggerTargetDose());
-    }
+//    if (seriesDose.getSkipTargetDoseList().size() > 0) {
+//      log("  + skip target dose list has entries");
+//      SkipTargetDose skipTargetDose = seriesDose.getSkipTargetDoseList().get(0);
+//      // caTriggerIntervalDate.setInitialValue(initialValue);
+//      if (skipTargetDose.getTriggerSeriesDose() != null) {
+//        log("  + trigger dose is specified, looking for dose " + skipTargetDose.getTriggerSeriesDose().getDoseNumber());
+//        for (TargetDose targetDose : dataModel.getTargetDoseList()) {
+//          if (targetDose.getTrackedSeriesDose() == skipTargetDose.getTriggerSeriesDose()) {
+//            skipTargetDose.setTriggerTargetDose(targetDose);
+//            log("  + found trigger target dose ");
+//          }
+//        }
+//      }
+////      caTargetDose.setInitialValue(skipTargetDose.getTriggerTargetDose());
+//    }
     LT logicTable = new LT();
     logicTableList.add(logicTable);
   }

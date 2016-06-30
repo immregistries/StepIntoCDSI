@@ -14,7 +14,7 @@ public class SeriesDose
   private AntigenSeries antigenSeries = null;
   private List<Age> ageList = new ArrayList<Age>();
   private List<Interval> intervalList = new ArrayList<Interval>();
-  private List<SkipTargetDose> skipTargetDoseList = new ArrayList<SkipTargetDose>();
+  private List<ConditionalSkip> conditionalSkipList = new ArrayList<ConditionalSkip>();
   private List<RecurringDose> recurringDoseList = new ArrayList<RecurringDose>();
   private List<ConditionalNeed> conditionalNeedList = new ArrayList<ConditionalNeed>();
   private List<SeasonalRecommendation> seasonalRecommendationList = new ArrayList<SeasonalRecommendation>();
@@ -79,25 +79,29 @@ public class SeriesDose
       }
       out.println("</table>");
     }
-    if (skipTargetDoseList.size() > 0) {
-      out.println("<h4>Skip Target Dose</h4>");
-      out.println("<table>");
-      out.println("  <tr>");
-      out.println("    <th>Trigger Age</th>");
-      out.println("    <th>Trigger Interval</th>");
-      out.println("    <th>Trigger Target Dose</th>");
-      out.println("    <th>Trigger Series Dose</th>");
-      out.println("  </tr>");
-      for (SkipTargetDose skipTargetDose : skipTargetDoseList) {
-        out.println("  <tr>");
-        out.println("    <td>" + skipTargetDose.getTriggerAge() + "</td>");
-        out.println("    <td>" + skipTargetDose.getTriggerInterval() + "</td>");
-        out.println("    <td>" + skipTargetDose.getTriggerTargetDose() + "</td>");
-        out.println("    <td>" + skipTargetDose.getTriggerSeriesDose() + "</td>");
-        out.println("  </tr>");
-      }
-      out.println("</table>");
+    if (conditionalSkipList.size() >0)
+    {
+      // TODO Eric    	
     }
+//    if (skipTargetDoseList.size() > 0) {
+//      out.println("<h4>Skip Target Dose</h4>");
+//      out.println("<table>");
+//      out.println("  <tr>");
+//      out.println("    <th>Trigger Age</th>");
+//      out.println("    <th>Trigger Interval</th>");
+//      out.println("    <th>Trigger Target Dose</th>");
+//      out.println("    <th>Trigger Series Dose</th>");
+//      out.println("  </tr>");
+//      for (SkipTargetDose skipTargetDose : skipTargetDoseList) {
+//        out.println("  <tr>");
+//        out.println("    <td>" + skipTargetDose.getTriggerAge() + "</td>");
+//        out.println("    <td>" + skipTargetDose.getTriggerInterval() + "</td>");
+//        out.println("    <td>" + skipTargetDose.getTriggerTargetDose() + "</td>");
+//        out.println("    <td>" + skipTargetDose.getTriggerSeriesDose() + "</td>");
+//        out.println("  </tr>");
+//      }
+//      out.println("</table>");
+//    }
 
     if (recurringDoseList.size() > 0) {
       out.println("<h4>Recurring Dose</h4>");
@@ -243,6 +247,10 @@ public class SeriesDose
     }
   }
 
+  public List<ConditionalSkip> getConditionalSkipList() {
+	  return conditionalSkipList;
+  }
+  
   public String getDoseNumber() {
     return doseNumber;
   }
@@ -265,10 +273,6 @@ public class SeriesDose
 
   public List<Interval> getIntervalList() {
     return intervalList;
-  }
-
-  public List<SkipTargetDose> getSkipTargetDoseList() {
-    return skipTargetDoseList;
   }
 
   public List<RecurringDose> getRecurringDoseList() {
