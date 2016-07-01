@@ -57,7 +57,7 @@ public class EvaluateAllowableInterval extends LogicStep
         caFromTargetDoseNumberInSeries.setInitialValue(interval.getFromTargetDoseNumberInSeries());
       }
     }
-    caAbsoluteMinimumIntervalDate.setInitialValue(CALCDTINT_3.evaluate(dataModel, this));
+    caAbsoluteMinimumIntervalDate.setInitialValue(CALCDTINT_3.evaluate(dataModel, this, null));
 //    caMinimumIntervalDate.setInitialValue(CALCDTINT_4.evaluate(dataModel, this));
 
 

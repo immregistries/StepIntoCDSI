@@ -279,7 +279,7 @@ public class DataModelLoader {
           }
 
           if (populated) {
-            seriesDose.getConditionalSkipList().add(conditionalSkip);
+            seriesDose.setConditionalSkip(conditionalSkip);
           }
         } else if (parentNode.getNodeName().equals("recurringDose")) {
           RecurringDose recurringDose = new RecurringDose();

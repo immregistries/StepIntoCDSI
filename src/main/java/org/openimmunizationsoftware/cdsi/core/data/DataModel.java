@@ -36,6 +36,7 @@ public class DataModel
   
   private TargetDose targetDose = null;
   private List<TargetDose> targetDoseList = null;
+  private AntigenAdministeredRecord antigenAdministeredRecordThatSatisfiedPreviousTargetDose = null;
   private EvaluationStatus evaluationStatus = null;
   private Patient patient = null;
   private ImmunizationHistory immunizationHistory = null;
@@ -47,6 +48,15 @@ public class DataModel
   private List<AntigenSeries> antigenSeriesList = new ArrayList<AntigenSeries>();
   private List<PatientSeries> patientSeriesList = new ArrayList<PatientSeries>();
   private PatientSeries patientSeries = null;
+  
+  public AntigenAdministeredRecord getAntigenAdministeredRecordThatSatisfiedPreviousTargetDose() {
+    return antigenAdministeredRecordThatSatisfiedPreviousTargetDose;
+  }
+  
+  public void setAntigenAdministeredRecordThatSatisfiedPreviousTargetDose(
+      AntigenAdministeredRecord antigenAdministeredRecordThatSatisfiedPreviousTargetDose) {
+    this.antigenAdministeredRecordThatSatisfiedPreviousTargetDose = antigenAdministeredRecordThatSatisfiedPreviousTargetDose;
+  }
   
   public List<TargetDose> getTargetDoseList() {
     return targetDoseList;

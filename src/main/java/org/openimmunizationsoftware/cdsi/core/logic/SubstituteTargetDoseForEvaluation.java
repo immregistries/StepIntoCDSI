@@ -1,8 +1,5 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTSUB_1;
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTSUB_2;
-
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;

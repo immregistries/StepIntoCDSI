@@ -1,8 +1,5 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTSKIP_1;
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTSKIP_2;
-
 import java.io.PrintWriter;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;

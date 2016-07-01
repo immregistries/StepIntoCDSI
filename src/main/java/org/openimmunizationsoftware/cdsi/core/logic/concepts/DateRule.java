@@ -6,7 +6,7 @@ import java.util.Date;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 
-public abstract class DateRule
+public abstract class DateRule<T>
 {
 
   private String businessRuleId = "";
@@ -46,12 +46,12 @@ public abstract class DateRule
     this.logicalComponent = logicalComponent;
   }
 
-  public Date evaluate(DataModel dataModel, LogicStep logicStep) {
+  public Date evaluate(DataModel dataModel, LogicStep logicStep, T t) {
     logicStep.log("Calculating using date rule " + getBusinessRuleId());
     logicStep.log("  + business rule: " + getBusinessRule());
     logicStep.log("  + logical component: " + getLogicalComponent());
     logicStep.log("  + field being returned: " + getFieldName());
-    Date value = evaluateInternal(dataModel, logicStep);
+    Date value = evaluateInternal(dataModel, logicStep, t);
     if (value == null) {
       logicStep.log("No value calculated");
     } else {
@@ -61,6 +61,6 @@ public abstract class DateRule
     return value;
   }
 
-  protected abstract Date evaluateInternal(DataModel dataModel, LogicStep logicStep);
+  protected abstract Date evaluateInternal(DataModel dataModel, LogicStep logicStep, T t);
 
 }

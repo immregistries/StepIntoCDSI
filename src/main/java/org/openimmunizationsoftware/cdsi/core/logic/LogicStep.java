@@ -1,12 +1,14 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
@@ -15,41 +17,24 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
-public abstract class LogicStep
-{
+public abstract class LogicStep {
 
-  public static final LogicStepType[] STEPS = { 
-      LogicStepType.GATHER_NECESSARY_DATA,
-      LogicStepType.CREATE_PATIENT_SERIES, 
-      LogicStepType.ORGANIZE_IMMUNIZATION_HISTORY,
-      LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES, 
-      LogicStepType.FOR_EACH_PATIENT_SERIES,
-      LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED, 
-      LogicStepType.EVALUATE_DOSE_ADMININISTERED_CONDITION,
-      LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION, 
-      LogicStepType.EVALUATE_AGE, 
-      LogicStepType.EVALUATE_INTERVAL, 
-      LogicStepType.EVALUATE_ALLOWABLE_INTERVAL, 
-      LogicStepType.EVALUATE_FOR_LIVE_VIRUS_CONFLICT,
-      LogicStepType.EVALUATE_PREFERABLE_VACCINE_ADMINISTERED, 
-      LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED,
-      LogicStepType.EVALUATE_GENDER, 
-      LogicStepType.SATISFY_TARGET_DOSE,
-      LogicStepType.FORECAST_DATES_AND_REASONS,
-      LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST,
-      LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY,
-      LogicStepType.DETERMINE_FORECAST_NEED, 
-      LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMEND_VACCINES,
-      LogicStepType.SELECT_BEST_PATIENT_SERIES, 
-      LogicStepType.ONE_BEST_PATIENT_SERIES,
-      LogicStepType.CLASSIFY_PATIENT_SERIES, 
-      LogicStepType.COMPLETE_PATIENT_SERIES,
-      LogicStepType.IN_PROCESS_PATIENT_SERIES, 
-      LogicStepType.NO_VALID_DOSES,
-      LogicStepType.SELECT_BEST_CANDIDATE_PATIENT_SERIES, 
-      LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP,
-      LogicStepType.CLASSIFY_VACCINE_GROUP, 
-      LogicStepType.SINGLE_ANTIGEN_VACCINE_GROUP,
+  public static final LogicStepType[] STEPS = { LogicStepType.GATHER_NECESSARY_DATA,
+      LogicStepType.CREATE_PATIENT_SERIES, LogicStepType.ORGANIZE_IMMUNIZATION_HISTORY,
+      LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES, LogicStepType.FOR_EACH_PATIENT_SERIES,
+      LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED, LogicStepType.EVALUATE_DOSE_ADMININISTERED_CONDITION,
+      LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION, LogicStepType.EVALUATE_AGE,
+      LogicStepType.EVALUATE_INTERVAL, LogicStepType.EVALUATE_ALLOWABLE_INTERVAL,
+      LogicStepType.EVALUATE_FOR_LIVE_VIRUS_CONFLICT, LogicStepType.EVALUATE_PREFERABLE_VACCINE_ADMINISTERED,
+      LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED, LogicStepType.EVALUATE_GENDER,
+      LogicStepType.SATISFY_TARGET_DOSE, LogicStepType.FORECAST_DATES_AND_REASONS,
+      LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST, LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY,
+      LogicStepType.DETERMINE_FORECAST_NEED, LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMEND_VACCINES,
+      LogicStepType.SELECT_BEST_PATIENT_SERIES, LogicStepType.ONE_BEST_PATIENT_SERIES,
+      LogicStepType.CLASSIFY_PATIENT_SERIES, LogicStepType.COMPLETE_PATIENT_SERIES,
+      LogicStepType.IN_PROCESS_PATIENT_SERIES, LogicStepType.NO_VALID_DOSES,
+      LogicStepType.SELECT_BEST_CANDIDATE_PATIENT_SERIES, LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP,
+      LogicStepType.CLASSIFY_VACCINE_GROUP, LogicStepType.SINGLE_ANTIGEN_VACCINE_GROUP,
       LogicStepType.MULTIPLE_ANTIGEN_VACCINE_GROUP };
 
   public static final String PARAM_VACCINE_MVX = "vaccineMvx";
@@ -154,6 +139,8 @@ public abstract class LogicStep
   }
 
   protected List<ConditionAttribute<?>> conditionAttributesList = new ArrayList<ConditionAttribute<?>>();
+  protected Map<String, List<ConditionAttribute<?>>> conditionAttributesAdditionalMap = new HashMap<String, List<ConditionAttribute<?>>>();
+
   protected List<LogicTable> logicTableList = new ArrayList<LogicTable>();
 
   public List<LogicTable> getLogicTableList() {
@@ -179,6 +166,21 @@ public abstract class LogicStep
   }
 
   protected void printConditionAttributesTable(PrintWriter out, String tableName) {
+    {
+      List<ConditionAttribute<?>> caList = conditionAttributesList;
+      printConditionAttributesTable(out, tableName, caList);
+    }
+    if (conditionAttributesAdditionalMap.size() > 0) {
+      List<String> nameList = new ArrayList<String>(conditionAttributesAdditionalMap.keySet());
+      Collections.sort(nameList);
+      for (String name : nameList) {
+        List<ConditionAttribute<?>> caList = conditionAttributesAdditionalMap.get(name);
+        printConditionAttributesTable(out, name, caList);
+      }
+    }
+  }
+
+  private void printConditionAttributesTable(PrintWriter out, String tableName, List<ConditionAttribute<?>> caList) {
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
     out.println("<h2>" + tableName + "</h2>");
     out.println("<table>");
@@ -189,7 +191,7 @@ public abstract class LogicStep
     out.println("    <th>Assumed Value if empty</th>");
     out.println("    <th>Final Value</th>");
     out.println("  </tr>");
-    for (ConditionAttribute<?> conditionAttribute : conditionAttributesList) {
+    for (ConditionAttribute<?> conditionAttribute : caList) {
       out.println("  <tr>");
       out.println("    <td>" + conditionAttribute.getAttributeType() + "</td>");
       out.println("    <td>" + conditionAttribute.getAttributeName() + "</td>");

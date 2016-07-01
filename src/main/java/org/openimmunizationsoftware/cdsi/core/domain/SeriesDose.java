@@ -14,7 +14,7 @@ public class SeriesDose
   private AntigenSeries antigenSeries = null;
   private List<Age> ageList = new ArrayList<Age>();
   private List<Interval> intervalList = new ArrayList<Interval>();
-  private List<ConditionalSkip> conditionalSkipList = new ArrayList<ConditionalSkip>();
+  private ConditionalSkip conditionalSkip = null;
   private List<RecurringDose> recurringDoseList = new ArrayList<RecurringDose>();
   private List<ConditionalNeed> conditionalNeedList = new ArrayList<ConditionalNeed>();
   private List<SeasonalRecommendation> seasonalRecommendationList = new ArrayList<SeasonalRecommendation>();
@@ -78,10 +78,6 @@ public class SeriesDose
         out.println("  </tr>");
       }
       out.println("</table>");
-    }
-    if (conditionalSkipList.size() >0)
-    {
-      // TODO Eric    	
     }
 //    if (skipTargetDoseList.size() > 0) {
 //      out.println("<h4>Skip Target Dose</h4>");
@@ -247,10 +243,14 @@ public class SeriesDose
     }
   }
 
-  public List<ConditionalSkip> getConditionalSkipList() {
-	  return conditionalSkipList;
+  public ConditionalSkip getConditionalSkip() {
+	  return conditionalSkip;
   }
   
+  public void setConditionalSkip(ConditionalSkip conditionalSkip) {
+    this.conditionalSkip = conditionalSkip;
+  }
+
   public String getDoseNumber() {
     return doseNumber;
   }

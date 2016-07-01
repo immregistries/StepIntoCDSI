@@ -9,6 +9,11 @@ public class TimePeriod
   private int amount = 0;
   private TimePeriodType type = null;
   private TimePeriod child = null;
+  private boolean valued = false;
+
+  public boolean isValued() {
+    return valued;
+  }
 
   public int getAmount() {
     return amount;
@@ -50,6 +55,7 @@ public class TimePeriod
     if (value.length() == 0 || value.equalsIgnoreCase("n/a")) {
       return;
     }
+    valued = true;
 
     boolean negative = false;
     if (value.startsWith("-")) {

@@ -1,16 +1,20 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTSKIP_1;
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTSKIP_2;
+import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTSKIP_3;
+import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTSKIP_4;
+import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTSKIP_5;
 
 import java.io.PrintWriter;
-
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
+import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkip;
+import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipCondition;
+import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipSet;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
-import org.openimmunizationsoftware.cdsi.core.domain.SkipTargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
@@ -19,21 +23,28 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
-public class EvaluateConditionalSkip extends LogicStep
-{
+public class EvaluateConditionalSkip extends LogicStep {
 
   private ConditionAttribute<Date> caDateAdministered = null;
   private ConditionAttribute<Date> caAssessmentDate = null;
   private ConditionAttribute<Integer> caAdministeredDoseCount = null;
-  private ConditionAttribute<Date> caConditionalSkipBeginAgeDate = null;
-  private ConditionAttribute<Date> caConditionalSkipEndAgeDate = null;
-  private ConditionAttribute<Date> caConditionalSkipIntervalDate= null;
-  private ConditionAttribute<Date> caConditionalSkipStartDate = null;
-  private ConditionAttribute<Date> caConditionalSkipEndDate = null;
-  private ConditionAttribute<String> caConditionalDoseType = null;
-  private ConditionAttribute<String> caConditionalSkipDoseCountLogic = null;
-  private ConditionAttribute<Integer> caConditonalSkipDoseCount = null;
- 
+
+  private class ForEachConditionalSkipSet {
+    public class ForEachConditionInSet {
+      private ConditionAttribute<Date> caConditionalSkipBeginAgeDate = null;
+      private ConditionAttribute<Date> caConditionalSkipEndAgeDate = null;
+      private ConditionAttribute<Date> caConditionalSkipIntervalDate = null;
+      private ConditionAttribute<Date> caConditionalSkipStartDate = null;
+      private ConditionAttribute<Date> caConditionalSkipEndDate = null;
+      private ConditionAttribute<String> caConditionalDoseType = null;
+      private ConditionAttribute<String> caConditionalSkipDoseCountLogic = null;
+      private ConditionAttribute<Integer> caConditonalSkipDoseCount = null;
+    }
+
+    public List<ForEachConditionInSet> forEachConditionInSetList = new ArrayList<EvaluateConditionalSkip.ForEachConditionalSkipSet.ForEachConditionInSet>();
+  }
+
+  private List<ForEachConditionalSkipSet> forEachConditionalSkipSetList = new ArrayList<ForEachConditionalSkipSet>();
 
   public EvaluateConditionalSkip(DataModel dataModel) {
     super(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION, dataModel);
@@ -41,54 +52,70 @@ public class EvaluateConditionalSkip extends LogicStep
 
     caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
     caAssessmentDate = new ConditionAttribute<Date>("Processing data", "Assessment Date");
-    caAdministeredDoseCount = new ConditionAttribute<Integer>("Patient Immunization History", "Administered Dose Count");
-    caConditionalSkipBeginAgeDate = new ConditionAttribute<Date>("Calculated date (CALCDTSKIP-3)","Conditional Skip Begin Age Date");
-    caConditionalSkipEndAgeDate = new ConditionAttribute<Date>("Calculated date (CALCDTSKIP-4)","Conditional Skip End Age Date");
-    caConditionalSkipIntervalDate = new ConditionAttribute<Date>("Calculated date (CALCDTSKIP-5)" , "Conditional Skip Interval Date");
-    caConditionalSkipStartDate = new ConditionAttribute<Date>("Supporting Data (Conditional Skip)" , "Conditional Skip Start Date");
-    caConditionalSkipEndDate = new ConditionAttribute<Date>("Supporting Data (Conditional Skip)" , "Conditional SKip End Date");
-    caConditionalDoseType = new ConditionAttribute<String>("Supporting Data (Conditional Skip)" , "Conditional Skip Dose Type");
-    caConditionalSkipDoseCountLogic = new ConditionAttribute<String>("Supporting Data (Conditional Skip)" , "Conditional Skip Doese Count Logic");
-    caConditonalSkipDoseCount = new ConditionAttribute<Integer>("Supporting Data (Conditional Skip)" , "Conditional Skip Dose Count");
+    caAdministeredDoseCount = new ConditionAttribute<Integer>("Patient Immunization History",
+        "Administered Dose Count");
 
     caAssessmentDate.setAssumedValue(new Date());
 
     conditionAttributesList.add(caDateAdministered);
     conditionAttributesList.add(caAssessmentDate);
     conditionAttributesList.add(caAdministeredDoseCount);
-    conditionAttributesList.add(caConditionalSkipBeginAgeDate);
-    conditionAttributesList.add(caConditionalSkipEndAgeDate);
-    conditionAttributesList.add(caConditionalSkipIntervalDate);
-    conditionAttributesList.add(caConditionalSkipStartDate);
-    conditionAttributesList.add(caConditionalSkipEndDate);
-    conditionAttributesList.add(caConditionalDoseType);
-    conditionAttributesList.add(caConditionalSkipDoseCountLogic);
-    conditionAttributesList.add(caConditonalSkipDoseCount);
-    
+
     AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
     caDateAdministered.setInitialValue(aar.getDateAdministered());
     caAssessmentDate.setInitialValue(dataModel.getAssessmentDate());
     // caAdministeredDoseCount.setInitialValue(dataModel.getAntigenAdministeredRecord().get);
-    
-    //caTriggerAgeDate.setInitialValue(CALCDTSKIP_1.evaluate(dataModel, this));
-//    caTriggerIntervalDate.setInitialValue(CALCDTSKIP_2.evaluate(dataModel, this));
+
+
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
+    if (seriesDose.getConditionalSkip() != null) {
+      log("Conditional skip has been defined, now looking at the details.");
+      ConditionalSkip conditionalSkip = seriesDose.getConditionalSkip();
+      for (ConditionalSkipSet conditionalSkipSet : conditionalSkip.getConditionalSkipSetList()) {
+        ForEachConditionalSkipSet forEachConditionalSkipSet = new ForEachConditionalSkipSet();
+        forEachConditionalSkipSetList.add(forEachConditionalSkipSet);
+        for (ConditionalSkipCondition condition : conditionalSkipSet.getConditionList()) {
+          EvaluateConditionalSkip.ForEachConditionalSkipSet.ForEachConditionInSet f = forEachConditionalSkipSet.new ForEachConditionInSet();
+          forEachConditionalSkipSet.forEachConditionInSetList.add(f);
+          f.caConditionalSkipBeginAgeDate = new ConditionAttribute<Date>("Calculated date (CALCDTSKIP-3)",
+              "Conditional Skip Begin Age Date");
+          f.caConditionalSkipEndAgeDate = new ConditionAttribute<Date>("Calculated date (CALCDTSKIP-4)",
+              "Conditional Skip End Age Date");
+          f.caConditionalSkipIntervalDate = new ConditionAttribute<Date>("Calculated date (CALCDTSKIP-5)",
+              "Conditional Skip Interval Date");
+          f.caConditionalSkipStartDate = new ConditionAttribute<Date>("Supporting Data (Conditional Skip)",
+              "Conditional Skip Start Date");
+          f.caConditionalSkipEndDate = new ConditionAttribute<Date>("Supporting Data (Conditional Skip)",
+              "Conditional SKip End Date");
+          f.caConditionalDoseType = new ConditionAttribute<String>("Supporting Data (Conditional Skip)",
+              "Conditional Skip Dose Type");
+          f.caConditionalSkipDoseCountLogic = new ConditionAttribute<String>("Supporting Data (Conditional Skip)",
+              "Conditional Skip Doese Count Logic");
+          f.caConditonalSkipDoseCount = new ConditionAttribute<Integer>("Supporting Data (Conditional Skip)",
+              "Conditional Skip Dose Count");
+
+          List<ConditionAttribute<?>> caList = new ArrayList<ConditionAttribute<?>>();
+          caList.add(f.caConditionalSkipBeginAgeDate);
+          caList.add(f.caConditionalSkipEndAgeDate);
+          caList.add(f.caConditionalSkipIntervalDate);
+          caList.add(f.caConditionalSkipStartDate);
+          caList.add(f.caConditionalSkipEndDate);
+          caList.add(f.caConditionalDoseType);
+          caList.add(f.caConditionalSkipDoseCountLogic);
+          caList.add(f.caConditonalSkipDoseCount);
+          conditionAttributesAdditionalMap.put("Table 4 - 4 Conditional Skip Attributes "
+              + conditionalSkipSet.getSetId() + "." + condition.getConditionId(), caList);
+
+          f.caConditionalSkipBeginAgeDate.setInitialValue(CALCDTSKIP_3.evaluate(dataModel, this, condition));
+          f.caConditionalSkipEndAgeDate.setInitialValue(CALCDTSKIP_4.evaluate(dataModel, this, condition));
+          f.caConditionalSkipIntervalDate.setInitialValue(CALCDTSKIP_5.evaluate(dataModel, this, condition));
+
+        }
+      }
+    } else {
+      log("No conditional skips are defined. ");
+    }
     log("Looking to set Trigger values");
-//    if (seriesDose.getSkipTargetDoseList().size() > 0) {
-//      log("  + skip target dose list has entries");
-//      SkipTargetDose skipTargetDose = seriesDose.getSkipTargetDoseList().get(0);
-//      // caTriggerIntervalDate.setInitialValue(initialValue);
-//      if (skipTargetDose.getTriggerSeriesDose() != null) {
-//        log("  + trigger dose is specified, looking for dose " + skipTargetDose.getTriggerSeriesDose().getDoseNumber());
-//        for (TargetDose targetDose : dataModel.getTargetDoseList()) {
-//          if (targetDose.getTrackedSeriesDose() == skipTargetDose.getTriggerSeriesDose()) {
-//            skipTargetDose.setTriggerTargetDose(targetDose);
-//            log("  + found trigger target dose ");
-//          }
-//        }
-//      }
-////      caTargetDose.setInitialValue(skipTargetDose.getTriggerTargetDose());
-//    }
     LT logicTable = new LT();
     logicTableList.add(logicTable);
   }
@@ -112,27 +139,30 @@ public class EvaluateConditionalSkip extends LogicStep
 
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + logicStepType.getDisplay() + "</h1>");
-    out.println("<p>Skip target dose addresses times when a target dose can be skipped. In most settings, this occurs when a patient is behind schedule and the total number of doses needed to satisfy patient series can be reduced. In cases where a target dose does not specify skip target dose attributes, the target dose cannot be skipped.</p>");
+    out.println(
+        "<p>Skip target dose addresses times when a target dose can be skipped. In most settings, this occurs when a patient is behind schedule and the total number of doses needed to satisfy patient series can be reduced. In cases where a target dose does not specify skip target dose attributes, the target dose cannot be skipped.</p>");
 
     printConditionAttributesTable(out);
     printLogicTables(out);
     printLog(out);
   }
 
-  private class LT extends LogicTable
-  {
+  private class LT extends LogicTable {
     public LT() {
       super(3, 4, "Table 4-5 Can the Target Dose be Skipped?");
 
       setLogicCondition(0, new LogicCondition("date administered < lot expiration date?") {
         @Override
         public LogicResult evaluateInternal() {
-//          if (caDateAdministered.getFinalValue() == null || caTriggerAgeDate.getFinalValue() == null) {
-//            return LogicResult.NO;
-//          }
-//          if (caDateAdministered.getFinalValue().before(caTriggerAgeDate.getFinalValue())) {
-//            return LogicResult.YES;
-//          }
+          // if (caDateAdministered.getFinalValue() == null ||
+          // caTriggerAgeDate.getFinalValue() == null) {
+          // return LogicResult.NO;
+          // }
+          // if
+          // (caDateAdministered.getFinalValue().before(caTriggerAgeDate.getFinalValue()))
+          // {
+          // return LogicResult.YES;
+          // }
           return LogicResult.NO;
         }
       });
@@ -140,12 +170,15 @@ public class EvaluateConditionalSkip extends LogicStep
       setLogicCondition(1, new LogicCondition("date administered < trigger interval date?") {
         @Override
         public LogicResult evaluateInternal() {
-//          if (caDateAdministered.getFinalValue() == null || caTriggerIntervalDate.getFinalValue() == null) {
-//            return LogicResult.NO;
-//          }
-//          if (caDateAdministered.getFinalValue().before(caTriggerIntervalDate.getFinalValue())) {
-//            return LogicResult.YES;
-//          }
+          // if (caDateAdministered.getFinalValue() == null ||
+          // caTriggerIntervalDate.getFinalValue() == null) {
+          // return LogicResult.NO;
+          // }
+          // if
+          // (caDateAdministered.getFinalValue().before(caTriggerIntervalDate.getFinalValue()))
+          // {
+          // return LogicResult.YES;
+          // }
           return LogicResult.NO;
         }
       });
@@ -153,10 +186,11 @@ public class EvaluateConditionalSkip extends LogicStep
       setLogicCondition(2, new LogicCondition("Is the trigger target dose status \"satisfied\"?") {
         @Override
         public LogicResult evaluateInternal() {
-//          if (caTargetDose.getFinalValue() != null
-//              && caTargetDose.getFinalValue().getTargetDoseStatus() == TargetDoseStatus.SATISFIED) {
-//            return LogicResult.YES;
-//          }
+          // if (caTargetDose.getFinalValue() != null
+          // && caTargetDose.getFinalValue().getTargetDoseStatus() ==
+          // TargetDoseStatus.SATISFIED) {
+          // return LogicResult.YES;
+          // }
           return LogicResult.NO;
         }
       });

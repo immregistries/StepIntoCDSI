@@ -39,8 +39,8 @@ public class EvaluateForPreferableVaccine extends LogicStep
     // set actual values
     caDateAdministered.setInitialValue(aar.getDateAdministered());
     caTradeName.setInitialValue(aar.getTradeName());
-    caVaccineTypeBeginAgeDate.setInitialValue(CALCDTPREF_1.evaluate(dataModel, this));
-    caVaccineTypeEndAgeDate.setInitialValue(CALCDTPREF_2.evaluate(dataModel, this));
+    caVaccineTypeBeginAgeDate.setInitialValue(CALCDTPREF_1.evaluate(dataModel, this, null));
+    caVaccineTypeEndAgeDate.setInitialValue(CALCDTPREF_2.evaluate(dataModel, this, null));
     //caPreferableVaccineTradeName.setInitialValue(initialValue);
 
     conditionAttributesList.add(caDateAdministered);
