@@ -70,7 +70,7 @@ public class EvaluateConditionalSkip extends LogicStep
     caAssessmentDate.setInitialValue(dataModel.getAssessmentDate());
     // caAdministeredDoseCount.setInitialValue(dataModel.getAntigenAdministeredRecord().get);
     
-//    caTriggerAgeDate.setInitialValue(CALCDTSKIP_1.evaluate(dataModel, this));
+    //caTriggerAgeDate.setInitialValue(CALCDTSKIP_1.evaluate(dataModel, this));
 //    caTriggerIntervalDate.setInitialValue(CALCDTSKIP_2.evaluate(dataModel, this));
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
     log("Looking to set Trigger values");
