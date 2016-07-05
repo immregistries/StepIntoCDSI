@@ -8,6 +8,7 @@ public class Patient
 {
   private Date dateOfBirth = null;
   private String gender = "";
+  private String countryOfBirth = "";
   private List<VaccineDoseAdministered> receivesList = new ArrayList<VaccineDoseAdministered>();
   private MedicalHistory medicalHistory = null;
 
@@ -33,6 +34,14 @@ public class Patient
 
   public void setGender(String gender) {
     this.gender = gender;
+  }
+
+  public String getCountryOfBirth() {
+    return countryOfBirth;
+  }
+
+  public void setCountryOfBirth(String countryOfBirth) {
+    this.countryOfBirth = countryOfBirth;
   }
 
   public List<VaccineDoseAdministered> getReceivesList() {

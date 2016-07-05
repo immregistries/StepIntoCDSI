@@ -5,15 +5,15 @@ import java.util.List;
 
 public class MedicalHistory
 {
-  private List<ImmunizationHistory> immunizationHistoryList = new ArrayList<ImmunizationHistory>();
+  private ImmunizationHistory immunizationHistory = null;
   private List<RelevantMedicalObservation> releventMedicalObservationList = new ArrayList<RelevantMedicalObservation>();
 
-  public List<ImmunizationHistory> getImmunizationHistoryList() {
-    return immunizationHistoryList;
+  public ImmunizationHistory getImmunizationHistory() {
+    return immunizationHistory;
   }
 
-  public void setImmunizationHistoryList(List<ImmunizationHistory> immunizationHistoryList) {
-    this.immunizationHistoryList = immunizationHistoryList;
+  public void setImmunizationHistory(ImmunizationHistory immunizationHistory) {
+    this.immunizationHistory = immunizationHistory;
   }
 
   public List<RelevantMedicalObservation> getReleventMedicalObservationList() {

@@ -43,6 +43,7 @@ public class GatherNecessaryData extends LogicStep
       vaccineDoseAdministered.setPatient(patient);
       vaccineDoseAdministered.setImmunizationHistory(immunizationHistory);
       immunizationHistory.getVaccineDoseAdministeredList().add(vaccineDoseAdministered);
+      patient.getReceivesList().add(vaccineDoseAdministered);
       vaccineDoseAdministered.setDateAdministered(sdf.parse(req.getParameter(PARAM_VACCINE_DATE + i)));
       if (req.getParameter(PARAM_VACCINE_CONDITION_CODE + i) != null
           && !req.getParameter(PARAM_VACCINE_CONDITION_CODE + i).equals("")) {
