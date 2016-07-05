@@ -24,6 +24,10 @@
         <servlet-name>forecast</servlet-name>
         <servlet-class>org.openimmunizationsoftware.cdsi.servlet.ForecastServlet</servlet-class>
     </servlet>
+	<servlet>
+        <servlet-name>dataModelView</servlet-name>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.DataModelViewServlet</servlet-class>
+    </servlet>
     
     <servlet-mapping>
         <servlet-name>forecast</servlet-name>
@@ -36,6 +40,10 @@
     <servlet-mapping>
         <servlet-name>step</servlet-name>
         <url-pattern>/fv/step</url-pattern>
+    </servlet-mapping>	 
+    <servlet-mapping>
+        <servlet-name>dataModelView</servlet-name>
+        <url-pattern>/dataModelView</url-pattern>
     </servlet-mapping>	 
     
 

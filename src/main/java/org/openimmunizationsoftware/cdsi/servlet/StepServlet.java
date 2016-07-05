@@ -146,6 +146,7 @@ public class StepServlet extends ForecastServlet {
     out.println("    </tr>");
     out.println("  </table>");
     out.println("  </form>");
+    out.println("<a href=\"dataModelView\" target=\"_new\">View Data Model</a>");
     out.println("  </body>");
     out.println("</html>");
     out.close();
