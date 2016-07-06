@@ -272,7 +272,7 @@ public class DataModelViewServlet extends ForecastServlet {
 
 
 
-    if (dataModel.getAntigenAdministeredRecordThatSatisfiedPreviousTargetDose()!=null) {
+    if (dataModel.getAntigenAdministeredRecordThatSatisfiedPreviousTargetDose() != null) {
       out.println("   <table>");
       out.println("     <tr>");
       out.println("       <caption>Antigen Administered Record That Satisfied Previous Target Dose</caption>");
@@ -314,23 +314,95 @@ public class DataModelViewServlet extends ForecastServlet {
       out.println("     </tr>");
       out.println("   </table>");
     }
+    if (dataModel.getAntigenAdministeredRecord() != null) {
+      out.println("   <table>");
+      out.println("     <tr>");
+      out.println("       <caption>Antigen Administered Record</caption>");
 
+      out.println("       <th>Antigen</th>");
+      out.println("       <td>" + dataModel.getAntigenAdministeredRecord().getAntigen() + "/td>");
+      out.println("     </tr>");
+      out.println("     <tr>");
+      out.println("       <th>Date Administered</th>");
 
+      out.println("       <td>" + sdf.format(dataModel.getAntigenAdministeredRecord().getDateAdministered()) + "</td>");
+      out.println("     </tr>");
+      out.println("       <th>Vaccine Type</th>");
+      out.println("       <td>" + dataModel.getAntigenAdministeredRecord().getVaccineType() + "</td>");
+      out.println("     </tr>");
+      out.println("     </tr>");
+      out.println("       <th>Manufacturer</th>");
+      out.println("       <td>" + dataModel.getAntigenAdministeredRecord().getManufacturer() + "</td>");
+      out.println("     </tr>");
+      out.println("     </tr>");
+      out.println("       <th>Trade Name</th>");
+      out.println("       <td>" + dataModel.getAntigenAdministeredRecord().getTradeName() + "</td>");
+      out.println("     </tr>");
+      out.println("     </tr>");
+      out.println("       <th>Amount</th>");
+      out.println("       <td>" + dataModel.getAntigenAdministeredRecord().getAmount() + "</td>");
+      out.println("     </tr>");
+      out.println("     </tr>");
+      out.println("       <th>Lot Expiration Date</th>");
+      out.println("       <td>" + sdf.format(dataModel.getAntigenAdministeredRecord().getVaccineType()) + "</td>");
+      out.println("     </tr>");
+      out.println("     </tr>");
+      out.println("       <th>Dose Condition</th>");
+      out.println("       <td>" + dataModel.getAntigenAdministeredRecord().getDoseCondition() + "</td>");
+      out.println("     </tr>");
+      out.println("     </tr>");
+      out.println("       <th>Evaluation</th>");
+      out.println("       <td>" + dataModel.getAntigenAdministeredRecord().getEvaluation() + "</td>");
+      out.println("     </tr>");
+      out.println("   </table>");
+    }
 
+    if (dataModel.getPreviousAntigenAdministeredRecord() != null) {
+      out.println("   <table>");
+      out.println("     <tr>");
+      out.println("       <caption>Previous Antigen Administered Record</caption>");
 
+      out.println("       <th>Antigen</th>");
+      out.println("       <td>" + dataModel.getPreviousAntigenAdministeredRecord().getAntigen() + "/td>");
+      out.println("     </tr>");
+      out.println("     <tr>");
+      out.println("       <th>Date Administered</th>");
 
+      out.println("       <td>" + sdf.format(dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered()) + "</td>");
+      out.println("     </tr>");
+      out.println("       <th>Vaccine Type</th>");
+      out.println("       <td>" + dataModel.getPreviousAntigenAdministeredRecord().getVaccineType() + "</td>");
+      out.println("     </tr>");
+      out.println("     </tr>");
+      out.println("       <th>Manufacturer</th>");
+      out.println("       <td>" + dataModel.getPreviousAntigenAdministeredRecord().getManufacturer() + "</td>");
+      out.println("     </tr>");
+      out.println("     </tr>");
+      out.println("       <th>Trade Name</th>");
+      out.println("       <td>" + dataModel.getPreviousAntigenAdministeredRecord().getTradeName() + "</td>");
+      out.println("     </tr>");
+      out.println("     </tr>");
+      out.println("       <th>Amount</th>");
+      out.println("       <td>" + dataModel.getPreviousAntigenAdministeredRecord().getAmount() + "</td>");
+      out.println("     </tr>");
+      out.println("     </tr>");
+      out.println("       <th>Lot Expiration Date</th>");
+      out.println("       <td>" + sdf.format(dataModel.getPreviousAntigenAdministeredRecord().getVaccineType()) + "</td>");
+      out.println("     </tr>");
+      out.println("     </tr>");
+      out.println("       <th>Dose Condition</th>");
+      out.println("       <td>" + dataModel.getPreviousAntigenAdministeredRecord().getDoseCondition() + "</td>");
+      out.println("     </tr>");
+      out.println("     </tr>");
+      out.println("       <th>Evaluation</th>");
+      out.println("       <td>" + dataModel.getPreviousAntigenAdministeredRecord().getEvaluation() + "</td>");
+      out.println("     </tr>");
+      out.println("   </table>");
+    }
 
 /*    out.println("     <tr>");
 
     out.println("       <th>Antigen Administered Record List</th>");
-    out.println("       <td>" +  + "</td>");
-    out.println("     </tr>");
-    out.println("     <tr>");
-    out.println("       <th>Antigen Administered Record</th>");
-    out.println("       <td>" +  + "</td>");
-    out.println("     </tr>");
-    out.println("     <tr>");
-    out.println("       <th>Previous Antigen Administered Record</th>");
     out.println("       <td>" +  + "</td>");
     out.println("     </tr>");
     out.println("     <tr>");
