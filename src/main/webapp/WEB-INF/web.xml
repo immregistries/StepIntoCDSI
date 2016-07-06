@@ -28,6 +28,14 @@
         <servlet-name>dataModelView</servlet-name>
         <servlet-class>org.openimmunizationsoftware.cdsi.servlet.DataModelViewServlet</servlet-class>
     </servlet>
+	<servlet>
+        <servlet-name>dataModelViewCvx</servlet-name>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.DataModelViewCvxServlet</servlet-class>
+    </servlet>
+	<servlet>
+        <servlet-name>dataModelViewAntigen</servlet-name>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.DataModelViewAntigenServlet</servlet-class>
+    </servlet>
     
     <servlet-mapping>
         <servlet-name>forecast</servlet-name>
@@ -44,6 +52,14 @@
     <servlet-mapping>
         <servlet-name>dataModelView</servlet-name>
         <url-pattern>/dataModelView</url-pattern>
+    </servlet-mapping>	 
+    <servlet-mapping>
+        <servlet-name>dataModelViewCvx</servlet-name>
+        <url-pattern>/dataModelViewCvx</url-pattern>
+    </servlet-mapping>	 
+    <servlet-mapping>
+        <servlet-name>dataModelViewAntigen</servlet-name>
+        <url-pattern>/dataModelViewAntigen</url-pattern>
     </servlet-mapping>	 
     
 
