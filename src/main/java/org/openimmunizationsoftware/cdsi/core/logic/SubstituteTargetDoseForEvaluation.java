@@ -109,7 +109,7 @@ public class SubstituteTargetDoseForEvaluation extends LogicStep
 
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + logicStepType.getDisplay() + "</h1>");
-    out.println("<p>Substitute target dose is similar to skip target dose as a means to adjust where the patient is in the patient series. The goal of substitute target dose is to look at previously satisfied target doses within the patient series to determine how many future target doses – if any – can be substituted and not recommended.</p>");
+    out.println("<p>Substitute target dose is similar to skip target dose as a means to adjust where the patient is in the patient series. The goal of substitute target dose is to look at previously satisfied target doses within the patient series to determine how many future target doses `if any` can be substituted and not recommended.</p>");
     out.println("<p>When a target dose does specify substitute target dose attributes, it will contain a set of substitution possibilities. If a substitution is found, the remaining substitute target dose sets can be ignored. If all of the sets are examined and no substitution is found, then the current target dose should be used for evaluation.</p>");
 
     out.println("<h2>Relationship to ACIP recommendations:</h2>");
@@ -143,7 +143,7 @@ public class SubstituteTargetDoseForEvaluation extends LogicStep
                 return LogicResult.NO;
               }
               TargetDose firstTargetDose = caTargetDosesWithATargetDoseSatisfied.getFinalValue().get(0);
-              Date adminDate = firstTargetDose.getSatisifiedByVaccineDoseAdministered().getDateAdministered();
+              Date adminDate = firstTargetDose.getSatisfiedByVaccineDoseAdministered().getDateAdministered();
               if (caFirstDoseBeginAgeDates[position].getFinalValue().after(adminDate)) {
                 log("First dose given before begin range");
                 return LogicResult.NO;

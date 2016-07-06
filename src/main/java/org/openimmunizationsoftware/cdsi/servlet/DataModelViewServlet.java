@@ -11,10 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
-import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
-import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
-import org.openimmunizationsoftware.cdsi.core.domain.Vaccine;
-import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
+import org.openimmunizationsoftware.cdsi.core.domain.*;
 
 public class DataModelViewServlet extends ForecastServlet {
 
@@ -24,7 +21,6 @@ public class DataModelViewServlet extends ForecastServlet {
   private static final String VIEW_VACCINE = "vaccine";
   private static final String PARAM_POS = "pos";
   private static final String VIEW_DATA_MODEL = "data_model";
-  private static final String VIEW_IMMUNITY = "immunity";
   private static final String VIEW_ANTIGEN = "antigen";
 
 
@@ -196,13 +192,8 @@ public class DataModelViewServlet extends ForecastServlet {
     out.println("     <tr>");
     out.println("       <caption>Data Model</caption>");
 
-    out.println("       <th>Immunity List</th>"); //another table on same page?
-    out.println("       <td><a href=\"/dataMoselView?" + PARAM_VIEW + "=" + VIEW_IMMUNITY + "\">View</a></td>");
-    out.println("     </tr>");
-
-    out.println("     <tr>");
     out.println("       <th>Evaluation Status</th>");
-    out.println("       <td>" + dataModel.getEvaluationStatus() + "</td>");
+    out.println("       <td>" + n(dataModel.getEvaluationStatus()) + "</td>");
     out.println("     </tr>");
     out.println("     <tr>");
     out.println("       <th>Patient</th>");
@@ -219,8 +210,32 @@ public class DataModelViewServlet extends ForecastServlet {
     out.println("     </tr>");
     out.println("   </table>");
 
+    out.println("   <table>");
+    out.println("     <tr>");
+    out.println("       <caption>Immunity List</caption>");
+    out.println("       <th>Antigen</th>");
+    out.println("       <th>Immunity Language</th>");
+    out.println("       <th>Concept</th>");
+    out.println("       <th>Concept Code</th>");
+    out.println("       <th>Concept Text</th>");
+    out.println("     </tr>");
+    for (Immunity immunity: dataModel.getImmunityList()) {
+      printRowImmunity(immunity, out);
+    }
+    out.println("   </table>");
 
 
+    out.println("   <table>");
+    out.println("     <tr>");
+    out.println("       <caption>Target Dose List</caption>");
+    out.println("       <th>Target Dose Status</th>");
+    out.println("       <th>Tracked Dose Series</th>");
+    out.println("       <th>Satisfied By Vaccine Dose Administered</th>");
+    out.println("     </tr>");
+    for (TargetDose targetDose: dataModel.getTargetDoseList()) {
+      printRowTargetDoseList(targetDose, out);
+    }
+    out.println("   </table>");
 
 
     out.println("   <table>");
@@ -239,6 +254,24 @@ public class DataModelViewServlet extends ForecastServlet {
     out.println("   </table>");
 
 
+    if (dataModel.getTargetDose() != null) {
+
+      out.println("   <table>");
+      out.println("     <tr>");
+      out.println("       <caption>Target Dose</caption>");
+      out.println("       <th>Target Dose Status</th>");
+      out.println("       <td>" + dataModel.getTargetDose().getTargetDoseStatus() + "</td>");
+      out.println("     </tr>");
+      out.println("     <tr>");
+      out.println("       <th>Tracked Series Dose</th>");
+      out.println("       <td>" + dataModel.getTargetDose().getTrackedSeriesDose() + "</td>");
+      out.println("     </tr>");
+      out.println("     <tr>");
+      out.println("       <th>Satisfied By Vaccine Dose Administered</th>");
+      out.println("       <td>" + dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered() + "</td>");
+      out.println("     </tr>");
+      out.println("   </table>");
+    }
 /*    out.println("     <tr>");
     out.println("       <th>cvx Map</th>");
     out.println("       <td>" +  + "</td>");
@@ -258,15 +291,6 @@ public class DataModelViewServlet extends ForecastServlet {
     out.println("     </tr>");
     out.println("     <tr>");
     out.println("       <th>Schedule List</th>");
-    out.println("       <td>" +  + "</td>");
-    out.println("     </tr>");
-
-    out.println("     <tr>");
-    out.println("       <th>Target Dose</th>");
-    out.println("       <td>" +  + "</td>");
-    out.println("     </tr>");
-    out.println("     <tr>");
-    out.println("       <th>Target Dose List</th>");
     out.println("       <td>" +  + "</td>");
     out.println("     </tr>");*/
 
@@ -421,7 +445,7 @@ public class DataModelViewServlet extends ForecastServlet {
   }
   private void printRowLiveVirusConflict(LiveVirusConflict liveVirusConflict, PrintWriter out) {
     out.println("     <tr>");
-    out.println("       <td>" + liveVirusConflict.getSchedule() + "</td>");
+    out.println("       <td>" + n(liveVirusConflict.getSchedule()) + "</td>");
 
     out.println("       <td>" + liveVirusConflict.getPreviousVaccineType() + "</td>");
 
@@ -434,5 +458,28 @@ public class DataModelViewServlet extends ForecastServlet {
     out.println("       <td>" + liveVirusConflict.getConflictEndInterval() + "</td>");
     out.println("     </tr>");
   }
+  private void printRowImmunity(Immunity immunity, PrintWriter out) {
+    out.println("     <tr>");
+    out.println("       <td>" + immunity.getAntigen() + "</td>");
 
+    out.println("       <td>" + immunity.getImmunityLanguage() + "</td>");
+
+    out.println("       <td>" + immunity.getConcept() + "</td>");
+
+    out.println("       <td>" + immunity.getConceptCode() + "</td>");
+
+    out.println("       <td>" + immunity.getConceptText() + "</td>");
+
+    out.println("     </tr>");
+  }
+  private void printRowTargetDoseList(TargetDose targetDose, PrintWriter out) {
+    out.println("     <tr>");
+    out.println("       <td>" + targetDose.getTargetDoseStatus() + "</td>");
+
+    out.println("       <td>" + targetDose.getTrackedSeriesDose() + "</td>");
+
+    out.println("       <td>" + targetDose.getSatisfiedByVaccineDoseAdministered() + "</td>");
+
+    out.println("     </tr>");
+  }
 }
