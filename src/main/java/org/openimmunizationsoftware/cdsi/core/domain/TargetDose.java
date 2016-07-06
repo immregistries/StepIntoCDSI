@@ -6,7 +6,7 @@ public class TargetDose
 {
   private TargetDoseStatus targetDoseStatus = null;
   private SeriesDose trackedSeriesDose = null;
-  private VaccineDoseAdministered satisifiedByVaccineDoseAdministered = null;
+  private VaccineDoseAdministered satisfiedByVaccineDoseAdministered = null;
 
   public TargetDose() {
     // default
@@ -20,12 +20,12 @@ public class TargetDose
     this.trackedSeriesDose = targetDose.getTrackedSeriesDose();
   }
   
-  public VaccineDoseAdministered getSatisifiedByVaccineDoseAdministered() {
-    return satisifiedByVaccineDoseAdministered;
+  public VaccineDoseAdministered getSatisfiedByVaccineDoseAdministered() {
+    return satisfiedByVaccineDoseAdministered;
   }
 
-  public void setSatisifiedByVaccineDoseAdministered(VaccineDoseAdministered satisifiedByVaccineDoseAdministered) {
-    this.satisifiedByVaccineDoseAdministered = satisifiedByVaccineDoseAdministered;
+  public void setSatisfiedByVaccineDoseAdministered(VaccineDoseAdministered satisfiedByVaccineDoseAdministered) {
+    this.satisfiedByVaccineDoseAdministered = satisfiedByVaccineDoseAdministered;
   }
 
 

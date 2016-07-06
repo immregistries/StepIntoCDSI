@@ -75,7 +75,7 @@ public class StepServlet extends ForecastServlet {
       out.println("</pre>");
     } else {
       try {
-        out.println("        <a href=\"step\"><img src=\"Logo Large.png\" height=\"120\" align=\"left\"/></a>");
+        out.println("  <a href=\"step\"><img src=\"Logo Large.png\" height=\"120\" align=\"left\"/></a>");
         if (dataModel.getLogicStepPrevious() == null) {
           out.println("<h1>CDSi Demonstration System</h1> ");
           if (req.getParameter(LogicStep.PARAM_EVAL_DATE) == null) {
@@ -131,6 +131,8 @@ public class StepServlet extends ForecastServlet {
     out.println("        </select>");
     out.println("        <input type=\"submit\" name=\"submit\" value=\"Jump\"/>");
     out.println("        <input type=\"hidden\" name=\"action\" value=\"next\"/>");
+    out.println("        <a href=\"dataModelView\" target=\"_new\" style=\"display: block;\">View Data Model</a>");
+
 
     try {
       if (dataModel.getLogicStep() != null) {
