@@ -3,7 +3,7 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VaccineType
+public class VaccineType 
 {
   private String cvxCode = "";
   private String shortDescription = "";
@@ -36,5 +36,19 @@ public class VaccineType
   public void setShortDescription(String shortDescription) {
     this.shortDescription = shortDescription;
   }
+  
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof VaccineType) {
+      VaccineType vt = (VaccineType) obj;
+      return this.getCvxCode().equals(vt.getCvxCode());
+    }
+    return super.equals(obj);
+  }
 
+  
+  @Override
+  public int hashCode() {
+    return getCvxCode().hashCode();
+  }
 }

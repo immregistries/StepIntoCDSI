@@ -1,107 +1,106 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 
 public class ConditionalSkipCondition {
-	private int conditionId = 0;
-	private ConditionalSkipConditionType conditionType = ConditionalSkipConditionType.AGE;
-	private Date startDate = null;
-	private Date endDate = null;
-	private TimePeriod beginAge = null;
-	private TimePeriod endAge = null;
-	private TimePeriod interval = null;
-	private int doseCount = 0;
-	private DoseType doseType = null;
-	private String doseCountLogic = "";
-	private String vaccineTypes = "";
+  private int conditionId = 0;
+  private ConditionalSkipConditionType conditionType = ConditionalSkipConditionType.AGE;
+  private Date startDate = null;
+  private Date endDate = null;
+  private TimePeriod beginAge = null;
+  private TimePeriod endAge = null;
+  private TimePeriod interval = null;
+  private int doseCount = 0;
+  private DoseType doseType = null;
+  private String doseCountLogic = "";
+  private Set<VaccineType> vaccineTypeSet = new HashSet<VaccineType>();
 
-	public int getConditionId() {
-		return conditionId;
-	}
+  public Set<VaccineType> getVaccineTypeSet() {
+    return vaccineTypeSet;
+  }
 
-	public void setConditionId(int conditionId) {
-		this.conditionId = conditionId;
-	}
+  public int getConditionId() {
+    return conditionId;
+  }
 
-	public ConditionalSkipConditionType getConditionType() {
-		return conditionType;
-	}
+  public void setConditionId(int conditionId) {
+    this.conditionId = conditionId;
+  }
 
-	public void setConditionType(ConditionalSkipConditionType conditionType) {
-		this.conditionType = conditionType;
-	}
+  public ConditionalSkipConditionType getConditionType() {
+    return conditionType;
+  }
 
-	public Date getStartDate() {
-		return startDate;
-	}
+  public void setConditionType(ConditionalSkipConditionType conditionType) {
+    this.conditionType = conditionType;
+  }
 
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
+  public Date getStartDate() {
+    return startDate;
+  }
 
-	public Date getEndDate() {
-		return endDate;
-	}
+  public void setStartDate(Date startDate) {
+    this.startDate = startDate;
+  }
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
+  public Date getEndDate() {
+    return endDate;
+  }
 
-	public TimePeriod getBeginAge() {
-		return beginAge;
-	}
+  public void setEndDate(Date endDate) {
+    this.endDate = endDate;
+  }
 
-	public void setBeginAge(TimePeriod beginAge) {
-		this.beginAge = beginAge;
-	}
+  public TimePeriod getBeginAge() {
+    return beginAge;
+  }
 
-	public TimePeriod getEndAge() {
-		return endAge;
-	}
+  public void setBeginAge(TimePeriod beginAge) {
+    this.beginAge = beginAge;
+  }
 
-	public void setEndAge(TimePeriod endAge) {
-		this.endAge = endAge;
-	}
+  public TimePeriod getEndAge() {
+    return endAge;
+  }
 
-	public TimePeriod getInterval() {
-		return interval;
-	}
+  public void setEndAge(TimePeriod endAge) {
+    this.endAge = endAge;
+  }
 
-	public void setInterval(TimePeriod interval) {
-		this.interval = interval;
-	}
+  public TimePeriod getInterval() {
+    return interval;
+  }
 
-	public int getDoseCount() {
-		return doseCount;
-	}
+  public void setInterval(TimePeriod interval) {
+    this.interval = interval;
+  }
 
-	public void setDoseCount(int doseCount) {
-		this.doseCount = doseCount;
-	}
+  public int getDoseCount() {
+    return doseCount;
+  }
 
-	public DoseType getDoseType() {
-		return doseType;
-	}
+  public void setDoseCount(int doseCount) {
+    this.doseCount = doseCount;
+  }
 
-	public void setDoseType(DoseType doseType) {
-		this.doseType = doseType;
-	}
+  public DoseType getDoseType() {
+    return doseType;
+  }
 
-	public String getDoseCountLogic() {
-		return doseCountLogic;
-	}
+  public void setDoseType(DoseType doseType) {
+    this.doseType = doseType;
+  }
 
-	public void setDoseCountLogic(String doseCountLogic) {
-		this.doseCountLogic = doseCountLogic;
-	}
+  public String getDoseCountLogic() {
+    return doseCountLogic;
+  }
 
-	public String getVaccineTypes() {
-		return vaccineTypes;
-	}
+  public void setDoseCountLogic(String doseCountLogic) {
+    this.doseCountLogic = doseCountLogic;
+  }
 
-	public void setVaccineTypes(String vaccineTypes) {
-		this.vaccineTypes = vaccineTypes;
-	}
 }

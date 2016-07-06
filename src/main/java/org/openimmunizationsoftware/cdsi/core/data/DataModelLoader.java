@@ -248,8 +248,7 @@ public class DataModelLoader {
                     } else if (grandchildNode.getNodeName().equals("conditionLogic")) {
                       conditionalSkipSet.setConditionLogic(DomUtils.getInternalValue(grandchildNode));
                     } else if (grandchildNode.getNodeName().equals("condition")) {
-                      readCondition(conditionalSkipSet, grandchildNode);
-
+                      readCondition(dataModel, conditionalSkipSet, grandchildNode);
                     }
                   }
                 }
@@ -332,7 +331,7 @@ public class DataModelLoader {
     }
   }
 
-  private static void readCondition(ConditionalSkipSet conditionalSkipSet, Node grandchildNode) {
+  private static void readCondition(DataModel dataModel, ConditionalSkipSet conditionalSkipSet, Node grandchildNode) {
     ConditionalSkipCondition condition = new ConditionalSkipCondition();
     conditionalSkipSet.getConditionList().add(condition);
     NodeList greatgrandchildNodeList = grandchildNode.getChildNodes();
@@ -375,7 +374,16 @@ public class DataModelLoader {
         } else if (greatgrandchildNode.getNodeName().equals("doseCountLogic")) {
           condition.setDoseCountLogic(DomUtils.getInternalValue(greatgrandchildNode));
         } else if (greatgrandchildNode.getNodeName().equals("vaccineTypes")) {
-          condition.setVaccineTypes(DomUtils.getInternalValue(greatgrandchildNode));
+          String vaccineTypeCvxCodeString = DomUtils.getInternalValue(greatgrandchildNode);
+          if (vaccineTypeCvxCodeString.length() > 0)
+          {
+            String[] vaccineTypeCvxCodes = vaccineTypeCvxCodeString.split("\\;");
+            for (String vaccineTypeCvx : vaccineTypeCvxCodes)
+            {
+              VaccineType vaccineType = dataModel.getCvx(vaccineTypeCvx);
+              condition.getVaccineTypeSet().add(vaccineType);
+            }
+          }
         }
       }
     }
