@@ -46,7 +46,7 @@ public class OrganizeImmunizationHistory extends LogicStep
   public void printPre(PrintWriter out) throws Exception {
     out.println("<h1>8.3 Organize Immunization History</h1>");
     out.println(
-        "   <p>The third step in the process is to look at the patient’s immunization history and prepare those records "
+        "   <p>The third step in the process is to look at the patient's immunization history and prepare those records "
             + "for evaluation and forecasting by breaking them into their antigen parts. This allows the evaluation and "
             + "forecasting engine to be as granular and specific as possible for both evaluation and forecasting purposes. "
             + "Later in the process (section 8.6), these antigens are assembled into commonly known vaccine groups (vaccine families) "
@@ -60,7 +60,7 @@ public class OrganizeImmunizationHistory extends LogicStep
     out.println("<h1>8.3 Organize Immunization History</h1>");
     
     out.println(
-        "   <p>The third step in the process is to look at the patient’s immunization history and prepare those records "
+        "   <p>The third step in the process is to look at the patient's immunization history and prepare those records "
             + "for evaluation and forecasting by breaking them into their antigen parts. This allows the evaluation and "
             + "forecasting engine to be as granular and specific as possible for both evaluation and forecasting purposes. "
             + "Later in the process (section 8.6), these antigens are assembled into commonly known vaccine groups (vaccine families) "
@@ -95,7 +95,7 @@ public class OrganizeImmunizationHistory extends LogicStep
       out.println("    <td>" + aar.getTradeName() + " (" + aar.getVaccineType().getCvxCode() + "/"
           + aar.getManufacturer() + ") - " + aar.getVaccineType().getShortDescription() + "</td>");
       out.println("    <td>" + sdf.format(aar.getDateAdministered()) + "</td>");
-      out.println("    <td>" + aar.getAntigen().getName() + "</td>");
+      out.println("    <td><a href=\"dataModelViewAntigen?search_term=" + aar.getAntigen().getName() + "\" target=\"_new\">" + aar.getAntigen().getName() + "</a></td>");
       out.println("  </tr>");
     }
     out.println("</table>");

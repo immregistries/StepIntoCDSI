@@ -53,6 +53,7 @@ public class DataModelViewServlet extends ForecastServlet {
       out.println("    <link rel=\"stylesheet\" type=\"text/css\" href=\"index.css\">");
       out.println("  </head>");
       out.println("  <body>");
+      out.println("    <a href=\"dataModelViewAntigen\">Antigen</a>");
       if (view.equals(VIEW_PATIENT)) {
         printViewPatient(dataModel, out);
       } else if (view.equals(VIEW_VACCINE)) {
