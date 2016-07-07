@@ -80,7 +80,7 @@ public class DataModelViewScheduleServlet extends ForecastServlet {
         out.println("        <td>" + schedule.getContraindicationList() + "</td>");
         out.println("        <td>" + schedule.getLiveVirusConflictList() + "</td>");
         out.println("        <td>" + schedule.getAntigenSeriesList() + "</td>");
-        out.println("        <td>" + schedule.getImmunityList() + "</td>");
+        out.println("        <td>" + schedule.getImmunity() + "</td>");
         out.println("      </tr>");
 
     }

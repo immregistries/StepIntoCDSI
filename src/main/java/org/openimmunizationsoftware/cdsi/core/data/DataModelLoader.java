@@ -14,6 +14,9 @@ import org.openimmunizationsoftware.cdsi.core.domain.Age;
 import org.openimmunizationsoftware.cdsi.core.domain.AllowableVaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.BirthDateImmunity;
+import org.openimmunizationsoftware.cdsi.core.domain.ClinicalHistory;
+import org.openimmunizationsoftware.cdsi.core.domain.Concept;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalNeed;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkip;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipCondition;
@@ -21,6 +24,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipConditionTyp
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipSet;
 import org.openimmunizationsoftware.cdsi.core.domain.Contraindication;
 import org.openimmunizationsoftware.cdsi.core.domain.DoseType;
+import org.openimmunizationsoftware.cdsi.core.domain.Exclusion;
 import org.openimmunizationsoftware.cdsi.core.domain.Immunity;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
@@ -62,7 +66,6 @@ public class DataModelLoader {
       readContraindications(dataModel, doc);
       readVaccineGroups(dataModel, doc);
       readVaccineGroupToAntigenMap(dataModel, doc);
-      readImmunities(dataModel, doc);
       readLiveVirusConflicts(dataModel, doc);
     }
     for (String scheduleName : scheduleNames) {
@@ -78,11 +81,104 @@ public class DataModelLoader {
 
         Schedule schedule = new Schedule();
         schedule.setScheduleName(scheduleName);
+        dataModel.getScheduleList().add(schedule);
+        readImmunity(schedule, dataModel, doc);
         readAntigenSeries(schedule, dataModel, doc);
       }
     }
 
     return dataModel;
+  }
+
+  private static void readImmunity(Schedule schedule, DataModel dataModel, Document doc) {
+    NodeList parentList = doc.getElementsByTagName("immunity");
+    for (int i = 0; i < parentList.getLength(); i++) {
+      Immunity immunity = new Immunity();
+      schedule.setImmunity(immunity);
+      Node parentNode = parentList.item(i);
+      NodeList childList = parentNode.getChildNodes();
+      for (int j = 0; j < childList.getLength(); j++) {
+        Node childNode = childList.item(j);
+        if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+          if (childNode.getNodeName().equals("clinicalHistory")) {
+            ClinicalHistory clinicalHistory = new ClinicalHistory();
+            immunity.getClinicalHistoryList().add(clinicalHistory);
+            NodeList grandchildList = childNode.getChildNodes();
+            for (int k = 0; k < grandchildList.getLength(); k++) {
+              Node grandchildNode = grandchildList.item(k);
+              if (grandchildNode.getNodeType() == Node.ELEMENT_NODE) {
+                if (grandchildNode.getNodeName().equals("guideline")) {
+                  clinicalHistory.setImmunityGuideline(DomUtils.getInternalValue(grandchildNode));
+                } else if (grandchildNode.getNodeName().equals("mapping")) {
+                  Concept concept = readConcept(grandchildNode);
+                  if (concept != null) {
+                    clinicalHistory.getConceptList().add(concept);
+                  }
+                }
+              }
+            }
+          } else if (childNode.getNodeName().equals("dateOfBirth")) {
+            BirthDateImmunity birthDateImmunity = null;
+            NodeList grandchildList = childNode.getChildNodes();
+            for (int k = 0; k < grandchildList.getLength(); k++) {
+              Node grandchildNode = grandchildList.item(k);
+              if (grandchildNode.getNodeType() == Node.ELEMENT_NODE) {
+                if (birthDateImmunity == null) {
+                  birthDateImmunity = new BirthDateImmunity();
+                  immunity.getBirthDateImmunityList().add(birthDateImmunity);
+                }
+                if (grandchildNode.getNodeName().equals("immunityBirthDate")) {
+                  birthDateImmunity.setImmunityBirthDate(parseDate(DomUtils.getInternalValue(grandchildNode)));
+                } else if (grandchildNode.getNodeName().equals("birthCountry")) {
+                  birthDateImmunity.setCountryOfBirth(DomUtils.getInternalValue(grandchildNode));
+                } else if (grandchildNode.getNodeName().equals("exclusion")) {
+                  Exclusion exclusion = null;
+                  NodeList greatgrandchildList = grandchildNode.getChildNodes();
+                  for (int m = 0; m < greatgrandchildList.getLength(); m++) {
+                    Node greatgrandchildNode = greatgrandchildList.item(m);
+                    if (greatgrandchildNode.getNodeType() == Node.ELEMENT_NODE) {
+                      if (exclusion == null) {
+                        exclusion = new Exclusion();
+                        birthDateImmunity.getExclusionList().add(exclusion);
+                      }
+                      if (greatgrandchildNode.getNodeName().equals("exclusionCondition")) {
+                        exclusion.setExclusionCondition(DomUtils.getInternalValue(greatgrandchildNode));
+                      } else if (greatgrandchildNode.getNodeName().equals("mapping")) {
+                        Concept concept = readConcept(greatgrandchildNode);
+                        if (concept != null) {
+                          exclusion.getConceptList().add(concept);
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  private static Concept readConcept(Node parentNode) {
+    Concept concept = null;
+    NodeList childList = parentNode.getChildNodes();
+    for (int m = 0; m < childList.getLength(); m++) {
+      Node childNode = childList.item(m);
+      if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+        if (concept == null) {
+          concept = new Concept();
+        }
+        if (childNode.getNodeName().equals("conceptCodeSystem")) {
+          concept.setConceptCodeSystem(DomUtils.getInternalValue(childNode));
+        } else if (childNode.getNodeName().equals("conceptCode")) {
+          concept.setConceptCode(DomUtils.getInternalValue(childNode));
+        } else if (childNode.getNodeName().equals("conceptText")) {
+          concept.setConceptText(DomUtils.getInternalValue(childNode));
+        }
+      }
+    }
+    return concept;
   }
 
   private static void readAntigenSeries(Schedule schedule, DataModel dataModel, Document doc) {
@@ -91,6 +187,7 @@ public class DataModelLoader {
     for (int i = 0; i < parentList.getLength(); i++) {
       Node parentNode = parentList.item(i);
       AntigenSeries antigenSeries = new AntigenSeries();
+      schedule.getAntigenSeriesList().add(antigenSeries);
       dataModel.getAntigenSeriesList().add(antigenSeries);
       NodeList childList = parentNode.getChildNodes();
       for (int j = 0; j < childList.getLength(); j++) {
@@ -344,7 +441,8 @@ public class DataModelLoader {
           ConditionalSkipConditionType conditionType = null;
           String conditionTypeString = DomUtils.getInternalValue(greatgrandchildNode);
           if (!conditionTypeString.equals("")) {
-            conditionType = ConditionalSkipConditionType.valueOf(conditionTypeString.toUpperCase().replaceAll("\\s", "_"));
+            conditionType = ConditionalSkipConditionType
+                .valueOf(conditionTypeString.toUpperCase().replaceAll("\\s", "_"));
             condition.setConditionType(conditionType);
           }
         } else if (greatgrandchildNode.getNodeName().equals("startDate")) {
@@ -359,15 +457,13 @@ public class DataModelLoader {
           condition.setInterval(new TimePeriod(DomUtils.getInternalValue(greatgrandchildNode)));
         } else if (greatgrandchildNode.getNodeName().equals("doseCount")) {
           String doseCountString = DomUtils.getInternalValue(greatgrandchildNode);
-          if (doseCountString.length() > 0)
-          {
+          if (doseCountString.length() > 0) {
             condition.setDoseCount(Integer.parseInt(doseCountString));
           }
         } else if (greatgrandchildNode.getNodeName().equals("doseType")) {
           DoseType doseType = null;
           String doseTypeString = DomUtils.getInternalValue(greatgrandchildNode);
-          if (!doseTypeString.equals(""))
-          {
+          if (!doseTypeString.equals("")) {
             doseType = DoseType.valueOf(doseTypeString.toUpperCase().replaceAll("\\s", "_"));
             condition.setDoseType(doseType);
           }
@@ -375,11 +471,9 @@ public class DataModelLoader {
           condition.setDoseCountLogic(DomUtils.getInternalValue(greatgrandchildNode));
         } else if (greatgrandchildNode.getNodeName().equals("vaccineTypes")) {
           String vaccineTypeCvxCodeString = DomUtils.getInternalValue(greatgrandchildNode);
-          if (vaccineTypeCvxCodeString.length() > 0)
-          {
+          if (vaccineTypeCvxCodeString.length() > 0) {
             String[] vaccineTypeCvxCodes = vaccineTypeCvxCodeString.split("\\;");
-            for (String vaccineTypeCvx : vaccineTypeCvxCodes)
-            {
+            for (String vaccineTypeCvx : vaccineTypeCvxCodes) {
               VaccineType vaccineType = dataModel.getCvx(vaccineTypeCvx);
               condition.getVaccineTypeSet().add(vaccineType);
             }
@@ -388,7 +482,7 @@ public class DataModelLoader {
       }
     }
   }
-
+  
   private static Date parseDate(String dateString) {
     Date date = null;
     if (!dateString.equals("")) {
@@ -396,8 +490,13 @@ public class DataModelLoader {
       try {
         date = sdf.parse(dateString);
       } catch (ParseException pe) {
-        System.err.println("This date is not parsable: " + dateString);
-        pe.printStackTrace();
+        sdf = new SimpleDateFormat("MM/dd/yyyy");
+        try {
+          date = sdf.parse(dateString);
+        } catch (ParseException pe2) {
+          System.err.println("This date is not parsable: " + dateString);
+          pe2.printStackTrace();
+        }
       }
     }
     return date;
@@ -475,45 +574,6 @@ public class DataModelLoader {
       }
     }
 
-  }
-
-  private static void readImmunities(DataModel dataModel, Document doc) {
-    NodeList parentList = doc.getElementsByTagName("immunities");
-    for (int i = 0; i < parentList.getLength(); i++) {
-      Node parentNode = parentList.item(i);
-      NodeList childList = parentNode.getChildNodes();
-      for (int j = 0; j < childList.getLength(); j++) {
-        Node childNode = childList.item(j);
-        if (childNode.getNodeType() == Node.ELEMENT_NODE && childNode.getNodeName().equals("immunity")) {
-          NodeList grandchildList = childNode.getChildNodes();
-          Immunity immunity = new Immunity();
-          dataModel.getImmunityList().add(immunity);
-          for (int k = 0; k < grandchildList.getLength(); k++) {
-            Node grandchildNode = grandchildList.item(k);
-            if (grandchildNode.getNodeType() == Node.ELEMENT_NODE) {
-              if (grandchildNode.getNodeName().equals("antigen")) {
-                String antigenName = DomUtils.getInternalValue(grandchildNode);
-                Antigen antigen = dataModel.getAntigen(antigenName);
-                immunity.setAntigen(antigen);
-                antigen.getImmunityList().add(immunity);
-              } else if (grandchildNode.getNodeName().equals("immunityLanguage")) {
-                String immunityLanguage = DomUtils.getInternalValue(grandchildNode);
-                immunity.setImmunityLanguage(immunityLanguage);
-              } else if (grandchildNode.getNodeName().equals("concept")) {
-                String concept = DomUtils.getInternalValue(grandchildNode);
-                immunity.setConcept(concept);
-              } else if (grandchildNode.getNodeName().equals("conceptCode")) {
-                String conceptCode = DomUtils.getInternalValue(grandchildNode);
-                immunity.setConceptCode(conceptCode);
-              } else if (grandchildNode.getNodeName().equals("conceptText")) {
-                String conceptText = DomUtils.getInternalValue(grandchildNode);
-                immunity.setConceptText(conceptText);
-              }
-            }
-          }
-        }
-      }
-    }
   }
 
   private static void readVaccineGroups(DataModel dataModel, Document doc) {

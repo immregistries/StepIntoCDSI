@@ -9,7 +9,15 @@ public class Schedule
   private List<Contraindication> contraindicationList = new ArrayList<Contraindication>();
   private List<LiveVirusConflict> liveVirusConflictList = new ArrayList<LiveVirusConflict>();
   private List<AntigenSeries> antigenSeriesList = new ArrayList<AntigenSeries>();
-  private List<Immunity> immunityList = new ArrayList<Immunity>();
+  private Immunity immunity = null;
+
+  public Immunity getImmunity() {
+    return immunity;
+  }
+
+  public void setImmunity(Immunity immunity) {
+    this.immunity = immunity;
+  }
 
   public String getScheduleName() {
     return scheduleName;
@@ -43,11 +51,4 @@ public class Schedule
     this.antigenSeriesList = antigenSeriesList;
   }
 
-  public List<Immunity> getImmunityList() {
-    return immunityList;
-  }
-
-  public void setImmunityList(List<Immunity> immunityList) {
-    this.immunityList = immunityList;
-  }
 }

@@ -1,50 +1,17 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
-public class Immunity
-{
-  private Antigen antigen = null;
-  private String immunityLanguage = "";
-  private String concept = "";
-  private String conceptCode = "";
-  private String conceptText = "";
+import java.util.ArrayList;
+import java.util.List;
 
-  public Antigen getAntigen() {
-    return antigen;
+public class Immunity {
+  private List<ClinicalHistory> clinicalHistoryList = new ArrayList<ClinicalHistory>();
+  private List<BirthDateImmunity> birthDateImmunityList = new ArrayList<BirthDateImmunity>();
+
+  public List<ClinicalHistory> getClinicalHistoryList() {
+    return clinicalHistoryList;
   }
 
-  public void setAntigen(Antigen antigen) {
-    this.antigen = antigen;
-  }
-
-  public String getImmunityLanguage() {
-    return immunityLanguage;
-  }
-
-  public void setImmunityLanguage(String immunityLanguage) {
-    this.immunityLanguage = immunityLanguage;
-  }
-
-  public String getConcept() {
-    return concept;
-  }
-
-  public void setConcept(String concept) {
-    this.concept = concept;
-  }
-
-  public String getConceptCode() {
-    return conceptCode;
-  }
-
-  public void setConceptCode(String conceptCode) {
-    this.conceptCode = conceptCode;
-  }
-
-  public String getConceptText() {
-    return conceptText;
-  }
-
-  public void setConceptText(String conceptText) {
-    this.conceptText = conceptText;
+  public List<BirthDateImmunity> getBirthDateImmunityList() {
+    return birthDateImmunityList;
   }
 }

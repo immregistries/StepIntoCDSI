@@ -391,18 +391,18 @@ public class DataModelViewServlet extends ForecastServlet {
     out.println("     </tr>");
   }
   private void printRowImmunity(Immunity immunity, PrintWriter out) {
-    out.println("     <tr>");
-    out.println("       <td>" + immunity.getAntigen() + "</td>");
-
-    out.println("       <td>" + immunity.getImmunityLanguage() + "</td>");
-
-    out.println("       <td>" + immunity.getConcept() + "</td>");
-
-    out.println("       <td>" + immunity.getConceptCode() + "</td>");
-
-    out.println("       <td>" + immunity.getConceptText() + "</td>");
-
-    out.println("     </tr>");
+//    out.println("     <tr>");
+//    out.println("       <td>" + immunity.getAntigen() + "</td>");
+//
+//    out.println("       <td>" + immunity.getImmunityLanguage() + "</td>");
+//
+//    out.println("       <td>" + immunity.getConcept() + "</td>");
+//
+//    out.println("       <td>" + immunity.getConceptCode() + "</td>");
+//
+//    out.println("       <td>" + immunity.getConceptText() + "</td>");
+//
+//    out.println("     </tr>");
   }
   private void printRowTargetDoseList(TargetDose targetDose, PrintWriter out) {
     out.println("     <tr>");
