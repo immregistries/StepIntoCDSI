@@ -15,6 +15,11 @@ import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 public class DataModelViewAntigenServlet extends ForecastServlet {
 
   private static final String PARAM_SEARCH = "search_term";
+  
+  public static String makeLink(Antigen antigen)
+  {
+    return "<a href=\"dataModelViewAntigen?" + PARAM_SEARCH + "=" + antigen.getName() + "\" target=\"_new\">" + antigen.getName() + "</a>";
+  }
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
