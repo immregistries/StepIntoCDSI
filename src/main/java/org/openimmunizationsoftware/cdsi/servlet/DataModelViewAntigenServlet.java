@@ -14,11 +14,13 @@ import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 
 public class DataModelViewAntigenServlet extends ForecastServlet {
 
+  public static final String SERVLET_NAME = "dataModelViewAntigen";
+  
   private static final String PARAM_SEARCH = "search_term";
   
   public static String makeLink(Antigen antigen)
   {
-    return "<a href=\"dataModelViewAntigen?" + PARAM_SEARCH + "=" + antigen.getName() + "\" target=\"_new\">" + antigen.getName() + "</a>";
+    return "<a href=\"" + SERVLET_NAME + "?" + PARAM_SEARCH + "=" + antigen.getName() + "\" target=\"_new\">" + antigen.getName() + "</a>";
   }
 
   @Override
@@ -46,7 +48,7 @@ public class DataModelViewAntigenServlet extends ForecastServlet {
       out.println("    <link rel=\"stylesheet\" type=\"text/css\" href=\"index.css\">");
       out.println("  </head>");
       out.println("  <body>");
-      out.println("    <form>");
+      out.println("    <form action=\"" + SERVLET_NAME + "\">");
 
       out.println("      <input type=\"text\" name=\"search_term\"><br>");
       out.println("      <input type=\"submit\" value=\"Submit\">");
