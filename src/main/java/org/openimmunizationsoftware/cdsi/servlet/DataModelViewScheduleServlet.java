@@ -1,7 +1,9 @@
 package org.openimmunizationsoftware.cdsi.servlet;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
-import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
+import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.ClinicalHistory;
+import org.openimmunizationsoftware.cdsi.core.domain.Contraindication;
 import org.openimmunizationsoftware.cdsi.core.domain.Schedule;
 
 import javax.servlet.ServletException;
@@ -19,7 +21,7 @@ public class DataModelViewScheduleServlet extends ForecastServlet {
 
     public static final String SERVLET_NAME = "dataModelViewAntigen";
 
-/*    public static String makeLink(Antigen antigen)
+/*    public static String makeLink(Schedule schedule)
     {
         return "<a href=\"" + SERVLET_NAME + "?\" target=\"dataModelView\">"  "</a>";
     }*/
@@ -63,7 +65,7 @@ public class DataModelViewScheduleServlet extends ForecastServlet {
         out.println("        <th>Contraindication List</th>");
         out.println("        <th>Live Virus Conflict List</th>");
         out.println("        <th>Antigen Series List</th>");
-        out.println("        <th>Immunity List</th>");
+        out.println("        <th>Immunity</th>");
 
         out.println("      </tr>");
         for (Schedule schedule: dataModel.getScheduleList()) {
@@ -79,9 +81,28 @@ public class DataModelViewScheduleServlet extends ForecastServlet {
         out.println("        <td>" + schedule.getScheduleName() + "</td>");
         out.println("        <td>" + schedule.getContraindicationList() + "</td>");
         out.println("        <td>" + schedule.getLiveVirusConflictList() + "</td>");
-        out.println("        <td>" + schedule.getAntigenSeriesList() + "</td>");
-        out.println("        <td>" + schedule.getImmunity() + "</td>");
-        out.println("      </tr>");
+        out.println("        <td>");
+        out.println("          <ul>");
 
+        for (AntigenSeries antigenSeries: schedule.getAntigenSeriesList()) {
+            out.println("       <li>" + antigenSeries.getSeriesName() + "</li>");
+        }
+        out.println("          </ul>");
+
+        out.println("        </td>");
+        out.println("        <td>");
+        if (schedule.getImmunity()!=null) {
+            if (schedule.getImmunity().getClinicalHistoryList().size() > 0) {
+                out.println("          <ul>");
+
+                for (ClinicalHistory clinicalHistory : schedule.getImmunity().getClinicalHistoryList()) {
+                    out.println("       <li>" + clinicalHistory.getImmunityGuideline() + "</li>");
+                }
+                out.println("          </ul>");
+            }
+            out.println("        </td>");
+            out.println("      </tr>");
+        }
     }
+
 }
