@@ -40,6 +40,10 @@
         <servlet-name>dataModelViewVaccineGroup</servlet-name>
         <servlet-class>org.openimmunizationsoftware.cdsi.servlet.DataModelViewVaccineGroupServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>dataModelViewSchedule</servlet-name>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.DataModelViewScheduleServlet</servlet-class>
+    </servlet>
     
     <servlet-mapping>
         <servlet-name>forecast</servlet-name>
@@ -69,6 +73,12 @@
         <servlet-name>dataModelViewVaccineGroup</servlet-name>
         <url-pattern>/dataModelViewVaccineGroup</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>dataModelViewSchedule</servlet-name>
+        <url-pattern>/dataModelViewSchedule</url-pattern>
+    </servlet-mapping>
+
+
 
 
     <filter>
