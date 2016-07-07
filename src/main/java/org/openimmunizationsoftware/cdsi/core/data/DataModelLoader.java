@@ -197,7 +197,8 @@ public class DataModelLoader {
             String seriesName = DomUtils.getInternalValue(childNode);
             antigenSeries.setSeriesName(seriesName);
           } else if (childNode.getNodeName().equals("targetDisease")) {
-            antigenSeries.setTargetDisease(DomUtils.getInternalValue(childNode));
+            Antigen targetDisease = dataModel.getOrCreateAntigen(DomUtils.getInternalValue(childNode));
+            antigenSeries.setTargetDisease(targetDisease);
           } else if (childNode.getNodeName().equals("vaccineGroup")) {
             String nameValue = DomUtils.getInternalValue(childNode);
             VaccineGroup vaccineGroup = dataModel.getOrCreateVaccineGroup(nameValue);
@@ -345,35 +346,13 @@ public class DataModelLoader {
                     } else if (grandchildNode.getNodeName().equals("conditionLogic")) {
                       conditionalSkipSet.setConditionLogic(DomUtils.getInternalValue(grandchildNode));
                     } else if (grandchildNode.getNodeName().equals("condition")) {
-                      readCondition(dataModel, conditionalSkipSet, grandchildNode);
+                      readCondition(dataModel, conditionalSkipSet, grandchildNode, seriesDose);
                     }
                   }
                 }
               }
-
-              // if (childNode.getNodeName().equals("triggerAge")) {
-              // String triggerAgeString = DomUtils.getInternalValue(childNode);
-              // skipTargetDose.setTriggerAge(new TimePeriod(triggerAgeString));
-              // if (triggerAgeString.length() > 0) {
-              // populated = true;
-              // }
-              // } else if (childNode.getNodeName().equals("triggerInt")) {
-              // String triggerIntString = DomUtils.getInternalValue(childNode);
-              // skipTargetDose.setTriggerInterval(new
-              // TimePeriod(triggerIntString));
-              // if (triggerIntString.length() > 0) {
-              // populated = true;
-              // }
-              // } else if (childNode.getNodeName().equals("triggerTargetDose"))
-              // {
-              // String doseNumber = DomUtils.getInternalValue(childNode);
-              // if (doseNumber != null && doseNumber.length() > 0) {
-              // skipTargetDose.setSeriesDose(seriesDoseMap.get(doseNumber));
-              // }
-              // }
             }
           }
-
           if (populated) {
             seriesDose.setConditionalSkip(conditionalSkip);
           }
@@ -428,8 +407,8 @@ public class DataModelLoader {
     }
   }
 
-  private static void readCondition(DataModel dataModel, ConditionalSkipSet conditionalSkipSet, Node grandchildNode) {
-    ConditionalSkipCondition condition = new ConditionalSkipCondition();
+  private static void readCondition(DataModel dataModel, ConditionalSkipSet conditionalSkipSet, Node grandchildNode, SeriesDose seriesDose) {
+    ConditionalSkipCondition condition = new ConditionalSkipCondition(seriesDose);
     conditionalSkipSet.getConditionList().add(condition);
     NodeList greatgrandchildNodeList = grandchildNode.getChildNodes();
     for (int m = 0; m < greatgrandchildNodeList.getLength(); m++) {

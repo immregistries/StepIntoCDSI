@@ -7,7 +7,6 @@ public class TargetDose
   private TargetDoseStatus targetDoseStatus = null;
   private SeriesDose trackedSeriesDose = null;
   private VaccineDoseAdministered satisfiedByVaccineDoseAdministered = null;
-
   public TargetDose() {
     // default
   }

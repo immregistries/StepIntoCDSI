@@ -7,6 +7,7 @@ import java.util.Set;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 
 public class ConditionalSkipCondition {
+  private SeriesDose seriesDose = null;
   private int conditionId = 0;
   private ConditionalSkipConditionType conditionType = ConditionalSkipConditionType.AGE;
   private Date startDate = null;
@@ -18,6 +19,15 @@ public class ConditionalSkipCondition {
   private DoseType doseType = null;
   private String doseCountLogic = "";
   private Set<VaccineType> vaccineTypeSet = new HashSet<VaccineType>();
+  
+  public SeriesDose getSeriesDose() {
+    return seriesDose;
+  }
+  
+  public ConditionalSkipCondition(SeriesDose seriesDose)
+  {
+    this.seriesDose = seriesDose;
+  }
 
   public Set<VaccineType> getVaccineTypeSet() {
     return vaccineTypeSet;

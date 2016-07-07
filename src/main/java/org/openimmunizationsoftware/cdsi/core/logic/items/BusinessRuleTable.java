@@ -3,8 +3,12 @@ package org.openimmunizationsoftware.cdsi.core.logic.items;
 import java.util.Date;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipCondition;
+import org.openimmunizationsoftware.cdsi.core.domain.DoseType;
+import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 
 /**
@@ -23,27 +27,40 @@ public class BusinessRuleTable {
           if (conditionalSkipCondition.getVaccineTypeSet()
               .contains(vaccineDoseAdministered.getVaccine().getVaccineType())) {
             boolean inRange = false;
-            {
-            TimePeriod beginAge = conditionalSkipCondition.getBeginAge();
-            TimePeriod endAge = conditionalSkipCondition.getEndAge();
             Date dateAdministered = vaccineDoseAdministered.getDateAdministered();
-            if (beginAge != null && beginAge.isValued() && endAge != null && endAge.isValued())
             {
-              Date beginAgeDate = beginAge.getDateFrom(dataModel.getPatient().getDateOfBirth());
-              Date endAgeDate = beginAge.getDateFrom(dataModel.getPatient().getDateOfBirth());
-              if (onOrAfter(dateAdministered, beginAgeDate) && before(dateAdministered, endAgeDate))
-              {
+              TimePeriod beginAge = conditionalSkipCondition.getBeginAge();
+              TimePeriod endAge = conditionalSkipCondition.getEndAge();
+              if (beginAge != null && beginAge.isValued() && endAge != null && endAge.isValued()) {
+                Date beginAgeDate = beginAge.getDateFrom(dataModel.getPatient().getDateOfBirth());
+                Date endAgeDate = beginAge.getDateFrom(dataModel.getPatient().getDateOfBirth());
+                if (onOrAfter(dateAdministered, beginAgeDate) && before(dateAdministered, endAgeDate)) {
+                  inRange = true;
+                }
+              }
+            }
+            {
+              Date startDate = conditionalSkipCondition.getStartDate();
+              Date endDate = conditionalSkipCondition.getEndDate();
+              if (onOrAfter(dateAdministered, startDate) && before(dateAdministered, endDate)) {
                 inRange = true;
               }
             }
+            if (inRange) {
+              Antigen antigen = conditionalSkipCondition.getSeriesDose().getAntigenSeries().getTargetDisease();
+              Evaluation evaluation = vaccineDoseAdministered.getEvaluationMap().get(antigen);
+              if (evaluation != null && evaluation.getEvaluationStatus() != null) {
+                if (conditionalSkipCondition.getDoseType() == DoseType.VALID
+                    && evaluation.getEvaluationStatus() == EvaluationStatus.VALID) {
+                  count++;
+                } else if (conditionalSkipCondition.getDoseType() == DoseType.TOTAL) {
+                  count++;
+                }
+              }
+
             }
-            {
-              
-            }
-            count++;
           }
         }
-
         return count;
       }
     };
@@ -59,14 +76,12 @@ public class BusinessRuleTable {
             + "<ul><li> \"Valid\" if the conditional skip dose type is \"Valid\" OR<li>"
             + "<li> of any status if the conditional skip dose type is \"Total\"</li></ul></li></ul>");
   }
-  
-  private static boolean onOrAfter(Date date, Date refDate)
-  {
+
+  private static boolean onOrAfter(Date date, Date refDate) {
     return !date.before(refDate);
   }
-  
-  private static boolean before(Date date, Date refDate)
-  {
+
+  private static boolean before(Date date, Date refDate) {
     return date.before(refDate);
   }
 }
