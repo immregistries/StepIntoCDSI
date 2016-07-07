@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 
 public class DataModelViewCvxServlet extends ForecastServlet {
   @Override
@@ -29,7 +30,22 @@ public class DataModelViewCvxServlet extends ForecastServlet {
       out.println("    <link rel=\"stylesheet\" type=\"text/css\" href=\"index.css\">");
       out.println("  </head>");
       out.println("  <body>");
+      out.println("  <table>");
+      out.println("   <tr>");
+      out.println("      <th>Cvx Code</td>");
+      out.println("      <th>Short Description</td>");
+      out.println("   </tr>");
+      dataModel.getCvxMap();
+      for(VaccineType vaccineType: dataModel.getCvxMap().values()){
+        // I am most likely doing the wrong thing here. :)
+        out.println("   <tr>");
+        out.println("      <td>" + vaccineType.getCvxCode() + "</td>");
+        out.println("      <td>" + vaccineType.getShortDescription() + "</td>");
+        out.println("   </tr>");
+
+      }
       // Do stuff here .....
+      out.println("  </table>");
       out.println("  </body>");
       out.println("</html>");
     } catch (Exception e) {
