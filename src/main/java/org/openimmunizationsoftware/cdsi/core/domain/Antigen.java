@@ -55,4 +55,5 @@ public class Antigen {
     }
     return super.equals(obj);
   }
+  
 }

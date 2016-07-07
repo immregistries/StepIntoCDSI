@@ -48,4 +48,9 @@ public class VaccineGroup
   public void setVaccineList(List<Vaccine> vaccineList) {
     this.vaccineList = vaccineList;
   }
+  
+  @Override
+  public String toString() {
+    return name;
+  }
 }

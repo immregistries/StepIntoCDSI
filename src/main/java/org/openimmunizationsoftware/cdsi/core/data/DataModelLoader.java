@@ -564,7 +564,7 @@ public class DataModelLoader {
             if (grandchildNode.getNodeType() == Node.ELEMENT_NODE) {
               if (grandchildNode.getNodeName().equals("name")) {
                 String nameValue = DomUtils.getInternalValue(grandchildNode);
-                vaccineGroup = dataModel.getVaccineGroup(nameValue);
+                vaccineGroup = dataModel.getOrCreateVaccineGroup(nameValue);
               } else if (vaccineGroup != null && grandchildNode.getNodeName().equals("antigen")) {
                 String antigenName = DomUtils.getInternalValue(grandchildNode);
                 Antigen antigen = dataModel.getOrCreateAntigen(antigenName);
