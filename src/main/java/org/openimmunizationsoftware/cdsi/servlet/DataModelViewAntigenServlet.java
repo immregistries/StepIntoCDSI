@@ -20,7 +20,7 @@ public class DataModelViewAntigenServlet extends ForecastServlet {
   
   public static String makeLink(Antigen antigen)
   {
-    return "<a href=\"" + SERVLET_NAME + "?" + PARAM_SEARCH + "=" + antigen.getName() + "\" target=\"_new\">" + antigen.getName() + "</a>";
+    return "<a href=\"" + SERVLET_NAME + "?" + PARAM_SEARCH + "=" + antigen.getName() + "\" target=\"dataModelView\">" + antigen.getName() + "</a>";
   }
 
   @Override
