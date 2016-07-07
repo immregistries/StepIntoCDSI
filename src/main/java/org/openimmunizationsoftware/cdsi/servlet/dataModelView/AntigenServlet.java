@@ -93,8 +93,7 @@ public class AntigenServlet extends MainServlet {
   private void printCvxList(Antigen antigen, PrintWriter out) {
     out.println("        <td>");
     for (VaccineType cvx : antigen.getCvxList()) {
-      out.println(
-          "         <ul><a href=\"dataModelViewCvx?search_term=" + cvx.getCvxCode() + "\">" + cvx + "</a></ul>");
+      out.println("         <ul>" + CvxServlet.makeLink(cvx) + "</ul>");
     }
     out.println("        </td>");
   }

@@ -19,7 +19,10 @@ import java.io.PrintWriter;
  */
 public class ScheduleServlet extends MainServlet {
 
-  public static final String SERVLET_NAME = "dataModelViewAntigen";
+  public static final String SERVLET_NAME = "dataModelViewSchedule";
+  private static final String PARAM_VIEW = "view";
+  private static final String SCHED_NAME = "scheduleName";
+  private static final String ANTIGEN_SERIES = "antigenSeries";
 
   /*
    * public static String makeLink(Schedule schedule) { return "<a href=\"" +
@@ -35,17 +38,36 @@ public class ScheduleServlet extends MainServlet {
     }
 
     resp.setContentType("text/html");
+    String view = req.getParameter(PARAM_VIEW);
+    if (view == null) {
+      view = "";
+    }
 
     PrintWriter out = new PrintWriter(resp.getOutputStream());
     try {
       printHeader(out, "Schedule");
-      printSchedule(dataModel, out);
+      if (view.equals("antigen")) {
+        for (Schedule schedule : dataModel.getScheduleList()) {
+          if (schedule.getScheduleName().equals(SCHED_NAME)) {
+            for (AntigenSeries antigenSeries : schedule.getAntigenSeriesList()) {
+              if (antigenSeries.getSeriesName().equals(ANTIGEN_SERIES)) {
+                printAntigenSeries(antigenSeries, out);
+              }
+            }
+          }
+        }
+
+      } else {
+        printSchedule(dataModel, out);
+
+      }
       printFooter(out);
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
       out.close();
     }
+
   }
 
   private void printSchedule(DataModel dataModel, PrintWriter out) {
@@ -75,7 +97,7 @@ public class ScheduleServlet extends MainServlet {
     out.println("          <ul>");
 
     for (AntigenSeries antigenSeries : schedule.getAntigenSeriesList()) {
-      out.println("       <li>" + antigenSeries.getSeriesName() + "</li>");
+      out.println("          <li><a href=\"" + SERVLET_NAME + "?" + PARAM_VIEW + "=antigen&" + SCHED_NAME + "=" + schedule.getScheduleName() + "&" + ANTIGEN_SERIES + "=" + antigenSeries.getSeriesName() + "\" target=\"dataModelView\">" + antigenSeries.getSeriesName() + "</a></li>");
     }
     out.println("          </ul>");
 
@@ -86,13 +108,36 @@ public class ScheduleServlet extends MainServlet {
         out.println("          <ul>");
 
         for (ClinicalHistory clinicalHistory : schedule.getImmunity().getClinicalHistoryList()) {
-          out.println("       <li>" + clinicalHistory.getImmunityGuideline() + "</li>");
+          out.println("          <li>" + clinicalHistory.getImmunityGuideline() + "</li>");
         }
         out.println("          </ul>");
       }
       out.println("        </td>");
       out.println("      </tr>");
     }
+  }
+  private void printAntigenSeries(AntigenSeries antigenSeries, PrintWriter out) {
+    out.println("    <table>");
+    out.println("      <tr>");
+    out.println("        <caption>Antigen Series</caption>");
+    out.println("        <th>Series Name</th>");
+    out.println("        <th>Series Dose List</th>");
+    out.println("        <th>Select Best Patient Series List</th>");
+    out.println("        <th>Target Disease</th>");
+    out.println("        <th>Vaccine Group</th>");
+
+    out.println("      </tr>");
+    out.println("      <tr>");
+    out.println("        <td>" + antigenSeries.getSeriesName() + "</td>");
+    out.println("        <td>" + antigenSeries.getSeriesDoseList() + "</td>");
+    out.println("        <td>" + antigenSeries.getSelectBestPatientSeriesList() + "</td>");
+    out.println("        <td>" + antigenSeries.getTargetDisease() + "</td>");
+    out.println("        <td>" + antigenSeries.getVaccineGroup() + "</td>");
+
+    out.println("      </tr>");
+
+    out.println("    </table>");
+
   }
 
 }
