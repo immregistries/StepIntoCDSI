@@ -32,7 +32,7 @@ public class PatientServlet extends MainServlet {
       return "";
     }
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-    return "<a href=\"" + SERVLET_NAME + "\">Patient born " + sdf.format(patient.getDateOfBirth()) + "</a>";
+    return "<a href=\"" + SERVLET_NAME + "\" target=\"dataModelView\">Patient born " + sdf.format(patient.getDateOfBirth()) + "</a>";
   }
 
   @Override

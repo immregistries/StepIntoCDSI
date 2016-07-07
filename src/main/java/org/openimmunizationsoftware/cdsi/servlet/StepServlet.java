@@ -76,6 +76,8 @@ public class StepServlet extends ForecastServlet {
     } else {
       try {
         out.println("  <a href=\"step\"><img src=\"Logo Large.png\" height=\"120\" align=\"left\"/></a>");
+        out.println("  <a href=\"dataModelView\" target=\"dataModelView\">View Data Model</a>");
+        out.println("<br clear=\"all\"/>");
         if (dataModel.getLogicStepPrevious() == null) {
           out.println("<h1>CDSi Demonstration System</h1> ");
           if (req.getParameter(LogicStep.PARAM_EVAL_DATE) == null) {
@@ -104,7 +106,6 @@ public class StepServlet extends ForecastServlet {
         out.println("</pre>");
       }
     }
-    out.println("        <hr/>");
     out.println("      </td>");
     out.println("      <td width=\"1010\" valign=\"top\" class=\"mainTable\">");
     if (dataModel.getLogicStepPrevious() == null || dataModel.getLogicStep() == null) {
@@ -115,40 +116,39 @@ public class StepServlet extends ForecastServlet {
           + dataModel.getLogicStep().getLogicStepType().getName()
           + ".png\" width=\"1000\" onclick=\"document.getElementById('stepForm').submit();\">");
     }
-    out.println("        <br/><input type=\"submit\" name=\"submit\" value=\"Next Step\"/>");
-    out.println("        <select name=\"jumpTo\">");
-    for (LogicStepType logicStepType : LogicStep.STEPS) {
-      String display = logicStepType.getDisplay();
-      if (logicStepType.isIndent()) {
-        display = " + " + display;
+    if (dataModel.getLogicStepPrevious() != null || req.getParameter(LogicStep.PARAM_EVAL_DATE) != null) {
+      out.println("        <br/><input type=\"submit\" name=\"submit\" value=\"Next Step\"/>");
+      out.println("        <select name=\"jumpTo\">");
+      for (LogicStepType logicStepType : LogicStep.STEPS) {
+        String display = logicStepType.getDisplay();
+        if (logicStepType.isIndent()) {
+          display = " + " + display;
+        }
+        if (dataModel.getLogicStep().getLogicStepType() == logicStepType) {
+          out.println("          <option value=\"" + logicStepType.getName() + "\" selected>" + display + "</option>");
+        } else {
+          out.println("          <option value=\"" + logicStepType.getName() + "\">" + display + "</option>");
+        }
       }
-      if (dataModel.getLogicStep().getLogicStepType() == logicStepType) {
-        out.println("          <option value=\"" + logicStepType.getName() + "\" selected>" + display + "</option>");
-      } else {
-        out.println("          <option value=\"" + logicStepType.getName() + "\">" + display + "</option>");
-      }
-    }
-    out.println("        </select>");
-    out.println("        <input type=\"submit\" name=\"submit\" value=\"Jump\"/>");
-    out.println("        <input type=\"hidden\" name=\"action\" value=\"next\"/>");
-    out.println("        <a href=\"dataModelView\" target=\"_new\" style=\"display: block;\">View Data Model</a>");
+      out.println("        </select>");
+      out.println("        <input type=\"submit\" name=\"submit\" value=\"Jump\"/>");
+      out.println("        <input type=\"hidden\" name=\"action\" value=\"next\"/>");
 
-
-    try {
-      if (dataModel.getLogicStep() != null) {
-        dataModel.getLogicStep().printPre(out);
+      try {
+        if (dataModel.getLogicStep() != null) {
+          dataModel.getLogicStep().printPre(out);
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+        out.println("<pre>");
+        e.printStackTrace(out);
+        out.println("</pre>");
       }
-    } catch (Exception e) {
-      e.printStackTrace();
-      out.println("<pre>");
-      e.printStackTrace(out);
-      out.println("</pre>");
     }
     out.println("      </td>");
     out.println("    </tr>");
     out.println("  </table>");
     out.println("  </form>");
-    out.println("<a href=\"dataModelView\" target=\"_new\">View Data Model</a>");
     out.println("  </body>");
     out.println("</html>");
     out.close();

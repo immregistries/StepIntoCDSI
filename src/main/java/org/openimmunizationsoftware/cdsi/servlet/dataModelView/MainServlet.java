@@ -254,9 +254,9 @@ public class MainServlet extends ForecastServlet {
     out.println("     <tr>");
     out.println("       <td>" + n(liveVirusConflict.getSchedule()) + "</td>");
 
-    out.println("       <td>" + liveVirusConflict.getPreviousVaccineType() + "</td>");
+    out.println("       <td>" + CvxServlet.makeLink(liveVirusConflict.getPreviousVaccineType()) + "</td>");
 
-    out.println("       <td>" + liveVirusConflict.getCurrentVaccineType() + "</td>");
+    out.println("       <td>" + CvxServlet.makeLink(liveVirusConflict.getCurrentVaccineType()) + "</td>");
 
     out.println("       <td>" + liveVirusConflict.getConflictBeginInterval() + "</td>");
 

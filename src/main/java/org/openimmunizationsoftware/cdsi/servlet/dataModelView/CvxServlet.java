@@ -60,7 +60,7 @@ public class CvxServlet extends MainServlet {
         VaccineType vaccineType = dataModel.getCvxMap().get(search_term);
         out.println("   <tr>");
         out.println("      <td>" + vaccineType.getCvxCode() + "</td>");
-        out.println("      <td>" + vaccineType.getShortDescription() + "</td>");
+        out.println("      <td>" + makeLink(vaccineType) + "</td>");
         out.println("   </tr>");
       } else {
         for(VaccineType vaccineType: dataModel.getCvxMap().values()){
