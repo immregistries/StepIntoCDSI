@@ -94,9 +94,7 @@ public class DataModelViewAntigenServlet extends ForecastServlet {
   private void printCvxList(Antigen antigen, PrintWriter out) {
     out.println("        <td>");
     for(VaccineType cvx:antigen.getCvxList()) {
-      out.println("       <li>");
-      out.println("         <ul><a href=\"dataModelViewCvx?search_term=" + cvx + "\">" + cvx + "</a></ul>");
-      out.println("       </li>");
+      out.println("         <ul><a href=\"dataModelViewCvx?search_term=" + cvx.getCvxCode() + "\">" + cvx + "</a></ul>");
     }
     out.println("        </td>");
   }
