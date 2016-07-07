@@ -50,7 +50,7 @@ public class DataModelViewAntigenServlet extends ForecastServlet {
       out.println("  <body>");
       out.println("    <form action=\"" + SERVLET_NAME + "\">");
 
-      out.println("      <input type=\"text\" name=\"search_term\"><br>");
+      out.println("      <input type=\"text\" name=\""+ PARAM_SEARCH + "\"><br>");
       out.println("      <input type=\"submit\" value=\"Submit\">");
 
       out.println("    </form>");
