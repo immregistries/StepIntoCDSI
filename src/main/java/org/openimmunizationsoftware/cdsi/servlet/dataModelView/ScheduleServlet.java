@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * Created by Eric on 7/7/16.
@@ -20,9 +22,12 @@ import java.io.PrintWriter;
 public class ScheduleServlet extends MainServlet {
 
   public static final String SERVLET_NAME = "dataModelViewSchedule";
+  
   private static final String PARAM_VIEW = "view";
-  private static final String SCHED_NAME = "scheduleName";
-  private static final String ANTIGEN_SERIES = "antigenSeries";
+  private static final String PARAM_SCHED_NAME = "scheduleName";
+  private static final String PARAM_ANTIGEN_SERIES = "antigenSeries";
+  
+  private static final String VIEW_ANTIGEN = "antigen";
 
   /*
    * public static String makeLink(Schedule schedule) { return "<a href=\"" +
@@ -46,20 +51,20 @@ public class ScheduleServlet extends MainServlet {
     PrintWriter out = new PrintWriter(resp.getOutputStream());
     try {
       printHeader(out, "Schedule");
-      if (view.equals("antigen")) {
+      if (view.equals(VIEW_ANTIGEN)) {
+        String scheduleName = req.getParameter(PARAM_SCHED_NAME);
+        String antigenSeriesName = req.getParameter(PARAM_ANTIGEN_SERIES);
         for (Schedule schedule : dataModel.getScheduleList()) {
-          if (schedule.getScheduleName().equals(SCHED_NAME)) {
+          if (schedule.getScheduleName().equals(scheduleName)) {
             for (AntigenSeries antigenSeries : schedule.getAntigenSeriesList()) {
-              if (antigenSeries.getSeriesName().equals(ANTIGEN_SERIES)) {
+              if (antigenSeries.getSeriesName().equals(antigenSeriesName)) {
                 printAntigenSeries(antigenSeries, out);
               }
             }
           }
         }
-
       } else {
         printSchedule(dataModel, out);
-
       }
       printFooter(out);
     } catch (Exception e) {
@@ -97,7 +102,15 @@ public class ScheduleServlet extends MainServlet {
     out.println("          <ul>");
 
     for (AntigenSeries antigenSeries : schedule.getAntigenSeriesList()) {
-      out.println("          <li><a href=\"" + SERVLET_NAME + "?" + PARAM_VIEW + "=antigen&" + SCHED_NAME + "=" + schedule.getScheduleName() + "&" + ANTIGEN_SERIES + "=" + antigenSeries.getSeriesName() + "\" target=\"dataModelView\">" + antigenSeries.getSeriesName() + "</a></li>");
+      try {
+        String link = SERVLET_NAME + "?" + PARAM_VIEW + "=" + VIEW_ANTIGEN + "&" + PARAM_SCHED_NAME + "="
+            + URLEncoder.encode(schedule.getScheduleName(), "UTF-8") + "&" + PARAM_ANTIGEN_SERIES + "="
+            + URLEncoder.encode(antigenSeries.getSeriesName(), "UTF-8");
+        out.println("          <li><a href=\"" + link + "\" target=\"dataModelView\">" + antigenSeries.getSeriesName()
+            + "</a></li>");
+      } catch (UnsupportedEncodingException uee) {
+        uee.printStackTrace();
+      }
     }
     out.println("          </ul>");
 
@@ -116,6 +129,7 @@ public class ScheduleServlet extends MainServlet {
       out.println("      </tr>");
     }
   }
+
   private void printAntigenSeries(AntigenSeries antigenSeries, PrintWriter out) {
     out.println("    <table>");
     out.println("      <tr>");
