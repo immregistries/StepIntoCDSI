@@ -1,4 +1,4 @@
-package org.openimmunizationsoftware.cdsi.servlet;
+package org.openimmunizationsoftware.cdsi.servlet.dataModelView;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -10,8 +10,9 @@ import javax.servlet.http.HttpSession;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
+import org.openimmunizationsoftware.cdsi.servlet.ForecastServlet;
 
-public class DataModelViewCvxServlet extends ForecastServlet {
+public class CvxServlet extends MainServlet {
 
   public static final String SERVLET_NAME = "dataModelViewCvx";
 
@@ -40,13 +41,7 @@ public class DataModelViewCvxServlet extends ForecastServlet {
 
 
     try {
-      out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\">");
-      out.println("<html>");
-      out.println("  <head>");
-      out.println("    <title>CDSi - Data Model View - CVX</title>");
-      out.println("    <link rel=\"stylesheet\" type=\"text/css\" href=\"index.css\">");
-      out.println("  </head>");
-      out.println("  <body>");
+      printHeader(out, "CVX");
 
       out.println("    <form action=\"" + SERVLET_NAME + "\">");
 
@@ -78,8 +73,7 @@ public class DataModelViewCvxServlet extends ForecastServlet {
       }
       // Do stuff here .....
       out.println("  </table>");
-      out.println("  </body>");
-      out.println("</html>");
+      printFooter(out);
     } catch (Exception e) {
       e.printStackTrace();
     } finally {

@@ -26,23 +26,27 @@
     </servlet>
 	<servlet>
         <servlet-name>dataModelView</servlet-name>
-        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.DataModelViewServlet</servlet-class>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.dataModelView.MainServlet</servlet-class>
+    </servlet>
+	<servlet>
+        <servlet-name>dataModelViewPatient</servlet-name>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.dataModelView.PatientServlet</servlet-class>
     </servlet>
 	<servlet>
         <servlet-name>dataModelViewCvx</servlet-name>
-        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.DataModelViewCvxServlet</servlet-class>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.dataModelView.CvxServlet</servlet-class>
     </servlet>
 	<servlet>
         <servlet-name>dataModelViewAntigen</servlet-name>
-        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.DataModelViewAntigenServlet</servlet-class>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.dataModelView.AntigenServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>dataModelViewVaccineGroup</servlet-name>
-        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.DataModelViewVaccineGroupServlet</servlet-class>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.dataModelView.VaccineGroupServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>dataModelViewSchedule</servlet-name>
-        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.DataModelViewScheduleServlet</servlet-class>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.dataModelView.ScheduleServlet</servlet-class>
     </servlet>
     
     <servlet-mapping>
@@ -60,6 +64,10 @@
     <servlet-mapping>
         <servlet-name>dataModelView</servlet-name>
         <url-pattern>/dataModelView</url-pattern>
+    </servlet-mapping>	 
+    <servlet-mapping>
+        <servlet-name>dataModelViewPatient</servlet-name>
+        <url-pattern>/dataModelViewPatient</url-pattern>
     </servlet-mapping>	 
     <servlet-mapping>
         <servlet-name>dataModelViewCvx</servlet-name>

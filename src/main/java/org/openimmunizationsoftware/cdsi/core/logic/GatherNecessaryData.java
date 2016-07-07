@@ -16,7 +16,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.Vaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.DoseCondition;
-import org.openimmunizationsoftware.cdsi.servlet.DataModelViewAntigenServlet;
+import org.openimmunizationsoftware.cdsi.servlet.dataModelView.AntigenServlet;
 
 public class GatherNecessaryData extends LogicStep
 {
@@ -178,7 +178,7 @@ public class GatherNecessaryData extends LogicStep
           out.print(", ");
         }
         first = false;
-        out.print(DataModelViewAntigenServlet.makeLink(antigen));
+        out.print(AntigenServlet.makeLink(antigen));
       }
       out.println("</td>");
       out.println("     </tr>");

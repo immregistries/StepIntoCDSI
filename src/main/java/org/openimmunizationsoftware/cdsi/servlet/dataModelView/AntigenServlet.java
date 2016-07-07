@@ -1,4 +1,4 @@
-package org.openimmunizationsoftware.cdsi.servlet;
+package org.openimmunizationsoftware.cdsi.servlet.dataModelView;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,16 +11,17 @@ import javax.servlet.http.HttpSession;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
+import org.openimmunizationsoftware.cdsi.servlet.ForecastServlet;
 
-public class DataModelViewAntigenServlet extends ForecastServlet {
+public class AntigenServlet extends MainServlet {
 
   public static final String SERVLET_NAME = "dataModelViewAntigen";
-  
+
   private static final String PARAM_SEARCH = "search_term";
-  
-  public static String makeLink(Antigen antigen)
-  {
-    return "<a href=\"" + SERVLET_NAME + "?" + PARAM_SEARCH + "=" + antigen.getName() + "\" target=\"dataModelView\">" + antigen.getName() + "</a>";
+
+  public static String makeLink(Antigen antigen) {
+    return "<a href=\"" + SERVLET_NAME + "?" + PARAM_SEARCH + "=" + antigen.getName() + "\" target=\"dataModelView\">"
+        + antigen.getName() + "</a>";
   }
 
   @Override
@@ -38,25 +39,17 @@ public class DataModelViewAntigenServlet extends ForecastServlet {
       search_term = "";
     }
 
-
     PrintWriter out = new PrintWriter(resp.getOutputStream());
     try {
-      out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\">");
-      out.println("<html>");
-      out.println("  <head>");
-      out.println("    <title>CDSi - Data Model View - Antigen</title>");
-      out.println("    <link rel=\"stylesheet\" type=\"text/css\" href=\"index.css\">");
-      out.println("  </head>");
-      out.println("  <body>");
+      printHeader(out, "Antigen");
       out.println("    <form action=\"" + SERVLET_NAME + "\">");
 
-      out.println("      <input type=\"text\" name=\""+ PARAM_SEARCH + "\"><br>");
+      out.println("      <input type=\"text\" name=\"" + PARAM_SEARCH + "\"><br>");
       out.println("      <input type=\"submit\" value=\"Submit\">");
 
       out.println("    </form>");
       printAntigen(dataModel, search_term, out);
-      out.println("  </body>");
-      out.println("</html>");
+      printFooter(out);
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
@@ -84,7 +77,6 @@ public class DataModelViewAntigenServlet extends ForecastServlet {
     }
     out.println("    </table>");
 
-
   }
 
   private void printRowAntigen(Antigen antigen, PrintWriter out) {
@@ -100,12 +92,11 @@ public class DataModelViewAntigenServlet extends ForecastServlet {
 
   private void printCvxList(Antigen antigen, PrintWriter out) {
     out.println("        <td>");
-    for(VaccineType cvx:antigen.getCvxList()) {
-      out.println("         <ul><a href=\"dataModelViewCvx?search_term=" + cvx.getCvxCode() + "\">" + cvx + "</a></ul>");
+    for (VaccineType cvx : antigen.getCvxList()) {
+      out.println(
+          "         <ul><a href=\"dataModelViewCvx?search_term=" + cvx.getCvxCode() + "\">" + cvx + "</a></ul>");
     }
     out.println("        </td>");
   }
-
-
 
 }

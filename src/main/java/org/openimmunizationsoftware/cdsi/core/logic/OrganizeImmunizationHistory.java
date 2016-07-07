@@ -9,7 +9,7 @@ import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
-import org.openimmunizationsoftware.cdsi.servlet.DataModelViewAntigenServlet;
+import org.openimmunizationsoftware.cdsi.servlet.dataModelView.AntigenServlet;
 
 public class OrganizeImmunizationHistory extends LogicStep
 {
@@ -96,7 +96,7 @@ public class OrganizeImmunizationHistory extends LogicStep
       out.println("    <td>" + aar.getTradeName() + " (" + aar.getVaccineType().getCvxCode() + "/"
           + aar.getManufacturer() + ") - " + aar.getVaccineType().getShortDescription() + "</td>");
       out.println("    <td>" + sdf.format(aar.getDateAdministered()) + "</td>");
-      out.println("    <td>" + DataModelViewAntigenServlet.makeLink(aar.getAntigen()) + "</td>");
+      out.println("    <td>" + AntigenServlet.makeLink(aar.getAntigen()) + "</td>");
       out.println("  </tr>");
     }
     out.println("</table>");
