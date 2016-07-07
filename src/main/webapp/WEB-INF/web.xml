@@ -36,6 +36,10 @@
         <servlet-name>dataModelViewAntigen</servlet-name>
         <servlet-class>org.openimmunizationsoftware.cdsi.servlet.DataModelViewAntigenServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>dataModelViewVaccineGroup</servlet-name>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.DataModelViewVaccineGroupServlet</servlet-class>
+    </servlet>
     
     <servlet-mapping>
         <servlet-name>forecast</servlet-name>
@@ -60,11 +64,14 @@
     <servlet-mapping>
         <servlet-name>dataModelViewAntigen</servlet-name>
         <url-pattern>/dataModelViewAntigen</url-pattern>
-    </servlet-mapping>	 
-    
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>dataModelViewVaccineGroup</servlet-name>
+        <url-pattern>/dataModelViewVaccineGroup</url-pattern>
+    </servlet-mapping>
 
 
-	<filter>
+    <filter>
 		<filter-name>wicket.core</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
