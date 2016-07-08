@@ -151,12 +151,11 @@ public class ScheduleServlet extends MainServlet {
     }
     out.println("        </td>");
     out.println("        <td>");
-    if (antigenSeries.getSelectBestPatientSeriesList().size() > 0) {
+    if (antigenSeries.getSelectBestPatientSeries() != null) {
       out.println("          <ul>");
 
-      for (SelectBestPatientSeries selectBestPatientSeries : antigenSeries.getSelectBestPatientSeriesList()) {
-        out.println("          <li>" + selectBestPatientSeries.getSeriesPreference() + "</li>");
-      }
+
+        out.println("          <li>" + antigenSeries.getSelectBestPatientSeries().getSeriesPreference() + "</li>");
       out.println("          </ul>");
     }
     out.println("        </td>");

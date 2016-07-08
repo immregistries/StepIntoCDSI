@@ -205,7 +205,7 @@ public class DataModelLoader {
             antigenSeries.setVaccineGroup(vaccineGroup);
           } else if (childNode.getNodeName().equals("selectBest")) {
             SelectBestPatientSeries selectBestPatientSeries = new SelectBestPatientSeries();
-            antigenSeries.getSelectBestPatientSeriesList().add(selectBestPatientSeries);
+            antigenSeries.setSelectBestPatientSeries(selectBestPatientSeries);
             NodeList grandchildList = parentNode.getChildNodes();
             for (int k = 0; k < grandchildList.getLength(); k++) {
               Node grandchildNode = grandchildList.item(k);
