@@ -2,6 +2,7 @@ package org.openimmunizationsoftware.cdsi.servlet.dataModelView;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.Immunity;
+import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
+import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.servlet.ForecastServlet;
 
@@ -19,13 +23,13 @@ public class LiveVirusConflictServlet extends MainServlet {
   private static final String PARAM_SEARCH = "search_term";
 
   public static String makeLink(VaccineType vaccineType) {
-    return ""; // "<a href=\"" + SERVLET_NAME + "?" + PARAM_SEARCH + "=" +
-               // vaccineType.getCvxCode() + "\" target=\"dataModelView\">" +
-               // vaccineType.getShortDescription() + "</a>";
+    return "";  // "<a href=\"" + SERVLET_NAME + "?" + PARAM_SEARCH + "=" +
+                // vaccineType.getCvxCode() + "\" target=\"dataModelView\">" +
+                // vaccineType.getShortDescription() + "</a>";
   }
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void  doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     HttpSession session = req.getSession(true);
     DataModel dataModel = (DataModel) session.getAttribute("dataModel");
     if (dataModel == null) {
@@ -42,12 +46,37 @@ public class LiveVirusConflictServlet extends MainServlet {
 
     try {
       printHeader(out, "Live Virus Conflict");
-
+      out.println("   <table>");
+      out.println("     <tr>");
+      out.println("       <caption>Live Virus Conflict</caption>");
+      out.println("       <th>Schedule</th>");
+      out.println("       <th>Previous Vaccine Type</th>");
+      out.println("       <th>Current Vaccine Type</th>");
+      out.println("       <th>Conflict Begin Interval</th>");
+      out.println("       <th>Minimal Conflict End Interval</th>");
+      out.println("       <th>Conflict End Interval</th>");
+      out.println("     </tr>");
+      for (LiveVirusConflict liveVirusConflict : dataModel.getLiveVirusConflictList()) {
+        printRowLiveVirusConflict(liveVirusConflict, out);
+      }
+      out.println("   </table>");
       printFooter(out);
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
       out.close();
     }
+  }
+
+
+  private void printRowLiveVirusConflict(LiveVirusConflict liveVirusConflict, PrintWriter out) {
+    out.println("     <tr>");
+    out.println("       <td>" + n(liveVirusConflict.getSchedule()) + "</td>");
+    out.println("       <td>" + CvxServlet.makeLink(liveVirusConflict.getPreviousVaccineType()) + "</td>");
+    out.println("       <td>" + CvxServlet.makeLink(liveVirusConflict.getCurrentVaccineType()) + "</td>");
+    out.println("       <td>" + liveVirusConflict.getConflictBeginInterval() + "</td>");
+    out.println("       <td>" + liveVirusConflict.getMinimalConflictEndInterval() + "</td>");
+    out.println("       <td>" + liveVirusConflict.getConflictEndInterval() + "</td>");
+    out.println("     </tr>");
   }
 }

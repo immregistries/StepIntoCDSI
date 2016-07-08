@@ -182,14 +182,7 @@ public class PatientServlet extends MainServlet {
     // out.println(" <td></td>");
     out.println("     </tr>");
   }
-
-  private String n(Object o) {
-    if (o == null) {
-      return "<center>-</center>";
-    } else {
-      return o.toString();
-    }
-  }
+  
 
   private String n(Date d) {
     if (d == null) {
@@ -261,32 +254,6 @@ public class PatientServlet extends MainServlet {
     out.println("       <td>" + liveVirusConflict.getMinimalConflictEndInterval() + "</td>");
 
     out.println("       <td>" + liveVirusConflict.getConflictEndInterval() + "</td>");
-    out.println("     </tr>");
-  }
-
-  private void printRowImmunity(Immunity immunity, PrintWriter out) {
-    // out.println(" <tr>");
-    // out.println(" <td>" + immunity.getAntigen() + "</td>");
-    //
-    // out.println(" <td>" + immunity.getImmunityLanguage() + "</td>");
-    //
-    // out.println(" <td>" + immunity.getConcept() + "</td>");
-    //
-    // out.println(" <td>" + immunity.getConceptCode() + "</td>");
-    //
-    // out.println(" <td>" + immunity.getConceptText() + "</td>");
-    //
-    // out.println(" </tr>");
-  }
-
-  private void printRowTargetDoseList(TargetDose targetDose, PrintWriter out) {
-    out.println("     <tr>");
-    out.println("       <td>" + targetDose.getTargetDoseStatus() + "</td>");
-
-    out.println("       <td>" + targetDose.getTrackedSeriesDose() + "</td>");
-
-    out.println("       <td>" + targetDose.getSatisfiedByVaccineDoseAdministered() + "</td>");
-
     out.println("     </tr>");
   }
 }

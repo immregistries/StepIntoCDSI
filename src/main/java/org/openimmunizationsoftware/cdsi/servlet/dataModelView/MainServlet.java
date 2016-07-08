@@ -70,7 +70,7 @@ public class MainServlet extends ForecastServlet {
     out.println("</p>");
   }
 
-  private String n(Object o) {
+  public String n(Object o) {
     if (o == null) {
       return "<center>-</center>";
     } else {
@@ -96,21 +96,6 @@ public class MainServlet extends ForecastServlet {
     out.println("     </tr>");
     out.println("   </table>");
 
-    if (dataModel.getImmunityList() != null && dataModel.getImmunityList().size() > 0) {
-      out.println("   <table>");
-      out.println("     <tr>");
-      out.println("       <caption>Immunity List</caption>");
-      out.println("       <th>Antigen</th>");
-      out.println("       <th>Immunity Language</th>");
-      out.println("       <th>Concept</th>");
-      out.println("       <th>Concept Code</th>");
-      out.println("       <th>Concept Text</th>");
-      out.println("     </tr>");
-      for (Immunity immunity : dataModel.getImmunityList()) {
-        printRowImmunity(immunity, out);
-      }
-      out.println("   </table>");
-    }
 
     if (dataModel.getTargetDoseList() != null) {
       out.println("   <table>");
@@ -123,21 +108,6 @@ public class MainServlet extends ForecastServlet {
       for (TargetDose targetDose : dataModel.getTargetDoseList()) {
         printRowTargetDoseList(targetDose, out);
       }
-    }
-    out.println("   </table>");
-
-    out.println("   <table>");
-    out.println("     <tr>");
-    out.println("       <caption>Live Virus Conflict</caption>");
-    out.println("       <th>Schedule</th>");
-    out.println("       <th>Previous Vaccine Type</th>");
-    out.println("       <th>Current Vaccine Type</th>");
-    out.println("       <th>Conflict Begin Interval</th>");
-    out.println("       <th>Minimal Conflict End Interval</th>");
-    out.println("       <th>Conflict End Interval</th>");
-    out.println("     </tr>");
-    for (LiveVirusConflict liveVirusConflict : dataModel.getLiveVirusConflictList()) {
-      printRowLiveVirusConflict(liveVirusConflict, out);
     }
     out.println("   </table>");
 
@@ -251,38 +221,9 @@ public class MainServlet extends ForecastServlet {
     }
   }
 
-  private void printRowLiveVirusConflict(LiveVirusConflict liveVirusConflict, PrintWriter out) {
-    out.println("     <tr>");
-    out.println("       <td>" + n(liveVirusConflict.getSchedule()) + "</td>");
 
-    out.println("       <td>" + CvxServlet.makeLink(liveVirusConflict.getPreviousVaccineType()) + "</td>");
 
-    out.println("       <td>" + CvxServlet.makeLink(liveVirusConflict.getCurrentVaccineType()) + "</td>");
-
-    out.println("       <td>" + liveVirusConflict.getConflictBeginInterval() + "</td>");
-
-    out.println("       <td>" + liveVirusConflict.getMinimalConflictEndInterval() + "</td>");
-
-    out.println("       <td>" + liveVirusConflict.getConflictEndInterval() + "</td>");
-    out.println("     </tr>");
-  }
-
-  private void printRowImmunity(Immunity immunity, PrintWriter out) {
-    // out.println(" <tr>");
-    // out.println(" <td>" + immunity.getAntigen() + "</td>");
-    //
-    // out.println(" <td>" + immunity.getImmunityLanguage() + "</td>");
-    //
-    // out.println(" <td>" + immunity.getConcept() + "</td>");
-    //
-    // out.println(" <td>" + immunity.getConceptCode() + "</td>");
-    //
-    // out.println(" <td>" + immunity.getConceptText() + "</td>");
-    //
-    // out.println(" </tr>");
-  }
-
-  private void printRowTargetDoseList(TargetDose targetDose, PrintWriter out) {
+  void printRowTargetDoseList(TargetDose targetDose, PrintWriter out) {
     out.println("     <tr>");
     out.println("       <td>" + targetDose.getTargetDoseStatus() + "</td>");
 
