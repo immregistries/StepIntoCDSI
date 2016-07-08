@@ -59,8 +59,8 @@ public class AntigenServlet extends MainServlet {
 
   private void printAntigen(DataModel dataModel, String searchParam, PrintWriter out) {
     out.println("    <table>");
+    out.println("      <caption>Antigen</caption>");
     out.println("      <tr>");
-    out.println("        <caption>Antigen</caption>");
     out.println("        <th>Name</th>");
     out.println("        <th>Vaccine Group</th>");
     out.println("        <th>Cvx List</th>");
@@ -92,9 +92,11 @@ public class AntigenServlet extends MainServlet {
 
   private void printCvxList(Antigen antigen, PrintWriter out) {
     out.println("        <td>");
+    out.println("         <ul>");
     for (VaccineType cvx : antigen.getCvxList()) {
-      out.println("         <ul>" + CvxServlet.makeLink(cvx) + "</ul>");
+      out.println("         <li>" + CvxServlet.makeLink(cvx) + "</li>");
     }
+    out.println("         </ul>");
     out.println("        </td>");
   }
 

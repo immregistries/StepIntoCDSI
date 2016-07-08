@@ -1,16 +1,16 @@
 package org.openimmunizationsoftware.cdsi.servlet.dataModelView;
 
-import org.openimmunizationsoftware.cdsi.core.data.DataModel;
-import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
-import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
-import org.openimmunizationsoftware.cdsi.servlet.ForecastServlet;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.PrintWriter;
+
+import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
 
 /**
  * Created by Eric on 7/7/16.
@@ -20,7 +20,8 @@ public class VaccineGroupServlet extends MainServlet {
   private static final String PARAM_SEARCH = "search_term";
 
   public static String makeLink(VaccineGroup vaccineGroup) {
-    return "<a href=\"" + SERVLET_NAME + "?" + PARAM_SEARCH + "=" + vaccineGroup.getName() + "\" target=\"dataModelView\">" + vaccineGroup.getName() + "</a>";
+    return "<a href=\"" + SERVLET_NAME + "?" + PARAM_SEARCH + "=" + vaccineGroup.getName()
+        + "\" target=\"dataModelView\">" + vaccineGroup.getName() + "</a>";
   }
 
   @Override
@@ -42,7 +43,7 @@ public class VaccineGroupServlet extends MainServlet {
 
       out.println("    <form action=\"" + SERVLET_NAME + "\">");
 
-      out.println("      <input type=\"text\" name=\""+ PARAM_SEARCH + "\"><br>");
+      out.println("      <input type=\"text\" name=\"" + PARAM_SEARCH + "\"><br>");
       out.println("      <input type=\"submit\" value=\"Submit\">");
 
       out.println("    </form>");
@@ -67,20 +68,28 @@ public class VaccineGroupServlet extends MainServlet {
 
         out.println("   </tr>");
       } else {
-        for(VaccineGroup vaccineGroup: dataModel.getVaccineGroupMap().values()){
-          // I am most likely doing the wrong thing here. :)
+        for (VaccineGroup vaccineGroup : dataModel.getVaccineGroupMap().values()) {
           out.println("   <tr>");
           out.println("      <td>" + makeLink(vaccineGroup) + "</td>");
           out.println("      <td>" + vaccineGroup.getVaccineList() + "</td>");
           out.println("      <td>" + vaccineGroup.getVaccineGroupForecast() + "</td>");
           out.println("      <td>" + vaccineGroup.getAdministerFullVaccineGroup() + "</td>");
-          out.println("      <td>" + vaccineGroup.getAntigenList() + "</td>");
+          out.println("      <td>");
+          if (vaccineGroup.getAntigenList().size() > 0) {
+            out.println("        <ul>");
+            for (Antigen antigen : vaccineGroup.getAntigenList()) {
+              out.println("          <li>" + AntigenServlet.makeLink(antigen) + "</li>");
+            }
+            out.println("        </ul>");
+          } else {
+            out.println("-");
+          }
+          out.println("      </td>");
           out.println("   </tr>");
         }
       }
       // Do stuff here .....
       out.println("  </table>");
-
 
       printFooter(out);
     } catch (Exception e) {
