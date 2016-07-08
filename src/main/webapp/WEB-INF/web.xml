@@ -48,6 +48,12 @@
         <servlet-name>dataModelViewSchedule</servlet-name>
         <servlet-class>org.openimmunizationsoftware.cdsi.servlet.dataModelView.ScheduleServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>dataModelViewLiveVirusConflict</servlet-name>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.dataModelView.LiveVirusConflictServlet</servlet-class>
+    </servlet>
+    
+    
     
     <servlet-mapping>
         <servlet-name>forecast</servlet-name>
@@ -84,6 +90,10 @@
     <servlet-mapping>
         <servlet-name>dataModelViewSchedule</servlet-name>
         <url-pattern>/dataModelViewSchedule</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>dataModelViewLiveVirusConflict</servlet-name>
+        <url-pattern>/dataModelViewLiveVirusConflict</url-pattern>
     </servlet-mapping>
 
 
