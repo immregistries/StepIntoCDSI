@@ -1,10 +1,7 @@
 package org.openimmunizationsoftware.cdsi.servlet.dataModelView;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
-import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
-import org.openimmunizationsoftware.cdsi.core.domain.ClinicalHistory;
-import org.openimmunizationsoftware.cdsi.core.domain.Contraindication;
-import org.openimmunizationsoftware.cdsi.core.domain.Schedule;
+import org.openimmunizationsoftware.cdsi.core.domain.*;
 import org.openimmunizationsoftware.cdsi.servlet.ForecastServlet;
 
 import javax.servlet.ServletException;
@@ -143,8 +140,26 @@ public class ScheduleServlet extends MainServlet {
     out.println("      </tr>");
     out.println("      <tr>");
     out.println("        <td>" + antigenSeries.getSeriesName() + "</td>");
-    out.println("        <td>" + antigenSeries.getSeriesDoseList() + "</td>");
-    out.println("        <td>" + antigenSeries.getSelectBestPatientSeriesList() + "</td>");
+    out.println("        <td>");
+    if (antigenSeries.getSeriesDoseList().size() > 0) {
+      out.println("          <ul>");
+
+      for (SeriesDose seriesDose : antigenSeries.getSeriesDoseList()) {
+        out.println("          <li>" + seriesDose.getDoseNumber() + "</li>");
+      }
+      out.println("          </ul>");
+    }
+    out.println("        </td>");
+    out.println("        <td>");
+    if (antigenSeries.getSelectBestPatientSeriesList().size() > 0) {
+      out.println("          <ul>");
+
+      for (SelectBestPatientSeries selectBestPatientSeries : antigenSeries.getSelectBestPatientSeriesList()) {
+        out.println("          <li>" + selectBestPatientSeries.getSeriesPreference() + "</li>");
+      }
+      out.println("          </ul>");
+    }
+    out.println("        </td>");
     out.println("        <td>" + antigenSeries.getTargetDisease() + "</td>");
     out.println("        <td>" + antigenSeries.getVaccineGroup() + "</td>");
 
