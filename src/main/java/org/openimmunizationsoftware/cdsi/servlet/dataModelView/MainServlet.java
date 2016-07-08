@@ -63,7 +63,7 @@ public class MainServlet extends ForecastServlet {
     out.println("      <a href=\"dataModelView\">Main</a> | ");
     out.println("      <a href=\"dataModelViewAntigen\">Antigen</a> | ");
     out.println("      <a href=\"dataModelViewCvx\">CVX</a> | ");
-    out.println("      <a href=\"dataModelViewPatient\">Live Virus Conflict</a> | ");
+    out.println("      <a href=\"dataModelViewLiveVirusConflict\">Live Virus Conflict</a> | ");
     out.println("      <a href=\"dataModelViewPatient\">Patient</a> | ");
     out.println("      <a href=\"dataModelViewSchedule\">Schedule</a> | ");
     out.println("      <a href=\"dataModelViewVaccineGroup\">Vaccine Group</a> ");
