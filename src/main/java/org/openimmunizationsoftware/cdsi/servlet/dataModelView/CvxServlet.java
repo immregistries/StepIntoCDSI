@@ -67,7 +67,7 @@ public class CvxServlet extends MainServlet {
         // I am most likely doing the wrong thing here. :)
           out.println("   <tr>");
           out.println("      <td>" + vaccineType.getCvxCode() + "</td>");
-          out.println("      <td>" + vaccineType.getShortDescription() + "</td>");
+          out.println("      <td>" + makeLink(vaccineType)  + "</td>");
           out.println("   </tr>");
         }
       }
