@@ -133,7 +133,6 @@ public class ScheduleServlet extends MainServlet {
     out.println("        <caption>Antigen Series</caption>");
     out.println("        <th>Series Name</th>");
     out.println("        <th>Series Dose List</th>");
-    out.println("        <th>Select Best Patient Series List</th>");
     out.println("        <th>Target Disease</th>");
     out.println("        <th>Vaccine Group</th>");
 
@@ -150,15 +149,7 @@ public class ScheduleServlet extends MainServlet {
       out.println("          </ul>");
     }
     out.println("        </td>");
-    out.println("        <td>");
-    if (antigenSeries.getSelectBestPatientSeries() != null) {
-      out.println("          <ul>");
 
-
-        out.println("          <li>" + antigenSeries.getSelectBestPatientSeries().getSeriesPreference() + "</li>");
-      out.println("          </ul>");
-    }
-    out.println("        </td>");
     out.println("        <td>" + antigenSeries.getTargetDisease() + "</td>");
     out.println("        <td>" + antigenSeries.getVaccineGroup() + "</td>");
 
@@ -166,6 +157,24 @@ public class ScheduleServlet extends MainServlet {
 
     out.println("    </table>");
 
+    out.println("    <table>");
+    out.println("      <tr>");
+    out.println("        <caption>Select Best Patient Series</caption>");
+    out.println("        <th>Default Series</th>");
+    out.println("        <th>Product Path</th>");
+    out.println("        <th>Series Preference</th>");
+    out.println("        <th>Max Age To Start</th>");
+    out.println("      </tr>");
+    out.println("      <tr>");
+    out.println("        <td>" + antigenSeries.getSelectBestPatientSeries().getDefaultSeries() + "</td>");
+    out.println("        <td>" + antigenSeries.getSelectBestPatientSeries().getProductPath() + "</td>");
+    out.println("        <td>" + antigenSeries.getSelectBestPatientSeries().getSeriesPreference() + "</td>");
+    out.println("        <td>" + antigenSeries.getSelectBestPatientSeries().getMaxAgeToStart() + "</td>");
+    out.println("      </tr>");
+    out.println("    </table>");
+
+
   }
+
 
 }
