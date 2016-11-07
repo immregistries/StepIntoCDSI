@@ -3253,7 +3253,6 @@
 <name>Zoster</name>
 <administerFullVaccineGroup/>
 </vaccineGroup>
-</vaccineGroups>
 <vaccineGroupToAntigenMap>
 <vaccineGroupMap>
 <name>MMR</name>
@@ -3311,7 +3310,8 @@
 <name>Zoster</name>
 <antigen>Zoster</antigen>
 </vaccineGroupMap>
-</vaccineGroupToAntigenMap>
+</vaccineGroupToAntigenMap></vaccineGroups>
+
 <cvxToAntigenMap>
 <cvxMap>
 <cvx>01</cvx>

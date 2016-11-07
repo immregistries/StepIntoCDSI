@@ -92,7 +92,7 @@ public class ScheduleServlet extends MainServlet {
 
   private void printRowSchedule(Schedule schedule, PrintWriter out) {
     out.println("      <tr>");
-    out.println("        <td>" + schedule.getScheduleName() + "</td>");
+    out.println("        <td><a href=\"dataModelViewAntigen?search_term=" +schedule.getScheduleName() +"\" >" + schedule.getScheduleName() + "</td>");
     out.println("        <td>" + schedule.getContraindicationList() + "</td>");
     out.println("        <td>" + schedule.getLiveVirusConflictList() + "</td>");
     out.println("        <td>");

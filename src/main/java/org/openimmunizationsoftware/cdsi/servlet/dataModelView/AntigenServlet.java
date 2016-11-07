@@ -81,8 +81,8 @@ public class AntigenServlet extends MainServlet {
 
   private void printRowAntigen(Antigen antigen, PrintWriter out) {
     out.println("      <tr>");
-    out.println("        <td>" + antigen.getName() + "</td>");
-    out.println("        <td>" + antigen.getVaccineGroup() + "</td>");
+    out.println("        <td><a href=\"dataModelViewAntigen?search_term=" +antigen.getName()+"\" >" + antigen.getName()+"</a></td>");
+    out.println("        <td><a href=\"dataModelViewVaccineGroup?search_term=" + antigen.getVaccineGroup() +"\">" + antigen.getVaccineGroup() +"</td>");
     printCvxList(antigen, out);
     out.println("        <td>" + antigen.getImmunityList() + "</td>");
 
