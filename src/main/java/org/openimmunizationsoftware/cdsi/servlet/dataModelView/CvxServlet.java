@@ -52,7 +52,7 @@ public class CvxServlet extends MainServlet {
 
       out.println("  <table>");
       out.println("   <tr>");
-      out.println("      <th>Cvx Code</td>");
+      out.println("      <th>CVX Code</td>");
       out.println("      <th>Short Description</td>");
       out.println("   </tr>");
 
