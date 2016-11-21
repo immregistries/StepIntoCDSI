@@ -121,7 +121,7 @@ public class MainServlet extends ForecastServlet {
       out.println("     </tr>");
       out.println("     <tr>");
       out.println("       <th>Tracked Series Dose</th>");
-      out.println("       <td>" + dataModel.getTargetDose().getTrackedSeriesDose() + "</td>");
+      out.println("       <td>" + "-_-"+dataModel.getTargetDose().getTrackedSeriesDose().getDoseNumber() + "</td>"); ///
       out.println("     </tr>");
       out.println("     <tr>");
       out.println("       <th>Satisfied By Vaccine Dose Administered</th>");
@@ -225,9 +225,9 @@ public class MainServlet extends ForecastServlet {
 
   void printRowTargetDoseList(TargetDose targetDose, PrintWriter out) {
     out.println("     <tr>");
-    out.println("       <td>" + targetDose.getTargetDoseStatus() + "</td>");
+    out.println("       <td>" + targetDose.getTargetDoseStatus()+ "</td>");
 
-    out.println("       <td>" + targetDose.getTrackedSeriesDose() + "</td>");
+    out.println("       <td>" + "-_- "+targetDose.getTrackedSeriesDose().getDoseNumber() + "</td>");
 
     out.println("       <td>" + targetDose.getSatisfiedByVaccineDoseAdministered() + "</td>");
 
