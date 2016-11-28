@@ -42,7 +42,7 @@ public class SingleAntigenVaccineGroup extends LogicStep
 
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + getTitle() + "</h1>");
-    out.println("<p>TODO</p>");
+    out.println("<p>The forecasting rules which need to be applied to a single antigen vaccine group are listed in the table below</p>");
 
     printConditionAttributesTable(out);
     printLogicTables(out);

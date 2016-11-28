@@ -28,27 +28,28 @@ public class EvaluateForPreferableVaccine extends LogicStep
     setConditionTableName("Table ");
 
     caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
-
-    AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
-    // set assumed values
-    caVaccineTypeBeginAgeDate.setAssumedValue(PAST);
-    caVaccineTypeEndAgeDate.setAssumedValue(FUTURE);
-    caPreferableVaccineTradeName.setAssumedValue(aar.getTradeName());
-    caPreferableVaccineVolume.setAssumedValue(aar.getVolume());
-
-    // set actual values
-    caDateAdministered.setInitialValue(aar.getDateAdministered());
-    caTradeName.setInitialValue(aar.getTradeName());
-    caVaccineTypeBeginAgeDate.setInitialValue(CALCDTPREF_1.evaluate(dataModel, this, null));
-    caVaccineTypeEndAgeDate.setInitialValue(CALCDTPREF_2.evaluate(dataModel, this, null));
-    //caPreferableVaccineTradeName.setInitialValue(initialValue);
-
-    conditionAttributesList.add(caDateAdministered);
-    conditionAttributesList.add(caTradeName);
-    conditionAttributesList.add(caVaccineTypeBeginAgeDate);
-    conditionAttributesList.add(caVaccineTypeEndAgeDate);
-    conditionAttributesList.add(caPreferableVaccineTradeName);
-    conditionAttributesList.add(caPreferableVaccineVolume);
+//     _____________>Logic Problem : Check logic specification
+    
+//    AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
+//    // set assumed values
+//    caVaccineTypeBeginAgeDate.setAssumedValue(PAST);
+//    caVaccineTypeEndAgeDate.setAssumedValue(FUTURE);
+//    caPreferableVaccineTradeName.setAssumedValue(aar.getTradeName());
+//    caPreferableVaccineVolume.setAssumedValue(aar.getVolume());
+//
+//    // set actual values
+//    caDateAdministered.setInitialValue(aar.getDateAdministered());
+//    caTradeName.setInitialValue(aar.getTradeName());
+//    caVaccineTypeBeginAgeDate.setInitialValue(CALCDTPREF_1.evaluate(dataModel, this, null));
+//    caVaccineTypeEndAgeDate.setInitialValue(CALCDTPREF_2.evaluate(dataModel, this, null));
+//    //caPreferableVaccineTradeName.setInitialValue(initialValue);
+//
+//    conditionAttributesList.add(caDateAdministered);
+//    conditionAttributesList.add(caTradeName);
+//    conditionAttributesList.add(caVaccineTypeBeginAgeDate);
+//    conditionAttributesList.add(caVaccineTypeEndAgeDate);
+//    conditionAttributesList.add(caPreferableVaccineTradeName);
+//    conditionAttributesList.add(caPreferableVaccineVolume);
 
     LT logicTable = new LT();
     logicTableList.add(logicTable);
@@ -57,7 +58,7 @@ public class EvaluateForPreferableVaccine extends LogicStep
   @Override
   public LogicStep process() throws Exception {
     setNextLogicStepType(LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED);
-    setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
+    //setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
     return next();
   }
 
@@ -73,7 +74,7 @@ public class EvaluateForPreferableVaccine extends LogicStep
 
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + getTitle() + "</h1>");
-    out.println("<p>TODO</p>");
+    out.println("<p>Evaluate  for  preferable  vaccine  validates  the  vaccine  of  a  vaccine  dose  administered  against  the  list  of preferable vaccines.</p>");
 
     printConditionAttributesTable(out);
     printLogicTables(out);

@@ -193,8 +193,7 @@ public class PatientServlet extends MainServlet {
     }
   }
 
-  private void printAntigenAdministeredRecordTable(AntigenAdministeredRecord antigenAdministeredRecord, String caption,
-      PrintWriter out) {
+  private void printAntigenAdministeredRecordTable(AntigenAdministeredRecord antigenAdministeredRecord, String caption,PrintWriter out) {
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
     if (antigenAdministeredRecord != null) {
       out.println("   <table>");

@@ -44,7 +44,7 @@ public class ClassifyVaccineGroup extends LogicStep
 
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + logicStepType.getDisplay() + "</h1>");
-    out.println("<p>TODO</p>");
+    out.println("<p>Classify vaccine group provides initial questioning to determine which vaccine group forecast rules to apply.</p>");
 
     printConditionAttributesTable(out);
     printLogicTables(out);

@@ -74,7 +74,7 @@ public class EvaluateInterval extends LogicStep
 
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.EVALUATE_FOR_LIVE_VIRUS_CONFLICT);
+    setNextLogicStepType(LogicStepType.EVALUATE_ALLOWABLE_INTERVAL);
     return next();
   }
 

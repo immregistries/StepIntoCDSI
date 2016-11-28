@@ -22,7 +22,12 @@ public class SatisfyTargetDose extends LogicStep
 
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED);
+
+	/***
+	 * Bypassing "4 Evaluate Vaccine Dose Administrated"
+	 * setNextLogicStepType(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED);
+	 */
+	 setNextLogicStepType(logicStepType.FORECAST_DATES_AND_REASONS);
     return next();
   }
 
@@ -38,10 +43,14 @@ public class SatisfyTargetDose extends LogicStep
 
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + getTitle() + "</h1>");
-    out.println("<p>TODO</p>");
+    out.println("<p>Satisfy  target  dose  uses  the  results  from  the  previous  evaluation  sections  as  conditions  to  determine  if the target dose is satisfied.  </p>");
+    
+    
+    out.println("<p>The following processing model and decision table are used to determine if the target dose was satisfied</p>");
+    out.println("<p>ADD MODEL PICTURE</p>");
 
-    printConditionAttributesTable(out);
-    printLogicTables(out);
+    //printConditionAttributesTable(out);
+    //printLogicTables(out);
   }
 
   private class LT extends LogicTable

@@ -65,7 +65,7 @@ public class DetermineEvidenceOfImmunityDose extends LogicStep
 
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + logicStepType.getDisplay() + "</h1>");
-    out.println("<p>TODO</p>");
+    out.println("<p>Determine evidence of immunity  assesses the patient’s profile to determine if the patient is already potentially immune to the target disease, negating the need for additional doses.</p>");
 
     printConditionAttributesTable(out);
     printLogicTables(out);

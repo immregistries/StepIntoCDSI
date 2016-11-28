@@ -43,7 +43,7 @@ public class SelectBestCandidatePatientSeries extends LogicStep
 
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + getTitle() + "</h1>");
-    out.println("<p>TODO</p>");
+    out.println("<p>Select best candidate patient series  provides the business rules to  be applied to  the scored candidate patient series which will result in the best patient series for the patient.</p>");
 
     printConditionAttributesTable(out);
     printLogicTables(out);

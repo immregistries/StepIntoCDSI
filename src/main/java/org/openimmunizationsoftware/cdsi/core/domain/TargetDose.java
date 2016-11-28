@@ -25,24 +25,15 @@ public class TargetDose
 
   public void setSatisfiedByVaccineDoseAdministered(VaccineDoseAdministered satisfiedByVaccineDoseAdministered) {
     this.satisfiedByVaccineDoseAdministered = satisfiedByVaccineDoseAdministered;
-    System.out.println("88888888888888888888888888888888888888888888888888888888888888888888888888888888888888888");
-    System.out.println(satisfiedByVaccineDoseAdministered);
-    System.out.println("_________________________________________________________________________________________");
   }
 
 
   public TargetDoseStatus getTargetDoseStatus() {
-	  System.out.println("00000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
-	  System.out.println(targetDoseStatus);
-	  System.out.println("00000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
     return targetDoseStatus;
   }
 
   public void setTargetDoseStatus(TargetDoseStatus targetDoseStatus) {
     this.targetDoseStatus = targetDoseStatus;
-    System.out.println("----------------------------------------------------------------------------------------");
-    System.out.println(targetDoseStatus);
-    System.out.println("_________________________________________________________________________________________");
   }
 
   public SeriesDose getTrackedSeriesDose() {

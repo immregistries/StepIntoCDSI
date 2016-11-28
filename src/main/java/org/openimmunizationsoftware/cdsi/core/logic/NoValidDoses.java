@@ -43,7 +43,7 @@ public class NoValidDoses extends LogicStep
 
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + getTitle() + "</h1>");
-    out.println("<p>TODO</p>");
+    out.println("<p>This section  provides the decision table for determining the number of points to assign to a  candidate  patient series when there are no valid doses.</p>");
 
     printConditionAttributesTable(out);
     printLogicTables(out);

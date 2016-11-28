@@ -43,7 +43,7 @@ public class InProcessPatientSeries extends LogicStep
 
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + getTitle() + "</h1>");
-    out.println("<p>TODO</p>");
+    out.println("<p>In-process  patient series provides the decision table for determining the number of points to assign to an  inprocess patient series based on a specified condition.</p>");
 
     printConditionAttributesTable(out);
     printLogicTables(out);

@@ -45,7 +45,7 @@ public class ClassifyPatientSeries extends LogicStep
 
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + getTitle() + "</h1>");
-    out.println("<p>TODO</p>");
+    out.println("<p>Classify  patient series  is an attempt to reduce  the total number of  patient series  to only those  which have  a chance to be selected as the best patient series.</p>");
 
     printConditionAttributesTable(out);
     printLogicTables(out);

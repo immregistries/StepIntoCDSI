@@ -62,7 +62,7 @@ public class EvaluateForAllowableVaccines extends LogicStep
 
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + getTitle() + "</h1>");
-    out.println("<p>TODO</p>");
+    out.println("<p>Evaluate  for  allowable  vaccine  validates  the  vaccine  of  a  vaccine  dose  administered  against  the  list  of allowable vaccines.</p>");
 
     printConditionAttributesTable(out);
     printLogicTables(out);

@@ -44,7 +44,7 @@ public class OneBestPatientSeries extends LogicStep
 
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + getTitle() + "</h1>");
-    out.println("<p>TODO</p>");
+    out.println("<p>One best patient series  examines all of the  patient series  for a given antigen to determine if one of the  patient series is superior to all other patient series and can be considered the best patient series.</p>");
 
     printConditionAttributesTable(out);
     printLogicTables(out);

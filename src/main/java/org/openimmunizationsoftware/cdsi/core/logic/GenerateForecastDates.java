@@ -66,7 +66,11 @@ public class GenerateForecastDates extends LogicStep
 
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.FOR_EACH_PATIENT_SERIES);
+	  /**
+	   * ByPassing "For Each Patient Series"
+	   */
+    //setNextLogicStepType(LogicStepType.FOR_EACH_PATIENT_SERIES);
+	  setNextLogicStepType(LogicStepType.SELECT_BEST_PATIENT_SERIES);
     return next();
   }
 
@@ -82,7 +86,8 @@ public class GenerateForecastDates extends LogicStep
 
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + getTitle() + "</h1>");
-    out.println("<p>TODO</p>");
+    out.println("<p>Generate forecast dates  and recommend vaccines  determines the forecast dates for the next  target dose  and identifies one  or  more recommended vaccines if the target dose warrants specific vaccine recommendations. The forecast dates are generated based on the patient’s immunization history. If the patient has not adhered to  the preferred schedule, then the forecast dates  are  adjusted to provide  the best  dates for the next target dose.</p>");
+    out.println("<p>Figure 5-4 below provides an illustration of how forecast dates appear on the timeline.</p>");
 
     printConditionAttributesTable(out);
     printLogicTables(out);

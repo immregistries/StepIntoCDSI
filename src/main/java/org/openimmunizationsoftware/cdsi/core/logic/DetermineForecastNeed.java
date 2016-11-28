@@ -60,7 +60,7 @@ public class DetermineForecastNeed extends LogicStep
   @Override
   public LogicStep process() throws Exception {
     setNextLogicStepType(LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMEND_VACCINES);
-    setNextLogicStepType(LogicStepType.FOR_EACH_PATIENT_SERIES);
+    //setNextLogicStepType(LogicStepType.FOR_EACH_PATIENT_SERIES);
     return next();
   }
 
@@ -76,7 +76,7 @@ public class DetermineForecastNeed extends LogicStep
 
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + getTitle() + "</h1>");
-    out.println("<p>TODO</p>");
+    out.println("<p>Determine forecast need determines  if there is a need to forecast dates. This involves reviewing patient data, antigen  administered  records,  and  patient  series.  This  is  a  prerequisite  before  a  CDS  engine  can  produce forecast dates and reasons </p>");
 
     printConditionAttributesTable(out);
     printLogicTables(out);

@@ -108,10 +108,10 @@ public class EvaluateVaccineDoseAdministered extends LogicStep
 
   @Override
   public void printPre(PrintWriter out) throws Exception {
-    printPrePost(out);
+    printStandard(out);
   }
 
-  private void printPrePost(PrintWriter out) {
+  private void printStandard(PrintWriter out) {
     out.println("<h1>Evaluate Vaccine Dose Administered</h1>");
     out.println("<p>The core of a CDS engine is the process of evaluating a single vaccine dose administered against  a  defined  target  dose to  determine  if  the  vaccine  dose  administered is valid or not valid. The  results  will  ultimately determine if all conditions of the target dose are satisfied and the dose does not need to be repeated.</p>");
     out.println("<img src=\"Figure 4.1.png\"/>");
@@ -119,7 +119,7 @@ public class EvaluateVaccineDoseAdministered extends LogicStep
 
   @Override
   public void printPost(PrintWriter out) throws Exception {
-    printPrePost(out);
+    printStandard(out);
   }
 
 }

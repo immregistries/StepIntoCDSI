@@ -26,8 +26,7 @@ import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CA
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTAGE_4;
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTAGE_5;
 
-public class EvaluateAge extends LogicStep
-{
+public class EvaluateAge extends LogicStep{
 
   private ConditionAttribute<Date> caDateAdministered = null;
   private ConditionAttribute<Date> caMinimumAgeDate = null;
@@ -91,12 +90,11 @@ public class EvaluateAge extends LogicStep
 
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + logicStepType.getDisplay() + "</h1>");
-    out.println("<p>Evaluate age validates the age at administration of a vaccine dose administered against a defined age range of a target dose. In cases where a target dose does not specify age attributes, the age at administration is considered “valid.”</p>");
+    out.println("<p>Evaluate age validates the age at administration of a vaccine dose administered against a defined age range of a target dose. In cases where a target dose does not specify age attributes, the age at administration is considered ï¿½valid.ï¿½</p>");
 
     printConditionAttributesTable(out);
     printLogicTables(out);
     printLog(out);
-    
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
     seriesDose.toHtml(out);
   }

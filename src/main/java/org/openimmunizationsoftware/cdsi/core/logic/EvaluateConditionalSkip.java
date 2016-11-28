@@ -226,7 +226,7 @@ public class EvaluateConditionalSkip extends LogicStep {
           log("Setting next step: Evaluate Immunization History");
           TargetDose targetDoseNext = dataModel.findNextTargetDose(dataModel.getTargetDose());
           dataModel.setTargetDose(targetDoseNext);
-          setNextLogicStepType(LogicStepType.EVALUATE_DOSE_ADMININISTERED_CONDITION);
+          setNextLogicStepType(LogicStepType.EVALUATE_AGE);
         }
       });
 
@@ -239,7 +239,7 @@ public class EvaluateConditionalSkip extends LogicStep {
           log("Setting next step: Evaluate Immunization History");
           TargetDose targetDoseNext = dataModel.findNextTargetDose(dataModel.getTargetDose());
           dataModel.setTargetDose(targetDoseNext);
-          setNextLogicStepType(LogicStepType.EVALUATE_DOSE_ADMININISTERED_CONDITION);
+          setNextLogicStepType(LogicStepType.EVALUATE_AGE);
         }
       });
 

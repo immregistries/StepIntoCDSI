@@ -43,7 +43,7 @@ public class MultipleAntigenVaccineGroup extends LogicStep
 
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + getTitle() + "</h1>");
-    out.println("<p>TODO</p>");
+    out.println("<p>The forecasting  decisions and  rules which need to be applied to a multiple antigen  vaccine group are  listed below</p>");
 
     printConditionAttributesTable(out);
     printLogicTables(out);

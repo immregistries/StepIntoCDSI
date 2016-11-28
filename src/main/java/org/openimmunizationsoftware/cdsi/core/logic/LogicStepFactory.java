@@ -103,6 +103,12 @@ public class LogicStepFactory
     if (stepName.equals(LogicStepType.SINGLE_ANTIGEN_VACCINE_GROUP)) {
       return new SingleAntigenVaccineGroup(dataModel);
     }
+    if(stepName.equals(LogicStepType.FORECAST_DATES_AND_REASONS)){
+    	return new ForecastDatesAndReasons(dataModel);
+    }
+    if(stepName.equals(LogicStepType.END)){
+    	return new End(dataModel);
+    }
 
     throw new IllegalArgumentException("Step '" + stepName + "' is not yet implemented");
   }
