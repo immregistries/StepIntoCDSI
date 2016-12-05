@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.util.Date;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
@@ -36,7 +37,13 @@ public class EvaluateForAllowableVaccines extends LogicStep
 
     caAllowableVaccineTypeBeginAgeDate.setAssumedValue(PAST);
     caAllowableVaccineTypeEndAgeDate.setAssumedValue(FUTURE);
-
+    
+    AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
+    caDateAdministered.setInitialValue(aar.getDateAdministered());
+    caVaccineType.setInitialValue(aar.getVaccineType().toString());
+    //caVaccineTypeAllowable.setInitialValue(dataModel.);;
+    
+    
     conditionAttributesList.add(caDateAdministered);
     conditionAttributesList.add(caVaccineType);
     conditionAttributesList.add(caVaccineTypeAllowable);
@@ -102,15 +109,34 @@ public class EvaluateForAllowableVaccines extends LogicStep
               }
             });
             
-           setLogicResults(0, LogicResult.YES, LogicResult.NO, LogicResult.NO, LogicResult.ANY);
+           setLogicResults(0, LogicResult.YES, LogicResult.YES);
+           setLogicResults(1, LogicResult.NO, LogicResult.ANY);
+           setLogicResults(2, LogicResult.YES, LogicResult.NO);
+          
            setLogicOutcome(0, new LogicOutcome() {
               @Override
               public void perform() {
-                log("No. The target dose cannot be skipped. ");
+                log("Yes. An allowable vaccine was administered ");
                 log("Setting next step: 4.9 EvaluateGender");
                 setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
               }
             });
+           setLogicOutcome(1, new LogicOutcome() {
+               @Override
+               public void perform() {
+                 log("No.  This supporting data defined allowable vaccine was not administered.");
+                 log("Setting next step: 4.9 EvaluateGender");
+                 setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
+               }
+             });
+           setLogicOutcome(2, new LogicOutcome() {
+               @Override
+               public void perform() {
+                 log("No.  This supporting data defined allowable vaccine was administered out of the allowable age range.");
+                 log("Setting next step: 4.9 EvaluateGender");
+                 setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
+               }
+             });
             
     }
   }
