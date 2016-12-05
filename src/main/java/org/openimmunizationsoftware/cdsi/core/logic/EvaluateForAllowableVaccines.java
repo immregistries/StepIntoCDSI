@@ -8,6 +8,9 @@ import java.util.Date;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
 public class EvaluateForAllowableVaccines extends LogicStep
@@ -16,29 +19,29 @@ public class EvaluateForAllowableVaccines extends LogicStep
   private ConditionAttribute<Date> caDateAdministered = null;
   private ConditionAttribute<String> caVaccineType = null;
   private ConditionAttribute<String> caVaccineTypeAllowable = null;
-  private ConditionAttribute<Date> caAllowableVaccineTYpeBeginAgeDate = null;
-  private ConditionAttribute<Date> caAllowablwVaccineTypeEndAgeDate = null;
+  private ConditionAttribute<Date> caAllowableVaccineTypeBeginAgeDate = null;
+  private ConditionAttribute<Date> caAllowableVaccineTypeEndAgeDate = null;
 
   public EvaluateForAllowableVaccines(DataModel dataModel) {
     super(LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED, dataModel);
-    setConditionTableName("Table ");
+    setConditionTableName("Table 4.8");
 
     caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
     caVaccineType = new ConditionAttribute<String>("Vaccine Dose Administered", "Vaccine Type");
     caVaccineTypeAllowable = new ConditionAttribute<String>("Supporting data (Allowable Vaccine)", "Vaccine Type");
-    caAllowableVaccineTYpeBeginAgeDate = new ConditionAttribute<Date>("Calculated data (CALCDTALLOW-1)",
+    caAllowableVaccineTypeBeginAgeDate = new ConditionAttribute<Date>("Calculated data (CALCDTALLOW-1)",
         "Allowable Vaccine Type Begin Age Date");
-    caAllowablwVaccineTypeEndAgeDate = new ConditionAttribute<Date>("Calcuated Data (CALCDTALLOW-2",
+    caAllowableVaccineTypeEndAgeDate = new ConditionAttribute<Date>("Calculated Data (CALCDTALLOW-2)",
         "Allowable Vaccine Type End Age Date");
 
-    caAllowableVaccineTYpeBeginAgeDate.setAssumedValue(PAST);
-    caAllowablwVaccineTypeEndAgeDate.setAssumedValue(FUTURE);
+    caAllowableVaccineTypeBeginAgeDate.setAssumedValue(PAST);
+    caAllowableVaccineTypeEndAgeDate.setAssumedValue(FUTURE);
 
     conditionAttributesList.add(caDateAdministered);
     conditionAttributesList.add(caVaccineType);
     conditionAttributesList.add(caVaccineTypeAllowable);
-    conditionAttributesList.add(caAllowableVaccineTYpeBeginAgeDate);
-    conditionAttributesList.add(caAllowablwVaccineTypeEndAgeDate);
+    conditionAttributesList.add(caAllowableVaccineTypeBeginAgeDate);
+    conditionAttributesList.add(caAllowableVaccineTypeEndAgeDate);
 
     LT logicTable = new LT();
     logicTableList.add(logicTable);
@@ -71,32 +74,44 @@ public class EvaluateForAllowableVaccines extends LogicStep
   private class LT extends LogicTable
   {
     public LT() {
-      super(0, 0, "Table ?-?");
+      super(0, 0, "Table 4.8");
 
-      //      setLogicCondition(0, new LogicCondition("date administered > lot expiration date?") {
-      //        @Override
-      //        public LogicResult evaluateInternal() {
-      //          if (caDateAdministered.getFinalValue() == null || caTriggerAgeDate.getFinalValue() == null) {
-      //            return LogicResult.NO;
-      //          }
-      //          if (caDateAdministered.getFinalValue().before(caTriggerAgeDate.getFinalValue())) {
-      //            return LogicResult.YES;
-      //          }
-      //          return LogicResult.NO;
-      //        }
-      //      });
-
-      //      setLogicResults(0, LogicResult.YES, LogicResult.NO, LogicResult.NO, LogicResult.ANY);
-
-      //      setLogicOutcome(0, new LogicOutcome() {
-      //        @Override
-      //        public void perform() {
-      //          log("No. The target dose cannot be skipped. ");
-      //          log("Setting next step: 4.3 Substitute Target Dose");
-      //          setNextLogicStep(LogicStep.SUBSTITUTE_TARGET_DOSE_FOR_EVALUATION);
-      //        }
-      //      });
-      //      
+      setLogicCondition(0, new LogicCondition("Is the vaccine type of the vaccine dose administered the same as the vaccine type of the allowable vaccine?") {
+          @Override
+          public LogicResult evaluateInternal() {
+            if (caDateAdministered.getFinalValue() == null) {
+              return LogicResult.NO;
+            }
+            if (caVaccineType.getFinalValue().equals(caVaccineTypeAllowable.getFinalValue())) {
+              return LogicResult.YES;
+            }
+            return LogicResult.NO;
+          }
+        });      
+      
+      setLogicCondition(1, new LogicCondition("Is the Allowable vaccine type begin age date ≤ date administered < allowable vaccine type end age date?") {
+              @Override
+              public LogicResult evaluateInternal() {
+                if (caDateAdministered.getFinalValue() == null || caAllowableVaccineTypeBeginAgeDate.getFinalValue() == null || caAllowableVaccineTypeEndAgeDate.getFinalValue()==null ) {
+                  return LogicResult.NO;
+                }
+                if (caDateAdministered.getFinalValue().before(caAllowableVaccineTypeEndAgeDate.getFinalValue()) && caDateAdministered.getFinalValue().after(caAllowableVaccineTypeBeginAgeDate.getFinalValue())) {
+                  return LogicResult.YES;
+                }
+                return LogicResult.NO;
+              }
+            });
+            
+           setLogicResults(0, LogicResult.YES, LogicResult.NO, LogicResult.NO, LogicResult.ANY);
+           setLogicOutcome(0, new LogicOutcome() {
+              @Override
+              public void perform() {
+                log("No. The target dose cannot be skipped. ");
+                log("Setting next step: 4.9 EvaluateGender");
+                setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
+              }
+            });
+            
     }
   }
 

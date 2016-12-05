@@ -26,6 +26,7 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 public class EvaluateConditionalSkip extends LogicStep {
 
   private ConditionAttribute<Date> caDateAdministered = null;
+  private ConditionAttribute<Date> caExpirationDate = null;
   private ConditionAttribute<Date> caAssessmentDate = null;
   private ConditionAttribute<Integer> caAdministeredDoseCount = null;
 
@@ -55,6 +56,7 @@ public class EvaluateConditionalSkip extends LogicStep {
     caAdministeredDoseCount = new ConditionAttribute<Integer>("Patient Immunization History",
         "Administered Dose Count");
 
+    caExpirationDate = new ConditionAttribute<Date>("Vaccine","Expiration Date");
     caAssessmentDate.setAssumedValue(new Date());
 
     conditionAttributesList.add(caDateAdministered);
@@ -63,6 +65,7 @@ public class EvaluateConditionalSkip extends LogicStep {
 
     AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
     caDateAdministered.setInitialValue(aar.getDateAdministered());
+    caExpirationDate.setInitialValue(aar.getLotExpirationDate());
     caAssessmentDate.setInitialValue(dataModel.getAssessmentDate());
     // caAdministeredDoseCount.setInitialValue(dataModel.getAntigenAdministeredRecord().get);
 
@@ -154,15 +157,15 @@ public class EvaluateConditionalSkip extends LogicStep {
       setLogicCondition(0, new LogicCondition("date administered < lot expiration date?") {
         @Override
         public LogicResult evaluateInternal() {
-          // if (caDateAdministered.getFinalValue() == null ||
-          // caTriggerAgeDate.getFinalValue() == null) {
-          // return LogicResult.NO;
-          // }
-          // if
-          // (caDateAdministered.getFinalValue().before(caTriggerAgeDate.getFinalValue()))
-          // {
-          // return LogicResult.YES;
-          // }
+           if (caDateAdministered.getFinalValue() == null ||
+           caExpirationDate.getFinalValue() == null) {
+           return LogicResult.NO;
+           }
+           if
+           (caDateAdministered.getFinalValue().before(caExpirationDate.getFinalValue()))
+           {
+           return LogicResult.YES;
+           }
           return LogicResult.NO;
         }
       });
@@ -170,16 +173,16 @@ public class EvaluateConditionalSkip extends LogicStep {
       setLogicCondition(1, new LogicCondition("date administered < trigger interval date?") {
         @Override
         public LogicResult evaluateInternal() {
-          // if (caDateAdministered.getFinalValue() == null ||
-          // caTriggerIntervalDate.getFinalValue() == null) {
-          // return LogicResult.NO;
-          // }
-          // if
-          // (caDateAdministered.getFinalValue().before(caTriggerIntervalDate.getFinalValue()))
-          // {
-          // return LogicResult.YES;
-          // }
-          return LogicResult.NO;
+          /* if (caDateAdministered.getFinalValue() == null ||
+           caTriggerIntervalDate.getFinalValue() == null) {
+           return LogicResult.NO;
+           }
+           if
+           (caDateAdministered.getFinalValue().before(caTriggerIntervalDate.getFinalValue()))
+           {
+           return LogicResult.YES;
+           }*/
+          return LogicResult.NO; 
         }
       });
 
@@ -226,7 +229,7 @@ public class EvaluateConditionalSkip extends LogicStep {
           log("Setting next step: Evaluate Immunization History");
           TargetDose targetDoseNext = dataModel.findNextTargetDose(dataModel.getTargetDose());
           dataModel.setTargetDose(targetDoseNext);
-          setNextLogicStepType(LogicStepType.EVALUATE_AGE);
+          setNextLogicStepType(LogicStepType.FOR_EACH_PATIENT_SERIES);
         }
       });
 
@@ -239,7 +242,7 @@ public class EvaluateConditionalSkip extends LogicStep {
           log("Setting next step: Evaluate Immunization History");
           TargetDose targetDoseNext = dataModel.findNextTargetDose(dataModel.getTargetDose());
           dataModel.setTargetDose(targetDoseNext);
-          setNextLogicStepType(LogicStepType.EVALUATE_AGE);
+          setNextLogicStepType(LogicStepType.FOR_EACH_PATIENT_SERIES);
         }
       });
 
