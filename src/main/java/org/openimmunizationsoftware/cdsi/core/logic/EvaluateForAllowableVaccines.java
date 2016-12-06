@@ -3,11 +3,15 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTALLOW_1;
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTALLOW_2;
 
+
 import java.io.PrintWriter;
 import java.util.Date;
+import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.*;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
@@ -18,8 +22,8 @@ public class EvaluateForAllowableVaccines extends LogicStep
 {
 
   private ConditionAttribute<Date> caDateAdministered = null;
-  private ConditionAttribute<String> caVaccineType = null;
-  private ConditionAttribute<String> caVaccineTypeAllowable = null;
+  private ConditionAttribute<VaccineType> caVaccineType = null;
+  private ConditionAttribute<List<AllowableVaccine>> caVaccineTypeAllowable = null;
   private ConditionAttribute<Date> caAllowableVaccineTypeBeginAgeDate = null;
   private ConditionAttribute<Date> caAllowableVaccineTypeEndAgeDate = null;
 
@@ -28,8 +32,8 @@ public class EvaluateForAllowableVaccines extends LogicStep
     setConditionTableName("Table 4.8");
 
     caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
-    caVaccineType = new ConditionAttribute<String>("Vaccine Dose Administered", "Vaccine Type");
-    caVaccineTypeAllowable = new ConditionAttribute<String>("Supporting data (Allowable Vaccine)", "Vaccine Type");
+    caVaccineType = new ConditionAttribute<VaccineType>("Vaccine Dose Administered", "Vaccine Type");
+    caVaccineTypeAllowable = new ConditionAttribute<List<AllowableVaccine>>("Supporting data (Allowable Vaccine)", "Vaccine Type");
     caAllowableVaccineTypeBeginAgeDate = new ConditionAttribute<Date>("Calculated data (CALCDTALLOW-1)",
         "Allowable Vaccine Type Begin Age Date");
     caAllowableVaccineTypeEndAgeDate = new ConditionAttribute<Date>("Calculated Data (CALCDTALLOW-2)",
@@ -40,8 +44,8 @@ public class EvaluateForAllowableVaccines extends LogicStep
     
     AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
     caDateAdministered.setInitialValue(aar.getDateAdministered());
-    caVaccineType.setInitialValue(aar.getVaccineType().toString());
-    //caVaccineTypeAllowable.setInitialValue(dataModel.);;
+    caVaccineType.setInitialValue(aar.getVaccineType());
+    caVaccineTypeAllowable.setInitialValue(dataModel.getTargetDose().getTrackedSeriesDose().getAllowableVaccineList());
     
     
     conditionAttributesList.add(caDateAdministered);
@@ -89,8 +93,13 @@ public class EvaluateForAllowableVaccines extends LogicStep
             if (caDateAdministered.getFinalValue() == null) {
               return LogicResult.NO;
             }
-            if (caVaccineType.getFinalValue().equals(caVaccineTypeAllowable.getFinalValue())) {
-              return LogicResult.YES;
+            for (int i=0;i<caVaccineTypeAllowable.getFinalValue().size();i++){
+            	if (caVaccineType.getFinalValue().equals(caVaccineTypeAllowable.getFinalValue().get(i).getVaccineType())) {
+            		caAllowableVaccineTypeBeginAgeDate.setInitialValue(caVaccineTypeAllowable.getFinalValue().get(i).getVaccineTypeBeginAge().getDateFrom(PAST));
+            		caAllowableVaccineTypeEndAgeDate.setInitialValue(caVaccineTypeAllowable.getFinalValue().get(i).getVaccineTypeEndAge().getDateFrom(FUTURE));
+            		return LogicResult.YES;
+            		
+            	}
             }
             return LogicResult.NO;
           }
@@ -117,6 +126,8 @@ public class EvaluateForAllowableVaccines extends LogicStep
               @Override
               public void perform() {
                 log("Yes. An allowable vaccine was administered ");
+               
+                
                 log("Setting next step: 4.9 EvaluateGender");
                 setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
               }

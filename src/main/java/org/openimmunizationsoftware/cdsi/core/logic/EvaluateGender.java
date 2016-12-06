@@ -22,6 +22,8 @@ public class EvaluateGender extends LogicStep
     caRequiredGender = new ConditionAttribute<String>("Supporting data (Gender)" , "Required Gender");
     
     caGender.setAssumedValue("UNKNOWN");
+    caGender.setInitialValue(dataModel.getPatient().getGender());
+    caRequiredGender.setInitialValue(dataModel.getTargetDose().getTrackedSeriesDose().getRequiredGenderList().toString());
     
     conditionAttributesList.add(caGender);
     conditionAttributesList.add(caRequiredGender);
