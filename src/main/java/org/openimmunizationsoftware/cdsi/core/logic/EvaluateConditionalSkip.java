@@ -67,7 +67,7 @@ public class EvaluateConditionalSkip extends LogicStep {
     caDateAdministered.setInitialValue(aar.getDateAdministered());
     caExpirationDate.setInitialValue(aar.getLotExpirationDate());
     caAssessmentDate.setInitialValue(dataModel.getAssessmentDate());
-    // caAdministeredDoseCount.setInitialValue(dataModel.getAntigenAdministeredRecord().get);
+    caAdministeredDoseCount.setInitialValue(dataModel.getAntigenAdministeredRecordList().size());
 
 
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
@@ -112,6 +112,10 @@ public class EvaluateConditionalSkip extends LogicStep {
           f.caConditionalSkipBeginAgeDate.setInitialValue(CALCDTSKIP_3.evaluate(dataModel, this, condition));
           f.caConditionalSkipEndAgeDate.setInitialValue(CALCDTSKIP_4.evaluate(dataModel, this, condition));
           f.caConditionalSkipIntervalDate.setInitialValue(CALCDTSKIP_5.evaluate(dataModel, this, condition));
+          f.caConditionalSkipStartDate.setInitialValue(condition.getStartDate());
+          f.caConditionalSkipEndDate.setInitialValue(condition.getEndDate());
+          f.caConditionalDoseType.setInitialValue(condition.getDoseType().name());
+        //  f.caConditionalSkipDoseCountLogic.setInitialValue(condition.);
 
         }
       }

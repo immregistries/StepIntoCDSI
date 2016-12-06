@@ -94,7 +94,7 @@ public class EvaluateForAllowableVaccines extends LogicStep
               return LogicResult.NO;
             }
             for (int i=0;i<caVaccineTypeAllowable.getFinalValue().size();i++){
-            	if (caVaccineType.getFinalValue().equals(caVaccineTypeAllowable.getFinalValue().get(i).getVaccineType())) {
+            	if (caVaccineType.getFinalValue() == caVaccineTypeAllowable.getFinalValue().get(i).getVaccineType()) {
             		caAllowableVaccineTypeBeginAgeDate.setInitialValue(caVaccineTypeAllowable.getFinalValue().get(i).getVaccineTypeBeginAge().getDateFrom(PAST));
             		caAllowableVaccineTypeEndAgeDate.setInitialValue(caVaccineTypeAllowable.getFinalValue().get(i).getVaccineTypeEndAge().getDateFrom(FUTURE));
             		return LogicResult.YES;

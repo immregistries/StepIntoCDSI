@@ -1,8 +1,10 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.RequiredGender;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
@@ -10,7 +12,7 @@ public class EvaluateGender extends LogicStep
 {
 
   private ConditionAttribute<String> caGender = null;
-  private ConditionAttribute<String> caRequiredGender = null;
+  private ConditionAttribute<List<RequiredGender>> caRequiredGender = null;
  
 
   public EvaluateGender(DataModel dataModel)
@@ -19,11 +21,11 @@ public class EvaluateGender extends LogicStep
     setConditionTableName("Table ");
     
     caGender = new ConditionAttribute<String>("Patient", "Gender");
-    caRequiredGender = new ConditionAttribute<String>("Supporting data (Gender)" , "Required Gender");
+    caRequiredGender = new ConditionAttribute<List<RequiredGender>>("Supporting data (Gender)" , "Required Gender");
     
     caGender.setAssumedValue("UNKNOWN");
     caGender.setInitialValue(dataModel.getPatient().getGender());
-    caRequiredGender.setInitialValue(dataModel.getTargetDose().getTrackedSeriesDose().getRequiredGenderList().toString());
+    caRequiredGender.setInitialValue(dataModel.getTargetDose().getTrackedSeriesDose().getRequiredGenderList());
     
     conditionAttributesList.add(caGender);
     conditionAttributesList.add(caRequiredGender);
