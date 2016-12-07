@@ -6,6 +6,9 @@ import java.util.List;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.RequiredGender;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
 public class EvaluateGender extends LogicStep
@@ -64,32 +67,34 @@ public class EvaluateGender extends LogicStep
   private class LT extends LogicTable
   {
     public LT() {
-      super(0, 0, "Table ?-?");
+      super(0, 0, "Table 4-31");
 
-      //      setLogicCondition(0, new LogicCondition("date administered > lot expiration date?") {
-      //        @Override
-      //        public LogicResult evaluateInternal() {
-      //          if (caDateAdministered.getFinalValue() == null || caTriggerAgeDate.getFinalValue() == null) {
-      //            return LogicResult.NO;
-      //          }
-      //          if (caDateAdministered.getFinalValue().before(caTriggerAgeDate.getFinalValue())) {
-      //            return LogicResult.YES;
-      //          }
-      //          return LogicResult.NO;
-      //        }
-      //      });
+            setLogicCondition(0, new LogicCondition("Is the patient’s gender the same as one of the required genders? ") {
+              @Override
+              public LogicResult evaluateInternal() {
+            	  List<RequiredGender> rg = caRequiredGender.getFinalValue();
+                if (rg == null) {
+                  return LogicResult.YES;
+                }
+                if (rg.contains(caGender.getFinalValue())) {
+                  return LogicResult.YES;
+                }
+                return LogicResult.NO;
+              }
+            });
 
-      //      setLogicResults(0, LogicResult.YES, LogicResult.NO, LogicResult.NO, LogicResult.ANY);
+            setLogicResults(0, LogicResult.YES);
+            setLogicResults(1, LogicResult.NO);
 
-      //      setLogicOutcome(0, new LogicOutcome() {
-      //        @Override
-      //        public void perform() {
-      //          log("No. The target dose cannot be skipped. ");
-      //          log("Setting next step: 4.3 Substitute Target Dose");
-      //          setNextLogicStep(LogicStep.SUBSTITUTE_TARGET_DOSE_FOR_EVALUATION);
-      //        }
-      //      });
-      //      
+            setLogicOutcome(0, new LogicOutcome() {
+              @Override
+              public void perform() {
+                log("No. The target dose cannot be skipped. ");
+                log("Setting next step: 4.3 Substitute Target Dose");
+                setNextLogicStepType(LogicStepType.SATISFY_TARGET_DOSE);
+              }
+            });
+            
     }
   }
 
