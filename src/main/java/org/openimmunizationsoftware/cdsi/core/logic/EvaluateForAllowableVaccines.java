@@ -85,7 +85,7 @@ public class EvaluateForAllowableVaccines extends LogicStep
   private class LT extends LogicTable
   {
     public LT() {
-      super(0, 0, "Table 4.8");
+      super(0, 0, "Table 4.28");
 
       setLogicCondition(0, new LogicCondition("Is the vaccine type of the vaccine dose administered the same as the vaccine type of the allowable vaccine?") {
           @Override
@@ -94,9 +94,11 @@ public class EvaluateForAllowableVaccines extends LogicStep
               return LogicResult.NO;
             }
             for (int i=0;i<caVaccineTypeAllowable.getFinalValue().size();i++){
-            	if (caVaccineType.getFinalValue() == caVaccineTypeAllowable.getFinalValue().get(i).getVaccineType()) {
-            		caAllowableVaccineTypeBeginAgeDate.setInitialValue(caVaccineTypeAllowable.getFinalValue().get(i).getVaccineTypeBeginAge().getDateFrom(PAST));
-            		caAllowableVaccineTypeEndAgeDate.setInitialValue(caVaccineTypeAllowable.getFinalValue().get(i).getVaccineTypeEndAge().getDateFrom(FUTURE));
+            	VaccineType vt = caVaccineType.getFinalValue();
+            	AllowableVaccine av = caVaccineTypeAllowable.getFinalValue().get(i);
+            	if (vt == av.getVaccineType()) {
+            		caAllowableVaccineTypeBeginAgeDate.setInitialValue(av.getVaccineTypeBeginAge().getDateFrom(PAST));
+            		caAllowableVaccineTypeEndAgeDate.setInitialValue(av.getVaccineTypeEndAge().getDateFrom(FUTURE));
             		return LogicResult.YES;
             		
             	}

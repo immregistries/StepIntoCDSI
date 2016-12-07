@@ -401,7 +401,7 @@ public class DataModelLoader {
           RequiredGender requiredGender = new RequiredGender();
           requiredGender.setSeriesDose(seriesDose);
           seriesDose.getRequiredGenderList().add(requiredGender);
-          // TODO
+          requiredGender.setValue(DomUtils.getInternalValue(parentNode));
         }
       }
     }
