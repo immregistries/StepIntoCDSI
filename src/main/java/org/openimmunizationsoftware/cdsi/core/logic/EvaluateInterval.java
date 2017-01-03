@@ -17,6 +17,7 @@ import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
@@ -175,6 +176,8 @@ public class EvaluateInterval extends LogicStep {
           "Is the previous vaccine dose administered \"not valid\" due to age or interval requirements?") {
         @Override
         public LogicResult evaluateInternal() {
+        	if (dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered().getTargetDose().getTargetDoseStatus() == TargetDoseStatus.NOT_SATISFIED)
+        		return LogicResult.YES;
           return LogicResult.NO;
         }
       });
