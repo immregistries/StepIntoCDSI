@@ -89,11 +89,22 @@ public class EvaluateGender extends LogicStep
             setLogicOutcome(0, new LogicOutcome() {
               @Override
               public void perform() {
-                log("No. The target dose cannot be skipped. ");
-                log("Setting next step: 4.3 Substitute Target Dose");
+                log("Yes. Patient’s gender is one of the required genders.");
+                log("Setting next step: 4.10 Satisfy Target Dose");
+                //dataModel.getTargetDose().getTrackedSeriesDose().
                 setNextLogicStepType(LogicStepType.SATISFY_TARGET_DOSE);
               }
             });
+            
+            setLogicOutcome(1, new LogicOutcome() {
+                @Override
+                public void perform() {
+                  log("No. Patient’s gender is not one of the required genders. Evaluation Reason is “incorrect gender.”");
+                  log("Setting next step: 4.10 Satisfy Target Dose");
+                  //dataModel.
+                  setNextLogicStepType(LogicStepType.SATISFY_TARGET_DOSE);
+                }
+              });
             
     }
   }
