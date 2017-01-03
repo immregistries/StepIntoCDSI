@@ -1,11 +1,27 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
+import java.util.List;
 import java.io.PrintWriter;
 import java.util.Date;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
+import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.SeasonalRecommendation;
+import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
+import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
+
+
+import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.ANY;
+import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
+import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
 
 public class DetermineForecastNeed extends LogicStep
 {
@@ -41,6 +57,10 @@ public class DetermineForecastNeed extends LogicStep
     caMaximumAgeDate.setAssumedValue(FUTURE);
     caEndDate.setAssumedValue(FUTURE);
     caAssessmentDate.setAssumedValue(null);
+    
+   
+    
+    
     
     
   conditionAttributesList.add(caVaccineDoseAdministered);
@@ -85,32 +105,132 @@ public class DetermineForecastNeed extends LogicStep
   private class LT extends LogicTable
   {
     public LT() {
-      super(0, 0, "Table ?-?");
+    	super(5, 6, "Table 5-5 Should the patient receive another target dose ?");
+    	
+    	setLogicCondition(0, new LogicCondition("Does the patient have at least one target dose with a target dose status of \"not satisfied\"?") {
+			@Override
+			protected LogicResult evaluateInternal() {
+				if(caTargetDose.equals(TargetDoseStatus.NOT_SATISFIED)){
+					return LogicResult.YES;
+				}
+				return LogicResult.NO;
+			}
+		});
+    	
+    	setLogicCondition(1, new LogicCondition("Does the patient have at least one target dose with a target dose status of \"satisfied\"?") {
+			@Override
+			protected LogicResult evaluateInternal() {
+				if(caTargetDose.equals(TargetDoseStatus.SATISFIED)){
+					return LogicResult.YES;
+				}
+				return LogicResult.NO;
+			}
+		});
+    	
+    	setLogicCondition(2, new LogicCondition("Is the patient without a contradiction for this patient series ?") {
+			@Override
+			protected LogicResult evaluateInternal() {
+				if(dataModel.getContraindicationList().isEmpty()){
+					return LogicResult.YES;
+				}
+				return LogicResult.NO;
+				
+			}
+		});
+    	
+    	setLogicCondition(3, new LogicCondition("Is the assement date < the maximum age date ?") {
+			@Override
+			protected LogicResult evaluateInternal() {
+				if(caAssessmentDate.getAssumedValue().before(caMaximumAgeDate.getAssumedValue())){
+					return LogicResult.YES;
+				}
+				return LogicResult.NO;
+			}
+		});
+    	
+    	setLogicCondition(4, new LogicCondition("Is the assement date < seasonal recommendation end date ?") {
+			@Override
+			protected LogicResult evaluateInternal() {
+				List<TargetDose> targetDoseList = dataModel.getTargetDoseList();
+				int targetDoseListLength = targetDoseList.size();
+				for(int i=0;i<targetDoseListLength;i++){
+					TargetDose targetDose = targetDoseList.get(i);
+					List<SeasonalRecommendation> seasonalRecommendationList = targetDose.getTrackedSeriesDose().getSeasonalRecommendationList();
+					int seasonalRecommendationLength = seasonalRecommendationList.size();
+					for(int j=0; j<seasonalRecommendationLength;j++){
+						SeasonalRecommendation seasonalRecommendation = seasonalRecommendationList.get(j);
+						if(caAssessmentDate.getAssumedValue().before(seasonalRecommendation.getSeasonalRecommendationEndDate())){
+							return LogicResult.YES;
+						}
+					}
+				}
+				return LogicResult.NO;
 
-      //      setLogicCondition(0, new LogicCondition("date administered > lot expiration date?") {
-      //        @Override
-      //        public LogicResult evaluateInternal() {
-      //          if (caDateAdministered.getFinalValue() == null || caTriggerAgeDate.getFinalValue() == null) {
-      //            return LogicResult.NO;
-      //          }
-      //          if (caDateAdministered.getFinalValue().before(caTriggerAgeDate.getFinalValue())) {
-      //            return LogicResult.YES;
-      //          }
-      //          return LogicResult.NO;
-      //        }
-      //      });
-
-      //      setLogicResults(0, LogicResult.YES, LogicResult.NO, LogicResult.NO, LogicResult.ANY);
-
-      //      setLogicOutcome(0, new LogicOutcome() {
-      //        @Override
-      //        public void perform() {
-      //          log("No. The target dose cannot be skipped. ");
-      //          log("Setting next step: 4.3 Substitute Target Dose");
-      //          setNextLogicStep(LogicStep.SUBSTITUTE_TARGET_DOSE_FOR_EVALUATION);
-      //        }
-      //      });
-      //      
+			}
+		});
+    	
+    	setLogicResults(0,YES,ANY,YES,YES,YES);
+    	setLogicResults(1,NO,YES,ANY,ANY,ANY);
+    	setLogicResults(2,NO,NO,ANY,ANY,ANY);
+    	setLogicResults(3,ANY,ANY,NO,ANY,ANY);
+    	setLogicResults(4,ANY,ANY,ANY,NO,ANY);
+    	setLogicResults(5,ANY,ANY,ANY,ANY,NO);
+    	
+    	setLogicOutcome(0, new LogicOutcome() {
+			@Override
+			public void perform() {
+				log("Yes. The patient should receive another dose.");
+	  			dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.NOT_COMPLETE);
+			}
+		});
+    	
+    	setLogicOutcome(1, new LogicOutcome() {
+			@Override
+			public void perform() {
+				log("No. The patient should not receive another dose .");
+	  			dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.COMPLETE);
+	  			log("Forecast reason is \"patient series is complete.\"");
+			}
+		});
+    	
+    	setLogicOutcome(2, new LogicOutcome() {
+			@Override
+			public void perform() {
+				log("No. The patient should not receive another dose .");
+	  			dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.NOT_RECOMMENDED);
+	  			log("Forecast reason is \"not recommended at this time due to past immunization history.\"");
+			}
+		});
+    	
+    	setLogicOutcome(3, new LogicOutcome() {
+			@Override
+			public void perform() {
+				log("No. The patient should not receive another dose .");
+	  			dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.CONTRAINDICATED);
+	  			log("Forecast reason is \"not recommended at this time due to past immunization history.\"");
+			}
+		});
+    	
+    	setLogicOutcome(4, new LogicOutcome() {
+			@Override
+			public void perform() {
+				log("No. The patient should not receive another dose .");
+	  			dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.AGED_OUT);
+	  			log("Forecast reason is \"patient has execeeded the maximum age.\"");
+			}
+		});
+    	
+    	setLogicOutcome(5, new LogicOutcome() {
+			@Override
+			public void perform() {
+				log("No. The patient should not receive another dose .");
+	  			dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.NOT_COMPLETE);
+	  			log("Forecast reason is \"past seasonal recommendation end date.\"");
+			}
+		});
+    	
+    	
+    	
     }
   }
 
