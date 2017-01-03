@@ -99,7 +99,7 @@ public class EvaluateInterval extends LogicStep
   private class LT extends LogicTable
   {
     public LT() {
-      super(5, 5, "Table 4-11 Was the Vaccine Dose Administered at a Valid Interval?");
+      super(5, 5, "Table 4 - 14 Did the vaccine dose administered satisfy the defined interval?");
 
       setLogicCondition(0, new LogicCondition("Absolute minimum interval date > date administered?") {
         @Override
@@ -138,7 +138,10 @@ public class EvaluateInterval extends LogicStep
       setLogicCondition(3, new LogicCondition("Is this the first target dose?") {
         @Override
         public LogicResult evaluateInternal() {
-          return LogicResult.NO;
+        	if (caFromTargetDoseNumberInSeries.equals(String.valueOf(1))){
+          return LogicResult.YES;
+        	}
+        	return LogicResult.NO;
         }
       });
 
@@ -169,3 +172,4 @@ public class EvaluateInterval extends LogicStep
   }
 
 }
+
