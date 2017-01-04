@@ -14,6 +14,7 @@ public class SeriesDose
   private AntigenSeries antigenSeries = null;
   private List<Age> ageList = new ArrayList<Age>();
   private List<Interval> intervalList = new ArrayList<Interval>();
+  private List<AllowableInterval> allowableintervalList = new ArrayList<AllowableInterval>();
   private ConditionalSkip conditionalSkip = null;
   private List<RecurringDose> recurringDoseList = new ArrayList<RecurringDose>();
   private List<ConditionalNeed> conditionalNeedList = new ArrayList<ConditionalNeed>();
@@ -79,6 +80,23 @@ public class SeriesDose
       }
       out.println("</table>");
     }
+    if (allowableintervalList.size() > 0) {
+        out.println("<h4>Allowable Interval</h4>");
+        out.println("<table>");
+        out.println("  <tr>");
+        out.println("    <th>From Immediate Previous Dose Administered</th>");
+        out.println("    <th>From Target Dose Number In Series</th>");
+        out.println("    <th>Absolute Minimum Interval</th>");
+        out.println("  </tr>");
+        for (AllowableInterval ainterval : allowableintervalList) {
+          out.println("  <tr>");
+          out.println("    <td>" + ainterval.getFromImmediatePreviousDoseAdministered() + "</td>");
+          out.println("    <td>" + ainterval.getFromTargetDoseNumberInSeries() + "</td>");
+          out.println("    <td>" + ainterval.getAbsoluteMinimumInterval() + "</td>");
+          out.println("  </tr>");
+        }
+        out.println("</table>");
+      }
 //    if (skipTargetDoseList.size() > 0) {
 //      out.println("<h4>Skip Target Dose</h4>");
 //      out.println("<table>");
@@ -309,4 +327,12 @@ public class SeriesDose
   public List<AllowableVaccine> getAllowableVaccineList() {
     return allowableVaccineList;
   }
+
+public List<AllowableInterval> getAllowableintervalList() {
+	return allowableintervalList;
+}
+
+public void setAllowableintervalList(List<AllowableInterval> allowableintervalList) {
+	this.allowableintervalList = allowableintervalList;
+}
 }

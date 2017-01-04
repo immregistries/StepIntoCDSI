@@ -12,12 +12,14 @@ import java.io.PrintWriter;
 import java.util.Date;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.AllowableInterval;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
@@ -51,24 +53,33 @@ public class EvaluateAllowableInterval extends LogicStep
     caDateAdministered.setInitialValue(aar.getDateAdministered());
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
     if (seriesDose.getAgeList().size() > 0) {
-      if (seriesDose.getIntervalList().size() > 0) {
-        Interval interval = seriesDose.getIntervalList().get(0);
-        caFromImmediatePreviousDoseAdministered.setInitialValue(interval.getFromImmediatePreviousDoseAdministered());
-        caFromTargetDoseNumberInSeries.setInitialValue(interval.getFromTargetDoseNumberInSeries());
+      for (AllowableInterval ainterval : seriesDose.getAllowableintervalList()) {
+        caFromImmediatePreviousDoseAdministered.setInitialValue(ainterval.getFromImmediatePreviousDoseAdministered());
+        caFromTargetDoseNumberInSeries.setInitialValue(ainterval.getFromTargetDoseNumberInSeries());
+        caAbsoluteMinimumIntervalDate.setInitialValue(CALCDTINT_3.evaluate(dataModel, this, null));
+        
+        LT logicTable = new LT();
+        logicTableList.add(logicTable);
       }
     }
-    caAbsoluteMinimumIntervalDate.setInitialValue(CALCDTINT_3.evaluate(dataModel, this, null));
 //    caMinimumIntervalDate.setInitialValue(CALCDTINT_4.evaluate(dataModel, this));
 
 
-    LT logicTable = new LT();
-    logicTableList.add(logicTable);
+
   }
 
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.EVALUATE_FOR_LIVE_VIRUS_CONFLICT);
-    return next();
+	  YesNo result = YesNo.YES;
+	    for (LogicTable logicTable : logicTableList) {
+	      logicTable.evaluate();
+	      if (((LT) logicTable).getResult() == YesNo.NO) {
+	        result = YesNo.NO;
+	      }
+	    }
+	      setNextLogicStepType(LogicStepType.EVALUATE_FOR_LIVE_VIRUS_CONFLICT);
+
+	      return next();
   }
 
   @Override
@@ -91,74 +102,58 @@ public class EvaluateAllowableInterval extends LogicStep
 
   private class LT extends LogicTable
   {
+	    private YesNo result = null;
+
     public LT() {
-      super(5, 5, "Table 4-11 Was the Vaccine Dose Administered at a Valid Interval?");
+      super(1, 2, "Table 4 - 17 Did the vaccine dose administered satisfy the defined Allowable interval?");
 
-      setLogicCondition(0, new LogicCondition("Absolute minimum interval date > date administered?") {
+
+      setLogicCondition(0, new LogicCondition("date administered < Absolute minimum interval date?") {
         @Override
         public LogicResult evaluateInternal() {
-          if (caAbsoluteMinimumIntervalDate.getFinalValue().after(caDateAdministered.getFinalValue())) {
-            return LogicResult.YES;
-          }
-          return LogicResult.NO;
-        }
-      });
-
-      setLogicCondition(1, new LogicCondition(
-          "Absolute minimum interval date <= date administered < minimum interval date?") {
-        @Override
-        public LogicResult evaluateInternal() {
-          if (caAbsoluteMinimumIntervalDate.getFinalValue().after(caDateAdministered.getFinalValue())) {
-            return LogicResult.NO;
-          }
-//          if (caDateAdministered.getFinalValue().before(caMinimumIntervalDate.getFinalValue())) {
-//            return LogicResult.YES;
-//          }
-          return LogicResult.NO;
-        }
-      });
-
-      setLogicCondition(2, new LogicCondition("Minimum interval date <= date administered?") {
-        @Override
-        public LogicResult evaluateInternal() {
+        	
+            if (caAbsoluteMinimumIntervalDate.getFinalValue().after(caDateAdministered.getFinalValue())) {
+                return LogicResult.YES;
+              }
 //          if (caDateAdministered.getFinalValue().before(caMinimumIntervalDate.getFinalValue())) {
 //            return LogicResult.NO;
 //          }
-          return LogicResult.YES;
-        }
-      });
-
-      setLogicCondition(3, new LogicCondition("Is this the first target dose?") {
-        @Override
-        public LogicResult evaluateInternal() {
           return LogicResult.NO;
         }
       });
 
-      setLogicCondition(4, new LogicCondition(
-          "Is the previous vaccine dose administered \"not valid\" due to age or interval requirements?") {
-        @Override
-        public LogicResult evaluateInternal() {
-          return LogicResult.NO;
-        }
-      });
+     
 
-      setLogicResults(0, LogicResult.YES, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.NO);
-      setLogicResults(1, LogicResult.NO, LogicResult.YES, LogicResult.YES, LogicResult.YES, LogicResult.NO);
-      setLogicResults(2, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.NO);
-      setLogicResults(3, LogicResult.ANY, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.ANY);
-      setLogicResults(4, LogicResult.ANY, LogicResult.YES, LogicResult.NO, LogicResult.ANY, LogicResult.ANY);
+      
 
-      //      setLogicOutcome(0, new LogicOutcome() {
-      //        @Override
-      //        public void perform() {
-      //          log("No. The target dose cannot be skipped. ");
-      //          log("Setting next step: 4.3 Substitute Target Dose");
-      //          setNextLogicStep(LogicStep.SUBSTITUTE_TARGET_DOSE_FOR_EVALUATION);
-      //        }
-      //      });
+      setLogicResults(0, LogicResult.YES);
+      setLogicResults(1, LogicResult.NO);
+      
+
+      
+      
+            setLogicOutcome(0, new LogicOutcome() {
+              @Override
+              public void perform() {
+                log("No. The vaccine dose administered did not satisfy the defined allowable interval.  Evaluation Reason is \" too soon. \" ");
+                result = YesNo.NO;
+              }
+            });
+            
+            setLogicOutcome(1, new LogicOutcome() {
+                @Override
+                public void perform() {
+                  log("Yes. The vaccine dose administered did satisfy the defined allowable interval. ");
+                  result = YesNo.YES;
+                }
+              });
       
     }
+
+	public YesNo getResult() {
+		// TODO Auto-generated method stub
+		return null;
+	}
   }
 
 }

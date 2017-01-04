@@ -184,9 +184,9 @@ public class EvaluateInterval extends LogicStep {
 
       setLogicResults(0, LogicResult.YES, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.NO);
       setLogicResults(1, LogicResult.NO, LogicResult.YES, LogicResult.YES, LogicResult.YES, LogicResult.NO);
-      setLogicResults(2, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.NO);
-      setLogicResults(3, LogicResult.ANY, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.ANY);
-      setLogicResults(4, LogicResult.ANY, LogicResult.YES, LogicResult.NO, LogicResult.ANY, LogicResult.ANY);
+      setLogicResults(2, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.YES);
+      setLogicResults(3, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.YES, LogicResult.ANY);
+      setLogicResults(4, LogicResult.NO, LogicResult.YES, LogicResult.NO, LogicResult.ANY, LogicResult.ANY);
 
       setLogicOutcome(0, new LogicOutcome() {
         @Override
