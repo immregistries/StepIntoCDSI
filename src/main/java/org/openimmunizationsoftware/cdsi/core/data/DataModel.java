@@ -12,6 +12,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.Contraindication;
+import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.Immunity;
 import org.openimmunizationsoftware.cdsi.core.domain.ImmunizationHistory;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
@@ -20,6 +21,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.Schedule;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
@@ -48,7 +50,16 @@ public class DataModel
   private List<AntigenSeries> antigenSeriesList = new ArrayList<AntigenSeries>();
   private List<PatientSeries> patientSeriesList = new ArrayList<PatientSeries>();
   private PatientSeries patientSeries = null;
+  private VaccineGroupForecast vaccineGroupForecast = new VaccineGroupForecast();
   
+  public VaccineGroupForecast getVaccineGroupForecast() {
+    return vaccineGroupForecast;
+  }
+
+  public void setVaccineGroupForecast(VaccineGroupForecast vaccineGroupForecast) {
+    this.vaccineGroupForecast = vaccineGroupForecast;
+  }
+
   public AntigenAdministeredRecord getAntigenAdministeredRecordThatSatisfiedPreviousTargetDose() {
     return antigenAdministeredRecordThatSatisfiedPreviousTargetDose;
   }

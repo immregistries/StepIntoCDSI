@@ -114,7 +114,9 @@ public class EvaluateConditionalSkip extends LogicStep {
           f.caConditionalSkipIntervalDate.setInitialValue(CALCDTSKIP_5.evaluate(dataModel, this, condition));
           f.caConditionalSkipStartDate.setInitialValue(condition.getStartDate());
           f.caConditionalSkipEndDate.setInitialValue(condition.getEndDate());
-          f.caConditionalDoseType.setInitialValue(condition.getDoseType().name());
+          if (condition.getDoseType() != null) {
+            f.caConditionalDoseType.setInitialValue(condition.getDoseType().name());
+          }
         //  f.caConditionalSkipDoseCountLogic.setInitialValue(condition.);
 
         }

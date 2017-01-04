@@ -12,6 +12,7 @@ public class Forecast {
   private Date unadjustedPastDueDate = null;
   private VaccineGroupForecast vaccineGroupForecast = null;
   private Date assessmentDate = null;
+  
   public Date getAdjustedRecommendedDate() {
     return adjustedRecommendedDate;
   }
