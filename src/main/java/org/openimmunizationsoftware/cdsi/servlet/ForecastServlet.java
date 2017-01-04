@@ -2,7 +2,9 @@ package org.openimmunizationsoftware.cdsi.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,8 +17,10 @@ import org.openimmunizationsoftware.cdsi.SoftwareVersion;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.data.DataModelLoader;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
+import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepFactory;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepType;
 
@@ -61,16 +65,35 @@ public class ForecastServlet extends HttpServlet {
     out.println("Step Into Clinical Decision Support for Immunizations - Demonstration System");
     out.println();
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-    
-    
-    out.println("VACCINATIONS RECOMMENDED " + sdf.format(dataModel.getAssessmentDate()));
-    out.println();
 
-    out.println("VACCINATIONS RECOMMENDED AFTER " + sdf.format(dataModel.getAssessmentDate()));
-    out.println();
+    VaccineGroupForecast vgf = dataModel.getVaccineGroupForecast();
+    List<Forecast> fl = vgf.getForecastList();
+    List<Forecast> flNow = new ArrayList<Forecast>();
+    List<Forecast> flLater = new ArrayList<Forecast>();
+    List<Forecast> flDone = new ArrayList<Forecast>();
+    Date today = new Date();
+    try {
+      today = sdf.parse(sdf.format(today));
+    } catch (ParseException pe) {
+      pe.printStackTrace();
+    }
+    {
+      for (Forecast f : fl) {
+        if (f.getForecastReason().equals("")) {
+          if (f.getAdjustedRecommendedDate().after(today)) {
+            flLater.add(f);
+          } else {
+            flNow.add(f);
+          }
+        } else {
+          flDone.add(f);
+        }
+      }
+    }
 
-    out.println("VACCINATIONS COMPLETE OR NOT RECOMMENDED");
-    out.println();
+    printList(dataModel, out, sdf, today, flNow, "VACCINATIONS RECOMMENDED");
+    printList(dataModel, out, sdf, today, flLater, "VACCINATIONS RECOMMENDED AFTER");
+    printList(dataModel, out, sdf, today, flDone, "VACCINATIONS COMPLETE OR NOT RECOMMENDED");
 
     if (dataModel.getAntigenAdministeredRecordList().size() > 0) {
       out.println("IMMUNIZATION EVALUATION");
@@ -94,6 +117,43 @@ public class ForecastServlet extends HttpServlet {
 
     out.println(
         "Forecast generated " + sdf.format(new Date()) + " using software version " + SoftwareVersion.VERSION + ".");
+  }
+
+  private void printList(DataModel dataModel, PrintWriter out, SimpleDateFormat sdf, Date today,
+      List<Forecast> forecastList, String title) {
+    if (forecastList.size() > 0) {
+      out.println(title + " " + sdf.format(dataModel.getAssessmentDate()));
+      for (Forecast forecast : forecastList) {
+        if (forecast.getAntigen() != null) {
+          out.print("Forecasting " + forecast.getAntigen().getName() + " status ");
+          if (forecast.getForecastReason().equals("")) {
+            if (forecast.getAdjustedRecommendedDate().after(today)) {
+              out.print("due later ");
+            } else {
+              out.print("due ");
+            }
+            out.print("dose ");
+            if (forecast.getTargetDose() == null) {
+              out.print("?");
+            } else {
+              out.print(forecast.getTargetDose().getTrackedSeriesDose().getDoseNumber());
+            }
+            out.println("due ");
+            out.println(sdf.format(forecast.getAdjustedRecommendedDate()));
+            out.println("valid ");
+            out.println(sdf.format(forecast.getEarliestDate()));
+            out.println("overdue ");
+            out.println(sdf.format(forecast.getAdjustedPastDueDate()));
+            out.println("finished ");
+            out.println(sdf.format(forecast.getLatestDate()));
+          } else {
+            out.print(forecast.getForecastReason());
+          }
+          out.println();
+        }
+      }
+      out.println();
+    }
   }
 
   private void process(DataModel dataModel) throws Exception {
