@@ -16,6 +16,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.AllowableInterval;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
@@ -70,11 +71,9 @@ public class EvaluateAllowableInterval extends LogicStep
 
   @Override
   public LogicStep process() throws Exception {
-	  YesNo result = YesNo.YES;
 	    for (LogicTable logicTable : logicTableList) {
 	      logicTable.evaluate();
 	      if (((LT) logicTable).getResult() == YesNo.NO) {
-	        result = YesNo.NO;
 	      }
 	    }
 	      setNextLogicStepType(LogicStepType.EVALUATE_FOR_LIVE_VIRUS_CONFLICT);
@@ -136,6 +135,7 @@ public class EvaluateAllowableInterval extends LogicStep
               @Override
               public void perform() {
                 log("No. The vaccine dose administered did not satisfy the defined allowable interval.  Evaluation Reason is \" too soon. \" ");
+                dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
                 result = YesNo.NO;
               }
             });

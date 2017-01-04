@@ -40,7 +40,6 @@ public class EvaluateGender extends LogicStep
 
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.SATISFY_TARGET_DOSE);
     return next();
   }
 
@@ -68,7 +67,7 @@ public class EvaluateGender extends LogicStep
   private class LT extends LogicTable
   {
     public LT() {
-      super(0, 0, "Table 4-31");
+      super(1, 2, "Table 4-31");
 
             setLogicCondition(0, new LogicCondition("Is the patient’s gender the same as one of the required genders? ") {
               @Override
