@@ -160,7 +160,7 @@ public class GenerateForecastDates extends LogicStep
 
   private TimePeriod getLatest(List<TimePeriod> timePeriodList){
 	return timePeriodList.get(0);
-	  
+
   }
   //Where can I get the The forecast earliest date
   private String unadjustedRecommandedDate(){
