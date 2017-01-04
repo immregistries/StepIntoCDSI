@@ -96,9 +96,10 @@ public class EvaluateForAllowableVaccines extends LogicStep
             for (int i=0;i<caVaccineTypeAllowable.getFinalValue().size();i++){
             	VaccineType vt = caVaccineType.getFinalValue();
             	AllowableVaccine av = caVaccineTypeAllowable.getFinalValue().get(i);
+            	Date birthDate = dataModel.getPatient().getDateOfBirth();
             	if (vt == av.getVaccineType()) {
-            		caAllowableVaccineTypeBeginAgeDate.setInitialValue(av.getVaccineTypeBeginAge().getDateFrom(PAST));
-            		caAllowableVaccineTypeEndAgeDate.setInitialValue(av.getVaccineTypeEndAge().getDateFrom(FUTURE));
+            		caAllowableVaccineTypeBeginAgeDate.setInitialValue(av.getVaccineTypeBeginAge().getDateFrom(birthDate));
+            		caAllowableVaccineTypeEndAgeDate.setInitialValue(av.getVaccineTypeEndAge().getDateFrom(birthDate));
             		return LogicResult.YES;
             		
             	}
@@ -128,8 +129,6 @@ public class EvaluateForAllowableVaccines extends LogicStep
               @Override
               public void perform() {
                 log("Yes. An allowable vaccine was administered ");
-               
-                
                 log("Setting next step: 4.9 EvaluateGender");
                 setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
               }
@@ -139,6 +138,7 @@ public class EvaluateForAllowableVaccines extends LogicStep
                public void perform() {
                  log("No.  This supporting data defined allowable vaccine was not administered.");
                  log("Setting next step: 4.9 EvaluateGender");
+                 dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
                  setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
                }
              });
@@ -146,6 +146,7 @@ public class EvaluateForAllowableVaccines extends LogicStep
                @Override
                public void perform() {
                  log("No.  This supporting data defined allowable vaccine was administered out of the allowable age range.");
+                 dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
                  log("Setting next step: 4.9 EvaluateGender");
                  setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
                }

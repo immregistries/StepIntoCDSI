@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.RequiredGender;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
@@ -91,7 +92,6 @@ public class EvaluateGender extends LogicStep
               public void perform() {
                 log("Yes. Patient’s gender is one of the required genders.");
                 log("Setting next step: 4.10 Satisfy Target Dose");
-                //dataModel.getTargetDose().getTrackedSeriesDose().
                 setNextLogicStepType(LogicStepType.SATISFY_TARGET_DOSE);
               }
             });
@@ -101,7 +101,7 @@ public class EvaluateGender extends LogicStep
                 public void perform() {
                   log("No. Patient’s gender is not one of the required genders. Evaluation Reason is “incorrect gender.”");
                   log("Setting next step: 4.10 Satisfy Target Dose");
-                  //dataModel.
+                  dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
                   setNextLogicStepType(LogicStepType.SATISFY_TARGET_DOSE);
                 }
               });
