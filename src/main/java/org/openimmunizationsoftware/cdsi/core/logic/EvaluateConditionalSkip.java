@@ -126,8 +126,16 @@ public class EvaluateConditionalSkip extends LogicStep {
       log("No conditional skips are defined. ");
     }
     log("Looking to set Trigger values");
-    LT46 logicTable = new LT46();
-    logicTableList.add(logicTable);
+    LT46 logicTable46 = new LT46();
+    logicTableList.add(logicTable46);
+    LT47 logicTable47 = new LT47();
+    logicTableList.add(logicTable47);
+    LT48 logicTable48 = new LT48();
+    logicTableList.add(logicTable48);
+    LT49 logicTable49 = new LT49();
+    logicTableList.add(logicTable49);
+    LT410 logicTable410 = new LT410();
+    logicTableList.add(logicTable410);
   }
 
   @Override
@@ -159,7 +167,7 @@ public class EvaluateConditionalSkip extends LogicStep {
 
   private class LT46 extends LogicTable {
     public LT46() {
-      super(3, 4, "Table 4-6 CONDITIONAL Type of Age – Is the Condition Met?");
+      super(1, 2, "Table 4-6 CONDITIONAL Type of Age – Is the Condition Met?");
 
       setLogicCondition(0, new LogicCondition("Is the Conditional Skip Reference Date ≥ Conditional Skip Begin Age Date?") {
         @Override
@@ -201,7 +209,7 @@ public class EvaluateConditionalSkip extends LogicStep {
   
   private class LT47 extends LogicTable {
 	    public LT47() {
-	      super(3, 4, "Table 4 - 7 CONDITIONAL Type of Interval – Is the Condition Met?");
+	      super(1, 2, "Table 4 - 7 CONDITIONAL Type of Interval – Is the Condition Met?");
 
 	      setLogicCondition(0, new LogicCondition("Is the Conditional Skip Reference Date ≥ Conditional Skip Interval Date?") {
 	        @Override
@@ -243,7 +251,7 @@ public class EvaluateConditionalSkip extends LogicStep {
   
   private class LT48 extends LogicTable {
 	    public LT48() {
-	      super(3, 4, "Table 4 - 8 CONDITIONAL Type of Vaccine Count By Age or Date – Is the Condition Met?");
+	      super(1, 2, "Table 4 - 8 CONDITIONAL Type of Vaccine Count By Age or Date – Is the Condition Met?");
 
 	      setLogicCondition(0, new LogicCondition("Comparing the Number of Conditional Doses Administered with the Conditional Skip Dose Count") {
 	        @Override
@@ -288,7 +296,7 @@ public class EvaluateConditionalSkip extends LogicStep {
   
   private class LT49 extends LogicTable {
 	    public LT49() {
-	      super(3, 4, "Table 4 - 9 Is the Conditional Skip Set Met?");
+	      super(1, 2, "Table 4 - 9 Is the Conditional Skip Set Met?");
 
 	      setLogicCondition(0, new LogicCondition("How many conditions were met?") {
 	        @Override
@@ -332,7 +340,7 @@ public class EvaluateConditionalSkip extends LogicStep {
 	  }
   private class LT410 extends LogicTable {
 	    public LT410() {
-	      super(3, 4, "Table 4 - 10 Can The Target Dose Be Skipped?");
+	      super(1, 2, "Table 4 - 10 Can The Target Dose Be Skipped?");
 
 	      setLogicCondition(0, new LogicCondition("How many sets were met?") {
 	        @Override
@@ -378,6 +386,4 @@ public class EvaluateConditionalSkip extends LogicStep {
 
 	    }
 	  }
-
-
 }
