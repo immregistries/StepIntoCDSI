@@ -8,11 +8,18 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
+import java.util.Map;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
+import org.openimmunizationsoftware.cdsi.core.domain.PreferrableVaccine;
+import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
+import org.openimmunizationsoftware.cdsi.core.domain.Vaccine;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
@@ -261,9 +268,23 @@ public class GenerateForecastDates extends LogicStep
   }
   
   
-  private String recommendedVaccine(){
-	  //ToDO
-	  return null;
+  private List<Vaccine> recommendedVaccines(){
+	  List<Vaccine> vaccineList = new ArrayList<Vaccine>();
+	  List<AntigenSeries> antigenSeriesList = dataModel.getAntigenSeriesList();
+	  for (AntigenSeries antigenSeries:antigenSeriesList){
+		  List<SeriesDose> serieDoseList = antigenSeries.getSeriesDoseList();
+		  for(SeriesDose serieDose:serieDoseList){
+			  List<PreferrableVaccine> preferrableVaccinesList = serieDose.getPreferrableVaccineList();
+			  for(PreferrableVaccine preferrableVaccine:preferrableVaccinesList){
+				  VaccineType vaccineType = preferrableVaccine.getVaccineType();
+				  if(vaccineType.equals(caForecastVaccineType.getAssumedValue())){
+					  vaccineList.add(preferrableVaccine);
+				  }
+			  }
+		  }
+	  }
+	  
+	  return vaccineList;
   }
   
   private Forecast generateForcastDate(){
