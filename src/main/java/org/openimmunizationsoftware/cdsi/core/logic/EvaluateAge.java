@@ -102,7 +102,7 @@ public class EvaluateAge extends LogicStep{
   private class LT extends LogicTable
   {
     public LT() {
-      super(6, 6, "Table 4-9 Was the Vaccine Dose Administered at a Valid Age?");
+      super(6, 6, "Table 4-12 Was the Vaccine Dose Administered at a Valid Age?");
 
       setLogicCondition(0, new LogicCondition("Date administered < absolute minimum age date?") {
         @Override
