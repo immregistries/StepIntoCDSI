@@ -25,7 +25,7 @@ public class SatisfyTargetDose extends LogicStep {
     LT logicTable = new LT();
     logicTableList.add(logicTable);
   }
-
+//:P
   @Override
   public LogicStep process() throws Exception {
 
