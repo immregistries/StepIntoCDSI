@@ -1,6 +1,9 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
+import java.util.List;
+
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
 public class TargetDose
 {
@@ -8,7 +11,6 @@ public class TargetDose
   private SeriesDose trackedSeriesDose = null;
   private VaccineDoseAdministered satisfiedByVaccineDoseAdministered = null;
   private String statusCause = "";
-  //:P
   public TargetDose() {
     // default
   }
@@ -53,5 +55,6 @@ public String getStatusCause() {
 public void setStatusCause(String statusCause) {
 	this.statusCause = statusCause;
 }
+
 
 }
