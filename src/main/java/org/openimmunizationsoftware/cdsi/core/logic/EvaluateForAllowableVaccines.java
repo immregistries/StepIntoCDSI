@@ -3,7 +3,6 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTALLOW_1;
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTALLOW_2;
 
-
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
@@ -18,8 +17,7 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
-public class EvaluateForAllowableVaccines extends LogicStep
-{
+public class EvaluateForAllowableVaccines extends LogicStep {
 
   private ConditionAttribute<Date> caDateAdministered = null;
   private ConditionAttribute<VaccineType> caVaccineType = null;
@@ -33,7 +31,8 @@ public class EvaluateForAllowableVaccines extends LogicStep
 
     caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
     caVaccineType = new ConditionAttribute<VaccineType>("Vaccine Dose Administered", "Vaccine Type");
-    caVaccineTypeAllowable = new ConditionAttribute<List<AllowableVaccine>>("Supporting data (Allowable Vaccine)", "Vaccine Type");
+    caVaccineTypeAllowable = new ConditionAttribute<List<AllowableVaccine>>("Supporting data (Allowable Vaccine)",
+        "Vaccine Type");
     caAllowableVaccineTypeBeginAgeDate = new ConditionAttribute<Date>("Calculated data (CALCDTALLOW-1)",
         "Allowable Vaccine Type Begin Age Date");
     caAllowableVaccineTypeEndAgeDate = new ConditionAttribute<Date>("Calculated Data (CALCDTALLOW-2)",
@@ -41,13 +40,12 @@ public class EvaluateForAllowableVaccines extends LogicStep
 
     caAllowableVaccineTypeBeginAgeDate.setAssumedValue(PAST);
     caAllowableVaccineTypeEndAgeDate.setAssumedValue(FUTURE);
-    
+
     AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
     caDateAdministered.setInitialValue(aar.getDateAdministered());
     caVaccineType.setInitialValue(aar.getVaccineType());
     caVaccineTypeAllowable.setInitialValue(dataModel.getTargetDose().getTrackedSeriesDose().getAllowableVaccineList());
-    
-    
+
     conditionAttributesList.add(caDateAdministered);
     conditionAttributesList.add(caVaccineType);
     conditionAttributesList.add(caVaccineTypeAllowable);
@@ -76,81 +74,85 @@ public class EvaluateForAllowableVaccines extends LogicStep
 
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + getTitle() + "</h1>");
-    out.println("<p>Evaluate  for  allowable  vaccine  validates  the  vaccine  of  a  vaccine  dose  administered  against  the  list  of allowable vaccines.</p>");
+    out.println(
+        "<p>Evaluate  for  allowable  vaccine  validates  the  vaccine  of  a  vaccine  dose  administered  against  the  list  of allowable vaccines.</p>");
 
     printConditionAttributesTable(out);
     printLogicTables(out);
   }
 
-  private class LT extends LogicTable
-  {
+  private class LT extends LogicTable {
     public LT() {
-      super(0, 0, "Table 4.28");
+      super(2, 3, "Table 4.28");
 
-      setLogicCondition(0, new LogicCondition("Is the vaccine type of the vaccine dose administered the same as the vaccine type of the allowable vaccine?") {
-          @Override
-          public LogicResult evaluateInternal() {
-            if (caDateAdministered.getFinalValue() == null) {
-              return LogicResult.NO;
-            }
-            for (int i=0;i<caVaccineTypeAllowable.getFinalValue().size();i++){
-            	VaccineType vt = caVaccineType.getFinalValue();
-            	AllowableVaccine av = caVaccineTypeAllowable.getFinalValue().get(i);
-            	Date birthDate = dataModel.getPatient().getDateOfBirth();
-            	if (vt == av.getVaccineType()) {
-            		caAllowableVaccineTypeBeginAgeDate.setInitialValue(av.getVaccineTypeBeginAge().getDateFrom(birthDate));
-            		caAllowableVaccineTypeEndAgeDate.setInitialValue(av.getVaccineTypeEndAge().getDateFrom(birthDate));
-            		return LogicResult.YES;
-            		
-            	}
-            }
+      setLogicCondition(0, new LogicCondition(
+          "Is the vaccine type of the vaccine dose administered the same as the vaccine type of the allowable vaccine?") {
+        @Override
+        public LogicResult evaluateInternal() {
+          if (caDateAdministered.getFinalValue() == null) {
             return LogicResult.NO;
           }
-        });      
-      
-      setLogicCondition(1, new LogicCondition("Is the Allowable vaccine type begin age date ≤ date administered < allowable vaccine type end age date?") {
-              @Override
-              public LogicResult evaluateInternal() {
-                if (caDateAdministered.getFinalValue() == null || caAllowableVaccineTypeBeginAgeDate.getFinalValue() == null || caAllowableVaccineTypeEndAgeDate.getFinalValue()==null ) {
-                  return LogicResult.NO;
-                }
-                if (caDateAdministered.getFinalValue().before(caAllowableVaccineTypeEndAgeDate.getFinalValue()) && caDateAdministered.getFinalValue().after(caAllowableVaccineTypeBeginAgeDate.getFinalValue())) {
-                  return LogicResult.YES;
-                }
-                return LogicResult.NO;
-              }
-            });
-            
-      		setLogicResults(0, new LogicResult[] { LogicResult.YES, LogicResult.NO, LogicResult.NO });
-      		setLogicResults(1, new LogicResult[] { LogicResult.YES, LogicResult.ANY, LogicResult.NO });
-          
-           setLogicOutcome(0, new LogicOutcome() {
-              @Override
-              public void perform() {
-                log("Yes. An allowable vaccine was administered ");
-                log("Setting next step: 4.9 EvaluateGender");
-                setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
-              }
-            });
-           setLogicOutcome(1, new LogicOutcome() {
-               @Override
-               public void perform() {
-                 log("No.  This supporting data defined allowable vaccine was not administered.");
-                 log("Setting next step: 4.9 EvaluateGender");
-                 dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
-                 setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
-               }
-             });
-           setLogicOutcome(2, new LogicOutcome() {
-               @Override
-               public void perform() {
-                 log("No.  This supporting data defined allowable vaccine was administered out of the allowable age range.");
-                 dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
-                 log("Setting next step: 4.9 EvaluateGender");
-                 setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
-               }
-             });
-            
+          for (int i = 0; i < caVaccineTypeAllowable.getFinalValue().size(); i++) {
+            VaccineType vt = caVaccineType.getFinalValue();
+            AllowableVaccine av = caVaccineTypeAllowable.getFinalValue().get(i);
+            Date birthDate = dataModel.getPatient().getDateOfBirth();
+            if (vt == av.getVaccineType()) {
+              caAllowableVaccineTypeBeginAgeDate.setInitialValue(av.getVaccineTypeBeginAge().getDateFrom(birthDate));
+              caAllowableVaccineTypeEndAgeDate.setInitialValue(av.getVaccineTypeEndAge().getDateFrom(birthDate));
+              return LogicResult.YES;
+
+            }
+          }
+          return LogicResult.NO;
+        }
+      });
+
+      setLogicCondition(1, new LogicCondition(
+          "Is the Allowable vaccine type begin age date ≤ date administered < allowable vaccine type end age date?") {
+        @Override
+        public LogicResult evaluateInternal() {
+          if (caDateAdministered.getFinalValue() == null || caAllowableVaccineTypeBeginAgeDate.getFinalValue() == null
+              || caAllowableVaccineTypeEndAgeDate.getFinalValue() == null) {
+            return LogicResult.NO;
+          }
+          if (caDateAdministered.getFinalValue().before(caAllowableVaccineTypeEndAgeDate.getFinalValue())
+              && caDateAdministered.getFinalValue().after(caAllowableVaccineTypeBeginAgeDate.getFinalValue())) {
+            return LogicResult.YES;
+          }
+          return LogicResult.NO;
+        }
+      });
+
+      setLogicResults(0, new LogicResult[] { LogicResult.YES, LogicResult.NO, LogicResult.NO });
+      setLogicResults(1, new LogicResult[] { LogicResult.YES, LogicResult.ANY, LogicResult.NO });
+
+      setLogicOutcome(0, new LogicOutcome() {
+        @Override
+        public void perform() {
+          log("Yes. An allowable vaccine was administered ");
+          log("Setting next step: 4.9 EvaluateGender");
+          setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
+        }
+      });
+      setLogicOutcome(1, new LogicOutcome() {
+        @Override
+        public void perform() {
+          log("No.  This supporting data defined allowable vaccine was not administered.");
+          log("Setting next step: 4.9 EvaluateGender");
+          dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
+          setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
+        }
+      });
+      setLogicOutcome(2, new LogicOutcome() {
+        @Override
+        public void perform() {
+          log("No.  This supporting data defined allowable vaccine was administered out of the allowable age range.");
+          dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
+          log("Setting next step: 4.9 EvaluateGender");
+          setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
+        }
+      });
+
     }
   }
 
