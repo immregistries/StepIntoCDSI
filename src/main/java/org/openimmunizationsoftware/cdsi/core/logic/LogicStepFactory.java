@@ -28,7 +28,7 @@ public class LogicStepFactory
       return new EvaluateDoseAdministeredCondition(dataModel);
     }
     if (stepName.equals(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION)) {
-      return new EvaluateConditionalSkip(dataModel);
+      return new EvaluateConditionalSkipForEvaluation(dataModel);
     }
     if (stepName.equals(LogicStepType.EVALUATE_AGE)) {
       return new EvaluateAge(dataModel);
@@ -57,7 +57,7 @@ public class LogicStepFactory
     }
 
     if (stepName.equals(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST)) {
-      return new SkipTargetDoseForForecast(dataModel);
+      return new EvaluateConditionalSkipForForecast(dataModel);
     }
     if (stepName.equals(LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY)) {
       return new DetermineEvidenceOfImmunityDose(dataModel);
