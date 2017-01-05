@@ -121,9 +121,8 @@ public class EvaluateForAllowableVaccines extends LogicStep
               }
             });
             
-           setLogicResults(0, LogicResult.YES, LogicResult.YES);
-           setLogicResults(1, LogicResult.NO, LogicResult.ANY);
-           setLogicResults(2, LogicResult.YES, LogicResult.NO);
+      		setLogicResults(0, new LogicResult[] { LogicResult.YES, LogicResult.NO, LogicResult.NO });
+      		setLogicResults(0, new LogicResult[] { LogicResult.YES, LogicResult.ANY, LogicResult.NO });
           
            setLogicOutcome(0, new LogicOutcome() {
               @Override

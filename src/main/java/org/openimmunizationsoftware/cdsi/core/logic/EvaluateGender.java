@@ -83,8 +83,7 @@ public class EvaluateGender extends LogicStep
               }
             });
 
-            setLogicResults(0, LogicResult.YES);
-            setLogicResults(1, LogicResult.NO);
+            setLogicResults(0, new LogicResult[] { LogicResult.YES, LogicResult.NO });
 
             setLogicOutcome(0, new LogicOutcome() {
               @Override
