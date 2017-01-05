@@ -7,6 +7,7 @@ public class TargetDose
   private TargetDoseStatus targetDoseStatus = null;
   private SeriesDose trackedSeriesDose = null;
   private VaccineDoseAdministered satisfiedByVaccineDoseAdministered = null;
+  private String statusCause = "";
   public TargetDose() {
     // default
   }
@@ -43,5 +44,13 @@ public class TargetDose
   public void setTrackedSeriesDose(SeriesDose trackedSeriesDose) {
     this.trackedSeriesDose = trackedSeriesDose;
   }
+
+public String getStatusCause() {
+	return statusCause;
+}
+
+public void setStatusCause(String statusCause) {
+	this.statusCause = statusCause;
+}
 
 }

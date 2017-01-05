@@ -127,6 +127,7 @@ public class EvaluateAllowableInterval extends LogicStep {
         public void perform() {
           log("No. The vaccine dose administered did not satisfy the defined allowable interval.  Evaluation Reason is \" too soon. \" ");
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
+          dataModel.getTargetDose().setStatusCause(dataModel.getTargetDose().getStatusCause()+"Interval");
           result = YesNo.NO;
         }
       });

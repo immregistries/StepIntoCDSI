@@ -140,6 +140,7 @@ public class EvaluateForAllowableVaccines extends LogicStep {
           log("No.  This supporting data defined allowable vaccine was not administered.");
           log("Setting next step: 4.9 EvaluateGender");
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
+          dataModel.getTargetDose().setStatusCause(dataModel.getTargetDose().getStatusCause()+"Vaccine");
           setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
         }
       });
@@ -149,6 +150,7 @@ public class EvaluateForAllowableVaccines extends LogicStep {
           log("No.  This supporting data defined allowable vaccine was administered out of the allowable age range.");
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
           log("Setting next step: 4.9 EvaluateGender");
+          dataModel.getTargetDose().setStatusCause(dataModel.getTargetDose().getStatusCause()+"Vaccine");
           setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
         }
       });

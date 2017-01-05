@@ -87,6 +87,7 @@ public class EvaluateInterval extends LogicStep {
       setNextLogicStepType(LogicStepType.EVALUATE_ALLOWABLE_INTERVAL);
     } else {
       setNextLogicStepType(LogicStepType.EVALUATE_FOR_LIVE_VIRUS_CONFLICT);
+      dataModel.getTargetDose().setStatusCause(dataModel.getTargetDose().getStatusCause()+"Interval");
     }
     return next();
   }

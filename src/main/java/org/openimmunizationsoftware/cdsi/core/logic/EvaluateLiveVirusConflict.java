@@ -121,6 +121,7 @@ public class EvaluateLiveVirusConflict extends LogicStep {
         @Override
         public void perform() {
           log("No. The vaccine dose administered should not be evaluated for a live virus conflict.");
+          dataModel.getTargetDose().setStatusCause(dataModel.getTargetDose().getStatusCause()+"VirusConflict");
         }
       });
 
@@ -129,6 +130,7 @@ public class EvaluateLiveVirusConflict extends LogicStep {
         @Override
         public void perform() {
           log("No. The vaccine dose administered should not be evaluated for a live virus conflict.");
+          dataModel.getTargetDose().setStatusCause(dataModel.getTargetDose().getStatusCause()+"VirusConflict");
         }
       });
 
