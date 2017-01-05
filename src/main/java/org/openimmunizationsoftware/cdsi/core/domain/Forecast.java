@@ -12,21 +12,7 @@ public class Forecast {
   private Date unadjustedPastDueDate = null;
   private VaccineGroupForecast vaccineGroupForecast = null;
   private Date assessmentDate = null;
-  private Antigen antigen = null;
-  private TargetDose targetDose = null;
   
-  public TargetDose getTargetDose() {
-    return targetDose;
-  }
-  public void setTargetDose(TargetDose targetDose) {
-    this.targetDose = targetDose;
-  }
-  public Antigen getAntigen() {
-    return antigen;
-  }
-  public void setAntigen(Antigen antigen) {
-    this.antigen = antigen;
-  }
   public Date getAdjustedRecommendedDate() {
     return adjustedRecommendedDate;
   }

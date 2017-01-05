@@ -47,5 +47,13 @@ public class ConditionAttribute<param>
   public param getFinalValue() {
     return initialValue == null ? assumedValue : initialValue;
   }
+  
+  public boolean hasInitialValue(){
+	  if(initialValue==null){
+		  return false;
+	  }else{
+		  return true;
+	  }
+  }
 
 }
