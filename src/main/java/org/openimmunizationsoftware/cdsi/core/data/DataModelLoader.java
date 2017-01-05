@@ -314,6 +314,15 @@ public class DataModelLoader {
           preferableVaccine.setSeriesDose(seriesDose);
           Vaccine vaccine = preferableVaccine;
           readVaccine(dataModel, parentNode, vaccine);
+          NodeList childNodeList = parentNode.getChildNodes();
+          for (int j = 0; j < childNodeList.getLength(); j++) {
+            Node childNode = childNodeList.item(j);
+            if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+              if (childNode.getNodeName().equals("forecastVaccineType")) {
+                preferableVaccine.setForecastVaccineType(DomUtils.getInternalValueYesNo(childNode));
+              }
+            }
+          }
           seriesDose.getPreferrableVaccineList().add(preferableVaccine);
         } else if (parentNode.getNodeName().equals("allowableVaccine")) {
           AllowableVaccine allowableVaccine = new AllowableVaccine();
@@ -407,7 +416,8 @@ public class DataModelLoader {
     }
   }
 
-  private static void readCondition(DataModel dataModel, ConditionalSkipSet conditionalSkipSet, Node grandchildNode, SeriesDose seriesDose) {
+  private static void readCondition(DataModel dataModel, ConditionalSkipSet conditionalSkipSet, Node grandchildNode,
+      SeriesDose seriesDose) {
     ConditionalSkipCondition condition = new ConditionalSkipCondition(seriesDose);
     conditionalSkipSet.getConditionList().add(condition);
     NodeList greatgrandchildNodeList = grandchildNode.getChildNodes();
@@ -461,7 +471,7 @@ public class DataModelLoader {
       }
     }
   }
-  
+
   private static Date parseDate(String dateString) {
     Date date = null;
     if (!dateString.equals("")) {

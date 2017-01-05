@@ -9,7 +9,7 @@ public class EvaluateConditionalSkipForForecast extends EvaluateConditionalSkipF
   public EvaluateConditionalSkipForForecast(DataModel dataModel) {
     super(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST, dataModel);
     setConditionTableName("Table 4.4 Skip Target Dose Attributes");
-    setupInternal(dataModel, LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY, LogicStepType.FORECAST_DATES_AND_REASONS);
+    setupInternal(dataModel, LogicStepType.EVALUATE_AGE, LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED);
   }
 
   @Override

@@ -18,11 +18,11 @@ public class ForEachPatientSeries extends LogicStep
 
   @Override
   public LogicStep process() {
+    System.out.println("-->  Calling now dataModel.getPatientSeriesList().size() = " + dataModel.getPatientSeriesList().size());
     PatientSeries patientSeriesSelected = null;
     if (dataModel.getPatientSeriesList().size() > 0) {
       if (dataModel.getPatientSeries() == null) {
         patientSeriesSelected = dataModel.getPatientSeriesList().get(0);
-
       } else {
         boolean found = false;
         for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {

@@ -134,18 +134,29 @@ public class ForecastServlet extends HttpServlet {
             }
             out.print("dose ");
             if (forecast.getTargetDose() == null) {
-              out.print("?");
+              out.print("? ");
             } else {
-              out.print(forecast.getTargetDose().getTrackedSeriesDose().getDoseNumber());
+              out.print(forecast.getTargetDose().getTrackedSeriesDose().getDoseNumber() + " ");
             }
-            out.println("due ");
-            out.println(sdf.format(forecast.getAdjustedRecommendedDate()));
-            out.println("valid ");
-            out.println(sdf.format(forecast.getEarliestDate()));
-            out.println("overdue ");
-            out.println(sdf.format(forecast.getAdjustedPastDueDate()));
-            out.println("finished ");
-            out.println(sdf.format(forecast.getLatestDate()));
+            if (forecast.getAdjustedRecommendedDate() != null) {
+              out.print("due ");
+              out.print(sdf.format(forecast.getAdjustedRecommendedDate()));
+              out.print(" ");
+              if (forecast.getEarliestDate() != null) {
+                out.print("valid ");
+                out.print(sdf.format(forecast.getEarliestDate()));
+                out.print(" ");
+                if (forecast.getAdjustedPastDueDate() != null) {
+                  out.print("overdue ");
+                  out.print(sdf.format(forecast.getAdjustedPastDueDate()));
+                  out.print(" ");
+                  if (forecast.getLatestDate() != null) {
+                    out.print("finished ");
+                    out.print(sdf.format(forecast.getLatestDate()));
+                  }
+                }
+              }
+            }
           } else {
             out.print(forecast.getForecastReason());
           }
@@ -164,7 +175,7 @@ public class ForecastServlet extends HttpServlet {
       if (count > 100000) {
         System.err.println("Appear to be caught in a loop at this step: " + dataModel.getLogicStep().getTitle());
         // too many steps!
-        if (count > 100010) {
+        if (count > 100100) {
           throw new RuntimeException("Logic steps seem to be caught in a loop, unable to get results");
         }
       }

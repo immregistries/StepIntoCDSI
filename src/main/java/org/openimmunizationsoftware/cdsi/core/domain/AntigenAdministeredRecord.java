@@ -16,6 +16,16 @@ public class AntigenAdministeredRecord
   private Date lotExpirationDate = null;
   private DoseCondition doseCondition = null;
   private Evaluation evaluation = new Evaluation();
+  private String assignedTargetDoseNumberInSeries = "";
+  
+  public String getAssignedTargetDoseNumberInSeries() {
+    return assignedTargetDoseNumberInSeries;
+  }
+
+  public void setAssignedTargetDoseNumberInSeries(String assignedTargetDoseNumberInSeries) {
+    this.assignedTargetDoseNumberInSeries = assignedTargetDoseNumberInSeries;
+  }
+
   public Evaluation getEvaluation() {
     
     return evaluation;

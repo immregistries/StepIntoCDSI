@@ -24,6 +24,7 @@ public class EvaluateVaccineDoseAdministered extends LogicStep
 
   @Override
   public LogicStep process() throws Exception {
+    System.out.println("--> Evaluating dose administered");
     LogicStepType nextLogicStep;
     if (!started) {
       logList.add(" + Get First Target Dose");
