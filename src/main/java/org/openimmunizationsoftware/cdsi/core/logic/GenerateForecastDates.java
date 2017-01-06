@@ -369,7 +369,12 @@ public class GenerateForecastDates extends LogicStep {
     insertTableRow(out, "FORECASTDT-2", "Unadjusted Recommended Date",
         computeUnadjustedPastDueDate(forecast).toString());
     insertTableRow(out, "FORECASTDT-3", "Unadjusted Past Due Date", computeUnadjustedPastDueDate(forecast).toString());
-    insertTableRow(out, "FORECASTDT-4", "Latest Date", computeLatestDate(forecast).toString());
+    Date d = computeLatestDate(forecast);
+    if (d == null) {
+      insertTableRow(out, "FORECASTDT-4", "Latest Date", "null");
+    } else {
+      insertTableRow(out, "FORECASTDT-4", "Latest Date", d.toString());
+    }
     insertTableRow(out, "FORECASTDT-5", "Adjusted Recommended Date",
         computeAdjustedRecommendedDate(forecast).toString());
     insertTableRow(out, "FORECASTDT-6", "Adjusted Past Due Date", computeAdjustedPastDueDate(forecast).toString());

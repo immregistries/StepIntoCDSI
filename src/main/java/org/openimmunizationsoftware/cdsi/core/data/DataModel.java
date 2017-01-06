@@ -26,8 +26,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 
-public class DataModel
-{
+public class DataModel {
   private List<LiveVirusConflict> liveVirusConflictList = new ArrayList<LiveVirusConflict>();
   private Map<String, VaccineType> cvxMap = new HashMap<String, VaccineType>();
   private Map<String, Antigen> antigenMap = new HashMap<String, Antigen>();
@@ -35,7 +34,7 @@ public class DataModel
   private List<Immunity> immunityList = new ArrayList<Immunity>();
   private List<Contraindication> contraindicationList = new ArrayList<Contraindication>();
   private List<Schedule> scheduleList = new ArrayList<Schedule>();
-  
+
   private TargetDose targetDose = null;
   private List<TargetDose> targetDoseList = null;
   private AntigenAdministeredRecord antigenAdministeredRecordThatSatisfiedPreviousTargetDose = null;
@@ -45,13 +44,39 @@ public class DataModel
   private Date assessmentDate = new Date();
   private HttpServletRequest request = null;
   private List<AntigenAdministeredRecord> antigenAdministeredRecordList = new ArrayList<AntigenAdministeredRecord>();
+  private int targetDoseListPos = -1;
+  private int antigenAdministeredRecordPos = -1;
   private AntigenAdministeredRecord antigenAdministeredRecord = null;
   private AntigenAdministeredRecord previousAntigenAdministeredRecord = null;
   private List<AntigenSeries> antigenSeriesList = new ArrayList<AntigenSeries>();
   private List<PatientSeries> patientSeriesList = new ArrayList<PatientSeries>();
   private PatientSeries patientSeries = null;
   private VaccineGroupForecast vaccineGroupForecast = new VaccineGroupForecast();
+
+  public int getAntigenAdministeredRecordPos() {
+    return antigenAdministeredRecordPos;
+  }
   
+  public void setAntigenAdministeredRecordPos(int antigenAdministeredRecordPos) {
+    this.antigenAdministeredRecordPos = antigenAdministeredRecordPos;
+  }
+  
+  public void incAntigenAdministeredRecordPos() {
+    this.antigenAdministeredRecordPos++;
+  }
+  
+  public int getTargetDoseListPos() {
+    return targetDoseListPos;
+  }
+
+  public void incTargetDoseListPos() {
+    targetDoseListPos++;
+  }
+
+  public void setTargetDoseListPos(int targetDoseListPos) {
+    this.targetDoseListPos = targetDoseListPos;
+  }
+
   public VaccineGroupForecast getVaccineGroupForecast() {
     return vaccineGroupForecast;
   }
@@ -63,16 +88,16 @@ public class DataModel
   public AntigenAdministeredRecord getAntigenAdministeredRecordThatSatisfiedPreviousTargetDose() {
     return antigenAdministeredRecordThatSatisfiedPreviousTargetDose;
   }
-  
+
   public void setAntigenAdministeredRecordThatSatisfiedPreviousTargetDose(
       AntigenAdministeredRecord antigenAdministeredRecordThatSatisfiedPreviousTargetDose) {
     this.antigenAdministeredRecordThatSatisfiedPreviousTargetDose = antigenAdministeredRecordThatSatisfiedPreviousTargetDose;
   }
-  
+
   public List<TargetDose> getTargetDoseList() {
     return targetDoseList;
   }
-  
+
   public TargetDose findNextTargetDose(TargetDose targetDoseCurrent) {
     TargetDose targetDoseNext = null;
     boolean found = false;
@@ -86,17 +111,16 @@ public class DataModel
     }
     return targetDoseNext;
   }
-  
+
   public void setTargetDoseList(List<TargetDose> targetDoseList) {
     this.targetDoseList = targetDoseList;
   }
-  
+
   public AntigenAdministeredRecord getAntigenAdministeredRecord() {
     return antigenAdministeredRecord;
   }
-  
-  public AntigenAdministeredRecord getPreviousAntigenAdministeredRecord()
-  {
+
+  public AntigenAdministeredRecord getPreviousAntigenAdministeredRecord() {
     return previousAntigenAdministeredRecord;
   }
 
@@ -203,9 +227,8 @@ public class DataModel
   public Map<String, Antigen> getAntigenMap() {
     return antigenMap;
   }
-  
-  public Map<String, VaccineGroup> getVaccineGroupMap()
-  {
+
+  public Map<String, VaccineGroup> getVaccineGroupMap() {
     return vaccineGroupMap;
   }
 
@@ -234,17 +257,14 @@ public class DataModel
     }
     return antigen;
   }
-  
-  public VaccineGroup getVaccineGroup(String vaccineGroupName)
-  {
+
+  public VaccineGroup getVaccineGroup(String vaccineGroupName) {
     return vaccineGroupMap.get(vaccineGroupName);
   }
-  
-  public VaccineGroup getOrCreateVaccineGroup(String vaccineGroupName)
-  {
+
+  public VaccineGroup getOrCreateVaccineGroup(String vaccineGroupName) {
     VaccineGroup vaccineGroup = getVaccineGroup(vaccineGroupName);
-    if (vaccineGroup == null)
-    {
+    if (vaccineGroup == null) {
       vaccineGroup = new VaccineGroup();
       vaccineGroup.setName(vaccineGroupName);
       vaccineGroupMap.put(vaccineGroupName, vaccineGroup);

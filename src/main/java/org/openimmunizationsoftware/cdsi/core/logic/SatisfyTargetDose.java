@@ -132,6 +132,7 @@ public class SatisfyTargetDose extends LogicStep {
           public void perform() {
             // TODO Auto-generated method stub
               dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.SATISFIED);
+              dataModel.getTargetDose().setSatisfiedByVaccineDoseAdministered(dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered());
               log("Yes. The target dose status is “satisfied.” Evaluation status is “valid” with possible evaluation reason(s).");
           }
         });

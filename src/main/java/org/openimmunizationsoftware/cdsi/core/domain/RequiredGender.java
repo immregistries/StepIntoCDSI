@@ -1,7 +1,6 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
-public class RequiredGender
-{
+public class RequiredGender {
   private SeriesDose seriesDose = null;
   private String value = null;
 
@@ -13,12 +12,16 @@ public class RequiredGender
     this.seriesDose = seriesDose;
   }
 
-public String getValue() {
-	return value;
-}
+  public String getValue() {
+    return value;
+  }
 
-public void setValue(String value) {
-	this.value = value;
-}
+  public void setValue(String value) {
+    this.value = value;
+  }
 
+  @Override
+  public String toString() {
+    return value;
+  }
 }

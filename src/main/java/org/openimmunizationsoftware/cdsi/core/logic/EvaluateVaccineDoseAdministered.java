@@ -12,94 +12,63 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 
-public class EvaluateVaccineDoseAdministered extends LogicStep
-{
-  private static boolean started = false;
-
-  public void setStarted(boolean b){
-	  started=b;
-  }
-  
+public class EvaluateVaccineDoseAdministered extends LogicStep {
   public EvaluateVaccineDoseAdministered(DataModel dataModel) {
     super(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED, dataModel);
   }
 
-  
-  public EvaluateVaccineDoseAdministered(DataModel dataModel, boolean b) {
-	    super(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED, dataModel);
-	    started=b;
-	  }
-
-  
-  
   private List<String> logList = new ArrayList<String>();
 
   @Override
   public LogicStep process() throws Exception {
-    System.out.println("--> Evaluating dose administered");
     LogicStepType nextLogicStep;
-    
-    if (!started) {
-      logList.add(" + Get First Target Dose");
-      dataModel.setTargetDose(dataModel.getTargetDoseList().get(0));
-      logList.add(" + Get First Antigen Administered Record if present");
-      if (dataModel.getAntigenAdministeredRecordList().size() == 0) {
-        logList.add("   No Doses Administered");
-        logList.add("   Finished evaluating administered doses");
-        nextLogicStep = LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST;
-      } else {
-        logList.add("   Looking at first dose administered");
-        dataModel.setAntigenAdministeredRecord(dataModel.getAntigenAdministeredRecordList().get(0));
+
+    dataModel.incAntigenAdministeredRecordPos();
+
+    if (dataModel.getAntigenAdministeredRecordPos() < dataModel.getAntigenAdministeredRecordList().size()) {
+      logList.add("   Looking at first dose administered");
+      dataModel.setAntigenAdministeredRecord(
+          dataModel.getAntigenAdministeredRecordList().get(dataModel.getAntigenAdministeredRecordPos()));
+      if (gotoNextTargetDose()) {
         nextLogicStep = LogicStepType.EVALUATE_DOSE_ADMININISTERED_CONDITION;
+      } else {
+        nextLogicStep = LogicStepType.FORECAST_DATES_AND_REASONS;
       }
-      started = true;
     } else {
-      TargetDose targetDose = dataModel.getTargetDose();
-      AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
-      AntigenAdministeredRecord aarNext = findNextAntigenAdministeredRecord(aar);
-      TargetDose targetDoseNext = dataModel.findNextTargetDose(targetDose);
-      nextLogicStep = LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST;
-      if (targetDose.getTargetDoseStatus() == TargetDoseStatus.SATISFIED) {
-        // Is there another Target Dose to process?
-        if (targetDoseNext == null) {
-          // Is this target dose a recurring dose?
-          RecurringDose recurringdose = targetDose.getTrackedSeriesDose().getRecurringDose();
-          if (recurringdose != null && recurringdose.getValue() == YesNo.YES) {
-            // Create another target dose
-            targetDoseNext = new TargetDose(targetDose);
-            dataModel.getTargetDoseList().add(targetDoseNext);
-          } else {
-            markRestAsExtraneous(aar);
-          }
-        }
-        targetDose = targetDoseNext;
-        dataModel.setTargetDose(targetDose);
-      }
-      if (targetDose != null && aarNext != null) {
-        aar = aarNext;
-        nextLogicStep = LogicStepType.EVALUATE_DOSE_ADMININISTERED_CONDITION;
-      } else {
-        aar = null;
-      }
-      dataModel.setTargetDose(targetDose);
-      if (dataModel.getAntigenAdministeredRecord() != null) {
-        if (aar == null || aar != dataModel.getAntigenAdministeredRecord()) {
-          dataModel.setPreviousAntigenAdministeredRecord(dataModel.getAntigenAdministeredRecord());
-        }
-      }
-      dataModel.setAntigenAdministeredRecord(aar);
+      nextLogicStep = LogicStepType.FORECAST_DATES_AND_REASONS;
     }
 
-    return LogicStepFactory.createLogicStep(nextLogicStep, dataModel  );
+    return LogicStepFactory.createLogicStep(nextLogicStep, dataModel);
   }
-  
-  
-  
-  
-  
-  
-  
-  
+
+  private boolean gotoNextTargetDose() {
+    if (dataModel.getTargetDose() == null) {
+      logList.add(" + Getting first target dose");
+      dataModel.incTargetDoseListPos();
+      dataModel.setTargetDose(dataModel.getTargetDoseList().get(dataModel.getTargetDoseListPos()));
+      return true;
+    } else {
+      if (dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered() != null) {
+        logList.add(" + Previous target dose was satisifed, getting next target dose");
+        RecurringDose recurringdose = dataModel.getTargetDose().getTrackedSeriesDose().getRecurringDose();
+        if (recurringdose != null && recurringdose.getValue() == YesNo.YES) {
+          // Create another target dose
+          TargetDose targetDoseNext = new TargetDose(dataModel.getTargetDose());
+          dataModel.getTargetDoseList().add(targetDoseNext);
+        }
+        dataModel.incTargetDoseListPos();
+        if (dataModel.getTargetDoseListPos() < dataModel.getTargetDoseListPos()) {
+          dataModel.setTargetDose(dataModel.getTargetDoseList().get(dataModel.getTargetDoseListPos()));
+          return true;
+        } else {
+          markRestAsExtraneous();
+          return false;
+        }
+      } else {
+        return true;
+      }
+    }
+  }
 
   private AntigenAdministeredRecord findNextAntigenAdministeredRecord(AntigenAdministeredRecord aar) {
     AntigenAdministeredRecord aarNext = null;
@@ -115,17 +84,12 @@ public class EvaluateVaccineDoseAdministered extends LogicStep
     return aarNext;
   }
 
-  private AntigenAdministeredRecord markRestAsExtraneous(AntigenAdministeredRecord aar) {
-    AntigenAdministeredRecord aarNext = null;
-    boolean found = false;
-    for (AntigenAdministeredRecord antigenAdministeredRecord : dataModel.getAntigenAdministeredRecordList()) {
-      if (found) {
-        antigenAdministeredRecord.getEvaluation().setEvaluationStatus(EvaluationStatus.EXTRANEOUS);
-      } else if (antigenAdministeredRecord == aar) {
-        found = true;
-      }
+  private void markRestAsExtraneous() {
+    for (int i = dataModel.getAntigenAdministeredRecordPos() + 1; i < dataModel.getAntigenAdministeredRecordList()
+        .size(); dataModel.incAntigenAdministeredRecordPos()) {
+      dataModel.getAntigenAdministeredRecordList().get(i).getEvaluation()
+          .setEvaluationStatus(EvaluationStatus.EXTRANEOUS);
     }
-    return aarNext;
   }
 
   @Override
@@ -135,7 +99,8 @@ public class EvaluateVaccineDoseAdministered extends LogicStep
 
   private void printStandard(PrintWriter out) {
     out.println("<h1>Evaluate Vaccine Dose Administered</h1>");
-    out.println("<p>The core of a CDS engine is the process of evaluating a single vaccine dose administered against  a  defined  target  dose to  determine  if  the  vaccine  dose  administered is valid or not valid. The  results  will  ultimately determine if all conditions of the target dose are satisfied and the dose does not need to be repeated.</p>");
+    out.println(
+        "<p>The core of a CDS engine is the process of evaluating a single vaccine dose administered against  a  defined  target  dose to  determine  if  the  vaccine  dose  administered is valid or not valid. The  results  will  ultimately determine if all conditions of the target dose are satisfied and the dose does not need to be repeated.</p>");
     out.println("<img src=\"Figure 4.1.png\"/>");
   }
 

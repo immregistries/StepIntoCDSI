@@ -137,7 +137,7 @@ public static LogicStep createLogicStep(LogicStepType stepName, DataModel dataMo
       return new ForEachPatientSeries(dataModel);
     }
     if (stepName.equals(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED)) {
-      return new EvaluateVaccineDoseAdministered(dataModel, b);
+      return new EvaluateVaccineDoseAdministered(dataModel);
     }
     if (stepName.equals(LogicStepType.EVALUATE_DOSE_ADMININISTERED_CONDITION)) {
       return new EvaluateDoseAdministeredCondition(dataModel);

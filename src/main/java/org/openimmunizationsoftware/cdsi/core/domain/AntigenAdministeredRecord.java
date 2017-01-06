@@ -17,7 +17,16 @@ public class AntigenAdministeredRecord
   private DoseCondition doseCondition = null;
   private Evaluation evaluation = new Evaluation();
   private String assignedTargetDoseNumberInSeries = "";
+  private VaccineDoseAdministered vaccineDoseAdministered = null;
   
+  public VaccineDoseAdministered getVaccineDoseAdministered() {
+    return vaccineDoseAdministered;
+  }
+
+  public void setVaccineDoseAdministered(VaccineDoseAdministered vaccineDoseAdministered) {
+    this.vaccineDoseAdministered = vaccineDoseAdministered;
+  }
+
   public String getAssignedTargetDoseNumberInSeries() {
     return assignedTargetDoseNumberInSeries;
   }
@@ -44,6 +53,7 @@ public class AntigenAdministeredRecord
     this.amount = vda.getVaccine().getVolume();
     this.lotExpirationDate = vda.getVaccine().getLotExpirationDate();
     this.doseCondition = vda.getDoseCondition();
+    this.vaccineDoseAdministered = vda;
   }
 
   public Antigen getAntigen() {

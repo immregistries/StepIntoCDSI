@@ -1,5 +1,6 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -108,5 +109,10 @@ public class Vaccine
 
   public void setAllowableVaccineForSeries(List<SeriesDose> allowableVaccineForSeries) {
     this.allowableVaccineForSeries = allowableVaccineForSeries;
+  }
+  
+  @Override
+  public String toString() {
+    return vaccineType.toString() +  " - " + manufacturer;
   }
 }
