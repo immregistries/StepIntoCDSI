@@ -34,7 +34,9 @@ public class SatisfyTargetDose extends LogicStep {
      * setNextLogicStepType(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED);
      */
     setNextLogicStepType(logicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED);
-    return next();
+   // if (dataModel.getAntigenAdministeredRecordList().size() == 0)
+    //	 getNextLogicStep().setStarted(true);
+    return next(true);
   }
 
   @Override

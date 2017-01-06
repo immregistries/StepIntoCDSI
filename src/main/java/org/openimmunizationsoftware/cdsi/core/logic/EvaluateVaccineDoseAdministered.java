@@ -14,18 +14,31 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 
 public class EvaluateVaccineDoseAdministered extends LogicStep
 {
-  private boolean started = false;
+  private static boolean started = false;
 
+  public void setStarted(boolean b){
+	  started=b;
+  }
+  
   public EvaluateVaccineDoseAdministered(DataModel dataModel) {
     super(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED, dataModel);
   }
 
+  
+  public EvaluateVaccineDoseAdministered(DataModel dataModel, boolean b) {
+	    super(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED, dataModel);
+	    started=b;
+	  }
+
+  
+  
   private List<String> logList = new ArrayList<String>();
 
   @Override
   public LogicStep process() throws Exception {
     System.out.println("--> Evaluating dose administered");
     LogicStepType nextLogicStep;
+    
     if (!started) {
       logList.add(" + Get First Target Dose");
       dataModel.setTargetDose(dataModel.getTargetDoseList().get(0));
@@ -77,8 +90,16 @@ public class EvaluateVaccineDoseAdministered extends LogicStep
       dataModel.setAntigenAdministeredRecord(aar);
     }
 
-    return LogicStepFactory.createLogicStep(nextLogicStep, dataModel);
+    return LogicStepFactory.createLogicStep(nextLogicStep, dataModel  );
   }
+  
+  
+  
+  
+  
+  
+  
+  
 
   private AntigenAdministeredRecord findNextAntigenAdministeredRecord(AntigenAdministeredRecord aar) {
     AntigenAdministeredRecord aarNext = null;

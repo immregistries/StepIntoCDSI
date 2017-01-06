@@ -134,6 +134,10 @@ public abstract class LogicStep {
     return LogicStepFactory.createLogicStep(nextLogicStepType, dataModel);
   }
 
+  public LogicStep next(boolean b) {
+	    return LogicStepFactory.createLogicStep(nextLogicStepType, dataModel, b);
+	  }
+  
   public String getConditionTableName() {
     return conditionTableName;
   }
