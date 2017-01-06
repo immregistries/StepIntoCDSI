@@ -30,6 +30,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
   protected ConditionAttribute<Date> caExpirationDate = null;
   protected ConditionAttribute<Date> caAssessmentDate = null;
   protected ConditionAttribute<Integer> caAdministeredDoseCount = null;
+  protected boolean isForecast;
 
   protected EvaluateConditionalSkipForEvaluation(LogicStepType logicStepType, DataModel dataModel) {
     super(logicStepType, dataModel);
@@ -42,12 +43,17 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
   }
 
   protected void setupInternal(DataModel dataModel, final LogicStepType noSkip, final LogicStepType skip) {
+	if(noSkip.equals(LogicStepType.EVALUATE_AGE)){
+		isForecast=false;
+	} else {
+		isForecast=true;
+	}
+	
     caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
     caAssessmentDate = new ConditionAttribute<Date>("Processing data", "Assessment Date");
-    caAdministeredDoseCount = new ConditionAttribute<Integer>("Patient Immunization History",
-        "Administered Dose Count");
-
+    caAdministeredDoseCount = new ConditionAttribute<Integer>("Patient Immunization History","Administered Dose Count");
     caExpirationDate = new ConditionAttribute<Date>("Vaccine", "Expiration Date");
+   
     caAssessmentDate.setAssumedValue(new Date());
 
     conditionAttributesList.add(caDateAdministered);
@@ -59,6 +65,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
     caExpirationDate.setInitialValue(aar.getLotExpirationDate());
     caAssessmentDate.setInitialValue(dataModel.getAssessmentDate());
     caAdministeredDoseCount.setInitialValue(dataModel.getAntigenAdministeredRecordList().size());
+    
 
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
     if (seriesDose.getConditionalSkip() != null) {
@@ -100,8 +107,10 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
                 "Conditional Skip Dose Type");
             lt.caConditionalSkipDoseCountLogic = new ConditionAttribute<String>("Supporting Data (Conditional Skip)",
                 "Conditional Skip Doese Count Logic");
-            lt.caConditonalSkipDoseCount = new ConditionAttribute<Integer>("Supporting Data (Conditional Skip)",
+            lt.caConditionalSkipDoseCount = new ConditionAttribute<Integer>("Supporting Data (Conditional Skip)",
                 "Conditional Skip Dose Count");
+            lt.caConditionalSkipReferenceDate = new ConditionAttribute<Date>("Supporting Data (Conditional Skip)",
+                    "Conditional Skip Reference Date");
 
             List<ConditionAttribute<?>> caList = new ArrayList<ConditionAttribute<?>>();
             caList.add(lt.caConditionalSkipBeginAgeDate);
@@ -111,7 +120,8 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
             caList.add(lt.caConditionalSkipEndDate);
             caList.add(lt.caConditionalSkipDoseType);
             caList.add(lt.caConditionalSkipDoseCountLogic);
-            caList.add(lt.caConditonalSkipDoseCount);
+            caList.add(lt.caConditionalSkipDoseCount);
+            caList.add(lt.caConditionalSkipReferenceDate);
             conditionAttributesAdditionalMap.put("Table 4 - 4 Conditional Skip Attributes "
                 + conditionalSkipSet.getSetId() + "." + condition.getConditionId(), caList);
 
@@ -123,8 +133,13 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
             if (condition.getDoseType() != null) {
               lt.caConditionalSkipDoseType.setInitialValue(condition.getDoseType().name());
             }
+            if(isForecast){
+            	lt.caConditionalSkipReferenceDate.setInitialValue(caAssessmentDate.getFinalValue());
+            } else {
+            	lt.caConditionalSkipReferenceDate.setInitialValue(caDateAdministered.getFinalValue());
+            }
             lt.caConditionalSkipDoseCountLogic.setInitialValue(condition.getDoseCountLogic());
-            lt.caConditonalSkipDoseCount.setInitialValue(0);
+            lt.caConditionalSkipDoseCount.setInitialValue(0);
           }
         }
       }
@@ -170,7 +185,8 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
     protected ConditionAttribute<Date> caConditionalSkipEndDate = null;
     protected ConditionAttribute<String> caConditionalSkipDoseType = null;
     protected ConditionAttribute<String> caConditionalSkipDoseCountLogic = null;
-    protected ConditionAttribute<Integer> caConditonalSkipDoseCount = null;
+    protected ConditionAttribute<Integer> caConditionalSkipDoseCount = null;
+    protected ConditionAttribute<Date> caConditionalSkipReferenceDate = null;
     
     protected boolean met = false;
 
@@ -191,10 +207,10 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
           new LogicCondition("Is the Conditional Skip Reference Date ≥ Conditional Skip Begin Age Date?") {
             @Override
             public LogicResult evaluateInternal() {
-              if (caDateAdministered.getFinalValue() == null || caExpirationDate.getFinalValue() == null) {
+              if (caConditionalSkipBeginAgeDate.getFinalValue() == null || caExpirationDate.getFinalValue() == null) {
                 return LogicResult.NO;
               }
-              if (caDateAdministered.getFinalValue().before(caExpirationDate.getFinalValue())) {
+              if (caConditionalSkipBeginAgeDate.getFinalValue().before(caExpirationDate.getFinalValue())) {
                 return LogicResult.YES;
               }
               return LogicResult.NO;
@@ -230,14 +246,14 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
           new LogicCondition("Is the Conditional Skip Reference Date ≥ Conditional Skip Interval Date?") {
             @Override
             public LogicResult evaluateInternal() {
-              if (caDateAdministered.getFinalValue() == null || caExpirationDate.getFinalValue() == null) {
+                if (caConditionalSkipIntervalDate.getFinalValue() == null || caExpirationDate.getFinalValue() == null) {
+                  return LogicResult.NO;
+                }
+                if (caConditionalSkipIntervalDate.getFinalValue().before(caExpirationDate.getFinalValue())) {
+                  return LogicResult.YES;
+                }
                 return LogicResult.NO;
               }
-              if (caDateAdministered.getFinalValue().before(caExpirationDate.getFinalValue())) {
-                return LogicResult.YES;
-              }
-              return LogicResult.NO;
-            }
           });
 
       setLogicResults(0, new LogicResult[] { LogicResult.YES, LogicResult.NO });
@@ -269,13 +285,25 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
           "Comparing the Number of Conditional Doses Administered with the Conditional Skip Dose Count") {
         @Override
         public LogicResult evaluateInternal() {
-          if (caDateAdministered.getFinalValue() == null || caExpirationDate.getFinalValue() == null) {
-            return LogicResult.NO;
+          if (caConditionalSkipDoseCountLogic.getFinalValue().equalsIgnoreCase("greater than")){
+        	  if(caConditionalSkipDoseCount.getFinalValue() < caAdministeredDoseCount.getFinalValue()){
+        		  return LogicResult.YES;
+        	  }
+        	  return LogicResult.NO;
           }
-          if (caDateAdministered.getFinalValue().before(caExpirationDate.getFinalValue())) {
-            return LogicResult.YES;
+          if (caConditionalSkipDoseCountLogic.getFinalValue().equalsIgnoreCase("equal")){
+        	  if(caConditionalSkipDoseCount.getFinalValue() == caAdministeredDoseCount.getFinalValue()){
+        		  return LogicResult.YES;
+        	  }
+        	  return LogicResult.NO;
           }
-          return LogicResult.NO;
+          if (caConditionalSkipDoseCountLogic.getFinalValue().equalsIgnoreCase("less than")){
+        	  if(caConditionalSkipDoseCount.getFinalValue() > caAdministeredDoseCount.getFinalValue()){
+        		  return LogicResult.YES;
+        	  }
+        	  return LogicResult.NO;
+          }
+          return LogicResult.ANY;
         }
       });
 
