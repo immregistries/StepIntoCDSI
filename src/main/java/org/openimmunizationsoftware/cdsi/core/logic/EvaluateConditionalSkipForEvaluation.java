@@ -3,6 +3,7 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTSKIP_3;
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTSKIP_4;
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTSKIP_5;
+import static org.openimmunizationsoftware.cdsi.core.logic.items.BusinessRuleTable.CONDSKIP_1;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -109,7 +110,9 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
                 "Conditional Skip Doese Count Logic");
             lt.caConditionalSkipDoseCount = new ConditionAttribute<Integer>("Supporting Data (Conditional Skip)",
                 "Conditional Skip Dose Count");
-            lt.caConditionalSkipReferenceDate = new ConditionAttribute<Date>("Supporting Data (Conditional Skip)",
+            lt.caNumberofConditionalDosesAdministered = new ConditionAttribute<Integer>("Supporting Data (CONDSKIP-1)",
+                    "Number of Conditional Doses Administered");
+            lt.caConditionalSkipReferenceDate = new ConditionAttribute<Date>("Supporting Data (CONDSKIP-2)",
                     "Conditional Skip Reference Date");
 
             List<ConditionAttribute<?>> caList = new ArrayList<ConditionAttribute<?>>();
@@ -140,6 +143,10 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
             }
             lt.caConditionalSkipDoseCountLogic.setInitialValue(condition.getDoseCountLogic());
             lt.caConditionalSkipDoseCount.setInitialValue(0);
+            if(condition.getEndDate()!=null){
+            	lt.caNumberofConditionalDosesAdministered.setInitialValue(CONDSKIP_1.evaluate(dataModel, condition));
+            }
+            
           }
         }
       }
@@ -187,6 +194,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
     protected ConditionAttribute<String> caConditionalSkipDoseCountLogic = null;
     protected ConditionAttribute<Integer> caConditionalSkipDoseCount = null;
     protected ConditionAttribute<Date> caConditionalSkipReferenceDate = null;
+    protected ConditionAttribute<Integer> caNumberofConditionalDosesAdministered = null;
     
     protected boolean met = false;
 
