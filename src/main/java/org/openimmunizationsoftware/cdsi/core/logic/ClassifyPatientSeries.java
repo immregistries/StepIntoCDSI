@@ -1,8 +1,23 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
+
+import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.ANY;
+import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
+import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
+
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
 public class ClassifyPatientSeries extends LogicStep
@@ -54,7 +69,124 @@ public class ClassifyPatientSeries extends LogicStep
   private class LT extends LogicTable
   {
     public LT() {
-      super(0, 0, "Table ?-?");
+    	super(3, 3, "Table 6-4 : Which patient series should be scored ? ");
+    	
+    	setLogicCondition(0, new LogicCondition("2 or more complete patient series?") {
+			
+			@Override
+			protected LogicResult evaluateInternal() {
+				// TODO Auto-generated method stub
+				int completePatientSeries = 0;
+				List<PatientSeries> patientSeriesList  = dataModel.getPatientSeriesList();
+				for(PatientSeries patientSeries:patientSeriesList){
+					if(patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)){
+						completePatientSeries ++;
+					}
+				}
+				if(completePatientSeries>1){
+					return LogicResult.YES;
+				}else{
+					return LogicResult.NO;
+				}
+			}
+		});
+    	
+    	setLogicCondition(1, new LogicCondition("2 or more in-process patient series and 0 are complete patient series ?") {
+			
+			@Override
+			protected LogicResult evaluateInternal() {
+				// TODO Auto-generated method stub
+				int completePatientSeries = 0;
+				int inProcessPatientSeries = 0;
+				List<PatientSeries> patientSeriesList  = dataModel.getPatientSeriesList();
+				for(PatientSeries patientSeries:patientSeriesList){
+					if(patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)){
+						completePatientSeries ++;
+					}
+				}
+				
+				/**
+				 * An in-process patient series must be a patient series with at least one
+				 * target dose status satisfied and the patient series status not complete.
+				 */
+				List<String> antigenSerieNameWithASatisfiedTargetDose = new ArrayList<String>();
+				
+				List<TargetDose> targetDoseList = dataModel.getTargetDoseList();
+				for(TargetDose targetDose:targetDoseList){
+					if(targetDose.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)){
+							String antigenSeriesName1 = targetDose.getTrackedSeriesDose().getAntigenSeries().getSeriesName();
+							antigenSerieNameWithASatisfiedTargetDose.add(antigenSeriesName1);
+					}
+				}
+				
+				List<String> antigenSerieNameWithANotCompletePatientSerieStatus = new ArrayList<String>();
+				
+				List<PatientSeries> ps2 = dataModel.getPatientSeriesList();
+				for(PatientSeries ps:ps2 ){
+					if(ps.getPatientSeriesStatus().equals(PatientSeriesStatus.NOT_COMPLETE)){
+						String antigenSeriesName2  =  ps.getTrackedAntigenSeries().getSeriesName();
+						antigenSerieNameWithANotCompletePatientSerieStatus.add(antigenSeriesName2);
+					}
+				}
+				
+				antigenSerieNameWithANotCompletePatientSerieStatus.retainAll(new HashSet<String> (antigenSerieNameWithASatisfiedTargetDose));
+				
+				inProcessPatientSeries  = antigenSerieNameWithANotCompletePatientSerieStatus.size();
+				
+				
+				if(inProcessPatientSeries>1 && completePatientSeries==0){
+					return LogicResult.YES;
+				}else{
+					return LogicResult.NO;
+				}
+			}
+		});
+    	
+    	setLogicCondition(2, new LogicCondition("All patient series have 0 valid doses ?") {
+			
+			@Override
+			protected LogicResult evaluateInternal() {
+				// TODO Auto-generated method stub
+				System.err.println("DIDN'T COMPUTE VALID DOSE");
+				return LogicResult.NO;
+			}
+		});
+    	
+    	
+    	setLogicResults(0, YES,NO,NO);
+    	setLogicResults(1, ANY, YES,NO);
+    	setLogicResults(2, ANY, NO, NO);
+    	
+    	setLogicOutcome(0, new LogicOutcome() {
+			
+			@Override
+			public void perform() {
+				// TODO Auto-generated method stub
+				log("Apply complete patient series scoring business rules to all complete patient series. Inprocess patient series and patient series with 0 valid doses are not scored and dropped from consideration.");	
+			}
+		});
+    	
+    	setLogicOutcome(1, new LogicOutcome() {
+			
+			@Override
+			public void perform() {
+				// TODO Auto-generated method stub
+				log("Apply in-process patient series scoring business rules to all in-process patient series. Patient Series with 0 valid doses are not scored and dropped from consideration.");
+				
+			}
+		});
+    	
+    	setLogicOutcome(2, new LogicOutcome() {
+			
+			@Override
+			public void perform() {
+				// TODO Auto-generated method stub
+				log("Apply no valid doses scoring business rules to all patient series");
+				
+			}
+		});
+    	
+    	
 
       //      setLogicCondition(0, new LogicCondition("date administered > lot expiration date?") {
       //        @Override

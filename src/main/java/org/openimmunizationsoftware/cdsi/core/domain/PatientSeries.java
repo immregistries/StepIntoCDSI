@@ -6,6 +6,7 @@ public class PatientSeries
 {
   private PatientSeriesStatus patientSeriesStatus = null;
   private AntigenSeries trackedAntigenSeries = null;
+  private int scorePatientSerie = 0;
   
   public PatientSeries()
   {
@@ -31,5 +32,17 @@ public class PatientSeries
 
   public void setTrackedAntigenSeries(AntigenSeries trackedAntigenSeries) {
     this.trackedAntigenSeries = trackedAntigenSeries;
+  }
+  
+  public void setScorePatientSeriesScore(int scorePatientSerie){
+	  this.scorePatientSerie = scorePatientSerie;
+  }
+  
+  public int getScorePatientSerie(){
+	  return scorePatientSerie;
+  }
+  
+  public void addScore(int value){
+	  scorePatientSerie = scorePatientSerie + value;
   }
 }
