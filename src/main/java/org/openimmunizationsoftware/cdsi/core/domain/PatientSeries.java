@@ -43,6 +43,7 @@ public class PatientSeries
   }
   
   public void addScore(int value){
+	  
 	  scorePatientSerie = scorePatientSerie + value;
   }
 }
