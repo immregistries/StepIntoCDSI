@@ -143,7 +143,10 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
             }
             lt.caConditionalSkipDoseCountLogic.setInitialValue(condition.getDoseCountLogic());
             lt.caConditionalSkipDoseCount.setInitialValue(0);
-            lt.caNumberofConditionalDosesAdministered.setInitialValue(CONDSKIP_1.evaluate(dataModel, condition));
+            if(condition.getEndDate()!=null){
+            	lt.caNumberofConditionalDosesAdministered.setInitialValue(CONDSKIP_1.evaluate(dataModel, condition));
+            }
+            
           }
         }
       }
