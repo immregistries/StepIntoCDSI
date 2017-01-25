@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -18,7 +19,6 @@ import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.data.DataModelLoader;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
-import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepFactory;
@@ -117,6 +117,18 @@ public class ForecastServlet extends HttpServlet {
 
     out.println(
         "Forecast generated " + sdf.format(new Date()) + " using software version " + SoftwareVersion.VERSION + ".");
+  }
+  
+  private static HashMap<String, String> NAME_MAP = new HashMap<String, String>();
+  static 
+  {
+	  NAME_MAP.put("Hep A", "HepA");
+	  NAME_MAP.put("HepB", "HepB");
+	  NAME_MAP.put("Hib", "Hib");
+	  NAME_MAP.put("Influenza", "");
+	  NAME_MAP.put("", "");
+	  NAME_MAP.put("", "");
+	  
   }
 
   private void printList(DataModel dataModel, PrintWriter out, SimpleDateFormat sdf, Date today,

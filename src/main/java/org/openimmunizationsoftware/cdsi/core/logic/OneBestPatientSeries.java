@@ -75,7 +75,7 @@ public class OneBestPatientSeries extends LogicStep
 			@Override
 			protected LogicResult evaluateInternal() {
 				int numberOfPatientSeries = 0;
-				List<AntigenSeries> asl = dataModel.getAntigenSeriesList();
+				List<AntigenSeries> asl = dataModel.getAntigenSeriesSelectedList();
 				for(AntigenSeries as: asl){
 					boolean isDefaultSeries = as.getSelectBestPatientSeries().getDefaultSeries().equals(YES);
 					if(isDefaultSeries){
@@ -164,7 +164,7 @@ public class OneBestPatientSeries extends LogicStep
 			@Override
 			protected LogicResult evaluateInternal() {
 				int numberOfDefaultPatientSeries = 0;
-				List<AntigenSeries> asl = dataModel.getAntigenSeriesList();
+				List<AntigenSeries> asl = dataModel.getAntigenSeriesSelectedList();
 				for(AntigenSeries as: asl){
 					boolean isDefaultSeries = as.getSelectBestPatientSeries().getDefaultSeries().equals(YES);
 					if(isDefaultSeries){

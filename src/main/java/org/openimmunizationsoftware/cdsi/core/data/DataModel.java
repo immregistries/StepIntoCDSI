@@ -30,7 +30,12 @@ public class DataModel {
   private List<LiveVirusConflict> liveVirusConflictList = new ArrayList<LiveVirusConflict>();
   private Map<String, VaccineType> cvxMap = new HashMap<String, VaccineType>();
   private Map<String, Antigen> antigenMap = new HashMap<String, Antigen>();
-  private Map<String, VaccineGroup> vaccineGroupMap = new HashMap<String, VaccineGroup>();
+  private List<Antigen> antigenList = null;
+  private int antigenPos = -1;
+  private Antigen antigen = null;
+  private List<AntigenSeries> antigenSeriesSelectedList = null;
+
+private Map<String, VaccineGroup> vaccineGroupMap = new HashMap<String, VaccineGroup>();
   private List<Immunity> immunityList = new ArrayList<Immunity>();
   private List<Contraindication> contraindicationList = new ArrayList<Contraindication>();
   private List<Schedule> scheduleList = new ArrayList<Schedule>();
@@ -52,6 +57,45 @@ public class DataModel {
   private List<PatientSeries> patientSeriesList = new ArrayList<PatientSeries>();
   private PatientSeries patientSeries = null;
   private VaccineGroupForecast vaccineGroupForecast = new VaccineGroupForecast();
+  
+  public Antigen getAntigen() {
+	return antigen;
+}
+
+public void setAntigen(Antigen antigen) {
+	this.antigen = antigen;
+}
+
+public List<AntigenSeries> getAntigenSeriesSelectedList() {
+	return antigenSeriesSelectedList;
+}
+
+public void setAntigenSeriesSelectedList(List<AntigenSeries> antigenSeriesSelectedList) {
+	this.antigenSeriesSelectedList = antigenSeriesSelectedList;
+}
+  public List<Antigen> getAntigenList() {
+	  if (antigenList == null)
+	  {
+		  antigenList = new ArrayList<Antigen>(antigenMap.values());
+	  }
+	  return antigenList;
+  }
+  
+  public int getAntigenPos() {
+	return antigenPos;
+}
+
+
+
+public void setAntigenPos(int antigenPos) {
+	this.antigenPos = antigenPos;
+}
+
+public void incAntigenPos() {
+	this.antigenPos++;
+}
+
+
 
   public int getAntigenAdministeredRecordPos() {
     return antigenAdministeredRecordPos;
@@ -227,6 +271,8 @@ public class DataModel {
   public Map<String, Antigen> getAntigenMap() {
     return antigenMap;
   }
+  
+  
 
   public Map<String, VaccineGroup> getVaccineGroupMap() {
     return vaccineGroupMap;

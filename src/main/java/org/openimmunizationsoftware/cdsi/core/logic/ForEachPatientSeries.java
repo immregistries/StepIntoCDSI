@@ -18,7 +18,6 @@ public class ForEachPatientSeries extends LogicStep
 
   @Override
   public LogicStep process() {
-    System.out.println("-->  Calling now dataModel.getPatientSeriesList().size() = " + dataModel.getPatientSeriesList().size());
     PatientSeries patientSeriesSelected = null;
     if (dataModel.getPatientSeriesList().size() > 0) {
       if (dataModel.getPatientSeries() == null) {
@@ -41,6 +40,7 @@ public class ForEachPatientSeries extends LogicStep
     } else {
       dataModel.setPatientSeries(patientSeriesSelected);
       dataModel.setTargetDoseList(new ArrayList<TargetDose>());
+      patientSeriesSelected.setTargetDoseList(dataModel.getTargetDoseList());
       for (SeriesDose seriesDose : dataModel.getPatientSeries().getTrackedAntigenSeries().getSeriesDoseList()) {
         TargetDose targetDose = new TargetDose(seriesDose);
         dataModel.getTargetDoseList().add(targetDose);

@@ -1,5 +1,7 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
+import java.util.List;
+
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 
 public class PatientSeries
@@ -7,8 +9,17 @@ public class PatientSeries
   private PatientSeriesStatus patientSeriesStatus = null;
   private AntigenSeries trackedAntigenSeries = null;
   private int scorePatientSerie = 0;
-  
-  public PatientSeries()
+  private List<TargetDose> targetDoseList = null;
+
+  public List<TargetDose> getTargetDoseList() {
+	return targetDoseList;
+}
+
+public void setTargetDoseList(List<TargetDose> targetDoseList) {
+	this.targetDoseList = targetDoseList;
+}
+
+public PatientSeries()
   {
     // default;
   }
