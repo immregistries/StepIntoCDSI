@@ -27,6 +27,7 @@ public class EvaluateForPreferableVaccine extends LogicStep
   private ConditionAttribute<String> caPreferableVaccineVolume = null;
   private ConditionAttribute<String> caPreferableVaccineType = null;
   private String caVolume = null;
+  private String pv = null;
 
   public EvaluateForPreferableVaccine(DataModel dataModel) {
     super(LogicStepType.EVALUATE_PREFERABLE_VACCINE_ADMINISTERED, dataModel);
@@ -36,16 +37,21 @@ public class EvaluateForPreferableVaccine extends LogicStep
 //     _____________>Logic Problem : Check logic specification
     
     AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
-    caPreferableVaccineTradeName = new ConditionAttribute<String>("Supporting data (Preferable Vaccine)", "Vaccine Type") ;
-    caTradeName = new ConditionAttribute<String>("Vaccine dose administered", "Vaccine Type") ;
+    caPreferableVaccineTradeName = new ConditionAttribute<String>("Supporting data (Preferable Vaccine)", "Preferable Vaccine Trade Name ") ;
+    caTradeName = new ConditionAttribute<String>("Vaccine dose administered", "Trade Name ") ;
     caVaccineTypeBeginAgeDate = new ConditionAttribute<Date>("Vaccine Type Begin Age Date", "Calculated date (CALCDTPREF-1)");
     caVaccineTypeEndAgeDate = new ConditionAttribute<Date>("Vaccine Type End Age Date", "Calculated date (CALCDTPREF-2)");
     caPreferableVaccineVolume = new ConditionAttribute<String>("Preferable Vaccine Volume ","Supporting data (Preferable Vaccine)");
     caPreferableVaccineType = new ConditionAttribute<String>("Preferable Vaccine Type ","Supporting data (Preferable Vaccine)");
     caVolume = aar.getVolume();
     caTradeName.setInitialValue(aar.getAntigen().getName());
-    caPreferableVaccineTradeName.setInitialValue( dataModel.getAntigenSeriesList().get(0).getSeriesDoseList().get(0).getAllowableVaccineList().get(0).getTradeName()) ;
+    //caPreferableVaccineTradeName.setInitialValue( dataModel.getAntigenSeriesList().get(0).getSeriesDoseList().get(0).getAllowableVaccineList().get(0).getTradeName()) ;
     caDateAdministered.setInitialValue(aar.getDateAdministered());
+    
+    caVaccineTypeBeginAgeDate.setAssumedValue(PAST);
+	caVaccineTypeEndAgeDate.setAssumedValue(FUTURE);
+    caPreferableVaccineTradeName.setAssumedValue(aar.getTradeName());
+    caPreferableVaccineVolume.setAssumedValue(aar.getVolume());
     
     conditionAttributesList.add(caDateAdministered);
   	conditionAttributesList.add(caTradeName);
@@ -53,7 +59,8 @@ public class EvaluateForPreferableVaccine extends LogicStep
   	conditionAttributesList.add(caVaccineTypeEndAgeDate);
   	conditionAttributesList.add(caPreferableVaccineTradeName);
   	conditionAttributesList.add(caPreferableVaccineVolume);
-    Date birthDate = dataModel.getPatient().getDateOfBirth();
+  	conditionAttributesList.add(caPreferableVaccineType);
+  	Date birthDate = dataModel.getPatient().getDateOfBirth();
 
     int i=0, j=0, k=0;
     boolean allTrue = true;
@@ -62,9 +69,10 @@ public class EvaluateForPreferableVaccine extends LogicStep
     	for (j=0; j<dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().size(); j++){
     		for (k=0; k<dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().get(j).getPreferrableVaccineList().size() ; k++){
     		    caPreferableVaccineTradeName.setInitialValue( dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().get(j).getPreferrableVaccineList().get(k).getTradeName()) ;
-    		    caPreferableVaccineTradeName.setInitialValue( dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().get(j).getPreferrableVaccineList().get(k).getVaccineType().getCvxCode()) ;
     		    caPreferableVaccineVolume.setInitialValue( dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().get(j).getPreferrableVaccineList().get(k).getVolume()) ;
-
+    		    pv = dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().get(j).getPreferrableVaccineList().get(k).getVolume();
+    		    caPreferableVaccineType.setInitialValue(dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().get(j).getPreferrableVaccineList().get(k).getVaccineType().getCvxCode());
+    		    
     		    if (dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().get(j).getPreferrableVaccineList().get(k).getVaccineTypeBeginAge()!=null)
     		    	caVaccineTypeBeginAgeDate.setInitialValue(dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().get(j).getPreferrableVaccineList().get(k).getVaccineTypeBeginAge().getDateFrom(birthDate));
     		    if (dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().get(j).getPreferrableVaccineList().get(k).getVaccineTypeEndAge()!=null)
@@ -153,7 +161,7 @@ public class EvaluateForPreferableVaccine extends LogicStep
           "Is the vaccine type of the vaccine dose administered the same as the vaccine type of the preferable vaccine? ") {
         @Override
         public LogicResult evaluateInternal() {
-          if (caPreferableVaccineType.equals(dataModel.getAntigenAdministeredRecord().getVaccineType().getCvxCode())) {
+          if (caPreferableVaccineType.getFinalValue().equals(dataModel.getAntigenAdministeredRecord().getVaccineType().getCvxCode())) {
             return LogicResult.YES;
           }
           else{
@@ -165,7 +173,7 @@ public class EvaluateForPreferableVaccine extends LogicStep
               "Is the Preferable vaccine type begin age date ≤ date administered < preferable vaccine type end age date? ") {
             @Override
             public LogicResult evaluateInternal() {
-              if (caVaccineTypeBeginAgeDate.getInitialValue().before(caDateAdministered.getInitialValue()) && caDateAdministered.getInitialValue().before(caVaccineTypeEndAgeDate.getInitialValue())) {
+              if (caVaccineTypeBeginAgeDate.getFinalValue().before(caDateAdministered.getFinalValue()) && caDateAdministered.getFinalValue().before(caVaccineTypeEndAgeDate.getFinalValue())) {
                 return LogicResult.YES;
               }
               else{
@@ -177,7 +185,7 @@ public class EvaluateForPreferableVaccine extends LogicStep
               "Is the vaccine dose administered trade name the same as the preferable vaccine trade name? ") {
             @Override
             public LogicResult evaluateInternal() {
-              if (caTradeName.equals(caPreferableVaccineTradeName)) {
+              if (caTradeName.getFinalValue().equals(caPreferableVaccineTradeName.getFinalValue())) {
                 return LogicResult.YES;
               }
               else{
@@ -189,8 +197,8 @@ public class EvaluateForPreferableVaccine extends LogicStep
               "Is the Vaccine dose administered volume >= preferable vaccine volume? ") {
             @Override
             public LogicResult evaluateInternal() {
-            	if (!(caVolume.equals(new String()) || caPreferableVaccineVolume.getInitialValue().equals(new String()))){
-            		if (Double.parseDouble(caPreferableVaccineVolume.getInitialValue()) <= Double.parseDouble(caVolume)) {
+            	if (!(caVolume.equals(new String()) || caPreferableVaccineVolume.getFinalValue().equals(new String()))){
+            		if (Double.parseDouble(caPreferableVaccineVolume.getFinalValue()) <= Double.parseDouble(caVolume)) {
                         return LogicResult.YES;
                       }
                       else{

@@ -27,12 +27,41 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
 public class EvaluateInterval extends LogicStep {
 
+    private ConditionAttribute<Date> caDateAdministered = null;
+    private ConditionAttribute<YesNo> caFromImmediatePreviousDoseAdministered = null;
+    private ConditionAttribute<String> caFromTargetDoseNumberInSeries = null;
+    private ConditionAttribute<String> caFromMostRecent = null;
+    private ConditionAttribute<Date> caAbsoluteMinimumIntervalDate = null;
+    private ConditionAttribute<Date> caMinimumIntervalDate = null;
+    
   public EvaluateInterval(DataModel dataModel) {
     super(LogicStepType.EVALUATE_INTERVAL, dataModel);
     setConditionTableName("Table ");
 
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
 
+    caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
+    caFromImmediatePreviousDoseAdministered = new ConditionAttribute<YesNo>("Supporting Data",
+        "From Immediate Previous Dose Administered");
+    caFromTargetDoseNumberInSeries = new ConditionAttribute<String>("Supporting Data",
+        "From Target Dose Number In Series");
+    caFromMostRecent = new ConditionAttribute<String>("Supporting Data (Interval)",
+        "From Most Recent (CVX)");
+    caAbsoluteMinimumIntervalDate = new ConditionAttribute<Date>("Calculated Date",
+        "Absolute Minimum Interval Date");
+    caMinimumIntervalDate = new ConditionAttribute<Date>("Calculated Date", "Mimium Interval Date");
+    
+    caAbsoluteMinimumIntervalDate.setAssumedValue(PAST);
+    caMinimumIntervalDate.setAssumedValue(PAST);
+    
+    List<ConditionAttribute<?>> list = new ArrayList<ConditionAttribute<?>>();
+    conditionAttributesList.add( caDateAdministered);
+    conditionAttributesList.add( caFromImmediatePreviousDoseAdministered);
+    conditionAttributesList.add( caFromTargetDoseNumberInSeries);
+    conditionAttributesList.add( caFromMostRecent);
+    conditionAttributesList.add( caAbsoluteMinimumIntervalDate);
+    conditionAttributesList.add( caMinimumIntervalDate);
+    
     int intervalCount = 0;
     if (seriesDose.getAgeList().size() > 0) {
       for (Interval interval : seriesDose.getIntervalList()) {
@@ -40,36 +69,19 @@ public class EvaluateInterval extends LogicStep {
         LT logicTable = new LT();
         logicTableList.add(logicTable);
 
-        logicTable.caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
-        logicTable.caFromImmediatePreviousDoseAdministered = new ConditionAttribute<YesNo>("Supporting Data",
-            "From Immediate Previous Dose Administered");
-        logicTable.caFromTargetDoseNumberInSeries = new ConditionAttribute<String>("Supporting Data",
-            "From Target Dose Number In Series");
-        logicTable.caFromMostRecent = new ConditionAttribute<String>("Supporting Data (Interval)",
-            "From Most Recent (CVX)");
-        logicTable.caAbsoluteMinimumIntervalDate = new ConditionAttribute<Date>("Calculated Date",
-            "Absolute Minimum Interval Date");
-        logicTable.caMinimumIntervalDate = new ConditionAttribute<Date>("Calculated Date", "Mimium Interval Date");
 
-        logicTable.caAbsoluteMinimumIntervalDate.setAssumedValue(PAST);
-        logicTable.caMinimumIntervalDate.setAssumedValue(PAST);
 
-        List<ConditionAttribute<?>> list = new ArrayList<ConditionAttribute<?>>();
-        list.add(logicTable.caDateAdministered);
-        list.add(logicTable.caFromImmediatePreviousDoseAdministered);
-        list.add(logicTable.caFromTargetDoseNumberInSeries);
-        list.add(logicTable.caFromMostRecent);
-        list.add(logicTable.caAbsoluteMinimumIntervalDate);
-        list.add(logicTable.caMinimumIntervalDate);
+
+
         conditionAttributesAdditionalMap.put("Interval Check #" + intervalCount, list);
 
         AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
-        logicTable.caDateAdministered.setInitialValue(aar.getDateAdministered());
-        logicTable.caFromImmediatePreviousDoseAdministered
+         caDateAdministered.setInitialValue(aar.getDateAdministered());
+         caFromImmediatePreviousDoseAdministered
             .setInitialValue(interval.getFromImmediatePreviousDoseAdministered());
-        logicTable.caFromTargetDoseNumberInSeries.setInitialValue(interval.getFromTargetDoseNumberInSeries());
-        logicTable.caAbsoluteMinimumIntervalDate.setInitialValue(CALCDTINT_3.evaluate(dataModel, this, null));
-        logicTable.caMinimumIntervalDate.setInitialValue(CALCDTINT_4.evaluate(dataModel, this, null));
+         caFromTargetDoseNumberInSeries.setInitialValue(interval.getFromTargetDoseNumberInSeries());
+         caAbsoluteMinimumIntervalDate.setInitialValue(CALCDTINT_3.evaluate(dataModel, this, null));
+         caMinimumIntervalDate.setInitialValue(CALCDTINT_4.evaluate(dataModel, this, null));
       }
     }
   }
@@ -113,12 +125,7 @@ public class EvaluateInterval extends LogicStep {
 
   private class LT extends LogicTable {
 
-    private ConditionAttribute<Date> caDateAdministered = null;
-    private ConditionAttribute<YesNo> caFromImmediatePreviousDoseAdministered = null;
-    private ConditionAttribute<String> caFromTargetDoseNumberInSeries = null;
-    private ConditionAttribute<String> caFromMostRecent = null;
-    private ConditionAttribute<Date> caAbsoluteMinimumIntervalDate = null;
-    private ConditionAttribute<Date> caMinimumIntervalDate = null;
+
 
     private YesNo result = null;
 
