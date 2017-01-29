@@ -9,6 +9,7 @@ import java.util.Date;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AllowableVaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
+import org.openimmunizationsoftware.cdsi.core.domain.PreferrableVaccine;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
@@ -65,18 +66,17 @@ public class EvaluateForPreferableVaccine extends LogicStep
     int i=0, j=0, k=0;
     boolean allTrue = true;
     outerloop :
-    for (i=0; i<dataModel.getAntigenSeriesList().size(); i++){
-    	for (j=0; j<dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().size(); j++){
-    		for (k=0; k<dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().get(j).getPreferrableVaccineList().size() ; k++){
-    		    caPreferableVaccineTradeName.setInitialValue( dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().get(j).getPreferrableVaccineList().get(k).getTradeName()) ;
-    		    caPreferableVaccineVolume.setInitialValue( dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().get(j).getPreferrableVaccineList().get(k).getVolume()) ;
-    		    pv = dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().get(j).getPreferrableVaccineList().get(k).getVolume();
-    		    caPreferableVaccineType.setInitialValue(dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().get(j).getPreferrableVaccineList().get(k).getVaccineType().getCvxCode());
-    		    
-    		    if (dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().get(j).getPreferrableVaccineList().get(k).getVaccineTypeBeginAge()!=null)
-    		    	caVaccineTypeBeginAgeDate.setInitialValue(dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().get(j).getPreferrableVaccineList().get(k).getVaccineTypeBeginAge().getDateFrom(birthDate));
-    		    if (dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().get(j).getPreferrableVaccineList().get(k).getVaccineTypeEndAge()!=null)
-    		    	caVaccineTypeEndAgeDate.setInitialValue(dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().get(j).getPreferrableVaccineList().get(k).getVaccineTypeEndAge().getDateFrom(birthDate));
+    for ( PreferrableVaccine pi : dataModel.getTargetDose().getTrackedSeriesDose().getPreferrableVaccineList()){
+    	//for (j=0; j<dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().size(); j++){
+    		//for (k=0; k<dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().get(j).getPreferrableVaccineList().size() ; k++){
+    		    caPreferableVaccineTradeName.setInitialValue( pi.getTradeName()) ;
+    		    caPreferableVaccineVolume.setInitialValue( pi.getVolume()) ;
+    		    pv = pi.getVolume();
+    		    caPreferableVaccineType.setInitialValue(pi.getVaccineType().getCvxCode());
+    		    if (pi.getVaccineTypeBeginAge()!=null)
+    		    	caVaccineTypeBeginAgeDate.setInitialValue(pi.getVaccineTypeBeginAge().getDateFrom(birthDate));
+    		    if (pi.getVaccineTypeEndAge()!=null)
+    		    	caVaccineTypeEndAgeDate.setInitialValue(pi.getVaccineTypeEndAge().getDateFrom(birthDate));
 
     		    LT logicTable = new LT();
     		    for (int l = 0; l < logicTable.getLogicOutcomes().length; l++) {
@@ -96,9 +96,9 @@ public class EvaluateForPreferableVaccine extends LogicStep
     		   
     		    logicTableList.add(logicTable);
     		   // k++;
-    		}
+    		//}
     		//j++;
-    	}
+    	//}
     	//i++;
     }
     
