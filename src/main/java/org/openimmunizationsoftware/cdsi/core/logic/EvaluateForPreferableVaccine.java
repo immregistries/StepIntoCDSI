@@ -19,48 +19,13 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 public class EvaluateForPreferableVaccine extends LogicStep
 {
 
-  private ConditionAttribute<Date> caDateAdministered = null;
-  //private ConditionAttribute<>
-  private ConditionAttribute<String> caTradeName = null;
-  private ConditionAttribute<Date> caVaccineTypeBeginAgeDate = null;
-  private ConditionAttribute<Date> caVaccineTypeEndAgeDate = null;
-  private ConditionAttribute<String> caPreferableVaccineTradeName = null;
-  private ConditionAttribute<String> caPreferableVaccineVolume = null;
-  private ConditionAttribute<String> caPreferableVaccineType = null;
-  private String caVolume = null;
-  private String pv = null;
+
 
   public EvaluateForPreferableVaccine(DataModel dataModel) {
     super(LogicStepType.EVALUATE_PREFERABLE_VACCINE_ADMINISTERED, dataModel);
     setConditionTableName("Table ");
 
-    caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
-//     _____________>Logic Problem : Check logic specification
     
-    AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
-    caPreferableVaccineTradeName = new ConditionAttribute<String>("Supporting data (Preferable Vaccine)", "Preferable Vaccine Trade Name ") ;
-    caTradeName = new ConditionAttribute<String>("Vaccine dose administered", "Trade Name ") ;
-    caVaccineTypeBeginAgeDate = new ConditionAttribute<Date>("Vaccine Type Begin Age Date", "Calculated date (CALCDTPREF-1)");
-    caVaccineTypeEndAgeDate = new ConditionAttribute<Date>("Vaccine Type End Age Date", "Calculated date (CALCDTPREF-2)");
-    caPreferableVaccineVolume = new ConditionAttribute<String>("Preferable Vaccine Volume ","Supporting data (Preferable Vaccine)");
-    caPreferableVaccineType = new ConditionAttribute<String>("Preferable Vaccine Type ","Supporting data (Preferable Vaccine)");
-    caVolume = aar.getVolume();
-    caTradeName.setInitialValue(aar.getAntigen().getName());
-    //caPreferableVaccineTradeName.setInitialValue( dataModel.getAntigenSeriesList().get(0).getSeriesDoseList().get(0).getAllowableVaccineList().get(0).getTradeName()) ;
-    caDateAdministered.setInitialValue(aar.getDateAdministered());
-    
-    caVaccineTypeBeginAgeDate.setAssumedValue(PAST);
-	caVaccineTypeEndAgeDate.setAssumedValue(FUTURE);
-    caPreferableVaccineTradeName.setAssumedValue(aar.getTradeName());
-    caPreferableVaccineVolume.setAssumedValue(aar.getVolume());
-    
-    conditionAttributesList.add(caDateAdministered);
-  	conditionAttributesList.add(caTradeName);
-  	conditionAttributesList.add(caVaccineTypeBeginAgeDate);
-  	conditionAttributesList.add(caVaccineTypeEndAgeDate);
-  	conditionAttributesList.add(caPreferableVaccineTradeName);
-  	conditionAttributesList.add(caPreferableVaccineVolume);
-  	conditionAttributesList.add(caPreferableVaccineType);
   	Date birthDate = dataModel.getPatient().getDateOfBirth();
 
     int i=0, j=0, k=0;
@@ -69,16 +34,45 @@ public class EvaluateForPreferableVaccine extends LogicStep
     for ( PreferrableVaccine pi : dataModel.getTargetDose().getTrackedSeriesDose().getPreferrableVaccineList()){
     	//for (j=0; j<dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().size(); j++){
     		//for (k=0; k<dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().get(j).getPreferrableVaccineList().size() ; k++){
-    		    caPreferableVaccineTradeName.setInitialValue( pi.getTradeName()) ;
-    		    caPreferableVaccineVolume.setInitialValue( pi.getVolume()) ;
-    		    pv = pi.getVolume();
-    		    caPreferableVaccineType.setInitialValue(pi.getVaccineType().getCvxCode());
+	    LT logicTable = new LT();
+	    
+	    logicTable.caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
+//	     _____________>Logic Problem : Check logic specification
+	    
+	    AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
+	    logicTable.caPreferableVaccineTradeName = new ConditionAttribute<String>("Supporting data (Preferable Vaccine)", "Preferable Vaccine Trade Name ") ;
+	    logicTable.caTradeName = new ConditionAttribute<String>("Vaccine dose administered", "Trade Name ") ;
+	    logicTable.caVaccineTypeBeginAgeDate = new ConditionAttribute<Date>("Vaccine Type Begin Age Date", "Calculated date (CALCDTPREF-1)");
+	    logicTable.caVaccineTypeEndAgeDate = new ConditionAttribute<Date>("Vaccine Type End Age Date", "Calculated date (CALCDTPREF-2)");
+	    logicTable.caPreferableVaccineVolume = new ConditionAttribute<String>("Preferable Vaccine Volume ","Supporting data (Preferable Vaccine)");
+	    logicTable.caPreferableVaccineType = new ConditionAttribute<String>("Preferable Vaccine Type ","Supporting data (Preferable Vaccine)");
+	    logicTable.caVolume = aar.getVolume();
+	    logicTable.caTradeName.setInitialValue(aar.getAntigen().getName());
+	    //caPreferableVaccineTradeName.setInitialValue( dataModel.getAntigenSeriesList().get(0).getSeriesDoseList().get(0).getAllowableVaccineList().get(0).getTradeName()) ;
+	    logicTable.caDateAdministered.setInitialValue(aar.getDateAdministered());
+	    
+	    logicTable.caVaccineTypeBeginAgeDate.setAssumedValue(PAST);
+	    logicTable.caVaccineTypeEndAgeDate.setAssumedValue(FUTURE);
+	    logicTable.caPreferableVaccineTradeName.setAssumedValue(aar.getTradeName());
+	    logicTable.caPreferableVaccineVolume.setAssumedValue(aar.getVolume());
+	    
+	    conditionAttributesList.add(logicTable.caDateAdministered);
+	  	conditionAttributesList.add(logicTable.caTradeName);
+	  	conditionAttributesList.add(logicTable.caVaccineTypeBeginAgeDate);
+	  	conditionAttributesList.add(logicTable.caVaccineTypeEndAgeDate);
+	  	conditionAttributesList.add(logicTable.caPreferableVaccineTradeName);
+	  	conditionAttributesList.add(logicTable.caPreferableVaccineVolume);
+	  	conditionAttributesList.add(logicTable.caPreferableVaccineType);
+	    
+	  	logicTable.caPreferableVaccineTradeName.setInitialValue( pi.getTradeName()) ;
+	  	logicTable.caPreferableVaccineVolume.setInitialValue( pi.getVolume()) ;
+	  	logicTable.pv = pi.getVolume();
+	  	logicTable.caPreferableVaccineType.setInitialValue(pi.getVaccineType().getCvxCode());
     		    if (pi.getVaccineTypeBeginAge()!=null)
-    		    	caVaccineTypeBeginAgeDate.setInitialValue(pi.getVaccineTypeBeginAge().getDateFrom(birthDate));
+    		    	logicTable.caVaccineTypeBeginAgeDate.setInitialValue(pi.getVaccineTypeBeginAge().getDateFrom(birthDate));
     		    if (pi.getVaccineTypeEndAge()!=null)
-    		    	caVaccineTypeEndAgeDate.setInitialValue(pi.getVaccineTypeEndAge().getDateFrom(birthDate));
+    		    	logicTable.caVaccineTypeEndAgeDate.setInitialValue(pi.getVaccineTypeEndAge().getDateFrom(birthDate));
 
-    		    LT logicTable = new LT();
     		    for (int l = 0; l < logicTable.getLogicOutcomes().length; l++) {
     		        allTrue = true;
     		        for (int m = 0; m < logicTable.getLogicConditions().length; m++) {
@@ -154,6 +148,17 @@ public class EvaluateForPreferableVaccine extends LogicStep
 
   private class LT extends LogicTable
   {
+	  private ConditionAttribute<Date> caDateAdministered = null;
+	  //private ConditionAttribute<>
+	  private ConditionAttribute<String> caTradeName = null;
+	  private ConditionAttribute<Date> caVaccineTypeBeginAgeDate = null;
+	  private ConditionAttribute<Date> caVaccineTypeEndAgeDate = null;
+	  private ConditionAttribute<String> caPreferableVaccineTradeName = null;
+	  private ConditionAttribute<String> caPreferableVaccineVolume = null;
+	  private ConditionAttribute<String> caPreferableVaccineType = null;
+	  private String caVolume = null;
+	  private String pv = null;
+	  
     public LT() {
       super(4, 5, "Table 4-5 Was the supporting data defined preferrable vaccine administered?");
 
