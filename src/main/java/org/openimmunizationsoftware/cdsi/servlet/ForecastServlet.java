@@ -128,7 +128,6 @@ public class ForecastServlet extends HttpServlet {
 	  NAME_MAP.put("Influenza", "");
 	  NAME_MAP.put("", "");
 	  NAME_MAP.put("", "");
-	  
   }
 
   private void printList(DataModel dataModel, PrintWriter out, SimpleDateFormat sdf, Date today,
