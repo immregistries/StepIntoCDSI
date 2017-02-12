@@ -171,8 +171,16 @@ public class OneBestPatientSeries extends LogicStep
 						numberOfDefaultPatientSeries ++;
 					}
 				}
-				System.err.println("VALID DOSE ??????????????????????????????");
-				if(numberOfDefaultPatientSeries==1){
+				//System.err.println("VALID DOSE ??????????????????????????????");
+				//A valid dose is a dose with 
+				List<TargetDose> targetDoseList = dataModel.getTargetDoseList();
+				boolean isThereAVlidDose = false;
+				for(TargetDose targetDose:targetDoseList){
+					if(targetDose.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)){
+						isThereAVlidDose=true;
+					}
+				}
+				if(!isThereAVlidDose && numberOfDefaultPatientSeries==1){
 					return LogicResult.YES;
 				}else{
 					return LogicResult.NO;
