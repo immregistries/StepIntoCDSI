@@ -52,7 +52,8 @@ public class EvaluateAllowableInterval extends LogicStep {
     AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
     caDateAdministered.setInitialValue(aar.getDateAdministered());
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-    if (seriesDose.getAgeList().size() > 0) {
+    
+    if (seriesDose.getAllowableintervalList().size() > 0) {
       for (AllowableInterval ainterval : seriesDose.getAllowableintervalList()) {
         caFromImmediatePreviousDoseAdministered.setInitialValue(ainterval.getFromImmediatePreviousDoseAdministered());
         caFromTargetDoseNumberInSeries.setInitialValue(ainterval.getFromTargetDoseNumberInSeries());
@@ -69,6 +70,7 @@ public class EvaluateAllowableInterval extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
+	  System.out.println(logicTableList.size());
     for (LogicTable logicTable : logicTableList) {
       logicTable.evaluate();
       if (((LT) logicTable).getResult() == YesNo.NO) {
@@ -107,7 +109,7 @@ public class EvaluateAllowableInterval extends LogicStep {
       setLogicCondition(0, new LogicCondition("date administered < Absolute minimum interval date?") {
         @Override
         public LogicResult evaluateInternal() {
-
+        
           if (caAbsoluteMinimumIntervalDate.getFinalValue().after(caDateAdministered.getFinalValue())) {
             return LogicResult.YES;
           }

@@ -191,9 +191,11 @@ public class SeriesDose
       out.println("<h4>Required Gender</h4>");
       out.println("<table>");
       out.println("  <tr>");
+      out.println("    <th>Required Gender</th>");
       out.println("  </tr>");
       for (RequiredGender requiredGender : requiredGenderList) {
         out.println("  <tr>");
+        out.println("    <td>" + requiredGender.getValue() + "</td>");
         out.println("  </tr>");
       }
       out.println("</table>");

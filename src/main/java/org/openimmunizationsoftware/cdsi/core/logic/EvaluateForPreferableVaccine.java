@@ -224,6 +224,7 @@ public class EvaluateForPreferableVaccine extends LogicStep
           @Override
           public void perform() {
             log("Yes. A preferable vaccine was administered.");
+            setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
           }
         });
 
@@ -231,23 +232,27 @@ public class EvaluateForPreferableVaccine extends LogicStep
           @Override
           public void perform() {
             log("Yes. A preferable vaccine was administered. Evaluation Reason is volume administered is “less than recommended volume.”");
+            setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
           }
         });
       setLogicOutcome(2, new LogicOutcome() {
           @Override
           public void perform() {
+        	  setNextLogicStepType(LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED);
             log("No.  This supporting data defined preferable vaccine was not administered.");
           }
         });
       setLogicOutcome(3, new LogicOutcome() {
           @Override
           public void perform() {
+        	  setNextLogicStepType(LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED);
             log("No.  This supporting data defined preferable vaccine was administered out of the preferred age range.");
           }
         });
       setLogicOutcome(4, new LogicOutcome() {
           @Override
           public void perform() {
+        	  setNextLogicStepType(LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED);
             log("No. This supporting data defined preferable vaccine was of the wrong trade name. ");
           }
         });

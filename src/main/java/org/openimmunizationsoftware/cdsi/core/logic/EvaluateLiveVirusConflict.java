@@ -1,5 +1,9 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
+import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTINT_4;
+import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTLIVE_1;
+import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTLIVE_3;
+import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTLIVE_2;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.ANY;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
@@ -44,6 +48,10 @@ public class EvaluateLiveVirusConflict extends LogicStep {
     conditionAttributesList.add(caCurrentVaccineType);
     conditionAttributesList.add(caPreviousVaccineType);
 
+    caDateAdministered.setInitialValue(dataModel.getAntigenAdministeredRecord().getDateAdministered());
+    caConflictBeginIntervalDate.setInitialValue(CALCDTLIVE_1.evaluate(dataModel, this, null));
+    caConflictEndIntervalDate.setInitialValue(CALCDTLIVE_2.evaluate(dataModel, this, null));
+    
     LT420 logicTable = new LT420();
     logicTableList.add(logicTable);
   }
@@ -51,6 +59,9 @@ public class EvaluateLiveVirusConflict extends LogicStep {
   @Override
   public LogicStep process() throws Exception {
     setNextLogicStepType(LogicStepType.EVALUATE_PREFERABLE_VACCINE_ADMINISTERED);
+    for(LogicTable lt : logicTableList){
+    	lt.evaluate();
+    }
     return next();
   }
 
@@ -70,7 +81,7 @@ public class EvaluateLiveVirusConflict extends LogicStep {
     out.println(
         "<p>Evaluate  live virus conflict  validates the  date  administered  of a live virus  vaccine dose administered  against previous  live  virus  administered  vaccines  to  ensure  proper  spacing  between  administrations.  For  some  live virus vaccines and for inactivated  virus or recombinant  vaccines, this condition does not exist. Therefore, if no live  virus  supporting  data  exists  for  the  vaccine  dose  administered  being  evaluated,  the  vaccine  dose administered is not in conflict with any other vaccine dose administered.</p>");// <------------------------------------------------------
 
-    printConditionAttributesTable(out);
+    //printConditionAttributesTable(out);
     printLogicTables(out);
   }
 
