@@ -146,9 +146,20 @@ public class ClassifyPatientSeries extends LogicStep
 			
 			@Override
 			protected LogicResult evaluateInternal() {
-				// TODO Auto-generated method stub
-				System.err.println("DIDN'T COMPUTE VALID DOSE");
-				return LogicResult.NO;
+				//A valid dose is a dose with a satisfied target dose
+				List<TargetDose> targetDoseList = dataModel.getTargetDoseList();
+				boolean isThereAVlidDose = false;
+				for(TargetDose targetDose:targetDoseList){
+					if(targetDose.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)){
+						isThereAVlidDose=true;
+					}
+				}
+				if(!isThereAVlidDose){
+					return LogicResult.YES;
+				}else{
+					return LogicResult.NO;
+				}
+
 			}
 		});
     	
