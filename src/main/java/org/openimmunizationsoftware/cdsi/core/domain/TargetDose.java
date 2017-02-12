@@ -1,9 +1,6 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
-import java.util.List;
-
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
-import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
 public class TargetDose
 {

@@ -12,7 +12,6 @@ import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.Contraindication;
-import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.Immunity;
 import org.openimmunizationsoftware.cdsi.core.domain.ImmunizationHistory;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;

@@ -1,15 +1,13 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTALLOW_1;
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTALLOW_2;
-
 import java.io.PrintWriter;
 import java.util.Date;
-import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.AllowableVaccine;
+import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
-import org.openimmunizationsoftware.cdsi.core.domain.*;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;

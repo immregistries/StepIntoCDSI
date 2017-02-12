@@ -11,7 +11,6 @@ import javax.servlet.http.HttpSession;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
-import org.openimmunizationsoftware.cdsi.servlet.ForecastServlet;
 
 public class AntigenServlet extends MainServlet {
 

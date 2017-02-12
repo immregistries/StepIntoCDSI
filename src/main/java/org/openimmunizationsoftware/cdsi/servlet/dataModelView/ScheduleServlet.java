@@ -1,17 +1,20 @@
 package org.openimmunizationsoftware.cdsi.servlet.dataModelView;
 
-import org.openimmunizationsoftware.cdsi.core.data.DataModel;
-import org.openimmunizationsoftware.cdsi.core.domain.*;
-import org.openimmunizationsoftware.cdsi.servlet.ForecastServlet;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+
+import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.ClinicalHistory;
+import org.openimmunizationsoftware.cdsi.core.domain.Schedule;
+import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 
 /**
  * Created by Eric on 7/7/16.

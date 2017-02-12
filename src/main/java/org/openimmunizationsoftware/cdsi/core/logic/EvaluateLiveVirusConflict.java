@@ -1,8 +1,6 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTINT_4;
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTLIVE_1;
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTLIVE_3;
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTLIVE_2;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.ANY;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
@@ -10,6 +8,7 @@ import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES
 
 import java.io.PrintWriter;
 import java.util.Date;
+
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;

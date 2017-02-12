@@ -1,13 +1,9 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTPREF_1;
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTPREF_2;
-
 import java.io.PrintWriter;
 import java.util.Date;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
-import org.openimmunizationsoftware.cdsi.core.domain.AllowableVaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.PreferrableVaccine;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;

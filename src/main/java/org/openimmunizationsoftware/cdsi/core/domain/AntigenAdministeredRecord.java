@@ -3,7 +3,6 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 import java.util.Date;
 
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.DoseCondition;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 
 public class AntigenAdministeredRecord
 {

@@ -1,17 +1,10 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTINT_1;
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTINT_2;
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTINT_3;
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTINT_4;
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTINT_5;
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTINT_6;
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTINT_7;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;

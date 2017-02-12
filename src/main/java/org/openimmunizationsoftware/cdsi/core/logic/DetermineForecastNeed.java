@@ -1,14 +1,15 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
-import java.util.List;
+import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.ANY;
+import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
+import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
+
 import java.io.PrintWriter;
 import java.util.Date;
+import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
-import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
-import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.SeasonalRecommendation;
-import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
@@ -17,10 +18,6 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
-
-import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.ANY;
-import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
-import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
 
 public class DetermineForecastNeed extends LogicStep {
 

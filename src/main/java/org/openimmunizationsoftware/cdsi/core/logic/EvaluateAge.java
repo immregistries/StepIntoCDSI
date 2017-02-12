@@ -20,12 +20,6 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTAGE_1;
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTAGE_2;
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTAGE_3;
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTAGE_4;
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTAGE_5;
-
 public class EvaluateAge extends LogicStep{
 
   private ConditionAttribute<Date> caDateAdministered = null;

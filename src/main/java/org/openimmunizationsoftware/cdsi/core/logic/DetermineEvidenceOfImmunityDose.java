@@ -1,5 +1,9 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
+import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.ANY;
+import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
+import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
+
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
@@ -15,10 +19,6 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
-
-import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.ANY;
-import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
-import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
 
 public class DetermineEvidenceOfImmunityDose extends LogicStep {
 

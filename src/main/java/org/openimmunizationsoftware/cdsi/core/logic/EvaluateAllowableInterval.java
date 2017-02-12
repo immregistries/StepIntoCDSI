@@ -1,12 +1,6 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTINT_1;
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTINT_2;
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTINT_3;
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTINT_4;
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTINT_5;
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTINT_6;
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTINT_7;
 
 import java.io.PrintWriter;
 import java.util.Date;
@@ -14,7 +8,6 @@ import java.util.Date;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AllowableInterval;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
-import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;

@@ -1,6 +1,6 @@
 package org.openimmunizationsoftware.cdsi.core.domain.datatypes;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 

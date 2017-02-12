@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
-
 public class SeriesDose
 {
   private String doseNumber = "";

@@ -1,6 +1,5 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
