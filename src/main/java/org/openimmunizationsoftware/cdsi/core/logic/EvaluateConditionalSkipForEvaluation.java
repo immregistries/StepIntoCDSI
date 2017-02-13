@@ -180,7 +180,6 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
 
     printConditionAttributesTable(out);
     printLogicTables(out);
-    printLog(out);
   }
 
   protected class LTInnerSet extends LogicTable {

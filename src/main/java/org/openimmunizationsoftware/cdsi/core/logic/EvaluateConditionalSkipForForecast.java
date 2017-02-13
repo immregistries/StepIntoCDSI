@@ -39,7 +39,6 @@ public class EvaluateConditionalSkipForForecast extends EvaluateConditionalSkipF
 
     printConditionAttributesTable(out);
     printLogicTables(out);
-    printLog(out);
   }
 
 

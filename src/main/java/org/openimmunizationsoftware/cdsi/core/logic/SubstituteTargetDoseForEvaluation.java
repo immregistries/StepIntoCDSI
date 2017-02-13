@@ -116,7 +116,6 @@ public class SubstituteTargetDoseForEvaluation extends LogicStep
     out.println("<p>At present, substitute target dose is only used for children who have partially completed their DTaP series and have turned seven years old. Once the child is seven years old, the number of Tdap/Td doses recommended is based on the number of DTaP vaccine doses administered the child received prior to age seven. See MMWR 2006; 55 (No. RR-3); Appendix D.</p>");
     printConditionAttributesTable(out);
     printLogicTables(out);
-    printLog(out);
   }
 
   private class LT extends LogicTable

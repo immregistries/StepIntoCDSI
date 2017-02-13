@@ -73,9 +73,9 @@ public class DomUtils
 
   public static YesNo getInternalValueYesNo(Node node) {
     String value = DomUtils.getInternalValue(node);
-    if (value.equalsIgnoreCase("Yes")) {
+    if (value.equalsIgnoreCase("Yes") || value.equalsIgnoreCase("Y")) {
       return YesNo.YES;
-    } else if (value.equalsIgnoreCase("No")) {
+    } else if (value.equalsIgnoreCase("No") || value.equalsIgnoreCase("N")) {
       return YesNo.NO;
     } else if (value.equalsIgnoreCase("n/a")) {
       return YesNo.NOT_APPLICABLE;

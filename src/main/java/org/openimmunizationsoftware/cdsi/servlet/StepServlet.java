@@ -99,6 +99,7 @@ public class StepServlet extends ForecastServlet {
           }
         } else {
           dataModel.getLogicStepPrevious().printPost(out);
+          dataModel.getLogicStepPrevious().printLog(out);
         }
       } catch (Exception e) {
         e.printStackTrace();

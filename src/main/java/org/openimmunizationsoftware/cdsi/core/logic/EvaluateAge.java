@@ -88,7 +88,6 @@ public class EvaluateAge extends LogicStep{
 
     printConditionAttributesTable(out);
     printLogicTables(out);
-    printLog(out);
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
     seriesDose.toHtml(out);
   }

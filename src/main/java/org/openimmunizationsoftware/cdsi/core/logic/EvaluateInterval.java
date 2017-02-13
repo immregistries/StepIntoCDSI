@@ -104,7 +104,41 @@ public class EvaluateInterval extends LogicStep {
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + getTitle() + "</h1>");
     out.println(
-        "<p>Evaluate interval validates the date administered of a vaccine dose administered against defined interval(s) from previous vaccine dose(s) administered.</p>");
+        "<p>Evaluate interva"
+        + "l validates the date administered of a vaccine dose administered against defined interval(s) from previous vaccine dose(s) administered.</p>");
+    out.println("<h2>Intervals</h2>");
+    SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
+    if ( seriesDose.getIntervalList().size() == 0)
+    {
+    	out.println("<p>No intervals for series dose " + seriesDose + "</p>");
+    }
+    else {
+    out.println("<table>");
+    out.println("  <tr>");
+    out.println("    <th>From Immediate Previous Dose Administered?</th>");
+    out.println("    <th>From Target Dose # in Series</th>");
+    out.println("    <th>From Most Recent</th>");
+    out.println("    <th>Absolute Minimum Interval</th>");
+    out.println("    <th>Minimum Interval/th>");
+    out.println("    <th>Earliest Recommended Interval</th>");
+    out.println("    <th>Latest Recommended Interval (less than)</th>");
+    out.println("    <th>Interval Priority Flag</th>");
+    out.println("  </tr>");
+   for (Interval interval : seriesDose.getIntervalList()) {
+    out.println("  <tr>");
+    out.println("    <td>" + interval.getFromImmediatePreviousDoseAdministered() + "</td>");
+    out.println("    <td>" + interval.getFromTargetDoseNumberInSeries() + "</td>");
+    out.println("    <td>?"  + "</td>");
+    out.println("    <td>" + interval.getAbsoluteMinimumInterval()+ "</td>");
+    out.println("    <td>" + interval.getMinimumInterval() + "</td>");
+    out.println("    <td>" + interval.getEarliestRecommendedInterval() + "</td>");
+    out.println("    <td>" + interval.getLatestRecommendedInterval() + "</td>");
+    out.println("    <td>?" + "</td>");
+    out.println("  </tr>");
+   }
+
+    out.println("</table>");
+    }
 
     printConditionAttributesTable(out);
     printLogicTables(out);

@@ -1,8 +1,6 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
@@ -16,8 +14,6 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
     super(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED, dataModel);
   }
 
-  private List<String> logList = new ArrayList<String>();
-
   @Override
   public LogicStep process() throws Exception {
     LogicStepType nextLogicStep;
@@ -25,7 +21,7 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
     dataModel.incAntigenAdministeredRecordPos();
 
     if (dataModel.getAntigenAdministeredRecordPos() < dataModel.getAntigenAdministeredRecordList().size()) {
-      logList.add("   Looking at first dose administered");
+      log("   Looking at first dose administered");
       dataModel.setAntigenAdministeredRecord(
           dataModel.getAntigenAdministeredRecordList().get(dataModel.getAntigenAdministeredRecordPos()));
       if (gotoNextTargetDose()) {
@@ -42,13 +38,13 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
 
   private boolean gotoNextTargetDose() {
     if (dataModel.getTargetDose() == null) {
-      logList.add(" + Getting first target dose");
+      log(" + Getting first target dose");
       dataModel.incTargetDoseListPos();
       dataModel.setTargetDose(dataModel.getTargetDoseList().get(dataModel.getTargetDoseListPos()));
       return true;
     } else {
       if (dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered() != null) {
-        logList.add(" + Previous target dose was satisifed, getting next target dose");
+        log(" + Previous target dose was satisifed, getting next target dose");
         RecurringDose recurringdose = dataModel.getTargetDose().getTrackedSeriesDose().getRecurringDose();
         if (recurringdose != null && recurringdose.getValue() == YesNo.YES) {
           // Create another target dose
@@ -64,6 +60,7 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
           return false;
         }
       } else {
+          log(" + Previous target dose was NOT satisifed, staying on this target dose");
         return true;
       }
     }

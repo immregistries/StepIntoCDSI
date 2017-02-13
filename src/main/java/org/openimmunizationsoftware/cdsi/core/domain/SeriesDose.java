@@ -21,6 +21,17 @@ public class SeriesDose
   private List<RequiredGender> requiredGenderList = new ArrayList<RequiredGender>();
   private List<PreferrableVaccine> preferrableVaccineList = new ArrayList<PreferrableVaccine>();
   private List<AllowableVaccine> allowableVaccineList = new ArrayList<AllowableVaccine>();
+  
+  @Override
+	public String toString() {
+	  if (antigenSeries != null) {
+		return antigenSeries.getSeriesName() + " dose " + doseNumber;
+	  }
+	  else 
+	  {
+		  return "dose " + doseNumber;
+	  }
+	}
 
   public void toHtml(PrintWriter out) {
     out.println("<h3>Series Dose</h3>");

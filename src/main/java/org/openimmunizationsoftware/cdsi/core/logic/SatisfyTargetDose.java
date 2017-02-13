@@ -33,6 +33,8 @@ public class SatisfyTargetDose extends LogicStep {
      * setNextLogicStepType(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED);
      */
     setNextLogicStepType(logicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED);
+    evaluateLogicTables();
+
    // if (dataModel.getAntigenAdministeredRecordList().size() == 0)
     //	 getNextLogicStep().setStarted(true);
     return next(true);
@@ -57,8 +59,8 @@ public class SatisfyTargetDose extends LogicStep {
         "<p>The following processing model and decision table are used to determine if the target dose was satisfied</p>");
     out.println("<p>ADD MODEL PICTURE</p>");
 
-    // printConditionAttributesTable(out);
-    // printLogicTables(out);
+    printConditionAttributesTable(out);
+    printLogicTables(out);
   }
 
   private class LT extends LogicTable {
@@ -132,7 +134,7 @@ public class SatisfyTargetDose extends LogicStep {
             // TODO Auto-generated method stub
               dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.SATISFIED);
               dataModel.getTargetDose().setSatisfiedByVaccineDoseAdministered(dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered());
-              log("Yes. The target dose status is “satisfied.” Evaluation status is “valid” with possible evaluation reason(s).");
+              log("Yes. The target dose status is \"satisfied.\" Evaluation status is \"valid\" with possible evaluation reason(s).");
           }
         });
       
@@ -141,7 +143,7 @@ public class SatisfyTargetDose extends LogicStep {
           public void perform() {
             // TODO Auto-generated method stub
               dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
-              log("No. The target dose status is “not satisfied.” Evaluation status is “extraneous” with possible evaluation reason(s).");
+              log("No. The target dose status is \"not satisfied.\" Evaluation status is \"extraneous\" with possible evaluation reason(s).");
 
           }
         });
@@ -151,7 +153,7 @@ public class SatisfyTargetDose extends LogicStep {
           public void perform() {
             // TODO Auto-generated method stub
               dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
-              log("No. The target dose status is “not satisfied.” Evaluation status is “not valid” with evaluation reason(s).");
+              log("No. The target dose status is \"not satisfied.\" Evaluation status is \"not valid\" with evaluation reason(s).");
 
           }
         });
@@ -161,7 +163,7 @@ public class SatisfyTargetDose extends LogicStep {
           public void perform() {
             // TODO Auto-generated method stub
               dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
-              log("No. The target dose status is “not satisfied.” Evaluation status is “not valid” with evaluation reason(s).");
+              log("No. The target dose status is \"not satisfied.\" Evaluation status is \"not valid\" with evaluation reason(s).");
 
           }
         });
@@ -171,7 +173,7 @@ public class SatisfyTargetDose extends LogicStep {
           public void perform() {
             // TODO Auto-generated method stub
               dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
-              log("No. The target dose status is “not satisfied.” Evaluation status is “not valid” with evaluation reason(s). ");
+              log("No. The target dose status is \"not satisfied.\" Evaluation status is \"not valid\" with evaluation reason(s). ");
 
           }
         });
@@ -181,7 +183,7 @@ public class SatisfyTargetDose extends LogicStep {
           public void perform() {
             // TODO Auto-generated method stub
               dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
-              log("No. The target dose status is “not satisfied.” Evaluation status is “not valid” with evaluation reason(s).");
+              log("No. The target dose status is \"not satisfied.\" Evaluation status is \"not valid\" with evaluation reason(s).");
 
           }
         });
@@ -191,7 +193,7 @@ public class SatisfyTargetDose extends LogicStep {
           public void perform() {
             // TODO Auto-generated method stub
               dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
-              log("No. The target dose status is “not satisfied.” Evaluation status is “not valid” with evaluation reason(s).");
+              log("No. The target dose status is \"not satisfied.\" Evaluation status is \"not valid\" with evaluation reason(s).");
 
           }
         });
