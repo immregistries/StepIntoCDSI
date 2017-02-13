@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Age;
+import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
@@ -36,6 +37,10 @@ public class GenerateForecastDates extends LogicStep {
   private ConditionAttribute<Date> caSeasonalRecommendationStartDate = null;
   private ConditionAttribute<VaccineType> caVaccineType = null;
   private ConditionAttribute<YesNo> caForecastVaccineType = null;
+  
+  private Forecast  forecast = new Forecast();
+  
+  int size = dataModel.getVaccineGroupForecast().getForecastList().size();
 
   public GenerateForecastDates(DataModel dataModel) {
     super(LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMEND_VACCINES, dataModel);
@@ -142,8 +147,6 @@ public class GenerateForecastDates extends LogicStep {
       caForecastVaccineType.setInitialValue(pv.getForecastVaccineType());
     }
 
-    LT logicTable = new LT();
-    logicTableList.add(logicTable);
   }
 
   @Override
@@ -151,12 +154,22 @@ public class GenerateForecastDates extends LogicStep {
     /**
      * ByPassing "For Each Patient Series"
      */
-    // setNextLogicStepType(LogicStepType.FOR_EACH_PATIENT_SERIES);
-    Forecast forecast = new Forecast();
-    dataModel.getVaccineGroupForecast().getForecastList().add(forecast);
+
     generateForcastDates(forecast);
     forecast.setAntigen(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
     forecast.setTargetDose(dataModel.getTargetDose());
+    Antigen newAntigenForeCast = forecast.getAntigen();
+    List<Antigen> antigenFromForcastList = new ArrayList<Antigen>();
+    List<Forecast> forecastList = dataModel.getVaccineGroupForecast().getForecastList();
+    for(Forecast forecast:forecastList){
+    	antigenFromForcastList.add(forecast.getAntigen());
+    }
+    if(!antigenFromForcastList.contains(newAntigenForeCast)){
+    	 dataModel.getVaccineGroupForecast().getForecastList().add(forecast);
+    	 Date now = new Date();
+    	 forecast.setAssessmentDate(now);
+    }
+
     setNextLogicStepType(LogicStepType.FOR_EACH_PATIENT_SERIES);
     return next();
   }
@@ -380,40 +393,5 @@ public class GenerateForecastDates extends LogicStep {
     insertTableRow(out, "FORECASTRECVACT-1", "Recommended Vaccine", "recommendedVaccine");
   }
 
-  private class LT extends LogicTable {
-    public LT() {
-      super(0, 0, "Table ?-?");
-
-      // setLogicCondition(0, new LogicCondition("date administered > lot
-      // expiration date?") {
-      // @Override
-      // public LogicResult evaluateInternal() {
-      // if (caDateAdministered.getFinalValue() == null ||
-      // caTriggerAgeDate.getFinalValue() == null) {
-      // return LogicResult.NO;
-      // }
-      // if
-      // (caDateAdministered.getFinalValue().before(caTriggerAgeDate.getFinalValue()))
-      // {
-      // return LogicResult.YES;
-      // }
-      // return LogicResult.NO;
-      // }
-      // });
-
-      // setLogicResults(0, LogicResult.YES, LogicResult.NO, LogicResult.NO,
-      // LogicResult.ANY);
-
-      // setLogicOutcome(0, new LogicOutcome() {
-      // @Override
-      // public void perform() {
-      // log("No. The target dose cannot be skipped. ");
-      // log("Setting next step: 4.3 Substitute Target Dose");
-      // setNextLogicStep(LogicStep.SUBSTITUTE_TARGET_DOSE_FOR_EVALUATION);
-      // }
-      // });
-      //
-    }
-  }
 
 }

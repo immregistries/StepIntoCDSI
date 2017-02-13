@@ -5,14 +5,14 @@
 <mapping>
 <conceptCodeSystem>SNOMED-CT</conceptCodeSystem>
 <conceptCode>278971009</conceptCode>
-<conceptText>Hepatitis A Immune (Finding)</conceptText>
+<conceptText>HepatitisA Immune (Finding)</conceptText>
 </mapping>
 </clinicalHistory>
 </immunity>
 <series>
-<seriesName>Hep A Standard 2-dose series</seriesName>
-<targetDisease>Hep A</targetDisease>
-<vaccineGroup>Hep A</vaccineGroup>
+<seriesName>HepA Standard 2-dose series</seriesName>
+<targetDisease>HepA</targetDisease>
+<vaccineGroup>HepA</vaccineGroup>
 <selectBest>
 <defaultSeries>Yes</defaultSeries>
 <productPath>No</productPath>
@@ -155,9 +155,9 @@
 </seriesDose>
 </series>
 <series>
-<seriesName>Hep A Twinrix 3 dose Series</seriesName>
-<targetDisease>Hep A</targetDisease>
-<vaccineGroup>Hep A</vaccineGroup>
+<seriesName>HepA Twinrix 3 dose Series</seriesName>
+<targetDisease>HepA</targetDisease>
+<vaccineGroup>HepA</vaccineGroup>
 <selectBest>
 <defaultSeries>No</defaultSeries>
 <productPath>Yes</productPath>
@@ -288,9 +288,9 @@
 </seriesDose>
 </series>
 <series>
-<seriesName>Hep A Twinrix 4 dose Series</seriesName>
-<targetDisease>Hep A</targetDisease>
-<vaccineGroup>Hep A</vaccineGroup>
+<seriesName>HepA Twinrix 4 dose Series</seriesName>
+<targetDisease>HepA</targetDisease>
+<vaccineGroup>HepA</vaccineGroup>
 <selectBest>
 <defaultSeries>No</defaultSeries>
 <productPath>Yes</productPath>

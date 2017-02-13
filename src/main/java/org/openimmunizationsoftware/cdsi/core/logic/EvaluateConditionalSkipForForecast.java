@@ -7,15 +7,18 @@ import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 public class EvaluateConditionalSkipForForecast extends EvaluateConditionalSkipForEvaluation {
 
   public EvaluateConditionalSkipForForecast(DataModel dataModel) {
+	  
     super(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST, dataModel);
-    setConditionTableName("Table 4.4 Skip Target Dose Attributes");
-    setupInternal(dataModel, LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY, LogicStepType.FORECAST_DATES_AND_REASONS);
+    setConditionTableName("Table 5.1 Evaluate Conditional Skip");
+
   }
 
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.EVALUATE_AGE);
-    evaluateLogicTables();
+	    //System.err.println("EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST");
+	    setNextLogicStepType(LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY);
+	    //evaluateLogicTables();
+    
     return next();
   }
 

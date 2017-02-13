@@ -5,14 +5,21 @@ import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
 
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.BirthDateImmunity;
 import org.openimmunizationsoftware.cdsi.core.domain.ClinicalHistory;
 import org.openimmunizationsoftware.cdsi.core.domain.Exclusion;
+import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.Immunity;
+import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
@@ -33,10 +40,12 @@ public class DetermineEvidenceOfImmunityDose extends LogicStep {
   public DetermineEvidenceOfImmunityDose(DataModel dataModel) {
     super(LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY, dataModel);
     setConditionTableName("Table ");
-
     caDateofBirth = new ConditionAttribute<Date>("Patient Data", "Date of Birth");
+    caDateofBirth.setInitialValue(dataModel.getPatient().getDateOfBirth());
     caCountryofBirth = new ConditionAttribute<String>("Patient Data", "Country of Birth");
+    caCountryofBirth.setInitialValue(dataModel.getPatient().getCountryOfBirth());
     caMaximumAgeDate = new ConditionAttribute<Date>("Calculated date (CALCDTAGE-1)", "Maximum Age Date");
+  
     caImmunityGuideline = new ConditionAttribute<String>("Supporting Data (Clinical History Immunity",
         "Immunity Guideline");
     caImmunityDate = new ConditionAttribute<Date>("Supporting Data (Birth Date Immunity", "Immunity Date");
@@ -48,8 +57,11 @@ public class DetermineEvidenceOfImmunityDose extends LogicStep {
     caMaximumAgeDate.setAssumedValue(FUTURE);
 
     conditionAttributesList.add(caDateofBirth);
+    caDateofBirth.setInitialValue(dataModel.getPatient().getDateOfBirth());
     conditionAttributesList.add(caCountryofBirth);
+    caCountryofBirth.setInitialValue(dataModel.getPatient().getDateOfBirth().toString());
     conditionAttributesList.add(caMaximumAgeDate);
+	caMaximumAgeDate.setAssumedValue(FUTURE);
     conditionAttributesList.add(caImmunityGuideline);
     conditionAttributesList.add(caImmunityDate);
     conditionAttributesList.add(caExclusionCondition);
@@ -66,6 +78,8 @@ public class DetermineEvidenceOfImmunityDose extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
+	    //System.err.println("DETERMINE_EVIDENCE_OF_IMMUNITY");
+
     setNextLogicStepType(LogicStepType.DETERMINE_FORECAST_NEED);
     return next();
   }
@@ -85,7 +99,7 @@ public class DetermineEvidenceOfImmunityDose extends LogicStep {
     out.println(
         "<p>Determine evidence of immunity  assesses the patient’s profile to determine if the patient is already potentially immune to the target disease, negating the need for additional doses.</p>");
 
-    System.out.println(caImmunityGuideline);
+    //System.out.println(caImmunityGuideline);
 
     printConditionAttributesTable(out);
     printLogicTables(out);
@@ -100,6 +114,7 @@ public class DetermineEvidenceOfImmunityDose extends LogicStep {
         @Override
         protected LogicResult evaluateInternal() {
           List<Immunity> immunityList = dataModel.getImmunityList();
+          
           int immunityListLength = immunityList.size();
           for (int j = 0; j < immunityListLength; j++) {
             List<ClinicalHistory> clinicalHistoryList = dataModel.getImmunityList().get(j).getClinicalHistoryList();
@@ -119,6 +134,7 @@ public class DetermineEvidenceOfImmunityDose extends LogicStep {
           new LogicCondition("Is the patient's date of the birth < the supporting data defined immunity date ?") {
             @Override
             protected LogicResult evaluateInternal() {
+            	
               if (caDateofBirth.getAssumedValue().before(caImmunityDate.getAssumedValue())) {
                 return LogicResult.YES;
               } else {
@@ -184,39 +200,67 @@ public class DetermineEvidenceOfImmunityDose extends LogicStep {
       setLogicOutcome(0, new LogicOutcome() {
         @Override
         public void perform() {
-          log("Yes. The patient has evidence of immunity.");
-          dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.IMMUNE);
-          log("Forecast reason is \"patient has evidence of immunity\". ");
+        	//System.out.println("DetermineEvidenceOfImmunityDose-0");
+        	log("Yes. The patient has evidence of immunity.");
+          	dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.IMMUNE); 
+          	Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
+          	List<Forecast> forecastList = dataModel.getVaccineGroupForecast().getForecastList();
+          	for(Forecast forecast:forecastList){
+          		if(forecast.getAntigen().equals(tmpAntigen)){
+          			forecast.setForecastReason("Patient has evidence of immunity");
+          		}
+          	}
+          /*	VaccineGroupForecast vaccineGroupForecast = dataModel.getVaccineGroupForecast();
+          	//System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX     "+vaccineGroupForecast.getForecastList().size());
+      		Forecast newForecast = new Forecast();
+      		newForecast.setVaccineGroupForecast(vaccineGroupForecast);
+      		newForecast.setForecastReason("Patient has evidence of immunity");*/
+      		log("Forecast reason is \"patient has evidence of immunity\". ");
         }
       });
 
       setLogicOutcome(1, new LogicOutcome() {
         @Override
         public void perform() {
-          log("No. The patient does not have evidence of immunity.");
+        	//System.out.println("DetermineEvidenceOfImmunityDose-1");
+        	log("No. The patient does not have evidence of immunity.");
         }
       });
 
       setLogicOutcome(2, new LogicOutcome() {
         @Override
         public void perform() {
-          log("Yes. The patient has evidence of immunity.");
-          dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.IMMUNE);
-          log("Forecast reason is \"patient has evidence of immunity\". ");
+        	//System.out.println("DetermineEvidenceOfImmunityDose-2");
+        	log("Yes. The patient has evidence of immunity.");
+        	dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.IMMUNE);
+        	/*VaccineGroupForecast vaccineGroupForecast = dataModel.getVaccineGroupForecast();
+    		Forecast newForecast = new Forecast();
+    		newForecast.setVaccineGroupForecast(vaccineGroupForecast);
+    		newForecast.setForecastReason("Patient has evidence of immunity");*/
+        	Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
+          	List<Forecast> forecastList = dataModel.getVaccineGroupForecast().getForecastList();
+          	for(Forecast forecast:forecastList){
+          		if(forecast.getAntigen().equals(tmpAntigen)){
+          			forecast.setForecastReason("Patient has evidence of immunity");
+          		}
+          	}
+    		log("Forecast reason is \"patient has evidence of immunity\". ");
         }
       });
 
       setLogicOutcome(3, new LogicOutcome() {
         @Override
         public void perform() {
-          log("No. The patient does not have evidence of immunity.");
+        	//System.out.println("DetermineEvidenceOfImmunityDose-3");
+        	log("No. The patient does not have evidence of immunity.");
         }
       });
 
       setLogicOutcome(4, new LogicOutcome() {
         @Override
         public void perform() {
-          log("No. The patient does not have evidence of immunity.");
+        	//System.out.println("DetermineEvidenceOfImmunityDose-4");
+        	log("No. The patient does not have evidence of immunity.");
         }
       });
 

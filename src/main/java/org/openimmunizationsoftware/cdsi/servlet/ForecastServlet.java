@@ -17,8 +17,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.openimmunizationsoftware.cdsi.SoftwareVersion;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.data.DataModelLoader;
+import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
+import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepFactory;
@@ -68,12 +70,29 @@ public class ForecastServlet extends HttpServlet {
 
     VaccineGroupForecast vgf = dataModel.getVaccineGroupForecast();
     List<Forecast> fl = vgf.getForecastList();
+    System.err.println(fl.size());
+    
+/*    for(int i=0;i<fl.size();i++){
+    	System.out.println("AntigenName:" +fl.get(i).getAntigen());
+    	System.out.println("ForecastReason:" +fl.get(i).getForecastReason());
+    }
+    */
+    System.out.println("***************************************************************************************");
+    for(Forecast fln:fl){
+    	    System.out.println("Antigen :"+fln.getAntigen()+" | "+" ForecastReason: "+fln.getForecastReason());
+    }
+
+    System.out.println("***************************************************************************************");
+
+
     List<Forecast> flNow = new ArrayList<Forecast>();
     List<Forecast> flLater = new ArrayList<Forecast>();
     List<Forecast> flDone = new ArrayList<Forecast>();
+        
     Date today = new Date();
     try {
       today = sdf.parse(sdf.format(today));
+      //System.out.println(today);
     } catch (ParseException pe) {
       pe.printStackTrace();
     }
@@ -90,10 +109,14 @@ public class ForecastServlet extends HttpServlet {
         }
       }
     }
-
+    
+    out.println("fl :"+fl.size());
     printList(dataModel, out, sdf, today, flNow, "VACCINATIONS RECOMMENDED");
+    out.println("flNow"+flNow.size());
     printList(dataModel, out, sdf, today, flLater, "VACCINATIONS RECOMMENDED AFTER");
+    out.println("flLater :"+flLater.size());
     printList(dataModel, out, sdf, today, flDone, "VACCINATIONS COMPLETE OR NOT RECOMMENDED");
+    out.println("flDone :"+flDone.size());
 
     if (dataModel.getAntigenAdministeredRecordList().size() > 0) {
       out.println("IMMUNIZATION EVALUATION");
