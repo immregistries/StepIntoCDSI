@@ -57,10 +57,10 @@ public class EvaluateAge extends LogicStep{
       Age age = seriesDose.getAgeList().get(0);
       log("Found Age information from series dose, now calculating dates");
       log(" + Absolute minimum age time period = " + age.getAbsoluteMinimumAge());
-      log(" + Minimum age time period = " + age.getMinimugeAge());
+      log(" + Minimum age time period = " + age.getMinimumAge());
       log(" + Maximum age time period = " + age.getMaximumAge());
       caAbsoluteMinimumAgeDate.setInitialValue(age.getAbsoluteMinimumAge().getDateFrom(dateOfBirth));
-      caMinimumAgeDate.setInitialValue(age.getMinimugeAge().getDateFrom(dateOfBirth));
+      caMinimumAgeDate.setInitialValue(age.getMinimumAge().getDateFrom(dateOfBirth));
       caMaximumAgeDate.setInitialValue(age.getMaximumAge().getDateFrom(dateOfBirth));
     }
   }

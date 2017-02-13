@@ -154,6 +154,7 @@ public class TimePeriod
     int year = startingDate.get(Calendar.YEAR);
     int month = startingDate.get(Calendar.MONTH) + 1;
     Calendar endingDate = Calendar.getInstance();
+    endingDate.setTime(date);
     endingDate.set(Calendar.HOUR, 0);
     endingDate.set(Calendar.MINUTE, 0);
     endingDate.set(Calendar.SECOND, 0);

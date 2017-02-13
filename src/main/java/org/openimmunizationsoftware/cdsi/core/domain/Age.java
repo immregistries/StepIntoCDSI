@@ -27,7 +27,7 @@ public class Age
     this.absoluteMinimumAge = absoluteMinimumAge;
   }
 
-  public TimePeriod getMinimugeAge() {
+  public TimePeriod getMinimumAge() {
     return minimumAge;
   }
 

@@ -85,14 +85,14 @@ public class GenerateForecastDates extends LogicStep {
 
     if (targetDose.getTrackedSeriesDose().getAgeList().size() > 0) {
       Age age = targetDose.getTrackedSeriesDose().getAgeList().get(0);
-      if (age.getMinimugeAge() != null) {
-        caMinimumAgeDate.setInitialValue(age.getMinimugeAge().getDateFrom(patient.getDateOfBirth()));
+      if (age.getMinimumAge() != null) {
+        caMinimumAgeDate.setInitialValue(age.getMinimumAge().getDateFrom(patient.getDateOfBirth()));
       }
       if (age.getEarliestRecommendedAge() != null) {
-        caEarliestRecommendedAgeDate.setInitialValue(age.getMinimugeAge().getDateFrom(patient.getDateOfBirth()));
+        caEarliestRecommendedAgeDate.setInitialValue(age.getMinimumAge().getDateFrom(patient.getDateOfBirth()));
       }
       if (age.getLatestRecommendedAge() != null) {
-        caLatestRecommendedAgeDate.setInitialValue(age.getMinimugeAge().getDateFrom(patient.getDateOfBirth()));
+        caLatestRecommendedAgeDate.setInitialValue(age.getMinimumAge().getDateFrom(patient.getDateOfBirth()));
       }
     }
     if (targetDose.getTrackedSeriesDose().getIntervalList().size() > 0) {

@@ -58,7 +58,7 @@ public class SeriesDose
       for (Age age : ageList) {
         out.println("  <tr>");
         out.println("    <td>" + age.getAbsoluteMinimumAge() + "</td>");
-        out.println("    <td>" + age.getMinimugeAge() + "</td>");
+        out.println("    <td>" + age.getMinimumAge() + "</td>");
         out.println("    <td>" + age.getEarliestRecommendedAge() + "</td>");
         out.println("    <td>" + age.getLatestRecommendedAge() + "</td>");
         out.println("    <td>" + age.getMaximumAge() + "</td>");
