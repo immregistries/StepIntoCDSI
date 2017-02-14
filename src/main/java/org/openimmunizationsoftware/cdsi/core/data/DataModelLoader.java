@@ -549,13 +549,13 @@ public class DataModelLoader {
 								contraindication.setAntigen(antigen);
 							} else if (grandchildNode.getNodeName().equals("concept")) {
 								String concept = DomUtils.getInternalValue(grandchildNode);
-								contraindication.setConcept(concept);
+								contraindication.getConcept().setConceptCodeSystem(concept);
 							} else if (grandchildNode.getNodeName().equals("conceptCode")) {
 								String conceptCode = DomUtils.getInternalValue(grandchildNode);
-								contraindication.setConceptCode(conceptCode);
+								contraindication.getConcept().setConceptCode(conceptCode);
 							} else if (grandchildNode.getNodeName().equals("conceptText")) {
 								String conceptText = DomUtils.getInternalValue(grandchildNode);
-								contraindication.setConceptText(conceptText);
+								contraindication.getConcept().setConceptText(conceptText);
 							} else if (grandchildNode.getNodeName().equals("cvxList")) {
 								String cvxList = DomUtils.getInternalValue(grandchildNode);
 								String cvxStrings[] = cvxList.split("\\,");

@@ -7,9 +7,8 @@ import java.util.List;
 public class Contraindication {
   private Antigen antigen = null;
   private String contraindicationLanguage = "";
-  private String concept = "";
-  private String conceptCode = "";
-  private String conceptText = "";
+  private Concept concept = new Concept();
+
   private List<VaccineType> cvxList = new ArrayList<VaccineType>();
 
   public Antigen getAntigen() {
@@ -28,30 +27,6 @@ public class Contraindication {
     this.contraindicationLanguage = contraindicationLanguage;
   }
 
-  public String getConcept() {
-    return concept;
-  }
-
-  public void setConcept(String concept) {
-    this.concept = concept;
-  }
-
-  public String getConceptCode() {
-    return conceptCode;
-  }
-
-  public void setConceptCode(String conceptCode) {
-    this.conceptCode = conceptCode;
-  }
-
-  public String getConceptText() {
-    return conceptText;
-  }
-
-  public void setConceptText(String conceptText) {
-    this.conceptText = conceptText;
-  }
-
   public List<VaccineType> getCvxList() {
     return cvxList;
   }
@@ -59,5 +34,13 @@ public class Contraindication {
   public void setCvxList(List<VaccineType> cvxList) {
     this.cvxList = cvxList;
   }
+
+public Concept getConcept() {
+	return concept;
+}
+
+public void setConcept(Concept concept) {
+	this.concept = concept;
+}
 
 }
