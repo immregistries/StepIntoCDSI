@@ -64,9 +64,11 @@ public class EvaluateAllowableInterval extends LogicStep {
   @Override
   public LogicStep process() throws Exception {
 	  //System.out.println(logicTableList.size());
+	  YesNo y = YesNo.YES;
     for (LogicTable logicTable : logicTableList) {
       logicTable.evaluate();
       if (((LT) logicTable).getResult() == YesNo.NO) {
+    	  y=YesNo.NO;
       }
     }
     setNextLogicStepType(LogicStepType.EVALUATE_FOR_LIVE_VIRUS_CONFLICT);
