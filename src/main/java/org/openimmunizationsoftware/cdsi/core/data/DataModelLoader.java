@@ -279,6 +279,7 @@ public class DataModelLoader {
 					Interval interval = new Interval();
 
 					interval.setSeriesDose(seriesDose);
+					seriesDose.getIntervalList().add(interval);
 					boolean populated = false;
 					NodeList childNodeList = parentNode.getChildNodes();
 
