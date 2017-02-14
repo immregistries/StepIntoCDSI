@@ -110,18 +110,21 @@ public class GenerateForecastDates extends LogicStep {
           }
         }
         if (aar != null) {
+        	if (interval.getMinimumInterval() != null)
           {
             Date d = interval.getMinimumInterval().getDateFrom(aar.getDateAdministered());
             if (minimumIntervalDate == null || d.after(minimumIntervalDate)) {
               minimumIntervalDate = d;
             }
           }
+        	if (interval.getEarliestRecommendedInterval() != null)
           {
             Date d = interval.getEarliestRecommendedInterval().getDateFrom(aar.getDateAdministered());
             if (earliestRecommendedIntervalDate == null || d.after(earliestRecommendedIntervalDate)) {
               earliestRecommendedIntervalDate = d;
             }
           }
+        	if (interval.getLatestRecommendedInterval() != null)
           {
             Date d = interval.getLatestRecommendedInterval().getDateFrom(aar.getDateAdministered());
             if (latestRecommendedIntervalDate == null || d.after(latestRecommendedIntervalDate)) {
@@ -245,9 +248,12 @@ public class GenerateForecastDates extends LogicStep {
     List<Interval> intervalList = dataModel.getTargetDose().getTrackedSeriesDose().getIntervalList();
     int biggestAmount = 0;
     for (Interval interval : intervalList) {
-      int tmp = interval.getEarliestRecommendedInterval().getAmount();
-      if (tmp > biggestAmount) {
-        biggestAmount = tmp;
+      if (interval.getEarliestRecommendedInterval() != null) 
+      {
+        int tmp = interval.getEarliestRecommendedInterval().getAmount();
+        if (tmp > biggestAmount) {
+          biggestAmount = tmp;
+        }
       }
     }
 
@@ -279,10 +285,12 @@ public class GenerateForecastDates extends LogicStep {
     List<Interval> intervalList = dataModel.getTargetDose().getTrackedSeriesDose().getIntervalList();
     int biggestAmount = 0;
     for (Interval interval : intervalList) {
+    	if (interval.getLatestRecommendedInterval() != null) {
       int tmp = interval.getLatestRecommendedInterval().getAmount();
       if (tmp > biggestAmount) {
         biggestAmount = tmp;
       }
+    	}
     }
 
     Date patientBirthDate = dataModel.getPatient().getDateOfBirth();
