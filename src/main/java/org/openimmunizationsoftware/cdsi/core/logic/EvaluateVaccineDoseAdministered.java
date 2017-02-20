@@ -38,6 +38,7 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
 
   private boolean gotoNextTargetDose() {
     if (dataModel.getTargetDose() == null) {
+    System.out.println(" + Getting first target dose");
       log(" + Getting first target dose");
       dataModel.incTargetDoseListPos();
       dataModel.setTargetDose(dataModel.getTargetDoseList().get(dataModel.getTargetDoseListPos()));
@@ -52,7 +53,7 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
           dataModel.getTargetDoseList().add(targetDoseNext);
         }
         dataModel.incTargetDoseListPos();
-        if (dataModel.getTargetDoseListPos() < dataModel.getTargetDoseListPos()) {
+        if (dataModel.getTargetDoseListPos() < dataModel.getTargetDoseList().size()) {
           dataModel.setTargetDose(dataModel.getTargetDoseList().get(dataModel.getTargetDoseListPos()));
           return true;
         } else {

@@ -77,10 +77,10 @@ public class EvaluateGender extends LogicStep {
           if (rg == null) {
             return LogicResult.YES;
           }
-          if (rg.contains(caGender.getFinalValue())) {
+          if (caRequiredGender.getFinalValue().contains(caGender.getFinalValue())) {
             return LogicResult.YES;
           }
-          return LogicResult.NO;
+          return LogicResult.YES;
         }
       });
 

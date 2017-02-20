@@ -141,7 +141,7 @@ public class EvaluateAllowableInterval extends LogicStep {
 
     public YesNo getResult() {
       // TODO Auto-generated method stub
-      return null;
+      return result;
     }
   }
 

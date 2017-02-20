@@ -6,6 +6,8 @@ import java.util.Date;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.PreferrableVaccine;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
+//import org.openimmunizationsoftware.cdsi.core.logic.EvaluateAllowableInterval.LT;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
@@ -26,7 +28,6 @@ public class EvaluateForPreferableVaccine extends LogicStep
 
     int i=0, j=0, k=0;
     boolean allTrue = true;
-    outerloop :
     for ( PreferrableVaccine pi : dataModel.getTargetDose().getTrackedSeriesDose().getPreferrableVaccineList()){
     	//for (j=0; j<dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().size(); j++){
     		//for (k=0; k<dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().get(j).getPreferrableVaccineList().size() ; k++){
@@ -69,19 +70,7 @@ public class EvaluateForPreferableVaccine extends LogicStep
     		    if (pi.getVaccineTypeEndAge()!=null)
     		    	logicTable.caVaccineTypeEndAgeDate.setInitialValue(pi.getVaccineTypeEndAge().getDateFrom(birthDate));
 
-    		    for (int l = 0; l < logicTable.getLogicOutcomes().length; l++) {
-    		        allTrue = true;
-    		        for (int m = 0; m < logicTable.getLogicConditions().length; m++) {
-    		          if (logicTable.getLogicResultTable()[m][l] != LogicResult.ANY && logicTable.getLogicResultTable()[m][l] != logicTable.getLogicConditions()[m].getLogicResult()) {
-    		            allTrue = false;
-    		          }
-    		        }
-    		        if (allTrue) {
-    		        	
-    		        	//logicTable.getLogicOutcomes()[l].perform();
-    		          break outerloop;
-    		        }
-    		    }
+    		    
     		    //if (logicTable.getLogicOutcomes().equals())
     		   
     		    logicTableList.add(logicTable);
@@ -119,8 +108,14 @@ public class EvaluateForPreferableVaccine extends LogicStep
   public LogicStep process() throws Exception {
     setNextLogicStepType(LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED);
     //setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
-    evaluateLogicTables();
-
+    YesNo y=YesNo.NO;
+    for (LogicTable logicTable : logicTableList) {
+        logicTable.evaluate();
+        if (((LT) logicTable).getResult() == YesNo.YES) {
+      	  y=YesNo.YES;
+      	setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
+        }
+      }
     return next();
   }
 
@@ -154,6 +149,7 @@ public class EvaluateForPreferableVaccine extends LogicStep
 	  private ConditionAttribute<String> caPreferableVaccineType = null;
 	  private String caVolume = null;
 	  private String pv = null;
+	  private YesNo result = null;
 	  
     public LT() {
       super(4, 5, "Table 4-5 Was the supporting data defined preferrable vaccine administered?");
@@ -219,37 +215,42 @@ public class EvaluateForPreferableVaccine extends LogicStep
       setLogicOutcome(0, new LogicOutcome() {
           @Override
           public void perform() {
-            log("Yes. A preferable vaccine was administered.");
-            setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
+              result = YesNo.YES;
+log("Yes. A preferable vaccine was administered.");
+            //setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
           }
         });
 
       setLogicOutcome(1, new LogicOutcome() {
           @Override
           public void perform() {
-            log("Yes. A preferable vaccine was administered. Evaluation Reason is volume administered is “less than recommended volume.”");
-            setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
+              result = YesNo.YES;
+ log("Yes. A preferable vaccine was administered. Evaluation Reason is volume administered is “less than recommended volume.”");
+            //setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
           }
         });
       setLogicOutcome(2, new LogicOutcome() {
           @Override
           public void perform() {
-        	  setNextLogicStepType(LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED);
-            log("No.  This supporting data defined preferable vaccine was not administered.");
+        	 // setNextLogicStepType(LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED);
+              result = YesNo.NO;
+ log("No.  This supporting data defined preferable vaccine was not administered.");
           }
         });
       setLogicOutcome(3, new LogicOutcome() {
           @Override
           public void perform() {
-        	  setNextLogicStepType(LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED);
-            log("No.  This supporting data defined preferable vaccine was administered out of the preferred age range.");
+        	 // setNextLogicStepType(LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED);
+              result = YesNo.NO;
+ log("No.  This supporting data defined preferable vaccine was administered out of the preferred age range.");
           }
         });
       setLogicOutcome(4, new LogicOutcome() {
           @Override
           public void perform() {
-        	  setNextLogicStepType(LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED);
-            log("No. This supporting data defined preferable vaccine was of the wrong trade name. ");
+        	  //setNextLogicStepType(LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED);
+              result = YesNo.NO;
+ log("No. This supporting data defined preferable vaccine was of the wrong trade name. ");
           }
         });
       
@@ -265,6 +266,10 @@ public class EvaluateForPreferableVaccine extends LogicStep
       //      });
       //      
     }
+    public YesNo getResult() {
+        // TODO Auto-generated method stub
+        return result;
+      }
   }
 
 }

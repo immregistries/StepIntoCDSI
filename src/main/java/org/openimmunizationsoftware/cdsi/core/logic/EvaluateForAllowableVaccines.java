@@ -8,6 +8,8 @@ import org.openimmunizationsoftware.cdsi.core.domain.AllowableVaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
+//import org.openimmunizationsoftware.cdsi.core.logic.EvaluateForPreferableVaccine.LT;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
@@ -58,9 +60,19 @@ public class EvaluateForAllowableVaccines extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
-    evaluateLogicTables();
-    return next();
+    	setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
+	    //setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
+	    YesNo y=YesNo.NO;
+	    for (LogicTable logicTable : logicTableList) {
+	        logicTable.evaluate();
+	        if (((LT) logicTable).getResult() == YesNo.YES) {
+	      	  y=YesNo.YES;
+	        }
+	      }
+	    if (y == YesNo.YES){
+	          dataModel.getTargetDose().setStatusCause(dataModel.getTargetDose().getStatusCause()+"Vaccine");
+	    }
+	    return next();
   }
 
   @Override
@@ -89,6 +101,7 @@ public class EvaluateForAllowableVaccines extends LogicStep {
 	  private ConditionAttribute<AllowableVaccine> caVaccineTypeAllowable = null;
 	  private ConditionAttribute<Date> caAllowableVaccineTypeBeginAgeDate = null;
 	  private ConditionAttribute<Date> caAllowableVaccineTypeEndAgeDate = null;
+	  private YesNo result = null;
 	  
     public LT() {
       super(2, 3, "Table 4.28");
@@ -137,33 +150,33 @@ public class EvaluateForAllowableVaccines extends LogicStep {
       setLogicOutcome(0, new LogicOutcome() {
         @Override
         public void perform() {
+        	result=YesNo.YES;
           log("Yes. An allowable vaccine was administered ");
           log("Setting next step: 4.9 EvaluateGender");
-          setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
         }
       });
       setLogicOutcome(1, new LogicOutcome() {
         @Override
         public void perform() {
+        	result=YesNo.NO;
           log("No.  This supporting data defined allowable vaccine was not administered.");
           log("Setting next step: 4.9 EvaluateGender");
-          dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
-          dataModel.getTargetDose().setStatusCause(dataModel.getTargetDose().getStatusCause()+"Vaccine");
-          setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
         }
       });
       setLogicOutcome(2, new LogicOutcome() {
         @Override
         public void perform() {
-          log("No.  This supporting data defined allowable vaccine was administered out of the allowable age range.");
-          dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
+        	result=YesNo.NO;
+log("No.  This supporting data defined allowable vaccine was administered out of the allowable age range.");
           log("Setting next step: 4.9 EvaluateGender");
-          dataModel.getTargetDose().setStatusCause(dataModel.getTargetDose().getStatusCause()+"Vaccine");
-          setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
         }
       });
 
     }
+    public YesNo getResult() {
+        // TODO Auto-generated method stub
+        return result;
+      }
   }
 
 }

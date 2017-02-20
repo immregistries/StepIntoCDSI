@@ -71,9 +71,9 @@ public class SatisfyTargetDose extends LogicStep {
         @Override
         public LogicResult evaluateInternal() {
             AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
-          if (aar.getEvaluation().getEvaluationReason() == EvaluationReason.TOO_OLD) {
-            return NO;
-          }
+         // if (aar.getEvaluation().getEvaluationReason() == EvaluationReason.TOO_OLD) {
+           // return NO;
+          //}
           if (aar.getEvaluation().getEvaluationStatus() == EvaluationStatus.VALID) {
               return YES;
             }
