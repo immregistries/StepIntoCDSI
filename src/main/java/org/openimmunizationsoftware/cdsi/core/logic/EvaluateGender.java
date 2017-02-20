@@ -70,11 +70,14 @@ public class EvaluateGender extends LogicStep {
     public LT() {
       super(1, 2, "Table 4-31");
 
-      setLogicCondition(0, new LogicCondition("Is the patient’s gender the same as one of the required genders? ") {
+      setLogicCondition(0, new LogicCondition("Is the patient's gender the same as one of the required genders? ") {
         @Override
         public LogicResult evaluateInternal() {
           List<RequiredGender> rg = caRequiredGender.getFinalValue();
           if (rg == null) {
+            return LogicResult.YES;
+          }
+          if (caRequiredGender.getFinalValue().size() == 0) {
             return LogicResult.YES;
           }
           if (caRequiredGender.getFinalValue().contains(caGender.getFinalValue())) {
@@ -89,7 +92,13 @@ public class EvaluateGender extends LogicStep {
       setLogicOutcome(0, new LogicOutcome() {
         @Override
         public void perform() {
-          log("Yes. Patient’s gender is one of the required genders.");
+          if (caRequiredGender.getFinalValue().size() == 0) {
+            log("Yes. Required patient's gender is not set." );
+          }
+          else
+          {
+            log("Yes. Patient's gender is one of the required genders.");
+          }
           log("Setting next step: 4.10 Satisfy Target Dose");
           setNextLogicStepType(LogicStepType.SATISFY_TARGET_DOSE);
         }
@@ -98,7 +107,7 @@ public class EvaluateGender extends LogicStep {
       setLogicOutcome(1, new LogicOutcome() {
         @Override
         public void perform() {
-          log("No. Patient’s gender is not one of the required genders. Evaluation Reason is “incorrect gender.”");
+          log("No. Patient's gender is not one of the required genders. Evaluation Reason is “incorrect gender.”");
           log("Setting next step: 4.10 Satisfy Target Dose");
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
           dataModel.getTargetDose().setStatusCause(dataModel.getTargetDose().getStatusCause()+"Gender");
