@@ -98,6 +98,14 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
     out.println("<h1>Evaluate Vaccine Dose Administered</h1>");
     out.println(
         "<p>The core of a CDS engine is the process of evaluating a single vaccine dose administered against  a  defined  target  dose to  determine  if  the  vaccine  dose  administered is valid or not valid. The  results  will  ultimately determine if all conditions of the target dose are satisfied and the dose does not need to be repeated.</p>");
+    if (dataModel.getTargetDose() != null)
+    {
+      out.println("<p>Target dose is dose number #" + dataModel.getTargetDose().getTrackedSeriesDose().getDoseNumber() + "</p>");
+    }
+    if (dataModel.getAntigenAdministeredRecord() != null)
+    {
+      out.println("<p>Antigen  " + dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered() + "</p>");
+    }
     out.println("<img src=\"Figure 4.1.png\"/>");
   }
 

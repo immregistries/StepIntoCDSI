@@ -112,7 +112,7 @@ public class SatisfyTargetDose extends LogicStep {
           }
         });
       
-      setLogicCondition(4, new LogicCondition("Is the patient’s gender one of the required genders?") {
+      setLogicCondition(4, new LogicCondition("Is the patient's gender one of the required genders?") {
           @Override
           public LogicResult evaluateInternal() {
             if (dataModel.getTargetDose().getStatusCause().contains("Gender")){

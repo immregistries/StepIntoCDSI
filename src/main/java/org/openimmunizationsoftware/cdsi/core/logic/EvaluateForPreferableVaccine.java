@@ -266,8 +266,7 @@ log("Yes. A preferable vaccine was administered.");
       //      });
       //      
     }
-    public YesNo getResult() {
-        // TODO Auto-generated method stub
+    public YesNo getResult() { // TODO Auto-generated method stub
         return result;
       }
   }

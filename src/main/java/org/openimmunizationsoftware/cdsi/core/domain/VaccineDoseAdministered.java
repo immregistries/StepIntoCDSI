@@ -1,5 +1,6 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -90,5 +91,23 @@ public class VaccineDoseAdministered
 
   public void setImmunizationHistory(ImmunizationHistory immunizationHistory) {
     this.immunizationHistory = immunizationHistory;
+  }
+  
+  @Override
+  public String toString() {
+    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+    if (dateAdministered != null && vaccine != null)
+    {
+      return vaccine + " given " + sdf.format(dateAdministered);
+    }
+    else if (dateAdministered != null)
+    {
+      return  "given " + sdf.format(dateAdministered);
+    }
+    else if (vaccine != null)
+    {
+      return  vaccine.toString();
+    }
+    return super.toString();
   }
 }

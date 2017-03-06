@@ -360,7 +360,7 @@ public class DateRules {
     // };
     // CALCDTCOND_1.setBusinessRuleId("CALCDTCOND-1");
     // CALCDTCOND_1
-    // .setBusinessRule("Retired in version 2.1 – No Longer Used.\n" +
+    // .setBusinessRule("Retired in version 2.1 - No Longer Used.\n" +
     // "The patient's conditional begin age date must be calculated as the
     // patient's date of birth plus the conditional begin age.");
     // CALCDTCOND_1.setLogicalComponent("n/a");
@@ -376,7 +376,7 @@ public class DateRules {
     // };
     // CALCDTCOND_2.setBusinessRuleId("CALCDTCOND-2");
     // CALCDTCOND_2
-    // .setBusinessRule("Retired in version 2.1 – No Longer Used.\n" +
+    // .setBusinessRule("Retired in version 2.1 - No Longer Used.\n" +
     // "The patient's conditional end age date must be calculated as the
     // patient's date of birth plus the conditional end age.");
     // CALCDTCOND_2.setLogicalComponent("n/a");

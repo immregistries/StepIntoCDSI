@@ -208,7 +208,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
 
   protected class LT46 extends LTInnerSet {
     public LT46() {
-      super(1, 2, "Table 4-6 CONDITIONAL Type of Age – Is the Condition Met?");
+      super(1, 2, "Table 4-6 CONDITIONAL Type of Age - Is the Condition Met?");
 
       setLogicCondition(0,
           new LogicCondition("Is the Conditional Skip Reference Date ≥ Conditional Skip Begin Age Date?") {
@@ -247,7 +247,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
 
   protected class LT47 extends LTInnerSet {
     public LT47() {
-      super(1, 2, "Table 4 - 7 CONDITIONAL Type of Interval – Is the Condition Met?");
+      super(1, 2, "Table 4 - 7 CONDITIONAL Type of Interval - Is the Condition Met?");
 
       setLogicCondition(0,
           new LogicCondition("Is the Conditional Skip Reference Date ≥ Conditional Skip Interval Date?") {
@@ -286,7 +286,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
 
   protected class LT48 extends LTInnerSet {
     public LT48() {
-      super(1, 2, "Table 4 - 8 CONDITIONAL Type of Vaccine Count By Age or Date – Is the Condition Met?");
+      super(1, 2, "Table 4 - 8 CONDITIONAL Type of Vaccine Count By Age or Date - Is the Condition Met?");
 
       setLogicCondition(0, new LogicCondition(
           "Comparing the Number of Conditional Doses Administered with the Conditional Skip Dose Count") {

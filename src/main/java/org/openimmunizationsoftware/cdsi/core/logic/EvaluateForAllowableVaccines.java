@@ -26,7 +26,7 @@ public class EvaluateForAllowableVaccines extends LogicStep {
 
     for ( AllowableVaccine pi : dataModel.getTargetDose().getTrackedSeriesDose().getAllowableVaccineList()){
 
-    	LT logicTable = new LT();
+    	LT logicTable = new LT(pi.toString());
 
     	logicTable.caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
     	logicTable.caVaccineType = new ConditionAttribute<VaccineType>("Vaccine Dose Administered", "Vaccine Type");
@@ -69,7 +69,7 @@ public class EvaluateForAllowableVaccines extends LogicStep {
 	      	  y=YesNo.YES;
 	        }
 	      }
-	    if (y == YesNo.YES){
+	    if (y == YesNo.NO){
 	          dataModel.getTargetDose().setStatusCause(dataModel.getTargetDose().getStatusCause()+"Vaccine");
 	    }
 	    return next();
@@ -103,8 +103,8 @@ public class EvaluateForAllowableVaccines extends LogicStep {
 	  private ConditionAttribute<Date> caAllowableVaccineTypeEndAgeDate = null;
 	  private YesNo result = null;
 	  
-    public LT() {
-      super(2, 3, "Table 4.28");
+    public LT(String name) {
+      super(2, 3, "Table 4.28 " + name);
 
       setLogicCondition(0, new LogicCondition(
           "Is the vaccine type of the vaccine dose administered the same as the vaccine type of the allowable vaccine?") {
@@ -129,7 +129,7 @@ public class EvaluateForAllowableVaccines extends LogicStep {
       });
 
       setLogicCondition(1, new LogicCondition(
-          "Is the Allowable vaccine type begin age date ≤ date administered < allowable vaccine type end age date?") {
+          "Is the Allowable vaccine type begin age date <= date administered < allowable vaccine type end age date?") {
         @Override
         public LogicResult evaluateInternal() {
           if (caDateAdministered.getFinalValue() == null || caAllowableVaccineTypeBeginAgeDate.getFinalValue() == null
