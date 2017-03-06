@@ -9,7 +9,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicIntegerArray;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Age;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
@@ -28,6 +30,9 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
+import org.apache.commons.lang.time.DateUtils;
+
+
 public class DetermineForecastNeed extends LogicStep {
 
   private ConditionAttribute<String> caVaccineDoseAdministered = null;
@@ -40,6 +45,45 @@ public class DetermineForecastNeed extends LogicStep {
   private ConditionAttribute<String> caContraindication = null;
   private ConditionAttribute<String> caImmunity = null;
   
+  private void findEndDate(){
+	  	  SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
+	  if(referenceSeriesDose.getSeasonalRecommendationList().size()>0){
+	    	System.out.println("#####"+referenceSeriesDose.getSeasonalRecommendationList().get(0).getSeasonalRecommendationEndDate());
+	    	Date seasonalRecommendationEndDate = referenceSeriesDose.getSeasonalRecommendationList().get(0).getSeasonalRecommendationEndDate();
+	    	caEndDate.setInitialValue(seasonalRecommendationEndDate);
+	    }else{
+	    	System.err.println("Recommendation End date is not referenced");
+	    }
+  }
+  
+  
+  private void findMaximumAgeDate(){
+	  SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
+	  Date dob = dataModel.getPatient().getDateOfBirth();
+	  int maximumAgeAmount = referenceSeriesDose.getAgeList().get(0).getMaximumAge().getAmount();
+	  System.err.println(referenceSeriesDose.getAgeList().size());
+		Date patientMaximumAgeDate = new Date();
+		switch (referenceSeriesDose.getAgeList().get(0).getMinimumAge().getType()) {
+		case DAY:
+  		patientMaximumAgeDate = DateUtils.addDays(dob, maximumAgeAmount);    		
+			break;
+		case WEEK:
+  		patientMaximumAgeDate = DateUtils.addWeeks(dob, maximumAgeAmount);    		
+			break;
+		case MONTH:
+  		patientMaximumAgeDate = DateUtils.addMonths(dob, maximumAgeAmount);    		
+			break;
+		case YEAR:
+  		patientMaximumAgeDate = DateUtils.addYears(dob, maximumAgeAmount);    		
+			break;
+		default:
+			break;
+		}
+		
+		caMaximumAgeDate.setInitialValue(patientMaximumAgeDate);
+		System.out.println("#######"+ caMaximumAgeDate.getFinalValue().toString());
+  }
+  
 
   public DetermineForecastNeed(DataModel dataModel) {
     super(LogicStepType.DETERMINE_FORECAST_NEED, dataModel);
@@ -49,11 +93,15 @@ public class DetermineForecastNeed extends LogicStep {
     caAdvereseEvents = new ConditionAttribute<String>("Immunization history", "Adverse Events");
     caRelevantMedicalObservation = new ConditionAttribute<String>("Medical History", "Relevant Medical Observation");
     caTargetDose = new ConditionAttribute<String>("Patient series", "Target Dose(s)");
+    caTargetDose.setInitialValue(dataModel.getTargetDose().getTrackedSeriesDose().toString());
     caMaximumAgeDate = new ConditionAttribute<Date>("Calculated date (CALCDTAGE-1)", "Maximum Age Date");
+    findMaximumAgeDate();
     caEndDate = new ConditionAttribute<Date>("Supporting data (Seasonal Recommendation", "End Date");
+    findEndDate();
     caAssessmentDate = new ConditionAttribute<Date>("Data Entry", "Assessment Date");
     caContraindication = new ConditionAttribute<String>("Supporting Data", "Contraindication");
     caImmunity = new ConditionAttribute<String>("Supporting Data", "Immunity");
+    
 
     caMaximumAgeDate.setAssumedValue(FUTURE);
     caEndDate.setAssumedValue(FUTURE);
@@ -71,7 +119,7 @@ public class DetermineForecastNeed extends LogicStep {
     conditionAttributesList.add(caContraindication);
     conditionAttributesList.add(caImmunity);
     
-    caTargetDose.setInitialValue(dataModel.getTargetDose().toString());
+    
 
     LT logicTable = new LT();
     logicTableList.add(logicTable);
@@ -81,7 +129,7 @@ public class DetermineForecastNeed extends LogicStep {
   public LogicStep process() throws Exception {
 	  //System.err.println("DETERMINE_FORECAST_NEED");
 	  setNextLogicStepType(LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMEND_VACCINES);
-	  //evaluateLogicTables();
+	  evaluateLogicTables();
 	  //setNextLogicStepType(LogicStepType.FOR_EACH_PATIENT_SERIES);
 	  return next();
   }
@@ -98,9 +146,10 @@ public class DetermineForecastNeed extends LogicStep {
 
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + getTitle() + "</h1>");
-    out.println(
-        "<p>Determine forecast need determines  if there is a need to forecast dates. This involves reviewing patient data, antigen  administered  records,  and  patient  series.  This  is  a  prerequisite  before  a  CDS  engine  can  produce forecast dates and reasons </p>");
-
+    out.println("<p>Determine forecast need determines  if there is a need to forecast dates. This involves reviewing patient data, antigen  administered  records,  and  patient  series.  This  is  a  prerequisite  before  a  CDS  engine  can  produce forecast dates and reasons </p>");
+    out.println("<p>The following process model, attribute table, and decision table are used to determine the need to generate forecast dates.</p>");
+    out.println("<p>Insert Figures 5.3</p>");
+    out.println("<p>FIGURE 5 - 3 DETERMINE FORECAST NEEDPROCESS MODEL</p>");
     printConditionAttributesTable(out);
     printLogicTables(out);
   }

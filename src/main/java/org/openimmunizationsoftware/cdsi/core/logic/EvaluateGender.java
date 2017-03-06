@@ -1,5 +1,8 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
+import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
+import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
+
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -87,7 +90,8 @@ public class EvaluateGender extends LogicStep {
         }
       });
 
-      setLogicResults(0, new LogicResult[] { LogicResult.YES, LogicResult.NO });
+      setLogicResults(0, YES, NO);
+      //setLogicResults(0, new LogicResult[] { LogicResult.YES, LogicResult.NO });
 
       setLogicOutcome(0, new LogicOutcome() {
         @Override
