@@ -361,25 +361,22 @@ public class GenerateForecastDates extends LogicStep {
      * ByPassing "For Each Patient Series"
      */
 	  Forecast forecast = new Forecast();
-	  //generateForcastDates(forecast);
 	  forecast.setAntigen(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
-	  //forecast.setAntigen(dataModel.getTargetDose().getTrackedSeriesDose().getAntigenSeries().getTargetDisease());
-	  //forecast.setAntigen(dataModel.getAntigen());
-
 	  forecast.setTargetDose(dataModel.getTargetDose());
+	  forecast.setVaccineGroupForecast(dataModel.getVaccineGroupForecast());
+	  generateForcastDates(forecast);
+	  System.out.println("________________________________"+dataModel.getTargetDose().getTrackedSeriesDose());
+	  
 	  Antigen newAntigenForeCast = forecast.getAntigen();
 	  List<Antigen> antigenFromForcastList = new ArrayList<Antigen>();
 	  List<Forecast> forecastList = dataModel.getVaccineGroupForecast().getForecastList();
+	  
     for(Forecast foreCast:forecastList){
     	antigenFromForcastList.add(foreCast.getAntigen());
     }
+    
     if(!antigenFromForcastList.contains(newAntigenForeCast)){
-    	//SeriesDose targetSeriesDose =
-    	//dataModel.getPatientSeries().getTrackedAntigenSeries().get
-    	generateForcastDates(forecast);
     	 dataModel.getVaccineGroupForecast().getForecastList().add(forecast);
-    	 //Date now = new Date();
-    	 //forecast.setAssessmentDate(now);
     }
 
     setNextLogicStepType(LogicStepType.FOR_EACH_PATIENT_SERIES);

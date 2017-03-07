@@ -295,8 +295,8 @@ public class DetermineForecastNeed extends LogicStep {
         	Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
           	List<Forecast> forecastList = dataModel.getVaccineGroupForecast().getForecastList();
           	for(Forecast forecast:forecastList){
-          		System.err.println("888888888888888888"+tmpAntigen.getName());
-          		System.err.println("999999999999999999"+forecast.getAntigen());
+          		//System.err.println("888888888888888888"+tmpAntigen.getName());
+          		//System.err.println("999999999999999999"+forecast.getAntigen());
           		if(forecast.getAntigen().equals(tmpAntigen)){
           			forecast.setForecastReason("Not recommended at this time due to past immuniszation history");
           		}
