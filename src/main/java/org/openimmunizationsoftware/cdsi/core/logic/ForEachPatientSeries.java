@@ -45,6 +45,7 @@ public class ForEachPatientSeries extends LogicStep
         TargetDose targetDose = new TargetDose(seriesDose);
         dataModel.getTargetDoseList().add(targetDose);
       }
+      dataModel.setTargetDose(null);
       dataModel.setTargetDoseListPos(-1);
       dataModel.setAntigenAdministeredRecordPos(-1);
       return LogicStepFactory.createLogicStep(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED, dataModel);

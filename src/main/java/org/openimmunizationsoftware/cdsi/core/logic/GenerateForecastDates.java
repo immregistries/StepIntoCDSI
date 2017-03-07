@@ -2,6 +2,7 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -39,24 +40,25 @@ public class GenerateForecastDates extends LogicStep {
 	  SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
 	  Date dob = dataModel.getPatient().getDateOfBirth();
 	  int manimumAgeAmount = referenceSeriesDose.getAgeList().get(0).getMinimumAge().getAmount();
-	  Date patientMaximumAgeDate = new Date();
+	  Date patientMinimumAgeDate = new Date();
 		switch (referenceSeriesDose.getAgeList().get(0).getMinimumAge().getType()) {
 		case DAY:
-  		patientMaximumAgeDate = DateUtils.addDays(dob, manimumAgeAmount);    		
+  		patientMinimumAgeDate = DateUtils.addDays(dob, manimumAgeAmount);    		
 			break;
 		case WEEK:
-  		patientMaximumAgeDate = DateUtils.addWeeks(dob, manimumAgeAmount);    		
+  		patientMinimumAgeDate = DateUtils.addWeeks(dob, manimumAgeAmount);    		
 			break;
 		case MONTH:
-  		patientMaximumAgeDate = DateUtils.addMonths(dob, manimumAgeAmount);    		
+  		patientMinimumAgeDate = DateUtils.addMonths(dob, manimumAgeAmount);    		
 			break;
 		case YEAR:
-  		patientMaximumAgeDate = DateUtils.addYears(dob, manimumAgeAmount);    		
+  		patientMinimumAgeDate = DateUtils.addYears(dob, manimumAgeAmount);    		
 			break;
 		default:
 			break;
 		}
-		caMinimumAgeDate.setInitialValue(patientMaximumAgeDate);
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyy");
+		caMinimumAgeDate.setInitialValue(patientMinimumAgeDate);
 		//System.out.println("#######MinimumAgeDate : "+ caMinimumAgeDate.getFinalValue().toString());
   }
   
@@ -268,7 +270,7 @@ public class GenerateForecastDates extends LogicStep {
   }
   
   private void findSeasonalRecommendationStartDate(){
-	  SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
+	  SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose(); // might be the problem here
 	  Date seasonalRecommendationstartDate = new DateTime(1900, 1, 1, 0, 0).toDate();
 	  caSeasonalRecommendationStartDate.setAssumedValue(seasonalRecommendationstartDate);
 	    if(referenceSeriesDose.getSeasonalRecommendationList().size()>0){
@@ -606,7 +608,8 @@ public class GenerateForecastDates extends LogicStep {
 
   private Forecast generateForcastDates(Forecast forecast) {
 	  forecast.setAdjustedPastDueDate(computeAdjustedPastDueDate());
-	  forecast.setAdjustedRecommendedDate(computeAdjustedRecommendedDate());
+	  Date d = computeAdjustedRecommendedDate();
+	  forecast.setAdjustedRecommendedDate(d);
 	  forecast.setEarliestDate(computeEarliestDate());
 	
     return forecast;

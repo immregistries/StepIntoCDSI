@@ -112,6 +112,6 @@ public class Vaccine
   
   @Override
   public String toString() {
-    return vaccineType.toString() +  " - " + manufacturer;
+    return vaccineType == null ? "" : (vaccineType.toString() +  " - " + manufacturer);
   }
 }
