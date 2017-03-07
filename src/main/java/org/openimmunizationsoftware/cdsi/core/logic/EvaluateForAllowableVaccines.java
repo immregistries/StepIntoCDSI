@@ -7,7 +7,6 @@ import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AllowableVaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 //import org.openimmunizationsoftware.cdsi.core.logic.EvaluateForPreferableVaccine.LT;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;

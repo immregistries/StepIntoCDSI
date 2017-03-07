@@ -3,29 +3,23 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.joda.time.DateTime;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
-import org.openimmunizationsoftware.cdsi.core.domain.Age;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
-import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
-import org.openimmunizationsoftware.cdsi.core.domain.Patient;
 import org.openimmunizationsoftware.cdsi.core.domain.PreferrableVaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
-import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.Vaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
-import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
 public class GenerateForecastDates extends LogicStep {
 
@@ -114,7 +108,7 @@ public class GenerateForecastDates extends LogicStep {
 			break;
 		}
 	caEarliestRecommendedAgeDate.setInitialValue(earliestRecommendedAgeDate);
-	System.err.println("EarlistRecommendedAgeDate : "+earliestRecommendedAgeDate);
+	//System.err.println("EarlistRecommendedAgeDate : "+earliestRecommendedAgeDate);
 	  
   }
   
@@ -140,7 +134,7 @@ public class GenerateForecastDates extends LogicStep {
 			break;
 		}
 	caLatestRecommendedAgeDate.setInitialValue(latestRecommendedAgeDate);
-	System.err.println("LatestRecommendedAgeDate : "+latestRecommendedAgeDate);
+	//System.err.println("LatestRecommendedAgeDate : "+latestRecommendedAgeDate);
 	  
   }
   
@@ -157,10 +151,10 @@ public class GenerateForecastDates extends LogicStep {
 			  * TO DO
 			  */
 			 patientReferenceDoseDate = dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered();
-			 System.out.println("patientReferenceDoseDate : "+patientReferenceDoseDate);
+			 //System.out.println("patientReferenceDoseDate : "+patientReferenceDoseDate);
 		 }catch(NullPointerException np){
 			 System.err.println("Patient reference dose date is NULL");
-			 System.err.println(np.getStackTrace());
+			 //System.err.println(np.getStackTrace());
 		 }
 		 switch (earliestRecommendedInterval.getType()) {
 			case DAY:
@@ -198,7 +192,7 @@ public class GenerateForecastDates extends LogicStep {
 			  * TO DO
 			  */
 			 patientReferenceDoseDate = dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered();
-			 System.out.println("patientReferenceDoseDate : "+patientReferenceDoseDate);
+			 //System.out.println("patientReferenceDoseDate : "+patientReferenceDoseDate);
 		 }catch(NullPointerException np){
 			 System.err.println("Patient reference dose date is NULL");
 		 }
@@ -219,7 +213,7 @@ public class GenerateForecastDates extends LogicStep {
 				break;
 			}
 		 caLatestRecommendedIntervalDate.setInitialValue(latestRecommendedIntervalDate);
-		 System.err.println("LatestRecommendedIntervalDate :::::::::::::::: "+latestRecommendedIntervalDate);
+		// System.err.println("LatestRecommendedIntervalDate :::::::::::::::: "+latestRecommendedIntervalDate);
 	  }catch(NullPointerException np){
 		  System.err.println("latestRecommendedInterval is null");
 	  }	  
@@ -238,7 +232,7 @@ public class GenerateForecastDates extends LogicStep {
 			  * TO DO
 			  */
 			 patientReferenceDoseDate = dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered();
-			 System.out.println("patientReferenceDoseDate : "+patientReferenceDoseDate);
+			// System.out.println("patientReferenceDoseDate : "+patientReferenceDoseDate);
 		 }catch(NullPointerException np){
 			 System.err.println("Patient reference dose date is NULL");
 			 //System.err.println(np.getStackTrace());
@@ -260,14 +254,14 @@ public class GenerateForecastDates extends LogicStep {
 				break;
 			}
 		 caMinimumIntervalDate.setInitialValue(minimalIntervalDate);
-		 System.err.println("MinimumIntervalDate :::::::::::::::: "+minimalIntervalDate);
+		// System.err.println("MinimumIntervalDate :::::::::::::::: "+minimalIntervalDate);
 	  }catch(NullPointerException np){
 		  System.err.println("MinimumIntervalDate is null");
 	  }	  
   }
   private void findLatestConflictEndIntervalDate(){
 	  try{
-		  System.err.println("####################"+dataModel.getLiveVirusConflictList().size());
+		  //System.err.println("####################"+dataModel.getLiveVirusConflictList().size());
 	  }catch (NullPointerException np) {
 		System.err.println(np.getStackTrace());
 	}
@@ -278,7 +272,7 @@ public class GenerateForecastDates extends LogicStep {
 	  Date seasonalRecommendationstartDate = new DateTime(1900, 1, 1, 0, 0).toDate();
 	  caSeasonalRecommendationStartDate.setAssumedValue(seasonalRecommendationstartDate);
 	    if(referenceSeriesDose.getSeasonalRecommendationList().size()>0){
-	       	System.out.println("#####"+referenceSeriesDose.getSeasonalRecommendationList().get(0).getSeasonalRecommendationStartDate());
+	       //	System.out.println("#####"+referenceSeriesDose.getSeasonalRecommendationList().get(0).getSeasonalRecommendationStartDate());
 	    	seasonalRecommendationstartDate = referenceSeriesDose.getSeasonalRecommendationList().get(0).getSeasonalRecommendationStartDate();
 	    	caSeasonalRecommendationStartDate.setInitialValue(seasonalRecommendationstartDate);
 	    }else{
@@ -289,22 +283,22 @@ public class GenerateForecastDates extends LogicStep {
   
   private void findEarliestDate(){
 	  try{
-		  System.out.println("MinimumAgeDate: "+ caMinimumAgeDate.getFinalValue());
+		  //System.out.println("MinimumAgeDate: "+ caMinimumAgeDate.getFinalValue());
 	  }catch(NullPointerException np){
 		  System.err.println("Coudn't find MinimumAgeDate");
 	  }
 	  try{
-		  System.out.println("LatestMinimumIntervalDate: "+ caMinimumIntervalDate.getFinalValue());
+		  //System.out.println("LatestMinimumIntervalDate: "+ caMinimumIntervalDate.getFinalValue());
 	  }catch(NullPointerException np){
 		  System.err.println("Coudn't find LatestMinimumIntervalDate");
 	  }
 	  try{
-		  System.out.println("LatestConflictEndIntervalDate: "+ caLatestConflictEndIntervalDate.getFinalValue());
+		  //System.out.println("LatestConflictEndIntervalDate: "+ caLatestConflictEndIntervalDate.getFinalValue());
 	  }catch(NullPointerException np){
 		  System.err.println("Coudn't find minimum age");
 	  }
 	  try{
-		  System.out.println("SeasonalRecommendationStartdate: "+ caSeasonalRecommendationStartDate.getFinalValue());
+		  //System.out.println("SeasonalRecommendationStartdate: "+ caSeasonalRecommendationStartDate.getFinalValue());
 	  }catch(NullPointerException np){
 		  System.err.println("Coudn't find minimum age");
 	  }
@@ -312,7 +306,7 @@ public class GenerateForecastDates extends LogicStep {
   }
 	 
   
-  private Forecast  forecast = new Forecast();
+  
   
   int size = dataModel.getVaccineGroupForecast().getForecastList().size();
 
@@ -366,20 +360,26 @@ public class GenerateForecastDates extends LogicStep {
     /**
      * ByPassing "For Each Patient Series"
      */
+	  Forecast forecast = new Forecast();
+	  //generateForcastDates(forecast);
+	  //forecast.setAntigen(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
+	  //forecast.setAntigen(dataModel.getTargetDose().getTrackedSeriesDose().getAntigenSeries().getTargetDisease());
+	  forecast.setAntigen(dataModel.getAntigen());
 
-    generateForcastDates(forecast);
-    forecast.setAntigen(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
-    forecast.setTargetDose(dataModel.getTargetDose());
-    Antigen newAntigenForeCast = forecast.getAntigen();
-    List<Antigen> antigenFromForcastList = new ArrayList<Antigen>();
-    List<Forecast> forecastList = dataModel.getVaccineGroupForecast().getForecastList();
-    for(Forecast forecast:forecastList){
-    	antigenFromForcastList.add(forecast.getAntigen());
+	  forecast.setTargetDose(dataModel.getTargetDose());
+	  Antigen newAntigenForeCast = forecast.getAntigen();
+	  List<Antigen> antigenFromForcastList = new ArrayList<Antigen>();
+	  List<Forecast> forecastList = dataModel.getVaccineGroupForecast().getForecastList();
+    for(Forecast foreCast:forecastList){
+    	antigenFromForcastList.add(foreCast.getAntigen());
     }
     if(!antigenFromForcastList.contains(newAntigenForeCast)){
+    	//SeriesDose targetSeriesDose =
+    	//dataModel.getPatientSeries().getTrackedAntigenSeries().get
+    	generateForcastDates(forecast);
     	 dataModel.getVaccineGroupForecast().getForecastList().add(forecast);
-    	 Date now = new Date();
-    	 forecast.setAssessmentDate(now);
+    	 //Date now = new Date();
+    	 //forecast.setAssessmentDate(now);
     }
 
     setNextLogicStepType(LogicStepType.FOR_EACH_PATIENT_SERIES);
@@ -556,44 +556,35 @@ public class GenerateForecastDates extends LogicStep {
     return unadjustedPastDueDate;
   }
 
-  private Date computeLatestDate() {
-    Date maximumAgeDate = caMaximumAgeDate.getFinalValue();
-    if (maximumAgeDate != null) {
-      Calendar calendar = Calendar.getInstance();
-      calendar.setTime(maximumAgeDate);
-      calendar.add(Calendar.DAY_OF_MONTH, -1);
-      forecast.setLatestDate(calendar.getTime());
-    }
-    return maximumAgeDate;
-
-  }
-
-  private Date computeAdjustedRecommendedDate(Forecast forecast) {
-    Date adjustedRecommendedDate = new Date();
-   // Date earliestDate = computeEarliestDate(forecast);
-    //Date unadjustedRecommendedDate = computeUnadjustedRecommandedDate(forecast);
-   // if (earliestDate.after(unadjustedRecommendedDate)) {
-    //  adjustedRecommendedDate = earliestDate;
-   // } else {
-    //  adjustedRecommendedDate = unadjustedRecommendedDate;
-    //}
-    //forecast.setAdjustedRecommendedDate(adjustedRecommendedDate);
+  private Date computeAdjustedRecommendedDate() {
+	Date adjustedRecommendedDate = new Date();
+	Date earliestDate =  computeEarliestDate();
+	Date unadjustedRecommendedDate = computeUnadjustedRecommandedDate();
+	//System.out.println("earliestDate :"+earliestDate);
+	//System.out.println("unadjustedRecommendedDate : "+unadjustedRecommendedDate);
+	if(earliestDate.after(unadjustedRecommendedDate)){
+		adjustedRecommendedDate = earliestDate;
+	}else{
+		adjustedRecommendedDate = unadjustedRecommendedDate;
+	}
+	//System.out.println("adjustedRecommendedDate : "+adjustedRecommendedDate);
     return adjustedRecommendedDate;
   }
 
-  private Date computeAdjustedPastDueDate(Forecast forecast) {
-    Date adjustedPastDueDate = new Date();
-    //Date earliestDate = computeEarliestDate(forecast);
-    //Date unadjustedPastDueDate = computeUnadjustedPastDueDate(forecast);
-    //if (unadjustedPastDueDate != null) {
-      //if (earliestDate.after(unadjustedPastDueDate)) {
-       // adjustedPastDueDate = earliestDate;
-      //} else {
-      //  adjustedPastDueDate = unadjustedPastDueDate;
-     // }
-    //}
-    //forecast.setAdjustedPastDueDate(adjustedPastDueDate);
+  private Date computeAdjustedPastDueDate() {
+    Date adjustedPastDueDate = null;
+	Date earliestDate =  computeEarliestDate();
+	Date unadjustedPastDueDate = computeUnadjustedPastDueDate();
+	//System.out.println("earliestDate :"+earliestDate);
+	//System.out.println("unadjustedPastDueDate : "+unadjustedPastDueDate);
+	if(earliestDate.after(unadjustedPastDueDate)){
+		adjustedPastDueDate = earliestDate;
+	}else{
+		adjustedPastDueDate = unadjustedPastDueDate;
+	}
+	//System.out.println("adjustedRecommendedDate : "+adjustedPastDueDate);
     return adjustedPastDueDate;
+    
 
   }
 
@@ -617,31 +608,22 @@ public class GenerateForecastDates extends LogicStep {
   }
 
   private Forecast generateForcastDates(Forecast forecast) {
-   // forecast.setEarliestDate(computeEarliestDate(forecast));
-   // forecast.setUnadjustedRecommendedDate(computeUnadjustedRecommandedDate(forecast));
-    //forecast.setUnadjustedPastDueDate(computeUnadjustedPastDueDate(forecast));
-    //forecast.setLatestDate(computeLatestDate(forecast));
-    forecast.setAdjustedRecommendedDate(computeAdjustedRecommendedDate(forecast));
-    forecast.setAdjustedPastDueDate(computeAdjustedPastDueDate(forecast));
+	  forecast.setAdjustedPastDueDate(computeAdjustedPastDueDate());
+	  forecast.setAdjustedRecommendedDate(computeAdjustedRecommendedDate());
+	  forecast.setEarliestDate(computeEarliestDate());
+	
     return forecast;
 
   }
 
   private void TablePost(PrintWriter out) throws ParseException {
-    Forecast forecast = new Forecast();
+    //Forecast forecast = new Forecast();
     insertTableRow(out, "BusinessRuleID", "Term", "BusinessRule");
     insertTableRow(out, "FORECASTDT-1", "Earliest Date", computeEarliestDate().toString() );
     insertTableRow(out, "FORECASTDT-2", "Unadjusted Recommended Date",computeUnadjustedRecommandedDate().toString());
     insertTableRow(out, "FORECASTDT-3", "Unadjusted Past Due Date", computeUnadjustedPastDueDate().toString());
-    //D//ate d = computeLatestDate(forecast);
-    //if (d == null) {
-    //  insertTableRow(out, "FORECASTDT-4", "Latest Date", "null");
-    //} else {
-    //  insertTableRow(out, "FORECASTDT-4", "Latest Date", d.toString());
-   // }
-    insertTableRow(out, "FORECASTDT-5", "Adjusted Recommended Date",
-        computeAdjustedRecommendedDate(forecast).toString());
-    insertTableRow(out, "FORECASTDT-6", "Adjusted Past Due Date", computeAdjustedPastDueDate(forecast).toString());
+    insertTableRow(out, "FORECASTDT-5", "Adjusted Recommended Date", computeAdjustedRecommendedDate().toString());
+    insertTableRow(out, "FORECASTDT-6", "Adjusted Past Due Date", computeAdjustedPastDueDate().toString());
     insertTableRow(out, "FORECASTRECVACT-1", "Recommended Vaccine", "recommendedVaccine");
   }
 

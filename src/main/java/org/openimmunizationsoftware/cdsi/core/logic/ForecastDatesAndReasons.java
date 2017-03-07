@@ -3,7 +3,6 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 import java.io.PrintWriter;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
-import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
 public class ForecastDatesAndReasons extends LogicStep{
 

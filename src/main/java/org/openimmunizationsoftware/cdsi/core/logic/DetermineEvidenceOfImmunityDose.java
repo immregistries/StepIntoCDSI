@@ -5,22 +5,13 @@ import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
 
 import java.io.PrintWriter;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.BirthDateImmunity;
-import org.openimmunizationsoftware.cdsi.core.domain.ClinicalHistory;
-import org.openimmunizationsoftware.cdsi.core.domain.Exclusion;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
-import org.openimmunizationsoftware.cdsi.core.domain.Immunity;
-import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
-import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
-import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
