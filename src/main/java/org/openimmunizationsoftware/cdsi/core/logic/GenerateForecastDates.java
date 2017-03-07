@@ -362,9 +362,9 @@ public class GenerateForecastDates extends LogicStep {
      */
 	  Forecast forecast = new Forecast();
 	  //generateForcastDates(forecast);
-	  //forecast.setAntigen(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
+	  forecast.setAntigen(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
 	  //forecast.setAntigen(dataModel.getTargetDose().getTrackedSeriesDose().getAntigenSeries().getTargetDisease());
-	  forecast.setAntigen(dataModel.getAntigen());
+	  //forecast.setAntigen(dataModel.getAntigen());
 
 	  forecast.setTargetDose(dataModel.getTargetDose());
 	  Antigen newAntigenForeCast = forecast.getAntigen();
