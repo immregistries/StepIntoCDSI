@@ -53,7 +53,7 @@ public class EvaluateAge extends LogicStep{
     Date dateOfBirth = dataModel.getPatient().getDateOfBirth();
     log("Date of Birth = " + sdf.format(dateOfBirth));
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-    System.out.println(dataModel.getTargetDose().getTrackedSeriesDose());
+    //System.out.println(dataModel.getTargetDose().getTrackedSeriesDose());
     if (seriesDose.getAgeList().size() > 0) {
       Age age = seriesDose.getAgeList().get(0);
       log("Found Age information from series dose, now calculating dates");

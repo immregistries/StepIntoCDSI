@@ -86,7 +86,7 @@ public class DetermineEvidenceOfImmunityDose extends LogicStep {
     out.println("<h1> " + logicStepType.getDisplay() + "</h1>");
     out.println("<p>Determine evidence of immunity  assesses the patient’s profile to determine if the patient is already potentially immune to the target disease, negating the need for additional doses.</p>");
     out.println("<p>A patient may be considered immune due to their clinical history or if they were born before a defined date for the given target disease.</p>");
-    out.println("<p>Insert Figures 5.2</p>");
+    out.println("<img src=\"Figure 5.2.png\"/>");
     out.println("<p>FIGURE 5 - 2 EVIDENCE OF IMMUNITY PROCESS MODEL</p>");
     
     printConditionAttributesTable(out);

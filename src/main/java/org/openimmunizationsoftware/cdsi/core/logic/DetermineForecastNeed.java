@@ -139,7 +139,7 @@ public class DetermineForecastNeed extends LogicStep {
     out.println("<h1> " + getTitle() + "</h1>");
     out.println("<p>Determine forecast need determines  if there is a need to forecast dates. This involves reviewing patient data, antigen  administered  records,  and  patient  series.  This  is  a  prerequisite  before  a  CDS  engine  can  produce forecast dates and reasons </p>");
     out.println("<p>The following process model, attribute table, and decision table are used to determine the need to generate forecast dates.</p>");
-    out.println("<p>Insert Figures 5.3</p>");
+    out.println("<img src=\"Figure 5.3.png\"/>");
     out.println("<p>FIGURE 5 - 3 DETERMINE FORECAST NEEDPROCESS MODEL</p>");
     printConditionAttributesTable(out);
     printLogicTables(out);
