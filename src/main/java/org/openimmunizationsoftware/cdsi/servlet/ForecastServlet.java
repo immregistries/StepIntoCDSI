@@ -5,9 +5,11 @@ import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -108,13 +110,13 @@ public class ForecastServlet extends HttpServlet {
       }
     }
     
-    out.println("fl :"+fl.size());
+    // out.println("fl :"+fl.size());
     printList(dataModel, out, sdf, today, flNow, "VACCINATIONS RECOMMENDED");
-    out.println("flNow"+flNow.size());
+    //out.println("flNow"+flNow.size());
     printList(dataModel, out, sdf, today, flLater, "VACCINATIONS RECOMMENDED AFTER");
-    out.println("flLater :"+flLater.size());
+    //out.println("flLater :"+flLater.size());
     printList(dataModel, out, sdf, today, flDone, "VACCINATIONS COMPLETE OR NOT RECOMMENDED");
-    out.println("flDone :"+flDone.size());
+    //out.println("flDone :"+flDone.size());
 
     if (dataModel.getAntigenAdministeredRecordList().size() > 0) {
       out.println("IMMUNIZATION EVALUATION");
@@ -150,14 +152,33 @@ public class ForecastServlet extends HttpServlet {
 	  NAME_MAP.put("", "");
 	  NAME_MAP.put("", "");
   }
-
+  
+  private static Map<String, String> mapLabelOut = new HashMap<String, String>();
+  
   private void printList(DataModel dataModel, PrintWriter out, SimpleDateFormat sdf, Date today,
       List<Forecast> forecastList, String title) {
     if (forecastList.size() > 0) {
       out.println(title + " " + sdf.format(dataModel.getAssessmentDate()));
       for (Forecast forecast : forecastList) {
         if (forecast.getAntigen() != null) {
-          out.print("Forecasting " + forecast.getAntigen().getName() + " status ");
+          String name = forecast.getAntigen().getName();
+          if (name.equals("Diphtheria"))
+          {
+            // < 7 years recommend Dtap,
+            // >= 7 years recommend Tdap
+            Calendar c = Calendar.getInstance();
+            c.add(Calendar.YEAR, -7);
+            
+            if (dataModel.getPatient().getDateOfBirth().after(c.getTime()))
+            {
+              name = "DTaP";
+            }
+            else
+            {
+              name = "Tdap"; // could be TD
+            }
+          }
+          out.print("Forecasting " + name + " status ");
           if (forecast.getForecastReason().equals("")) {
             if (forecast.getAdjustedRecommendedDate().after(today)) {
               out.print("due later ");
