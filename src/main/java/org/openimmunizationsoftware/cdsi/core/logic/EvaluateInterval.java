@@ -203,7 +203,7 @@ public class EvaluateInterval extends LogicStep {
       setLogicCondition(3, new LogicCondition("Is this the first target dose?") {
         @Override
         public LogicResult evaluateInternal() {
-          if (caFromTargetDoseNumberInSeries.equals(String.valueOf(1))) {
+          if (caFromTargetDoseNumberInSeries.getFinalValue().equals(String.valueOf(1))) {
             return LogicResult.YES;
           }
           return LogicResult.NO;

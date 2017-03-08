@@ -33,7 +33,8 @@ public class SatisfyTargetDose extends LogicStep {
      */
     setNextLogicStepType(logicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED);
     evaluateLogicTables();
-
+    System.out.println(dataModel.getTargetDose().getStatusCause()+dataModel.getTargetDose().getTargetDoseStatus());
+    dataModel.getTargetDose().setStatusCause("");
    // if (dataModel.getAntigenAdministeredRecordList().size() == 0)
     //	 getNextLogicStep().setStarted(true);
     return next(true);
@@ -95,9 +96,9 @@ public class SatisfyTargetDose extends LogicStep {
           @Override
           public LogicResult evaluateInternal() {
             if (dataModel.getTargetDose().getStatusCause().contains("VirusConflict")){
-              return NO;
+              return YES;
             }
-            return YES;
+            return NO;
           }
         });
       
