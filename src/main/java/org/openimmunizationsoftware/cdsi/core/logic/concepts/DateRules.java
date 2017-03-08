@@ -2,6 +2,7 @@ package org.openimmunizationsoftware.cdsi.core.logic.concepts;
 
 import java.util.Date;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Age;
 import org.openimmunizationsoftware.cdsi.core.domain.AllowableVaccine;
@@ -9,6 +10,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipCondition;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
 import org.openimmunizationsoftware.cdsi.core.domain.PreferrableVaccine;
+import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 
 public class DateRules {
@@ -186,7 +188,35 @@ public class DateRules {
     CALCDTINT_3 = new DateRule<Interval>() {
       @Override
       protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep, Interval interval) {
-        return null;
+    	  if (interval != null){
+    	 if (interval.getAbsoluteMinimumInterval() != null){
+    	  SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
+		  Date dob = dataModel.getAntigenAdministeredRecord().getDateAdministered();
+		  int absMinIntAmount = interval.getAbsoluteMinimumInterval().getAmount();
+		  Date absMinIntDate = new Date();
+			switch (interval.getAbsoluteMinimumInterval().getType()) {
+			case DAY:
+				absMinIntDate = DateUtils.addDays(dob, absMinIntAmount);    		
+	  		break;
+			case WEEK:
+				absMinIntDate = DateUtils.addWeeks(dob, absMinIntAmount);    		
+    	  		break;
+			case MONTH:
+				absMinIntDate = DateUtils.addMonths(dob, absMinIntAmount);    		
+    	  		break;
+			case YEAR:
+				absMinIntDate = DateUtils.addYears(dob, absMinIntAmount);    		
+    	  		break;
+			default:
+				break;
+			}
+			return absMinIntDate;
+    	 }else{
+    		 return null;
+    	 }
+    	  }else{
+    		 return null;
+    	 }
       }
     };
     CALCDTINT_3.setBusinessRuleId("CALCDTINT-3");
@@ -198,7 +228,35 @@ public class DateRules {
     CALCDTINT_4 = new DateRule<Interval>() {
       @Override
       protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep, Interval interval) {
-        return null;
+    	  if (interval != null){
+    	  if (interval.getMinimumInterval() != null){
+    	  SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
+		  Date dob = dataModel.getAntigenAdministeredRecord().getDateAdministered();
+		  int minIntAmount = interval.getMinimumInterval().getAmount();
+		  Date minIntDate = new Date();
+			switch (interval.getMinimumInterval().getType()) {
+			case DAY:
+				minIntDate = DateUtils.addDays(dob, minIntAmount);    		
+	  		break;
+			case WEEK:
+				minIntDate = DateUtils.addWeeks(dob, minIntAmount);    		
+    	  		break;
+			case MONTH:
+				minIntDate = DateUtils.addMonths(dob, minIntAmount);    		
+    	  		break;
+			case YEAR:
+				minIntDate = DateUtils.addYears(dob, minIntAmount);    		
+    	  		break;
+			default:
+				break;
+			}
+			return minIntDate;      
+			}else{
+				return null;
+			}
+    	  }else{
+    		  return null;
+    	  }
       }
     };
     CALCDTINT_4.setBusinessRuleId("CALCDTINT-4");

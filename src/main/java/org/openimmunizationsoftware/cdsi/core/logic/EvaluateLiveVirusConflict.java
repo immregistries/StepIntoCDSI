@@ -262,13 +262,16 @@ public class EvaluateLiveVirusConflict extends LogicStep {
 	            	  		break;
 	            			case WEEK:
 		            	  		beginIntervalDate = DateUtils.addWeeks(dob, beginAgeAmount);    		
-		            	  		endIntervalDate = DateUtils.addWeeks(dob, endAgeAmount);	            				break;
+		            	  		endIntervalDate = DateUtils.addWeeks(dob, endAgeAmount);
+		            	  		break;
 	            			case MONTH:
 		            	  		beginIntervalDate = DateUtils.addMonths(dob, beginAgeAmount);    		
-		            	  		endIntervalDate = DateUtils.addMonths(dob, endAgeAmount);	            				break;
+		            	  		endIntervalDate = DateUtils.addMonths(dob, endAgeAmount);
+		            	  		break;
 	            			case YEAR:
 		            	  		beginIntervalDate = DateUtils.addYears(dob, beginAgeAmount);    		
-		            	  		endIntervalDate = DateUtils.addYears(dob, endAgeAmount);	            				break;
+		            	  		endIntervalDate = DateUtils.addYears(dob, endAgeAmount);
+		            	  		break;
 	            			default:
 	            				break;
 	            			}

@@ -17,11 +17,11 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
   @Override
   public LogicStep process() throws Exception {
     LogicStepType nextLogicStep;
-
     dataModel.incAntigenAdministeredRecordPos();
 
     if (dataModel.getAntigenAdministeredRecordPos() < dataModel.getAntigenAdministeredRecordList().size()) {
-      log("   Looking at first dose administered");
+      if (dataModel.getAntigenAdministeredRecordPos()==0)
+    	  log("   Looking at first dose administered");
       dataModel.setAntigenAdministeredRecord(
           dataModel.getAntigenAdministeredRecordList().get(dataModel.getAntigenAdministeredRecordPos()));
       if (gotoNextTargetDose()) {
@@ -45,10 +45,10 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
       return true;
     } else {
   	  //System.err.println("-->"+dataModel.getTargetDose().getStatusCause());
-  	  //System.err.println("============"+ dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered());
+  	  System.err.println("============"+ dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered());
 
       if (dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered() != null) {
-    	  ////System.err.println("-->"+dataModel.getTargetDose().getStatusCause());
+    	  System.err.println("-->"+dataModel.getTargetDose().getStatusCause());
     	//System.out.println("+++++++++++++++++++ Previous target dose was satisifed, getting next target dose");
         log(" + Previous target dose was satisifed, getting next target dose");
         RecurringDose recurringdose = dataModel.getTargetDose().getTrackedSeriesDose().getRecurringDose();
@@ -61,6 +61,7 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
         if (dataModel.getTargetDoseListPos() < dataModel.getTargetDoseList().size()) {
           dataModel.setTargetDose(dataModel.getTargetDoseList().get(dataModel.getTargetDoseListPos()));
           ////System.err.println("------------------>"+dataModel.getTargetDose().getTrackedSeriesDose().getDoseNumber());
+         // dataModel.setAntigenAdministeredRecordPos(0);
           return true;
         } else {
           markRestAsExtraneous();
