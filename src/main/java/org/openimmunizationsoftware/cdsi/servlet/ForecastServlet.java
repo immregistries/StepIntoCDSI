@@ -64,25 +64,25 @@ public class ForecastServlet extends HttpServlet {
 
   private void printText(HttpServletResponse resp, DataModel dataModel, PrintWriter out) {
     resp.setContentType("text/plain");
-    out.println("Step Into Clinical Decision Support for Immunizations - Demonstration System");
+    out.println("Step Into Clinical Decision Support for Immunizations - Demonstration //System");
     out.println();
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 
     VaccineGroupForecast vgf = dataModel.getVaccineGroupForecast();
     List<Forecast> fl = vgf.getForecastList();
-    System.err.println(fl.size());
+    ////System.err.println(fl.size());
     
 /*    for(int i=0;i<fl.size();i++){
-    	System.out.println("AntigenName:" +fl.get(i).getAntigen());
-    	System.out.println("ForecastReason:" +fl.get(i).getForecastReason());
+    	//System.out.println("AntigenName:" +fl.get(i).getAntigen());
+    	//System.out.println("ForecastReason:" +fl.get(i).getForecastReason());
     }
     */
-    System.out.println("***************************************************************************************");
+    ////System.out.println("***************************************************************************************");
     for(Forecast fln:fl){
-    	    System.out.println("Antigen :"+fln.getAntigen()+" | "+" ForecastReason: "+fln.getForecastReason());
+    	    //System.out.println("Antigen :"+fln.getAntigen()+" | "+" ForecastReason: "+fln.getForecastReason());
     }
 
-    System.out.println("***************************************************************************************");
+    //System.out.println("***************************************************************************************");
 
 
     List<Forecast> flNow = new ArrayList<Forecast>();
@@ -92,7 +92,7 @@ public class ForecastServlet extends HttpServlet {
     Date today = new Date();
     try {
       today = sdf.parse(sdf.format(today));
-      //System.out.println(today);
+      ////System.out.println(today);
     } catch (ParseException pe) {
       pe.printStackTrace();
     }

@@ -33,7 +33,7 @@ public class SatisfyTargetDose extends LogicStep {
      */
     setNextLogicStepType(logicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED);
     evaluateLogicTables();
-    System.out.println(dataModel.getTargetDose().getStatusCause()+dataModel.getTargetDose().getTargetDoseStatus());
+    //System.out.println(dataModel.getTargetDose().getStatusCause()+dataModel.getTargetDose().getTargetDoseStatus());
     dataModel.getTargetDose().setStatusCause("");
    // if (dataModel.getAntigenAdministeredRecordList().size() == 0)
     //	 getNextLogicStep().setStarted(true);
