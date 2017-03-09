@@ -283,7 +283,7 @@ public class GenerateForecastDates extends LogicStep {
 	    
   }
   
-  private void findEarliestDate(){
+/*  private void findEarliestDate(){
 	  try{
 		  ////System.out.println("MinimumAgeDate: "+ caMinimumAgeDate.getFinalValue());
 	  }catch(NullPointerException np){
@@ -306,7 +306,7 @@ public class GenerateForecastDates extends LogicStep {
 	  }
 	  
   }
-	 
+	 */
   
   
   
@@ -337,7 +337,7 @@ public class GenerateForecastDates extends LogicStep {
     findMinimalIntervalDate();
     findLatestConflictEndIntervalDate();
     findSeasonalRecommendationStartDate();
-    findEarliestDate();
+    //findEarliestDate();
     
     
     caSeasonalRecommendationStartDate.setAssumedValue(PAST);

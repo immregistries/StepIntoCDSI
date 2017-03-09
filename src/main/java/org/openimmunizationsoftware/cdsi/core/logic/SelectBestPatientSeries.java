@@ -35,6 +35,41 @@ public class SelectBestPatientSeries extends LogicStep {
 
 		return next();
 	}
+	
+	public void printTableAndFigures(PrintWriter out) {
+		out.println("<p>Select best patient series involves reviewing all potential patient series which might satisfy the goals of an antigen and determining the one series which best fits the patient based on several important factors. The four steps of this process are listed in table 6-1.</p>");
+		out.println("<p>TABLE 6 - 1 SELECT BEST PATIENT SERIES PROCESS STEPS</p>");
+		out.println("<table>");
+		out.println("	<tr>");
+		out.println("		<td>Section</td>");
+		out.println("		<td>Activity</td>");
+		out.println("		<td>Goal</td>");
+		out.println("	</tr>");
+		out.println("	<tr>");
+		out.println("		<td>6.2</td>");
+		out.println("		<td>Identify Superior Patient Series </td>");
+		out.println("		<td>The goal of this step is to determine if one patient series is superior to the other entire patient series.</td>");
+		out.println("	</tr>");
+		out.println("	<tr>");
+		out.println("		<td>6.3</td>");
+		out.println("		<td>Classify Patient Series</td>");
+		out.println("		<td>The goal of this step is to classify where the patient is in the overall  path to immunity and pass those candidate patient series onto the next step. Only those patient series with the most likely chance to be considered the best are retained for further consideration.</td>");
+		out.println("	</tr>");
+		out.println("	<tr>");
+		out.println("		<td>6.4-6.6</td>");
+		out.println("		<td>Scoring Patient Series</td>");
+		out.println("		<td>The goal of this step is to apply the proper scoring business rules based on results of the second step. The scoring business rules will determine the best patient series. Scoring business rules are specific to where the patient is in the overall path to immunity. The complete patient series scoring business rules look at factors important when candidate patient series are complete. Similarly in-process patient series scoring business rules and no valid doses scoring business rules look at factors important to their respective situation. For any given antigen, only one set of these scoring business rules will be applied to each candidate patient series.</td>");
+		out.println("	</tr>");
+		out.println("	<tr>");
+		out.println("		<td>6.7</td>");
+		out.println("		<td>Select Best Patient Series</td>");
+		out.println("		<td>The goal of this step is to evaluate the scored candidate patient series and determine which of the candidate patient series is the one and only best patient series.</td>");
+		out.println("	</tr>");
+		out.println("</table>");
+		out.println("<p>The process model below illustrates the major steps involved in selecting the best patient series.</p>");
+		out.println("<img src=\"Figure 6.1.png\"/>");
+		out.println("<p>FIGURE 6 - 1 SELECT BEST PATIENT SERIES PROCESS MODEL</p>");
+	}
 
 	@Override
 	public void printPre(PrintWriter out) throws Exception {
@@ -52,8 +87,7 @@ public class SelectBestPatientSeries extends LogicStep {
 
 	private void printStandard(PrintWriter out) {
 		out.println("<h1> " + getTitle() + "</h1>");
-		out.println(
-				"<p>Select Best  Patient Series  determines the best path to immunity (patient series) for the patient based on the evaluated immunization history and forecast. Each antigen evaluated and forecasted may contain more than one  patient series  and the goal  of  select best  patient series  is to select one of those  patient series  as being superior  to  the  others  based  on  several  factors.   </p>");
+		printTableAndFigures(out);
 	}
 
 }
