@@ -71,14 +71,14 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
     if (seriesDose.getConditionalSkip() != null) {
       LT410 logicTable410 = new LT410(noSkip, skip);
-      logicTableList.add(logicTable410);
+      //logicTableList.add(logicTable410);
       log("Conditional skip has been defined, now looking at the details.");
       ConditionalSkip conditionalSkip = seriesDose.getConditionalSkip();
       logicTable410.setSetLogicType(conditionalSkip.getSetLogic());
       for (ConditionalSkipSet conditionalSkipSet : conditionalSkip.getConditionalSkipSetList()) {
         LT49 logicTable49 = new LT49();
-        logicTableList.add(logicTable49);
-        logicTable410.addInnerSet(logicTable49);
+        //logicTableList.add(logicTable49);
+        //logicTable410.addInnerSet(logicTable49);
         logicTable49.setConditionLogicType(conditionalSkipSet.getConditionLogic());
         for (ConditionalSkipCondition condition : conditionalSkipSet.getConditionList()) {
 
@@ -148,8 +148,13 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
             }
             
           }
+          logicTable49.addInnerSet(lt);
         }
+        logicTableList.add(logicTable49);
+        logicTable410.addInnerSet(logicTable49);
       }
+      logicTableList.add(logicTable410);
+
     } else {
       log("No conditional skips are defined. ");
     }

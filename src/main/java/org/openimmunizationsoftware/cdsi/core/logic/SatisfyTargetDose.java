@@ -60,12 +60,12 @@ public class SatisfyTargetDose extends LogicStep {
     out.println("<img src=\"Figure 4.22.PNG\"/>");
     out.println("<p>FIGURE 4 - 22 SATISFY TARGET DOSE PROCESS MODEL</p>");
     printConditionAttributesTable(out);
-    printLogicTables(out);
+   // printLogicTables(out);
   }
 
   private class LT extends LogicTable {
     public LT() {
-      super(5, 7, "Table ?-?");
+      super(5, 7, "TABLE 4 - 32 WAS THE TARGET DOSE SATISFIED?");
 
       setLogicCondition(0, new LogicCondition("Was the vaccine dose administered at a valid age?") {
         @Override

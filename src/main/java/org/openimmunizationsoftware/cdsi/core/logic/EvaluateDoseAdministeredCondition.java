@@ -125,6 +125,7 @@ public class EvaluateDoseAdministeredCondition extends LogicStep
 
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + getTitle() + "</h1>");
+    out.println("<p>Target dose : " + dataModel.getTargetDose().getTrackedSeriesDose().getDoseNumber() + " " + dataModel.getTargetDose().getTrackedSeriesDose().getAntigenSeries().getSeriesName() + " </p>");
     out.println("<p>Dose administered condition checks the dose administered to see if the dose must be repeated regardless of the other evaluation rules.</p>");
     out.println("<p>Relationship to ACIP recommendations:</p>");
     out.println("<ul>");
