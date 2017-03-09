@@ -56,14 +56,12 @@ public class EvaluateAllowableInterval extends LogicStep {
         logicTableList.add(logicTable);
       }
     }
-    // caMinimumIntervalDate.setInitialValue(CALCDTINT_4.evaluate(dataModel,
-    // this));
+
 
   }
 
   @Override
   public LogicStep process() throws Exception {
-	  //System.out.println(logicTableList.size());
 	  YesNo y = YesNo.YES;
     for (LogicTable logicTable : logicTableList) {
       logicTable.evaluate();
@@ -116,11 +114,6 @@ public class EvaluateAllowableInterval extends LogicStep {
           if (caAbsoluteMinimumIntervalDate.getFinalValue().after(caDateAdministered.getFinalValue())) {
             return LogicResult.YES;
           }
-          // if
-          // (caDateAdministered.getFinalValue().before(caMinimumIntervalDate.getFinalValue()))
-          // {
-          // return LogicResult.NO;
-          // }
           return LogicResult.NO;
         }
       });

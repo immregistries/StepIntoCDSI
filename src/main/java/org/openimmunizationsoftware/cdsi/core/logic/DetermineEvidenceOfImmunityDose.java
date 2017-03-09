@@ -202,7 +202,6 @@ public class DetermineEvidenceOfImmunityDose extends LogicStep {
       setLogicOutcome(0, new LogicOutcome() {
         @Override
         public void perform() {
-        	//System.out.println("DetermineEvidenceOfImmunityDose-0");
         	log("Yes. The patient has evidence of immunity.");
           	dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.IMMUNE); 
       		log("Forecast reason is \"patient has evidence of immunity\". ");
@@ -214,7 +213,6 @@ public class DetermineEvidenceOfImmunityDose extends LogicStep {
       setLogicOutcome(1, new LogicOutcome() {
         @Override
         public void perform() {
-        	//System.out.println("DetermineEvidenceOfImmunityDose-1");
         	log("No. The patient does not have evidence of immunity.");
         }
       });
@@ -222,7 +220,6 @@ public class DetermineEvidenceOfImmunityDose extends LogicStep {
       setLogicOutcome(2, new LogicOutcome() {
         @Override
         public void perform() {
-        	//System.out.println("DetermineEvidenceOfImmunityDose-2");
         	log("Yes. The patient has evidence of immunity.");
         	dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.IMMUNE);
            	Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
@@ -239,7 +236,6 @@ public class DetermineEvidenceOfImmunityDose extends LogicStep {
       setLogicOutcome(3, new LogicOutcome() {
         @Override
         public void perform() {
-        	//System.out.println("DetermineEvidenceOfImmunityDose-3");
         	log("No. The patient does not have evidence of immunity.");
         }
       });
@@ -247,12 +243,7 @@ public class DetermineEvidenceOfImmunityDose extends LogicStep {
       setLogicOutcome(4, new LogicOutcome() {
         @Override
         public void perform() {
-        	//System.out.println("DetermineEvidenceOfImmunityDose-4");
         	log("No. The patient does not have evidence of immunity.");
-        	/*if(dataModel.getVaccineGroupForecast().getForecastList().size()>2){
-        		dataModel.getVaccineGroupForecast().getForecastList().get(dataModel.getVaccineGroupForecast().getForecastList().size()-1).setForecastReason("###############");
-        	}*/
-
         }
       });
     }

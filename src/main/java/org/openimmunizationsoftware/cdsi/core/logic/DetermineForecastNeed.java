@@ -81,7 +81,6 @@ public class DetermineForecastNeed extends LogicStep {
 		}
 		
 		caMaximumAgeDate.setInitialValue(patientMaximumAgeDate);
-		////System.out.println("££££££££££££££££££££££££££"+ caMaximumAgeDate.getFinalValue().toString());
   }
   
 
@@ -97,7 +96,6 @@ public class DetermineForecastNeed extends LogicStep {
     
     
     caTargetDose.setInitialValue(dataModel.getTargetDose());
-    //System.out.println("++++++++++++++++++++++++++++++++++++++++++++++"+ dataModel.getContraindicationList().size());
     caMaximumAgeDate = new ConditionAttribute<Date>("Calculated date (CALCDTAGE-1)", "Maximum Age Date");
     findMaximumAgeDate();
     caEndDate = new ConditionAttribute<Date>("Supporting data (Seasonal Recommendation", "End Date");
@@ -110,7 +108,6 @@ public class DetermineForecastNeed extends LogicStep {
 
     caMaximumAgeDate.setAssumedValue(FUTURE);
     caEndDate.setAssumedValue(FUTURE);
-    //SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
     Date now = new Date();
     caAssessmentDate.setAssumedValue(now);
 
@@ -132,7 +129,6 @@ public class DetermineForecastNeed extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
-	  //////System.err.println("DETERMINE_FORECAST_NEED");
 	  setNextLogicStepType(LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMEND_VACCINES);
 	  evaluateLogicTables();
 	  if (getNextLogicStepType() == LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMEND_VACCINES)
@@ -142,7 +138,6 @@ public class DetermineForecastNeed extends LogicStep {
     throw new Exception("Problem! next target dose is null " + dataModel.getPatientSeries().getTrackedAntigenSeries().getSeriesName());
   }
 }
-	  //setNextLogicStepType(LogicStepType.FOR_EACH_PATIENT_SERIES);
 	  
 	  return next();
   }
@@ -257,12 +252,10 @@ public class DetermineForecastNeed extends LogicStep {
       setLogicOutcome(1, new LogicOutcome() {
         @Override
         public void perform() {
-        	//////System.out.println("DetermineForecastNeed_01");
         	log("No. The patient should not receive another dose .");
         	setNextLogicStepType(LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMEND_VACCINES);
         	dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.COMPLETE);
         	Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
-        	//System.out.println("1111111111111111111111111111111111111111111111  "+tmpAntigen);
           	List<Forecast> forecastList = dataModel.getVaccineGroupForecast().getForecastList();
           	for(Forecast forecast:forecastList){
           		if(forecast.getAntigen().equals(tmpAntigen)){
@@ -279,49 +272,15 @@ public class DetermineForecastNeed extends LogicStep {
       setLogicOutcome(2, new LogicOutcome() {
         @Override
         public void perform() {
-        	
-        	//////System.out.println("DetermineForecastNeed_02");
-        	log("No. The patient should not receive another dose .");
+           	log("No. The patient should not receive another dose .");
         	dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.NOT_RECOMMENDED);
-        	//////System.out.println(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
-        	//VaccineGroupForecast vaccineGroupForecast = dataModel.getVaccineGroupForecast();
-   /*       	////System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX     "+vaccineGroupForecast.getForecastList().size());
-          	if(vaccineGroupForecast.getForecastList().size()>1){
-          		////System.out.println("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP     "+vaccineGroupForecast.getForecastList().get(vaccineGroupForecast.getForecastList().size()-1).getAntigen());
-
-          	}
-          	////System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY     "+vaccineGroupForecast.getAntigensNeededList().size());
-          	////System.out.println("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ     "+dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
-          	////System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW     "+dataModel.getPatientSeries().getTargetDoseList().size());*/
-        /*	List<Antigen> antigenFromForecast = new ArrayList<Antigen>();
-        	List<Forecast> forecastList = dataModel.getVaccineGroupForecast().getForecastList();
-        	boolean isNew = false;
-        	for(Forecast forecast:forecastList){
-        		Antigen tmpAntigen = forecast.getAntigen();
-        		if(!antigenFromForecast.contains(tmpAntigen)){
-        			isNew = true;
-        		}
-        	}
-        	if(isNew){
-        		Forecast newForecast = new Forecast();
-            	newForecast.setAntigen(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
-            	newForecast.setTargetDose(dataModel.getTargetDose());
-            	newForecast.setVaccineGroupForecast(vaccineGroupForecast);
-            	newForecast.setForecastReason("Not recommended at this time due to past immunization history");
-            	vaccineGroupForecast.getForecastList().add(newForecast);
-        	}*/
         	Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
-        	////System.out.println("222222222222222222222222222222222222  "+tmpAntigen);
-
           	List<Forecast> forecastList = dataModel.getVaccineGroupForecast().getForecastList();
           	for(Forecast forecast:forecastList){
-          		//System.err.println("888888888888888888"+tmpAntigen.getName());
-          		//System.err.println("))))))))))))))))))))))))))"+forecast.getVaccineGroupForecast().getForecastList().size());
           		if(forecast.getAntigen().equals(tmpAntigen)){
           			forecast.setForecastReason("Not recommended at this time due to past immuniszation history");
           		}
           	}
-
         	log("Forecast reason is \"not recommended at this time due to past immunization history.\"");
         }
       });
@@ -329,31 +288,9 @@ public class DetermineForecastNeed extends LogicStep {
       setLogicOutcome(3, new LogicOutcome() {
         @Override
         public void perform() {
-        	//////System.out.println("DetermineForecastNeed_03");
         	log("No. The patient should not receive another dose .");
         	dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.CONTRAINDICATED);
-/*        	VaccineGroupForecast vaccineGroupForecast = dataModel.getVaccineGroupForecast();
-        	List<Antigen> antigenFromForecast = new ArrayList<Antigen>();
-        	List<Forecast> forecastList = dataModel.getVaccineGroupForecast().getForecastList();
-        	boolean isNew = false;
-        	for(Forecast forecast:forecastList){
-        		Antigen tmpAntigen = forecast.getAntigen();
-        		if(!antigenFromForecast.contains(tmpAntigen)){
-        			isNew = true;
-        		}
-        	}
-        	if(isNew){
-        		Forecast newForecast = new Forecast();
-            	newForecast.setAntigen(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
-            	newForecast.setTargetDose(dataModel.getTargetDose());
-            	newForecast.setVaccineGroupForecast(vaccineGroupForecast);
-            	newForecast.setForecastReason("Patient has a contraindication");
-            	vaccineGroupForecast.getForecastList().add(newForecast);
-            	
-        	}*/
         	Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
-        	//System.out.println("33333333333333333333333333333333333333333333  "+tmpAntigen);
-
           	List<Forecast> forecastList = dataModel.getVaccineGroupForecast().getForecastList();
           	for(Forecast forecast:forecastList){
           		if(forecast.getAntigen().equals(tmpAntigen)){
@@ -367,31 +304,10 @@ public class DetermineForecastNeed extends LogicStep {
       setLogicOutcome(4, new LogicOutcome() {
         @Override
         public void perform() {
-        	//////System.out.println("DetermineForecastNeed_04");
         	log("No. The patient should not receive another dose .");
         	dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.AGED_OUT);
-        	/*VaccineGroupForecast vaccineGroupForecast = dataModel.getVaccineGroupForecast();
-        	List<Antigen> antigenFromForecast = new ArrayList<Antigen>();
-        	List<Forecast> forecastList = dataModel.getVaccineGroupForecast().getForecastList();
-        	boolean isNew = false;
-        	for(Forecast forecast:forecastList){
-        		Antigen tmpAntigen = forecast.getAntigen();
-        		if(!antigenFromForecast.contains(tmpAntigen)){
-        			isNew = true;
-        		}
-        	}
-        	if(isNew){
-        		Forecast newForecast = new Forecast();
-            	newForecast.setAntigen(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
-            	newForecast.setTargetDose(dataModel.getTargetDose());
-            	newForecast.setVaccineGroupForecast(vaccineGroupForecast);
-            	newForecast.setForecastReason("Patient has exceeded the minimum age");
-            	vaccineGroupForecast.getForecastList().add(newForecast);
-        	}*/
         	Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
-        	//System.out.println("44444444444444444444444444444444444444444444444  "+tmpAntigen);
-
-          	List<Forecast> forecastList = dataModel.getVaccineGroupForecast().getForecastList();
+        	List<Forecast> forecastList = dataModel.getVaccineGroupForecast().getForecastList();
           	for(Forecast forecast:forecastList){
           		if(forecast.getAntigen().equals(tmpAntigen)){
           			forecast.setForecastReason("Patient has exceeded the maximum age");
@@ -404,31 +320,10 @@ public class DetermineForecastNeed extends LogicStep {
       setLogicOutcome(5, new LogicOutcome() {
         @Override
         public void perform() {
-        	//////System.out.println("DetermineForecastNeed_05");
         	log("No. The patient should not receive another dose .");
         	dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.NOT_COMPLETE);
-        /*	VaccineGroupForecast vaccineGroupForecast = dataModel.getVaccineGroupForecast();
-        	List<Antigen> antigenFromForecast = new ArrayList<Antigen>();
+            Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
         	List<Forecast> forecastList = dataModel.getVaccineGroupForecast().getForecastList();
-        	boolean isNew = false;
-        	for(Forecast forecast:forecastList){
-        		Antigen tmpAntigen = forecast.getAntigen();
-        		if(!antigenFromForecast.contains(tmpAntigen)){
-        			isNew = true;
-        		}
-        	}
-        	if(isNew){
-        		Forecast newForecast = new Forecast();
-            	newForecast.setAntigen(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
-            	newForecast.setTargetDose(dataModel.getTargetDose());
-            	newForecast.setVaccineGroupForecast(vaccineGroupForecast);
-            	newForecast.setForecastReason("Past seasonal recommendation end date");
-            	vaccineGroupForecast.getForecastList().add(newForecast);
-        	}*/
-        	Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
-        	//System.out.println("555555555555555555555555555555555555555  "+tmpAntigen);
-
-          	List<Forecast> forecastList = dataModel.getVaccineGroupForecast().getForecastList();
           	for(Forecast forecast:forecastList){
           		if(forecast.getAntigen().equals(tmpAntigen)){
           			forecast.setForecastReason("Forecast reason is past seasonal date");

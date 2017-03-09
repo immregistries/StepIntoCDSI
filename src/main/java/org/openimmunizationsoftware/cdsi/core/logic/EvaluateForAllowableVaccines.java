@@ -60,7 +60,6 @@ public class EvaluateForAllowableVaccines extends LogicStep {
   @Override
   public LogicStep process() throws Exception {
     	setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
-	    //setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
 	    YesNo y=YesNo.NO;
 	    for (LogicTable logicTable : logicTableList) {
 	        logicTable.evaluate();
@@ -118,7 +117,6 @@ public class EvaluateForAllowableVaccines extends LogicStep {
           if (caDateAdministered.getFinalValue() == null) {
             return LogicResult.NO;
           }
-          //for (int i = 0; i < caVaccineTypeAllowable.getFinalValue().size(); i++) {
             VaccineType vt = caVaccineType.getFinalValue();
             AllowableVaccine av = caVaccineTypeAllowable.getFinalValue();
             Date birthDate = dataModel.getPatient().getDateOfBirth();

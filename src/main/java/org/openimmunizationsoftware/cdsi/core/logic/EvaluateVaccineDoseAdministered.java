@@ -57,20 +57,12 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
 
   private boolean gotoNextTargetDose() {
     if (dataModel.getTargetDose() == null) {
-      //// System.out.println(" + Getting first target dose");
       log(" + Getting first target dose");
       dataModel.incTargetDoseListPos();
       dataModel.setTargetDose(dataModel.getTargetDoseList().get(dataModel.getTargetDoseListPos()));
       return true;
     } else {
-      //// System.err.println("-->"+dataModel.getTargetDose().getStatusCause());
-      // System.err.println("============"+
-      //// dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered());
-
       if (dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered() != null) {
-        // System.err.println("-->"+dataModel.getTargetDose().getStatusCause());
-        //// System.out.println("+++++++++++++++++++ Previous target dose was satisifed, getting
-        //// next target dose");
         log(" + Previous target dose was satisifed, getting next target dose");
         RecurringDose recurringdose =
             dataModel.getTargetDose().getTrackedSeriesDose().getRecurringDose();
@@ -81,26 +73,21 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
         }
         dataModel.incTargetDoseListPos();
         if (dataModel.getTargetDoseListPos() < dataModel.getTargetDoseList().size()) {
-          dataModel
-              .setTargetDose(dataModel.getTargetDoseList().get(dataModel.getTargetDoseListPos()));
-          ////// System.err.println("------------------>"+dataModel.getTargetDose().getTrackedSeriesDose().getDoseNumber());
-          // dataModel.setAntigenAdministeredRecordPos(0);
+          dataModel.setTargetDose(dataModel.getTargetDoseList().get(dataModel.getTargetDoseListPos()));
           return true;
         } else {
           markRestAsExtraneous();
           return false;
         }
       } else {
-        //// System.out.println("++++++++++++++++++ Previous target dose was NOT satisifed, staying
-        //// on this target dose");
+
         log(" + Previous target dose was NOT satisifed, staying on this target dose");
         return true;
       }
     }
   }
 
-  private AntigenAdministeredRecord findNextAntigenAdministeredRecord(
-      AntigenAdministeredRecord aar) {
+  private AntigenAdministeredRecord findNextAntigenAdministeredRecord(AntigenAdministeredRecord aar) {
     AntigenAdministeredRecord aarNext = null;
     boolean found = false;
     for (AntigenAdministeredRecord antigenAdministeredRecord : dataModel
