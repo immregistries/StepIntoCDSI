@@ -38,18 +38,18 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
 
   private boolean gotoNextTargetDose() {
     if (dataModel.getTargetDose() == null) {
-      //System.out.println(" + Getting first target dose");
+      ////System.out.println(" + Getting first target dose");
       log(" + Getting first target dose");
       dataModel.incTargetDoseListPos();
       dataModel.setTargetDose(dataModel.getTargetDoseList().get(dataModel.getTargetDoseListPos()));
       return true;
     } else {
-  	  //System.err.println("-->"+dataModel.getTargetDose().getStatusCause());
-  	  System.err.println("============"+ dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered());
+  	  ////System.err.println("-->"+dataModel.getTargetDose().getStatusCause());
+  	  //System.err.println("============"+ dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered());
 
       if (dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered() != null) {
-    	  System.err.println("-->"+dataModel.getTargetDose().getStatusCause());
-    	//System.out.println("+++++++++++++++++++ Previous target dose was satisifed, getting next target dose");
+    	  //System.err.println("-->"+dataModel.getTargetDose().getStatusCause());
+    	////System.out.println("+++++++++++++++++++ Previous target dose was satisifed, getting next target dose");
         log(" + Previous target dose was satisifed, getting next target dose");
         RecurringDose recurringdose = dataModel.getTargetDose().getTrackedSeriesDose().getRecurringDose();
         if (recurringdose != null && recurringdose.getValue() == YesNo.YES) {
@@ -60,7 +60,7 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
         dataModel.incTargetDoseListPos();
         if (dataModel.getTargetDoseListPos() < dataModel.getTargetDoseList().size()) {
           dataModel.setTargetDose(dataModel.getTargetDoseList().get(dataModel.getTargetDoseListPos()));
-          ////System.err.println("------------------>"+dataModel.getTargetDose().getTrackedSeriesDose().getDoseNumber());
+          //////System.err.println("------------------>"+dataModel.getTargetDose().getTrackedSeriesDose().getDoseNumber());
          // dataModel.setAntigenAdministeredRecordPos(0);
           return true;
         } else {
@@ -68,7 +68,7 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
           return false;
         }
       } else {
-    	  //System.out.println("++++++++++++++++++ Previous target dose was NOT satisifed, staying on this target dose");
+    	  ////System.out.println("++++++++++++++++++ Previous target dose was NOT satisifed, staying on this target dose");
           log(" + Previous target dose was NOT satisifed, staying on this target dose");
         return true;
       }
