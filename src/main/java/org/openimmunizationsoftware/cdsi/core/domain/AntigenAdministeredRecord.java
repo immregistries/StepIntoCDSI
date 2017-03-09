@@ -1,11 +1,11 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.DoseCondition;
 
-public class AntigenAdministeredRecord
-{
+public class AntigenAdministeredRecord {
   private Antigen antigen = null;
   private Date dateAdministered = null;
   private VaccineType vaccineType = null;
@@ -17,7 +17,13 @@ public class AntigenAdministeredRecord
   private Evaluation evaluation = new Evaluation();
   private String assignedTargetDoseNumberInSeries = "";
   private VaccineDoseAdministered vaccineDoseAdministered = null;
-  
+
+  @Override
+  public String toString() {
+    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+    return  vaccineType + " " + sdf.format(dateAdministered) ;
+  }
+
   public VaccineDoseAdministered getVaccineDoseAdministered() {
     return vaccineDoseAdministered;
   }
@@ -35,7 +41,7 @@ public class AntigenAdministeredRecord
   }
 
   public Evaluation getEvaluation() {
-    
+
     return evaluation;
   }
 
@@ -98,9 +104,8 @@ public class AntigenAdministeredRecord
   public String getAmount() {
     return amount;
   }
-  
-  public String getVolume()
-  {
+
+  public String getVolume() {
     return amount;
   }
 

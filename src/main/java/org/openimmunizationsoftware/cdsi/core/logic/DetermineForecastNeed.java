@@ -39,6 +39,10 @@ public class DetermineForecastNeed extends LogicStep {
   private ConditionAttribute<String> caImmunity = null;
   
   private void findEndDate(){
+    if (dataModel.getTargetDose() == null)
+    {
+      return;
+    }
 	  	  SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
 	  if(referenceSeriesDose.getSeasonalRecommendationList().size()>0){
 	    	Date seasonalRecommendationEndDate = referenceSeriesDose.getSeasonalRecommendationList().get(0).getSeasonalRecommendationEndDate();
@@ -50,6 +54,10 @@ public class DetermineForecastNeed extends LogicStep {
   
   
   private void findMaximumAgeDate(){
+    if (dataModel.getTargetDose() == null)
+    {
+      return;
+    }
 	  SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
 	  Date dob = dataModel.getPatient().getDateOfBirth();
 	  int maximumAgeAmount = referenceSeriesDose.getAgeList().get(0).getMaximumAge().getAmount();
@@ -127,6 +135,13 @@ public class DetermineForecastNeed extends LogicStep {
 	  //////System.err.println("DETERMINE_FORECAST_NEED");
 	  setNextLogicStepType(LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMEND_VACCINES);
 	  evaluateLogicTables();
+	  if (getNextLogicStepType() == LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMEND_VACCINES)
+{
+  if (dataModel.getTargetDose() == null)
+  {
+    throw new Exception("Problem! next target dose is null " + dataModel.getPatientSeries().getTrackedAntigenSeries().getSeriesName());
+  }
+}
 	  //setNextLogicStepType(LogicStepType.FOR_EACH_PATIENT_SERIES);
 	  
 	  return next();
@@ -244,6 +259,7 @@ public class DetermineForecastNeed extends LogicStep {
         public void perform() {
         	//////System.out.println("DetermineForecastNeed_01");
         	log("No. The patient should not receive another dose .");
+        	setNextLogicStepType(LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMEND_VACCINES);
         	dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.COMPLETE);
         	Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
         	//System.out.println("1111111111111111111111111111111111111111111111  "+tmpAntigen);
