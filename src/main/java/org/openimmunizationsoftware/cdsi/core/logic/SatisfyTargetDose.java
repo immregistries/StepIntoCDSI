@@ -57,8 +57,8 @@ public class SatisfyTargetDose extends LogicStep {
 
     out.println(
         "<p>The following processing model and decision table are used to determine if the target dose was satisfied</p>");
-    out.println("<p>ADD MODEL PICTURE</p>");
-
+    out.println("<img src=\"Figure 4.22.PNG\"/>");
+    out.println("<p>FIGURE 4 - 22 SATISFY TARGET DOSE PROCESS MODEL</p>");
     printConditionAttributesTable(out);
     printLogicTables(out);
   }

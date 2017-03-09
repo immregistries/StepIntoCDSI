@@ -88,6 +88,10 @@ public class EvaluateAge extends LogicStep{
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + logicStepType.getDisplay() + "</h1>");
     out.println("<p>Evaluate age validates the age at administration of a vaccine dose administered against a defined age range of a target dose. In cases where a target dose does not specify age attributes, the age at administration is considered �valid.�</p>");
+    out.println("<img src=\"Figure 4.4.PNG\"/>");
+    out.println("<p>FIGURE 4 - 4 EVALUATE AGE TIMELINE</p>");
+    out.println("<img src=\"Figure 4.5.PNG\"/>");
+    out.println("<p>FIGURE 4 - 5 EVALUATE AGE PROCESS MODEL</p>");
 
     printConditionAttributesTable(out);
     printLogicTables(out);

@@ -63,7 +63,8 @@ public class EvaluateGender extends LogicStep {
 
     out.println(
         "<p>The following process model, attribute table, and decision table are used to evaluate the gender.</p>");
-    out.println("<p>ADD MODEL PICTURE</p>");
+    out.println("<img src=\"Figure 4.21.PNG\"/>");
+    out.println("<p>FIGURE 4 - 21 GENDER PROCESS MODEL</p>");
 
     printConditionAttributesTable(out);
     printLogicTables(out);

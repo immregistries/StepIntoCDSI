@@ -132,8 +132,16 @@ public class EvaluateForPreferableVaccine extends LogicStep
 
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + getTitle() + "</h1>");
-    out.println("<p>Evaluate  for  preferable  vaccine  validates  the  vaccine  of  a  vaccine  dose  administered  against  the  list  of preferable vaccines.</p>");
-
+    out.println("<p>Evaluate for preferable vaccine validates the vaccine of a vaccine dose administered against the list of preferable vaccines.</p>");
+    out.println("<p>Figures 4-15 depicts a patient who received a preferable vaccine while figure 4-16 depicts a patient who did not receive a preferable vaccine.</p>");
+    out.println("<img src=\"Figure 4.15.PNG\"/>");
+    out.println("<p>FIGURE 4 - 15 PATIENT RECEIVED A PREFERABLE VACCINE</p>");
+    out.println("<img src=\"Figure 4.16.PNG\"/>");
+    out.println("<p>FIGURE 4 - 16 PATIENT DID NOT RECEIVE A PREFERABLE VACCINE</p>");
+    out.println("<p>It should be noted that volume is sparsely populated and tracked differently in most systems. Therefore, volume will not be used to evaluate the validity of a vaccine dose administered. However, it will be provided as an evaluation reason that less than sufficient volume was administered.</p>");
+    out.println("<p>The following process model, attribute table, decision table, and business rule table are used to evaluate for a preferable vaccine.</p>");
+    out.println("<img src=\"Figure 4.17.PNG\"/>");
+    out.println("<p>FIGURE 4 - 17 EVALUATE FOR A PREFERABLE VACCINE PROCESS MODEL</p>");
     printConditionAttributesTable(out);
     printLogicTables(out);
   }

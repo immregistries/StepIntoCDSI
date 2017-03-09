@@ -131,6 +131,9 @@ public class EvaluateDoseAdministeredCondition extends LogicStep
     out.println("  <li>Doses which were administered after the lot expiration date or which contain a condition do not need to be evaluated.</li>");
     out.println("  <li>Examples of conditions which would prevent evaluation of dose range from misadministration to recalls.</li>");
     out.println("</ul>");
+    out.println("<img src=\"Figure 4.2.png\"/>");
+    out.println("<p>FIGURE 4 - 2 VACCINE DOSE ADMINISTERED CONDITION PROCESS MODEL</p>");
+
 
     printConditionAttributesTable(out);
     printLogicTables(out);

@@ -110,9 +110,12 @@ public class EvaluateLiveVirusConflict extends LogicStep {
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + getTitle() + "</h1>");
 
-    out.println(
-        "<p>Evaluate  live virus conflict  validates the  date  administered  of a live virus  vaccine dose administered  against previous  live  virus  administered  vaccines  to  ensure  proper  spacing  between  administrations.  For  some  live virus vaccines and for inactivated  virus or recombinant  vaccines, this condition does not exist. Therefore, if no live  virus  supporting  data  exists  for  the  vaccine  dose  administered  being  evaluated,  the  vaccine  dose administered is not in conflict with any other vaccine dose administered.</p>");// <------------------------------------------------------
-
+    out.println("<p>Evaluate live virus conflict validates the date administered of a live virus vaccine dose administered against previous live virus administered vaccines to ensure proper spacing between administrations. For some live virus vaccines and for inactivated virus or recombinant vaccines, this condition does not exist. Therefore, if no live virus supporting data exists for the vaccine dose administered being evaluated, the vaccine dose administered is not in conflict with any other vaccine dose administered.</p>");// <------------------------------------------------------
+    out.println("<img src=\"Figure 4.13.PNG\"/>");
+    out.println("<p>FIGURE 4 - 13 EVALUATE LIVE VIRUS CONFLICT TIMELINE</p>");
+    out.println("<p>The following process model, attribute table, decision tables, and business rule table are used to evaluate for a live virus conflict.</p>");
+    out.println("<img src=\"Figure 4.14.PNG\"/>");
+    out.println("<p>FIGURE 4 - 14 EVALUATE LIVE VIRUS CONFLICT PROCESS MODEL</p>");
     //printConditionAttributesTable(out);
     printLogicTables(out);
   }
