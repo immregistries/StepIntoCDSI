@@ -455,6 +455,7 @@ public class GenerateForecastDates extends LogicStep {
     list.add(caLatestConflictEndIntervalDate.getFinalValue());
     list.add(caSeasonalRecommendationStartDate.getFinalValue());
     Date earliestDate = getEarliestDate(list);
+    //System.out.println(earliestDate);
     return earliestDate;
   }
 
