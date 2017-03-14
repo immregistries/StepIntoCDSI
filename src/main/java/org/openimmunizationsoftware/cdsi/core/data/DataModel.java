@@ -12,6 +12,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.Contraindication;
+import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.Immunity;
 import org.openimmunizationsoftware.cdsi.core.domain.ImmunizationHistory;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
@@ -55,8 +56,25 @@ private Map<String, VaccineGroup> vaccineGroupMap = new HashMap<String, VaccineG
   private List<AntigenSeries> antigenSeriesList = new ArrayList<AntigenSeries>();
   private List<PatientSeries> patientSeriesList = new ArrayList<PatientSeries>();
   private PatientSeries patientSeries = null;
-  private VaccineGroupForecast vaccineGroupForecast = new VaccineGroupForecast();
+  private List<Forecast> forecastList = new ArrayList<Forecast>(); 
+  private List<VaccineGroupForecast> vaccineGroupForcastList = new ArrayList<VaccineGroupForecast>();
   
+  public List<Forecast> getForecastList() {
+    return forecastList;
+  }
+  
+  public void setForecastList(List<Forecast> forecastList) {
+    this.forecastList = forecastList;
+  }
+  
+  public List<VaccineGroupForecast> getVaccineGroupForcastList() {
+    return vaccineGroupForcastList;
+  }
+
+  public void setVaccineGroupForcastList(List<VaccineGroupForecast> vaccienGroupForcastList) {
+    this.vaccineGroupForcastList = vaccienGroupForcastList;
+  }
+
   public Antigen getAntigen() {
 	return antigen;
 }
@@ -118,14 +136,6 @@ public void incAntigenPos() {
 
   public void setTargetDoseListPos(int targetDoseListPos) {
     this.targetDoseListPos = targetDoseListPos;
-  }
-
-  public VaccineGroupForecast getVaccineGroupForecast() {
-    return vaccineGroupForecast;
-  }
-
-  public void setVaccineGroupForecast(VaccineGroupForecast vaccineGroupForecast) {
-    this.vaccineGroupForecast = vaccineGroupForecast;
   }
 
   public AntigenAdministeredRecord getAntigenAdministeredRecordThatSatisfiedPreviousTargetDose() {

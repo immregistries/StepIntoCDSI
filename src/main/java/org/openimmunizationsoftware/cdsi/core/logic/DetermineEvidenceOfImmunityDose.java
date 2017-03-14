@@ -206,7 +206,7 @@ public class DetermineEvidenceOfImmunityDose extends LogicStep {
           	dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.IMMUNE); 
       		log("Forecast reason is \"patient has evidence of immunity\". ");
       		
-      		dataModel.getVaccineGroupForecast().getForecastList().get(dataModel.getVaccineGroupForecast().getForecastList().size()-1).setForecastReason("Patient has Evidence of immunity");
+      		dataModel.getForecastList().get(dataModel.getForecastList().size()-1).setForecastReason("Patient has Evidence of immunity");
         }
       });
 
@@ -223,7 +223,7 @@ public class DetermineEvidenceOfImmunityDose extends LogicStep {
         	log("Yes. The patient has evidence of immunity.");
         	dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.IMMUNE);
            	Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
-          	List<Forecast> forecastList = dataModel.getVaccineGroupForecast().getForecastList();
+          	List<Forecast> forecastList = dataModel.getForecastList();
           	for(Forecast forecast:forecastList){
           		if(forecast.getAntigen().equals(tmpAntigen)){
           			forecast.setForecastReason("Patient has evidence of immunity");

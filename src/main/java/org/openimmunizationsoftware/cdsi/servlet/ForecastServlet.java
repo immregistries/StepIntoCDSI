@@ -68,8 +68,8 @@ public class ForecastServlet extends HttpServlet {
     out.println();
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 
-    VaccineGroupForecast vgf = dataModel.getVaccineGroupForecast();
-    List<Forecast> fl = vgf.getForecastList();
+    
+    List<Forecast> fl = dataModel.getForecastList();
     ////System.err.println(fl.size());
     
 /*    for(int i=0;i<fl.size();i++){
@@ -84,6 +84,10 @@ public class ForecastServlet extends HttpServlet {
 
     //System.out.println("***************************************************************************************");
 
+    List<VaccineGroupForecast> vgfNow = new ArrayList<VaccineGroupForecast>();
+    List<VaccineGroupForecast> vgfLater = new ArrayList<VaccineGroupForecast>();
+    List<VaccineGroupForecast> vgfDone = new ArrayList<VaccineGroupForecast>();
+    
 
     List<Forecast> flNow = new ArrayList<Forecast>();
     List<Forecast> flLater = new ArrayList<Forecast>();
@@ -142,26 +146,21 @@ public class ForecastServlet extends HttpServlet {
         "Forecast generated " + sdf.format(new Date()) + " using software version " + SoftwareVersion.VERSION + ".");
   }
   
-  private static HashMap<String, String> NAME_MAP = new HashMap<String, String>();
-  static 
-  {
-	  NAME_MAP.put("Hep A", "HepA");
-	  NAME_MAP.put("HepB", "HepB");
-	  NAME_MAP.put("Hib", "Hib");
-	  NAME_MAP.put("Influenza", "");
-	  NAME_MAP.put("", "");
-	  NAME_MAP.put("", "");
-  }
-  
-  private static Map<String, String> mapLabelOut = new HashMap<String, String>();
+  // Measles Mumps Rubella
+  // combined into MMR
   
   private void printList(DataModel dataModel, PrintWriter out, SimpleDateFormat sdf, Date today,
       List<Forecast> forecastList, String title) {
     if (forecastList.size() > 0) {
       out.println(title + " " + sdf.format(dataModel.getAssessmentDate()));
+//      for (VaccineGroupForecast vaccineGroupForecast : vaccineGroupForecastList) 
+//      {
+//        
+//      }
       for (Forecast forecast : forecastList) {
         if (forecast.getAntigen() != null) {
           String name = forecast.getAntigen().getName();
+          // this section needs to be removed START REMOVE
           if (name.equals("Diphtheria"))
           {
             // < 7 years recommend Dtap,
@@ -178,6 +177,7 @@ public class ForecastServlet extends HttpServlet {
               name = "Tdap"; // could be TD
             }
           }
+          // down to here
           out.print("Forecasting " + name + " status ");
           if (forecast.getForecastReason().equals("")) {
             if (forecast.getAdjustedRecommendedDate().after(today)) {

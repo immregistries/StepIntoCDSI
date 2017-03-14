@@ -3,7 +3,7 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VaccineGroupForecast {
+public class VaccineGroupForecast extends Forecast {
   private List<Antigen> antigensNeededList = new ArrayList<Antigen>();
   private VaccineGroupStatus vaccineGroupStatus = null;
   private List<Forecast> forecastList = new ArrayList<Forecast>();
