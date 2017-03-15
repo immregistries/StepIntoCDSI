@@ -178,7 +178,7 @@ public class GenerateForecastDates extends LogicStep {
 	    
   }
   
-  int size = dataModel.getVaccineGroupForecast().getForecastList().size();
+  int size = dataModel.getForecastList().size();
 
   public GenerateForecastDates(DataModel dataModel) {
     super(LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMEND_VACCINES, dataModel);
@@ -231,19 +231,19 @@ public class GenerateForecastDates extends LogicStep {
 	  Forecast forecast = new Forecast();
 	  forecast.setAntigen(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
 	  forecast.setTargetDose(dataModel.getTargetDose());
-	  forecast.setVaccineGroupForecast(dataModel.getVaccineGroupForecast());
+	  forecast.setVaccineGroupForecast(null); // todo do we create the vaccine group forecast now? or later? 
 	  generateForcastDates(forecast);
 	  
 	  Antigen newAntigenForeCast = forecast.getAntigen();
 	  List<Antigen> antigenFromForcastList = new ArrayList<Antigen>();
-	  List<Forecast> forecastList = dataModel.getVaccineGroupForecast().getForecastList();
+	  List<Forecast> forecastList = dataModel.getForecastList();
 	  
     for(Forecast foreCast:forecastList){
     	antigenFromForcastList.add(foreCast.getAntigen());
     }
     
     if(!antigenFromForcastList.contains(newAntigenForeCast)){
-    	 dataModel.getVaccineGroupForecast().getForecastList().add(forecast);
+    	 dataModel.getForecastList().add(forecast);
     }
 
     setNextLogicStepType(LogicStepType.FOR_EACH_PATIENT_SERIES);
@@ -358,8 +358,8 @@ public class GenerateForecastDates extends LogicStep {
 			 if(biggeestAmout!=0 || patientReferenceDoseDate!=null){
 				 unadjustedRecommandedDate = DateUtils.addDays(patientReferenceDoseDate, biggeestAmout);
 			 }else{
-				 if(dataModel.getVaccineGroupForecast().getForecastList().size()>0){
-					 Forecast forecast = dataModel.getVaccineGroupForecast().getForecastList().get(dataModel.getVaccineGroupForecast().getForecastList().size()-1);
+				 if(dataModel.getForecastList().size()>0){
+					 Forecast forecast = dataModel.getForecastList().get(dataModel.getForecastList().size()-1);
 					 unadjustedRecommandedDate = forecast.getEarliestDate();
 				 } 
 			 }	 

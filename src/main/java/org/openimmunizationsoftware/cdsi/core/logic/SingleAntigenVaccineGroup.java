@@ -1,8 +1,12 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
 public class SingleAntigenVaccineGroup extends LogicStep
@@ -26,6 +30,12 @@ public class SingleAntigenVaccineGroup extends LogicStep
 
   @Override
   public LogicStep process() throws Exception {
+    List<VaccineGroupForecast> vaccineGroupForecastList = new ArrayList<VaccineGroupForecast>();
+    
+    Forecast f = new Forecast();
+    VaccineGroupForecast vgf = new VaccineGroupForecast();
+    vgf.setEarliestDate(f.getEarliestDate());
+    
     setNextLogicStepType(LogicStepType.END);
     return next();
   }
