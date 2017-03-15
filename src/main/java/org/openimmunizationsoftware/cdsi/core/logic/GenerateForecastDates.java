@@ -129,7 +129,7 @@ public class GenerateForecastDates extends LogicStep {
 		  ////System.err.println("earliestRecommendedInterval is null");
 	  }	  
   }
-  
+  //
   
   private void findLatestRecommendedIntervalDate(){
 	  TimePeriod latestRecommendedInterval;
