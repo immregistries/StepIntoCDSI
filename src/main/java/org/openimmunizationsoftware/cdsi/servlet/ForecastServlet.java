@@ -70,29 +70,13 @@ public class ForecastServlet extends HttpServlet {
 
     
     List<Forecast> fl = dataModel.getForecastList();
-    ////System.err.println(fl.size());
-    
-/*    for(int i=0;i<fl.size();i++){
-    	//System.out.println("AntigenName:" +fl.get(i).getAntigen());
-    	//System.out.println("ForecastReason:" +fl.get(i).getForecastReason());
-    }
-    */
-    ////System.out.println("***************************************************************************************");
-    for(Forecast fln:fl){
-    	    //System.out.println("Antigen :"+fln.getAntigen()+" | "+" ForecastReason: "+fln.getForecastReason());
-    }
-
-    //System.out.println("***************************************************************************************");
+    List<VaccineGroupForecast> vgfl = dataModel.getVaccineGroupForcastList();
 
     List<VaccineGroupForecast> vgfNow = new ArrayList<VaccineGroupForecast>();
     List<VaccineGroupForecast> vgfLater = new ArrayList<VaccineGroupForecast>();
     List<VaccineGroupForecast> vgfDone = new ArrayList<VaccineGroupForecast>();
     
 
-    List<Forecast> flNow = new ArrayList<Forecast>();
-    List<Forecast> flLater = new ArrayList<Forecast>();
-    List<Forecast> flDone = new ArrayList<Forecast>();
-        
     Date today = new Date();
     try {
       today = sdf.parse(sdf.format(today));
@@ -101,26 +85,22 @@ public class ForecastServlet extends HttpServlet {
       pe.printStackTrace();
     }
     {
-      for (Forecast f : fl) {
-        if (f.getForecastReason().equals("")) {
-          if (f.getAdjustedRecommendedDate().after(today)) {
-            flLater.add(f);
+      for (VaccineGroupForecast vgf : vgfl) {
+        if (vgf.getForecastReason().equals("")) {
+          if (vgf.getAdjustedRecommendedDate() != null && vgf.getAdjustedRecommendedDate().after(today)) {
+            vgfLater.add(vgf);
           } else {
-            flNow.add(f);
+            vgfNow.add(vgf);
           }
         } else {
-          flDone.add(f);
+          vgfDone.add(vgf);
         }
       }
     }
     
-    // out.println("fl :"+fl.size());
-    printList(dataModel, out, sdf, today, flNow, "VACCINATIONS RECOMMENDED");
-    //out.println("flNow"+flNow.size());
-    printList(dataModel, out, sdf, today, flLater, "VACCINATIONS RECOMMENDED AFTER");
-    //out.println("flLater :"+flLater.size());
-    printList(dataModel, out, sdf, today, flDone, "VACCINATIONS COMPLETE OR NOT RECOMMENDED");
-    //out.println("flDone :"+flDone.size());
+    printList(dataModel, out, sdf, today, vgfNow, "VACCINATIONS RECOMMENDED");
+    printList(dataModel, out, sdf, today, vgfLater, "VACCINATIONS RECOMMENDED AFTER");
+    printList(dataModel, out, sdf, today, vgfDone, "VACCINATIONS COMPLETE OR NOT RECOMMENDED");
 
     if (dataModel.getAntigenAdministeredRecordList().size() > 0) {
       out.println("IMMUNIZATION EVALUATION");
@@ -150,7 +130,7 @@ public class ForecastServlet extends HttpServlet {
   // combined into MMR
   
   private void printList(DataModel dataModel, PrintWriter out, SimpleDateFormat sdf, Date today,
-      List<Forecast> forecastList, String title) {
+      List<VaccineGroupForecast> forecastList, String title) {
     if (forecastList.size() > 0) {
       out.println(title + " " + sdf.format(dataModel.getAssessmentDate()));
 //      for (VaccineGroupForecast vaccineGroupForecast : vaccineGroupForecastList) 
@@ -160,23 +140,6 @@ public class ForecastServlet extends HttpServlet {
       for (Forecast forecast : forecastList) {
         if (forecast.getAntigen() != null) {
           String name = forecast.getAntigen().getName();
-          // this section needs to be removed START REMOVE
-          if (name.equals("Diphtheria"))
-          {
-            // < 7 years recommend Dtap,
-            // >= 7 years recommend Tdap
-            Calendar c = Calendar.getInstance();
-            c.add(Calendar.YEAR, -7);
-            
-            if (dataModel.getPatient().getDateOfBirth().after(c.getTime()))
-            {
-              name = "DTaP";
-            }
-            else
-            {
-              name = "Tdap"; // could be TD
-            }
-          }
           // down to here
           out.print("Forecasting " + name + " status ");
           if (forecast.getForecastReason().equals("")) {

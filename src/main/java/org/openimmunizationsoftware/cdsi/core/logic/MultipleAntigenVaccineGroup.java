@@ -27,7 +27,7 @@ public class MultipleAntigenVaccineGroup extends LogicStep
 
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.END);
+    setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
     return next();
   }
 

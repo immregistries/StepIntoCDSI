@@ -11,14 +11,17 @@ import org.apache.commons.lang.time.DateUtils;
 import org.joda.time.DateTime;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
+import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.domain.PreferrableVaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.Vaccine;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriodType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 
@@ -36,137 +39,91 @@ public class GenerateForecastDates extends LogicStep {
   private ConditionAttribute<VaccineType> caVaccineType = null;
   private ConditionAttribute<YesNo> caForecastVaccineType = null;
   
-  private void findMinimumAgeDate(){
-	  SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-	  Date dob = dataModel.getPatient().getDateOfBirth();
-	  int manimumAgeAmount = referenceSeriesDose.getAgeList().get(0).getMinimumAge().getAmount();
-	  Date patientMinimumAgeDate = new Date();
-		switch (referenceSeriesDose.getAgeList().get(0).getMinimumAge().getType()) {
-		case DAY:
-  		patientMinimumAgeDate = DateUtils.addDays(dob, manimumAgeAmount);    		
-			break;
-		case WEEK:
-  		patientMinimumAgeDate = DateUtils.addWeeks(dob, manimumAgeAmount);    		
-			break;
-		case MONTH:
-  		patientMinimumAgeDate = DateUtils.addMonths(dob, manimumAgeAmount);    		
-			break;
-		case YEAR:
-  		patientMinimumAgeDate = DateUtils.addYears(dob, manimumAgeAmount);    		
-			break;
-		default:
-			break;
-		}
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyy");
-		caMinimumAgeDate.setInitialValue(patientMinimumAgeDate);
-  }
+  private Date dob = dataModel.getPatient().getDateOfBirth();
+  private SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
+  private Date patientReferenceDoseDate = computePatientReferenceDoseDate();
+
   
-  private void findMaximumAgeDate(){
-	  SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-	  Date dob = dataModel.getPatient().getDateOfBirth();
-	  int maximumAgeAmount = referenceSeriesDose.getAgeList().get(0).getMaximumAge().getAmount();
-		Date patientMinimumAgeDate = new Date();
-		switch (referenceSeriesDose.getAgeList().get(0).getMinimumAge().getType()) {
-		case DAY:
-  		patientMinimumAgeDate = DateUtils.addDays(dob, maximumAgeAmount);    		
-			break;
-		case WEEK:
-  		patientMinimumAgeDate = DateUtils.addWeeks(dob, maximumAgeAmount);    		
-			break;
-		case MONTH:
-  		patientMinimumAgeDate = DateUtils.addMonths(dob, maximumAgeAmount);    		
-			break;
-		case YEAR:
-  		patientMinimumAgeDate = DateUtils.addYears(dob, maximumAgeAmount);    		
-			break;
-		default:
-			break;
-		}
-		
-		caMaximumAgeDate.setInitialValue(patientMinimumAgeDate);
-  }
-  
-  private void findEarliestRecommendedAgeDate(){
-	  SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-	  Date dob = dataModel.getPatient().getDateOfBirth();
-	  int earliestRecommendedAgeAmount = referenceSeriesDose.getAgeList().get(0).getEarliestRecommendedAge().getAmount();
-	  Date earliestRecommendedAgeDate  = new Date();
-		switch (referenceSeriesDose.getAgeList().get(0).getEarliestRecommendedAge().getType()) {
-		case DAY:
-			earliestRecommendedAgeDate = DateUtils.addDays(dob, earliestRecommendedAgeAmount);    		
-			break;
-		case WEEK:
-			earliestRecommendedAgeDate = DateUtils.addWeeks(dob, earliestRecommendedAgeAmount);    		
-			break;
-		case MONTH:
-			earliestRecommendedAgeDate = DateUtils.addMonths(dob, earliestRecommendedAgeAmount);    		
-			break;
-		case YEAR:
-			earliestRecommendedAgeDate = DateUtils.addYears(dob, earliestRecommendedAgeAmount);    		
-			break;
-		default:
-			break;
-		}
-	caEarliestRecommendedAgeDate.setInitialValue(earliestRecommendedAgeDate);  
-  }
-  
-  private void findLatestRecommendedAgeDate(){
-	  SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-	  Date dob = dataModel.getPatient().getDateOfBirth();
-	  int latestRecommendedAgeAmount = referenceSeriesDose.getAgeList().get(0).getLatestRecommendedAge().getAmount();
-	  Date latestRecommendedAgeDate  = new Date();
-		switch (referenceSeriesDose.getAgeList().get(0).getEarliestRecommendedAge().getType()) {
-		case DAY:
-			latestRecommendedAgeDate = DateUtils.addDays(dob, latestRecommendedAgeAmount);    		
-			break;
-		case WEEK:
-			latestRecommendedAgeDate = DateUtils.addWeeks(dob, latestRecommendedAgeAmount);    		
-			break;
-		case MONTH:
-			latestRecommendedAgeDate = DateUtils.addMonths(dob, latestRecommendedAgeAmount);    		
-			break;
-		case YEAR:
-			latestRecommendedAgeDate = DateUtils.addYears(dob, latestRecommendedAgeAmount);    		
-			break;
-		default:
-			break;
-		}
-	caLatestRecommendedAgeDate.setInitialValue(latestRecommendedAgeDate);
-	  
-  }
-  
-  private void findEarliestRecommendedIntervalDate(){
-	  SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-	  TimePeriod earliestRecommendedInterval;
-	  try{
-		 earliestRecommendedInterval =  referenceSeriesDose.getAgeList().get(0).getSeriesDose().getIntervalList().get(0).getEarliestRecommendedInterval();
-		 int earliestRecommendedIntervalAmout = earliestRecommendedInterval.getAmount();
-		 Date earliestRecommendedIntervalDate = new Date();
-		 Date patientReferenceDoseDate = new Date();
-		 try{
-			 /***
-			  * TO DO
-			  */
-			 patientReferenceDoseDate = dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered();
-		 }catch(NullPointerException np){
-			 //TO DO
-		 }
-		 switch (earliestRecommendedInterval.getType()) {
+  public Date addTimePeriodtotoDate(Date date, TimePeriod timePeriod){
+		int amount = timePeriod.getAmount();
+		TimePeriodType  type = timePeriod.getType();
+		switch (type) {
 			case DAY:
-				earliestRecommendedIntervalDate = DateUtils.addDays(patientReferenceDoseDate, earliestRecommendedIntervalAmout);    		
+	  		date = DateUtils.addDays(date, amount);    		
 				break;
 			case WEEK:
-				earliestRecommendedIntervalDate = DateUtils.addWeeks(patientReferenceDoseDate, earliestRecommendedIntervalAmout);    		
+	  		date = DateUtils.addWeeks(date, amount);    		
 				break;
 			case MONTH:
-				earliestRecommendedIntervalDate = DateUtils.addMonths(patientReferenceDoseDate, earliestRecommendedIntervalAmout);    		
+	  		date = DateUtils.addMonths(date, amount);    		
 				break;
 			case YEAR:
-				earliestRecommendedIntervalDate = DateUtils.addYears(patientReferenceDoseDate, earliestRecommendedIntervalAmout);    		
+	  		date = DateUtils.addYears(date, amount);    		
 				break;
 			default:
 				break;
 			}
+		return date;
+	}
+   
+  
+  private void findMinimumAgeDate(){
+	  TimePeriod timePeriod = referenceSeriesDose.getAgeList().get(0).getMaximumAge();
+	  Date minimumAgeDate = addTimePeriodtotoDate(dob, timePeriod);
+	  caMinimumAgeDate.setInitialValue(minimumAgeDate);
+  }
+  
+  private void findMaximumAgeDate(){
+	  TimePeriod timePeriod = referenceSeriesDose.getAgeList().get(0).getMaximumAge();
+	  Date maximumAgeDate = addTimePeriodtotoDate(dob, timePeriod);
+	  caMaximumAgeDate.setInitialValue(maximumAgeDate);
+  }
+  
+  private void findEarliestRecommendedAgeDate(){
+	  TimePeriod timePeriod = referenceSeriesDose.getAgeList().get(0).getEarliestRecommendedAge();
+	  Date earliestRecommendedAgeDate = addTimePeriodtotoDate(dob, timePeriod);
+	  caEarliestRecommendedAgeDate.setInitialValue(earliestRecommendedAgeDate);  
+  }
+  
+  private void findLatestRecommendedAgeDate(){
+	  TimePeriod timePeriod = referenceSeriesDose.getAgeList().get(0).getLatestRecommendedAge();
+	  Date latestRecommendedAgeDate  = addTimePeriodtotoDate(dob, timePeriod);
+	  caLatestRecommendedAgeDate.setInitialValue(latestRecommendedAgeDate);
+	  
+  }
+  
+  private Date computePatientReferenceDoseDate(){
+	  Date tmppatientReferenceDoseDate =  new Date();
+//	  try{
+//		  	  AntigenAdministeredRecord prevAar = dataModel.getPreviousAntigenAdministeredRecord();
+//	  //System.err.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@ prevAar : "+prevAar.toString());
+//	  VaccineDoseAdministered prevVacine = prevAar.getVaccineDoseAdministered();
+//	  System.err.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@ prevVaccine_AntigenName : "+prevVacine.getAntigenAssigned().getName());
+//	  }catch(NullPointerException p){
+//		  p.printStackTrace();
+//	  }
+//
+////	  System.err.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@ EvaluationMapSize : "+prevVacine.getEvaluationMap().size());
+//	  //Date tmpPtientReferenceDoseDate1 = new Date();
+//	  /*try{
+//			 /***
+//			  * TO DO
+//			  */
+//			// tmpPtientReferenceDoseDate1 = dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered();
+//		// }catch(NullPointerException np){
+//			 //TO DO
+//		// }
+  
+	  return tmppatientReferenceDoseDate;
+  }
+  
+  
+  private void findEarliestRecommendedIntervalDate(){
+	  TimePeriod earliestRecommendedInterval;
+	  try{
+		 earliestRecommendedInterval =  referenceSeriesDose.getAgeList().get(0).getSeriesDose().getIntervalList().get(0).getEarliestRecommendedInterval();
+		 Date earliestRecommendedIntervalDate = new Date();
+		 earliestRecommendedIntervalDate = addTimePeriodtotoDate(patientReferenceDoseDate, earliestRecommendedInterval);
 		 caEarliestRecommendedIntervalDate.setInitialValue(earliestRecommendedIntervalDate);
 	  }catch(NullPointerException np){
 		  ////System.err.println("earliestRecommendedInterval is null");
@@ -175,37 +132,12 @@ public class GenerateForecastDates extends LogicStep {
   
   
   private void findLatestRecommendedIntervalDate(){
-	  SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
 	  TimePeriod latestRecommendedInterval;
 	  try{
 		 latestRecommendedInterval =  referenceSeriesDose.getAgeList().get(0).getSeriesDose().getIntervalList().get(0).getLatestRecommendedInterval();
-		 int latestRecommendedIntervalAmout = latestRecommendedInterval.getAmount();
 		 Date latestRecommendedIntervalDate = new Date();
-		 Date patientReferenceDoseDate = new Date();
-		 try{
-			 /***
-			  * TO DO
-			  */
-			 patientReferenceDoseDate = dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered();
-		 }catch(NullPointerException np){
-			 ////System.err.println("Patient reference dose date is NULL");
-		 }
-		 switch (latestRecommendedInterval.getType()) {
-			case DAY:
-				latestRecommendedIntervalDate = DateUtils.addDays(patientReferenceDoseDate, latestRecommendedIntervalAmout);    		
-				break;
-			case WEEK:
-				latestRecommendedIntervalDate = DateUtils.addWeeks(patientReferenceDoseDate, latestRecommendedIntervalAmout);    		
-				break;
-			case MONTH:
-				latestRecommendedIntervalDate = DateUtils.addMonths(patientReferenceDoseDate, latestRecommendedIntervalAmout);    		
-				break;
-			case YEAR:
-				latestRecommendedIntervalDate = DateUtils.addYears(patientReferenceDoseDate, latestRecommendedIntervalAmout);    		
-				break;
-			default:
-				break;
-			}
+		 //Date patientReferenceDoseDate = new Date();
+		 latestRecommendedIntervalDate = addTimePeriodtotoDate(patientReferenceDoseDate, latestRecommendedInterval);
 		 caLatestRecommendedIntervalDate.setInitialValue(latestRecommendedIntervalDate);
 	  }catch(NullPointerException np){
 		  ////System.err.println("latestRecommendedInterval is null");
@@ -213,41 +145,16 @@ public class GenerateForecastDates extends LogicStep {
   }
   
   private void findMinimalIntervalDate(){
-	  SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
 	  TimePeriod minimalInterval;
 	  try{
 		 minimalInterval =  referenceSeriesDose.getAgeList().get(0).getSeriesDose().getIntervalList().get(0).getMinimumInterval();
-		 int minimalIntervalAmout = minimalInterval.getAmount();
 		 Date minimalIntervalDate = new Date();
-		 Date patientReferenceDoseDate = new Date();
-		 try{
-			 /***
-			  * TO DO
-			  */
-			 patientReferenceDoseDate = dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered();
-		 }catch(NullPointerException np){
-			 ////System.err.println("Patient reference dose date is NULL");
-			 //////System.err.println(np.getStackTrace());
-		 }
-		 switch (minimalInterval.getType()) {
-			case DAY:
-				minimalIntervalDate = DateUtils.addDays(patientReferenceDoseDate, minimalIntervalAmout);    		
-				break;
-			case WEEK:
-				minimalIntervalDate = DateUtils.addWeeks(patientReferenceDoseDate, minimalIntervalAmout);    		
-				break;
-			case MONTH:
-				minimalIntervalDate = DateUtils.addMonths(patientReferenceDoseDate, minimalIntervalAmout);    		
-				break;
-			case YEAR:
-				minimalIntervalDate = DateUtils.addYears(patientReferenceDoseDate, minimalIntervalAmout);    		
-				break;
-			default:
-				break;
-			}
+		 Date patientReferenceDoseDate = new Date();		
+		 minimalIntervalDate = addTimePeriodtotoDate(patientReferenceDoseDate, minimalInterval);
+		 System.out.println("minimalInterval "+minimalInterval);
 		 caMinimumIntervalDate.setInitialValue(minimalIntervalDate);
 	  }catch(NullPointerException np){
-		  ////System.err.println("MinimumIntervalDate is null");
+		  System.err.println("MinimumIntervalDate is null");
 	  }	  
   }
   private void findLatestConflictEndIntervalDate(){
@@ -271,7 +178,7 @@ public class GenerateForecastDates extends LogicStep {
 	    
   }
   
-  int size = dataModel.getForecastList().size();
+  int size = dataModel.getVaccineGroupForcastList().size();
 
   public GenerateForecastDates(DataModel dataModel) {
     super(LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMEND_VACCINES, dataModel);
@@ -324,7 +231,6 @@ public class GenerateForecastDates extends LogicStep {
 	  Forecast forecast = new Forecast();
 	  forecast.setAntigen(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
 	  forecast.setTargetDose(dataModel.getTargetDose());
-	  forecast.setVaccineGroupForecast(null); // todo do we create the vaccine group forecast now? or later? 
 	  generateForcastDates(forecast);
 	  
 	  Antigen newAntigenForeCast = forecast.getAntigen();
@@ -336,7 +242,7 @@ public class GenerateForecastDates extends LogicStep {
     }
     
     if(!antigenFromForcastList.contains(newAntigenForeCast)){
-    	 dataModel.getForecastList().add(forecast);
+      forecastList.add(forecast);
     }
 
     setNextLogicStepType(LogicStepType.FOR_EACH_PATIENT_SERIES);
@@ -451,8 +357,8 @@ public class GenerateForecastDates extends LogicStep {
 			 if(biggeestAmout!=0 || patientReferenceDoseDate!=null){
 				 unadjustedRecommandedDate = DateUtils.addDays(patientReferenceDoseDate, biggeestAmout);
 			 }else{
-				 if(dataModel.getForecastList().size()>0){
-					 Forecast forecast = dataModel.getForecastList().get(dataModel.getForecastList().size()-1);
+				 if(dataModel.getVaccineGroupForcastList().size()>0){
+					 Forecast forecast = dataModel.getVaccineGroupForcastList().get(dataModel.getVaccineGroupForcastList().size()-1);
 					 unadjustedRecommandedDate = forecast.getEarliestDate();
 				 } 
 			 }	 

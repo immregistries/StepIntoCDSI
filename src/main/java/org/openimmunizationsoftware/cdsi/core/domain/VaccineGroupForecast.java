@@ -7,7 +7,14 @@ public class VaccineGroupForecast extends Forecast {
   private List<Antigen> antigensNeededList = new ArrayList<Antigen>();
   private VaccineGroupStatus vaccineGroupStatus = null;
   private List<Forecast> forecastList = new ArrayList<Forecast>();
+  private VaccineGroup vaccineGroup = null;
   
+  public VaccineGroup getVaccineGroup() {
+    return vaccineGroup;
+  }
+  public void setVaccineGroup(VaccineGroup vaccineGroup) {
+    this.vaccineGroup = vaccineGroup;
+  }
   public List<Forecast> getForecastList() {
     return forecastList;
   }

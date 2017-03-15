@@ -4,12 +4,8 @@ import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
 
 import java.io.PrintWriter;
-import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
-import org.openimmunizationsoftware.cdsi.core.domain.RequiredGender;
-import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
@@ -23,22 +19,12 @@ public class ClassifyVaccineGroup extends LogicStep
   public ClassifyVaccineGroup(DataModel dataModel)
   {
     super(LogicStepType.CLASSIFY_VACCINE_GROUP, dataModel);
-    setConditionTableName("Table ");
-    // caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
-   // caTriggerAgeDate.setAssumedValue(FUTURE);
-//    conditionAttributesList.add(caDateAdministered);
-  	for (VaccineGroupForecast vaccGpeFor : dataModel.getVaccineGroupForcastList()){
-  	    LT logicTable = new LT();
-  		logicTable.vaccineGroupForecast = vaccGpeFor;
-  		logicTableList.add(logicTable);
-
-  	}
+    LT logicTable = new LT();
+    logicTableList.add(logicTable);
   }
 
   @Override
   public LogicStep process() throws Exception {
-   // setNextLogicStepType(LogicStepType.MULTIPLE_ANTIGEN_VACCINE_GROUP);
-   //setNextLogicStepType(LogicStepType.SINGLE_ANTIGEN_VACCINE_GROUP);
   	evaluateLogicTables();
     return next();
   }
@@ -63,16 +49,14 @@ public class ClassifyVaccineGroup extends LogicStep
 
   private class LT extends LogicTable
   {
-	  public VaccineGroupForecast vaccineGroupForecast;
 	  public LT() {
 	      super(1, 2, "TABLE 7 - 2 WHAT IS THE VACCINE GROUP TYPE?");
 
 	      setLogicCondition(0, new LogicCondition("Does the vaccine group contain exactly 1 antigen?"){
 	            public LogicResult evaluateInternal() {
-	            		if (vaccineGroupForecast.getVaccineGroupForecast().getAntigensNeededList().size() == 1){
+	            		if (dataModel.getVaccineGroup().getAntigenList().size() == 1){
 	            			return LogicResult.YES;
 	            		}
-	            	
 	            	return LogicResult.NO;
 	            }
 	      });

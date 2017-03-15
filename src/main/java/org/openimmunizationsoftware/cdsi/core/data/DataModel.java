@@ -58,7 +58,43 @@ private Map<String, VaccineGroup> vaccineGroupMap = new HashMap<String, VaccineG
   private PatientSeries patientSeries = null;
   private List<Forecast> forecastList = new ArrayList<Forecast>(); 
   private List<VaccineGroupForecast> vaccineGroupForcastList = new ArrayList<VaccineGroupForecast>();
+  private VaccineGroup vaccineGroup;
+  private List<VaccineGroup> vaccineGroupList;
+  private int vaccineGroupPos = -1;
   
+  public void incVaccineGroupPos()
+  {
+    vaccineGroupPos++;
+  }
+  
+  public VaccineGroup getVaccineGroup() {
+    return vaccineGroup;
+  }
+
+  public void setVaccineGroup(VaccineGroup vaccineGroup) {
+    this.vaccineGroup = vaccineGroup;
+  }
+
+  public List<VaccineGroup> getVaccineGroupList() {
+    if (vaccineGroupList == null)
+    {
+      vaccineGroupList = new ArrayList<VaccineGroup> (vaccineGroupMap.values());
+    }
+    return vaccineGroupList;
+  }
+
+  public void setVaccineGroupList(List<VaccineGroup> vaccineGroupList) {
+    this.vaccineGroupList = vaccineGroupList;
+  }
+
+  public int getVaccineGroupPos() {
+    return vaccineGroupPos;
+  }
+
+  public void setVaccineGroupPos(int vaccineGroupPos) {
+    this.vaccineGroupPos = vaccineGroupPos;
+  }
+
   public List<Forecast> getForecastList() {
     return forecastList;
   }
