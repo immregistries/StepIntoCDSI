@@ -28,7 +28,7 @@ public class ClassifyPatientSeries extends LogicStep
   public ClassifyPatientSeries(DataModel dataModel)
   {
     super(LogicStepType.CLASSIFY_PATIENT_SERIES, dataModel);
-    setConditionTableName("Table ");
+    //setConditionTableName("Table ");
     
     // caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
     
@@ -45,6 +45,7 @@ public class ClassifyPatientSeries extends LogicStep
     setNextLogicStepType(LogicStepType.COMPLETE_PATIENT_SERIES);
     setNextLogicStepType(LogicStepType.IN_PROCESS_PATIENT_SERIES);
     setNextLogicStepType(LogicStepType.NO_VALID_DOSES);
+    evaluateLogicTables();
     return next();
   }
 
@@ -62,7 +63,7 @@ public class ClassifyPatientSeries extends LogicStep
     out.println("<h1> " + getTitle() + "</h1>");
     out.println("<p>Classify  patient series  is an attempt to reduce  the total number of  patient series  to only those  which have  a chance to be selected as the best patient series.</p>");
 
-    printConditionAttributesTable(out);
+    //printConditionAttributesTable(out);
     printLogicTables(out);
   }
 
@@ -79,8 +80,10 @@ public class ClassifyPatientSeries extends LogicStep
 				int completePatientSeries = 0;
 				List<PatientSeries> patientSeriesList  = dataModel.getPatientSeriesList();
 				for(PatientSeries patientSeries:patientSeriesList){
-					if(patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)){
-						completePatientSeries ++;
+					if(patientSeries!=null){
+						if(patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)){
+							completePatientSeries ++;
+						}
 					}
 				}
 				if(completePatientSeries>1){
@@ -100,8 +103,10 @@ public class ClassifyPatientSeries extends LogicStep
 				int inProcessPatientSeries = 0;
 				List<PatientSeries> patientSeriesList  = dataModel.getPatientSeriesList();
 				for(PatientSeries patientSeries:patientSeriesList){
-					if(patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)){
-						completePatientSeries ++;
+					if(patientSeries!=null){
+						if(patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)){
+							completePatientSeries ++;
+						}
 					}
 				}
 				
@@ -113,9 +118,11 @@ public class ClassifyPatientSeries extends LogicStep
 				
 				List<TargetDose> targetDoseList = dataModel.getTargetDoseList();
 				for(TargetDose targetDose:targetDoseList){
-					if(targetDose.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)){
+					if(targetDose.getTargetDoseStatus()!=null){
+						if(targetDose.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)){
 							String antigenSeriesName1 = targetDose.getTrackedSeriesDose().getAntigenSeries().getSeriesName();
 							antigenSerieNameWithASatisfiedTargetDose.add(antigenSeriesName1);
+						}
 					}
 				}
 				
@@ -123,10 +130,13 @@ public class ClassifyPatientSeries extends LogicStep
 				
 				List<PatientSeries> ps2 = dataModel.getPatientSeriesList();
 				for(PatientSeries ps:ps2 ){
-					if(ps.getPatientSeriesStatus().equals(PatientSeriesStatus.NOT_COMPLETE)){
-						String antigenSeriesName2  =  ps.getTrackedAntigenSeries().getSeriesName();
-						antigenSerieNameWithANotCompletePatientSerieStatus.add(antigenSeriesName2);
+					if(ps!=null){
+						if(ps.getPatientSeriesStatus().equals(PatientSeriesStatus.NOT_COMPLETE)){
+							String antigenSeriesName2  =  ps.getTrackedAntigenSeries().getSeriesName();
+							antigenSerieNameWithANotCompletePatientSerieStatus.add(antigenSeriesName2);
+						}
 					}
+					
 				}
 				
 				antigenSerieNameWithANotCompletePatientSerieStatus.retainAll(new HashSet<String> (antigenSerieNameWithASatisfiedTargetDose));
@@ -150,8 +160,10 @@ public class ClassifyPatientSeries extends LogicStep
 				List<TargetDose> targetDoseList = dataModel.getTargetDoseList();
 				boolean isThereAVlidDose = false;
 				for(TargetDose targetDose:targetDoseList){
-					if(targetDose.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)){
-						isThereAVlidDose=true;
+					if(targetDose.getTargetDoseStatus()!=null){
+						if(targetDose.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)){
+							isThereAVlidDose=true;
+						}
 					}
 				}
 				if(!isThereAVlidDose){

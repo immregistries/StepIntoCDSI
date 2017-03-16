@@ -29,7 +29,7 @@ public class OneBestPatientSeries extends LogicStep
   public OneBestPatientSeries(DataModel dataModel)
   {
     super(LogicStepType.ONE_BEST_PATIENT_SERIES, dataModel);
-    setConditionTableName("Table ");
+    //setConditionTableName("Table ");
     
     // caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
     
@@ -45,6 +45,7 @@ public class OneBestPatientSeries extends LogicStep
   public LogicStep process() throws Exception {
     setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
     setNextLogicStepType(LogicStepType.CLASSIFY_PATIENT_SERIES);
+    evaluateLogicTables();
     return next();
   }
 
@@ -62,7 +63,7 @@ public class OneBestPatientSeries extends LogicStep
     out.println("<h1> " + getTitle() + "</h1>");
     out.println("<p>One best patient series  examines all of the  patient series  for a given antigen to determine if one of the  patient series is superior to all other patient series and can be considered the best patient series.</p>");
 
-    printConditionAttributesTable(out);
+    //printConditionAttributesTable(out);
     printLogicTables(out);
   }
 
@@ -75,12 +76,11 @@ public class OneBestPatientSeries extends LogicStep
 			@Override
 			protected LogicResult evaluateInternal() {
 				int numberOfPatientSeries = 0;
-				List<AntigenSeries> asl = dataModel.getAntigenSeriesSelectedList();
-				for(AntigenSeries as: asl){
-					boolean isDefaultSeries = as.getSelectBestPatientSeries().getDefaultSeries().equals(YES);
-					if(isDefaultSeries){
+				for(TargetDose targetDose:dataModel.getTargetDoseList()){
+					if(targetDose.getTrackedSeriesDose().getAntigenSeries().getSelectBestPatientSeries()!=null){
 						numberOfPatientSeries++;
 					}
+					
 				}
 				if(numberOfPatientSeries==1){
 					return LogicResult.YES;
@@ -130,20 +130,25 @@ public class OneBestPatientSeries extends LogicStep
 				
 				List<TargetDose> targetDoseList = dataModel.getTargetDoseList();
 				for(TargetDose targetDose:targetDoseList){
-					if(targetDose.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)){
-							String antigenSeriesName1 = targetDose.getTrackedSeriesDose().getAntigenSeries().getSeriesName();
-							antigenSerieNameWithASatisfiedTargetDose.add(antigenSeriesName1);
-					}
+						if(targetDose.getTargetDoseStatus()!=null){
+							if(targetDose.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)){
+								String antigenSeriesName1 = targetDose.getTrackedSeriesDose().getAntigenSeries().getSeriesName();
+								antigenSerieNameWithASatisfiedTargetDose.add(antigenSeriesName1);
+							}
+						}
 				}
 				
 				List<String> antigenSerieNameWithANotCompletePatientSerieStatus = new ArrayList<String>();
 				
 				List<PatientSeries> ps2 = dataModel.getPatientSeriesList();
 				for(PatientSeries ps:ps2 ){
-					if(ps.getPatientSeriesStatus().equals(PatientSeriesStatus.NOT_COMPLETE)){
-						String antigenSeriesName2  =  ps.getTrackedAntigenSeries().getSeriesName();
-						antigenSerieNameWithANotCompletePatientSerieStatus.add(antigenSeriesName2);
+					if(ps.getPatientSeriesStatus()!=null){
+						if(ps.getPatientSeriesStatus().equals(PatientSeriesStatus.NOT_COMPLETE)){
+							String antigenSeriesName2  =  ps.getTrackedAntigenSeries().getSeriesName();
+							antigenSerieNameWithANotCompletePatientSerieStatus.add(antigenSeriesName2);
+						}
 					}
+					
 				}
 				
 				antigenSerieNameWithANotCompletePatientSerieStatus.retainAll(new HashSet<String> (antigenSerieNameWithASatisfiedTargetDose));
@@ -166,19 +171,25 @@ public class OneBestPatientSeries extends LogicStep
 				int numberOfDefaultPatientSeries = 0;
 				List<AntigenSeries> asl = dataModel.getAntigenSeriesSelectedList();
 				for(AntigenSeries as: asl){
-					boolean isDefaultSeries = as.getSelectBestPatientSeries().getDefaultSeries().equals(YES);
-					if(isDefaultSeries){
-						numberOfDefaultPatientSeries ++;
+					if(as.getSelectBestPatientSeries().getDefaultSeries()!=null){
+						boolean isDefaultSeries = as.getSelectBestPatientSeries().getDefaultSeries().equals(YES);
+						if(isDefaultSeries){
+							numberOfDefaultPatientSeries ++;
+						}
 					}
+
 				}
 				//System.err.println("VALID DOSE ??????????????????????????????");
 				//A valid dose is a dose with 
 				List<TargetDose> targetDoseList = dataModel.getTargetDoseList();
 				boolean isThereAVlidDose = false;
 				for(TargetDose targetDose:targetDoseList){
-					if(targetDose.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)){
-						isThereAVlidDose=true;
+					if(targetDose.getTargetDoseStatus()!=null){
+						if(targetDose.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)){
+							isThereAVlidDose=true;
+						}
 					}
+					
 				}
 				if(!isThereAVlidDose && numberOfDefaultPatientSeries==1){
 					return LogicResult.YES;
