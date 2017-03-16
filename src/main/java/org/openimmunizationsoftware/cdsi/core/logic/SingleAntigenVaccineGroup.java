@@ -47,7 +47,6 @@ public class SingleAntigenVaccineGroup extends LogicStep
         vgf.setVaccineGroupStatus(getBestPatientSeries().getPatientSeriesStatus());
         // SINGLEANTVG-2   The vaccine group forecast earliest date for a single antigen vaccine group must be the best patient series forecast earliest date.
         vgf.setEarliestDate(forecast.getEarliestDate());
-
         // SINGLEANTVG-3   The vaccine group forecast adjusted recommended date for a single antigen vaccine group must be the best patient series forecast adjusted recommended date.
         vgf.setAdjustedRecommendedDate(forecast.getAdjustedRecommendedDate());
 

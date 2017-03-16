@@ -69,7 +69,7 @@ public class EvaluateLiveVirusConflict extends LogicStep {
         	    LT422 lt = new LT422();
         	    lt.caConflictBeginIntervalDate = new ConditionAttribute<Date>("Calculated date (CALCDTLIVE-1)",
         	            "Conflict Begin Interval Date");
-        	        lt.caConflictEndIntervalDate = new ConditionAttribute<Date>("Calculated date(CALCDTLIVE-2 & CALCDTLIVE-3",
+        	        lt.caConflictEndIntervalDate = new ConditionAttribute<Date>("Calculated date(CALCDTLIVE-2 & CALCDTLIVE-3)",
         	            "Conflict End Interval Date");
 
         	        conditionAttributesList.add(lt.caConflictBeginIntervalDate);
@@ -136,6 +136,7 @@ public class EvaluateLiveVirusConflict extends LogicStep {
         @Override
         protected LogicResult evaluateInternal() {
           for (LiveVirusConflict liveVirusConflict : dataModel.getLiveVirusConflictList()) {
+        	 // System.out.println("///////"+caCurrentVaccineType.getFinalValue());//liveVirusConflict.getCurrentVaccineType()+
             if (liveVirusConflict.getCurrentVaccineType().equals(caCurrentVaccineType.getFinalValue())) {
               return YES;
             }

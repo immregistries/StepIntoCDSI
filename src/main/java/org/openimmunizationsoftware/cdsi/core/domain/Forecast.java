@@ -14,6 +14,7 @@ public class Forecast {
   private Date assessmentDate = null;
   private Antigen antigen = null;
   private TargetDose targetDose = null;
+  private boolean bestPatientSeries = false;
   
   public TargetDose getTargetDose() {
     return targetDose;
@@ -81,5 +82,11 @@ public class Forecast {
   public void setAssessmentDate(Date assessmentDate) {
     this.assessmentDate = assessmentDate;
   }
+public boolean isBestPatientSeries() {
+	return bestPatientSeries;
+}
+public void setBestPatientSeries(boolean bestPatientSeries) {
+	this.bestPatientSeries = bestPatientSeries;
+}
   
 }

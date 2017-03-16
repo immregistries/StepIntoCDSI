@@ -220,6 +220,7 @@ public class OneBestPatientSeries extends LogicStep
 			public void perform() {
 				// TODO Auto-generated method stub
 				log("Yes. The lone complete patient series is the best patient series");
+				
 			}
 		});
     	
