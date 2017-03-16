@@ -135,9 +135,7 @@ public class EvaluateLiveVirusConflict extends LogicStep {
           "Is the current vaccine type of the vaccine dose administered one of the supporting data defined live virus conflict current vaccine types?") {
         @Override
         protected LogicResult evaluateInternal() {
-        	System.out.println(dataModel.getLiveVirusConflictList().size()+"nnn"+caCurrentVaccineType.getFinalValue());
           for (LiveVirusConflict liveVirusConflict : dataModel.getLiveVirusConflictList()) {
-        	  System.out.println(liveVirusConflict.getCurrentVaccineType());
             if (liveVirusConflict.getCurrentVaccineType().equals(caCurrentVaccineType.getFinalValue())) {
               return YES;
             }
@@ -256,7 +254,6 @@ public class EvaluateLiveVirusConflict extends LogicStep {
 	  public void setIntervalDate(AntigenAdministeredRecord vaccineAdministered){
 		  System.out.println(dataModel.getLiveVirusConflictList().size());
 	        for (LiveVirusConflict liveVirusConflict : dataModel.getLiveVirusConflictList()) {
-	        	System.out.println(liveVirusConflict.getCurrentVaccineType());
 	            if (liveVirusConflict.getCurrentVaccineType().equals(caCurrentVaccineType.getFinalValue())) {
 	            	   //caConflictBeginIntervalDate.setInitialValue(vaccineAdministered.getDateAdministered()+liveVirusConflict.getConflictBeginInterval().getAmount());
 	        	       //caConflictEndIntervalDate.setInitialValue(CALCDTLIVE_2.evaluate(dataModel, this, null));

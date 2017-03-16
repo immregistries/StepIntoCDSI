@@ -3,6 +3,9 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.time.DateUtils;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
+
 public class VaccineGroupForecast extends Forecast {
   private List<Antigen> antigensNeededList = new ArrayList<Antigen>();
   private VaccineGroupStatus vaccineGroupStatus = null;
@@ -32,5 +35,32 @@ public class VaccineGroupForecast extends Forecast {
   }
   public void setVaccineGroupStatus(VaccineGroupStatus vaccineGroupStatus) {
     this.vaccineGroupStatus = vaccineGroupStatus;
-  }
+  } 
+
+public void setVaccineGroupStatus(PatientSeriesStatus patientSeriesStatus) {
+	// TODO Auto-generated method stub
+	
+	switch (patientSeriesStatus) {
+	case COMPLETE:
+		setVaccineGroupStatus(VaccineGroupStatus.COMPLETE);
+		break;
+	case CONTRAINDICATED:
+		setVaccineGroupStatus(VaccineGroupStatus.CONTRAINDICATED);
+  		break;
+	case IMMUNE:
+		setVaccineGroupStatus(VaccineGroupStatus.IMMUNE);
+		break;
+	case NOT_COMPLETE:
+		setVaccineGroupStatus(VaccineGroupStatus.NOT_COMPLETE);
+		break;
+	case NOT_RECOMMENDED:
+		setVaccineGroupStatus(VaccineGroupStatus.NOT_RECOMMENDED);
+		break;
+	case AGED_OUT:
+		setVaccineGroupStatus(VaccineGroupStatus.AGED_OUT);
+		break;
+	default:
+		break;
+	}
+}
 }

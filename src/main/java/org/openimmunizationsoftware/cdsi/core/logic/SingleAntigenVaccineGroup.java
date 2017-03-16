@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
+import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
@@ -43,23 +44,28 @@ public class SingleAntigenVaccineGroup extends LogicStep
       {
         // SINGLEANTVG-1    The vaccine group status for a single antigen vaccine group must be the patient series status of the best patient series.
         
-        
+        vgf.setVaccineGroupStatus(getBestPatientSeries().getPatientSeriesStatus());
         // SINGLEANTVG-2   The vaccine group forecast earliest date for a single antigen vaccine group must be the best patient series forecast earliest date.
         vgf.setEarliestDate(forecast.getEarliestDate());
 
         // SINGLEANTVG-3   The vaccine group forecast adjusted recommended date for a single antigen vaccine group must be the best patient series forecast adjusted recommended date.
-        // SINGLEANTVG-4   The vaccine group forecast adjusted past due date for a single antigen vaccine group must be the best patient series forecast adjusted past due date.
-        // SINGLEANTVG-5   The vaccine group forecast latest date for a single antigen vaccine group must be the best patient series forecast latest date.
-        // SINGLEANTVG-6   The vaccine group forecast unadjusted recommended date for a single antigen vaccine group must be the best patient series forecast unadjusted recommended date.
-        // SINGLEANTVG-7   The vaccine group forecast unadjusted past due date for a single antigen vaccine group must be the best patient series forecast unadjusted past due date.
-        // SINGLEANTVG-8   The vaccine group forecast reason for a single antigen vaccine group must be set the best patient series forecast reason.
-        // SINGLEANTVG-9   The vaccine group forecast antigens needed for a single antigen vaccine group must be the best patient series target disease.
-        // SINGLEANTVG-10  The vaccine group forecast recommended vaccines for a single antigen vaccine group must be the best patient series forecast recommended vaccines.
-
-        vgf.setAntigen(forecast.getAntigen());
         vgf.setAdjustedRecommendedDate(forecast.getAdjustedRecommendedDate());
+
+        // SINGLEANTVG-4   The vaccine group forecast adjusted past due date for a single antigen vaccine group must be the best patient series forecast adjusted past due date.
+       vgf.setAdjustedPastDueDate(forecast.getAdjustedPastDueDate());
+        // SINGLEANTVG-5   The vaccine group forecast latest date for a single antigen vaccine group must be the best patient series forecast latest date.
+        vgf.setLatestDate(forecast.getLatestDate());
+       // SINGLEANTVG-6   The vaccine group forecast unadjusted recommended date for a single antigen vaccine group must be the best patient series forecast unadjusted recommended date.
         vgf.setUnadjustedRecommendedDate(forecast.getUnadjustedRecommendedDate());
+        // SINGLEANTVG-7   The vaccine group forecast unadjusted past due date for a single antigen vaccine group must be the best patient series forecast unadjusted past due date.
+        vgf.setUnadjustedPastDueDate(forecast.getUnadjustedPastDueDate());
+        // SINGLEANTVG-8   The vaccine group forecast reason for a single antigen vaccine group must be set the best patient series forecast reason.
         vgf.setForecastReason(forecast.getForecastReason());
+        // SINGLEANTVG-9   The vaccine group forecast antigens needed for a single antigen vaccine group must be the best patient series target disease.
+        //vgf.setAntigensNeededList(forecast.getAntigen());
+        // SINGLEANTVG-10  The vaccine group forecast recommended vaccines for a single antigen vaccine group must be the best patient series forecast recommended vaccines.
+        //
+        vgf.setAntigen(forecast.getAntigen());
       }
     }
     dataModel.getVaccineGroupForcastList().add(vgf);
@@ -73,6 +79,19 @@ public class SingleAntigenVaccineGroup extends LogicStep
     printStandard(out);
   }
 
+  public PatientSeries getBestPatientSeries(){
+	  if (dataModel.getPatientSeriesList().size() > 0){
+		  PatientSeries bestPatientSeries = dataModel.getPatientSeriesList().get(0);
+		  for (PatientSeries ps : dataModel.getPatientSeriesList()){
+			  if (ps.getScorePatientSerie()>bestPatientSeries.getScorePatientSerie())
+				  bestPatientSeries=ps;
+		  }
+		  return bestPatientSeries; 
+	  }else{
+		  return null;
+	  }
+  }
+  
   @Override
   public void printPost(PrintWriter out) throws Exception {
     printStandard(out);
