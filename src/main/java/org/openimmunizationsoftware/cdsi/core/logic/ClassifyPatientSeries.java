@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
@@ -183,31 +184,34 @@ public class ClassifyPatientSeries extends LogicStep
     	setLogicOutcome(0, new LogicOutcome() {
 			
 			@Override
-			public void perform() {
-				// TODO Auto-generated method stub
-				log("Apply complete patient series scoring business rules to all complete patient series. Inprocess patient series and patient series with 0 valid doses are not scored and dropped from consideration.");	
+			public void perform() {	  
+				log("Apply complete patient series scoring business rules to all complete patient series. Inprocess patient series and patient series with 0 valid doses are not scored and dropped from consideration");
+			    setNextLogicStepType(LogicStepType.COMPLETE_PATIENT_SERIES);
+
 			}
 		});
     	
     	setLogicOutcome(1, new LogicOutcome() {
 			
 			@Override
-			public void perform() {
-				// TODO Auto-generated method stub
+			public void perform() {	  
 				log("Apply in-process patient series scoring business rules to all in-process patient series. Patient Series with 0 valid doses are not scored and dropped from consideration.");
-				
+			    setNextLogicStepType(LogicStepType.IN_PROCESS_PATIENT_SERIES);
+
 			}
 		});
     	
     	setLogicOutcome(2, new LogicOutcome() {
 			
 			@Override
-			public void perform() {
-				// TODO Auto-generated method stub
-				log("Apply no valid doses scoring business rules to all patient series");
-				
+			public void perform() {	  
+				log("Apply no valid doses scoring business rules to all patient series.");
+			    setNextLogicStepType(LogicStepType.NO_VALID_DOSES);
+
 			}
 		});
+    	
+ 
     	
     	
 

@@ -15,14 +15,6 @@ public class InProcessPatientSeries extends LogicStep
     super(LogicStepType.IN_PROCESS_PATIENT_SERIES, dataModel);
     setConditionTableName("Table ");
     
-    // caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
-    
-   // caTriggerAgeDate.setAssumedValue(FUTURE);
-    
-//    conditionAttributesList.add(caDateAdministered);
-    
-    LT logicTable = new LT();
-    logicTableList.add(logicTable);
   }
 
   @Override
@@ -44,42 +36,61 @@ public class InProcessPatientSeries extends LogicStep
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + getTitle() + "</h1>");
     out.println("<p>In-process  patient series provides the decision table for determining the number of points to assign to an  inprocess patient series based on a specified condition.</p>");
-
-    printConditionAttributesTable(out);
-    printLogicTables(out);
+    printTable(out);
   }
+  
+  private void printTable(PrintWriter out){
+	  out.println("<table BORDER=\"1\"> ");
+	  out.println("  <tr> ");
+	  out.println(" <th> Conditions </th> ");
+	  out.println(" <th> If this condition is true for the candidate patient series </th> ");
+	  out.println(" <th>If this condition is true for two or more candidate patient series </th> ");
+	  out.println(" <th>If this condition is not true for the candidate patient serie </th> ");
+	  out.println("  </tr> ");
+	  out.println("  <tr> ");
+	  out.println(" <td >A candidate patient series is a product patient series and has all valid doses </th> ");
+	  out.println(" <td align=\"center\"> +2</td> ");
+	  out.println(" <td align=\"center\"> 0</td> ");
+	  out.println(" <td align=\"center\"> -2 </td> ");
+	  out.println("  </tr> ");
+	  out.println("<tr> ");
+	  out.println(" <td>A candidate patient series is completable.</th> ");
+	  out.println(" <td align=\"center\"> +3</td> ");
+	  out.println(" <td align=\"center\"> n/a</td> ");
+	  out.println(" <td align=\"center\"> -3 </td> ");
+	  out.println("  </tr> ");
+	  out.println("<tr> ");
+	  out.println(" <td>A candidate patient series has the most valid doses.</th> ");
+	  out.println(" <td align=\"center\"> +2</td> ");
+	  out.println(" <td align=\"center\"> 0</td> ");
+	  out.println(" <td align=\"center\"> -2 </td> ");
+	  out.println("  </tr> ");
+	  out.println("<tr> ");
+	  out.println(" <td>A candidate patient series is closest to completion. </th> ");
+	  out.println(" <td align=\"center\"> -2</td> ");
+	  out.println(" <td align=\"center\"> n/a</td> ");
+	  out.println(" <td align=\"center\"> +2 </td> ");
+	  out.println("  </tr> ");
+	  out.println("  <tr> ");
+	  out.println(" <td>A candidate patient series can finish earliest. </th> ");
+	  out.println(" <td align=\"center\"> -1</td> ");
+	  out.println(" <td align=\"center\"> n/a</td> ");
+	  out.println(" <td align=\"center\"> +1 </td> ");
+	  out.println("  </tr> ");
+	  out.println("<tr> ");
+	  out.println(" <td>A candidate patient series exceeded maximum age to start. </th> ");
+	  out.println(" <td align=\"center\"> -1</td> ");
+	  out.println(" <td align=\"center\"> n/a</td> ");
+	  out.println(" <td align=\"center\"> +1 </td> ");
+	  out.println("  </tr> ");
+	  out.println("</table>");
+	  }
+  
+  
+  
+  
 
-  private class LT extends LogicTable
-  {
-    public LT() {
-      super(0, 0, "Table ?-?");
-
-      //      setLogicCondition(0, new LogicCondition("date administered > lot expiration date?") {
-      //        @Override
-      //        public LogicResult evaluateInternal() {
-      //          if (caDateAdministered.getFinalValue() == null || caTriggerAgeDate.getFinalValue() == null) {
-      //            return LogicResult.NO;
-      //          }
-      //          if (caDateAdministered.getFinalValue().before(caTriggerAgeDate.getFinalValue())) {
-      //            return LogicResult.YES;
-      //          }
-      //          return LogicResult.NO;
-      //        }
-      //      });
-
-      //      setLogicResults(0, LogicResult.YES, LogicResult.NO, LogicResult.NO, LogicResult.ANY);
-
-      //      setLogicOutcome(0, new LogicOutcome() {
-      //        @Override
-      //        public void perform() {
-      //          log("No. The target dose cannot be skipped. ");
-      //          log("Setting next step: 4.3 Substitute Target Dose");
-      //          setNextLogicStep(LogicStep.SUBSTITUTE_TARGET_DOSE_FOR_EVALUATION);
-      //        }
-      //      });
-      //      
-    }
-  }
+  
 
 
 }
