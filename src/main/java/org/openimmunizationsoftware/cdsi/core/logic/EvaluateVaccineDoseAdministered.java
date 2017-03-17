@@ -60,7 +60,7 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
   private boolean gotoNextTargetDose() {
     if (dataModel.getTargetDose() == null) {
       log(" + Getting first target dose");
-      log("   zzzzzzzzz " + dataModel.getAntigenAdministeredRecordList().get(dataModel.getAntigenAdministeredRecordPos()).getAntigen() + "rrrrr" + dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
+      //log("   zzzzzzzzz " + dataModel.getAntigenAdministeredRecordList().get(dataModel.getAntigenAdministeredRecordPos()).getAntigen() + "rrrrr" + dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
       dataModel.incTargetDoseListPos();
       dataModel.setTargetDose(dataModel.getTargetDoseList().get(dataModel.getTargetDoseListPos()));
       return true;

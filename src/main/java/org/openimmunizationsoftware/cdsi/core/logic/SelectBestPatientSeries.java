@@ -68,6 +68,8 @@ public class SelectBestPatientSeries extends LogicStep {
 		out.println("<p>The process model below illustrates the major steps involved in selecting the best patient series.</p>");
 		out.println("<img src=\"Figure 6.1.png\"/>");
 		out.println("<p>FIGURE 6 - 1 SELECT BEST PATIENT SERIES PROCESS MODEL</p>");
+		
+		out.println("-->Patient series list size : "+dataModel.getPatientSeriesList().size());
 	}
 
 	@Override

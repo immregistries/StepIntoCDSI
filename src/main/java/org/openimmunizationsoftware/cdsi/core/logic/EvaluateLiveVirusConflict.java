@@ -222,7 +222,7 @@ public class EvaluateLiveVirusConflict extends LogicStep {
         }
       });
 
-      setLogicResults(0, YES);
+      setLogicResults(0, LogicResult.YES);
       setLogicResults(1, NO);
 
       setLogicOutcome(0, new LogicOutcome() {
