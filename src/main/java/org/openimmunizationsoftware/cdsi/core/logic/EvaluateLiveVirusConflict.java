@@ -61,7 +61,8 @@ public class EvaluateLiveVirusConflict extends LogicStep {
     	for (int i=dataModel.getAntigenAdministeredRecordPos()+1; i<dataModel.getAntigenAdministeredRecordList().size(); i++){
     		AntigenAdministeredRecord vaccineAdministered=dataModel.getAntigenAdministeredRecordList().get(i);
     	    LT421 logicTab = new LT421();
-    	    logicTab.caPreviousVaccineType.setInitialValue(vaccineAdministered.getVaccineType());
+            logicTab.caPreviousVaccineType= new ConditionAttribute<VaccineType>("Supporting Data (Live Virus Conflict)", "Previous Vaccine Type");
+    	    logicTab.caPreviousVaccineType.setInitialValue(vaccineAdministered.getVaccineType());    	    	
     		conditionAttributesList.add(logicTab.caPreviousVaccineType);
     	    logicTableList.add(logicTab);
     		logicTab.evaluate();
@@ -125,7 +126,7 @@ public class EvaluateLiveVirusConflict extends LogicStep {
   }
 
   private class LT420 extends LogicTable {
-	  private YesNo y420 = null;
+	  private YesNo y420 = YesNo.NO;
 	  
     public LT420() {
 
@@ -222,8 +223,8 @@ public class EvaluateLiveVirusConflict extends LogicStep {
         }
       });
 
-      setLogicResults(0, LogicResult.YES);
-      setLogicResults(1, NO);
+      setLogicResults(0, YES, NO);
+
 
       setLogicOutcome(0, new LogicOutcome() {
 
@@ -310,8 +311,7 @@ public class EvaluateLiveVirusConflict extends LogicStep {
         }
       });
 
-      setLogicResults(0, YES);
-      setLogicResults(1, NO);
+      setLogicResults(0, YES, NO);
 
       setLogicOutcome(0, new LogicOutcome() {
 
