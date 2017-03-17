@@ -40,9 +40,9 @@ public class SelectBestPatientSeries extends LogicStep {
 		out.println("<p>TABLE 6 - 1 SELECT BEST PATIENT SERIES PROCESS STEPS</p>");
 		out.println("<table>");
 		out.println("	<tr>");
-		out.println("		<td>Section</td>");
-		out.println("		<td>Activity</td>");
-		out.println("		<td>Goal</td>");
+		out.println("		<th>Section</th>");
+		out.println("		<th>Activity</th>");
+		out.println("		<th>Goal</th>");
 		out.println("	</tr>");
 		out.println("	<tr>");
 		out.println("		<td>6.2</td>");

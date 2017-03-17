@@ -276,24 +276,24 @@ public class GenerateForecastDates extends LogicStep {
   }
 
   private void insertTableRow(PrintWriter out, String BusinessRuleID, String Term, String BusinessRule) {
+	
     out.println("  <tr>");
-    out.println("    <th>" + BusinessRuleID + "</th>");
-    out.println("    <th>" + Term + "</th> ");
-    out.println("    <th>" + BusinessRule + "</th>");
+    out.println("    <td>" + BusinessRuleID + "</td>");
+    out.println("    <td>" + Term + "</td> ");
+    out.println("    <td>" + BusinessRule + "</td>");
     out.println("  </tr>");
 
   }
-
-  private void TablePre(PrintWriter out) {
-    insertTableRow(out, "BusinessRuleID", "Term", "BusinessRule");
-    insertTableRow(out, "FORECASTDT-1", "Earliest Date", "");
-    insertTableRow(out, "FORECASTDT-2", "Unadjusted Recommended Date", "");
-    insertTableRow(out, "FORECASTDT-3", "Unadjusted Past Due Date", "");
-    insertTableRow(out, "FORECASTDT-4", "Latest Date", "");
-    insertTableRow(out, "FORECASTDT-5", "Adjusted Recommended Date", "");
-    insertTableRow(out, "FORECASTDT-6", "Adjusted Past Due Date", "");
-    insertTableRow(out, "FORECASTRECVACT-1", "Recommended Vaccine", "");
+  
+  private void insertTableInit(PrintWriter out){
+	  out.println("  <tr>");
+	    out.println("    <th> BusinessRuleID  </th>");
+	    out.println("    <th> Term </th> ");
+	    out.println("    <th> BusinessRule </th>");
+	    out.println("  </tr>");
   }
+
+
 
   private Date getEarliestDate(List<Date> dateList) {
     Date tmp = null;
@@ -474,15 +474,32 @@ public class GenerateForecastDates extends LogicStep {
     return forecast;
 
   }
+  
+  private void TablePre(PrintWriter out) {
+	out.println("<p>TABLE 5 - 7 GENERATE FORECAST DATE AND RECOMMENDED VACCINE BUSINESS RULES</p>");
+	out.println("<table BORDER=\"1\"> ");
+	insertTableInit(out);
+    insertTableRow(out, "FORECASTDT-1", "Earliest Date", "");
+    insertTableRow(out, "FORECASTDT-2", "Unadjusted Recommended Date", "");
+    insertTableRow(out, "FORECASTDT-3", "Unadjusted Past Due Date", "");
+    insertTableRow(out, "FORECASTDT-4", "Latest Date", "");
+    insertTableRow(out, "FORECASTDT-5", "Adjusted Recommended Date", "");
+    insertTableRow(out, "FORECASTDT-6", "Adjusted Past Due Date", "");
+    insertTableRow(out, "FORECASTRECVACT-1", "Recommended Vaccine", "");
+    out.println("</table>");
+  }
 
   private void TablePost(PrintWriter out) throws ParseException {
-    insertTableRow(out, "BusinessRuleID", "Term", "BusinessRule");
+	out.println("<p> TABLE 5 - 7 GENERATE FORECAST DATE AND RECOMMENDED VACCINE BUSINESS RULES</p>");
+	out.println("<table BORDER=\"1\"> ");
+	insertTableInit(out);
     insertTableRow(out, "FORECASTDT-1", "Earliest Date", computeEarliestDate().toString() );
     insertTableRow(out, "FORECASTDT-2", "Unadjusted Recommended Date",computeUnadjustedRecommandedDate().toString());
     insertTableRow(out, "FORECASTDT-3", "Unadjusted Past Due Date", computeUnadjustedPastDueDate().toString());
     insertTableRow(out, "FORECASTDT-5", "Adjusted Recommended Date", computeAdjustedRecommendedDate().toString());
     insertTableRow(out, "FORECASTDT-6", "Adjusted Past Due Date", computeAdjustedPastDueDate().toString());
     insertTableRow(out, "FORECASTRECVACT-1", "Recommended Vaccine", "recommendedVaccine");
+    out.println("</table>");
   }
 
 
