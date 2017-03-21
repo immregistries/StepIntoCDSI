@@ -37,14 +37,17 @@ public class SingleAntigenVaccineGroup extends LogicStep
     VaccineGroup vaccineGroup = dataModel.getVaccineGroup();
     VaccineGroupForecast vgf = new VaccineGroupForecast();
     vgf.setVaccineGroup(vaccineGroup);
-    
+    System.out.println("FFF");
+    for (    PatientSeries p : dataModel.getBestPatientSeriesList())
+    	System.out.println("FFFFF"+p.getTrackedAntigenSeries().getSeriesName());
     for (Forecast forecast : dataModel.getForecastList())
     {
       if (forecast.getAntigen().equals(vaccineGroup.getAntigenList().get(0)))
       {
+    	  System.out.println(forecast.getAntigen());
         // SINGLEANTVG-1    The vaccine group status for a single antigen vaccine group must be the patient series status of the best patient series.
         
-        vgf.setVaccineGroupStatus(getBestPatientSeries().getPatientSeriesStatus());
+       // vgf.setVaccineGroupStatus(getBestPatientSeries().getPatientSeriesStatus());
         // SINGLEANTVG-2   The vaccine group forecast earliest date for a single antigen vaccine group must be the best patient series forecast earliest date.
         vgf.setEarliestDate(forecast.getEarliestDate());
         // SINGLEANTVG-3   The vaccine group forecast adjusted recommended date for a single antigen vaccine group must be the best patient series forecast adjusted recommended date.
@@ -78,7 +81,7 @@ public class SingleAntigenVaccineGroup extends LogicStep
     printStandard(out);
   }
 
-  public PatientSeries getBestPatientSeries(){
+ /* public PatientSeries getBestPatientSeries(){
 	  if (dataModel.getPatientSeriesList().size() > 0){
 		  PatientSeries bestPatientSeries = dataModel.getPatientSeriesList().get(0);
 		  for (PatientSeries ps : dataModel.getPatientSeriesList()){
@@ -89,7 +92,7 @@ public class SingleAntigenVaccineGroup extends LogicStep
 	  }else{
 		  return null;
 	  }
-  }
+  }*/
   
   @Override
   public void printPost(PrintWriter out) throws Exception {
@@ -100,8 +103,8 @@ public class SingleAntigenVaccineGroup extends LogicStep
     out.println("<h1> " + getTitle() + "</h1>");
     out.println("<p>The forecasting rules which need to be applied to a single antigen vaccine group are listed in the table below</p>");
 
-    printConditionAttributesTable(out);
-    printLogicTables(out);
+   // printConditionAttributesTable(out);
+   // printLogicTables(out);
   }
 
   private class LT extends LogicTable
