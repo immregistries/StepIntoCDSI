@@ -15,6 +15,7 @@ public class SelectBestPatientSeries extends LogicStep {
 	@Override
 	public LogicStep process() {
 		dataModel.incAntigenPos();
+		System.out.println("--> Looking to run #" + dataModel.getAntigenPos() + " size of BestPatientSeriesLis = " + dataModel.getBestPatientSeriesList().size());
 		if (dataModel.getAntigenPos() < dataModel.getAntigenList().size()) {
 			Antigen antigen = dataModel.getAntigenList().get(dataModel.getAntigenPos());
 			dataModel.setAntigen(dataModel.getAntigenList().get(dataModel.getAntigenPos()));
@@ -26,10 +27,12 @@ public class SelectBestPatientSeries extends LogicStep {
 			}
 			dataModel.setAntigenSeriesSelectedList(antigenSeriesSelectedList);
 			setNextLogicStepType(LogicStepType.ONE_BEST_PATIENT_SERIES);
+	        System.out.println("-->   + found it");
 		} else {
 			dataModel.setAntigen(null);
 			dataModel.setAntigenSeriesSelectedList(null);
 			setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
+            System.out.println("-->   + done");
 		}
 
 		return next();
@@ -69,7 +72,6 @@ public class SelectBestPatientSeries extends LogicStep {
 		out.println("<img src=\"Figure 6.1.png\"/>");
 		out.println("<p>FIGURE 6 - 1 SELECT BEST PATIENT SERIES PROCESS MODEL</p>");
 		
-		out.println("-->Patient series list size : "+dataModel.getPatientSeriesList().size());
 	}
 
 	@Override
@@ -83,6 +85,13 @@ public class SelectBestPatientSeries extends LogicStep {
 	public void printPost(PrintWriter out) {
 		// out.println("<h1>8.5 Select Best Patient Series</h1>");
 		printStandard(out);
+		if (dataModel.getAntigenPos() < dataModel.getAntigenList().size()) {
+		  out.println("<p>Now looking at Antigen: " + dataModel.getAntigen() + "</p>");
+		}
+		else
+		{
+		  out.println("<p>Done checking Antigens, moving onto Identify and Evaluate Vaccine Group</p>");
+		}
 
 	}
 

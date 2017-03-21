@@ -23,6 +23,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepFactory;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepType;
 
@@ -130,51 +131,51 @@ public class ForecastServlet extends HttpServlet {
   // combined into MMR
   
   private void printList(DataModel dataModel, PrintWriter out, SimpleDateFormat sdf, Date today,
-      List<VaccineGroupForecast> forecastList, String title) {
-    if (forecastList.size() > 0) {
+      List<VaccineGroupForecast> vaccineGroupForecastList, String title) {
+    if (vaccineGroupForecastList.size() > 0) {
       out.println(title + " " + sdf.format(dataModel.getAssessmentDate()));
 //      for (VaccineGroupForecast vaccineGroupForecast : vaccineGroupForecastList) 
 //      {
 //        
 //      }
-      for (Forecast forecast : forecastList) {
-        if (forecast.getAntigen() != null) {
-          String name = forecast.getAntigen().getName();
+      for (VaccineGroupForecast vgf : vaccineGroupForecastList) {
+        if (vgf.getAntigen() != null) {
+          String name = vgf.getAntigen().getName();
           // down to here
           out.print("Forecasting " + name + " status ");
-          if (forecast.getForecastReason().equals("")) {
-            if (forecast.getAdjustedRecommendedDate().after(today)) {
+          if (vgf.getPatientSeriesStatus() == PatientSeriesStatus.NOT_COMPLETE) {
+            if (vgf.getAdjustedRecommendedDate().after(today)) {
               out.print("due later ");
             } else {
               out.print("due ");
             }
             out.print("dose ");
-            if (forecast.getTargetDose() == null) {
+            if (vgf.getTargetDose() == null) {
               out.print("? ");
             } else {
-              out.print(forecast.getTargetDose().getTrackedSeriesDose().getDoseNumber() + " ");
+              out.print(vgf.getTargetDose().getTrackedSeriesDose().getDoseNumber() + " ");
             }
-            if (forecast.getAdjustedRecommendedDate() != null) {
+            if (vgf.getAdjustedRecommendedDate() != null) {
               out.print("due ");
-              out.print(sdf.format(forecast.getAdjustedRecommendedDate()));
+              out.print(sdf.format(vgf.getAdjustedRecommendedDate()));
               out.print(" ");
-              if (forecast.getEarliestDate() != null) {
+              if (vgf.getEarliestDate() != null) {
                 out.print("valid ");
-                out.print(sdf.format(forecast.getEarliestDate()));
+                out.print(sdf.format(vgf.getEarliestDate()));
                 out.print(" ");
-                if (forecast.getAdjustedPastDueDate() != null) {
+                if (vgf.getAdjustedPastDueDate() != null) {
                   out.print("overdue ");
-                  out.print(sdf.format(forecast.getAdjustedPastDueDate()));
+                  out.print(sdf.format(vgf.getAdjustedPastDueDate()));
                   out.print(" ");
-                  if (forecast.getLatestDate() != null) {
+                  if (vgf.getLatestDate() != null) {
                     out.print("finished ");
-                    out.print(sdf.format(forecast.getLatestDate()));
+                    out.print(sdf.format(vgf.getLatestDate()));
                   }
                 }
               }
             }
           } else {
-            out.print(forecast.getForecastReason());
+            out.print(vgf.getPatientSeriesStatus());
           }
           out.println();
         }

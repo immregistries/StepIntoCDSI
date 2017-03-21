@@ -10,6 +10,15 @@ public class PatientSeries
   private AntigenSeries trackedAntigenSeries = null;
   private int scorePatientSerie = 0;
   private List<TargetDose> targetDoseList = null;
+  private Forecast forecast = null;
+
+  public Forecast getForecast() {
+    return forecast;
+  }
+
+  public void setForecast(Forecast forecast) {
+    this.forecast = forecast;
+  }
 
   public List<TargetDose> getTargetDoseList() {
 	return targetDoseList;

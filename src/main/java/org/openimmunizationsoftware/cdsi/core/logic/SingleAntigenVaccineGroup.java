@@ -39,7 +39,7 @@ public class SingleAntigenVaccineGroup extends LogicStep
     vgf.setVaccineGroup(vaccineGroup);
     System.out.println("FFF");
     for (    PatientSeries p : dataModel.getBestPatientSeriesList())
-    	System.out.println("FFFFF"+p.getTrackedAntigenSeries().getSeriesName());
+    	//System.out.println("FFFFF"+p.getTrackedAntigenSeries().getSeriesName());
     for (Forecast forecast : dataModel.getForecastList())
     {
       if (forecast.getAntigen().equals(vaccineGroup.getAntigenList().get(0)))

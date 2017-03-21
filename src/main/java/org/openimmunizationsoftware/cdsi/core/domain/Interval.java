@@ -11,7 +11,14 @@ public class Interval {
   private TimePeriod minimumInterval = null;
   private TimePeriod earliestRecommendedInterval = null;
   private TimePeriod latestRecommendedInterval = null;
+  private IntervalPriority intervalPriority = null;
   
+  public IntervalPriority getIntervalPriority() {
+    return intervalPriority;
+  }
+  public void setIntervalPriority(IntervalPriority intervalPriority) {
+    this.intervalPriority = intervalPriority;
+  }
   public SeriesDose getSeriesDose() {
     return seriesDose;
   }

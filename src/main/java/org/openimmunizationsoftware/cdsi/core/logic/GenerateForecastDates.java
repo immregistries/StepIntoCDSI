@@ -244,6 +244,12 @@ public class GenerateForecastDates extends LogicStep {
     if(!antigenFromForcastList.contains(newAntigenForeCast)){
       forecastList.add(forecast);
     }
+    dataModel.getPatientSeries().setForecast(forecast);
+    List<Interval> intervalList = dataModel.getTargetDose().getTrackedSeriesDose().getIntervalList();
+    if (intervalList.size() > 0)
+    {
+      forecast.setInterval(intervalList.get(0));
+    }
 
     setNextLogicStepType(LogicStepType.FOR_EACH_PATIENT_SERIES);
     return next();

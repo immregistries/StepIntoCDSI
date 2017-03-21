@@ -2,6 +2,8 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 
 import java.util.Date;
 
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
+
 public class Forecast {
   private Date adjustedRecommendedDate = null;
   private Date adjustedPastDueDate = null;
@@ -15,7 +17,14 @@ public class Forecast {
   private Antigen antigen = null;
   private TargetDose targetDose = null;
   private boolean bestPatientSeries = false;
-  
+  private Interval interval = null;
+
+  public Interval getInterval() {
+    return interval;
+  }
+  public void setInterval(Interval interval) {
+    this.interval = interval;
+  }
   public TargetDose getTargetDose() {
     return targetDose;
   }

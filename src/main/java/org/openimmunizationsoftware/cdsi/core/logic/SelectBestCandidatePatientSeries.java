@@ -27,7 +27,7 @@ public class SelectBestCandidatePatientSeries extends LogicStep
 
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
+    setNextLogicStepType(LogicStepType.SELECT_BEST_PATIENT_SERIES);
     return next();
   }
 

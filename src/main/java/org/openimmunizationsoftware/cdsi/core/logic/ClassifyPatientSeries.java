@@ -43,8 +43,6 @@ public class ClassifyPatientSeries extends LogicStep
 
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.COMPLETE_PATIENT_SERIES);
-    setNextLogicStepType(LogicStepType.IN_PROCESS_PATIENT_SERIES);
     setNextLogicStepType(LogicStepType.NO_VALID_DOSES);
     
     evaluateLogicTables();
