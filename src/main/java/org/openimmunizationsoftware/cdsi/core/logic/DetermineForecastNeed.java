@@ -278,7 +278,7 @@ public class DetermineForecastNeed extends LogicStep {
           	List<Forecast> forecastList = dataModel.getForecastList();
           	for(Forecast forecast:forecastList){
           		if(forecast.getAntigen().equals(tmpAntigen)){
-          			forecast.setForecastReason("Not recommended at this time due to past immuniszation history");
+          			forecast.setForecastReason("Not recommended at this time due to past immunization history");
           		}
           	}
         	log("Forecast reason is \"not recommended at this time due to past immunization history.\"");

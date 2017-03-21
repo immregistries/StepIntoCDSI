@@ -46,6 +46,7 @@ public class ClassifyPatientSeries extends LogicStep
     setNextLogicStepType(LogicStepType.COMPLETE_PATIENT_SERIES);
     setNextLogicStepType(LogicStepType.IN_PROCESS_PATIENT_SERIES);
     setNextLogicStepType(LogicStepType.NO_VALID_DOSES);
+    
     evaluateLogicTables();
     return next();
   }
@@ -179,7 +180,7 @@ public class ClassifyPatientSeries extends LogicStep
     	
     	setLogicResults(0, YES,NO,NO);
     	setLogicResults(1, ANY, YES,NO);
-    	setLogicResults(2, ANY, NO, NO);
+    	setLogicResults(2, ANY, NO, YES);
     	
     	setLogicOutcome(0, new LogicOutcome() {
 			

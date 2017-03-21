@@ -49,6 +49,15 @@ public PatientSeries()
 	  this.scorePatientSerie = scorePatientSerie;
   }
   
+  public void incPatientScoreSeries(){
+	  scorePatientSerie++;
+  }
+  
+  public void descPatientScoreSeries(){
+	  scorePatientSerie--;
+  }
+  
+  
   public int getScorePatientSerie(){
 	  return scorePatientSerie;
   }
