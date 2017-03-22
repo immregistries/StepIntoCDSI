@@ -227,27 +227,23 @@ public class CompletePatientSeries extends LogicStep
 	  
   }
   
-  private int IsAProductPatientSeriesAndHasAllValidDoses(PatientSeries patientSeries){
+  private int isAProductPatientSeriesAndHasAllValidDoses(PatientSeries patientSeries){
 		boolean productPatientSeries = false;
 		boolean hasAllValidDoses = false;
-		
 		
 		if(patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries().getProductPath()!=null){
 			if(patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries().getProductPath().equals(YesNo.YES)){
 				productPatientSeries = true;
-			}
-			
+			}	
 		}
-		
 		for(TargetDose target:patientSeries.getTargetDoseList()){
 			if(target.getTargetDoseStatus()!=null){
 				if(!target.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)){
-					
+				//	
 				}else{
 					hasAllValidDoses = true;
 				}
 			}
-			
 		}
 		
 		if(productPatientSeries && hasAllValidDoses){
@@ -258,6 +254,13 @@ public class CompletePatientSeries extends LogicStep
 	}
   
  private void evaluate_ACandidatePatientSeriesIsAProductPatientSeriesAndHasAllValidDoses(){
+	 for(PatientSeries patientSeries:patientSeriesList){
+		 if(isAProductPatientSeriesAndHasAllValidDoses(patientSeries)==1){
+			 patientSeries.incPatientScoreSeries();
+		 }else if(isAProductPatientSeriesAndHasAllValidDoses(patientSeries)==-1){
+			 patientSeries.descPatientScoreSeries();
+		 }
+	 }
 	  
   }
  
