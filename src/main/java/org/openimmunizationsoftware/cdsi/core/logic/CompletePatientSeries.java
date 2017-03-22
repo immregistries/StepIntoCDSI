@@ -2,6 +2,7 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -11,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
@@ -43,8 +45,7 @@ public class CompletePatientSeries extends LogicStep
 	
 	
 	
-	 private  Map<Integer, Integer> sortByComparator(Map<Integer, Integer> unsortMap)
-	    {
+	 private  Map<Integer, Integer> sortByComparator(Map<Integer, Integer> unsortMap)  {
 
 	        List<Entry<Integer, Integer>> list = new LinkedList<Entry<Integer, Integer>>(unsortMap.entrySet());
 
@@ -124,7 +125,6 @@ public class CompletePatientSeries extends LogicStep
 		  }
 		  for(int i:pos){
 			  patientSeriesList.get(i).incPatientScoreSeries();
-			  patientSeriesList.get(i).incPatientScoreSeries();
 		  }
 	  }  
 	  
@@ -182,10 +182,68 @@ public class CompletePatientSeries extends LogicStep
 	 */
  
  private void evaluate_ACondidatePatientSeriesIsTheEarliestCompleting(){
-	 ArrayList<Date> finishDateList = new ArrayList<Date>();
-	 for(PatientSeries patientSeries:patientSeriesList){
-		 
+	 HashMap<Integer, Date> finishDateMap = new HashMap<Integer,Date>();
+	 for(int i=0 ;i<patientSeriesList.size();i++){
+		 PatientSeries patientSeries=patientSeriesList.get(i);
+		 Date finishDate = patientSeries.getForecast().getAdjustedPastDueDate();
+		 finishDateMap.put(i, finishDate);
 	 }
+	 HashMap<Integer,Integer> amountMap = new HashMap<Integer, Integer>();
+	 @SuppressWarnings("deprecation")
+	Date refDate = new Date(1900,1,1);
+	 for(Entry<Integer,Date> entry:finishDateMap.entrySet()){
+		 Date tmpDate = entry.getValue();	
+		  Calendar c = Calendar.getInstance();
+          Calendar c2 = Calendar.getInstance();
+          c.setTime(tmpDate);
+          c2.setTime(refDate);
+		 int nDifferenceInDays =  c.get(Calendar.DAY_OF_YEAR) - c2.get(Calendar.DAY_OF_YEAR);
+		 amountMap.put(entry.getKey(), nDifferenceInDays); 
+	 }
+	 amountMap = (HashMap<Integer, Integer>) sortByComparator(amountMap);
+	 
+	 int j = 0;
+	  int tmp = 0;
+	  int greatestElementPos = 0;
+	  ArrayList<Integer> pos = new ArrayList<Integer>();
+	  boolean twoOrMore = false;
+	  for(Entry<Integer,Integer> entry:amountMap.entrySet()){
+		  if(j==0){
+			  tmp = entry.getValue();
+			  greatestElementPos = entry.getKey();
+			  j++;
+		  }
+		  if(j>0){
+			  if(tmp == entry.getValue()){
+				  twoOrMore = true;
+				 pos.add(entry.getKey());
+				  
+			  }
+		  }
+		  
+	  }
+	  if(twoOrMore){
+		  pos.add(greatestElementPos);
+	  }
+	  
+	  if(!twoOrMore){
+		  patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
+		  patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
+		  if(patientSeriesList.size()>1){
+			  patientSeriesList.get(greatestElementPos).descPatientScoreSeries();
+			  for(PatientSeries patientSeries: patientSeriesList){
+				  patientSeries.descPatientScoreSeries();
+			  }
+		  }
+	  }else{
+		  for(PatientSeries patientSeries: patientSeriesList){
+			  patientSeries.descPatientScoreSeries();
+		  }
+		  for(int i:pos){
+			  patientSeriesList.get(i).incPatientScoreSeries();
+			  patientSeriesList.get(i).incPatientScoreSeries();
+		  }
+	  }  
 	  
  }
 
