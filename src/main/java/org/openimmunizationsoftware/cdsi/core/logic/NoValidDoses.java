@@ -56,25 +56,33 @@ private Date findMaximumAgeDate(PatientSeries patientSeries){
    */
   
   private void evaluate_ACandidatePatientSeriesCanStartEarliest(){
+	  int j=0;
 	  if(patientSeriesList.get(0).getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast()!=null){
 		Date tmpDate = patientSeriesList.get(0).getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getEarliestDate();
 			for(int i=0; i<patientSeriesList.size();i++){
 				PatientSeries patientSeries = patientSeriesList.get(i);
-				if(tmpDate.after(patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getEarliestDate())){
-					tmpDate = patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getEarliestDate();
+				if (tmpDate == patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getEarliestDate()){
+					j++;
+				}else{
+					if(tmpDate.after(patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getEarliestDate())){
+						tmpDate = patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getEarliestDate();
+					j=0;
+					}	
 				}
 			}  
 			for(PatientSeries patientSeries:patientSeriesList){
 				if(patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getEarliestDate()!=tmpDate){
 					patientSeries.descPatientScoreSeries();
 				}else{
-					patientSeries.incPatientScoreSeries();
+					if (j==1)
+						patientSeries.incPatientScoreSeries();
 				}
 			}
 		}else{
 			System.err.println("TrachedAntigenSeries is not set");
 		}
 	}
+
   
   /**
    * cond2

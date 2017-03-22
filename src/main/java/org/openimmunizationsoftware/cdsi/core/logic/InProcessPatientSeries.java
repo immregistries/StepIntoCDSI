@@ -1,12 +1,25 @@
-package org.openimmunizationsoftware.cdsi.core.logic;
+	package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriodType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
@@ -24,33 +37,35 @@ public class InProcessPatientSeries extends LogicStep
 	 * P66 SelectB-23 "patient path" or "product path"
 	 */
 	
-	private int cond1(PatientSeries patientSeries){
+	private void evaluate_ACandidatePatientSeriesIsAProductPatientSeriesAndHasAllValidDoses(){
 		boolean productPatientSeries = false;
-		boolean hasAllValidDoses = false;
+		boolean hasAllValidDoses = true;
 		
-		
-		if(patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries().getProductPath()!=null){
-			if(patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries().getProductPath().equals(YesNo.YES)){
-				productPatientSeries = true;
-			}
-			
-		}
-		
-		for(TargetDose target:patientSeries.getTargetDoseList()){
-			if(target.getTargetDoseStatus()!=null){
-				if(!target.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)){
-					
-				}else{
-					hasAllValidDoses = true;
+		for (PatientSeries patientSeries : patientSeriesList){
+			if(patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries().getProductPath()!=null){
+				if(patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries().getProductPath().equals(YesNo.YES)){
+					productPatientSeries = true;
 				}
+				
 			}
 			
-		}
-		
-		if(productPatientSeries && hasAllValidDoses){
-			return 1;
-		}else{
-			return 0;
+			for(TargetDose target:patientSeries.getTargetDoseList()){
+				if(target.getTargetDoseStatus()!=null){
+					if(target.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)){
+						
+					}else{
+						hasAllValidDoses = false;
+					}
+				}
+				
+			}
+			if(productPatientSeries && hasAllValidDoses){
+				patientSeries.incPatientScoreSeries();
+				patientSeries.incPatientScoreSeries();
+			}else{
+				patientSeries.descPatientScoreSeries();
+				patientSeries.descPatientScoreSeries();
+			}
 		}
 	}
 	
@@ -59,13 +74,55 @@ public class InProcessPatientSeries extends LogicStep
 	 * A candidate patient series is completable.
 	 */
 	
-	private int cond2(PatientSeries patientSeries){
-		return 0;
+	private void evaluate_ACandidatePatientSeriesIsCompletable(){
+		 for(PatientSeries patientSeries:patientSeriesList){
+			 Date finishDate = patientSeries.getForecast().getAdjustedPastDueDate();
+			 Date maximumAgeDate = findMaximumAgeDate(patientSeries);
+			 if(finishDate.before(maximumAgeDate)){
+				 patientSeries.incPatientScoreSeries();
+				 patientSeries.incPatientScoreSeries();
+				 patientSeries.incPatientScoreSeries();
+			 }else{
+				 patientSeries.descPatientScoreSeries();
+				 patientSeries.descPatientScoreSeries();
+				 patientSeries.descPatientScoreSeries();
+			 }
+		  }		
+		 }
+	
+	private Date findMaximumAgeDate(PatientSeries patientSeries){
+		Date dob = dataModel.getPatient().getDateOfBirth();
+		SeriesDose referenceSeriesDose =patientSeries.getForecast().getTargetDose().getTrackedSeriesDose();;
+		TimePeriod timePeriod = referenceSeriesDose.getAgeList().get(0).getMaximumAge();
+		Date maximumAgeDate = addTimePeriodtotoDate(dob, timePeriod);
+		return maximumAgeDate;
 	}
 	
+	  public Date addTimePeriodtotoDate(Date date, TimePeriod timePeriod){
+			int amount = timePeriod.getAmount();
+			TimePeriodType  type = timePeriod.getType();
+			switch (type) {
+				case DAY:
+		  		date = DateUtils.addDays(date, amount);    		
+					break;
+				case WEEK:
+		  		date = DateUtils.addWeeks(date, amount);    		
+					break;
+				case MONTH:
+		  		date = DateUtils.addMonths(date, amount);    		
+					break;
+				case YEAR:
+		  		date = DateUtils.addYears(date, amount);    		
+					break;
+				default:
+					break;
+				}
+			return date;
+		}
+  
 	/**
 	 * cond3
-	 * Number of valid doses
+	*A candidate patient series has the most valid doses
 	 */
 	
 	private int  numberOfValidDoses (PatientSeries patientSeries){
@@ -81,12 +138,95 @@ public class InProcessPatientSeries extends LogicStep
 		return nbOfValidDoses;
 	}
 	
+	 private  Map<Integer, Integer> sortByComparator(Map<Integer, Integer> unsortMap)
+	    {
+
+	        List<Entry<Integer, Integer>> list = new LinkedList<Entry<Integer, Integer>>(unsortMap.entrySet());
+
+	        // Sorting the list based on values
+	        Collections.sort(list, new Comparator<Entry<Integer, Integer>>()        {
+	  
+				@Override
+				public int compare(Entry<Integer, Integer> o1, Entry<Integer, Integer> o2) {
+					// Sort Desc
+					return  o2.getValue().compareTo(o1.getValue());
+				}
+	        });
+
+	        // Maintaining insertion order with the help of LinkedList
+	        Map<Integer, Integer> sortedMap = new LinkedHashMap<Integer, Integer>();
+	        for (Entry<Integer, Integer> entry : list){
+	        
+	            sortedMap.put(entry.getKey(), entry.getValue());
+	            
+	        }
+
+	        return sortedMap;
+	    }
+	
+	 private void evaluate_ACandidatePatientSeriesHasTheMostValidDoses(){
+		  HashMap<Integer,Integer> condMap = new HashMap<Integer,Integer>();
+		  for(int i=0; i<patientSeriesList.size();i++){
+			  condMap.put(i,numberOfValidDoses(patientSeriesList.get(i)));
+		  }
+		  condMap =(HashMap<Integer, Integer>) sortByComparator(condMap);
+		  int j = 0;
+		  int tmp = 0;
+		  int greatestElementPos = 0;
+		  ArrayList<Integer> pos = new ArrayList<Integer>();
+		  boolean twoOrMore = false;
+		  for(Entry<Integer,Integer> entry:condMap.entrySet()){
+			  if(j==0){
+				  tmp = entry.getValue();
+				  greatestElementPos = entry.getKey();
+				  j++;
+			  }
+			  if(j>0){
+				  if(tmp == entry.getValue()){
+					  twoOrMore = true;
+					 pos.add(entry.getKey());
+					  
+				  }
+			  }
+			  
+		  }
+		  if(twoOrMore){
+			  pos.add(greatestElementPos);
+		  }
+		  
+		  if(!twoOrMore){
+			  patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
+			  patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
+			  if(patientSeriesList.size()>1){
+				  patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
+				  patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
+				  for(PatientSeries patientSeries: patientSeriesList){
+					  patientSeries.descPatientScoreSeries();
+					  patientSeries.descPatientScoreSeries();
+				  }
+			  }
+		  }else{
+			  for(PatientSeries patientSeries: patientSeriesList){
+				  patientSeries.descPatientScoreSeries();
+				  patientSeries.descPatientScoreSeries();
+			  }
+			  for(int i:pos){
+				  patientSeriesList.get(i).incPatientScoreSeries();
+				  patientSeriesList.get(i).incPatientScoreSeries();
+			  }
+		  }  
+		  
+	  }
 	/**
 	 * Cond4
 	 * A candidate patient series is closest to completion.
 	 */
 	private int isClosestToCompletion(PatientSeries patientSeries){
 		return 0;
+	}
+	
+	private void evaluate_ACandidatePatientSeriesIsClosestToCompletion(){
+		
 	}
 	
 	/**
@@ -98,14 +238,67 @@ public class InProcessPatientSeries extends LogicStep
 		return 0;
 	}
 	
+	  private void evaluate_ACandidatePatientSeriesCanFinishEarliest(){
+		  int j=0;
+		  if(patientSeriesList.get(0).getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast()!=null){
+			Date tmpDate = patientSeriesList.get(0).getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getLatestDate();
+				for(int i=0; i<patientSeriesList.size();i++){
+					PatientSeries patientSeries = patientSeriesList.get(i);
+					if (tmpDate == patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getLatestDate()){
+						j++;
+					}else{
+						if(tmpDate.after(patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getLatestDate())){
+							tmpDate = patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getLatestDate();
+						j=0;
+						}	
+					}
+				}  
+				for(PatientSeries patientSeries:patientSeriesList){
+					if(patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getLatestDate()!=tmpDate){
+						patientSeries.descPatientScoreSeries();
+					}else{
+						if (j==1)
+							patientSeries.incPatientScoreSeries();
+					}
+				}
+			}else{
+				System.err.println("TrachedAntigenSeries is not set");
+			}
+		}
+	
 	/**
 	 * Cond6
 	 * A candidate patient series exceeded maximum age to start
 	 */
 	
-	private int exceededTheMaximumAgeToStart(PatientSeries patientSeries){
-		int maximumAgetoStart;
-		return 0;
+	private void cond6(){
+		  Date evalDate = dataModel.getAssessmentDate();
+		  for(PatientSeries patientSeries: patientSeriesList){
+				 Date maximumAgeDate = findMaximumAgeDate(patientSeries);
+				 if(evalDate.after(maximumAgeDate)){
+					 patientSeries.descPatientScoreSeries();
+					 patientSeries.descPatientScoreSeries();
+					 patientSeries.descPatientScoreSeries();
+					 patientSeries.descPatientScoreSeries();
+					 patientSeries.descPatientScoreSeries();
+					 patientSeries.descPatientScoreSeries();
+					 patientSeries.descPatientScoreSeries();
+					 patientSeries.descPatientScoreSeries();
+					 patientSeries.descPatientScoreSeries();
+					 patientSeries.descPatientScoreSeries();
+				 }else{
+					 patientSeries.incPatientScoreSeries();
+					 patientSeries.incPatientScoreSeries();
+					 patientSeries.incPatientScoreSeries();
+					 patientSeries.incPatientScoreSeries();
+					 patientSeries.incPatientScoreSeries();
+					 patientSeries.incPatientScoreSeries();
+					 patientSeries.incPatientScoreSeries();
+					 patientSeries.incPatientScoreSeries();
+					 patientSeries.incPatientScoreSeries();
+					 patientSeries.incPatientScoreSeries();
+				 }
+			  }		
 	}
 	
 	
