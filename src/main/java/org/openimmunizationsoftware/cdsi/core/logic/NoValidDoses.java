@@ -2,7 +2,9 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
@@ -54,24 +56,51 @@ private Date findMaximumAgeDate(PatientSeries patientSeries){
    */
   
   private void evaluate_ACandidatePatientSeriesCanStartEarliest(){
+	HashMap<Integer, Integer> condMap = new HashMap<Integer,Integer>();
 	if(patientSeriesList.get(0).getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast()!=null){
 		Date tmpDate = patientSeriesList.get(0).getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getEarliestDate();
-			for(PatientSeries patientSeries : patientSeriesList){
+		int j = 0;
+			for(int i=0; i<patientSeriesList.size();i++){
+				PatientSeries patientSeries = patientSeriesList.get(i);
 				if(tmpDate.after(patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getEarliestDate())){
 					tmpDate = patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getEarliestDate();
 				}
+				j=i;
 			}  
 			for(PatientSeries patientSeries:patientSeriesList){
 				if(patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getEarliestDate()!=tmpDate){
-					patientSeries.descPatientScoreSeries();
+					condMap.put(j, 1);
 				}else{
-					patientSeries.incPatientScoreSeries();
+					condMap.put(j, -1);
 				}
 			}
 		}else{
 			System.err.println("TrachedAntigenSeries is not set");
 		}
+	int condTrueCount =0; 
+	int condFalseCount =0;
+	int posTrue = 0; 
+	int posFalse = 0;
+	for (Entry<Integer, Integer> entry : condMap.entrySet()){
+		if(entry.getValue().equals(1)){
+			condTrueCount++;
+			posTrue = entry.getKey();
+		}
+		if(entry.getValue().equals(-1)){
+			condTrueCount++;
+			posTrue = entry.getKey();
+		}
 	}
+	
+	if(condTrueCount==1){
+		patientSeriesList.get(posTrue).incPatientScoreSeries();
+	}
+	if(condFalseCount==1){
+		patientSeriesList.get(posFalse).descPatientScoreSeries();
+	}	
+	
+	
+}
   
   /**
    * cond2
