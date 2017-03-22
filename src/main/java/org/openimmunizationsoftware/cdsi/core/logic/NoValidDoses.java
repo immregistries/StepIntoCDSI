@@ -56,32 +56,49 @@ private Date findMaximumAgeDate(PatientSeries patientSeries){
    */
   
   private void evaluate_ACandidatePatientSeriesCanStartEarliest(){
-	HashMap<Integer, Integer> condMap = new HashMap<Integer,Integer>();
-	if(patientSeriesList.get(0).getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast()!=null){
+	  if(patientSeriesList.get(0).getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast()!=null){
 		Date tmpDate = patientSeriesList.get(0).getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getEarliestDate();
-		int j = 0;
+		int j;
 			for(int i=0; i<patientSeriesList.size();i++){
 				PatientSeries patientSeries = patientSeriesList.get(i);
 				if(tmpDate.after(patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getEarliestDate())){
 					tmpDate = patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getEarliestDate();
 				}
-				j=i;
 			}  
 			for(PatientSeries patientSeries:patientSeriesList){
 				if(patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getEarliestDate()!=tmpDate){
-					condMap.put(j, 1);
+					patientSeries.descPatientScoreSeries();
 				}else{
-					condMap.put(j, -1);
+					patientSeries.incPatientScoreSeries();
 				}
 			}
 		}else{
 			System.err.println("TrachedAntigenSeries is not set");
 		}
-	int condTrueCount =0; 
-	int condFalseCount =0;
-	int posTrue = 0; 
-	int posFalse = 0;
-	for (Entry<Integer, Integer> entry : condMap.entrySet()){
+	}
+  
+  /**
+   * cond2
+   * A candidate patient series is completable.
+   */
+  
+  private void evaluate_ACandidatePatientSeriesIsCompletable(){
+	  HashMap<Integer, Integer> condMap = new HashMap<Integer,Integer>();
+	  for(int i=0;i<patientSeriesList.size();i++){
+		 PatientSeries patientSeries = patientSeriesList.get(i);
+		 Date finishDate = patientSeries.getForecast().getAdjustedPastDueDate();
+		 Date maximumAgeDate = findMaximumAgeDate(patientSeries);
+		 if(finishDate.before(maximumAgeDate)){
+			 condMap.put(i, 1);
+		 }else{
+			 condMap.put(i, -1);
+		 }
+	  }
+	  int condTrueCount =0; 
+	  int condFalseCount =0;
+	  int posTrue = 0; 
+	  int posFalse = 0;
+	  for (Entry<Integer, Integer> entry : condMap.entrySet()){
 		if(entry.getValue().equals(1)){
 			condTrueCount++;
 			posTrue = entry.getKey();
@@ -90,33 +107,14 @@ private Date findMaximumAgeDate(PatientSeries patientSeries){
 			condTrueCount++;
 			posTrue = entry.getKey();
 		}
-	}
-	
-	if(condTrueCount==1){
+	  }
+	  if(condTrueCount==1){
 		patientSeriesList.get(posTrue).incPatientScoreSeries();
-	}
-	if(condFalseCount==1){
+	  }
+	  if(condFalseCount==1){
 		patientSeriesList.get(posFalse).descPatientScoreSeries();
-	}	
-	
-	
-}
-  
-  /**
-   * cond2
-   * A candidate patient series is completable.
-   */
-  
-  private void evaluate_ACandidatePatientSeriesIsCompletable(){
-	  for(PatientSeries patientSeries: patientSeriesList){
-		 Date finishDate = patientSeries.getForecast().getAdjustedPastDueDate();
-		 Date maximumAgeDate = findMaximumAgeDate(patientSeries);
-		 if(finishDate.before(maximumAgeDate)){
-			 patientSeries.incPatientScoreSeries();
-		 }else{
-			 patientSeries.descPatientScoreSeries();
-		 }
-	  }  
+	  }	
+		
   }
   
   /**
