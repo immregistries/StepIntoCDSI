@@ -79,7 +79,7 @@ private Date findMaximumAgeDate(PatientSeries patientSeries){
 				}
 			}
 		}else{
-			System.err.println("TrachedAntigenSeries is not set");
+			System.err.println("VaccineGroupForecast is not set");
 		}
 	}
 
