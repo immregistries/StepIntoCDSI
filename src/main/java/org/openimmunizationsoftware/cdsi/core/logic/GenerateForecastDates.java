@@ -93,28 +93,17 @@ public class GenerateForecastDates extends LogicStep {
   }
   
   private Date computePatientReferenceDoseDate(){
-	  Date tmppatientReferenceDoseDate =  new Date();
-//	  try{
-//		  	  AntigenAdministeredRecord prevAar = dataModel.getPreviousAntigenAdministeredRecord();
-//	  //System.err.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@ prevAar : "+prevAar.toString());
-//	  VaccineDoseAdministered prevVacine = prevAar.getVaccineDoseAdministered();
-//	  System.err.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@ prevVaccine_AntigenName : "+prevVacine.getAntigenAssigned().getName());
-//	  }catch(NullPointerException p){
-//		  p.printStackTrace();
-//	  }
-//
-////	  System.err.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@ EvaluationMapSize : "+prevVacine.getEvaluationMap().size());
-//	  //Date tmpPtientReferenceDoseDate1 = new Date();
-//	  /*try{
-//			 /***
-//			  * TO DO
-//			  */
-//			// tmpPtientReferenceDoseDate1 = dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered();
-//		// }catch(NullPointerException np){
-//			 //TO DO
-//		// }
-  
-	  return tmppatientReferenceDoseDate;
+	  Date tmpPatientReferenceDoseDate = new Date();
+	  try{
+		  AntigenAdministeredRecord previousAAR = dataModel.getPreviousAntigenAdministeredRecord();
+	  tmpPatientReferenceDoseDate = previousAAR.getDateAdministered();
+	  System.out.println("##################################  "+previousAAR.getEvaluation().getEvaluationStatus());
+	 
+	  }catch(NullPointerException np){
+		  np.getCause();
+	  }
+	  return tmpPatientReferenceDoseDate;
+
   }
   
   
