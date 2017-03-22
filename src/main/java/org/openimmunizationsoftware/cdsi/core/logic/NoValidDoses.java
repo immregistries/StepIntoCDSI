@@ -104,8 +104,8 @@ private Date findMaximumAgeDate(PatientSeries patientSeries){
 			posTrue = entry.getKey();
 		}
 		if(entry.getValue().equals(-1)){
-			condTrueCount++;
-			posTrue = entry.getKey();
+			condFalseCount++;
+			posFalse = entry.getKey();
 		}
 	  }
 	  if(condTrueCount==1){
