@@ -113,7 +113,7 @@ public class EvaluateForPreferableVaccine extends LogicStep
         logicTable.evaluate();
         if (((LT) logicTable).getResult() == YesNo.YES) {
       	  y=YesNo.YES;
-      	  System.out.println("eeeee");
+      	  //System.out.println("eeeee");
       	setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
         }
       }

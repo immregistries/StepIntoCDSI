@@ -254,7 +254,7 @@ public class EvaluateLiveVirusConflict extends LogicStep {
 	  private YesNo y422 = null;
 	  
 	  public void setIntervalDate(AntigenAdministeredRecord vaccineAdministered){
-		  System.out.println(dataModel.getLiveVirusConflictList().size());
+		  //System.out.println(dataModel.getLiveVirusConflictList().size());
 	        for (LiveVirusConflict liveVirusConflict : dataModel.getLiveVirusConflictList()) {
 	            if (liveVirusConflict.getCurrentVaccineType().equals(caCurrentVaccineType.getFinalValue())) {
 	            	   //caConflictBeginIntervalDate.setInitialValue(vaccineAdministered.getDateAdministered()+liveVirusConflict.getConflictBeginInterval().getAmount());

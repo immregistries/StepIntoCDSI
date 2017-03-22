@@ -34,7 +34,6 @@ public class InProcessPatientSeries extends LogicStep
 	 * cond1
 	 * A candidate patient series is a product patient series and has all valid doses.
 	 * 
-	 * P66 SelectB-23 "patient path" or "product path"
 	 */
 	
 	private void evaluate_ACandidatePatientSeriesIsAProductPatientSeriesAndHasAllValidDoses(){
@@ -221,9 +220,6 @@ public class InProcessPatientSeries extends LogicStep
 	 * Cond4
 	 * A candidate patient series is closest to completion.
 	 */
-	private int isClosestToCompletion(PatientSeries patientSeries){
-		return 0;
-	}
 	
 	private void evaluate_ACandidatePatientSeriesIsClosestToCompletion(){
 		HashMap<Integer,Integer> condMap = new HashMap<Integer,Integer>();
@@ -296,11 +292,7 @@ public class InProcessPatientSeries extends LogicStep
 	 * Cond5
 	 * A candidate patient series can finish earliest.
 	 */
-	
-	private int canFinishEarliest(PatientSeries patientSeries){
-		return 0;
-	}
-	
+		
 	  private void evaluate_ACandidatePatientSeriesCanFinishEarliest(){
 		  int j=0;
 		  if(patientSeriesList.get(0).getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast()!=null){
@@ -356,6 +348,14 @@ public class InProcessPatientSeries extends LogicStep
 	}
 	
 	
+	private void evaluateTable(){
+		evaluate_ACandidatePatientSeriesIsAProductPatientSeriesAndHasAllValidDoses();
+		evaluate_ACandidatePatientSeriesIsCompletable();
+		evaluate_ACandidatePatientSeriesHasTheMostValidDoses();
+		evaluate_ACandidatePatientSeriesIsClosestToCompletion();
+		evaluate_ACandidatePatientSeriesCanFinishEarliest();
+		evaluate_ACandidatePatientSeriesExceededMaximumAgeToStart();
+	}
 
  
 
@@ -369,6 +369,7 @@ public class InProcessPatientSeries extends LogicStep
   @Override
   public LogicStep process() throws Exception {
     setNextLogicStepType(LogicStepType.SELECT_BEST_CANDIDATE_PATIENT_SERIES);
+    evaluateTable();
     return next();
   }
 

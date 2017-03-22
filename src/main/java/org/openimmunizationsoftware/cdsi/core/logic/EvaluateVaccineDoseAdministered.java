@@ -34,7 +34,7 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
         log("   Skipping " + aar + " for antigen " + aar.getAntigen()+"rrrrr"+patientSeries.getTrackedAntigenSeries().getTargetDisease());
       }
     }
-    System.out.println("eeeeee"+dataModel.getAntigenAdministeredRecordPos());
+    //System.out.println("eeeeee"+dataModel.getAntigenAdministeredRecordPos());
 
     if (dataModel.getAntigenAdministeredRecordPos() < dataModel.getAntigenAdministeredRecordList()
         .size()) {
@@ -49,7 +49,7 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
         nextLogicStep = LogicStepType.FORECAST_DATES_AND_REASONS;
       }
     } else {
-    	System.out.println("DDDDDDDDDD");
+    	//System.out.println("DDDDDDDDDD");
       gotoNextTargetDose();
       nextLogicStep = LogicStepType.FORECAST_DATES_AND_REASONS;
     }
@@ -79,7 +79,7 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
           dataModel.setTargetDose(dataModel.getTargetDoseList().get(dataModel.getTargetDoseListPos()));
           return true;
         } else {
-        	System.out.println("CCCCCCCCCCCCCCCCCCCCC");
+        	//System.out.println("CCCCCCCCCCCCCCCCCCCCC");
           markRestAsExtraneous();
           return false;
         }
