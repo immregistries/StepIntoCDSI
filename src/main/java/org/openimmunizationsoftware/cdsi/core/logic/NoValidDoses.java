@@ -4,8 +4,12 @@ import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriodType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 
 public class NoValidDoses extends LogicStep
@@ -13,34 +17,77 @@ public class NoValidDoses extends LogicStep
   
   private List<PatientSeries> patientSeriesList = dataModel.getPatientSeriesList();
   
+  public Date addTimePeriodtotoDate(Date date, TimePeriod timePeriod){
+		int amount = timePeriod.getAmount();
+		TimePeriodType  type = timePeriod.getType();
+		switch (type) {
+			case DAY:
+	  		date = DateUtils.addDays(date, amount);    		
+				break;
+			case WEEK:
+	  		date = DateUtils.addWeeks(date, amount);    		
+				break;
+			case MONTH:
+	  		date = DateUtils.addMonths(date, amount);    		
+				break;
+			case YEAR:
+	  		date = DateUtils.addYears(date, amount);    		
+				break;
+			default:
+				break;
+			}
+		return date;
+	}
+ 
+
+private Date findMaximumAgeDate(PatientSeries patientSeries){
+		Date dob = dataModel.getPatient().getDateOfBirth();
+		SeriesDose referenceSeriesDose =patientSeries.getForecast().getTargetDose().getTrackedSeriesDose();;
+		TimePeriod timePeriod = referenceSeriesDose.getAgeList().get(0).getMaximumAge();
+		Date maximumAgeDate = addTimePeriodtotoDate(dob, timePeriod);
+		return maximumAgeDate;
+}
+  
   /**
    * cond1
    * A candidate patient series can start earliest
    */
   
-  private void evaluateACandidatePatientSeriesCanStartEarliest(){
-    Date tmpDate = patientSeriesList.get(0).getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getEarliestDate();
-    for(PatientSeries patientSeries : patientSeriesList){
-      if(tmpDate.after(patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getEarliestDate())){
-        tmpDate = patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getEarliestDate();
-      }
-    }
-    
-    for(PatientSeries patientSeries:patientSeriesList){
-      if(patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getEarliestDate()!=tmpDate){
-        patientSeries.descPatientScoreSeries();
-      }else{
-        patientSeries.incPatientScoreSeries();
-      }
-    }
-  }
+  private void evaluate_ACandidatePatientSeriesCanStartEarliest(){
+	if(patientSeriesList.get(0).getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast()!=null){
+		Date tmpDate = patientSeriesList.get(0).getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getEarliestDate();
+			for(PatientSeries patientSeries : patientSeriesList){
+				if(tmpDate.after(patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getEarliestDate())){
+					tmpDate = patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getEarliestDate();
+				}
+			}  
+			for(PatientSeries patientSeries:patientSeriesList){
+				if(patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getEarliestDate()!=tmpDate){
+					patientSeries.descPatientScoreSeries();
+				}else{
+					patientSeries.incPatientScoreSeries();
+				}
+			}
+		}else{
+			System.err.println("TrachedAntigenSeries is not set");
+		}
+	}
   
   /**
    * cond2
    * A candidate patient series is completable.
    */
   
-  private void evaluateACandidatePatientSeriesIsCompletable(){
+  private void evaluate_ACandidatePatientSeriesIsCompletable(){
+	  for(PatientSeries patientSeries: patientSeriesList){
+		 Date finishDate = patientSeries.getForecast().getAdjustedPastDueDate();
+		 Date maximumAgeDate = findMaximumAgeDate(patientSeries);
+		 if(finishDate.before(maximumAgeDate)){
+			 patientSeries.incPatientScoreSeries();
+		 }else{
+			 patientSeries.descPatientScoreSeries();
+		 }
+	  }  
   }
   
   /**
@@ -48,15 +95,30 @@ public class NoValidDoses extends LogicStep
    * A candidate patient series is a gender-specific patient series and the patient‘s gender matches a required gender specified on the first target dose.
    */
   
-  private void evaluateACandidatePatientSeriesGenderSpecific(){
-      }
+  private void evaluate_ACandidatePatientSeriesGenderSpecific(){
+	  for(PatientSeries patientSeries: patientSeriesList){
+		  	boolean patientSeriesIsGenderSpecefic = false;
+			SeriesDose referenceSeriesDose =patientSeries.getForecast().getTargetDose().getTrackedSeriesDose();
+			String gender = referenceSeriesDose.getRequiredGenderList().get(0).getValue();
+			if(!gender.isEmpty()){
+				patientSeriesIsGenderSpecefic = true;
+			}
+			if(patientSeriesIsGenderSpecefic){
+				String targetDoseGender = dataModel.getPatient().getGender();
+				if(targetDoseGender.equals(gender)){
+					patientSeries.incPatientScoreSeries();
+				}
+			}
+
+	  }
+   }
   
   /**
    * cond4
    * A candidate patient series is a product patient series.
    */
   
-  private void evaluateACandidatePatientSeriesIsAProductPatientSeries(){
+  private void evaluate_ACandidatePatientSeriesIsAProductPatientSeries(){
     boolean productPatientSeries = false;
     for(PatientSeries patientSeries:patientSeriesList){
       if(patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries().getProductPath()!=null){
@@ -78,16 +140,25 @@ public class NoValidDoses extends LogicStep
    * A candidate patient series exceeded maximum age to start
    */
   
-  private void evaluateACandidatePatientSeriesHasExceededTheMaximumAge(){
+  private void evaluate_ACandidatePatientSeriesHasExceededTheMaximumAge(){
+	  Date evalDate = dataModel.getAssessmentDate();
+	  for(PatientSeries patientSeries: patientSeriesList){
+			 Date maximumAgeDate = findMaximumAgeDate(patientSeries);
+			 if(evalDate.after(maximumAgeDate)){
+				 patientSeries.descPatientScoreSeries();
+			 }else{
+				 patientSeries.incPatientScoreSeries();
+			 }
+		  }  
     
   }
   
   private void evalTable(){
-    evaluateACandidatePatientSeriesCanStartEarliest();
-    evaluateACandidatePatientSeriesIsCompletable();
-    evaluateACandidatePatientSeriesGenderSpecific();
-    evaluateACandidatePatientSeriesIsAProductPatientSeries();
-    evaluateACandidatePatientSeriesHasExceededTheMaximumAge();  
+    evaluate_ACandidatePatientSeriesCanStartEarliest();
+    evaluate_ACandidatePatientSeriesIsCompletable();
+    evaluate_ACandidatePatientSeriesGenderSpecific();
+    evaluate_ACandidatePatientSeriesIsAProductPatientSeries();
+    evaluate_ACandidatePatientSeriesHasExceededTheMaximumAge();  
   }
   
 
@@ -106,7 +177,7 @@ public class NoValidDoses extends LogicStep
   public LogicStep process() throws Exception {
     setNextLogicStepType(LogicStepType.SELECT_BEST_CANDIDATE_PATIENT_SERIES);
     evaluateLogicTables();
-    //evalTable();
+    evalTable();
     return next();
   }
 
