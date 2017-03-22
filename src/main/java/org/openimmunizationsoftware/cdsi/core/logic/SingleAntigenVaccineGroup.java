@@ -44,7 +44,7 @@ public class SingleAntigenVaccineGroup extends LogicStep
     {
       if (forecast.getAntigen().equals(vaccineGroup.getAntigenList().get(0)))
       {
-    	  System.out.println(forecast.getAntigen());
+    	  //System.out.println(forecast.getAntigen());
         // SINGLEANTVG-1    The vaccine group status for a single antigen vaccine group must be the patient series status of the best patient series.
         
        // vgf.setVaccineGroupStatus(getBestPatientSeries().getPatientSeriesStatus());
