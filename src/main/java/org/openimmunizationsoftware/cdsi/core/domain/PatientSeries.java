@@ -8,7 +8,7 @@ public class PatientSeries
 {
   private PatientSeriesStatus patientSeriesStatus = null;
   private AntigenSeries trackedAntigenSeries = null;
-  private int scorePatientSerie = 0;
+  private int scorePatientSeries = 0;
   private List<TargetDose> targetDoseList = null;
   private Forecast forecast = null;
 
@@ -55,24 +55,30 @@ public PatientSeries()
   }
   
   public void setScorePatientSeriesScore(int scorePatientSerie){
-	  this.scorePatientSerie = scorePatientSerie;
+	  this.scorePatientSeries = scorePatientSerie;
   }
   
   public void incPatientScoreSeries(){
-	  scorePatientSerie++;
+	  scorePatientSeries++;
   }
   
   public void descPatientScoreSeries(){
-	  scorePatientSerie--;
+	  scorePatientSeries--;
   }
   
   
-  public int getScorePatientSerie(){
-	  return scorePatientSerie;
+  public int getScorePatientSeries(){
+	  return scorePatientSeries;
   }
   
   public void addScore(int value){
 	  
-	  scorePatientSerie = scorePatientSerie + value;
+	  scorePatientSeries = scorePatientSeries + value;
   }
+  
+  @Override
+  public String toString() {
+    return this.getTrackedAntigenSeries().getSeriesName();
+  }
+  
 }
