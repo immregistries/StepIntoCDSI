@@ -170,10 +170,6 @@ private Date findMaximumAgeDate(PatientSeries patientSeries){
   public NoValidDoses(DataModel dataModel)
   {
     super(LogicStepType.NO_VALID_DOSES, dataModel);
-    //setConditionTableName("Table ");
-    //System.out.println("-->Patient series size : "+dataModel.getPatientSeriesList().size());
-    //System.out.println("--> "+dataModel.getPatientSeriesList().get(0));
-
   }
 
   @Override
