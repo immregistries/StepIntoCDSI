@@ -72,8 +72,11 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
       // MULTIANTVG-9
       List<VaccineGroup> recommendedVaccines = new ArrayList<VaccineGroup>();
       for (PatientSeries p : selectedList)
-    	  recommendedVaccines.add(p.getForecast().getVaccineGroupForecast().getVaccineGroup());
-     // vgf.setV
+        if (p.getForecast() != null && p.getForecast().getVaccineGroupForecast() != null
+            && p.getForecast().getVaccineGroupForecast().getVaccineGroup() != null) {
+          recommendedVaccines.add(p.getForecast().getVaccineGroupForecast().getVaccineGroup());
+        }
+      // vgf.setV
     }
     for (PatientSeries p : selectedList) {
       vgf.setAntigen(p.getForecast().getAntigen());
@@ -83,112 +86,112 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
     return next();
   }
 
-private void MULTIANTVG_8() {
-	List<Antigen> antigensNeededList = new ArrayList<Antigen>();
-      for (PatientSeries p : selectedList){
-    	  if (p.getPatientSeriesStatus() == PatientSeriesStatus.NOT_COMPLETE)
-    		  antigensNeededList.add(p.getTrackedAntigenSeries().getTargetDisease());
-      }
-      vgf.setAntigensNeededList(antigensNeededList);
-}
+  private void MULTIANTVG_8() {
+    List<Antigen> antigensNeededList = new ArrayList<Antigen>();
+    for (PatientSeries p : selectedList) {
+      if (p.getPatientSeriesStatus() == PatientSeriesStatus.NOT_COMPLETE)
+        antigensNeededList.add(p.getTrackedAntigenSeries().getTargetDisease());
+    }
+    vgf.setAntigensNeededList(antigensNeededList);
+  }
 
-private void MULTIANTVG_7() {
+  private void MULTIANTVG_7() {
     String reasons = "";
-	for (PatientSeries p : selectedList)
-    	  reasons=reasons+p.getForecast().getForecastReason();
-      vgf.setForecastReason(reasons);
-}
+    for (PatientSeries p : selectedList)
+      reasons = reasons + p.getForecast().getForecastReason();
+    vgf.setForecastReason(reasons);
+  }
 
   private void MULTIANTVG_6() {
-		Date earliestRecommendedDate = null;
-	    for (PatientSeries p : selectedList) {
-	  	  Date erd = p.getForecast().getUnadjustedPastDueDate();
-	  	  if (erd != null){
-	  		  if (earliestRecommendedDate == null){
-	  			  earliestRecommendedDate=erd;
-	  		  }else{
-	  			  if (erd.before(earliestRecommendedDate)){
-	  				  earliestRecommendedDate=erd;
-	  			  }
-	  		  }
-	  	  }
-	    }
-	    vgf.setUnadjustedPastDueDate(earliestRecommendedDate);
-	}
-  
-private void MULTIANTVG_5() {
-	Date earliestRecommendedDate = null;
+    Date earliestRecommendedDate = null;
     for (PatientSeries p : selectedList) {
-  	  Date erd = p.getForecast().getUnadjustedRecommendedDate();
-  	  if (erd != null){
-  		  if (earliestRecommendedDate == null){
-  			  earliestRecommendedDate=erd;
-  		  }else{
-  			  if (erd.before(earliestRecommendedDate)){
-  				  earliestRecommendedDate=erd;
-  			  }
-  		  }
-  	  }
+      Date erd = p.getForecast().getUnadjustedPastDueDate();
+      if (erd != null) {
+        if (earliestRecommendedDate == null) {
+          earliestRecommendedDate = erd;
+        } else {
+          if (erd.before(earliestRecommendedDate)) {
+            earliestRecommendedDate = erd;
+          }
+        }
+      }
+    }
+    vgf.setUnadjustedPastDueDate(earliestRecommendedDate);
+  }
+
+  private void MULTIANTVG_5() {
+    Date earliestRecommendedDate = null;
+    for (PatientSeries p : selectedList) {
+      Date erd = p.getForecast().getUnadjustedRecommendedDate();
+      if (erd != null) {
+        if (earliestRecommendedDate == null) {
+          earliestRecommendedDate = erd;
+        } else {
+          if (erd.before(earliestRecommendedDate)) {
+            earliestRecommendedDate = erd;
+          }
+        }
+      }
     }
     vgf.setUnadjustedRecommendedDate(earliestRecommendedDate);
-}
+  }
 
-private void MULTIANTVG_4() {
-	Date earliestRecommendedDate = null;
+  private void MULTIANTVG_4() {
+    Date earliestRecommendedDate = null;
     for (PatientSeries p : selectedList) {
-  	  Date erd = p.getForecast().getLatestDate();
-  	  if (erd != null){
-  		  if (earliestRecommendedDate == null){
-  			  earliestRecommendedDate=erd;
-  		  }else{
-  			  if (erd.before(earliestRecommendedDate)){
-  				  earliestRecommendedDate=erd;
-  			  }
-  		  }
-  	  }
+      Date erd = p.getForecast().getLatestDate();
+      if (erd != null) {
+        if (earliestRecommendedDate == null) {
+          earliestRecommendedDate = erd;
+        } else {
+          if (erd.before(earliestRecommendedDate)) {
+            earliestRecommendedDate = erd;
+          }
+        }
+      }
     }
     vgf.setLatestDate(earliestRecommendedDate);
-}
+  }
 
-private void MULTIANTVG_3() {
-	Date earliestRecommendedDate = null;
+  private void MULTIANTVG_3() {
+    Date earliestRecommendedDate = null;
     for (PatientSeries p : selectedList) {
-  	  Date erd = p.getForecast().getAdjustedPastDueDate();
-  	  if (erd != null){
-  		  if (earliestRecommendedDate == null){
-  			  earliestRecommendedDate=erd;
-  		  }else{
-  			  if (erd.before(earliestRecommendedDate)){
-  				  earliestRecommendedDate=erd;
-  			  }
-  		  }
-  	  }
+      Date erd = p.getForecast().getAdjustedPastDueDate();
+      if (erd != null) {
+        if (earliestRecommendedDate == null) {
+          earliestRecommendedDate = erd;
+        } else {
+          if (erd.before(earliestRecommendedDate)) {
+            earliestRecommendedDate = erd;
+          }
+        }
+      }
     }
-    if (vgf.getEarliestDate().after(earliestRecommendedDate)){
-  	  earliestRecommendedDate=vgf.getEarliestDate();
+    if (vgf.getEarliestDate().after(earliestRecommendedDate)) {
+      earliestRecommendedDate = vgf.getEarliestDate();
     }
     vgf.setAdjustedPastDueDate(earliestRecommendedDate);
-}
+  }
 
-private void MULTIANTVG_2() {
-	Date earliestRecommendedDate = null;
-      for (PatientSeries p : selectedList) {
-    	  Date erd = p.getForecast().getAdjustedRecommendedDate();
-    	  if (erd != null){
-    		  if (earliestRecommendedDate == null){
-    			  earliestRecommendedDate=erd;
-    		  }else{
-    			  if (erd.before(earliestRecommendedDate)){
-    				  earliestRecommendedDate=erd;
-    			  }
-    		  }
-    	  }
+  private void MULTIANTVG_2() {
+    Date earliestRecommendedDate = null;
+    for (PatientSeries p : selectedList) {
+      Date erd = p.getForecast().getAdjustedRecommendedDate();
+      if (erd != null) {
+        if (earliestRecommendedDate == null) {
+          earliestRecommendedDate = erd;
+        } else {
+          if (erd.before(earliestRecommendedDate)) {
+            earliestRecommendedDate = erd;
+          }
+        }
       }
-      if (vgf.getEarliestDate().after(earliestRecommendedDate)){
-    	  earliestRecommendedDate=vgf.getEarliestDate();
-      }
-      vgf.setAdjustedRecommendedDate(earliestRecommendedDate);
-}
+    }
+    if (vgf.getEarliestDate().after(earliestRecommendedDate)) {
+      earliestRecommendedDate = vgf.getEarliestDate();
+    }
+    vgf.setAdjustedRecommendedDate(earliestRecommendedDate);
+  }
 
   private void MULTIANTVG_1() {
     Date earliestDate = null;
@@ -233,8 +236,7 @@ private void MULTIANTVG_2() {
 
     printConditionAttributesTable(out);
     printLogicTables(out);
-    out.println(
-        "<h2>Selected Patient Series for " + dataModel.getVaccineGroup().getName() + "</h2>");
+    out.println("<h2>Selected Patient Series for " + dataModel.getVaccineGroup().getName() + "</h2>");
     out.println("<table>");
     out.println("  <tr>");
     out.println("    <th>Antigen</th>");
@@ -242,8 +244,7 @@ private void MULTIANTVG_2() {
     out.println("  </tr>");
     for (PatientSeries patientSeries : selectedList) {
       out.println("  <tr>");
-      out.println(
-          "    <td>" + patientSeries.getTrackedAntigenSeries().getTargetDisease() + "</td>");
+      out.println("    <td>" + patientSeries.getTrackedAntigenSeries().getTargetDisease() + "</td>");
       out.println("    <td>" + patientSeries.getPatientSeriesStatus() + "</td>");
       out.println("  </tr>");
     }
@@ -254,17 +255,17 @@ private void MULTIANTVG_2() {
     public LT(final VaccineGroupForecast vgf, final List<PatientSeries> selectedList) {
       super(4, 6, "Table 7 - 4 WHAT IS THE VACCINE GROUP STATUS OF A MULTIPLE VACCINE GROUP?");
 
-      setLogicCondition(0, new LogicCondition(
-          "Is there at least one best patient series status of \"Not Completed\"?") {
-        @Override
-        public LogicResult evaluateInternal() {
-          for (PatientSeries p : dataModel.getBestPatientSeriesList()) {
-            if (p.getPatientSeriesStatus().equals(PatientSeriesStatus.NOT_COMPLETE))
-              return LogicResult.YES;
-          }
-          return LogicResult.NO;
-        }
-      });
+      setLogicCondition(0,
+          new LogicCondition("Is there at least one best patient series status of \"Not Completed\"?") {
+            @Override
+            public LogicResult evaluateInternal() {
+              for (PatientSeries p : dataModel.getBestPatientSeriesList()) {
+                if (p.getPatientSeriesStatus().equals(PatientSeriesStatus.NOT_COMPLETE))
+                  return LogicResult.YES;
+              }
+              return LogicResult.NO;
+            }
+          });
 
       setLogicCondition(1, new LogicCondition("Are all best patient series status \"Immune\"?") {
         @Override
@@ -280,36 +281,35 @@ private void MULTIANTVG_2() {
         }
       });
 
-      setLogicCondition(2, new LogicCondition(
-          "Is there at least one best patient series status of \"Contraindicated\"?") {
-        @Override
-        public LogicResult evaluateInternal() {
-          for (PatientSeries p : selectedList) {
-            if (p.getPatientSeriesStatus().equals(PatientSeriesStatus.CONTRAINDICATED))
-              return LogicResult.YES;
-          }
-          return LogicResult.NO;
-        }
-      });
+      setLogicCondition(2,
+          new LogicCondition("Is there at least one best patient series status of \"Contraindicated\"?") {
+            @Override
+            public LogicResult evaluateInternal() {
+              for (PatientSeries p : selectedList) {
+                if (p.getPatientSeriesStatus().equals(PatientSeriesStatus.CONTRAINDICATED))
+                  return LogicResult.YES;
+              }
+              return LogicResult.NO;
+            }
+          });
 
-      setLogicCondition(3, new LogicCondition(
-          "Is the recommendation for the vaccine group to administer full vaccine group?") {
-        @Override
-        public LogicResult evaluateInternal() {
+      setLogicCondition(3,
+          new LogicCondition("Is the recommendation for the vaccine group to administer full vaccine group?") {
+            @Override
+            public LogicResult evaluateInternal() {
 
-          return LogicResult.NO;
-        }
-      });
+              return LogicResult.NO;
+            }
+          });
 
-      setLogicResults(0, LogicResult.NO, LogicResult.NO, LogicResult.ANY, LogicResult.YES,
-          LogicResult.YES, LogicResult.ANY);
-      setLogicResults(1, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.NO,
-          LogicResult.NO, LogicResult.YES);
-      setLogicResults(2, LogicResult.NO, LogicResult.YES, LogicResult.YES, LogicResult.NO,
-          LogicResult.ANY, LogicResult.ANY);
-      setLogicResults(3, LogicResult.ANY, LogicResult.NO, LogicResult.YES, LogicResult.YES,
-          LogicResult.NO, LogicResult.ANY);
-
+      setLogicResults(0, LogicResult.NO, LogicResult.NO, LogicResult.ANY, LogicResult.YES, LogicResult.YES,
+          LogicResult.ANY);
+      setLogicResults(1, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.NO,
+          LogicResult.YES);
+      setLogicResults(2, LogicResult.NO, LogicResult.YES, LogicResult.YES, LogicResult.NO, LogicResult.ANY,
+          LogicResult.ANY);
+      setLogicResults(3, LogicResult.ANY, LogicResult.NO, LogicResult.YES, LogicResult.YES, LogicResult.NO,
+          LogicResult.ANY);
 
       setLogicOutcome(0, new LogicOutcome() {
         @Override
@@ -362,6 +362,5 @@ private void MULTIANTVG_2() {
 
     }
   }
-
 
 }

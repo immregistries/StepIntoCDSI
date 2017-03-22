@@ -4,7 +4,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 
 public class TargetDose
 {
-  private TargetDoseStatus targetDoseStatus = null;
+  private TargetDoseStatus targetDoseStatus = TargetDoseStatus.NOT_SATISFIED;
   private SeriesDose trackedSeriesDose = null;
   private VaccineDoseAdministered satisfiedByVaccineDoseAdministered = null;
   private String statusCause = "";
@@ -54,5 +54,14 @@ public void setStatusCause(String statusCause) {
 	this.statusCause = statusCause;
 }
 
+@Override
+public String toString() {
+  if (trackedSeriesDose != null)
+  {
+    return trackedSeriesDose.toString();
+  }
+  // TODO Auto-generated method stub
+  return super.toString();
+}
 
 }

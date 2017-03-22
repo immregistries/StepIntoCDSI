@@ -102,7 +102,7 @@ public class DetermineEvidenceOfImmunityDose extends LogicStep {
       setLogicCondition(0, new LogicCondition("Does the patient clinical history contain one of the supporting data defined immunity guidelines ?") {
         @Override
         protected LogicResult evaluateInternal() {
-        	if(dataModel.getPatient().getMedicalHistory()!=null){
+        	if(false && dataModel.getPatient().getMedicalHistory()!=null){
         		/**
         		 * To Complete
         		 */
@@ -205,8 +205,7 @@ public class DetermineEvidenceOfImmunityDose extends LogicStep {
         	log("Yes. The patient has evidence of immunity.");
           	dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.IMMUNE); 
       		log("Forecast reason is \"patient has evidence of immunity\". ");
-      		
-      		dataModel.getForecastList().get(dataModel.getForecastList().size()-1).setForecastReason("Patient has Evidence of immunity");
+      		dataModel.getForecast().setForecastReason("Patient has Evidence of immunity");
         }
       });
 
@@ -222,13 +221,7 @@ public class DetermineEvidenceOfImmunityDose extends LogicStep {
         public void perform() {
         	log("Yes. The patient has evidence of immunity.");
         	dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.IMMUNE);
-           	Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
-          	List<Forecast> forecastList = dataModel.getForecastList();
-          	for(Forecast forecast:forecastList){
-          		if(forecast.getAntigen().equals(tmpAntigen)){
-          			forecast.setForecastReason("Patient has evidence of immunity");
-          		}
-          	}
+       		dataModel.getForecast().setForecastReason("Patient has evidence of immunity");
     		log("Forecast reason is \"patient has evidence of immunity\". ");
         }
       });

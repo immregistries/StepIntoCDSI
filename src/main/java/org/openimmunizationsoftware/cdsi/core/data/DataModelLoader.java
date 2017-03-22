@@ -564,7 +564,10 @@ public class DataModelLoader {
                 String antigenName = DomUtils.getInternalValue(grandchildNode);
                 Antigen antigen = dataModel.getAntigen(antigenName);
                 contraindication.setAntigen(antigen);
-              } else if (grandchildNode.getNodeName().equals("concept")) {
+              } else if (grandchildNode.getNodeName().equals("contraindicationLanguage")) {
+                String contraindicationLanguage = DomUtils.getInternalValue(grandchildNode);
+                contraindication.setContraindicationLanguage(contraindicationLanguage);
+              } if (grandchildNode.getNodeName().equals("concept")) {
                 String concept = DomUtils.getInternalValue(grandchildNode);
                 contraindication.getConcept().setConceptCodeSystem(concept);
               } else if (grandchildNode.getNodeName().equals("conceptCode")) {

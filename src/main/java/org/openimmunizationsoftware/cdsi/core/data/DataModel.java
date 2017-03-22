@@ -63,7 +63,16 @@ public class DataModel {
   private VaccineGroup vaccineGroup;
   private List<VaccineGroup> vaccineGroupList;
   private int vaccineGroupPos = -1;
+  private Forecast forecast = null;
   
+  public Forecast getForecast() {
+    return forecast;
+  }
+
+  public void setForecast(Forecast forecast) {
+    this.forecast = forecast;
+  }
+
   public void setSelectedPatientSeriesList(List<PatientSeries> selectedPatientSeriesList) {
     this.selectedPatientSeriesList = selectedPatientSeriesList;
   }

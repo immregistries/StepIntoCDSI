@@ -10,7 +10,7 @@ public class Patient
   private String gender = "";
   private String countryOfBirth = "";
   private List<VaccineDoseAdministered> receivesList = new ArrayList<VaccineDoseAdministered>();
-  private MedicalHistory medicalHistory = null;
+  private MedicalHistory medicalHistory = new MedicalHistory();
 
   public MedicalHistory getMedicalHistory() {
     return medicalHistory;
