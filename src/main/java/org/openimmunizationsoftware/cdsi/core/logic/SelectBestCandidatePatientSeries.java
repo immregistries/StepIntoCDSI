@@ -1,28 +1,68 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
-import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
+import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 
 public class SelectBestCandidatePatientSeries extends LogicStep
 {
-
-  // private ConditionAttribute<Date> caDateAdministered = null;
+	
+	private List<PatientSeries> patientSeriesList = dataModel.getPatientSeriesList();
 
   public SelectBestCandidatePatientSeries(DataModel dataModel)
   {
     super(LogicStepType.SELECT_BEST_CANDIDATE_PATIENT_SERIES, dataModel);
     setConditionTableName("Table ");
-    
-    // caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
-    
-   // caTriggerAgeDate.setAssumedValue(FUTURE);
-    
-//    conditionAttributesList.add(caDateAdministered);
-    
-    LT logicTable = new LT();
-    logicTableList.add(logicTable);
+
+  }
+  
+  private  Map<String, Integer> sortByComparator(Map<String, Integer> unsortMap)  {
+
+      List<Entry<String, Integer>> list = new LinkedList<Entry<String, Integer>>(unsortMap.entrySet());
+
+      // Sorting the list based on values
+      Collections.sort(list, new Comparator<Entry<String, Integer>>()        {
+
+			@Override
+			public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
+				// Sort Desc
+				return  o2.getValue().compareTo(o1.getValue());
+			}
+      });
+
+      // Maintaining insertion order with the help of LinkedList
+      Map<String, Integer> sortedMap = new LinkedHashMap<String, Integer>();
+      for (Entry<String, Integer> entry : list){
+      
+          sortedMap.put(entry.getKey(), entry.getValue());
+          
+      }
+
+      return sortedMap;
+  }
+
+  
+  private void ElectBestPatientSeries(PrintWriter out){
+	  HashMap<String,Integer> patientSeriesMap= new HashMap<String,Integer>();
+	  for(PatientSeries patientSeries:patientSeriesList){
+		  patientSeriesMap.put(patientSeries.getTrackedAntigenSeries().getSeriesName(), patientSeries.getScorePatientSerie());
+	  }
+	  patientSeriesMap= (HashMap<String, Integer>) sortByComparator(patientSeriesMap);
+			  
+	  for (Entry<String, Integer> entry : patientSeriesMap.entrySet())
+      {
+          out.println("<p> PatientSeries : " + entry.getKey() + " Value : "+ entry.getValue()  +" </p>");
+      }
+	  
   }
 
   @Override
@@ -39,47 +79,17 @@ public class SelectBestCandidatePatientSeries extends LogicStep
   @Override
   public void printPost(PrintWriter out) throws Exception {
     printStandard(out);
+    ElectBestPatientSeries(out);
   }
 
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + getTitle() + "</h1>");
     out.println("<p>Select best candidate patient series  provides the business rules to  be applied to  the scored candidate patient series which will result in the best patient series for the patient.</p>");
-
-    printConditionAttributesTable(out);
-    printLogicTables(out);
+    
   }
 
-  private class LT extends LogicTable
-  {
-    public LT() {
-      super(0, 0, "Table ?-?");
+ 
 
-      //      setLogicCondition(0, new LogicCondition("date administered > lot expiration date?") {
-      //        @Override
-      //        public LogicResult evaluateInternal() {
-      //          if (caDateAdministered.getFinalValue() == null || caTriggerAgeDate.getFinalValue() == null) {
-      //            return LogicResult.NO;
-      //          }
-      //          if (caDateAdministered.getFinalValue().before(caTriggerAgeDate.getFinalValue())) {
-      //            return LogicResult.YES;
-      //          }
-      //          return LogicResult.NO;
-      //        }
-      //      });
-
-      //      setLogicResults(0, LogicResult.YES, LogicResult.NO, LogicResult.NO, LogicResult.ANY);
-
-      //      setLogicOutcome(0, new LogicOutcome() {
-      //        @Override
-      //        public void perform() {
-      //          log("No. The target dose cannot be skipped. ");
-      //          log("Setting next step: 4.3 Substitute Target Dose");
-      //          setNextLogicStep(LogicStep.SUBSTITUTE_TARGET_DOSE_FOR_EVALUATION);
-      //        }
-      //      });
-      //      
-    }
-  }
 
 
 }
