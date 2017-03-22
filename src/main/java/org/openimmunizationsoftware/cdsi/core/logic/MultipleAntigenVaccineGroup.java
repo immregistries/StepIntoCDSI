@@ -56,13 +56,24 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
       // MULTIANTVG-1
       MULTIANTVG_1();
       // MULTIANTVG-2
+      MULTIANTVG_2();
       // MULTIANTVG-3
+      MULTIANTVG_3();
       // MULTIANTVG-4
+      MULTIANTVG_4();
       // MULTIANTVG-5
+      MULTIANTVG_5();
       // MULTIANTVG-6
+      MULTIANTVG_6();
       // MULTIANTVG-7
+      MULTIANTVG_7();
       // MULTIANTVG-8
+      MULTIANTVG_8();
       // MULTIANTVG-9
+      List<VaccineGroup> recommendedVaccines = new ArrayList<VaccineGroup>();
+      for (PatientSeries p : selectedList)
+    	  recommendedVaccines.add(p.getForecast().getVaccineGroupForecast().getVaccineGroup());
+     // vgf.setV
     }
     for (PatientSeries p : selectedList) {
       vgf.setAntigen(p.getForecast().getAntigen());
@@ -71,6 +82,113 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
     dataModel.getVaccineGroupForcastList().add(vgf);
     return next();
   }
+
+private void MULTIANTVG_8() {
+	List<Antigen> antigensNeededList = new ArrayList<Antigen>();
+      for (PatientSeries p : selectedList){
+    	  if (p.getPatientSeriesStatus() == PatientSeriesStatus.NOT_COMPLETE)
+    		  antigensNeededList.add(p.getTrackedAntigenSeries().getTargetDisease());
+      }
+      vgf.setAntigensNeededList(antigensNeededList);
+}
+
+private void MULTIANTVG_7() {
+    String reasons = "";
+	for (PatientSeries p : selectedList)
+    	  reasons=reasons+p.getForecast().getForecastReason();
+      vgf.setForecastReason(reasons);
+}
+
+  private void MULTIANTVG_6() {
+		Date earliestRecommendedDate = null;
+	    for (PatientSeries p : selectedList) {
+	  	  Date erd = p.getForecast().getUnadjustedPastDueDate();
+	  	  if (erd != null){
+	  		  if (earliestRecommendedDate == null){
+	  			  earliestRecommendedDate=erd;
+	  		  }else{
+	  			  if (erd.before(earliestRecommendedDate)){
+	  				  earliestRecommendedDate=erd;
+	  			  }
+	  		  }
+	  	  }
+	    }
+	    vgf.setUnadjustedPastDueDate(earliestRecommendedDate);
+	}
+  
+private void MULTIANTVG_5() {
+	Date earliestRecommendedDate = null;
+    for (PatientSeries p : selectedList) {
+  	  Date erd = p.getForecast().getUnadjustedRecommendedDate();
+  	  if (erd != null){
+  		  if (earliestRecommendedDate == null){
+  			  earliestRecommendedDate=erd;
+  		  }else{
+  			  if (erd.before(earliestRecommendedDate)){
+  				  earliestRecommendedDate=erd;
+  			  }
+  		  }
+  	  }
+    }
+    vgf.setUnadjustedRecommendedDate(earliestRecommendedDate);
+}
+
+private void MULTIANTVG_4() {
+	Date earliestRecommendedDate = null;
+    for (PatientSeries p : selectedList) {
+  	  Date erd = p.getForecast().getLatestDate();
+  	  if (erd != null){
+  		  if (earliestRecommendedDate == null){
+  			  earliestRecommendedDate=erd;
+  		  }else{
+  			  if (erd.before(earliestRecommendedDate)){
+  				  earliestRecommendedDate=erd;
+  			  }
+  		  }
+  	  }
+    }
+    vgf.setLatestDate(earliestRecommendedDate);
+}
+
+private void MULTIANTVG_3() {
+	Date earliestRecommendedDate = null;
+    for (PatientSeries p : selectedList) {
+  	  Date erd = p.getForecast().getAdjustedPastDueDate();
+  	  if (erd != null){
+  		  if (earliestRecommendedDate == null){
+  			  earliestRecommendedDate=erd;
+  		  }else{
+  			  if (erd.before(earliestRecommendedDate)){
+  				  earliestRecommendedDate=erd;
+  			  }
+  		  }
+  	  }
+    }
+    if (vgf.getEarliestDate().after(earliestRecommendedDate)){
+  	  earliestRecommendedDate=vgf.getEarliestDate();
+    }
+    vgf.setAdjustedPastDueDate(earliestRecommendedDate);
+}
+
+private void MULTIANTVG_2() {
+	Date earliestRecommendedDate = null;
+      for (PatientSeries p : selectedList) {
+    	  Date erd = p.getForecast().getAdjustedRecommendedDate();
+    	  if (erd != null){
+    		  if (earliestRecommendedDate == null){
+    			  earliestRecommendedDate=erd;
+    		  }else{
+    			  if (erd.before(earliestRecommendedDate)){
+    				  earliestRecommendedDate=erd;
+    			  }
+    		  }
+    	  }
+      }
+      if (vgf.getEarliestDate().after(earliestRecommendedDate)){
+    	  earliestRecommendedDate=vgf.getEarliestDate();
+      }
+      vgf.setAdjustedRecommendedDate(earliestRecommendedDate);
+}
 
   private void MULTIANTVG_1() {
     Date earliestDate = null;
