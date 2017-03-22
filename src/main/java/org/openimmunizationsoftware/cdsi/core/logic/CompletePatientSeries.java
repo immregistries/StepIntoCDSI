@@ -1,6 +1,7 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -26,9 +27,7 @@ public class CompletePatientSeries extends LogicStep
 	
 	private List<PatientSeries> patientSeriesList = dataModel.getPatientSeriesList();
 	
-	/***cond1
-	 * A candidate patient series has the most valid doses
-	 */
+	
 	private int  numberOfValidDoses (PatientSeries patientSeries){
 		int nbOfValidDoses = 0;
 		for(TargetDose target:patientSeries.getTargetDoseList()){
@@ -75,7 +74,7 @@ public class CompletePatientSeries extends LogicStep
 		if(productPatientSeries && hasAllValidDoses){
 			return 1;
 		}else{
-			return 0;
+			return -1;
 		}
 	}
 	
@@ -173,11 +172,111 @@ public class CompletePatientSeries extends LogicStep
     super(LogicStepType.COMPLETE_PATIENT_SERIES, dataModel);
     setConditionTableName("Table ");
   }
+  
+  /***cond1
+	 * A candidate patient series has the most valid doses
+	 */
+  
+  private void evaluate_ACandidatePatientSeriesHasTheMostValidDoses(){
+	  HashMap<Integer,Integer> condMap = new HashMap<Integer,Integer>();
+	  for(int i=0; i<patientSeriesList.size();i++){
+		  condMap.put(i,numberOfValidDoses(patientSeriesList.get(i)));
+	  }
+	  condMap =(HashMap<Integer, Integer>) sortByComparator(condMap);
+	  int j = 0;
+	  int tmp = 0;
+	  int greatestElementPos = 0;
+	  ArrayList<Integer> pos = new ArrayList<Integer>();
+	  boolean twoOrMore = false;
+	  for(Entry<Integer,Integer> entry:condMap.entrySet()){
+		  if(j==0){
+			  tmp = entry.getValue();
+			  greatestElementPos = entry.getKey();
+			  j++;
+		  }
+		  if(j>0){
+			  if(tmp == entry.getValue()){
+				  twoOrMore = true;
+				 pos.add(entry.getKey());
+				  
+			  }
+		  }
+		  
+	  }
+	  if(twoOrMore){
+		  pos.add(greatestElementPos);
+	  }
+	  
+	  if(!twoOrMore){
+		  patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
+		  if(patientSeriesList.size()>1){
+			  patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
+			  for(PatientSeries patientSeries: patientSeriesList){
+				  patientSeries.descPatientScoreSeries();
+			  }
+		  }
+	  }else{
+		  for(PatientSeries patientSeries: patientSeriesList){
+			  patientSeries.descPatientScoreSeries();
+		  }
+		  for(int i:pos){
+			  patientSeriesList.get(i).incPatientScoreSeries();
+			  patientSeriesList.get(i).incPatientScoreSeries();
+		  }
+	  }  
+	  
+  }
+  
+  private int IsAProductPatientSeriesAndHasAllValidDoses(PatientSeries patientSeries){
+		boolean productPatientSeries = false;
+		boolean hasAllValidDoses = false;
+		
+		
+		if(patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries().getProductPath()!=null){
+			if(patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries().getProductPath().equals(YesNo.YES)){
+				productPatientSeries = true;
+			}
+			
+		}
+		
+		for(TargetDose target:patientSeries.getTargetDoseList()){
+			if(target.getTargetDoseStatus()!=null){
+				if(!target.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)){
+					
+				}else{
+					hasAllValidDoses = true;
+				}
+			}
+			
+		}
+		
+		if(productPatientSeries && hasAllValidDoses){
+			return 1;
+		}else{
+			return -1;
+		}
+	}
+  
+ private void evaluate_ACandidatePatientSeriesIsAProductPatientSeriesAndHasAllValidDoses(){
+	  
+  }
+ 
+ private void evaluate_ACondidatePatientSeriesIsTheEarliestCompleting(){
+	  
+ }
+
+  
+  private void evaluateTable(){
+	  evaluate_ACandidatePatientSeriesHasTheMostValidDoses();
+	  evaluate_ACandidatePatientSeriesIsAProductPatientSeriesAndHasAllValidDoses();
+	  evaluate_ACondidatePatientSeriesIsTheEarliestCompleting();
+	  
+  }
 
   @Override
   public LogicStep process() throws Exception {
     setNextLogicStepType(LogicStepType.SELECT_BEST_CANDIDATE_PATIENT_SERIES);
-    evalateTable();
+    evaluateTable();
     return next();
   }
 
