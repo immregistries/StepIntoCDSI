@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -16,14 +17,11 @@ import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
-import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
-import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
-import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
+
 
 public class CompletePatientSeries extends LogicStep
 {
 
-  // private ConditionAttribute<Date> caDateAdministered = null;
 	
 	private List<PatientSeries> patientSeriesList = dataModel.getPatientSeriesList();
 	
@@ -41,78 +39,9 @@ public class CompletePatientSeries extends LogicStep
 		return nbOfValidDoses;
 	}
 	
-	/***
-	 * cond2
-	 * A candidate patient series is a product patient series and has all valid doses.
-	 * 
-	 * P66 SelectB-23 "patient path" or "product path"
-	 */
+
 	
-	private int cond2(PatientSeries patientSeries){
-		boolean productPatientSeries = false;
-		boolean hasAllValidDoses = false;
-		
-		
-		if(patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries().getProductPath()!=null){
-			if(patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries().getProductPath().equals(YesNo.YES)){
-				productPatientSeries = true;
-			}
-			
-		}
-		
-		for(TargetDose target:patientSeries.getTargetDoseList()){
-			if(target.getTargetDoseStatus()!=null){
-				if(!target.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)){
-					
-				}else{
-					hasAllValidDoses = true;
-				}
-			}
-			
-		}
-		
-		if(productPatientSeries && hasAllValidDoses){
-			return 1;
-		}else{
-			return -1;
-		}
-	}
 	
-	/***
-	 * cond3
-	 * A candidate patient series is the earliest completing.
-	 * 
-	 * A complete patient series must be considered to be the earliest completing if the actual finish date is before the actual finish date for all 
-	 * other complete patient series.
-	 */
-	
-	private boolean isTheEarliestCompleting(PatientSeries patientSeries){
-		// Don't know how to verify the condition
-		return false;
-	}
-	
-	private HashMap<Integer, Integer> evaluateCond1(){
-		HashMap<Integer, Integer> condMap = new HashMap<Integer, Integer>();
-		for(int i=0; i<patientSeriesList.size();i++){
-			condMap.put(i,  numberOfValidDoses(patientSeriesList.get(i)));
-		}
-		
-		return condMap;
-	}
-	
-	private HashMap<Integer, Integer> evaluateCond2(){
-		HashMap<Integer, Integer> condMap = new HashMap<Integer, Integer>();
-		for(int i=0; i<patientSeriesList.size();i++){
-			condMap.put(i, cond2(patientSeriesList.get(i)));
-		}
-		
-		return condMap;
-	}
-	private HashMap<Integer, Integer> evaluateCond3(){
-		HashMap<Integer, Integer> condMap = new HashMap<Integer, Integer>();
-		
-		return condMap;
-	}
 	
 	 private  Map<Integer, Integer> sortByComparator(Map<Integer, Integer> unsortMap)
 	    {
@@ -140,33 +69,7 @@ public class CompletePatientSeries extends LogicStep
 	        return sortedMap;
 	    }
 	
-	private void evalateTable(){
-		HashMap<Integer,Integer> cond1 = evaluateCond1();
-		cond1 = (HashMap<Integer, Integer>) sortByComparator(cond1);
-		Entry<Integer, Integer> entry = cond1.entrySet().iterator().next();
-		int biggestValue = entry.getValue();
-		for (Entry<Integer, Integer> entry0 : cond1.entrySet()){
-			if(biggestValue>=entry0.getValue()){
-				patientSeriesList.get(entry0.getKey()).incPatientScoreSeries();
-			}else{
-				patientSeriesList.get(entry0.getKey()).descPatientScoreSeries();
-			}
-			
-		}
-		HashMap<Integer,Integer> cond2 = evaluateCond2();
-		for(Entry<Integer,Integer> entry0:cond2.entrySet()){
-			if(entry0.getValue()==1){
-				patientSeriesList.get(entry0.getKey()).incPatientScoreSeries();
-			}else{
-				patientSeriesList.get(entry0.getKey()).descPatientScoreSeries();
-			}
-		}
-		//HashMap<Integer,Integer> cond3 = evaluateCond3();
-		
-		
-	}
-
-
+	
   public CompletePatientSeries(DataModel dataModel)
   {
     super(LogicStepType.COMPLETE_PATIENT_SERIES, dataModel);
@@ -226,6 +129,12 @@ public class CompletePatientSeries extends LogicStep
 	  }  
 	  
   }
+  /***
+	 * cond2
+	 * A candidate patient series is a product patient series and has all valid doses.
+	 * 
+	 * P66 SelectB-23 "patient path" or "product path"
+	 */
   
   private int isAProductPatientSeriesAndHasAllValidDoses(PatientSeries patientSeries){
 		boolean productPatientSeries = false;
@@ -264,7 +173,19 @@ public class CompletePatientSeries extends LogicStep
 	  
   }
  
+ /***
+	 * cond3
+	 * A candidate patient series is the earliest completing.
+	 * 
+	 * A complete patient series must be considered to be the earliest completing if the actual finish date is before the actual finish date for all 
+	 * other complete patient series.
+	 */
+ 
  private void evaluate_ACondidatePatientSeriesIsTheEarliestCompleting(){
+	 ArrayList<Date> finishDateList = new ArrayList<Date>();
+	 for(PatientSeries patientSeries:patientSeriesList){
+		 
+	 }
 	  
  }
 
