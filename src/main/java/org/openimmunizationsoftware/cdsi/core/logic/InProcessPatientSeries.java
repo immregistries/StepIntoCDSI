@@ -226,7 +226,70 @@ public class InProcessPatientSeries extends LogicStep
 	}
 	
 	private void evaluate_ACandidatePatientSeriesIsClosestToCompletion(){
-		
+		HashMap<Integer,Integer> condMap = new HashMap<Integer,Integer>();
+		  for(int i=0; i<patientSeriesList.size();i++){
+			  condMap.put(i,numberOfNotSatisfiedTargetDoses(patientSeriesList.get(i)));
+		  }
+		  condMap =(HashMap<Integer, Integer>) sortByComparator(condMap);
+		  int j = 0;
+		  int tmp = 0;
+		  int greatestElementPos = 0;
+		  ArrayList<Integer> pos = new ArrayList<Integer>();
+		  boolean twoOrMore = false;
+		  for(Entry<Integer,Integer> entry:condMap.entrySet()){
+			  if(j==0){
+				  tmp = entry.getValue();
+				  greatestElementPos = entry.getKey();
+				  j++;
+			  }
+			  if(j>0){
+				  if(tmp == entry.getValue()){
+					  twoOrMore = true;
+					 pos.add(entry.getKey());
+					  
+				  }
+			  }
+			  
+		  }
+		  if(twoOrMore){
+			  pos.add(greatestElementPos);
+		  }
+		  
+		  if(!twoOrMore){
+			  patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
+			  patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
+			  if(patientSeriesList.size()>1){
+				  patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
+				  patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
+				  for(PatientSeries patientSeries: patientSeriesList){
+					  patientSeries.descPatientScoreSeries();
+					  patientSeries.descPatientScoreSeries();
+				  }
+			  }
+		  }else{
+			  for(PatientSeries patientSeries: patientSeriesList){
+				  patientSeries.descPatientScoreSeries();
+				  patientSeries.descPatientScoreSeries();
+			  }
+			  for(int i:pos){
+				  patientSeriesList.get(i).incPatientScoreSeries();
+				  patientSeriesList.get(i).incPatientScoreSeries();
+			  }
+		  }  
+		  
+	  }
+	
+	private int  numberOfNotSatisfiedTargetDoses (PatientSeries patientSeries){
+		int nbOfNotSatisfiedTargetDoses = 0;
+		for(TargetDose target:patientSeries.getTargetDoseList()){
+			if(target.getTargetDoseStatus()!=null){
+				if(target.getTargetDoseStatus().equals(TargetDoseStatus.NOT_SATISFIED)){
+					nbOfNotSatisfiedTargetDoses++;
+				}
+			}
+			
+		}
+		return nbOfNotSatisfiedTargetDoses;
 	}
 	
 	/**
@@ -262,7 +325,7 @@ public class InProcessPatientSeries extends LogicStep
 					}
 				}
 			}else{
-				System.err.println("TrachedAntigenSeries is not set");
+				System.err.println("VaccineGroupForecast is not set");
 			}
 		}
 	
@@ -271,7 +334,7 @@ public class InProcessPatientSeries extends LogicStep
 	 * A candidate patient series exceeded maximum age to start
 	 */
 	
-	private void cond6(){
+	private void evaluate_ACandidatePatientSeriesExceededMaximumAgeToStart(){
 		  Date evalDate = dataModel.getAssessmentDate();
 		  for(PatientSeries patientSeries: patientSeriesList){
 				 Date maximumAgeDate = findMaximumAgeDate(patientSeries);
@@ -287,16 +350,7 @@ public class InProcessPatientSeries extends LogicStep
 					 patientSeries.descPatientScoreSeries();
 					 patientSeries.descPatientScoreSeries();
 				 }else{
-					 patientSeries.incPatientScoreSeries();
-					 patientSeries.incPatientScoreSeries();
-					 patientSeries.incPatientScoreSeries();
-					 patientSeries.incPatientScoreSeries();
-					 patientSeries.incPatientScoreSeries();
-					 patientSeries.incPatientScoreSeries();
-					 patientSeries.incPatientScoreSeries();
-					 patientSeries.incPatientScoreSeries();
-					 patientSeries.incPatientScoreSeries();
-					 patientSeries.incPatientScoreSeries();
+					 
 				 }
 			  }		
 	}
