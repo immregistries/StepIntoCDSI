@@ -38,16 +38,22 @@ public class SingleAntigenVaccineGroup extends LogicStep
     VaccineGroupForecast vgf = new VaccineGroupForecast();
     vgf.setVaccineGroup(vaccineGroup);
     //System.out.println("FFF");
-    for (    PatientSeries p : dataModel.getBestPatientSeriesList())
+    //for (    PatientSeries p : dataModel.getBestPatientSeriesList())
     	//System.out.println("FFFFF"+p.getTrackedAntigenSeries().getSeriesName());
+    PatientSeries p=dataModel.getBestPatientSeriesList().get(0);
     for (Forecast forecast : dataModel.getForecastList())
     {
       if (forecast.getAntigen().equals(vaccineGroup.getAntigenList().get(0)))
-      {
+      {    System.out.println("bbbbbbb" +forecast.getAntigen() + vaccineGroup.getAntigenList().get(0));
+
+      //Règle en plus
+      vgf.setTargetDose(p.getForecast().getTargetDose());
     	  //System.out.println(forecast.getAntigen());
         // SINGLEANTVG-1    The vaccine group status for a single antigen vaccine group must be the patient series status of the best patient series.
         
-       // vgf.setVaccineGroupStatus(getBestPatientSeries().getPatientSeriesStatus());
+        vgf.setVaccineGroupStatus(p.getPatientSeriesStatus());
+  		System.out.println("ccccccc" + vgf.getVaccineGroupStatus());
+
         // SINGLEANTVG-2   The vaccine group forecast earliest date for a single antigen vaccine group must be the best patient series forecast earliest date.
         vgf.setEarliestDate(forecast.getEarliestDate());
         // SINGLEANTVG-3   The vaccine group forecast adjusted recommended date for a single antigen vaccine group must be the best patient series forecast adjusted recommended date.
@@ -81,18 +87,18 @@ public class SingleAntigenVaccineGroup extends LogicStep
     printStandard(out);
   }
 
- /* public PatientSeries getBestPatientSeries(){
+  public PatientSeries getBestPatientSeries(){
 	  if (dataModel.getPatientSeriesList().size() > 0){
 		  PatientSeries bestPatientSeries = dataModel.getPatientSeriesList().get(0);
 		  for (PatientSeries ps : dataModel.getPatientSeriesList()){
-			  if (ps.getScorePatientSerie()>bestPatientSeries.getScorePatientSerie())
+			  if (ps.getScorePatientSeries()>bestPatientSeries.getScorePatientSeries())
 				  bestPatientSeries=ps;
 		  }
 		  return bestPatientSeries; 
 	  }else{
 		  return null;
 	  }
-  }*/
+  }
   
   @Override
   public void printPost(PrintWriter out) throws Exception {

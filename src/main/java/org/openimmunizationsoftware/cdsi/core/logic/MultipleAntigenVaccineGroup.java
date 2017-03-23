@@ -1,6 +1,7 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,8 +10,10 @@ import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.IntervalPriority;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
@@ -52,7 +55,9 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
 
     setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
     evaluateLogicTables();
-    if (vgf.getPatientSeriesStatus() == PatientSeriesStatus.NOT_COMPLETE) {
+
+    if (vgf.getVaccineGroupStatus() == VaccineGroupStatus.NOT_COMPLETE) {
+    	System.out.println("PatientSeries not complete");
       // MULTIANTVG-1
       MULTIANTVG_1();
       // MULTIANTVG-2
@@ -77,12 +82,13 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
           recommendedVaccines.add(p.getForecast().getVaccineGroupForecast().getVaccineGroup());
         }
       // vgf.setV
+      for (PatientSeries p : selectedList) {
+          vgf.setAntigen(p.getForecast().getAntigen());
+          vgf.getAntigenList().add(p.getForecast().getAntigen());
+        }
+       	dataModel.getVaccineGroupForcastList().add(vgf);
     }
-    for (PatientSeries p : selectedList) {
-      vgf.setAntigen(p.getForecast().getAntigen());
-      vgf.getAntigenList().add(p.getForecast().getAntigen());
-    }
-    dataModel.getVaccineGroupForcastList().add(vgf);
+
     return next();
   }
 
@@ -138,7 +144,10 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
 
   private void MULTIANTVG_4() {
     Date earliestRecommendedDate = null;
+    TargetDose td = null;
     for (PatientSeries p : selectedList) {
+        if (p.getForecast().getTargetDose() != null)
+      	  td = p.getForecast().getTargetDose();
       Date erd = p.getForecast().getLatestDate();
       if (erd != null) {
         if (earliestRecommendedDate == null) {
@@ -150,13 +159,18 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
         }
       }
     }
+    if (vgf.getTargetDose() == null && td != null)
+    	vgf.setTargetDose(td);
     vgf.setLatestDate(earliestRecommendedDate);
   }
 
   private void MULTIANTVG_3() {
     Date earliestRecommendedDate = null;
+    TargetDose td = null;
     for (PatientSeries p : selectedList) {
       Date erd = p.getForecast().getAdjustedPastDueDate();
+      if (p.getForecast().getTargetDose() != null)
+    	  td = p.getForecast().getTargetDose();
       if (erd != null) {
         if (earliestRecommendedDate == null) {
           earliestRecommendedDate = erd;
@@ -170,52 +184,75 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
     if (vgf.getEarliestDate().after(earliestRecommendedDate)) {
       earliestRecommendedDate = vgf.getEarliestDate();
     }
+    if (vgf.getTargetDose() == null && td != null)
+    	vgf.setTargetDose(td);
     vgf.setAdjustedPastDueDate(earliestRecommendedDate);
   }
 
   private void MULTIANTVG_2() {
     Date earliestRecommendedDate = null;
+    TargetDose td = null;
     for (PatientSeries p : selectedList) {
       Date erd = p.getForecast().getAdjustedRecommendedDate();
       if (erd != null) {
         if (earliestRecommendedDate == null) {
           earliestRecommendedDate = erd;
+          if (p.getForecast().getTargetDose() != null)
+        	  td = p.getForecast().getTargetDose();
         } else {
           if (erd.before(earliestRecommendedDate)) {
             earliestRecommendedDate = erd;
+            if (p.getForecast().getTargetDose() != null)
+          	  td = p.getForecast().getTargetDose();
           }
         }
       }
     }
-    if (vgf.getEarliestDate().after(earliestRecommendedDate)) {
-      earliestRecommendedDate = vgf.getEarliestDate();
+    if (vgf.getEarliestDate()!=null){
+    	System.out.println("ttttttt");
+    	if (earliestRecommendedDate!=null){
+    		System.out.println("uuuuuuuu");
+    	    if (vgf.getEarliestDate().after(earliestRecommendedDate)) {
+    	        earliestRecommendedDate = vgf.getEarliestDate();
+    	      }
+    	}
     }
+    if (vgf.getTargetDose() == null && td != null)
+    	vgf.setTargetDose(td);
     vgf.setAdjustedRecommendedDate(earliestRecommendedDate);
   }
 
   private void MULTIANTVG_1() {
     Date earliestDate = null;
+    TargetDose td = null;
     for (PatientSeries p : selectedList) {
       Date ed = p.getForecast().getEarliestDate();
       if (ed != null) {
         if (earliestDate == null) {
           earliestDate = ed;
+          if (p.getForecast().getTargetDose() != null)
+        	  td = p.getForecast().getTargetDose();
         } else {
           IntervalPriority intervalPriority = p.getForecast().getInterval() == null ? null
               : p.getForecast().getInterval().getIntervalPriority();
           if (intervalPriority == null) {
             if (ed.after(earliestDate)) {
               earliestDate = ed;
+              if (p.getForecast().getTargetDose() != null)
+            	  	td = p.getForecast().getTargetDose();
             }
           } else {
             if (ed.before(earliestDate)) {
               earliestDate = ed;
+              if (p.getForecast().getTargetDose() != null)
+            	  td = p.getForecast().getTargetDose();
             }
           }
         }
       }
     }
     vgf.setEarliestDate(earliestDate);
+    vgf.setTargetDose(td);
   }
 
   @Override
@@ -297,8 +334,8 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
           new LogicCondition("Is the recommendation for the vaccine group to administer full vaccine group?") {
             @Override
             public LogicResult evaluateInternal() {
-
-              return LogicResult.NO;
+            	//if (vgf.get)
+              return LogicResult.YES;
             }
           });
 
@@ -315,6 +352,7 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
         @Override
         public void perform() {
           log("Completed");
+          vgf.setVaccineGroupStatus(PatientSeriesStatus.COMPLETE);
           vgf.setPatientSeriesStatus(PatientSeriesStatus.COMPLETE);
           setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
         }
@@ -323,6 +361,7 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
         @Override
         public void perform() {
           log("Contraindicated");
+          vgf.setVaccineGroupStatus(PatientSeriesStatus.CONTRAINDICATED);
           vgf.setPatientSeriesStatus(PatientSeriesStatus.CONTRAINDICATED);
           setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
         }
@@ -331,6 +370,7 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
         @Override
         public void perform() {
           log("Contraindicated");
+          vgf.setVaccineGroupStatus(PatientSeriesStatus.CONTRAINDICATED);
           vgf.setPatientSeriesStatus(PatientSeriesStatus.CONTRAINDICATED);
           setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
         }
@@ -339,6 +379,7 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
         @Override
         public void perform() {
           log("Not Complete");
+          vgf.setVaccineGroupStatus(PatientSeriesStatus.NOT_COMPLETE);
           vgf.setPatientSeriesStatus(PatientSeriesStatus.NOT_COMPLETE);
           setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
         }
@@ -347,6 +388,7 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
         @Override
         public void perform() {
           log("Not Complete");
+          vgf.setVaccineGroupStatus(PatientSeriesStatus.NOT_COMPLETE);
           vgf.setPatientSeriesStatus(PatientSeriesStatus.NOT_COMPLETE);
           setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
         }
@@ -355,6 +397,7 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
         @Override
         public void perform() {
           log("Immune");
+          vgf.setVaccineGroupStatus(PatientSeriesStatus.IMMUNE);
           vgf.setPatientSeriesStatus(PatientSeriesStatus.IMMUNE);
           setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
         }

@@ -295,21 +295,23 @@ public class InProcessPatientSeries extends LogicStep
 		
 	  private void evaluate_ACandidatePatientSeriesCanFinishEarliest(){
 		  int j=0;
-		  if(patientSeriesList.get(0).getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast()!=null){
-			Date tmpDate = patientSeriesList.get(0).getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getLatestDate();
+		  System.out.println("patientSeries: "+patientSeriesList.get(0));
+		  if(patientSeriesList.get(0).getForecast()!=null){
+				System.err.println("Forecast is set");
+			Date tmpDate = patientSeriesList.get(0).getForecast().getLatestDate();
 				for(int i=0; i<patientSeriesList.size();i++){
 					PatientSeries patientSeries = patientSeriesList.get(i);
-					if (tmpDate == patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getLatestDate()){
+					if (tmpDate == patientSeries.getForecast().getLatestDate()){
 						j++;
 					}else{
-						if(tmpDate.after(patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getLatestDate())){
-							tmpDate = patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getLatestDate();
+						if(tmpDate.after(patientSeries.getForecast().getLatestDate())){
+							tmpDate = patientSeries.getForecast().getLatestDate();
 						j=0;
 						}	
 					}
 				}  
 				for(PatientSeries patientSeries:patientSeriesList){
-					if(patientSeries.getTrackedAntigenSeries().getVaccineGroup().getVaccineGroupForecast().getLatestDate()!=tmpDate){
+					if(patientSeries.getForecast().getLatestDate()!=tmpDate){
 						patientSeries.descPatientScoreSeries();
 					}else{
 						if (j==1)
@@ -317,7 +319,7 @@ public class InProcessPatientSeries extends LogicStep
 					}
 				}
 			}else{
-				System.err.println("VaccineGroupForecast is not set");
+				System.err.println("Forecast is not set");
 			}
 		}
 	

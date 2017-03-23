@@ -54,6 +54,7 @@ public class ClassifyVaccineGroup extends LogicStep
 
 	      setLogicCondition(0, new LogicCondition("Does the vaccine group contain exactly 1 antigen?"){
 	            public LogicResult evaluateInternal() {
+	            	System.out.println("----->"+dataModel.getVaccineGroup().getAntigenList().size());
 	            		if (dataModel.getVaccineGroup().getAntigenList().size() == 1){
 	            			return LogicResult.YES;
 	            		}

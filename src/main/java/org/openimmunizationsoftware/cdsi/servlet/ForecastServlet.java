@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.SynchronousQueue;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -144,7 +145,8 @@ public class ForecastServlet extends HttpServlet {
         if (vgf.getAntigen() != null) {
           String name = vgf.getAntigen().getName();
           // down to here
-          out.print("Forecasting " + name + " status ");
+          out.print("Forecasting " + name + " status " );
+          System.out.println("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"+vgf.getPatientSeriesStatus());
           if (vgf.getPatientSeriesStatus() == PatientSeriesStatus.NOT_COMPLETE) {
             if (vgf.getAdjustedRecommendedDate().after(today)) {
               out.print("due later ");

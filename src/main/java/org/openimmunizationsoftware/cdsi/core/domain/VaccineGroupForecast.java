@@ -8,10 +8,10 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStat
 
 public class VaccineGroupForecast extends Forecast {
   private List<Antigen> antigensNeededList = new ArrayList<Antigen>();
-  private VaccineGroupStatus vaccineGroupStatus = null;
+  private VaccineGroupStatus vaccineGroupStatus =VaccineGroupStatus.NOT_COMPLETE;// null;
   private List<Forecast> forecastList = new ArrayList<Forecast>();
   private VaccineGroup vaccineGroup = null;
-  private PatientSeriesStatus patientSeriesStatus = null;
+  private PatientSeriesStatus patientSeriesStatus =PatientSeriesStatus.NOT_COMPLETE;// null;
   private List<Antigen> antigenList = new ArrayList<Antigen>();
   
   public List<Antigen> getAntigenList() {
