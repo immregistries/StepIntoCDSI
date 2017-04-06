@@ -112,7 +112,7 @@ public class EvaluateInterval extends LogicStep {
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + getTitle() + "</h1>");
     out.println(
-        "<p>Evaluate interval validates the date administered of a vaccine dose administered against defined interval(s) from previous vaccine dose(s) administered. In cases where a target dose does not specify interval attributes, the interval is considered “valid.”</p>");
+        "<p>Evaluate interval validates the date administered of a vaccine dose administered against defined interval(s) from previous vaccine dose(s) administered. In cases where a target dose does not specify interval attributes, the interval is considered \"valid.\"</p>");
     out.println("<p>Intervals can be measures in three different ways:</p>");
     out.println("<ul>");
     out.println(
@@ -240,7 +240,7 @@ public class EvaluateInterval extends LogicStep {
       });
 
       setLogicCondition(4, new LogicCondition(
-          "Is the evaluation status of the previous vaccine dose administered “not valid” due to age or interval recommendations? ") {
+          "Is the evaluation status of the previous vaccine dose administered \"not valid\" due to age or interval recommendations? ") {
         @Override
         public LogicResult evaluateInternal() {
           if (dataModel.getTargetDose().getTargetDoseStatus() == TargetDoseStatus.NOT_SATISFIED)
@@ -264,7 +264,7 @@ public class EvaluateInterval extends LogicStep {
         @Override
         public void perform() {
           // TODO Auto-generated method stub
-          log("No. The vaccine dose administered did not satisfy the defined interval.  Evaluation Reason is “too soon.”");
+          log("No. The vaccine dose administered did not satisfy the defined interval.  Evaluation Reason is \"too soon.\"");
           result = YesNo.NO;
         }
       });
@@ -273,7 +273,7 @@ public class EvaluateInterval extends LogicStep {
         @Override
         public void perform() {
           // TODO Auto-generated method stub
-          log("No. The vaccine dose administered did not satisfy the defined interval.  Evaluation Reason is “too soon.”");
+          log("No. The vaccine dose administered did not satisfy the defined interval.  Evaluation Reason is \"too soon.\"");
           result = YesNo.NO;
         }
       });
@@ -282,7 +282,7 @@ public class EvaluateInterval extends LogicStep {
         @Override
         public void perform() {
           // TODO Auto-generated method stub
-          log("Yes. The vaccine dose administered satisfied the defined interval.  Evaluation Reason is “grace period.”");
+          log("Yes. The vaccine dose administered satisfied the defined interval.  Evaluation Reason is \"grace period.\"");
           result = YesNo.YES;
         }
       });
@@ -291,7 +291,7 @@ public class EvaluateInterval extends LogicStep {
         @Override
         public void perform() {
           // TODO Auto-generated method stub
-          log("Yes. The vaccine dose administered satisfied the defined interval.  Evaluation Reason is “grace period.”");
+          log("Yes. The vaccine dose administered satisfied the defined interval.  Evaluation Reason is \"grace period.\"");
           result = YesNo.YES;
         }
       });

@@ -253,7 +253,7 @@ public class EvaluateForPreferableVaccine extends LogicStep {
         @Override
         public void perform() {
           result = YesNo.YES;
-          log("Yes. A preferable vaccine was administered. Evaluation Reason is volume administered is “less than recommended volume.”");
+          log("Yes. A preferable vaccine was administered. Evaluation Reason is volume administered is \"less than recommended volume.\"");
           // setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
         }
       });

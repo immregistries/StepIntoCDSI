@@ -113,7 +113,7 @@ public class EvaluateGender extends LogicStep {
       setLogicOutcome(1, new LogicOutcome() {
         @Override
         public void perform() {
-          log("No. Patient's gender is not one of the required genders. Evaluation Reason is “incorrect gender.”");
+          log("No. Patient's gender is not one of the required genders. Evaluation Reason is \"incorrect gender.\"");
           log("Setting next step: 4.10 Satisfy Target Dose");
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
           dataModel.getTargetDose()
