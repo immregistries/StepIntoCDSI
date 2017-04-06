@@ -303,7 +303,7 @@ public class EvaluateLiveVirusConflict extends LogicStep {
           "Table 4-22 Is the current vaccine dose administrated in conflict with previous vaccije dose administrated ?");
 
       setLogicCondition(0, new LogicCondition(
-          "Is the conflict begin interval date ≤ current date administered<conflict end interval date?") {
+          "Is the conflict begin interval date <= current date administered<conflict end interval date?") {
 
         @Override
         protected LogicResult evaluateInternal() {

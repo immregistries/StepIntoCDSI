@@ -110,32 +110,22 @@ public class GenerateForecastDates extends LogicStep {
 
   private void findMinimalIntervalDate() {
     TimePeriod minimalInterval;
-    try {
+    if (referenceSeriesDose.getAgeList().get(0).getSeriesDose() != null) {
       minimalInterval = referenceSeriesDose.getAgeList().get(0).getSeriesDose().getIntervalList()
           .get(0).getMinimumInterval();
       Date minimalIntervalDate = new Date();
       Date patientReferenceDoseDate = new Date();
       minimalIntervalDate = minimalInterval.getDateFrom(patientReferenceDoseDate);
       caMinimumIntervalDate.setInitialValue(minimalIntervalDate);
-    } catch (NullPointerException np) {
-      System.err.println("MinimumIntervalDate is null");
     }
   }
 
   private void findLatestConflictEndIntervalDate() {
-    try {
-      ////// System.err.println("####################"+dataModel.getLiveVirusConflictList().size());
-    } catch (NullPointerException np) {
-      //// System.err.println(np.getStackTrace());
-    }
+    // not implemented
   }
 
   private void findSeasonalRecommendationStartDate() {
-    SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose(); // might
-                                                                                       // be
-                                                                                       // the
-                                                                                       // problem
-                                                                                       // here
+    SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose(); 
     Date seasonalRecommendationstartDate = new DateTime(1900, 1, 1, 0, 0).toDate();
     caSeasonalRecommendationStartDate.setAssumedValue(seasonalRecommendationstartDate);
     if (referenceSeriesDose.getSeasonalRecommendationList().size() > 0) {
@@ -143,8 +133,7 @@ public class GenerateForecastDates extends LogicStep {
           .getSeasonalRecommendationStartDate();
       caSeasonalRecommendationStartDate.setInitialValue(seasonalRecommendationstartDate);
     } else {
-      //// System.err.println("Couldn't find seasonalRecommandation start
-      //// date");
+      //Couldn't find seasonalRecommandation start date
     }
 
   }

@@ -2,6 +2,7 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
+import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.EXTRANEOUS;
 
 import java.io.PrintWriter;
 
@@ -74,6 +75,8 @@ public class SatisfyTargetDose extends LogicStep {
           // }
           if (aar.getEvaluation().getEvaluationStatus() == EvaluationStatus.VALID) {
             return YES;
+          } else if (aar.getEvaluation().getEvaluationStatus() == EvaluationStatus.EXTRANEOUS) {
+            return EXTRANEOUS;
           }
           return NO;
         }
@@ -124,7 +127,7 @@ public class SatisfyTargetDose extends LogicStep {
             }
           });
 
-      setLogicResults(0, LogicResult.YES, LogicResult.ANY, LogicResult.NO, LogicResult.ANY,
+      setLogicResults(0, LogicResult.YES, LogicResult.EXTRANEOUS, LogicResult.NO, LogicResult.ANY,
           LogicResult.ANY, LogicResult.ANY, LogicResult.ANY);
       setLogicResults(1, LogicResult.YES, LogicResult.ANY, LogicResult.ANY, LogicResult.NO,
           LogicResult.ANY, LogicResult.ANY, LogicResult.ANY);

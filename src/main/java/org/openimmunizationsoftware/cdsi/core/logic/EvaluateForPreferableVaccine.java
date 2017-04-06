@@ -1,7 +1,9 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
@@ -27,17 +29,14 @@ public class EvaluateForPreferableVaccine extends LogicStep {
 
     int i = 0, j = 0, k = 0;
     boolean allTrue = true;
+    int count = 0;
     for (PreferrableVaccine pi : dataModel.getTargetDose().getTrackedSeriesDose()
         .getPreferrableVaccineList()) {
-      // for (j=0; j<dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().size(); j++){
-      // for (k=0;
-      // k<dataModel.getAntigenSeriesList().get(i).getSeriesDoseList().get(j).getPreferrableVaccineList().size()
-      // ; k++){
-      LT logicTable = new LT();
+      count++;
+      LT logicTable = new LT(count);
 
       logicTable.caDateAdministered =
           new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
-      // _____________>Logic Problem : Check logic specification
 
       AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
       logicTable.caPreferableVaccineTradeName = new ConditionAttribute<String>(
@@ -61,58 +60,39 @@ public class EvaluateForPreferableVaccine extends LogicStep {
 
       logicTable.caVaccineTypeBeginAgeDate.setAssumedValue(PAST);
       logicTable.caVaccineTypeEndAgeDate.setAssumedValue(FUTURE);
-      logicTable.caPreferableVaccineTradeName.setAssumedValue(aar.getTradeName());
+      logicTable.caPreferableVaccineTradeName.setAssumedValue(aar.getAntigen().getName());
       logicTable.caPreferableVaccineVolume.setAssumedValue(aar.getVolume());
 
-      conditionAttributesList.add(logicTable.caDateAdministered);
-      conditionAttributesList.add(logicTable.caTradeName);
-      conditionAttributesList.add(logicTable.caVaccineTypeBeginAgeDate);
-      conditionAttributesList.add(logicTable.caVaccineTypeEndAgeDate);
-      conditionAttributesList.add(logicTable.caPreferableVaccineTradeName);
-      conditionAttributesList.add(logicTable.caPreferableVaccineVolume);
-      conditionAttributesList.add(logicTable.caPreferableVaccineType);
+      List<ConditionAttribute<?>> caList = new ArrayList<ConditionAttribute<?>>();
+      caList.add(logicTable.caDateAdministered);
+      caList.add(logicTable.caTradeName);
+      caList.add(logicTable.caVaccineTypeBeginAgeDate);
+      caList.add(logicTable.caVaccineTypeEndAgeDate);
+      caList.add(logicTable.caPreferableVaccineTradeName);
+      caList.add(logicTable.caPreferableVaccineVolume);
+      caList.add(logicTable.caPreferableVaccineType);
 
-      logicTable.caPreferableVaccineTradeName.setInitialValue(pi.getTradeName());
-      logicTable.caPreferableVaccineVolume.setInitialValue(pi.getVolume());
+      conditionAttributesAdditionalMap.put("Preferrable Vaccine #" + count, caList);
+
+      if (pi.getTradeName() != null && !pi.getTradeName().equals("")) {
+        logicTable.caPreferableVaccineTradeName.setInitialValue(pi.getTradeName());
+      }
+      if (pi.getVolume() != null && !pi.getVolume().equals("")) {
+        logicTable.caPreferableVaccineVolume.setInitialValue(pi.getVolume());
+      }
       logicTable.pv = pi.getVolume();
       logicTable.caPreferableVaccineType.setInitialValue(pi.getVaccineType().getCvxCode());
-      if (pi.getVaccineTypeBeginAge() != null)
+      if (pi.getVaccineTypeBeginAge() != null) {
         logicTable.caVaccineTypeBeginAgeDate
             .setInitialValue(pi.getVaccineTypeBeginAge().getDateFrom(birthDate));
-      if (pi.getVaccineTypeEndAge() != null)
+      }
+      if (pi.getVaccineTypeEndAge() != null) {
         logicTable.caVaccineTypeEndAgeDate
             .setInitialValue(pi.getVaccineTypeEndAge().getDateFrom(birthDate));
-
-
-      // if (logicTable.getLogicOutcomes().equals())
+      }
 
       logicTableList.add(logicTable);
-      // k++;
-      // }
-      // j++;
-      // }
-      // i++;
     }
-
-    // // set assumed values
-    // caVaccineTypeBeginAgeDate.setAssumedValue(PAST);
-    // caVaccineTypeEndAgeDate.setAssumedValue(FUTURE);
-    // caPreferableVaccineTradeName.setAssumedValue(aar.getTradeName());
-    // caPreferableVaccineVolume.setAssumedValue(aar.getVolume());
-    //
-    // // set actual values
-    // caDateAdministered.setInitialValue(aar.getDateAdministered());
-    // caTradeName.setInitialValue(aar.getTradeName());
-    // caVaccineTypeBeginAgeDate.setInitialValue(CALCDTPREF_1.evaluate(dataModel, this, null));
-    // caVaccineTypeEndAgeDate.setInitialValue(CALCDTPREF_2.evaluate(dataModel, this, null));
-    // //caPreferableVaccineTradeName.setInitialValue(initialValue);
-    //
-    // conditionAttributesList.add(caDateAdministered);
-    // conditionAttributesList.add(caTradeName);
-    // conditionAttributesList.add(caVaccineTypeBeginAgeDate);
-    // conditionAttributesList.add(caVaccineTypeEndAgeDate);
-    // conditionAttributesList.add(caPreferableVaccineTradeName);
-    // conditionAttributesList.add(caPreferableVaccineVolume);
 
 
   }
@@ -120,13 +100,11 @@ public class EvaluateForPreferableVaccine extends LogicStep {
   @Override
   public LogicStep process() throws Exception {
     setNextLogicStepType(LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED);
-    // setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
-    YesNo y = YesNo.NO;
     for (LogicTable logicTable : logicTableList) {
       logicTable.evaluate();
       if (((LT) logicTable).getResult() == YesNo.YES) {
-        y = YesNo.YES;
         setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
+        break;
       }
     }
     return next();
@@ -175,8 +153,9 @@ public class EvaluateForPreferableVaccine extends LogicStep {
     private String pv = null;
     private YesNo result = null;
 
-    public LT() {
-      super(4, 5, "Table 4-5 Was the supporting data defined preferrable vaccine administered?");
+    public LT(int count) {
+      super(4, 5,
+          "Table 4-5 Was the supporting data defined preferrable vaccine administered? #" + count);
 
       setLogicCondition(0, new LogicCondition(
           "Is the vaccine type of the vaccine dose administered the same as the vaccine type of the preferable vaccine? ") {
@@ -191,7 +170,7 @@ public class EvaluateForPreferableVaccine extends LogicStep {
         }
       });
       setLogicCondition(1, new LogicCondition(
-          "Is the Preferable vaccine type begin age date ≤ date administered < preferable vaccine type end age date? ") {
+          "Is the Preferable vaccine type begin age date <= date administered < preferable vaccine type end age date? ") {
         @Override
         public LogicResult evaluateInternal() {
           if (caVaccineTypeBeginAgeDate.getFinalValue().before(caDateAdministered.getFinalValue())
@@ -218,15 +197,17 @@ public class EvaluateForPreferableVaccine extends LogicStep {
           "Is the Vaccine dose administered volume >= preferable vaccine volume? ") {
         @Override
         public LogicResult evaluateInternal() {
-          if (!(caVolume.equals(new String())
-              || caPreferableVaccineVolume.getFinalValue().equals(new String()))) {
-            if (Double.parseDouble(caPreferableVaccineVolume.getFinalValue()) <= Double
-                .parseDouble(caVolume)) {
+          if (caVolume.equals("") || caVolume.equalsIgnoreCase(caPreferableVaccineVolume.getFinalValue())) {
+            return LogicResult.YES;
+          }
+          try {
+            if (Double.parseDouble(caVolume) >= Double
+                .parseDouble(caPreferableVaccineVolume.getFinalValue())) {
               return LogicResult.YES;
             } else {
               return LogicResult.NO;
             }
-          } else {
+          } catch (NumberFormatException nfe) {
             return LogicResult.NO;
           }
         }

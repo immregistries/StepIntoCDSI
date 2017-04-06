@@ -182,7 +182,9 @@ public abstract class LogicStep {
   protected void printConditionAttributesTable(PrintWriter out, String tableName) {
     {
       List<ConditionAttribute<?>> caList = conditionAttributesList;
-      printConditionAttributesTable(out, tableName, caList);
+      if (caList.size() > 0) {
+        printConditionAttributesTable(out, tableName, caList);
+      }
     }
     if (conditionAttributesAdditionalMap.size() > 0) {
       List<String> nameList = new ArrayList<String>(conditionAttributesAdditionalMap.keySet());

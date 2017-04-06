@@ -4,7 +4,9 @@ import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CA
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTINT_4;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
@@ -52,17 +54,15 @@ public class EvaluateInterval extends LogicStep {
       logicTable.caAbsoluteMinimumIntervalDate.setAssumedValue(PAST);
       logicTable.caMinimumIntervalDate.setAssumedValue(PAST);
 
-      conditionAttributesList.add(logicTable.caDateAdministered);
-      conditionAttributesList.add(logicTable.caFromImmediatePreviousDoseAdministered);
-      conditionAttributesList.add(logicTable.caFromTargetDoseNumberInSeries);
-      conditionAttributesList.add(logicTable.caFromMostRecent);
-      conditionAttributesList.add(logicTable.caAbsoluteMinimumIntervalDate);
-      conditionAttributesList.add(logicTable.caMinimumIntervalDate);
-
-
-
+      List<ConditionAttribute<?>> caList = new ArrayList<ConditionAttribute<?>>();
+      caList.add(logicTable.caDateAdministered);
+      caList.add(logicTable.caFromImmediatePreviousDoseAdministered);
+      caList.add(logicTable.caFromTargetDoseNumberInSeries);
+      caList.add(logicTable.caFromMostRecent);
+      caList.add(logicTable.caAbsoluteMinimumIntervalDate);
+      caList.add(logicTable.caMinimumIntervalDate);
       conditionAttributesAdditionalMap.put("Interval Check #" + intervalCount,
-          conditionAttributesList);
+          caList);
 
       AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
       logicTable.caDateAdministered.setInitialValue(aar.getDateAdministered());
