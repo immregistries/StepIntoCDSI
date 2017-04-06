@@ -21,7 +21,7 @@ public class AntigenAdministeredRecord {
   @Override
   public String toString() {
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-    return  vaccineType + " " + sdf.format(dateAdministered) ;
+    return vaccineType + " " + sdf.format(dateAdministered);
   }
 
   public VaccineDoseAdministered getVaccineDoseAdministered() {

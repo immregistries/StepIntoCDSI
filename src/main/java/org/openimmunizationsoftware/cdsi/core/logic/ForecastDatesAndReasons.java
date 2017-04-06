@@ -54,7 +54,8 @@ public class ForecastDatesAndReasons extends LogicStep {
     out.println("  <tr>");
     out.println("    <td>5.2</td>");
     out.println("    <td>Determine Evidence of Immunity</td>");
-    out.println("    <td>The goal of this step is to determine if the patient has evidence of immunity.");
+    out.println(
+        "    <td>The goal of this step is to determine if the patient has evidence of immunity.");
     out.println("</td>");
     out.println("  </tr>");
     out.println("  <tr>");
@@ -71,7 +72,8 @@ public class ForecastDatesAndReasons extends LogicStep {
     out.println("  </tr>");
     out.println("</table>");
     out.println("");
-    out.println("<p>The figure below provides an illustration of the forecast dates and reasonsprocess.</p>");
+    out.println(
+        "<p>The figure below provides an illustration of the forecast dates and reasonsprocess.</p>");
     out.println("");
     out.println("<img src=\"Figure 5.1.png\"/>");
 

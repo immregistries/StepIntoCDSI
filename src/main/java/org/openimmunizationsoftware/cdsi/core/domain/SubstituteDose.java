@@ -2,8 +2,7 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 
-public class SubstituteDose
-{
+public class SubstituteDose {
   private SeriesDose seriesDose = null;
   private TimePeriod firstDoseBeginAge = null;
   private TimePeriod firstDoseEndAge = null;

@@ -3,9 +3,9 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImmunizationHistory
-{
-  private List<VaccineDoseAdministered> vaccineDoseAdministeredList = new ArrayList<VaccineDoseAdministered>();
+public class ImmunizationHistory {
+  private List<VaccineDoseAdministered> vaccineDoseAdministeredList =
+      new ArrayList<VaccineDoseAdministered>();
   private MedicalHistory medicalHistory = null;
   private List<AdverseEvent> adverseEventList = new ArrayList<AdverseEvent>();
 
@@ -13,7 +13,8 @@ public class ImmunizationHistory
     return vaccineDoseAdministeredList;
   }
 
-  public void setVaccineDoseAdministeredList(List<VaccineDoseAdministered> vaccineDoseAdministeredList) {
+  public void setVaccineDoseAdministeredList(
+      List<VaccineDoseAdministered> vaccineDoseAdministeredList) {
     this.vaccineDoseAdministeredList = vaccineDoseAdministeredList;
   }
 

@@ -17,7 +17,8 @@ import org.openimmunizationsoftware.cdsi.servlet.ForecastServlet;
 public class MainServlet extends ForecastServlet {
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
     HttpSession session = req.getSession(true);
     DataModel dataModel = (DataModel) session.getAttribute("dataModel");
     if (dataModel == null) {
@@ -49,9 +50,8 @@ public class MainServlet extends ForecastServlet {
     out.println("<html>");
     out.println("  <head>");
     if (section == null) {
-    out.println("    <title>CDSi - Data Model View</title>");
-    }
-    else {
+      out.println("    <title>CDSi - Data Model View</title>");
+    } else {
       out.println("    <title>CDSi - Data Model View - " + section + "</title>");
     }
     out.println("    <link rel=\"stylesheet\" type=\"text/css\" href=\"index.css\">");
@@ -119,60 +119,62 @@ public class MainServlet extends ForecastServlet {
       out.println("     </tr>");
       out.println("     <tr>");
       out.println("       <th>Tracked Series Dose</th>");
-      out.println("       <td>" + "-_-"+dataModel.getTargetDose().getTrackedSeriesDose().getDoseNumber() + "</td>"); ///
+      out.println("       <td>" + "-_-"
+          + dataModel.getTargetDose().getTrackedSeriesDose().getDoseNumber() + "</td>"); ///
       out.println("     </tr>");
       out.println("     <tr>");
       out.println("       <th>Satisfied By Vaccine Dose Administered</th>");
-      out.println("       <td>" + dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered() + "</td>");
+      out.println("       <td>" + dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered()
+          + "</td>");
       out.println("     </tr>");
       out.println("   </table>");
     }
     /*
-     * out.println("     <tr>"); out.println("       <th>cvx Map</th>");
-     * out.println("       <td>" + + "</td>"); out.println("     </tr>");
-     * out.println("     <tr>"); out.println("       <th>Antigen Map</th>");
-     * out.println("       <td>" + + "</td>"); out.println("     </tr>");
-     * out.println("     <tr>"); out.println("       <th>Vaccine Group Map</th>"
-     * ); out.println("       <td>" + + "</td>"); out.println("     </tr>");
+     * out.println("     <tr>"); out.println("       <th>cvx Map</th>"); out.println("       <td>" +
+     * + "</td>"); out.println("     </tr>"); out.println("     <tr>");
+     * out.println("       <th>Antigen Map</th>"); out.println("       <td>" + + "</td>");
+     * out.println("     </tr>"); out.println("     <tr>");
+     * out.println("       <th>Vaccine Group Map</th>" ); out.println("       <td>" + + "</td>");
+     * out.println("     </tr>");
      */
 
     /*
-     * out.println("     <tr>"); out.println(
-     * "       <th>Constraindictation List</th>"); out.println("       <td>" + +
-     * "</td>"); out.println("     </tr>"); out.println("     <tr>");
-     * out.println("       <th>Schedule List</th>"); out.println("       <td>" +
-     * + "</td>"); out.println("     </tr>");
+     * out.println("     <tr>"); out.println( "       <th>Constraindictation List</th>");
+     * out.println("       <td>" + + "</td>"); out.println("     </tr>"); out.println("     <tr>");
+     * out.println("       <th>Schedule List</th>"); out.println("       <td>" + + "</td>");
+     * out.println("     </tr>");
      */
 
-    AntigenAdministeredRecord antigenAdministeredRecordThatSatisfiedPreviousTargetDose = dataModel
-        .getAntigenAdministeredRecordThatSatisfiedPreviousTargetDose();
+    AntigenAdministeredRecord antigenAdministeredRecordThatSatisfiedPreviousTargetDose =
+        dataModel.getAntigenAdministeredRecordThatSatisfiedPreviousTargetDose();
     printAntigenAdministeredRecordTable(antigenAdministeredRecordThatSatisfiedPreviousTargetDose,
         "Antigen Administered Record That Satisfied Previous Target Dose", out);
 
     AntigenAdministeredRecord antigenAdministeredRecord = dataModel.getAntigenAdministeredRecord();
-    printAntigenAdministeredRecordTable(antigenAdministeredRecord, "Antigen Administered Record", out);
+    printAntigenAdministeredRecordTable(antigenAdministeredRecord, "Antigen Administered Record",
+        out);
 
-    AntigenAdministeredRecord previousAntigenAdministeredRecord = dataModel.getPreviousAntigenAdministeredRecord();
-    printAntigenAdministeredRecordTable(previousAntigenAdministeredRecord, "Previous Antigen Administered Record", out);
+    AntigenAdministeredRecord previousAntigenAdministeredRecord =
+        dataModel.getPreviousAntigenAdministeredRecord();
+    printAntigenAdministeredRecordTable(previousAntigenAdministeredRecord,
+        "Previous Antigen Administered Record", out);
 
     /*
      * out.println("     <tr>");
      * 
-     * out.println("       <th>Antigen Administered Record List</th>");
-     * out.println("       <td>" + + "</td>"); out.println("     </tr>");
-     * out.println("     <tr>"); out.println(
-     * "       <th>Antigen Series List</th>"); out.println("       <td>" + +
-     * "</td>"); out.println("     </tr>"); out.println("     <tr>");
-     * out.println("       <th>Patient Series List</th>"); out.println(
-     * "       <td>" + + "</td>"); out.println("     </tr>"); out.println(
-     * "     <tr>"); out.println("       <th>Patient Series</th>"); out.println(
-     * "       <td>" + + "</td>"); out.println("     </tr>"); out.println(
-     * "   </table>");
+     * out.println("       <th>Antigen Administered Record List</th>"); out.println("       <td>" +
+     * + "</td>"); out.println("     </tr>"); out.println("     <tr>"); out.println(
+     * "       <th>Antigen Series List</th>"); out.println("       <td>" + + "</td>");
+     * out.println("     </tr>"); out.println("     <tr>");
+     * out.println("       <th>Patient Series List</th>"); out.println( "       <td>" + + "</td>");
+     * out.println("     </tr>"); out.println( "     <tr>");
+     * out.println("       <th>Patient Series</th>"); out.println( "       <td>" + + "</td>");
+     * out.println("     </tr>"); out.println( "   </table>");
      */
   }
 
-  private void printAntigenAdministeredRecordTable(AntigenAdministeredRecord antigenAdministeredRecord, String caption,
-      PrintWriter out) {
+  private void printAntigenAdministeredRecordTable(
+      AntigenAdministeredRecord antigenAdministeredRecord, String caption, PrintWriter out) {
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
     if (antigenAdministeredRecord != null) {
       out.println("   <table>");
@@ -186,7 +188,8 @@ public class MainServlet extends ForecastServlet {
       out.println("     <tr>");
       out.println("       <th>Date Administered</th>");
 
-      out.println("       <td>" + sdf.format(antigenAdministeredRecord.getDateAdministered()) + "</td>");
+      out.println(
+          "       <td>" + sdf.format(antigenAdministeredRecord.getDateAdministered()) + "</td>");
       out.println("     </tr>");
       out.println("       <th>Vaccine Type</th>");
       out.println("       <td>" + antigenAdministeredRecord.getVaccineType() + "</td>");
@@ -223,9 +226,10 @@ public class MainServlet extends ForecastServlet {
 
   void printRowTargetDoseList(TargetDose targetDose, PrintWriter out) {
     out.println("     <tr>");
-    out.println("       <td>" + targetDose.getTargetDoseStatus()+ "</td>");
+    out.println("       <td>" + targetDose.getTargetDoseStatus() + "</td>");
 
-    out.println("       <td>" + "-_- "+targetDose.getTrackedSeriesDose().getDoseNumber() + "</td>");
+    out.println(
+        "       <td>" + "-_- " + targetDose.getTrackedSeriesDose().getDoseNumber() + "</td>");
 
     out.println("       <td>" + targetDose.getSatisfiedByVaccineDoseAdministered() + "</td>");
 

@@ -17,8 +17,6 @@ public class SelectBestPatientSeries extends LogicStep {
   @Override
   public LogicStep process() {
     dataModel.incAntigenPos();
-    System.out.println("--> Looking to run #" + dataModel.getAntigenPos() + " size of BestPatientSeriesLis = "
-        + dataModel.getBestPatientSeriesList().size());
     if (dataModel.getAntigenPos() < dataModel.getAntigenList().size()) {
       Antigen antigen = dataModel.getAntigenList().get(dataModel.getAntigenPos());
       dataModel.setAntigen(dataModel.getAntigenList().get(dataModel.getAntigenPos()));

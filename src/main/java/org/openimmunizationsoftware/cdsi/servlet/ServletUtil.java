@@ -3,8 +3,7 @@ package org.openimmunizationsoftware.cdsi.servlet;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 
-public class ServletUtil
-{
+public class ServletUtil {
   public static String safe(VaccineType cvx) {
     if (cvx == null || cvx.getCvxCode().equals("")) {
       return "&nbsp;";

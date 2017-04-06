@@ -2,8 +2,7 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 
-public class LiveVirusConflict
-{
+public class LiveVirusConflict {
   private Schedule schedule = null;
   private VaccineType previousVaccineType = null;
   private VaccineType currentVaccineType = null;

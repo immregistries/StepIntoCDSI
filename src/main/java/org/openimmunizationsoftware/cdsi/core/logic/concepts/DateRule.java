@@ -6,8 +6,7 @@ import java.util.Date;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 
-public abstract class DateRule<T>
-{
+public abstract class DateRule<T> {
 
   private String businessRuleId = "";
   private String businessRule = "";

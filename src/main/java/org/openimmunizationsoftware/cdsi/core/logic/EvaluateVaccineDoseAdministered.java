@@ -20,7 +20,6 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
     LogicStepType nextLogicStep;
 
     dataModel.incAntigenAdministeredRecordPos();
-    System.out.println(dataModel.getAntigenAdministeredRecordPos());
     PatientSeries patientSeries = dataModel.getPatientSeries();
 
     while (dataModel.getAntigenAdministeredRecordPos() < dataModel
@@ -31,10 +30,10 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
         break;
       } else {
         dataModel.incAntigenAdministeredRecordPos();
-        log("   Skipping " + aar + " for antigen " + aar.getAntigen()+"rrrrr"+patientSeries.getTrackedAntigenSeries().getTargetDisease());
+        log("   Skipping " + aar + " for antigen " + aar.getAntigen() + "rrrrr"
+            + patientSeries.getTrackedAntigenSeries().getTargetDisease());
       }
     }
-    //System.out.println("eeeeee"+dataModel.getAntigenAdministeredRecordPos());
 
     if (dataModel.getAntigenAdministeredRecordPos() < dataModel.getAntigenAdministeredRecordList()
         .size()) {
@@ -49,7 +48,6 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
         nextLogicStep = LogicStepType.FORECAST_DATES_AND_REASONS;
       }
     } else {
-    	//System.out.println("DDDDDDDDDD");
       gotoNextTargetDose();
       nextLogicStep = LogicStepType.FORECAST_DATES_AND_REASONS;
     }
@@ -60,7 +58,9 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
   private boolean gotoNextTargetDose() {
     if (dataModel.getTargetDose() == null) {
       log(" + Getting first target dose");
-      //log("   zzzzzzzzz " + dataModel.getAntigenAdministeredRecordList().get(dataModel.getAntigenAdministeredRecordPos()).getAntigen() + "rrrrr" + dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
+      // log(" zzzzzzzzz " +
+      // dataModel.getAntigenAdministeredRecordList().get(dataModel.getAntigenAdministeredRecordPos()).getAntigen()
+      // + "rrrrr" + dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
       dataModel.incTargetDoseListPos();
       dataModel.setTargetDose(dataModel.getTargetDoseList().get(dataModel.getTargetDoseListPos()));
       return true;
@@ -76,10 +76,10 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
         }
         dataModel.incTargetDoseListPos();
         if (dataModel.getTargetDoseListPos() < dataModel.getTargetDoseList().size()) {
-          dataModel.setTargetDose(dataModel.getTargetDoseList().get(dataModel.getTargetDoseListPos()));
+          dataModel
+              .setTargetDose(dataModel.getTargetDoseList().get(dataModel.getTargetDoseListPos()));
           return true;
         } else {
-        	//System.out.println("CCCCCCCCCCCCCCCCCCCCC");
           markRestAsExtraneous();
           return false;
         }
@@ -91,7 +91,8 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
     }
   }
 
-  private AntigenAdministeredRecord findNextAntigenAdministeredRecord(AntigenAdministeredRecord aar) {
+  private AntigenAdministeredRecord findNextAntigenAdministeredRecord(
+      AntigenAdministeredRecord aar) {
     AntigenAdministeredRecord aarNext = null;
     boolean found = false;
     for (AntigenAdministeredRecord antigenAdministeredRecord : dataModel

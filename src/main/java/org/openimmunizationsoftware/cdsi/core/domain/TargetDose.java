@@ -2,30 +2,30 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 
-public class TargetDose
-{
+public class TargetDose {
   private TargetDoseStatus targetDoseStatus = TargetDoseStatus.NOT_SATISFIED;
   private SeriesDose trackedSeriesDose = null;
   private VaccineDoseAdministered satisfiedByVaccineDoseAdministered = null;
   private String statusCause = "";
-  
+
   public TargetDose() {
     // default
   }
-  
+
   public TargetDose(SeriesDose seriesDose) {
     this.trackedSeriesDose = seriesDose;
   }
-  
+
   public TargetDose(TargetDose targetDose) {
     this.trackedSeriesDose = targetDose.getTrackedSeriesDose();
   }
-  
+
   public VaccineDoseAdministered getSatisfiedByVaccineDoseAdministered() {
     return satisfiedByVaccineDoseAdministered;
   }
 
-  public void setSatisfiedByVaccineDoseAdministered(VaccineDoseAdministered satisfiedByVaccineDoseAdministered) {
+  public void setSatisfiedByVaccineDoseAdministered(
+      VaccineDoseAdministered satisfiedByVaccineDoseAdministered) {
     this.satisfiedByVaccineDoseAdministered = satisfiedByVaccineDoseAdministered;
   }
 
@@ -46,22 +46,21 @@ public class TargetDose
     this.trackedSeriesDose = trackedSeriesDose;
   }
 
-public String getStatusCause() {
-	return statusCause;
-}
-
-public void setStatusCause(String statusCause) {
-	this.statusCause = statusCause;
-}
-
-@Override
-public String toString() {
-  if (trackedSeriesDose != null)
-  {
-    return trackedSeriesDose.toString();
+  public String getStatusCause() {
+    return statusCause;
   }
-  // TODO Auto-generated method stub
-  return super.toString();
-}
+
+  public void setStatusCause(String statusCause) {
+    this.statusCause = statusCause;
+  }
+
+  @Override
+  public String toString() {
+    if (trackedSeriesDose != null) {
+      return trackedSeriesDose.toString();
+    }
+    // TODO Auto-generated method stub
+    return super.toString();
+  }
 
 }

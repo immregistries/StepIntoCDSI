@@ -25,11 +25,13 @@ public class EvaluateGender extends LogicStep {
     setConditionTableName("Table ");
 
     caGender = new ConditionAttribute<String>("Patient", "Gender");
-    caRequiredGender = new ConditionAttribute<List<RequiredGender>>("Supporting data (Gender)", "Required Gender");
+    caRequiredGender =
+        new ConditionAttribute<List<RequiredGender>>("Supporting data (Gender)", "Required Gender");
 
     caGender.setAssumedValue("UNKNOWN");
     caGender.setInitialValue(dataModel.getPatient().getGender());
-    caRequiredGender.setInitialValue(dataModel.getTargetDose().getTrackedSeriesDose().getRequiredGenderList());
+    caRequiredGender
+        .setInitialValue(dataModel.getTargetDose().getTrackedSeriesDose().getRequiredGenderList());
 
     conditionAttributesList.add(caGender);
     conditionAttributesList.add(caRequiredGender);
@@ -74,34 +76,33 @@ public class EvaluateGender extends LogicStep {
     public LT() {
       super(1, 2, "Table 4-31");
 
-      setLogicCondition(0, new LogicCondition("Is the patient's gender the same as one of the required genders? ") {
-        @Override
-        public LogicResult evaluateInternal() {
-          List<RequiredGender> rg = caRequiredGender.getFinalValue();
-          if (rg == null) {
-            return LogicResult.YES;
-          }
-          if (caRequiredGender.getFinalValue().size() == 0) {
-            return LogicResult.YES;
-          }
-          if (caRequiredGender.getFinalValue().contains(caGender.getFinalValue())) {
-            return LogicResult.YES;
-          }
-          return LogicResult.YES;
-        }
-      });
+      setLogicCondition(0,
+          new LogicCondition("Is the patient's gender the same as one of the required genders? ") {
+            @Override
+            public LogicResult evaluateInternal() {
+              List<RequiredGender> rg = caRequiredGender.getFinalValue();
+              if (rg == null) {
+                return LogicResult.YES;
+              }
+              if (caRequiredGender.getFinalValue().size() == 0) {
+                return LogicResult.YES;
+              }
+              if (caRequiredGender.getFinalValue().contains(caGender.getFinalValue())) {
+                return LogicResult.YES;
+              }
+              return LogicResult.YES;
+            }
+          });
 
       setLogicResults(0, YES, NO);
-      //setLogicResults(0, new LogicResult[] { LogicResult.YES, LogicResult.NO });
+      // setLogicResults(0, new LogicResult[] { LogicResult.YES, LogicResult.NO });
 
       setLogicOutcome(0, new LogicOutcome() {
         @Override
         public void perform() {
           if (caRequiredGender.getFinalValue().size() == 0) {
-            log("Yes. Required patient's gender is not set." );
-          }
-          else
-          {
+            log("Yes. Required patient's gender is not set.");
+          } else {
             log("Yes. Patient's gender is one of the required genders.");
           }
           log("Setting next step: 4.10 Satisfy Target Dose");
@@ -115,7 +116,8 @@ public class EvaluateGender extends LogicStep {
           log("No. Patient's gender is not one of the required genders. Evaluation Reason is “incorrect gender.”");
           log("Setting next step: 4.10 Satisfy Target Dose");
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
-          dataModel.getTargetDose().setStatusCause(dataModel.getTargetDose().getStatusCause()+"Gender");
+          dataModel.getTargetDose()
+              .setStatusCause(dataModel.getTargetDose().getStatusCause() + "Gender");
           setNextLogicStepType(LogicStepType.SATISFY_TARGET_DOSE);
         }
       });

@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Patient
-{
+public class Patient {
   private Date dateOfBirth = null;
   private String gender = "";
   private String countryOfBirth = "";

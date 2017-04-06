@@ -6,8 +6,7 @@ import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 
-public class Vaccine
-{
+public class Vaccine {
   private Date lotExpirationDate = null;
   private String manufacturer = "";
   private String tradeName = "";
@@ -109,9 +108,9 @@ public class Vaccine
   public void setAllowableVaccineForSeries(List<SeriesDose> allowableVaccineForSeries) {
     this.allowableVaccineForSeries = allowableVaccineForSeries;
   }
-  
+
   @Override
   public String toString() {
-    return vaccineType == null ? "" : (vaccineType.toString() +  " - " + manufacturer);
+    return vaccineType == null ? "" : (vaccineType.toString() + " - " + manufacturer);
   }
 }

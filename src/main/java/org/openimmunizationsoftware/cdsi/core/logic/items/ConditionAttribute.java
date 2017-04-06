@@ -1,7 +1,6 @@
 package org.openimmunizationsoftware.cdsi.core.logic.items;
 
-public class ConditionAttribute<param>
-{
+public class ConditionAttribute<param> {
   public ConditionAttribute(String attributeType, String attributeName) {
     this.attributeType = attributeType;
     this.attributeName = attributeName;
@@ -47,13 +46,13 @@ public class ConditionAttribute<param>
   public param getFinalValue() {
     return initialValue == null ? assumedValue : initialValue;
   }
-  
-  public boolean hasInitialValue(){
-	  if(initialValue==null){
-		  return false;
-	  }else{
-		  return true;
-	  }
+
+  public boolean hasInitialValue() {
+    if (initialValue == null) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
 }

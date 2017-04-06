@@ -1,7 +1,6 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
-import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,13 +33,9 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
     vgf = new VaccineGroupForecast();
     vgf.setVaccineGroup(vaccineGroup);
     selectedList = new ArrayList<PatientSeries>();
-    System.out.println("--> ##################### ");
     for (PatientSeries p : dataModel.getBestPatientSeriesList()) {
-      System.out.println("-->  + looking at " + p.getTrackedAntigenSeries().getSeriesName());
       for (Antigen a : dataModel.getVaccineGroup().getAntigenList()) {
-        System.out.println("-->     + looking at " + a.getName());
         if (p.getTrackedAntigenSeries().getTargetDisease().equals(a)) {
-          System.out.println("-->        + adding!");
           selectedList.add(p);
         }
       }
@@ -57,7 +52,6 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
     evaluateLogicTables();
 
     if (vgf.getVaccineGroupStatus() == VaccineGroupStatus.NOT_COMPLETE) {
-    	System.out.println("PatientSeries not complete");
       // MULTIANTVG-1
       MULTIANTVG_1();
       // MULTIANTVG-2
@@ -83,10 +77,10 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
         }
       // vgf.setV
       for (PatientSeries p : selectedList) {
-          vgf.setAntigen(p.getForecast().getAntigen());
-          vgf.getAntigenList().add(p.getForecast().getAntigen());
-        }
-       	dataModel.getVaccineGroupForcastList().add(vgf);
+        vgf.setAntigen(p.getForecast().getAntigen());
+        vgf.getAntigenList().add(p.getForecast().getAntigen());
+      }
+      dataModel.getVaccineGroupForcastList().add(vgf);
     }
 
     return next();
@@ -146,8 +140,8 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
     Date earliestRecommendedDate = null;
     TargetDose td = null;
     for (PatientSeries p : selectedList) {
-        if (p.getForecast().getTargetDose() != null)
-      	  td = p.getForecast().getTargetDose();
+      if (p.getForecast().getTargetDose() != null)
+        td = p.getForecast().getTargetDose();
       Date erd = p.getForecast().getLatestDate();
       if (erd != null) {
         if (earliestRecommendedDate == null) {
@@ -160,7 +154,7 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
       }
     }
     if (vgf.getTargetDose() == null && td != null)
-    	vgf.setTargetDose(td);
+      vgf.setTargetDose(td);
     vgf.setLatestDate(earliestRecommendedDate);
   }
 
@@ -170,7 +164,7 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
     for (PatientSeries p : selectedList) {
       Date erd = p.getForecast().getAdjustedPastDueDate();
       if (p.getForecast().getTargetDose() != null)
-    	  td = p.getForecast().getTargetDose();
+        td = p.getForecast().getTargetDose();
       if (erd != null) {
         if (earliestRecommendedDate == null) {
           earliestRecommendedDate = erd;
@@ -185,7 +179,7 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
       earliestRecommendedDate = vgf.getEarliestDate();
     }
     if (vgf.getTargetDose() == null && td != null)
-    	vgf.setTargetDose(td);
+      vgf.setTargetDose(td);
     vgf.setAdjustedPastDueDate(earliestRecommendedDate);
   }
 
@@ -198,27 +192,25 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
         if (earliestRecommendedDate == null) {
           earliestRecommendedDate = erd;
           if (p.getForecast().getTargetDose() != null)
-        	  td = p.getForecast().getTargetDose();
+            td = p.getForecast().getTargetDose();
         } else {
           if (erd.before(earliestRecommendedDate)) {
             earliestRecommendedDate = erd;
             if (p.getForecast().getTargetDose() != null)
-          	  td = p.getForecast().getTargetDose();
+              td = p.getForecast().getTargetDose();
           }
         }
       }
     }
-    if (vgf.getEarliestDate()!=null){
-    	System.out.println("ttttttt");
-    	if (earliestRecommendedDate!=null){
-    		System.out.println("uuuuuuuu");
-    	    if (vgf.getEarliestDate().after(earliestRecommendedDate)) {
-    	        earliestRecommendedDate = vgf.getEarliestDate();
-    	      }
-    	}
+    if (vgf.getEarliestDate() != null) {
+      if (earliestRecommendedDate != null) {
+        if (vgf.getEarliestDate().after(earliestRecommendedDate)) {
+          earliestRecommendedDate = vgf.getEarliestDate();
+        }
+      }
     }
     if (vgf.getTargetDose() == null && td != null)
-    	vgf.setTargetDose(td);
+      vgf.setTargetDose(td);
     vgf.setAdjustedRecommendedDate(earliestRecommendedDate);
   }
 
@@ -231,7 +223,7 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
         if (earliestDate == null) {
           earliestDate = ed;
           if (p.getForecast().getTargetDose() != null)
-        	  td = p.getForecast().getTargetDose();
+            td = p.getForecast().getTargetDose();
         } else {
           IntervalPriority intervalPriority = p.getForecast().getInterval() == null ? null
               : p.getForecast().getInterval().getIntervalPriority();
@@ -239,13 +231,13 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
             if (ed.after(earliestDate)) {
               earliestDate = ed;
               if (p.getForecast().getTargetDose() != null)
-            	  	td = p.getForecast().getTargetDose();
+                td = p.getForecast().getTargetDose();
             }
           } else {
             if (ed.before(earliestDate)) {
               earliestDate = ed;
               if (p.getForecast().getTargetDose() != null)
-            	  td = p.getForecast().getTargetDose();
+                td = p.getForecast().getTargetDose();
             }
           }
         }
@@ -273,7 +265,8 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
 
     printConditionAttributesTable(out);
     printLogicTables(out);
-    out.println("<h2>Selected Patient Series for " + dataModel.getVaccineGroup().getName() + "</h2>");
+    out.println(
+        "<h2>Selected Patient Series for " + dataModel.getVaccineGroup().getName() + "</h2>");
     out.println("<table>");
     out.println("  <tr>");
     out.println("    <th>Antigen</th>");
@@ -281,7 +274,8 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
     out.println("  </tr>");
     for (PatientSeries patientSeries : selectedList) {
       out.println("  <tr>");
-      out.println("    <td>" + patientSeries.getTrackedAntigenSeries().getTargetDisease() + "</td>");
+      out.println(
+          "    <td>" + patientSeries.getTrackedAntigenSeries().getTargetDisease() + "</td>");
       out.println("    <td>" + patientSeries.getPatientSeriesStatus() + "</td>");
       out.println("  </tr>");
     }
@@ -292,17 +286,17 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
     public LT(final VaccineGroupForecast vgf, final List<PatientSeries> selectedList) {
       super(4, 6, "Table 7 - 4 WHAT IS THE VACCINE GROUP STATUS OF A MULTIPLE VACCINE GROUP?");
 
-      setLogicCondition(0,
-          new LogicCondition("Is there at least one best patient series status of \"Not Completed\"?") {
-            @Override
-            public LogicResult evaluateInternal() {
-              for (PatientSeries p : dataModel.getBestPatientSeriesList()) {
-                if (p.getPatientSeriesStatus().equals(PatientSeriesStatus.NOT_COMPLETE))
-                  return LogicResult.YES;
-              }
-              return LogicResult.NO;
-            }
-          });
+      setLogicCondition(0, new LogicCondition(
+          "Is there at least one best patient series status of \"Not Completed\"?") {
+        @Override
+        public LogicResult evaluateInternal() {
+          for (PatientSeries p : dataModel.getBestPatientSeriesList()) {
+            if (p.getPatientSeriesStatus().equals(PatientSeriesStatus.NOT_COMPLETE))
+              return LogicResult.YES;
+          }
+          return LogicResult.NO;
+        }
+      });
 
       setLogicCondition(1, new LogicCondition("Are all best patient series status \"Immune\"?") {
         @Override
@@ -318,35 +312,35 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
         }
       });
 
-      setLogicCondition(2,
-          new LogicCondition("Is there at least one best patient series status of \"Contraindicated\"?") {
-            @Override
-            public LogicResult evaluateInternal() {
-              for (PatientSeries p : selectedList) {
-                if (p.getPatientSeriesStatus().equals(PatientSeriesStatus.CONTRAINDICATED))
-                  return LogicResult.YES;
-              }
-              return LogicResult.NO;
-            }
-          });
-
-      setLogicCondition(3,
-          new LogicCondition("Is the recommendation for the vaccine group to administer full vaccine group?") {
-            @Override
-            public LogicResult evaluateInternal() {
-            	//if (vgf.get)
+      setLogicCondition(2, new LogicCondition(
+          "Is there at least one best patient series status of \"Contraindicated\"?") {
+        @Override
+        public LogicResult evaluateInternal() {
+          for (PatientSeries p : selectedList) {
+            if (p.getPatientSeriesStatus().equals(PatientSeriesStatus.CONTRAINDICATED))
               return LogicResult.YES;
-            }
-          });
+          }
+          return LogicResult.NO;
+        }
+      });
 
-      setLogicResults(0, LogicResult.NO, LogicResult.NO, LogicResult.ANY, LogicResult.YES, LogicResult.YES,
-          LogicResult.ANY);
-      setLogicResults(1, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.NO,
-          LogicResult.YES);
-      setLogicResults(2, LogicResult.NO, LogicResult.YES, LogicResult.YES, LogicResult.NO, LogicResult.ANY,
-          LogicResult.ANY);
-      setLogicResults(3, LogicResult.ANY, LogicResult.NO, LogicResult.YES, LogicResult.YES, LogicResult.NO,
-          LogicResult.ANY);
+      setLogicCondition(3, new LogicCondition(
+          "Is the recommendation for the vaccine group to administer full vaccine group?") {
+        @Override
+        public LogicResult evaluateInternal() {
+          // if (vgf.get)
+          return LogicResult.YES;
+        }
+      });
+
+      setLogicResults(0, LogicResult.NO, LogicResult.NO, LogicResult.ANY, LogicResult.YES,
+          LogicResult.YES, LogicResult.ANY);
+      setLogicResults(1, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.NO,
+          LogicResult.NO, LogicResult.YES);
+      setLogicResults(2, LogicResult.NO, LogicResult.YES, LogicResult.YES, LogicResult.NO,
+          LogicResult.ANY, LogicResult.ANY);
+      setLogicResults(3, LogicResult.ANY, LogicResult.NO, LogicResult.YES, LogicResult.YES,
+          LogicResult.NO, LogicResult.ANY);
 
       setLogicOutcome(0, new LogicOutcome() {
         @Override

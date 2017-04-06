@@ -25,7 +25,8 @@ public class VaccineGroupServlet extends MainServlet {
   }
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
     HttpSession session = req.getSession(true);
     DataModel dataModel = (DataModel) session.getAttribute("dataModel");
     if (dataModel == null) {

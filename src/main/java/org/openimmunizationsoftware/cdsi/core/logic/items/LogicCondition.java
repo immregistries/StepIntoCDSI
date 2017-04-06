@@ -1,7 +1,6 @@
 package org.openimmunizationsoftware.cdsi.core.logic.items;
 
-public abstract class LogicCondition
-{
+public abstract class LogicCondition {
   private String label = "";
   private LogicResult logicResult = null;
 
@@ -16,9 +15,8 @@ public abstract class LogicCondition
   public String getLabel() {
     return label;
   }
-  
-  public void evaluate()
-  {
+
+  public void evaluate() {
     logicResult = evaluateInternal();
   }
 

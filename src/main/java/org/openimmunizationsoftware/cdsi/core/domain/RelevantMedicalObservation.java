@@ -1,7 +1,6 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
-public class RelevantMedicalObservation
-{
+public class RelevantMedicalObservation {
   private MedicalHistory medicalHistory = null;
 
   public MedicalHistory getMedicalHistory() {

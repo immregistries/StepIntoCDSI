@@ -9,8 +9,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 
-public class ForEachPatientSeries extends LogicStep
-{
+public class ForEachPatientSeries extends LogicStep {
 
   public ForEachPatientSeries(DataModel dataModel) {
     super(LogicStepType.FOR_EACH_PATIENT_SERIES, dataModel);
@@ -41,14 +40,16 @@ public class ForEachPatientSeries extends LogicStep
       dataModel.setPatientSeries(patientSeriesSelected);
       dataModel.setTargetDoseList(new ArrayList<TargetDose>());
       patientSeriesSelected.setTargetDoseList(dataModel.getTargetDoseList());
-      for (SeriesDose seriesDose : dataModel.getPatientSeries().getTrackedAntigenSeries().getSeriesDoseList()) {
+      for (SeriesDose seriesDose : dataModel.getPatientSeries().getTrackedAntigenSeries()
+          .getSeriesDoseList()) {
         TargetDose targetDose = new TargetDose(seriesDose);
         dataModel.getTargetDoseList().add(targetDose);
       }
       dataModel.setTargetDose(null);
       dataModel.setTargetDoseListPos(-1);
       dataModel.setAntigenAdministeredRecordPos(-1);
-      return LogicStepFactory.createLogicStep(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED, dataModel);
+      return LogicStepFactory.createLogicStep(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED,
+          dataModel);
     }
   }
 
@@ -72,7 +73,8 @@ public class ForEachPatientSeries extends LogicStep
       AntigenSeries antigenSeries = patientSeries.getTrackedAntigenSeries();
       out.println("     <tr>");
       if (!found) {
-        if ((dataModel.getPatientSeries() == null || dataModel.getPatientSeries() == patientSeries)) {
+        if ((dataModel.getPatientSeries() == null
+            || dataModel.getPatientSeries() == patientSeries)) {
           found = true;
           out.println("       <td>Selected</td>");
         } else {
@@ -83,8 +85,8 @@ public class ForEachPatientSeries extends LogicStep
       }
       out.println("       <td>" + antigenSeries.getSeriesName() + "</td>");
       out.println("       <td>" + antigenSeries.getTargetDisease() + "</td>");
-      out.println("       <td>"
-          + (antigenSeries.getVaccineGroup() == null ? "" : antigenSeries.getVaccineGroup().getName()) + "</td>");
+      out.println("       <td>" + (antigenSeries.getVaccineGroup() == null ? ""
+          : antigenSeries.getVaccineGroup().getName()) + "</td>");
       out.println("     </tr>");
     }
     out.println("   </table>");

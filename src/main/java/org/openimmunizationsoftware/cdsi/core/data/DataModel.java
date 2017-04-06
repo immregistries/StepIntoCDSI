@@ -50,7 +50,8 @@ public class DataModel {
   private ImmunizationHistory immunizationHistory = null;
   private Date assessmentDate = new Date();
   private HttpServletRequest request = null;
-  private List<AntigenAdministeredRecord> antigenAdministeredRecordList = new ArrayList<AntigenAdministeredRecord>();
+  private List<AntigenAdministeredRecord> antigenAdministeredRecordList =
+      new ArrayList<AntigenAdministeredRecord>();
   private int targetDoseListPos = -1;
   private int antigenAdministeredRecordPos = -1;
   private AntigenAdministeredRecord antigenAdministeredRecord = null;
@@ -58,13 +59,14 @@ public class DataModel {
   private List<AntigenSeries> antigenSeriesList = new ArrayList<AntigenSeries>();
   private List<PatientSeries> patientSeriesList = new ArrayList<PatientSeries>();
   private PatientSeries patientSeries = null;
-  private List<Forecast> forecastList = new ArrayList<Forecast>(); 
-  private List<VaccineGroupForecast> vaccineGroupForcastList = new ArrayList<VaccineGroupForecast>();
+  private List<Forecast> forecastList = new ArrayList<Forecast>();
+  private List<VaccineGroupForecast> vaccineGroupForcastList =
+      new ArrayList<VaccineGroupForecast>();
   private VaccineGroup vaccineGroup;
   private List<VaccineGroup> vaccineGroupList;
   private int vaccineGroupPos = -1;
   private Forecast forecast = null;
-  
+
   public Forecast getForecast() {
     return forecast;
   }
@@ -76,11 +78,11 @@ public class DataModel {
   public void setSelectedPatientSeriesList(List<PatientSeries> selectedPatientSeriesList) {
     this.selectedPatientSeriesList = selectedPatientSeriesList;
   }
-  
+
   public List<PatientSeries> getSelectedPatientSeriesList() {
     return selectedPatientSeriesList;
   }
-  
+
   public List<PatientSeries> getBestPatientSeriesList() {
     return bestPatientSeriesList;
   }
@@ -89,11 +91,10 @@ public class DataModel {
     this.bestPatientSeriesList = bestPatientSeriesList;
   }
 
-public void incVaccineGroupPos()
-  {
+  public void incVaccineGroupPos() {
     vaccineGroupPos++;
   }
-  
+
   public VaccineGroup getVaccineGroup() {
     return vaccineGroup;
   }
@@ -103,9 +104,8 @@ public void incVaccineGroupPos()
   }
 
   public List<VaccineGroup> getVaccineGroupList() {
-    if (vaccineGroupList == null)
-    {
-      vaccineGroupList = new ArrayList<VaccineGroup> (vaccineGroupMap.values());
+    if (vaccineGroupList == null) {
+      vaccineGroupList = new ArrayList<VaccineGroup>(vaccineGroupMap.values());
     }
     return vaccineGroupList;
   }
@@ -125,11 +125,11 @@ public void incVaccineGroupPos()
   public List<Forecast> getForecastList() {
     return forecastList;
   }
-  
+
   public void setForecastList(List<Forecast> forecastList) {
     this.forecastList = forecastList;
   }
-  
+
   public List<VaccineGroupForecast> getVaccineGroupForcastList() {
     return vaccineGroupForcastList;
   }
@@ -139,56 +139,56 @@ public void incVaccineGroupPos()
   }
 
   public Antigen getAntigen() {
-	return antigen;
-}
-
-public void setAntigen(Antigen antigen) {
-	this.antigen = antigen;
-}
-
-public List<AntigenSeries> getAntigenSeriesSelectedList() {
-	return antigenSeriesSelectedList;
-}
-
-public void setAntigenSeriesSelectedList(List<AntigenSeries> antigenSeriesSelectedList) {
-	this.antigenSeriesSelectedList = antigenSeriesSelectedList;
-}
-  public List<Antigen> getAntigenList() {
-	  if (antigenList == null)
-	  {
-		  antigenList = new ArrayList<Antigen>(antigenMap.values());
-	  }
-	  return antigenList;
+    return antigen;
   }
-  
+
+  public void setAntigen(Antigen antigen) {
+    this.antigen = antigen;
+  }
+
+  public List<AntigenSeries> getAntigenSeriesSelectedList() {
+    return antigenSeriesSelectedList;
+  }
+
+  public void setAntigenSeriesSelectedList(List<AntigenSeries> antigenSeriesSelectedList) {
+    this.antigenSeriesSelectedList = antigenSeriesSelectedList;
+  }
+
+  public List<Antigen> getAntigenList() {
+    if (antigenList == null) {
+      antigenList = new ArrayList<Antigen>(antigenMap.values());
+    }
+    return antigenList;
+  }
+
   public int getAntigenPos() {
-	return antigenPos;
-}
+    return antigenPos;
+  }
 
 
 
-public void setAntigenPos(int antigenPos) {
-	this.antigenPos = antigenPos;
-}
+  public void setAntigenPos(int antigenPos) {
+    this.antigenPos = antigenPos;
+  }
 
-public void incAntigenPos() {
-	this.antigenPos++;
-}
+  public void incAntigenPos() {
+    this.antigenPos++;
+  }
 
 
 
   public int getAntigenAdministeredRecordPos() {
     return antigenAdministeredRecordPos;
   }
-  
+
   public void setAntigenAdministeredRecordPos(int antigenAdministeredRecordPos) {
     this.antigenAdministeredRecordPos = antigenAdministeredRecordPos;
   }
-  
+
   public void incAntigenAdministeredRecordPos() {
     this.antigenAdministeredRecordPos++;
   }
-  
+
   public int getTargetDoseListPos() {
     return targetDoseListPos;
   }
@@ -207,7 +207,8 @@ public void incAntigenPos() {
 
   public void setAntigenAdministeredRecordThatSatisfiedPreviousTargetDose(
       AntigenAdministeredRecord antigenAdministeredRecordThatSatisfiedPreviousTargetDose) {
-    this.antigenAdministeredRecordThatSatisfiedPreviousTargetDose = antigenAdministeredRecordThatSatisfiedPreviousTargetDose;
+    this.antigenAdministeredRecordThatSatisfiedPreviousTargetDose =
+        antigenAdministeredRecordThatSatisfiedPreviousTargetDose;
   }
 
   public List<TargetDose> getTargetDoseList() {
@@ -240,7 +241,8 @@ public void incAntigenPos() {
     return previousAntigenAdministeredRecord;
   }
 
-  public void setPreviousAntigenAdministeredRecord(AntigenAdministeredRecord previousAntigenAdministeredRecord) {
+  public void setPreviousAntigenAdministeredRecord(
+      AntigenAdministeredRecord previousAntigenAdministeredRecord) {
     this.previousAntigenAdministeredRecord = previousAntigenAdministeredRecord;
   }
 
@@ -268,7 +270,8 @@ public void incAntigenPos() {
     return antigenAdministeredRecordList;
   }
 
-  public void setAntigenAdministeredRecordList(List<AntigenAdministeredRecord> antigenAdministeredRecordList) {
+  public void setAntigenAdministeredRecordList(
+      List<AntigenAdministeredRecord> antigenAdministeredRecordList) {
     this.antigenAdministeredRecordList = antigenAdministeredRecordList;
   }
 
@@ -343,8 +346,8 @@ public void incAntigenPos() {
   public Map<String, Antigen> getAntigenMap() {
     return antigenMap;
   }
-  
-  
+
+
 
   public Map<String, VaccineGroup> getVaccineGroupMap() {
     return vaccineGroupMap;

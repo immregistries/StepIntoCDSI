@@ -20,7 +20,8 @@ public class BusinessRuleTable {
   static {
     CONDSKIP_1 = new BusinessRule<Integer, ConditionalSkipCondition>() {
       @Override
-      public Integer evaluate(DataModel dataModel, ConditionalSkipCondition conditionalSkipCondition) {
+      public Integer evaluate(DataModel dataModel,
+          ConditionalSkipCondition conditionalSkipCondition) {
         int count = 0;
         for (VaccineDoseAdministered vaccineDoseAdministered : dataModel.getImmunizationHistory()
             .getVaccineDoseAdministeredList()) {
@@ -34,7 +35,8 @@ public class BusinessRuleTable {
               if (beginAge != null && beginAge.isValued() && endAge != null && endAge.isValued()) {
                 Date beginAgeDate = beginAge.getDateFrom(dataModel.getPatient().getDateOfBirth());
                 Date endAgeDate = beginAge.getDateFrom(dataModel.getPatient().getDateOfBirth());
-                if (onOrAfter(dateAdministered, beginAgeDate) && before(dateAdministered, endAgeDate)) {
+                if (onOrAfter(dateAdministered, beginAgeDate)
+                    && before(dateAdministered, endAgeDate)) {
                   inRange = true;
                 }
               }
@@ -47,7 +49,8 @@ public class BusinessRuleTable {
               }
             }
             if (inRange) {
-              Antigen antigen = conditionalSkipCondition.getSeriesDose().getAntigenSeries().getTargetDisease();
+              Antigen antigen =
+                  conditionalSkipCondition.getSeriesDose().getAntigenSeries().getTargetDisease();
               Evaluation evaluation = vaccineDoseAdministered.getEvaluationMap().get(antigen);
               if (evaluation != null && evaluation.getEvaluationStatus() != null) {
                 if (conditionalSkipCondition.getDoseType() == DoseType.VALID
@@ -69,7 +72,8 @@ public class BusinessRuleTable {
     CONDSKIP_1.setBusinessRuleText(
         "The Number of Conditional Doses Administered must be computed as the count of vaccine doses administered where all of the following are true:"
             + "<ul><li>a. Vaccine Type is one of the supporting data defined conditional skip vaccine types.</li>"
-            + "<li>b. Date Administered is:" + "<ul><li> on or after the conditional skip begin age date and\n"
+            + "<li>b. Date Administered is:"
+            + "<ul><li> on or after the conditional skip begin age date and\n"
             + "before the conditional skip end age date OR</li>"
             + "<li> on or after the conditional skip start date and before\n"
             + "conditional skip end date</li></ul> <li>c. Evaluation Status is:\n"

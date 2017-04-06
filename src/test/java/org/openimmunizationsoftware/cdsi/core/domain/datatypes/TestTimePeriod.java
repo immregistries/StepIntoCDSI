@@ -4,8 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-public class TestTimePeriod
-{
+public class TestTimePeriod {
 
   @Test
   public void test() {

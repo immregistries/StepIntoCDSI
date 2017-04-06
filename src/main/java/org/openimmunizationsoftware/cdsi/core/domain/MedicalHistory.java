@@ -5,10 +5,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class MedicalHistory
-{
+public class MedicalHistory {
   private ImmunizationHistory immunizationHistory = null;
-  private List<RelevantMedicalObservation> releventMedicalObservationList = new ArrayList<RelevantMedicalObservation>();
+  private List<RelevantMedicalObservation> releventMedicalObservationList =
+      new ArrayList<RelevantMedicalObservation>();
   private Set<Contraindication> contraindicationSet = new HashSet<Contraindication>();
 
   public Set<Contraindication> getContraindicationSet() {
@@ -27,7 +27,8 @@ public class MedicalHistory
     return releventMedicalObservationList;
   }
 
-  public void setReleventMedicalObservationList(List<RelevantMedicalObservation> releventMedicalObservationList) {
+  public void setReleventMedicalObservationList(
+      List<RelevantMedicalObservation> releventMedicalObservationList) {
     this.releventMedicalObservationList = releventMedicalObservationList;
   }
 }

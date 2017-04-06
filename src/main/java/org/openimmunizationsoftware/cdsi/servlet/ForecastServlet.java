@@ -5,12 +5,8 @@ import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.SynchronousQueue;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -39,7 +35,8 @@ public class ForecastServlet extends HttpServlet {
   protected static final String SCHEDULE_NAME_DEFAULT = "default";
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
     try {
       DataModel dataModel = readRequest(req);
       process(dataModel);
@@ -70,26 +67,26 @@ public class ForecastServlet extends HttpServlet {
     out.println();
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 
-    
+
     List<Forecast> fl = dataModel.getForecastList();
     List<VaccineGroupForecast> vgfl = dataModel.getVaccineGroupForcastList();
 
     List<VaccineGroupForecast> vgfNow = new ArrayList<VaccineGroupForecast>();
     List<VaccineGroupForecast> vgfLater = new ArrayList<VaccineGroupForecast>();
     List<VaccineGroupForecast> vgfDone = new ArrayList<VaccineGroupForecast>();
-    
+
 
     Date today = new Date();
     try {
       today = sdf.parse(sdf.format(today));
-      ////System.out.println(today);
     } catch (ParseException pe) {
       pe.printStackTrace();
     }
     {
       for (VaccineGroupForecast vgf : vgfl) {
         if (vgf.getForecastReason().equals("")) {
-          if (vgf.getAdjustedRecommendedDate() != null && vgf.getAdjustedRecommendedDate().after(today)) {
+          if (vgf.getAdjustedRecommendedDate() != null
+              && vgf.getAdjustedRecommendedDate().after(today)) {
             vgfLater.add(vgf);
           } else {
             vgfNow.add(vgf);
@@ -99,24 +96,25 @@ public class ForecastServlet extends HttpServlet {
         }
       }
     }
-    
+
     printList(dataModel, out, sdf, today, vgfNow, "VACCINATIONS RECOMMENDED");
     printList(dataModel, out, sdf, today, vgfLater, "VACCINATIONS RECOMMENDED AFTER");
     printList(dataModel, out, sdf, today, vgfDone, "VACCINATIONS COMPLETE OR NOT RECOMMENDED");
-    
+
     printListRaw(dataModel, out, sdf, today, dataModel.getForecastList(), "RAW LIST FOR DEBUG");
 
     if (dataModel.getAntigenAdministeredRecordList().size() > 0) {
       out.println("IMMUNIZATION EVALUATION");
       int count = 0;
 
-      for (VaccineDoseAdministered vda : dataModel.getImmunizationHistory().getVaccineDoseAdministeredList()) {
+      for (VaccineDoseAdministered vda : dataModel.getImmunizationHistory()
+          .getVaccineDoseAdministeredList()) {
         count++;
         for (AntigenAdministeredRecord aar : dataModel.getAntigenAdministeredRecordList()) {
           if (aar.getVaccineType().equals(vda.getVaccine().getVaccineType())
               && aar.getDateAdministered().equals(vda.getDateAdministered())) {
-            out.print("Vaccination #" + count + ": " + aar.getVaccineType().getShortDescription() + " given "
-                + sdf.format(aar.getDateAdministered()));
+            out.print("Vaccination #" + count + ": " + aar.getVaccineType().getShortDescription()
+                + " given " + sdf.format(aar.getDateAdministered()));
             // is a valid Hib dose 1. Dose 1 valid at 6 weeks of age,
             // 10/14/2012.
             out.println();
@@ -126,27 +124,26 @@ public class ForecastServlet extends HttpServlet {
       out.println();
     }
 
-    out.println(
-        "Forecast generated " + sdf.format(new Date()) + " using software version " + SoftwareVersion.VERSION + ".");
+    out.println("Forecast generated " + sdf.format(new Date()) + " using software version "
+        + SoftwareVersion.VERSION + ".");
   }
-  
+
   // Measles Mumps Rubella
   // combined into MMR
-  
+
   private void printList(DataModel dataModel, PrintWriter out, SimpleDateFormat sdf, Date today,
       List<VaccineGroupForecast> vaccineGroupForecastList, String title) {
     if (vaccineGroupForecastList.size() > 0) {
       out.println(title + " " + sdf.format(dataModel.getAssessmentDate()));
-//      for (VaccineGroupForecast vaccineGroupForecast : vaccineGroupForecastList) 
-//      {
-//        
-//      }
+      // for (VaccineGroupForecast vaccineGroupForecast : vaccineGroupForecastList)
+      // {
+      //
+      // }
       for (VaccineGroupForecast vgf : vaccineGroupForecastList) {
         if (vgf.getAntigen() != null) {
           String name = vgf.getAntigen().getName();
           // down to here
-          out.print("Forecasting " + name + " status " );
-          System.out.println("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"+vgf.getPatientSeriesStatus());
+          out.print("Forecasting " + name + " status ");
           if (vgf.getPatientSeriesStatus() == PatientSeriesStatus.NOT_COMPLETE) {
             if (vgf.getAdjustedRecommendedDate().after(today)) {
               out.print("due later ");
@@ -193,10 +190,10 @@ public class ForecastServlet extends HttpServlet {
       List<Forecast> forecastList, String title) {
     if (forecastList.size() > 0) {
       out.println(title + " " + sdf.format(dataModel.getAssessmentDate()));
-//      for (VaccineGroupForecast vaccineGroupForecast : vaccineGroupForecastList) 
-//      {
-//        
-//      }
+      // for (VaccineGroupForecast vaccineGroupForecast : vaccineGroupForecastList)
+      // {
+      //
+      // }
       for (Forecast forecast : forecastList) {
         if (forecast.getAntigen() != null) {
           String name = forecast.getAntigen().getName();
@@ -250,10 +247,12 @@ public class ForecastServlet extends HttpServlet {
       dataModel.setNextLogicStep(dataModel.getLogicStep().process());
       count++;
       if (count > 100000) {
-        System.err.println("Appear to be caught in a loop at this step: " + dataModel.getLogicStep().getTitle());
+        System.err.println(
+            "Appear to be caught in a loop at this step: " + dataModel.getLogicStep().getTitle());
         // too many steps!
         if (count > 100100) {
-          throw new RuntimeException("Logic steps seem to be caught in a loop, unable to get results");
+          throw new RuntimeException(
+              "Logic steps seem to be caught in a loop, unable to get results");
         }
       }
     }
@@ -262,7 +261,8 @@ public class ForecastServlet extends HttpServlet {
   protected DataModel readRequest(HttpServletRequest req) throws Exception {
     DataModel dataModel = DataModelLoader.createDataModel();
     dataModel.setRequest(req);
-    dataModel.setNextLogicStep(LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel));
+    dataModel.setNextLogicStep(
+        LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel));
     return dataModel;
   }
 }

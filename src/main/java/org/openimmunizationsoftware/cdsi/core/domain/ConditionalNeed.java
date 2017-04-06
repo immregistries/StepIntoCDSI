@@ -2,8 +2,7 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 
 import java.util.Date;
 
-public class ConditionalNeed
-{
+public class ConditionalNeed {
   private SeriesDose seriesDose = null;
   private String conditionalSet = "";
   private Date conditionalStartDate = null;

@@ -14,8 +14,7 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
-public class EvaluateDoseAdministeredCondition extends LogicStep
-{
+public class EvaluateDoseAdministeredCondition extends LogicStep {
 
   private ConditionAttribute<Date> caDateAdministered = null;
   private ConditionAttribute<Date> caLotExpirationDate = null;
@@ -25,13 +24,16 @@ public class EvaluateDoseAdministeredCondition extends LogicStep
     super(LogicStepType.EVALUATE_DOSE_ADMININISTERED_CONDITION, dataModel);
     setConditionTableName("Table 4 - 2 Dose Administered Condition Attributes");
     // initialize condition attributes
-    caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
-    caLotExpirationDate = new ConditionAttribute<Date>("Vaccine dose administered", "Lot Expiration Date");
-    caDoseCondition = new ConditionAttribute<DoseCondition>("Vaccine dose administered", "Dose Condition");
+    caDateAdministered =
+        new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
+    caLotExpirationDate =
+        new ConditionAttribute<Date>("Vaccine dose administered", "Lot Expiration Date");
+    caDoseCondition =
+        new ConditionAttribute<DoseCondition>("Vaccine dose administered", "Dose Condition");
 
     // set assumed values, if possible
     caLotExpirationDate.setAssumedValue(FUTURE);
-    
+
     // set actual values
     AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
     caDateAdministered.setInitialValue(aar.getDateAdministered());
@@ -46,7 +48,7 @@ public class EvaluateDoseAdministeredCondition extends LogicStep
     LT logicTable = new LT();
     logicTableList.add(logicTable);
   }
-  
+
   @Override
   public LogicStep process() {
     setNextLogicStepType(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST);
@@ -54,16 +56,16 @@ public class EvaluateDoseAdministeredCondition extends LogicStep
     return next();
   }
 
-  
 
-  private class LT extends LogicTable
-  {
+
+  private class LT extends LogicTable {
     public LT() {
       super(2, 3, "Table 4 - 3 Can the vaccine dose administered be evaluated?");
       setLogicCondition(0, new LogicCondition("Date administered > lot expiration date?") {
         @Override
         public LogicResult evaluateInternal() {
-          if (caDateAdministered.getFinalValue() == null || caLotExpirationDate.getFinalValue() == null) {
+          if (caDateAdministered.getFinalValue() == null
+              || caLotExpirationDate.getFinalValue() == null) {
             return LogicResult.NO;
           }
           if (caDateAdministered.getFinalValue().after(caLotExpirationDate.getFinalValue()))
@@ -80,8 +82,8 @@ public class EvaluateDoseAdministeredCondition extends LogicStep
           return LogicResult.NO;
         }
       });
-      setLogicResults(0, new LogicResult[] { LogicResult.YES, LogicResult.NO, LogicResult.NO });
-      setLogicResults(1, new LogicResult[] { LogicResult.ANY, LogicResult.YES, LogicResult.NO });
+      setLogicResults(0, new LogicResult[] {LogicResult.YES, LogicResult.NO, LogicResult.NO});
+      setLogicResults(1, new LogicResult[] {LogicResult.ANY, LogicResult.YES, LogicResult.NO});
       setLogicOutcome(0, new LogicOutcome() {
         @Override
         public void perform() {
@@ -125,12 +127,18 @@ public class EvaluateDoseAdministeredCondition extends LogicStep
 
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + getTitle() + "</h1>");
-    out.println("<p>Target dose : " + dataModel.getTargetDose().getTrackedSeriesDose().getDoseNumber() + " " + dataModel.getTargetDose().getTrackedSeriesDose().getAntigenSeries().getSeriesName() + " </p>");
-    out.println("<p>Dose administered condition checks the dose administered to see if the dose must be repeated regardless of the other evaluation rules.</p>");
+    out.println(
+        "<p>Target dose : " + dataModel.getTargetDose().getTrackedSeriesDose().getDoseNumber() + " "
+            + dataModel.getTargetDose().getTrackedSeriesDose().getAntigenSeries().getSeriesName()
+            + " </p>");
+    out.println(
+        "<p>Dose administered condition checks the dose administered to see if the dose must be repeated regardless of the other evaluation rules.</p>");
     out.println("<p>Relationship to ACIP recommendations:</p>");
     out.println("<ul>");
-    out.println("  <li>Doses which were administered after the lot expiration date or which contain a condition do not need to be evaluated.</li>");
-    out.println("  <li>Examples of conditions which would prevent evaluation of dose range from misadministration to recalls.</li>");
+    out.println(
+        "  <li>Doses which were administered after the lot expiration date or which contain a condition do not need to be evaluated.</li>");
+    out.println(
+        "  <li>Examples of conditions which would prevent evaluation of dose range from misadministration to recalls.</li>");
     out.println("</ul>");
     out.println("<img src=\"Figure 4.2.png\"/>");
     out.println("<p>FIGURE 4 - 2 VACCINE DOSE ADMINISTERED CONDITION PROCESS MODEL</p>");
@@ -140,7 +148,7 @@ public class EvaluateDoseAdministeredCondition extends LogicStep
     printLogicTables(out);
   }
 
- 
+
 
   @Override
   public void printPost(PrintWriter out) {

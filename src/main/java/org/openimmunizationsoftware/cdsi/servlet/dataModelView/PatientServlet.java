@@ -30,11 +30,13 @@ public class PatientServlet extends MainServlet {
       return "";
     }
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-    return "<a href=\"" + SERVLET_NAME + "\" target=\"dataModelView\">Patient born " + sdf.format(patient.getDateOfBirth()) + "</a>";
+    return "<a href=\"" + SERVLET_NAME + "\" target=\"dataModelView\">Patient born "
+        + sdf.format(patient.getDateOfBirth()) + "</a>";
   }
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
     HttpSession session = req.getSession(true);
     DataModel dataModel = (DataModel) session.getAttribute("dataModel");
     if (dataModel == null) {
@@ -102,7 +104,8 @@ public class PatientServlet extends MainServlet {
     out.println("     </tr>");
 
     int pos = 0;
-    for (VaccineDoseAdministered vaccineDoseAdministered : dataModel.getPatient().getReceivesList()) {
+    for (VaccineDoseAdministered vaccineDoseAdministered : dataModel.getPatient()
+        .getReceivesList()) {
       printRowVaccineDoseAdmistered(vaccineDoseAdministered, pos, out);
       pos++;
     }
@@ -117,70 +120,77 @@ public class PatientServlet extends MainServlet {
     out.println("       <caption>Vaccine</caption>");
 
     out.println("       <th>Expiration Date</th>");
-    out.println("       <td>" + n(dataModel.getPatient().getReceivesList().get(i).getVaccine().getLotExpirationDate())
+    out.println("       <td>"
+        + n(dataModel.getPatient().getReceivesList().get(i).getVaccine().getLotExpirationDate())
         + "</td>");
     out.println("     </tr>");
     out.println("     <tr>");
     out.println("       <th>Manufacturer</th>");
-    out.println(
-        "       <td>" + dataModel.getPatient().getReceivesList().get(i).getVaccine().getManufacturer() + "</td>");
+    out.println("       <td>"
+        + dataModel.getPatient().getReceivesList().get(i).getVaccine().getManufacturer() + "</td>");
     out.println("     </tr>");
     out.println("     <tr>");
     out.println("       <th>Trade Name</th>");
-    out.println("       <td>" + dataModel.getPatient().getReceivesList().get(i).getVaccine().getTradeName() + "</td>");
+    out.println("       <td>"
+        + dataModel.getPatient().getReceivesList().get(i).getVaccine().getTradeName() + "</td>");
     out.println("     </tr>");
     out.println("     <tr>");
     out.println("       <th>Vaccine Type</th>");
-    out.println(
-        "       <td>" + dataModel.getPatient().getReceivesList().get(i).getVaccine().getVaccineType() + "</td>");
+    out.println("       <td>"
+        + dataModel.getPatient().getReceivesList().get(i).getVaccine().getVaccineType() + "</td>");
     out.println("     </tr>");
     out.println("     <tr>");
     out.println("       <th>Vaccine Type Begin Age</th>");
-    out.println("       <td>" + dataModel.getPatient().getReceivesList().get(i).getVaccine().getVaccineTypeBeginAge()
+    out.println("       <td>"
+        + dataModel.getPatient().getReceivesList().get(i).getVaccine().getVaccineTypeBeginAge()
         + "</td>");
     out.println("     </tr>");
     out.println("     <tr>");
     out.println("       <th>Vaccine Type End Age</th>");
-    out.println(
-        "       <td>" + dataModel.getPatient().getReceivesList().get(i).getVaccine().getVaccineTypeEndAge() + "</td>");
+    out.println("       <td>"
+        + dataModel.getPatient().getReceivesList().get(i).getVaccine().getVaccineTypeEndAge()
+        + "</td>");
     out.println("     </tr>");
     out.println("     <tr>");
     out.println("       <th>Volume</th>");
-    out.println("       <td>" + dataModel.getPatient().getReceivesList().get(i).getVaccine().getVolume() + "</td>");
+    out.println("       <td>"
+        + dataModel.getPatient().getReceivesList().get(i).getVaccine().getVolume() + "</td>");
     out.println("     </tr>");
     out.println("     <tr>");
     out.println("       <th>Antigen List</th>");
-    out.println(
-        "       <td>" + dataModel.getPatient().getReceivesList().get(i).getVaccine().getAntigenList() + "</td>");
+    out.println("       <td>"
+        + dataModel.getPatient().getReceivesList().get(i).getVaccine().getAntigenList() + "</td>");
     out.println("     </tr>");
     out.println("     <tr>");
     out.println("       <th>Preferable Vaccine For Series</th>");
-    out.println("       <td>"
-        + dataModel.getPatient().getReceivesList().get(i).getVaccine().getPreferableVaccineForSeries() + "</td>");
+    out.println("       <td>" + dataModel.getPatient().getReceivesList().get(i).getVaccine()
+        .getPreferableVaccineForSeries() + "</td>");
     out.println("     </tr>");
     out.println("     <tr>");
     out.println("       <th>Allowable Vaccine For Series</th>");
-    out.println("       <td>"
-        + dataModel.getPatient().getReceivesList().get(i).getVaccine().getAllowableVaccineForSeries() + "</td>");
+    out.println("       <td>" + dataModel.getPatient().getReceivesList().get(i).getVaccine()
+        .getAllowableVaccineForSeries() + "</td>");
     out.println("     </tr>");
 
     out.println("   </table>");
   }
 
-  private void printRowVaccineDoseAdmistered(VaccineDoseAdministered vaccineDoseAdministered, int pos,
-      PrintWriter out) {
+  private void printRowVaccineDoseAdmistered(VaccineDoseAdministered vaccineDoseAdministered,
+      int pos, PrintWriter out) {
     out.println("     <tr>");
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-    out.println("       <td>" + sdf.format(vaccineDoseAdministered.getDateAdministered()) + "</td>");
-    out.println("       <td><a href=\"/dataModelView?" + PARAM_VIEW + "=" + VIEW_VACCINE + "&" + PARAM_POS + "=" + pos
-        + "\">" + vaccineDoseAdministered.getVaccine().getVaccineType().getShortDescription() + " ("
+    out.println(
+        "       <td>" + sdf.format(vaccineDoseAdministered.getDateAdministered()) + "</td>");
+    out.println("       <td><a href=\"/dataModelView?" + PARAM_VIEW + "=" + VIEW_VACCINE + "&"
+        + PARAM_POS + "=" + pos + "\">"
+        + vaccineDoseAdministered.getVaccine().getVaccineType().getShortDescription() + " ("
         + vaccineDoseAdministered.getVaccine().getVaccineType().getCvxCode() + ")</a></td>");
     out.println("       <td>" + n(vaccineDoseAdministered.getDoseCondition()) + "</td>");
     // out.println(" <td>" + + "</td>");
     // out.println(" <td></td>");
     out.println("     </tr>");
   }
-  
+
 
   private String n(Date d) {
     if (d == null) {
@@ -191,7 +201,8 @@ public class PatientServlet extends MainServlet {
     }
   }
 
-  private void printAntigenAdministeredRecordTable(AntigenAdministeredRecord antigenAdministeredRecord, String caption,PrintWriter out) {
+  private void printAntigenAdministeredRecordTable(
+      AntigenAdministeredRecord antigenAdministeredRecord, String caption, PrintWriter out) {
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
     if (antigenAdministeredRecord != null) {
       out.println("   <table>");
@@ -205,7 +216,8 @@ public class PatientServlet extends MainServlet {
       out.println("     <tr>");
       out.println("       <th>Date Administered</th>");
 
-      out.println("       <td>" + sdf.format(antigenAdministeredRecord.getDateAdministered()) + "</td>");
+      out.println(
+          "       <td>" + sdf.format(antigenAdministeredRecord.getDateAdministered()) + "</td>");
       out.println("     </tr>");
       out.println("       <th>Vaccine Type</th>");
       out.println("       <td>" + antigenAdministeredRecord.getVaccineType() + "</td>");

@@ -4,8 +4,7 @@ import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 
-public class PatientSeries
-{
+public class PatientSeries {
   private PatientSeriesStatus patientSeriesStatus = null;
   private AntigenSeries trackedAntigenSeries = null;
   private int scorePatientSeries = 0;
@@ -21,20 +20,18 @@ public class PatientSeries
   }
 
   public List<TargetDose> getTargetDoseList() {
-	return targetDoseList;
-}
+    return targetDoseList;
+  }
 
-public void setTargetDoseList(List<TargetDose> targetDoseList) {
-	this.targetDoseList = targetDoseList;
-}
+  public void setTargetDoseList(List<TargetDose> targetDoseList) {
+    this.targetDoseList = targetDoseList;
+  }
 
-public PatientSeries()
-  {
+  public PatientSeries() {
     // default;
   }
-  
-  public PatientSeries(AntigenSeries trackedAntigenSeries)
-  {
+
+  public PatientSeries(AntigenSeries trackedAntigenSeries) {
     this.trackedAntigenSeries = trackedAntigenSeries;
   }
 
@@ -53,32 +50,32 @@ public PatientSeries()
   public void setTrackedAntigenSeries(AntigenSeries trackedAntigenSeries) {
     this.trackedAntigenSeries = trackedAntigenSeries;
   }
-  
-  public void setScorePatientSeriesScore(int scorePatientSerie){
-	  this.scorePatientSeries = scorePatientSerie;
+
+  public void setScorePatientSeriesScore(int scorePatientSerie) {
+    this.scorePatientSeries = scorePatientSerie;
   }
-  
-  public void incPatientScoreSeries(){
-	  scorePatientSeries++;
+
+  public void incPatientScoreSeries() {
+    scorePatientSeries++;
   }
-  
-  public void descPatientScoreSeries(){
-	  scorePatientSeries--;
+
+  public void descPatientScoreSeries() {
+    scorePatientSeries--;
   }
-  
-  
-  public int getScorePatientSeries(){
-	  return scorePatientSeries;
+
+
+  public int getScorePatientSeries() {
+    return scorePatientSeries;
   }
-  
-  public void addScore(int value){
-	  
-	  scorePatientSeries = scorePatientSeries + value;
+
+  public void addScore(int value) {
+
+    scorePatientSeries = scorePatientSeries + value;
   }
-  
+
   @Override
   public String toString() {
     return this.getTrackedAntigenSeries().getSeriesName();
   }
-  
+
 }

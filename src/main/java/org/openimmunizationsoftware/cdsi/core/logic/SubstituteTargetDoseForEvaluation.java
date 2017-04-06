@@ -17,13 +17,13 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
-public class SubstituteTargetDoseForEvaluation extends LogicStep
-{
+public class SubstituteTargetDoseForEvaluation extends LogicStep {
 
-  private ConditionAttribute<Date> caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered",
-      "Date Administered");
-  private ConditionAttribute<List<TargetDose>> caTargetDosesWithATargetDoseSatisfied = new ConditionAttribute<List<TargetDose>>(
-      "Patient Series", "Target Doses with a Target Dose \"Satisfied\"");
+  private ConditionAttribute<Date> caDateAdministered =
+      new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
+  private ConditionAttribute<List<TargetDose>> caTargetDosesWithATargetDoseSatisfied =
+      new ConditionAttribute<List<TargetDose>>("Patient Series",
+          "Target Doses with a Target Dose \"Satisfied\"");
   private ConditionAttribute<Date>[] caFirstDoseBeginAgeDates;
   private ConditionAttribute<Date>[] caFirstDoseEndAgeDates;
   private ConditionAttribute<Integer>[] caTotalCountOfValidDoses;
@@ -34,9 +34,10 @@ public class SubstituteTargetDoseForEvaluation extends LogicStep
 
     setConditionTableName("Table 4-6 Substitute Target Dose Attributes");
 
-    caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
-    caTargetDosesWithATargetDoseSatisfied = new ConditionAttribute<List<TargetDose>>("Patient Series",
-        "Target Doses with a Target Dose \"Satisfied\"");
+    caDateAdministered =
+        new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
+    caTargetDosesWithATargetDoseSatisfied = new ConditionAttribute<List<TargetDose>>(
+        "Patient Series", "Target Doses with a Target Dose \"Satisfied\"");
 
     conditionAttributesList.add(caDateAdministered);
     conditionAttributesList.add(caTargetDosesWithATargetDoseSatisfied);
@@ -62,16 +63,22 @@ public class SubstituteTargetDoseForEvaluation extends LogicStep
     for (int i = 0; i < substituteCount; i++) {
       SubstituteDose substituteDose = seriesDose.getSubstituteDoseList().get(i);
       String s = " [" + (i + 1) + "]";
-      caFirstDoseBeginAgeDates[i] = new ConditionAttribute<Date>("Calculated Date", "First Dose Begin Age Date" + s);
-      caFirstDoseEndAgeDates[i] = new ConditionAttribute<Date>("Calculated Date", "First Dose End Age Date" + s);
-      caTotalCountOfValidDoses[i] = new ConditionAttribute<Integer>("Supporting Data", "Total Count of Valid Doses" + s);
+      caFirstDoseBeginAgeDates[i] =
+          new ConditionAttribute<Date>("Calculated Date", "First Dose Begin Age Date" + s);
+      caFirstDoseEndAgeDates[i] =
+          new ConditionAttribute<Date>("Calculated Date", "First Dose End Age Date" + s);
+      caTotalCountOfValidDoses[i] =
+          new ConditionAttribute<Integer>("Supporting Data", "Total Count of Valid Doses" + s);
       caNumberOfTargetDosesToSubstitutes[i] = new ConditionAttribute<Integer>("Supporting Data",
           "Number of Target Doses to substitute" + s);
 
-      caFirstDoseBeginAgeDates[i].setInitialValue(substituteDose.getFirstDoseBeginAge().getDateFrom(dateOfBirth));
-      caFirstDoseEndAgeDates[i].setInitialValue(substituteDose.getFirstDoseEndAge().getDateFrom(dateOfBirth));
+      caFirstDoseBeginAgeDates[i]
+          .setInitialValue(substituteDose.getFirstDoseBeginAge().getDateFrom(dateOfBirth));
+      caFirstDoseEndAgeDates[i]
+          .setInitialValue(substituteDose.getFirstDoseEndAge().getDateFrom(dateOfBirth));
       caTotalCountOfValidDoses[i].setInitialValue(substituteDose.getTotalCountOfValidDoses());
-      caNumberOfTargetDosesToSubstitutes[i].setInitialValue(substituteDose.getNumberOfTargetDosesToSubstitue());
+      caNumberOfTargetDosesToSubstitutes[i]
+          .setInitialValue(substituteDose.getNumberOfTargetDosesToSubstitue());
 
       conditionAttributesList.add(caFirstDoseBeginAgeDates[i]);
       conditionAttributesList.add(caFirstDoseEndAgeDates[i]);
@@ -109,17 +116,19 @@ public class SubstituteTargetDoseForEvaluation extends LogicStep
 
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + logicStepType.getDisplay() + "</h1>");
-    out.println("<p>Substitute target dose is similar to skip target dose as a means to adjust where the patient is in the patient series. The goal of substitute target dose is to look at previously satisfied target doses within the patient series to determine how many future target doses `if any` can be substituted and not recommended.</p>");
-    out.println("<p>When a target dose does specify substitute target dose attributes, it will contain a set of substitution possibilities. If a substitution is found, the remaining substitute target dose sets can be ignored. If all of the sets are examined and no substitution is found, then the current target dose should be used for evaluation.</p>");
+    out.println(
+        "<p>Substitute target dose is similar to skip target dose as a means to adjust where the patient is in the patient series. The goal of substitute target dose is to look at previously satisfied target doses within the patient series to determine how many future target doses `if any` can be substituted and not recommended.</p>");
+    out.println(
+        "<p>When a target dose does specify substitute target dose attributes, it will contain a set of substitution possibilities. If a substitution is found, the remaining substitute target dose sets can be ignored. If all of the sets are examined and no substitution is found, then the current target dose should be used for evaluation.</p>");
 
     out.println("<h2>Relationship to ACIP recommendations:</h2>");
-    out.println("<p>At present, substitute target dose is only used for children who have partially completed their DTaP series and have turned seven years old. Once the child is seven years old, the number of Tdap/Td doses recommended is based on the number of DTaP vaccine doses administered the child received prior to age seven. See MMWR 2006; 55 (No. RR-3); Appendix D.</p>");
+    out.println(
+        "<p>At present, substitute target dose is only used for children who have partially completed their DTaP series and have turned seven years old. Once the child is seven years old, the number of Tdap/Td doses recommended is based on the number of DTaP vaccine doses administered the child received prior to age seven. See MMWR 2006; 55 (No. RR-3); Appendix D.</p>");
     printConditionAttributesTable(out);
     printLogicTables(out);
   }
 
-  private class LT extends LogicTable
-  {
+  private class LT extends LogicTable {
     private int position;
     private boolean targetDosesCanBeSubstituted = false;
 
@@ -131,36 +140,35 @@ public class SubstituteTargetDoseForEvaluation extends LogicStep
       super(2, 3, "Table 4-7 Can Target Doses Be Substituted [" + (p + 1) + "]");
       this.position = p;
 
-      setLogicCondition(
-          0,
-          new LogicCondition(
-              "First dose begin age date <= date administered of first satisfied target dose in patient series < first dose end age date?") {
-            @Override
-            public LogicResult evaluateInternal() {
-              if (caTargetDosesWithATargetDoseSatisfied.getFinalValue().size() == 0) {
-                log("There is no first target dose");
-                return LogicResult.NO;
-              }
-              TargetDose firstTargetDose = caTargetDosesWithATargetDoseSatisfied.getFinalValue().get(0);
-              Date adminDate = firstTargetDose.getSatisfiedByVaccineDoseAdministered().getDateAdministered();
-              if (caFirstDoseBeginAgeDates[position].getFinalValue().after(adminDate)) {
-                log("First dose given before begin range");
-                return LogicResult.NO;
-              }
-              if (adminDate.before(caFirstDoseEndAgeDates[position].getFinalValue())) {
-                log("First dose given before end range");
-                return LogicResult.YES;
-              }
-              return LogicResult.NO;
-            }
-          });
+      setLogicCondition(0, new LogicCondition(
+          "First dose begin age date <= date administered of first satisfied target dose in patient series < first dose end age date?") {
+        @Override
+        public LogicResult evaluateInternal() {
+          if (caTargetDosesWithATargetDoseSatisfied.getFinalValue().size() == 0) {
+            log("There is no first target dose");
+            return LogicResult.NO;
+          }
+          TargetDose firstTargetDose = caTargetDosesWithATargetDoseSatisfied.getFinalValue().get(0);
+          Date adminDate =
+              firstTargetDose.getSatisfiedByVaccineDoseAdministered().getDateAdministered();
+          if (caFirstDoseBeginAgeDates[position].getFinalValue().after(adminDate)) {
+            log("First dose given before begin range");
+            return LogicResult.NO;
+          }
+          if (adminDate.before(caFirstDoseEndAgeDates[position].getFinalValue())) {
+            log("First dose given before end range");
+            return LogicResult.YES;
+          }
+          return LogicResult.NO;
+        }
+      });
 
       setLogicCondition(0, new LogicCondition(
           "Total count of satisfied target doses in patient series = substitute dose total count of valid doses?") {
         @Override
         public LogicResult evaluateInternal() {
-          if (caTargetDosesWithATargetDoseSatisfied.getFinalValue().size() == caNumberOfTargetDosesToSubstitutes[position]
-              .getFinalValue()) {
+          if (caTargetDosesWithATargetDoseSatisfied.getFinalValue()
+              .size() == caNumberOfTargetDosesToSubstitutes[position].getFinalValue()) {
             return LogicResult.YES;
           }
           return LogicResult.NO;

@@ -7,8 +7,7 @@ import java.util.Map;
 
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.DoseCondition;
 
-public class VaccineDoseAdministered
-{
+public class VaccineDoseAdministered {
   private Date dateAdministered = null;
   private DoseCondition doseCondition = null;
   private Patient patient = null;
@@ -30,20 +29,18 @@ public class VaccineDoseAdministered
     this.antigenAssigned = antigenAssigned;
   }
 
-  public VaccineDoseAdministered()
-  {
+  public VaccineDoseAdministered() {
     // default
   }
-  
-  public VaccineDoseAdministered(VaccineDoseAdministered vdaOriginal)
-  {
+
+  public VaccineDoseAdministered(VaccineDoseAdministered vdaOriginal) {
     dateAdministered = vdaOriginal.getDateAdministered();
     doseCondition = vdaOriginal.getDoseCondition();
     patient = vdaOriginal.getPatient();
     vaccine = vdaOriginal.getVaccine();
     immunizationHistory = vdaOriginal.getImmunizationHistory();
     targetDose = vdaOriginal.getTargetDose();
-  }  
+  }
 
   public TargetDose getTargetDose() {
     return targetDose;
@@ -92,21 +89,16 @@ public class VaccineDoseAdministered
   public void setImmunizationHistory(ImmunizationHistory immunizationHistory) {
     this.immunizationHistory = immunizationHistory;
   }
-  
+
   @Override
   public String toString() {
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-    if (dateAdministered != null && vaccine != null)
-    {
+    if (dateAdministered != null && vaccine != null) {
       return vaccine + " given " + sdf.format(dateAdministered);
-    }
-    else if (dateAdministered != null)
-    {
-      return  "given " + sdf.format(dateAdministered);
-    }
-    else if (vaccine != null)
-    {
-      return  vaccine.toString();
+    } else if (dateAdministered != null) {
+      return "given " + sdf.format(dateAdministered);
+    } else if (vaccine != null) {
+      return vaccine.toString();
     }
     return super.toString();
   }

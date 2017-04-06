@@ -56,10 +56,12 @@ public class DateRules {
       @Override
       protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep,
           ConditionalSkipCondition conditionalSkipCondition) {
-        if (conditionalSkipCondition.getBeginAge() == null || !conditionalSkipCondition.getBeginAge().isValued()) {
+        if (conditionalSkipCondition.getBeginAge() == null
+            || !conditionalSkipCondition.getBeginAge().isValued()) {
           return null;
         }
-        return conditionalSkipCondition.getBeginAge().getDateFrom(dataModel.getPatient().getDateOfBirth());
+        return conditionalSkipCondition.getBeginAge()
+            .getDateFrom(dataModel.getPatient().getDateOfBirth());
       }
     };
     CALCDTSKIP_3.setBusinessRuleId("CALCDTSKIP-3");
@@ -71,10 +73,12 @@ public class DateRules {
       @Override
       protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep,
           ConditionalSkipCondition conditionalSkipCondition) {
-        if (conditionalSkipCondition.getEndAge() == null || !conditionalSkipCondition.getEndAge().isValued()) {
+        if (conditionalSkipCondition.getEndAge() == null
+            || !conditionalSkipCondition.getEndAge().isValued()) {
           return null;
         }
-        return conditionalSkipCondition.getEndAge().getDateFrom(dataModel.getPatient().getDateOfBirth());
+        return conditionalSkipCondition.getEndAge()
+            .getDateFrom(dataModel.getPatient().getDateOfBirth());
       }
     };
     CALCDTSKIP_4.setBusinessRuleId("CALCDTSKIP-4");
@@ -89,11 +93,12 @@ public class DateRules {
         if (dataModel.getAntigenAdministeredRecordThatSatisfiedPreviousTargetDose() == null) {
           return null;
         }
-        if (conditionalSkipCondition.getInterval() == null || !conditionalSkipCondition.getInterval().isValued()) {
+        if (conditionalSkipCondition.getInterval() == null
+            || !conditionalSkipCondition.getInterval().isValued()) {
           return null;
         }
-        return conditionalSkipCondition.getInterval()
-            .getDateFrom(dataModel.getAntigenAdministeredRecordThatSatisfiedPreviousTargetDose().getDateAdministered());
+        return conditionalSkipCondition.getInterval().getDateFrom(dataModel
+            .getAntigenAdministeredRecordThatSatisfiedPreviousTargetDose().getDateAdministered());
       }
     };
     CALCDTSKIP_5.setBusinessRuleId("CALCDTSKIP-5");
@@ -188,35 +193,35 @@ public class DateRules {
     CALCDTINT_3 = new DateRule<Interval>() {
       @Override
       protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep, Interval interval) {
-    	  if (interval != null){
-    	 if (interval.getAbsoluteMinimumInterval() != null){
-    	  SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-		  Date dob = dataModel.getAntigenAdministeredRecord().getDateAdministered();
-		  int absMinIntAmount = interval.getAbsoluteMinimumInterval().getAmount();
-		  Date absMinIntDate = new Date();
-			switch (interval.getAbsoluteMinimumInterval().getType()) {
-			case DAY:
-				absMinIntDate = DateUtils.addDays(dob, absMinIntAmount);    		
-	  		break;
-			case WEEK:
-				absMinIntDate = DateUtils.addWeeks(dob, absMinIntAmount);    		
-    	  		break;
-			case MONTH:
-				absMinIntDate = DateUtils.addMonths(dob, absMinIntAmount);    		
-    	  		break;
-			case YEAR:
-				absMinIntDate = DateUtils.addYears(dob, absMinIntAmount);    		
-    	  		break;
-			default:
-				break;
-			}
-			return absMinIntDate;
-    	 }else{
-    		 return null;
-    	 }
-    	  }else{
-    		 return null;
-    	 }
+        if (interval != null) {
+          if (interval.getAbsoluteMinimumInterval() != null) {
+            SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
+            Date dob = dataModel.getAntigenAdministeredRecord().getDateAdministered();
+            int absMinIntAmount = interval.getAbsoluteMinimumInterval().getAmount();
+            Date absMinIntDate = new Date();
+            switch (interval.getAbsoluteMinimumInterval().getType()) {
+              case DAY:
+                absMinIntDate = DateUtils.addDays(dob, absMinIntAmount);
+                break;
+              case WEEK:
+                absMinIntDate = DateUtils.addWeeks(dob, absMinIntAmount);
+                break;
+              case MONTH:
+                absMinIntDate = DateUtils.addMonths(dob, absMinIntAmount);
+                break;
+              case YEAR:
+                absMinIntDate = DateUtils.addYears(dob, absMinIntAmount);
+                break;
+              default:
+                break;
+            }
+            return absMinIntDate;
+          } else {
+            return null;
+          }
+        } else {
+          return null;
+        }
       }
     };
     CALCDTINT_3.setBusinessRuleId("CALCDTINT-3");
@@ -228,35 +233,35 @@ public class DateRules {
     CALCDTINT_4 = new DateRule<Interval>() {
       @Override
       protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep, Interval interval) {
-    	  if (interval != null){
-    	  if (interval.getMinimumInterval() != null){
-    	  SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-		  Date dob = dataModel.getAntigenAdministeredRecord().getDateAdministered();
-		  int minIntAmount = interval.getMinimumInterval().getAmount();
-		  Date minIntDate = new Date();
-			switch (interval.getMinimumInterval().getType()) {
-			case DAY:
-				minIntDate = DateUtils.addDays(dob, minIntAmount);    		
-	  		break;
-			case WEEK:
-				minIntDate = DateUtils.addWeeks(dob, minIntAmount);    		
-    	  		break;
-			case MONTH:
-				minIntDate = DateUtils.addMonths(dob, minIntAmount);    		
-    	  		break;
-			case YEAR:
-				minIntDate = DateUtils.addYears(dob, minIntAmount);    		
-    	  		break;
-			default:
-				break;
-			}
-			return minIntDate;      
-			}else{
-				return null;
-			}
-    	  }else{
-    		  return null;
-    	  }
+        if (interval != null) {
+          if (interval.getMinimumInterval() != null) {
+            SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
+            Date dob = dataModel.getAntigenAdministeredRecord().getDateAdministered();
+            int minIntAmount = interval.getMinimumInterval().getAmount();
+            Date minIntDate = new Date();
+            switch (interval.getMinimumInterval().getType()) {
+              case DAY:
+                minIntDate = DateUtils.addDays(dob, minIntAmount);
+                break;
+              case WEEK:
+                minIntDate = DateUtils.addWeeks(dob, minIntAmount);
+                break;
+              case MONTH:
+                minIntDate = DateUtils.addMonths(dob, minIntAmount);
+                break;
+              case YEAR:
+                minIntDate = DateUtils.addYears(dob, minIntAmount);
+                break;
+              default:
+                break;
+            }
+            return minIntDate;
+          } else {
+            return null;
+          }
+        } else {
+          return null;
+        }
       }
     };
     CALCDTINT_4.setBusinessRuleId("CALCDTINT-4");
@@ -315,7 +320,8 @@ public class DateRules {
 
     CALCDTLIVE_1 = new DateRule<LiveVirusConflict>() {
       @Override
-      protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep, LiveVirusConflict liveVirusConflict) {
+      protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep,
+          LiveVirusConflict liveVirusConflict) {
         return null;
       }
     };
@@ -327,7 +333,8 @@ public class DateRules {
 
     CALCDTLIVE_2 = new DateRule<LiveVirusConflict>() {
       @Override
-      protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep, LiveVirusConflict liveVirusConflict) {
+      protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep,
+          LiveVirusConflict liveVirusConflict) {
         return null;
       }
     };
@@ -339,7 +346,8 @@ public class DateRules {
 
     CALCDTLIVE_3 = new DateRule<LiveVirusConflict>() {
       @Override
-      protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep, LiveVirusConflict liveVirusConflict) {
+      protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep,
+          LiveVirusConflict liveVirusConflict) {
         return null;
       }
     };
@@ -351,7 +359,8 @@ public class DateRules {
 
     CALCDTLIVE_4 = new DateRule<LiveVirusConflict>() {
       @Override
-      protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep, LiveVirusConflict liveVirusConflict) {
+      protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep,
+          LiveVirusConflict liveVirusConflict) {
         return null;
       }
     };
@@ -363,7 +372,8 @@ public class DateRules {
 
     CALCDTPREF_1 = new DateRule<PreferrableVaccine>() {
       @Override
-      protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep, PreferrableVaccine preferrableVaccine) {
+      protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep,
+          PreferrableVaccine preferrableVaccine) {
         return null;
       }
     };
@@ -375,7 +385,8 @@ public class DateRules {
 
     CALCDTPREF_2 = new DateRule<PreferrableVaccine>() {
       @Override
-      protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep, PreferrableVaccine preferrableVaccine) {
+      protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep,
+          PreferrableVaccine preferrableVaccine) {
         return null;
       }
     };
@@ -387,7 +398,8 @@ public class DateRules {
 
     CALCDTALLOW_1 = new DateRule<AllowableVaccine>() {
       @Override
-      protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep, AllowableVaccine allowableVaccine) {
+      protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep,
+          AllowableVaccine allowableVaccine) {
         return null;
       }
     };
@@ -399,7 +411,8 @@ public class DateRules {
 
     CALCDTALLOW_2 = new DateRule<AllowableVaccine>() {
       @Override
-      protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep, AllowableVaccine allowableVaccine) {
+      protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep,
+          AllowableVaccine allowableVaccine) {
         return null;
       }
     };

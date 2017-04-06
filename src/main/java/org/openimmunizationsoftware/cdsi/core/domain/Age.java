@@ -2,15 +2,14 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 
-public class Age
-{
+public class Age {
   private SeriesDose seriesDose = null;
   private TimePeriod absoluteMinimumAge = null;
   private TimePeriod minimumAge = null;
   private TimePeriod earliestRecommendedAge = null;
   private TimePeriod latestRecommendedAge = null;
   private TimePeriod maximumAge = null;
-  
+
   public SeriesDose getSeriesDose() {
     return seriesDose;
   }

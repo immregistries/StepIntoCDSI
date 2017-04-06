@@ -3,8 +3,7 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Schedule
-{
+public class Schedule {
   private String scheduleName = "";
   private List<Contraindication> contraindicationList = new ArrayList<Contraindication>();
   private List<LiveVirusConflict> liveVirusConflictList = new ArrayList<LiveVirusConflict>();

@@ -2,8 +2,7 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 
-public class RecurringDose
-{
+public class RecurringDose {
   private SeriesDose seriesDose = null;
   private YesNo value;
 

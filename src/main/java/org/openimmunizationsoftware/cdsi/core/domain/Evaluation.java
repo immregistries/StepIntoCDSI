@@ -3,8 +3,7 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 
-public class Evaluation
-{
+public class Evaluation {
   private EvaluationStatus evaluationStatus = null;
   private EvaluationReason evaluationReason = null;
   private VaccineDoseAdministered vaccineDoseAdministered = null;

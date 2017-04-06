@@ -18,11 +18,13 @@ public class CvxServlet extends MainServlet {
   private static final String PARAM_SEARCH = "search_term";
 
   public static String makeLink(VaccineType vaccineType) {
-    return "<a href=\"" + SERVLET_NAME + "?" + PARAM_SEARCH + "=" + vaccineType.getCvxCode() + "\" target=\"dataModelView\">" + vaccineType.getShortDescription() + "</a>";
+    return "<a href=\"" + SERVLET_NAME + "?" + PARAM_SEARCH + "=" + vaccineType.getCvxCode()
+        + "\" target=\"dataModelView\">" + vaccineType.getShortDescription() + "</a>";
   }
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
     HttpSession session = req.getSession(true);
     DataModel dataModel = (DataModel) session.getAttribute("dataModel");
     if (dataModel == null) {
@@ -44,7 +46,7 @@ public class CvxServlet extends MainServlet {
 
       out.println("    <form action=\"" + SERVLET_NAME + "\">");
 
-      out.println("      <input type=\"text\" name=\""+ PARAM_SEARCH + "\"><br>");
+      out.println("      <input type=\"text\" name=\"" + PARAM_SEARCH + "\"><br>");
       out.println("      <input type=\"submit\" value=\"Submit\">");
 
       out.println("    </form>");
@@ -62,11 +64,11 @@ public class CvxServlet extends MainServlet {
         out.println("      <td>" + makeLink(vaccineType) + "</td>");
         out.println("   </tr>");
       } else {
-        for(VaccineType vaccineType: dataModel.getCvxMap().values()){
-        // I am most likely doing the wrong thing here. :)
+        for (VaccineType vaccineType : dataModel.getCvxMap().values()) {
+          // I am most likely doing the wrong thing here. :)
           out.println("   <tr>");
           out.println("      <td>" + vaccineType.getCvxCode() + "</td>");
-          out.println("      <td>" + makeLink(vaccineType)  + "</td>");
+          out.println("      <td>" + makeLink(vaccineType) + "</td>");
           out.println("   </tr>");
         }
       }

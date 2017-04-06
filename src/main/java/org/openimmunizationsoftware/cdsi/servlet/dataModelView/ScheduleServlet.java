@@ -22,20 +22,21 @@ import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 public class ScheduleServlet extends MainServlet {
 
   public static final String SERVLET_NAME = "dataModelViewSchedule";
-  
+
   private static final String PARAM_VIEW = "view";
   private static final String PARAM_SCHED_NAME = "scheduleName";
   private static final String PARAM_ANTIGEN_SERIES = "antigenSeries";
-  
+
   private static final String VIEW_ANTIGEN = "antigen";
 
   /*
-   * public static String makeLink(Schedule schedule) { return "<a href=\"" +
-   * SERVLET_NAME + "?\" target=\"dataModelView\">" "</a>"; }
+   * public static String makeLink(Schedule schedule) { return "<a href=\"" + SERVLET_NAME +
+   * "?\" target=\"dataModelView\">" "</a>"; }
    */
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
     HttpSession session = req.getSession(true);
     DataModel dataModel = (DataModel) session.getAttribute("dataModel");
     if (dataModel == null) {
@@ -95,7 +96,8 @@ public class ScheduleServlet extends MainServlet {
 
   private void printRowSchedule(Schedule schedule, PrintWriter out) {
     out.println("      <tr>");
-    out.println("        <td><a href=\"dataModelViewAntigen?search_term=" +schedule.getScheduleName() +"\" >" + schedule.getScheduleName() + "</td>");
+    out.println("        <td><a href=\"dataModelViewAntigen?search_term="
+        + schedule.getScheduleName() + "\" >" + schedule.getScheduleName() + "</td>");
     out.println("        <td>" + schedule.getContraindicationList() + "</td>");
     out.println("        <td>" + schedule.getLiveVirusConflictList() + "</td>");
     out.println("        <td>");
@@ -103,11 +105,12 @@ public class ScheduleServlet extends MainServlet {
 
     for (AntigenSeries antigenSeries : schedule.getAntigenSeriesList()) {
       try {
-        String link = SERVLET_NAME + "?" + PARAM_VIEW + "=" + VIEW_ANTIGEN + "&" + PARAM_SCHED_NAME + "="
-            + URLEncoder.encode(schedule.getScheduleName(), "UTF-8") + "&" + PARAM_ANTIGEN_SERIES + "="
+        String link = SERVLET_NAME + "?" + PARAM_VIEW + "=" + VIEW_ANTIGEN + "&" + PARAM_SCHED_NAME
+            + "=" + URLEncoder.encode(schedule.getScheduleName(), "UTF-8") + "&"
+            + PARAM_ANTIGEN_SERIES + "="
             + URLEncoder.encode(antigenSeries.getSeriesName(), "UTF-8");
-        out.println("          <li><a href=\"" + link + "\" target=\"dataModelView\">" + antigenSeries.getSeriesName()
-            + "</a></li>");
+        out.println("          <li><a href=\"" + link + "\" target=\"dataModelView\">"
+            + antigenSeries.getSeriesName() + "</a></li>");
       } catch (UnsupportedEncodingException uee) {
         uee.printStackTrace();
       }
@@ -169,10 +172,14 @@ public class ScheduleServlet extends MainServlet {
     out.println("        <th>Max Age To Start</th>");
     out.println("      </tr>");
     out.println("      <tr>");
-    out.println("        <td>" + antigenSeries.getSelectBestPatientSeries().getDefaultSeries() + "</td>");
-    out.println("        <td>" + antigenSeries.getSelectBestPatientSeries().getProductPath() + "</td>");
-    out.println("        <td>" + antigenSeries.getSelectBestPatientSeries().getSeriesPreference() + "</td>");
-    out.println("        <td>" + antigenSeries.getSelectBestPatientSeries().getMaxAgeToStart() + "</td>");
+    out.println(
+        "        <td>" + antigenSeries.getSelectBestPatientSeries().getDefaultSeries() + "</td>");
+    out.println(
+        "        <td>" + antigenSeries.getSelectBestPatientSeries().getProductPath() + "</td>");
+    out.println("        <td>" + antigenSeries.getSelectBestPatientSeries().getSeriesPreference()
+        + "</td>");
+    out.println(
+        "        <td>" + antigenSeries.getSelectBestPatientSeries().getMaxAgeToStart() + "</td>");
     out.println("      </tr>");
     out.println("    </table>");
 

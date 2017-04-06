@@ -3,8 +3,7 @@ package org.openimmunizationsoftware.cdsi.core.domain.datatypes;
 import java.util.Calendar;
 import java.util.Date;
 
-public class TimePeriod
-{
+public class TimePeriod {
   private String originalValue = "";
   private int amount = 0;
   private TimePeriodType type = null;
@@ -99,8 +98,8 @@ public class TimePeriod
       spacePos = positivePos;
     }
     String typeString = value.substring(0, spacePos);
-    if (typeString.equalsIgnoreCase("day") || typeString.equalsIgnoreCase("days") || typeString.equalsIgnoreCase("d")
-        || typeString.equalsIgnoreCase("da")) {
+    if (typeString.equalsIgnoreCase("day") || typeString.equalsIgnoreCase("days")
+        || typeString.equalsIgnoreCase("d") || typeString.equalsIgnoreCase("da")) {
       type = TimePeriodType.DAY;
     } else if (typeString.equalsIgnoreCase("week") || typeString.equalsIgnoreCase("weeks")
         || typeString.equalsIgnoreCase("w") || typeString.equalsIgnoreCase("we")) {
@@ -109,8 +108,8 @@ public class TimePeriod
         || typeString.equalsIgnoreCase("m") || typeString.equalsIgnoreCase("mo")) {
       type = TimePeriodType.MONTH;
     } else if (typeString.equalsIgnoreCase("year") || typeString.equalsIgnoreCase("years")
-        || typeString.equalsIgnoreCase("y") || typeString.equalsIgnoreCase("ye") || typeString.equalsIgnoreCase("yr")
-        || typeString.equalsIgnoreCase("yrs")) {
+        || typeString.equalsIgnoreCase("y") || typeString.equalsIgnoreCase("ye")
+        || typeString.equalsIgnoreCase("yr") || typeString.equalsIgnoreCase("yrs")) {
       type = TimePeriodType.YEAR;
     } else {
       throw new IllegalArgumentException("Unrecognized interval type '" + typeString + "'");
@@ -184,7 +183,8 @@ public class TimePeriod
       endingDate.set(Calendar.YEAR, year);
     }
     // CALCDT-5
-    if (endingDate.get(Calendar.DAY_OF_MONTH) > endingDate.getActualMaximum(Calendar.DAY_OF_MONTH)) {
+    if (endingDate.get(Calendar.DAY_OF_MONTH) > endingDate
+        .getActualMaximum(Calendar.DAY_OF_MONTH)) {
       month = month + 1;
       if (month > 12) {
         year = year + 1;
@@ -195,8 +195,7 @@ public class TimePeriod
       endingDate.set(Calendar.DAY_OF_MONTH, 1);
     }
 
-    if (child != null)
-    {
+    if (child != null) {
       return child.getDateFrom(endingDate.getTime());
     }
     return endingDate.getTime();

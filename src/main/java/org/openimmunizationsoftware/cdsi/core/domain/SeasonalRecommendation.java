@@ -2,8 +2,7 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 
 import java.util.Date;
 
-public class SeasonalRecommendation
-{
+public class SeasonalRecommendation {
   private SeriesDose seriesDose = null;
   private Date seasonalRecommendationStartDate = null;
   private Date seasonalRecommendationEndDate = null;

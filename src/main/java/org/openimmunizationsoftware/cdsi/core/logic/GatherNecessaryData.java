@@ -18,8 +18,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.DoseCondition;
 import org.openimmunizationsoftware.cdsi.servlet.dataModelView.AntigenServlet;
 
-public class GatherNecessaryData extends LogicStep
-{
+public class GatherNecessaryData extends LogicStep {
 
   public GatherNecessaryData(DataModel dataModel) {
     super(LogicStepType.GATHER_NECESSARY_DATA, dataModel);
@@ -45,11 +44,13 @@ public class GatherNecessaryData extends LogicStep
       vaccineDoseAdministered.setImmunizationHistory(immunizationHistory);
       immunizationHistory.getVaccineDoseAdministeredList().add(vaccineDoseAdministered);
       patient.getReceivesList().add(vaccineDoseAdministered);
-      vaccineDoseAdministered.setDateAdministered(sdf.parse(req.getParameter(PARAM_VACCINE_DATE + i)));
+      vaccineDoseAdministered
+          .setDateAdministered(sdf.parse(req.getParameter(PARAM_VACCINE_DATE + i)));
       if (req.getParameter(PARAM_VACCINE_CONDITION_CODE + i) != null
           && !req.getParameter(PARAM_VACCINE_CONDITION_CODE + i).equals("")) {
-        vaccineDoseAdministered.setDoseCondition(req.getParameter(PARAM_VACCINE_CONDITION_CODE + i).equalsIgnoreCase(
-            "yes") ? DoseCondition.YES : DoseCondition.NO);
+        vaccineDoseAdministered.setDoseCondition(
+            req.getParameter(PARAM_VACCINE_CONDITION_CODE + i).equalsIgnoreCase("yes")
+                ? DoseCondition.YES : DoseCondition.NO);
       }
       String cvxCode = req.getParameter(PARAM_VACCINE_CVX + i);
       String mvxCode = req.getParameter(PARAM_VACCINE_MVX + i);
@@ -111,8 +112,9 @@ public class GatherNecessaryData extends LogicStep
           + n(req.getParameter(PARAM_VACCINE_MVX + i)) + "\" size=\"3\"/></td>");
       out.println("    <td><input type=\"text\" name=\"" + PARAM_VACCINE_DATE + i + "\" value=\""
           + n(req.getParameter(PARAM_VACCINE_DATE + i)) + "\" size=\"10\"/></td>");
-      out.println("    <td><input type=\"text\" name=\"" + PARAM_VACCINE_CONDITION_CODE + i + "\" value=\""
-          + n(req.getParameter(PARAM_VACCINE_CONDITION_CODE + i)) + "\" size=\"3\"/></td>");
+      out.println(
+          "    <td><input type=\"text\" name=\"" + PARAM_VACCINE_CONDITION_CODE + i + "\" value=\""
+              + n(req.getParameter(PARAM_VACCINE_CONDITION_CODE + i)) + "\" size=\"3\"/></td>");
       out.println("  </tr>");
       i++;
     }
@@ -146,7 +148,8 @@ public class GatherNecessaryData extends LogicStep
     for (VaccineDoseAdministered vaccineDoseAdministered : dataModel.getImmunizationHistory()
         .getVaccineDoseAdministeredList()) {
       out.println("     <tr>");
-      out.println("       <td>" + sdf.format(vaccineDoseAdministered.getDateAdministered()) + "</td>");
+      out.println(
+          "       <td>" + sdf.format(vaccineDoseAdministered.getDateAdministered()) + "</td>");
       out.println("       <td>" + vaccineDoseAdministered.getVaccine().getVaccineType() + "</td>");
       out.println("       <td>" + vaccineDoseAdministered.getVaccine().getManufacturer() + "</td>");
       out.println("     </tr>");
@@ -198,7 +201,8 @@ public class GatherNecessaryData extends LogicStep
       out.println("       <td>" + safe(liveVirusConflict.getPreviousVaccineType()) + "</td>");
       out.println("       <td>" + safe(liveVirusConflict.getCurrentVaccineType()) + "</td>");
       out.println("       <td>" + safe(liveVirusConflict.getConflictBeginInterval()) + "</td>");
-      out.println("       <td>" + safe(liveVirusConflict.getMinimalConflictEndInterval()) + "</td>");
+      out.println(
+          "       <td>" + safe(liveVirusConflict.getMinimalConflictEndInterval()) + "</td>");
       out.println("       <td>" + safe(liveVirusConflict.getConflictEndInterval()) + "</td>");
       out.println("     </tr>");
     }

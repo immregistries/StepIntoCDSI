@@ -12,7 +12,6 @@ import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
-import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
@@ -43,7 +42,6 @@ public class OneBestPatientSeries extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
-    System.out.println("--> ============================================================ ");
     setNextLogicStepType(LogicStepType.SELECT_BEST_PATIENT_SERIES);
     evaluateLogicTables();
     return next();
@@ -75,10 +73,9 @@ public class OneBestPatientSeries extends LogicStep {
         @Override
         protected LogicResult evaluateInternal() {
           int numberOfPatientSeries = 0;
-          for (PatientSeries patientSeries : dataModel.getPatientSeriesList())
-          {
-            if (patientSeries.getTrackedAntigenSeries().getTargetDisease().equals(dataModel.getAntigen()))
-            {
+          for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {
+            if (patientSeries.getTrackedAntigenSeries().getTargetDisease()
+                .equals(dataModel.getAntigen())) {
               numberOfPatientSeries++;
             }
           }
@@ -236,7 +233,6 @@ public class OneBestPatientSeries extends LogicStep {
         public void perform() {
           // TODO Auto-generated method stub
           log("Yes. The lone complete patient series is the best patient series");
-          System.out.println("--> #1");
           for (AntigenSeries as : dataModel.getAntigenSeriesSelectedList()) {
             for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {
               if (patientSeries.getTrackedAntigenSeries().equals(as)) {
@@ -254,7 +250,6 @@ public class OneBestPatientSeries extends LogicStep {
         public void perform() {
           // TODO Auto-generated method stub
           log("Yes. The lone in-process patient series is the best patient series");
-          System.out.println("--> #2");
           for (AntigenSeries as : dataModel.getAntigenSeriesSelectedList()) {
             for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {
               if (patientSeries.getTrackedAntigenSeries().equals(as)) {
@@ -272,8 +267,7 @@ public class OneBestPatientSeries extends LogicStep {
         public void perform() {
           // TODO Auto-generated method stub
           log("Yes. The lone default patient series is the best patient series");
-          System.out.println("--> #3");
-for (AntigenSeries as : dataModel.getAntigenSeriesSelectedList()) {
+          for (AntigenSeries as : dataModel.getAntigenSeriesSelectedList()) {
             for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {
               if (patientSeries.getTrackedAntigenSeries().equals(as)) {
                 dataModel.getBestPatientSeriesList().add(patientSeries);
@@ -290,7 +284,6 @@ for (AntigenSeries as : dataModel.getAntigenSeriesSelectedList()) {
         public void perform() {
           // TODO Auto-generated method stub
           log("No. More than one patient series has potential. All patient series are examined to see which should be scored and selected as the best patient series");
-          System.out.println("--> #4");
           setNextLogicStepType(LogicStepType.CLASSIFY_PATIENT_SERIES);
 
         }

@@ -4,8 +4,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-public class DomUtils
-{
+public class DomUtils {
 
   public static String getAttributeValue(Node node, String attributeName) {
     String result = "";
@@ -115,27 +114,27 @@ public class DomUtils
       char[] c = s.toCharArray();
       for (int i = 0; i < c.length; i++) {
         switch (c[i]) {
-        case '&':
-          result += "&amp;";
-          break;
-        case '<':
-          result += "&lt;";
-          break;
-        case '>':
-          result += "&gt;";
-          break;
-        case '\'':
-          result += "&apos;";
-          break;
-        case '\"':
-          result += "&quot;";
-          break;
-        default:
-          if (c[i] < ' ') {
-            result += "&#" + ((int) c[i]) + ";";
-          } else {
-            result += c[i];
-          }
+          case '&':
+            result += "&amp;";
+            break;
+          case '<':
+            result += "&lt;";
+            break;
+          case '>':
+            result += "&gt;";
+            break;
+          case '\'':
+            result += "&apos;";
+            break;
+          case '\"':
+            result += "&quot;";
+            break;
+          default:
+            if (c[i] < ' ') {
+              result += "&#" + ((int) c[i]) + ";";
+            } else {
+              result += c[i];
+            }
         }
       }
     }

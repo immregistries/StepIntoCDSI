@@ -19,38 +19,26 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
 public abstract class LogicStep {
 
-  public static final LogicStepType[] STEPS = { LogicStepType.GATHER_NECESSARY_DATA,
-      LogicStepType.CREATE_PATIENT_SERIES, 
-      LogicStepType.ORGANIZE_IMMUNIZATION_HISTORY,
-      LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES, 
-      LogicStepType.FOR_EACH_PATIENT_SERIES,
-      LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED, 
+  public static final LogicStepType[] STEPS = {LogicStepType.GATHER_NECESSARY_DATA,
+      LogicStepType.CREATE_PATIENT_SERIES, LogicStepType.ORGANIZE_IMMUNIZATION_HISTORY,
+      LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES, LogicStepType.FOR_EACH_PATIENT_SERIES,
+      LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED,
       LogicStepType.EVALUATE_DOSE_ADMININISTERED_CONDITION,
-      LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION, 
-      LogicStepType.EVALUATE_AGE,
-      LogicStepType.EVALUATE_INTERVAL, 
-      LogicStepType.EVALUATE_ALLOWABLE_INTERVAL,
-      LogicStepType.EVALUATE_FOR_LIVE_VIRUS_CONFLICT, 
+      LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION, LogicStepType.EVALUATE_AGE,
+      LogicStepType.EVALUATE_INTERVAL, LogicStepType.EVALUATE_ALLOWABLE_INTERVAL,
+      LogicStepType.EVALUATE_FOR_LIVE_VIRUS_CONFLICT,
       LogicStepType.EVALUATE_PREFERABLE_VACCINE_ADMINISTERED,
-      LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED, 
-      LogicStepType.EVALUATE_GENDER,
-      LogicStepType.SATISFY_TARGET_DOSE, 
-      LogicStepType.FORECAST_DATES_AND_REASONS,
-      LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST, 
-      LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY,
-      LogicStepType.DETERMINE_FORECAST_NEED, 
+      LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED, LogicStepType.EVALUATE_GENDER,
+      LogicStepType.SATISFY_TARGET_DOSE, LogicStepType.FORECAST_DATES_AND_REASONS,
+      LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST,
+      LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY, LogicStepType.DETERMINE_FORECAST_NEED,
       LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMEND_VACCINES,
-      LogicStepType.SELECT_BEST_PATIENT_SERIES, 
-      LogicStepType.ONE_BEST_PATIENT_SERIES,
-      LogicStepType.CLASSIFY_PATIENT_SERIES, 
-      LogicStepType.COMPLETE_PATIENT_SERIES,
-      LogicStepType.IN_PROCESS_PATIENT_SERIES, 
-      LogicStepType.NO_VALID_DOSES,
-      LogicStepType.SELECT_BEST_CANDIDATE_PATIENT_SERIES, 
-      LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP,
-      LogicStepType.CLASSIFY_VACCINE_GROUP, 
-      LogicStepType.SINGLE_ANTIGEN_VACCINE_GROUP,
-      LogicStepType.MULTIPLE_ANTIGEN_VACCINE_GROUP };
+      LogicStepType.SELECT_BEST_PATIENT_SERIES, LogicStepType.ONE_BEST_PATIENT_SERIES,
+      LogicStepType.CLASSIFY_PATIENT_SERIES, LogicStepType.COMPLETE_PATIENT_SERIES,
+      LogicStepType.IN_PROCESS_PATIENT_SERIES, LogicStepType.NO_VALID_DOSES,
+      LogicStepType.SELECT_BEST_CANDIDATE_PATIENT_SERIES,
+      LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP, LogicStepType.CLASSIFY_VACCINE_GROUP,
+      LogicStepType.SINGLE_ANTIGEN_VACCINE_GROUP, LogicStepType.MULTIPLE_ANTIGEN_VACCINE_GROUP};
 
   public static final String PARAM_VACCINE_MVX = "vaccineMvx";
   public static final String PARAM_VACCINE_CVX = "vaccineCvx";
@@ -65,11 +53,16 @@ public abstract class LogicStep {
   public static final String PARAM_FLU_SEASON_OVERDUE = "fluSeasonOverdue";
   public static final String PARAM_FLU_SEASON_END = "fluSeasonEnd";
   public static final String PARAM_DUE_USE_EARLY = "dueUseEarly";
-  public static final String PARAM_ASSUME_DTAP_SERIES_COMPLETE_AT_AGE = "assumeDtapSeriesCompleteAtAge";
-  public static final String PARAM_ASSUME_HEPA_SERIES_COMPLETE_AT_AGE = "assumeHepASeriesCompleteAtAge";
-  public static final String PARAM_ASSUME_HEPB_SERIES_COMPLETE_AT_AGE = "assumeHepBSeriesCompleteAtAge";
-  public static final String PARAM_ASSUME_MMR_SERIES_COMPLETE_AT_AGE = "assumeMMRSeriesCompleteAtAge";
-  public static final String PARAM_ASSUME_VAR_SERIES_COMPLETE_AT_AGE = "assumeVarSeriesCompleteAtAge";
+  public static final String PARAM_ASSUME_DTAP_SERIES_COMPLETE_AT_AGE =
+      "assumeDtapSeriesCompleteAtAge";
+  public static final String PARAM_ASSUME_HEPA_SERIES_COMPLETE_AT_AGE =
+      "assumeHepASeriesCompleteAtAge";
+  public static final String PARAM_ASSUME_HEPB_SERIES_COMPLETE_AT_AGE =
+      "assumeHepBSeriesCompleteAtAge";
+  public static final String PARAM_ASSUME_MMR_SERIES_COMPLETE_AT_AGE =
+      "assumeMMRSeriesCompleteAtAge";
+  public static final String PARAM_ASSUME_VAR_SERIES_COMPLETE_AT_AGE =
+      "assumeVarSeriesCompleteAtAge";
   public static final String PARAM_IGNORE_FOUR_DAY_GRACE = "ignoreFourDayGrace";
   public static final String PARAM_SCHEDULE_NAME = "scheduleName";
   public static final String PARAM_ASSUME_SERIES_COMPLETED = "assumeSeriesCompleted";
@@ -135,9 +128,9 @@ public abstract class LogicStep {
   }
 
   public LogicStep next(boolean b) {
-	    return LogicStepFactory.createLogicStep(nextLogicStepType, dataModel, b);
-	  }
-  
+    return LogicStepFactory.createLogicStep(nextLogicStepType, dataModel, b);
+  }
+
   public String getConditionTableName() {
     return conditionTableName;
   }
@@ -157,8 +150,10 @@ public abstract class LogicStep {
     this.dataModel = dataModel;
   }
 
-  protected List<ConditionAttribute<?>> conditionAttributesList = new ArrayList<ConditionAttribute<?>>();
-  protected Map<String, List<ConditionAttribute<?>>> conditionAttributesAdditionalMap = new HashMap<String, List<ConditionAttribute<?>>>();
+  protected List<ConditionAttribute<?>> conditionAttributesList =
+      new ArrayList<ConditionAttribute<?>>();
+  protected Map<String, List<ConditionAttribute<?>>> conditionAttributesAdditionalMap =
+      new HashMap<String, List<ConditionAttribute<?>>>();
 
   protected List<LogicTable> logicTableList = new ArrayList<LogicTable>();
 
@@ -199,7 +194,8 @@ public abstract class LogicStep {
     }
   }
 
-  private void printConditionAttributesTable(PrintWriter out, String tableName, List<ConditionAttribute<?>> caList) {
+  private void printConditionAttributesTable(PrintWriter out, String tableName,
+      List<ConditionAttribute<?>> caList) {
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
     out.println("<h2>" + tableName + "</h2>");
     out.println("<table>");
@@ -257,13 +253,15 @@ public abstract class LogicStep {
         } else if (logicCondition.getLogicResult() == null) {
           out.println("    <td>" + logicCondition.getLabel() + "</td>");
         } else {
-          out.println("    <td>" + logicCondition.getLabel() + " <b>" + logicCondition.getLogicResult() + "</b></td>");
+          out.println("    <td>" + logicCondition.getLabel() + " <b>"
+              + logicCondition.getLogicResult() + "</b></td>");
         }
         for (int j = 0; j < logicTable.getLogicResultTable()[i].length; j++) {
           LogicResult logicResult = logicTable.getLogicResultTable()[i][j];
           String style = "";
           if (logicCondition != null && logicCondition.getLogicResult() != null
-              && (logicCondition.getLogicResult() == logicResult || logicResult == LogicResult.ANY)) {
+              && (logicCondition.getLogicResult() == logicResult
+                  || logicResult == LogicResult.ANY)) {
             style = "pass";
           }
           if (logicResult == LogicResult.YES) {
@@ -280,7 +278,8 @@ public abstract class LogicStep {
       out.println("    <th>Outcomes</th>");
       for (int j = 0; j < logicTable.getLogicOutcomes().length; j++) {
         LogicOutcome logicOutcome = logicTable.getLogicOutcomes()[j];
-        if (logicOutcome != null && logicOutcome.getLogList() != null && logicOutcome.getLogList().size() > 0) {
+        if (logicOutcome != null && logicOutcome.getLogList() != null
+            && logicOutcome.getLogList().size() > 0) {
           out.println("    <td class=\"pass\"><ul>");
           for (String log : logicOutcome.getLogList()) {
             out.println("<li>" + log + "</li>");

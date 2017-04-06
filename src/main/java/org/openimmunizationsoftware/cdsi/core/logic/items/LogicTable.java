@@ -1,7 +1,6 @@
 package org.openimmunizationsoftware.cdsi.core.logic.items;
 
-public class LogicTable
-{
+public class LogicTable {
   private String label = "";
   private LogicResult[][] logicResultTable;
   private LogicCondition[] logicConditions;
@@ -14,7 +13,8 @@ public class LogicTable
     for (int j = 0; j < logicOutcomes.length; j++) {
       boolean allTrue = true;
       for (int i = 0; i < logicConditions.length; i++) {
-        if (logicResultTable[i][j] != LogicResult.ANY && logicResultTable[i][j] != logicConditions[i].getLogicResult()) {
+        if (logicResultTable[i][j] != LogicResult.ANY
+            && logicResultTable[i][j] != logicConditions[i].getLogicResult()) {
           allTrue = false;
         }
       }

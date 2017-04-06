@@ -19,12 +19,13 @@ public class AntigenServlet extends MainServlet {
   private static final String PARAM_SEARCH = "search_term";
 
   public static String makeLink(Antigen antigen) {
-    return "<a href=\"" + SERVLET_NAME + "?" + PARAM_SEARCH + "=" + antigen.getName() + "\" target=\"dataModelView\">"
-        + antigen.getName() + "</a>";
+    return "<a href=\"" + SERVLET_NAME + "?" + PARAM_SEARCH + "=" + antigen.getName()
+        + "\" target=\"dataModelView\">" + antigen.getName() + "</a>";
   }
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
     HttpSession session = req.getSession(true);
     DataModel dataModel = (DataModel) session.getAttribute("dataModel");
     if (dataModel == null) {
@@ -81,7 +82,8 @@ public class AntigenServlet extends MainServlet {
   private void printRowAntigen(Antigen antigen, PrintWriter out) {
     out.println("      <tr>");
     out.println("        <td>" + makeLink(antigen) + "</td>");
-    out.println("        <td><a href=\"dataModelViewVaccineGroup?search_term=" + antigen.getVaccineGroup() +"\">" + antigen.getVaccineGroup() +"</td>");
+    out.println("        <td><a href=\"dataModelViewVaccineGroup?search_term="
+        + antigen.getVaccineGroup() + "\">" + antigen.getVaccineGroup() + "</td>");
     printCvxList(antigen, out);
     out.println("        <td>" + antigen.getImmunityList() + "</td>");
 

@@ -2,8 +2,7 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 
-public class LogicStepFactory
-{
+public class LogicStepFactory {
 
   public static LogicStep createLogicStep(LogicStepType stepName, DataModel dataModel) {
     if (stepName.equals(LogicStepType.GATHER_NECESSARY_DATA)) {
@@ -103,11 +102,11 @@ public class LogicStepFactory
     if (stepName.equals(LogicStepType.SINGLE_ANTIGEN_VACCINE_GROUP)) {
       return new SingleAntigenVaccineGroup(dataModel);
     }
-    if(stepName.equals(LogicStepType.FORECAST_DATES_AND_REASONS)){
-    	return new ForecastDatesAndReasons(dataModel);
+    if (stepName.equals(LogicStepType.FORECAST_DATES_AND_REASONS)) {
+      return new ForecastDatesAndReasons(dataModel);
     }
-    if(stepName.equals(LogicStepType.END)){
-    	return new End(dataModel);
+    if (stepName.equals(LogicStepType.END)) {
+      return new End(dataModel);
     }
 
     throw new IllegalArgumentException("Step '" + stepName + "' is not yet implemented");
@@ -115,12 +114,7 @@ public class LogicStepFactory
 
 
 
-
-
-
-
-
-public static LogicStep createLogicStep(LogicStepType stepName, DataModel dataModel, boolean b) {
+  public static LogicStep createLogicStep(LogicStepType stepName, DataModel dataModel, boolean b) {
     if (stepName.equals(LogicStepType.GATHER_NECESSARY_DATA)) {
       return new GatherNecessaryData(dataModel);
     }
@@ -218,11 +212,11 @@ public static LogicStep createLogicStep(LogicStepType stepName, DataModel dataMo
     if (stepName.equals(LogicStepType.SINGLE_ANTIGEN_VACCINE_GROUP)) {
       return new SingleAntigenVaccineGroup(dataModel);
     }
-    if(stepName.equals(LogicStepType.FORECAST_DATES_AND_REASONS)){
-    	return new ForecastDatesAndReasons(dataModel);
+    if (stepName.equals(LogicStepType.FORECAST_DATES_AND_REASONS)) {
+      return new ForecastDatesAndReasons(dataModel);
     }
-    if(stepName.equals(LogicStepType.END)){
-    	return new End(dataModel);
+    if (stepName.equals(LogicStepType.END)) {
+      return new End(dataModel);
     }
 
     throw new IllegalArgumentException("Step '" + stepName + "' is not yet implemented");

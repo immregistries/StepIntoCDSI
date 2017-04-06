@@ -2,8 +2,7 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 
-public class SkipTargetDose
-{
+public class SkipTargetDose {
   private SeriesDose seriesDose = null;
   private TimePeriod triggerAge = null;
   private TimePeriod triggerInterval = null;

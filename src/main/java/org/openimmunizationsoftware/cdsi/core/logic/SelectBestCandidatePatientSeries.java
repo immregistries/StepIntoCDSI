@@ -3,11 +3,9 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
@@ -23,9 +21,11 @@ public class SelectBestCandidatePatientSeries extends LogicStep {
 
   }
 
-  private LinkedHashMap<PatientSeries, Integer> sortByComparator(LinkedHashMap<PatientSeries, Integer> unsortMap) {
+  private LinkedHashMap<PatientSeries, Integer> sortByComparator(
+      LinkedHashMap<PatientSeries, Integer> unsortMap) {
 
-    List<Entry<PatientSeries, Integer>> list = new LinkedList<Entry<PatientSeries, Integer>>(unsortMap.entrySet());
+    List<Entry<PatientSeries, Integer>> list =
+        new LinkedList<Entry<PatientSeries, Integer>>(unsortMap.entrySet());
 
     // Sorting the list based on values
     Collections.sort(list, new Comparator<Entry<PatientSeries, Integer>>() {
@@ -48,7 +48,8 @@ public class SelectBestCandidatePatientSeries extends LogicStep {
     return sortedMap;
   }
 
-  private LinkedHashMap<PatientSeries, Integer> patientSeriesMap = new LinkedHashMap<PatientSeries, Integer>();
+  private LinkedHashMap<PatientSeries, Integer> patientSeriesMap =
+      new LinkedHashMap<PatientSeries, Integer>();
   private PatientSeries bestPatientSeries = null;
 
   private void selectBestPatientSeries() {
@@ -56,8 +57,7 @@ public class SelectBestCandidatePatientSeries extends LogicStep {
       patientSeriesMap.put(patientSeries, patientSeries.getScorePatientSeries());
     }
     patientSeriesMap = (LinkedHashMap<PatientSeries, Integer>) sortByComparator(patientSeriesMap);
-    if (patientSeriesMap.size() > 0)
-    {
+    if (patientSeriesMap.size() > 0) {
       bestPatientSeries = (PatientSeries) patientSeriesMap.keySet().toArray()[0];
     }
   }
@@ -82,7 +82,8 @@ public class SelectBestCandidatePatientSeries extends LogicStep {
     printStandard(out);
     out.println("<p>Best Patient Series: " + bestPatientSeries + "</p>");
     for (Entry<PatientSeries, Integer> entry : patientSeriesMap.entrySet()) {
-      out.println("<p> PatientSeries : " + entry.getKey() + " Value : " + entry.getValue() + " </p>");
+      out.println(
+          "<p> PatientSeries : " + entry.getKey() + " Value : " + entry.getValue() + " </p>");
     }
 
   }

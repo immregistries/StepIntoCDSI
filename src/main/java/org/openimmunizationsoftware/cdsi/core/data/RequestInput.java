@@ -1,6 +1,5 @@
 package org.openimmunizationsoftware.cdsi.core.data;
 
-public class RequestInput
-{
-  
+public class RequestInput {
+
 }

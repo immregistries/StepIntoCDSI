@@ -5,8 +5,7 @@ import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 
-public class VaccineGroup
-{
+public class VaccineGroup {
   private String name = "";
   private List<Vaccine> vaccineList = new ArrayList<Vaccine>();
   private VaccineGroupForecast vaccineGroupForecast = null;
@@ -48,7 +47,7 @@ public class VaccineGroup
   public void setVaccineList(List<Vaccine> vaccineList) {
     this.vaccineList = vaccineList;
   }
-  
+
   @Override
   public String toString() {
     return name;

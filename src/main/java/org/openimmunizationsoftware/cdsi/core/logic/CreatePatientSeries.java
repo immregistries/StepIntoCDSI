@@ -6,8 +6,7 @@ import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 
-public class CreatePatientSeries extends LogicStep
-{
+public class CreatePatientSeries extends LogicStep {
 
   public CreatePatientSeries(DataModel dataModel) {
     super(LogicStepType.CREATE_PATIENT_SERIES, dataModel);
@@ -38,11 +37,12 @@ public class CreatePatientSeries extends LogicStep
 
   public void printPre(PrintWriter out) throws Exception {
     out.println("   <h2>8.2 Create Patient Series</h2>");
-    out.println("   <p>An antigen series is one way to reach perceived immunity against a disease.  "
-        + "An antigen series can be thought of as a \"path to immunity\" and is described in "
-        + "relative terms.  In many cases, a single antigen may have more than one successful "
-        + "path to immunity and as such may have more than one antigen series.  Antigen "
-        + "series are defined through supporting data spreadsheets defined in chapter 3.</p>");
+    out.println(
+        "   <p>An antigen series is one way to reach perceived immunity against a disease.  "
+            + "An antigen series can be thought of as a \"path to immunity\" and is described in "
+            + "relative terms.  In many cases, a single antigen may have more than one successful "
+            + "path to immunity and as such may have more than one antigen series.  Antigen "
+            + "series are defined through supporting data spreadsheets defined in chapter 3.</p>");
     out.println("   <h3>Instructions</h3>");
     out.println(
         "   <p>To support simple testing only antigen series selected will be run. In normal production mode all "
@@ -59,12 +59,12 @@ public class CreatePatientSeries extends LogicStep
     int i = 1;
     for (AntigenSeries antigenSeries : dataModel.getAntigenSeriesList()) {
       out.println("     <tr>");
-      out.println(
-          "       <td><input type=\"checkbox\" name=\"" + PARAM_ANTIGEN_SERIES_INCLUDE + i + "\" value=\"true\"></td>");
+      out.println("       <td><input type=\"checkbox\" name=\"" + PARAM_ANTIGEN_SERIES_INCLUDE + i
+          + "\" value=\"true\"></td>");
       out.println("       <td>" + antigenSeries.getSeriesName() + "</td>");
       out.println("       <td>" + antigenSeries.getTargetDisease() + "</td>");
-      out.println("       <td>"
-          + (antigenSeries.getVaccineGroup() == null ? "" : antigenSeries.getVaccineGroup().getName()) + "</td>");
+      out.println("       <td>" + (antigenSeries.getVaccineGroup() == null ? ""
+          : antigenSeries.getVaccineGroup().getName()) + "</td>");
       out.println("     </tr>");
       i++;
     }
@@ -73,11 +73,12 @@ public class CreatePatientSeries extends LogicStep
 
   public void printPost(PrintWriter out) throws Exception {
     out.println("   <h1>8.2 Create Patient Series</h2>");
-    out.println("   <p>An antigen series is one way to reach perceived immunity against a disease.  "
-        + "An antigen series can be thought of as a \"path to immunity\" and is described in "
-        + "relative terms.  In many cases, a single antigen may have more than one successful "
-        + "path to immunity and as such may have more than one antigen series.  Antigen "
-        + "series are defined through supporting data spreadsheets defined in chapter 3.</p>");
+    out.println(
+        "   <p>An antigen series is one way to reach perceived immunity against a disease.  "
+            + "An antigen series can be thought of as a \"path to immunity\" and is described in "
+            + "relative terms.  In many cases, a single antigen may have more than one successful "
+            + "path to immunity and as such may have more than one antigen series.  Antigen "
+            + "series are defined through supporting data spreadsheets defined in chapter 3.</p>");
 
     out.println("   <h2>Patient Series Included</h2>");
     out.println("   <table>");
@@ -91,8 +92,8 @@ public class CreatePatientSeries extends LogicStep
       out.println("     <tr>");
       out.println("       <td>" + antigenSeries.getSeriesName() + "</td>");
       out.println("       <td>" + antigenSeries.getTargetDisease() + "</td>");
-      out.println("       <td>"
-          + (antigenSeries.getVaccineGroup() == null ? "" : antigenSeries.getVaccineGroup().getName()) + "</td>");
+      out.println("       <td>" + (antigenSeries.getVaccineGroup() == null ? ""
+          : antigenSeries.getVaccineGroup().getName()) + "</td>");
       out.println("     </tr>");
     }
     out.println("   </table>");

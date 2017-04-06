@@ -10,7 +10,7 @@ public class AllowableVaccine extends Vaccine {
   public void setSeriesDose(SeriesDose seriesDose) {
     this.seriesDose = seriesDose;
   }
-  
+
   @Override
   public String toString() {
     return super.toString();

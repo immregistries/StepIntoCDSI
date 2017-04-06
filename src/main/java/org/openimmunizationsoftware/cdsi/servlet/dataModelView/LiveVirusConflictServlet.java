@@ -19,13 +19,14 @@ public class LiveVirusConflictServlet extends MainServlet {
   private static final String PARAM_SEARCH = "search_term";
 
   public static String makeLink(VaccineType vaccineType) {
-    return "";  // "<a href=\"" + SERVLET_NAME + "?" + PARAM_SEARCH + "=" +
-                // vaccineType.getCvxCode() + "\" target=\"dataModelView\">" +
-                // vaccineType.getShortDescription() + "</a>";
+    return ""; // "<a href=\"" + SERVLET_NAME + "?" + PARAM_SEARCH + "=" +
+               // vaccineType.getCvxCode() + "\" target=\"dataModelView\">" +
+               // vaccineType.getShortDescription() + "</a>";
   }
 
   @Override
-  protected void  doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
     HttpSession session = req.getSession(true);
     DataModel dataModel = (DataModel) session.getAttribute("dataModel");
     if (dataModel == null) {
@@ -68,8 +69,10 @@ public class LiveVirusConflictServlet extends MainServlet {
   private void printRowLiveVirusConflict(LiveVirusConflict liveVirusConflict, PrintWriter out) {
     out.println("     <tr>");
     out.println("       <td>" + n(liveVirusConflict.getSchedule()) + "</td>");
-    out.println("       <td>" + CvxServlet.makeLink(liveVirusConflict.getPreviousVaccineType()) + "</td>");
-    out.println("       <td>" + CvxServlet.makeLink(liveVirusConflict.getCurrentVaccineType()) + "</td>");
+    out.println(
+        "       <td>" + CvxServlet.makeLink(liveVirusConflict.getPreviousVaccineType()) + "</td>");
+    out.println(
+        "       <td>" + CvxServlet.makeLink(liveVirusConflict.getCurrentVaccineType()) + "</td>");
     out.println("       <td>" + liveVirusConflict.getConflictBeginInterval() + "</td>");
     out.println("       <td>" + liveVirusConflict.getMinimalConflictEndInterval() + "</td>");
     out.println("       <td>" + liveVirusConflict.getConflictEndInterval() + "</td>");

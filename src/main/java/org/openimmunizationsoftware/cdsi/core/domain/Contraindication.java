@@ -8,10 +8,10 @@ public class Contraindication {
   private Antigen antigen = null;
   private String contraindicationLanguage = "";
   private Concept concept = new Concept();
-  
+
   @Override
   public String toString() {
-    return antigen.getName() + ": "+ contraindicationLanguage;
+    return antigen.getName() + ": " + contraindicationLanguage;
   }
 
   private List<VaccineType> cvxList = new ArrayList<VaccineType>();
@@ -40,12 +40,12 @@ public class Contraindication {
     this.cvxList = cvxList;
   }
 
-public Concept getConcept() {
-	return concept;
-}
+  public Concept getConcept() {
+    return concept;
+  }
 
-public void setConcept(Concept concept) {
-	this.concept = concept;
-}
+  public void setConcept(Concept concept) {
+    this.concept = concept;
+  }
 
 }

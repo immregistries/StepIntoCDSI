@@ -19,13 +19,12 @@ public class ConditionalSkipCondition {
   private DoseType doseType = null;
   private String doseCountLogic = "";
   private Set<VaccineType> vaccineTypeSet = new HashSet<VaccineType>();
-  
+
   public SeriesDose getSeriesDose() {
     return seriesDose;
   }
-  
-  public ConditionalSkipCondition(SeriesDose seriesDose)
-  {
+
+  public ConditionalSkipCondition(SeriesDose seriesDose) {
     this.seriesDose = seriesDose;
   }
 

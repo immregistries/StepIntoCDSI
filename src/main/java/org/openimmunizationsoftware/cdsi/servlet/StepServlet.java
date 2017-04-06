@@ -14,12 +14,14 @@ import org.openimmunizationsoftware.cdsi.core.logic.LogicStepType;
 
 public class StepServlet extends ForecastServlet {
   @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
     doGet(req, resp);
   }
 
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
 
     HttpSession session = req.getSession(true);
     DataModel dataModel = null;
@@ -75,13 +77,15 @@ public class StepServlet extends ForecastServlet {
       out.println("</pre>");
     } else {
       try {
-        out.println("  <a href=\"step\"><img src=\"Logo Large.png\" height=\"120\" align=\"left\"/></a>");
+        out.println(
+            "  <a href=\"step\"><img src=\"Logo Large.png\" height=\"120\" align=\"left\"/></a>");
         out.println("  <a href=\"dataModelView\" target=\"dataModelView\">View Data Model</a>");
         out.println("<br clear=\"all\"/>");
         if (dataModel.getLogicStepPrevious() == null) {
           out.println("<h1>CDSi Demonstration System</h1> ");
           if (req.getParameter(LogicStep.PARAM_EVAL_DATE) == null) {
-            out.println("<p>This application will take the user step-by-step through the CDSi logic. </p>");
+            out.println(
+                "<p>This application will take the user step-by-step through the CDSi logic. </p>");
             out.println("<h2>Acknowledgements</h2>");
             out.println("<ul>");
             out.println("  <li>Nathan Bunker</li>");
@@ -114,11 +118,13 @@ public class StepServlet extends ForecastServlet {
       out.println(
           "        <img src=\"i.png\" width=\"1000\" onclick=\"document.getElementById('stepForm').submit();\">");
     } else {
-      out.println("        <img src=\"" + dataModel.getLogicStepPrevious().getLogicStepType().getName() + "-"
-          + dataModel.getLogicStep().getLogicStepType().getName()
-          + ".png\" width=\"1000\" onclick=\"document.getElementById('stepForm').submit();\">");
+      out.println(
+          "        <img src=\"" + dataModel.getLogicStepPrevious().getLogicStepType().getName()
+              + "-" + dataModel.getLogicStep().getLogicStepType().getName()
+              + ".png\" width=\"1000\" onclick=\"document.getElementById('stepForm').submit();\">");
     }
-    if (dataModel.getLogicStepPrevious() != null || req.getParameter(LogicStep.PARAM_EVAL_DATE) != null) {
+    if (dataModel.getLogicStepPrevious() != null
+        || req.getParameter(LogicStep.PARAM_EVAL_DATE) != null) {
       out.println("        <br/><input type=\"submit\" name=\"submit\" value=\"Next Step\"/>");
       out.println("        <select name=\"jumpTo\">");
       for (LogicStepType logicStepType : LogicStep.STEPS) {
@@ -127,9 +133,11 @@ public class StepServlet extends ForecastServlet {
           display = " + " + display;
         }
         if (dataModel.getLogicStep().getLogicStepType() == logicStepType) {
-          out.println("          <option value=\"" + logicStepType.getName() + "\" selected>" + display + "</option>");
+          out.println("          <option value=\"" + logicStepType.getName() + "\" selected>"
+              + display + "</option>");
         } else {
-          out.println("          <option value=\"" + logicStepType.getName() + "\">" + display + "</option>");
+          out.println("          <option value=\"" + logicStepType.getName() + "\">" + display
+              + "</option>");
         }
       }
       out.println("        </select>");
