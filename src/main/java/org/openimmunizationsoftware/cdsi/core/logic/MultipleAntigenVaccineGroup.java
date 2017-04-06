@@ -137,25 +137,26 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
   }
 
   private void MULTIANTVG_4() {
-    Date earliestRecommendedDate = null;
+    Date latestDate = null;
     TargetDose td = null;
     for (PatientSeries p : selectedList) {
       if (p.getForecast().getTargetDose() != null)
         td = p.getForecast().getTargetDose();
       Date erd = p.getForecast().getLatestDate();
       if (erd != null) {
-        if (earliestRecommendedDate == null) {
-          earliestRecommendedDate = erd;
+        if (latestDate == null) {
+          latestDate = erd;
         } else {
-          if (erd.before(earliestRecommendedDate)) {
-            earliestRecommendedDate = erd;
+          if (erd.before(latestDate)) {
+            latestDate = erd;
           }
         }
       }
     }
-    if (vgf.getTargetDose() == null && td != null)
+    if (vgf.getTargetDose() == null && td != null) {
       vgf.setTargetDose(td);
-    vgf.setLatestDate(earliestRecommendedDate);
+    }
+    vgf.setLatestDate(latestDate);
   }
 
   private void MULTIANTVG_3() {

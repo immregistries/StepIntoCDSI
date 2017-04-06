@@ -125,7 +125,7 @@ public class GenerateForecastDates extends LogicStep {
   }
 
   private void findSeasonalRecommendationStartDate() {
-    SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose(); 
+    SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
     Date seasonalRecommendationstartDate = new DateTime(1900, 1, 1, 0, 0).toDate();
     caSeasonalRecommendationStartDate.setAssumedValue(seasonalRecommendationstartDate);
     if (referenceSeriesDose.getSeasonalRecommendationList().size() > 0) {
@@ -133,7 +133,7 @@ public class GenerateForecastDates extends LogicStep {
           .getSeasonalRecommendationStartDate();
       caSeasonalRecommendationStartDate.setInitialValue(seasonalRecommendationstartDate);
     } else {
-      //Couldn't find seasonalRecommandation start date
+      // Couldn't find seasonalRecommandation start date
     }
 
   }
@@ -349,57 +349,40 @@ public class GenerateForecastDates extends LogicStep {
     return unadjustedRecommandedDate;
   }
 
-  private Date computeUnadjustedPastDueDate() {
+  private Date computeLatestDate() {
+    Date latestDate = null;
+    if (caMaximumAgeDate.getFinalValue() != null) {
+      latestDate = DateUtils.addDays(caMaximumAgeDate.getFinalValue(), -1);
+    }
+    return latestDate;
+  }
 
-    Date unadjustedPastDueDate = new Date();
+  private Date computeUnadjustedPastDueDate() {
+    Date patientReferenceDoseDate = null;
+    if (dataModel.getPreviousAntigenAdministeredRecord() != null) {
+      patientReferenceDoseDate =
+          dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered();
+    }
+
+    Date unadjustedPastDueDate = null;
     if (caLatestRecommendedAgeDate.getFinalValue() != null) {
       unadjustedPastDueDate = DateUtils.addDays(caLatestRecommendedAgeDate.getFinalValue(), -1);
     } else {
-      List<Interval> intervalList =
-          dataModel.getTargetDose().getTrackedSeriesDose().getIntervalList();
-      int biggeestAmout = 0;
-      for (Interval interval : intervalList) {
-        int tmp = 0;
-        switch (interval.getLatestRecommendedInterval().getType()) {
-          case DAY:
-            tmp = interval.getLatestRecommendedInterval().getAmount();
-            break;
-          case WEEK:
-            tmp = 7 * interval.getLatestRecommendedInterval().getAmount();
-            break;
-          case MONTH:
-            tmp = 30 * interval.getLatestRecommendedInterval().getAmount();
-            break;
-          case YEAR:
-            tmp = 365 * interval.getLatestRecommendedInterval().getAmount();
-            break;
-          default:
-            break;
+      if (patientReferenceDoseDate != null) {
+        List<Interval> intervalList =
+            dataModel.getTargetDose().getTrackedSeriesDose().getIntervalList();
+        for (Interval interval : intervalList) {
+          Date d = interval.getLatestRecommendedInterval().getDateFrom(patientReferenceDoseDate);
+          if (unadjustedPastDueDate == null || d.after(unadjustedPastDueDate)) {
+            unadjustedPastDueDate = d;
+          }
         }
-        if (tmp > biggeestAmout) {
-          biggeestAmout = tmp;
-        }
-        biggeestAmout = biggeestAmout - 1;
       }
-      Date patientReferenceDoseDate;
-      try {
-        /***
-         * TO DO
-         */
-        patientReferenceDoseDate =
-            dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered();
-        unadjustedPastDueDate = DateUtils.addDays(patientReferenceDoseDate, biggeestAmout);
-        if (biggeestAmout != 0 || patientReferenceDoseDate != null) {
-          unadjustedPastDueDate = DateUtils.addDays(patientReferenceDoseDate, biggeestAmout);
-        } else {
-          unadjustedPastDueDate = null;
-        }
-      } catch (NullPointerException np) {
-        //// System.err.println("Patient reference dose date is NULL");
+      if (unadjustedPastDueDate == null)
+      {
+        throw new NullPointerException("Unadjusted Past Due Date was not set");
       }
-
     }
-
     return unadjustedPastDueDate;
   }
 
@@ -452,9 +435,8 @@ public class GenerateForecastDates extends LogicStep {
     Date d = computeAdjustedRecommendedDate();
     forecast.setAdjustedRecommendedDate(d);
     forecast.setEarliestDate(computeEarliestDate());
-
+    forecast.setLatestDate(computeLatestDate());
     return forecast;
-
   }
 
   private void TablePre(PrintWriter out) {
@@ -481,6 +463,7 @@ public class GenerateForecastDates extends LogicStep {
         computeUnadjustedRecommandedDate().toString());
     insertTableRow(out, "FORECASTDT-3", "Unadjusted Past Due Date",
         computeUnadjustedPastDueDate().toString());
+    insertTableRow(out, "FORECASTDT-4", "Latest Date", computeUnadjustedPastDueDate().toString());
     insertTableRow(out, "FORECASTDT-5", "Adjusted Recommended Date",
         computeAdjustedRecommendedDate().toString());
     insertTableRow(out, "FORECASTDT-6", "Adjusted Past Due Date",
