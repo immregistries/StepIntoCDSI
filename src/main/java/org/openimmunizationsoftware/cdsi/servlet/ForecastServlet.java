@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -101,7 +102,7 @@ public class ForecastServlet extends HttpServlet {
     printList(dataModel, out, sdf, today, vgfLater, "VACCINATIONS RECOMMENDED AFTER");
     printList(dataModel, out, sdf, today, vgfDone, "VACCINATIONS COMPLETE OR NOT RECOMMENDED");
 
-    printListRaw(dataModel, out, sdf, today, dataModel.getForecastList(), "RAW LIST FOR DEBUG");
+    // printListRaw(dataModel, out, sdf, today, dataModel.getForecastList(), "RAW LIST FOR DEBUG");
 
     if (dataModel.getAntigenAdministeredRecordList().size() > 0) {
       out.println("IMMUNIZATION EVALUATION");
@@ -135,14 +136,22 @@ public class ForecastServlet extends HttpServlet {
       List<VaccineGroupForecast> vaccineGroupForecastList, String title) {
     if (vaccineGroupForecastList.size() > 0) {
       out.println(title + " " + sdf.format(dataModel.getAssessmentDate()));
-      // for (VaccineGroupForecast vaccineGroupForecast : vaccineGroupForecastList)
-      // {
-      //
-      // }
       for (VaccineGroupForecast vgf : vaccineGroupForecastList) {
         if (vgf.getAntigen() != null) {
           String name = vgf.getAntigen().getName();
           // down to here
+          if (name.equals("Tetanus")) {
+            Calendar c = Calendar.getInstance();
+            c.setTime(dataModel.getPatient().getDateOfBirth());
+            c.add(Calendar.YEAR, 7);
+            if (today.before(c.getTime())) {
+              name = "DTaP";
+            } else {
+              name = "Tdap";
+            }
+          } else if (name.equals("Mumps") || name.equals("Measles") || name.equals("Rubella")) {
+            name = "MMR";
+          }
           out.print("Forecasting " + name + " status ");
           if (vgf.getPatientSeriesStatus() == PatientSeriesStatus.NOT_COMPLETE) {
             if (vgf.getAdjustedRecommendedDate().after(today)) {
@@ -171,6 +180,8 @@ public class ForecastServlet extends HttpServlet {
                   if (vgf.getLatestDate() != null) {
                     out.print("finished ");
                     out.print(sdf.format(vgf.getLatestDate()));
+                  } else {
+                    out.print("finished 01/01/2200");
                   }
                 }
               }
