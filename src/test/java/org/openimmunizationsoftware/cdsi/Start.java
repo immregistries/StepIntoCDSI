@@ -9,6 +9,8 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 public class Start {
+  private static final int PORT = 8382;
+
   public static void main(String[] args) throws Exception {
     int timeout = (int) Duration.ONE_HOUR.getMilliseconds();
 
@@ -18,7 +20,7 @@ public class Start {
     // Set some timeout options to make debugging easier.
     connector.setMaxIdleTime(timeout);
     connector.setSoLingerTime(-1);
-    connector.setPort(8382);
+    connector.setPort(PORT);
     server.addConnector(connector);
 
     Resource keystore = Resource.newClassPathResource("/keystore");
@@ -63,6 +65,7 @@ public class Start {
 
     try {
       System.out.println(">>> STARTING EMBEDDED JETTY SERVER, PRESS ANY KEY TO STOP");
+      System.out.println("http://localhost:" + PORT + "/step");
       server.start();
       System.in.read();
       System.out.println(">>> STOPPING EMBEDDED JETTY SERVER");
