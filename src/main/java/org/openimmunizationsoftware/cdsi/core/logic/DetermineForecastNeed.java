@@ -127,9 +127,9 @@ public class DetermineForecastNeed extends LogicStep {
   public void printPost(PrintWriter out) throws Exception {
     printStandard(out);
 
-    if (!dataModel.getPatient().getMedicalHistory().getContraindicationSet().isEmpty()) {
+    if (!dataModel.getPatient().getPatientHistory().getContraindicationSet().isEmpty()) {
       out.println("<h2>Contraindications for Patient</h2>");
-      for (Contraindication contraindication : dataModel.getPatient().getMedicalHistory()
+      for (Contraindication contraindication : dataModel.getPatient().getPatientHistory()
           .getContraindicationSet()) {
         if (contraindication.getAntigen()
             .equals(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease())) {
@@ -193,14 +193,14 @@ public class DetermineForecastNeed extends LogicStep {
             @Override
             protected LogicResult evaluateInternal() {
               List<Contraindication> targetContraindictionList = new ArrayList<Contraindication>();
-              for (Contraindication contraindication : dataModel.getPatient().getMedicalHistory()
+              for (Contraindication contraindication : dataModel.getPatient().getPatientHistory()
                   .getContraindicationSet()) {
                 if (contraindication.getAntigen().equals(
                     dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease())) {
                   targetContraindictionList.add(contraindication);
                 }
               }
-              if (dataModel.getPatient().getMedicalHistory().getContraindicationSet().isEmpty()) {
+              if (dataModel.getPatient().getPatientHistory().getContraindicationSet().isEmpty()) {
                 return LogicResult.YES;
               }
               return LogicResult.NO;

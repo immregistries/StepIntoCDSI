@@ -1,13 +1,13 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
 public class RelevantMedicalObservation {
-  private MedicalHistory medicalHistory = null;
+  private PatientHistory medicalHistory = null;
 
-  public MedicalHistory getMedicalHistory() {
+  public PatientHistory getMedicalHistory() {
     return medicalHistory;
   }
 
-  public void setMedicalHistory(MedicalHistory medicalHistory) {
+  public void setMedicalHistory(PatientHistory medicalHistory) {
     this.medicalHistory = medicalHistory;
   }
 }

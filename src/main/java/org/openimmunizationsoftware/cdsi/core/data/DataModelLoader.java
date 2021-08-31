@@ -15,7 +15,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.AllowableVaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.BirthDateImmunity;
-import org.openimmunizationsoftware.cdsi.core.domain.ClinicalHistory;
+import org.openimmunizationsoftware.cdsi.core.domain.ClinicalHistoryImmunity;
 import org.openimmunizationsoftware.cdsi.core.domain.Concept;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalNeed;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkip;
@@ -104,7 +104,7 @@ public class DataModelLoader {
         Node childNode = childList.item(j);
         if (childNode.getNodeType() == Node.ELEMENT_NODE) {
           if (childNode.getNodeName().equals("clinicalHistory")) {
-            ClinicalHistory clinicalHistory = new ClinicalHistory();
+            ClinicalHistoryImmunity clinicalHistory = new ClinicalHistoryImmunity();
             immunity.getClinicalHistoryList().add(clinicalHistory);
             NodeList grandchildList = childNode.getChildNodes();
             for (int k = 0; k < grandchildList.getLength(); k++) {
@@ -134,7 +134,7 @@ public class DataModelLoader {
                   birthDateImmunity
                       .setImmunityBirthDate(parseDate(DomUtils.getInternalValue(grandchildNode)));
                 } else if (grandchildNode.getNodeName().equals("birthCountry")) {
-                  birthDateImmunity.setCountryOfBirth(DomUtils.getInternalValue(grandchildNode));
+                  birthDateImmunity.setImmunityCountryOfBirth(DomUtils.getInternalValue(grandchildNode));
                 } else if (grandchildNode.getNodeName().equals("exclusion")) {
                   Exclusion exclusion = null;
                   NodeList greatgrandchildList = grandchildNode.getChildNodes();
@@ -566,7 +566,7 @@ public class DataModelLoader {
                 contraindication.setAntigen(antigen);
               } else if (grandchildNode.getNodeName().equals("contraindicationLanguage")) {
                 String contraindicationLanguage = DomUtils.getInternalValue(grandchildNode);
-                contraindication.setContraindicationLanguage(contraindicationLanguage);
+                contraindication.setContraindicationTextDescription(contraindicationLanguage);
               }
               if (grandchildNode.getNodeName().equals("concept")) {
                 String concept = DomUtils.getInternalValue(grandchildNode);

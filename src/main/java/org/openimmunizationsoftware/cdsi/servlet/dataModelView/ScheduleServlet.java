@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
-import org.openimmunizationsoftware.cdsi.core.domain.ClinicalHistory;
+import org.openimmunizationsoftware.cdsi.core.domain.ClinicalHistoryImmunity;
 import org.openimmunizationsoftware.cdsi.core.domain.Schedule;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 
@@ -123,7 +123,7 @@ public class ScheduleServlet extends MainServlet {
       if (schedule.getImmunity().getClinicalHistoryList().size() > 0) {
         out.println("          <ul>");
 
-        for (ClinicalHistory clinicalHistory : schedule.getImmunity().getClinicalHistoryList()) {
+        for (ClinicalHistoryImmunity clinicalHistory : schedule.getImmunity().getClinicalHistoryList()) {
           out.println("          <li>" + clinicalHistory.getImmunityGuideline() + "</li>");
         }
         out.println("          </ul>");
