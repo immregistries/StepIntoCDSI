@@ -6,7 +6,7 @@ import java.util.List;
 public class ImmunizationHistory {
   private List<VaccineDoseAdministered> vaccineDoseAdministeredList =
       new ArrayList<VaccineDoseAdministered>();
-  private MedicalHistory medicalHistory = null;
+  private PatientHistory medicalHistory = null;
   private List<AdverseEvent> adverseEventList = new ArrayList<AdverseEvent>();
 
   public List<VaccineDoseAdministered> getVaccineDoseAdministeredList() {
@@ -18,11 +18,11 @@ public class ImmunizationHistory {
     this.vaccineDoseAdministeredList = vaccineDoseAdministeredList;
   }
 
-  public MedicalHistory getMedicalHistory() {
+  public PatientHistory getMedicalHistory() {
     return medicalHistory;
   }
 
-  public void setMedicalHistory(MedicalHistory medicalHistory) {
+  public void setMedicalHistory(PatientHistory medicalHistory) {
     this.medicalHistory = medicalHistory;
   }
 

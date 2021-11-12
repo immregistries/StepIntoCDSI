@@ -6,7 +6,8 @@ import java.util.List;
 
 public class BirthDateImmunity {
   private Date immunityBirthDate = null;
-  private String countryOfBirth = "";
+  private String immunityCountryOfBirth = "";
+  private String immunityExclusionCondition = "";
   private List<Exclusion> exclusionList = new ArrayList<Exclusion>();
 
   public List<Exclusion> getExclusionList() {
@@ -21,12 +22,20 @@ public class BirthDateImmunity {
     this.immunityBirthDate = immunityBirthDate;
   }
 
-  public String getCountryOfBirth() {
-    return countryOfBirth;
+  public String getImmunityCountryOfBirth() {
+    return immunityCountryOfBirth;
   }
 
-  public void setCountryOfBirth(String countryOfBirth) {
-    this.countryOfBirth = countryOfBirth;
+  public void setImmunityCountryOfBirth(String countryOfBirth) {
+    this.immunityCountryOfBirth = countryOfBirth;
+  }
+
+  public String getImmunityExclusionCondition() {
+    return immunityExclusionCondition;
+  }
+
+  public void setImmunityExclusionCondition(String immunityExclusionCondition) {
+    this.immunityExclusionCondition = immunityExclusionCondition;
   }
 
 }

@@ -105,7 +105,7 @@ public class DetermineEvidenceOfImmunityDose extends LogicStep {
           "Does the patient clinical history contain one of the supporting data defined immunity guidelines ?") {
         @Override
         protected LogicResult evaluateInternal() {
-          if (false && dataModel.getPatient().getMedicalHistory() != null) {
+          if (false && dataModel.getPatient().getPatientHistory() != null) {
             /**
              * To Complete
              */
@@ -183,7 +183,7 @@ public class DetermineEvidenceOfImmunityDose extends LogicStep {
                 List<BirthDateImmunity> birthDateImmunityList =
                     dataModel.getImmunityList().get(0).getBirthDateImmunityList();
                 for (BirthDateImmunity bdi : birthDateImmunityList) {
-                  if (bdi.getCountryOfBirth().equals(patientCountry)) {
+                  if (bdi.getImmunityCountryOfBirth().equals(patientCountry)) {
                     return YES;
                   }
                 }

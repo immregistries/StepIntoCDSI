@@ -9,14 +9,14 @@ public class Patient {
   private String gender = "";
   private String countryOfBirth = "";
   private List<VaccineDoseAdministered> receivesList = new ArrayList<VaccineDoseAdministered>();
-  private MedicalHistory medicalHistory = new MedicalHistory();
+  private PatientHistory patientHistory = new PatientHistory();
 
-  public MedicalHistory getMedicalHistory() {
-    return medicalHistory;
+  public PatientHistory getPatientHistory() {
+    return patientHistory;
   }
 
-  public void setMedicalHistory(MedicalHistory medicalHistory) {
-    this.medicalHistory = medicalHistory;
+  public void setPatientHistory(PatientHistory patientHistory) {
+    this.patientHistory = patientHistory;
   }
 
   public Date getDateOfBirth() {

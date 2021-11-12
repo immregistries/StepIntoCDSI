@@ -3,7 +3,7 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClinicalHistory {
+public class ClinicalHistoryImmunity {
   private String immunityGuideline = "";
   private List<Concept> conceptList = new ArrayList<Concept>();
 

@@ -9,6 +9,24 @@ public class AntigenSeries {
   private SelectBestPatientSeries selectBestPatientSeries = null;
   private Antigen targetDisease = null;
   private VaccineGroup vaccineGroup = null;
+  private Indication indication = null;
+  private Schedule schedule = null;
+
+  public Indication getIndication() {
+    return indication;
+  }
+
+  public void setIndication(Indication indication) {
+    this.indication = indication;
+  }
+
+  public Schedule getSchedule() {
+    return schedule;
+  }
+
+  public void setSchedule(Schedule schedule) {
+    this.schedule = schedule;
+  }
 
   @Override
   public boolean equals(Object obj) {
