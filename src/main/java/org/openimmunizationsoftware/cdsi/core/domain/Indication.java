@@ -1,9 +1,27 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Indication {
   private String indicationTextDescription = "";
   private Age indicationBeginAge = null;
   private Age indicationEndAge = null;
+  private ClinicalGuidelineObservation clinicalGuidelineObservation = null;
+  private List<AntigenSeries> antigenSeriesList = new ArrayList<AntigenSeries>();
+  private AdministrativeGuidance administrativeGuidance = null;
+
+  public AdministrativeGuidance getAdministrativeGuidance() {
+    return administrativeGuidance;
+  }
+
+  public void setAdministrativeGuidance(AdministrativeGuidance administrativeGuidance) {
+    this.administrativeGuidance = administrativeGuidance;
+  }
+
+  public List<AntigenSeries> getAntigenSeriesList() {
+    return antigenSeriesList;
+  }
 
   public String getIndicationTextDescription() {
     return indicationTextDescription;
@@ -27,5 +45,13 @@ public class Indication {
 
   public void setIndicationEndAge(Age indicationEndAge) {
     this.indicationEndAge = indicationEndAge;
+  }
+
+  public ClinicalGuidelineObservation getClinicalGuidelineObservation() {
+    return clinicalGuidelineObservation;
+  }
+
+  public void setClinicalGuidelineObservation(ClinicalGuidelineObservation clinicalGuidelineObservation) {
+    this.clinicalGuidelineObservation = clinicalGuidelineObservation;
   }
 }

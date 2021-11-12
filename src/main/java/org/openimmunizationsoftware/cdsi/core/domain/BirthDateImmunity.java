@@ -5,11 +5,20 @@ import java.util.Date;
 import java.util.List;
 
 public class BirthDateImmunity {
+  private Immunity immunity = null;
   private Date immunityBirthDate = null;
   private String immunityCountryOfBirth = "";
   private String immunityExclusionCondition = "";
   private List<Exclusion> exclusionList = new ArrayList<Exclusion>();
 
+  public Immunity getImmunity() {
+    return immunity;
+  }
+  
+  public void setImmunity(Immunity immunity) {
+    this.immunity = immunity;
+  }
+  
   public List<Exclusion> getExclusionList() {
     return exclusionList;
   }

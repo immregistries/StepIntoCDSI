@@ -8,6 +8,11 @@ public class Antigen {
   private VaccineGroup vaccineGroup = null;
   private List<VaccineType> cvxList = new ArrayList<VaccineType>();
   private List<Immunity> immunityList = new ArrayList<Immunity>();
+  private List<Contraindication> antigenList = new ArrayList<Contraindication>();
+
+  public List<Contraindication> getAntigenList() {
+    return antigenList;
+  }
 
   public List<Immunity> getImmunityList() {
     return immunityList;

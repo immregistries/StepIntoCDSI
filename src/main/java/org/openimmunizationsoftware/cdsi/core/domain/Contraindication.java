@@ -13,6 +13,7 @@ public class Contraindication {
   private AntigenContraindication antigenContraindication = null;
   private VaccineContraindication vaccineContraindication = null;
   private Schedule schedule = null;
+  private ClinicalGuidelineObservation clinicalGuidelineObservation = null;
 
   public Schedule getSchedule() {
     return schedule;
@@ -91,6 +92,14 @@ public class Contraindication {
 
   public void setConcept(Concept concept) {
     this.concept = concept;
+  }
+
+  public ClinicalGuidelineObservation getClinicalGuidelineObservation() {
+    return clinicalGuidelineObservation;
+  }
+
+  public void setClinicalGuidelineObservation(ClinicalGuidelineObservation clinicalGuidelineObservation) {
+    this.clinicalGuidelineObservation = clinicalGuidelineObservation;
   }
 
 }

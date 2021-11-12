@@ -1,6 +1,7 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
 public class ClinicalGuidelineObservation {
+  private Observation observation = null;
   private String observationCode = "";
   private String observationTitle = "";
   private PatientObservation patientObservation = null;
@@ -54,5 +55,13 @@ public class ClinicalGuidelineObservation {
 
   public void setPatientObservation(PatientObservation patientObservation) {
     this.patientObservation = patientObservation;
+  }
+
+  public Observation getObservation() {
+    return observation;
+  }
+
+  public void setObservation(Observation observation) {
+    this.observation = observation;
   }
 }

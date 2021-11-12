@@ -8,7 +8,12 @@ public class Immunity {
   private Schedule schedule = null;
   private List<BirthDateImmunity> birthDateImmunityList = new ArrayList<BirthDateImmunity>();
   private List<ClinicalHistoryImmunity> clinicalHistoryList = new ArrayList<ClinicalHistoryImmunity>();
+  private List<Antigen> antigenList = new ArrayList<Antigen>();
   
+  public List<Antigen> getAntigenList() {
+    return antigenList;
+  }
+
   public ClinicalGuidelineObservation getClinicalGuidelineObservation() {
     return clinicalGuidelineObservation;
   }
