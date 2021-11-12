@@ -10,6 +10,11 @@ public class Patient {
   private String countryOfBirth = "";
   private List<VaccineDoseAdministered> receivesList = new ArrayList<VaccineDoseAdministered>();
   private PatientHistory patientHistory = new PatientHistory();
+  private List<EvidenceOfImmunity> hasProofOfList = new ArrayList<EvidenceOfImmunity>();
+
+  public List<EvidenceOfImmunity> getHasProofOfList() {
+    return hasProofOfList;
+  }
 
   public PatientHistory getPatientHistory() {
     return patientHistory;

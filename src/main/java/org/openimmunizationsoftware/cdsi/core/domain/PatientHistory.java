@@ -6,12 +6,26 @@ import java.util.List;
 import java.util.Set;
 
 public class PatientHistory {
+  private Patient patient = null;
   private ImmunizationHistory immunizationHistory = null;
   private List<PatientObservation> patientObservationList = new ArrayList<PatientObservation>();
   private List<RelevantMedicalObservation> releventMedicalObservationList =
       new ArrayList<RelevantMedicalObservation>();
   private Set<Contraindication> contraindicationSet = new HashSet<Contraindication>();
+  private List<EvidenceOfImmunity> evidenceOfImmunityList = new ArrayList<EvidenceOfImmunity>();
+
+  public Patient getPatient() {
+    return patient;
+  }
   
+  public void setPatient(Patient patient) {
+    this.patient = patient;
+  }
+  
+  public List<EvidenceOfImmunity> getEvidenceOfImmunityList() {
+    return evidenceOfImmunityList;
+  }
+
   public List<PatientObservation> getPatientObservationList() {
     return patientObservationList;
   }

@@ -17,6 +17,15 @@ public class Vaccine {
   private List<Antigen> antigenList = new ArrayList<Antigen>();
   private List<SeriesDose> preferableVaccineForSeries = new ArrayList<SeriesDose>();
   private List<SeriesDose> allowableVaccineForSeries = new ArrayList<SeriesDose>();
+  private List<VaccineDoseAdministered> vaccineDoseAdministeredList = new ArrayList<VaccineDoseAdministered>();
+
+  public List<VaccineDoseAdministered> getVaccineDoseAdministeredList() {
+    return vaccineDoseAdministeredList;
+  }
+
+  public void setVaccineDoseAdministeredList(List<VaccineDoseAdministered> vaccineList) {
+    this.vaccineDoseAdministeredList = vaccineList;
+  }
 
   public Antigen getAntigen() {
     if (antigenList.size() > 0) {
