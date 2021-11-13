@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.immregistries.step.core.domain.datatypes.TimePeriod;
@@ -47,13 +46,14 @@ import org.w3c.dom.NodeList;
 
 public class DataModelLoader {
   private static final String[] scheduleNames =
-      {"Diphtheria", "HepA", "HepB", "Hib", "HPV", "Influenza", "MCV", "Measles", "Mumps", "PCV",
-          "Pertussis", "Polio", "Rotavirus", "Rubella", "Tetanus", "Varicella"};
+      {"Cholera", "COVID-19", "Diphtheria", "Ebola", "HepA", "HepB", "Hib", "HPV", "Influenza",
+          "JE", "Measles", "Meningococcal B", "Meningococcal", "Mumps", "PCV", "Pertussis", "Pneumococcal", "Polio",
+          "Rabies", "Rotavirus", "Rubella", "Tetanus", "Typhoid", "Varicella", "YF", "Zoster"};
 
   public static DataModel createDataModel() throws Exception {
     DataModel dataModel = new DataModel();
 
-    String baseLocation = "";
+    String baseLocation = "/";
 
     {
       InputStream is =
@@ -71,8 +71,8 @@ public class DataModelLoader {
       readLiveVirusConflicts(dataModel, doc);
     }
     for (String scheduleName : scheduleNames) {
-      InputStream is = DataModelLoader.class
-          .getResourceAsStream(baseLocation + "AntigenSupportingData- " + scheduleName + ".xml");
+      InputStream is = DataModelLoader.class.getResourceAsStream(
+          baseLocation + "AntigenSupportingData- " + scheduleName + "-508.xml");
 
       if (is != null) {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -133,7 +133,8 @@ public class DataModelLoader {
                   birthDateImmunity
                       .setImmunityBirthDate(parseDate(DomUtils.getInternalValue(grandchildNode)));
                 } else if (grandchildNode.getNodeName().equals("birthCountry")) {
-                  birthDateImmunity.setImmunityCountryOfBirth(DomUtils.getInternalValue(grandchildNode));
+                  birthDateImmunity
+                      .setImmunityCountryOfBirth(DomUtils.getInternalValue(grandchildNode));
                 } else if (grandchildNode.getNodeName().equals("exclusion")) {
                   Exclusion exclusion = null;
                   NodeList greatgrandchildList = grandchildNode.getChildNodes();
@@ -226,8 +227,8 @@ public class DataModelLoader {
                   selectBestPatientSeries
                       .setSeriesPreference(DomUtils.getInternalValue(grandchildNode));
                 } else if (grandchildNode.getNodeName().equals("maxAgeToStart")) {
-                  selectBestPatientSeries
-                      .setMaximumAgeToStart(new TimePeriod(DomUtils.getInternalValue(grandchildNode)));
+                  selectBestPatientSeries.setMaximumAgeToStart(
+                      new TimePeriod(DomUtils.getInternalValue(grandchildNode)));
                 }
               }
             }
