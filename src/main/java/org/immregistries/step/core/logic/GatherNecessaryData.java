@@ -3,7 +3,6 @@ package org.immregistries.step.core.logic;
 import static org.immregistries.step.servlet.ServletUtil.safe;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-
 import javax.servlet.http.HttpServletRequest;
 import org.immregistries.step.core.data.DataModel;
 import org.immregistries.step.core.domain.datatypes.DoseCondition;
@@ -48,7 +47,8 @@ public class GatherNecessaryData extends LogicStep {
           && !req.getParameter(PARAM_VACCINE_CONDITION_CODE + i).equals("")) {
         vaccineDoseAdministered.setDoseCondition(
             req.getParameter(PARAM_VACCINE_CONDITION_CODE + i).equalsIgnoreCase("yes")
-                ? DoseCondition.YES : DoseCondition.NO);
+                ? DoseCondition.YES
+                : DoseCondition.NO);
       }
       String cvxCode = req.getParameter(PARAM_VACCINE_CVX + i);
       String mvxCode = req.getParameter(PARAM_VACCINE_MVX + i);
@@ -117,6 +117,11 @@ public class GatherNecessaryData extends LogicStep {
       i++;
     }
     out.println("</table>");
+    out.println("<p>TODO</p>");
+    out.println("<ul>");
+    out.println("  <li>Adverse Events</li>");
+    out.println("  <li>Patient Observations</li>");
+    out.println("</ul>");
 
   }
 

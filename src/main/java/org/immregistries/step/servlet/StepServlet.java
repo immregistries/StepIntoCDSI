@@ -106,25 +106,16 @@ public class StepServlet extends HomeServlet {
     out.println("      </td>");
     out.println("      <td width=\"1010\" valign=\"top\" class=\"mainTable\">");
     if (dataModel.getLogicStep() != null) {
-      String prefix = dataModel.getLogicStep().getLogicStepType().getName().substring(0, 1);
+      String prefix = dataModel.getLogicStep().getLogicStepType().getDisplay().substring(0, 1);
       out.println("        <table>");
       out.println("          <tr>");
       for (LogicStepType logicStepType : LogicStepType.values()) {
-        if (logicStepType.getName().startsWith(prefix)) {
-          out.println("            <td>" + logicStepType.getName() + "</td>");
+        if (logicStepType.getDisplay().startsWith(prefix)) {
+          out.println("            <td>" + logicStepType.getDisplay() + "</td>");
         }
       }
       out.println("          </tr>");
       out.println("        </table>");
-    }
-    if (dataModel.getLogicStepPrevious() == null || dataModel.getLogicStep() == null) {
-      out.println(
-          "        <img src=\"i.png\" width=\"1000\" onclick=\"document.getElementById('stepForm').submit();\">");
-    } else {
-      out.println(
-          "        <img src=\"" + dataModel.getLogicStepPrevious().getLogicStepType().getName()
-              + "-" + dataModel.getLogicStep().getLogicStepType().getName()
-              + ".png\" width=\"1000\" onclick=\"document.getElementById('stepForm').submit();\">");
     }
     if (dataModel.getLogicStepPrevious() != null
         || req.getParameter(LogicStep.PARAM_EVAL_DATE) != null) {
