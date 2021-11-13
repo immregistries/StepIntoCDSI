@@ -32,7 +32,7 @@ public class ConditionalSkip {
   private String setLogic = "";
   private List<ConditionalSkipSet> conditionalSkipSetList = new ArrayList<ConditionalSkipSet>();
   private SeriesDose seriesDose = null;
-  
+
   public SeriesDose getSeriesDose() {
     return seriesDose;
   }

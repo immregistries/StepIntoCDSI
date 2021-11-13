@@ -3,7 +3,6 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 
 public class ConditionalSkipCondition {

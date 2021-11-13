@@ -1,16 +1,7 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
-public class VaccineContraindication {
-  private Contraindication contraindication = null;
+public class VaccineContraindication extends Contraindication {
   private VaccineType vaccineType = null;
-
-  public Contraindication getContraindication() {
-    return contraindication;
-  }
-
-  public void setContraindication(Contraindication contraindication) {
-    this.contraindication = contraindication;
-  }
 
   public VaccineType getVaccineType() {
     return vaccineType;

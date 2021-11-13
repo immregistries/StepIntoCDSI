@@ -18,7 +18,8 @@ public class Forecast {
   private TargetDose targetDose = null;
   private boolean bestPatientSeries = false;
   private Interval interval = null;
-  private List<AdministrativeGuidance> administrativeGuidanceList = new ArrayList<AdministrativeGuidance>();
+  private List<AdministrativeGuidance> administrativeGuidanceList =
+      new ArrayList<AdministrativeGuidance>();
   private Vaccine recommendedVaccine = null;
   private Patient patient = null;
 

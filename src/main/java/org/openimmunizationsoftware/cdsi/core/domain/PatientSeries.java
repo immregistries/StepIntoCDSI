@@ -1,7 +1,6 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
 import java.util.List;
-
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 
 public class PatientSeries {

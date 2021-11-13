@@ -51,7 +51,8 @@ public class Indication {
     return clinicalGuidelineObservation;
   }
 
-  public void setClinicalGuidelineObservation(ClinicalGuidelineObservation clinicalGuidelineObservation) {
+  public void setClinicalGuidelineObservation(
+      ClinicalGuidelineObservation clinicalGuidelineObservation) {
     this.clinicalGuidelineObservation = clinicalGuidelineObservation;
   }
 }

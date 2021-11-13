@@ -6,7 +6,6 @@ public class PatientObservation extends Observation {
   private Observation observation = null;
   private PatientHistory patientHistory = null;
   private Date ObservationDate = null;
-  private ActivePatientObservation activePatientObservation = null;
   private ClinicalGuidelineObservation clinicalGuidelineObservation = null;
 
   public ClinicalGuidelineObservation getClinicalGuidelineObservation() {
@@ -32,14 +31,6 @@ public class PatientObservation extends Observation {
 
   public void setObservationDate(Date observationDate) {
     ObservationDate = observationDate;
-  }
-
-  public ActivePatientObservation getActivePatientObservation() {
-    return activePatientObservation;
-  }
-
-  public void setActivePatientObservation(ActivePatientObservation activePatientObservation) {
-    this.activePatientObservation = activePatientObservation;
   }
 
   public Observation getObservation() {

@@ -10,8 +10,6 @@ public class Contraindication {
   private Age contraindicationEndAge = null;
   private Antigen antigen = null;
   private Concept concept = new Concept();
-  private AntigenContraindication antigenContraindication = null;
-  private VaccineContraindication vaccineContraindication = null;
   private Schedule schedule = null;
   private ClinicalGuidelineObservation clinicalGuidelineObservation = null;
 
@@ -37,22 +35,6 @@ public class Contraindication {
 
   public void setContraindicationEndAge(Age contraindicationEndAge) {
     this.contraindicationEndAge = contraindicationEndAge;
-  }
-
-  public AntigenContraindication getAntigenContraindication() {
-    return antigenContraindication;
-  }
-
-  public void setAntigenContraindication(AntigenContraindication antigenContraindication) {
-    this.antigenContraindication = antigenContraindication;
-  }
-
-  public VaccineContraindication getVaccineContraindication() {
-    return vaccineContraindication;
-  }
-
-  public void setVaccineContraindication(VaccineContraindication vaccineContraindication) {
-    this.vaccineContraindication = vaccineContraindication;
   }
 
   @Override
@@ -98,7 +80,8 @@ public class Contraindication {
     return clinicalGuidelineObservation;
   }
 
-  public void setClinicalGuidelineObservation(ClinicalGuidelineObservation clinicalGuidelineObservation) {
+  public void setClinicalGuidelineObservation(
+      ClinicalGuidelineObservation clinicalGuidelineObservation) {
     this.clinicalGuidelineObservation = clinicalGuidelineObservation;
   }
 

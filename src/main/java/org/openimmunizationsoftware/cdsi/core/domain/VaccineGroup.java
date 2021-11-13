@@ -2,7 +2,6 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 
 public class VaccineGroup {

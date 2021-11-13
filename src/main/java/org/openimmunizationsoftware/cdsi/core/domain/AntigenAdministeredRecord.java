@@ -2,7 +2,6 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.DoseCondition;
 
 public class AntigenAdministeredRecord {

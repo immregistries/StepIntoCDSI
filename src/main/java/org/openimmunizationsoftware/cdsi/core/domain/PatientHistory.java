@@ -17,11 +17,11 @@ public class PatientHistory {
   public Patient getPatient() {
     return patient;
   }
-  
+
   public void setPatient(Patient patient) {
     this.patient = patient;
   }
-  
+
   public List<EvidenceOfImmunity> getEvidenceOfImmunityList() {
     return evidenceOfImmunityList;
   }
