@@ -63,7 +63,7 @@ public class ForecastServlet extends HttpServlet {
 
   private void printText(HttpServletResponse resp, DataModel dataModel, PrintWriter out) {
     resp.setContentType("text/plain");
-    out.println("Step Into Clinical Decision Support for Immunizations - Demonstration //System");
+    out.println("Step Into Immunization Forecasting - Demonstration System");
     out.println();
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 

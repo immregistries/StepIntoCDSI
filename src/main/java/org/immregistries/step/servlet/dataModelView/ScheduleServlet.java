@@ -50,7 +50,7 @@ public class ScheduleServlet extends MainServlet {
 
     PrintWriter out = new PrintWriter(resp.getOutputStream());
     try {
-      printHeader(out, "Schedule");
+      printHeader(out, session, MiniMenuItem.SCHEDULE);
       if (view.equals(VIEW_ANTIGEN)) {
         String scheduleName = req.getParameter(PARAM_SCHED_NAME);
         String antigenSeriesName = req.getParameter(PARAM_ANTIGEN_SERIES);
@@ -66,7 +66,7 @@ public class ScheduleServlet extends MainServlet {
       } else {
         printSchedule(dataModel, out);
       }
-      printFooter(out);
+      printFooter(out, session);
     } catch (Exception e) {
       e.printStackTrace();
     } finally {

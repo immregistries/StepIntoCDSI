@@ -40,7 +40,7 @@ public class AntigenServlet extends MainServlet {
 
     PrintWriter out = new PrintWriter(resp.getOutputStream());
     try {
-      printHeader(out, "Antigen");
+      printHeader(out, session, MiniMenuItem.ANTIGEN);
       out.println("    <form action=\"" + SERVLET_NAME + "\">");
 
       out.println("      <input type=\"text\" name=\"" + PARAM_SEARCH + "\"><br>");
@@ -48,7 +48,7 @@ public class AntigenServlet extends MainServlet {
 
       out.println("    </form>");
       printAntigen(dataModel, search_term, out);
-      printFooter(out);
+      printFooter(out, session);
     } catch (Exception e) {
       e.printStackTrace();
     } finally {

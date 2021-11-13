@@ -9,6 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.immregistries.step.SoftwareVersion;
+import org.immregistries.step.core.data.DataModel;
+import org.immregistries.step.core.data.DataModelLoader;
+import org.immregistries.step.core.logic.LogicStepFactory;
+import org.immregistries.step.core.logic.LogicStepType;
 
 
 @SuppressWarnings("serial")
@@ -62,7 +66,7 @@ public class HomeServlet extends HttpServlet {
   public static void doHeader(PrintWriter out, HttpSession session) {
     out.println("<html>");
     out.println("  <head>");
-    out.println("    <title>EHR Sandbox</title>");
+    out.println("    <title>Step Into Immunization Forecasting</title>");
     out.println("    <link rel=\"stylesheet\" href=\"https://www.w3schools.com/w3css/4/w3.css\"/>");
     out.println("  </head>");
     out.println("  <body>");
@@ -70,9 +74,9 @@ public class HomeServlet extends HttpServlet {
     out.println("      <div class=\"w3-bar w3-light-grey\">");
     out.println(
         "        <a href=\"home\" class=\"w3-bar-item w3-button w3-green\">Home</a>");
-    out.println("        <a href=\"home\" class=\"w3-bar-item w3-button\">Step</a>");
-    out.println("        <a href=\"home\" class=\"w3-bar-item w3-button\">Forecast</a>");
-    out.println("        <a href=\"home\" class=\"w3-bar-item w3-button\">Model</a>");
+    out.println("        <a href=\"step\" class=\"w3-bar-item w3-button\">Step</a>");
+    out.println("        <a href=\"forecast\" class=\"w3-bar-item w3-button\">Forecast</a>");
+    out.println("        <a href=\"dataModelView\" class=\"w3-bar-item w3-button\">Model</a>");
     out.println("      </div>");
     out.println("    </header>");
     out.println("    <div class=\"w3-container\">");
@@ -89,6 +93,14 @@ public class HomeServlet extends HttpServlet {
     out.println("  </div>");
     out.println("  </body>");
     out.println("</html>");
+  }
+  
+  protected DataModel readRequest(HttpServletRequest req) throws Exception {
+    DataModel dataModel = DataModelLoader.createDataModel();
+    dataModel.setRequest(req);
+    dataModel.setNextLogicStep(
+        LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel));
+    return dataModel;
   }
 
 }

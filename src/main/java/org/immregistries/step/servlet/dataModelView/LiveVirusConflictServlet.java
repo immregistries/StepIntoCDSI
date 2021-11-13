@@ -2,7 +2,6 @@ package org.immregistries.step.servlet.dataModelView;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,7 +40,7 @@ public class LiveVirusConflictServlet extends MainServlet {
     }
 
     try {
-      printHeader(out, "Live Virus Conflict");
+      printHeader(out, session, MiniMenuItem.LIVE_VIRUS_CONFLICT);
       out.println("   <table>");
       out.println("     <tr>");
       out.println("       <caption>Live Virus Conflict</caption>");
@@ -56,7 +55,7 @@ public class LiveVirusConflictServlet extends MainServlet {
         printRowLiveVirusConflict(liveVirusConflict, out);
       }
       out.println("   </table>");
-      printFooter(out);
+      printFooter(out, session);
     } catch (Exception e) {
       e.printStackTrace();
     } finally {

@@ -2,7 +2,6 @@ package org.immregistries.step.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,7 +10,7 @@ import org.immregistries.step.core.data.DataModel;
 import org.immregistries.step.core.logic.LogicStep;
 import org.immregistries.step.core.logic.LogicStepType;
 
-public class StepServlet extends ForecastServlet {
+public class StepServlet extends HomeServlet {
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
@@ -59,13 +58,8 @@ public class StepServlet extends ForecastServlet {
     resp.setContentType("text/html");
 
     PrintWriter out = new PrintWriter(resp.getOutputStream());
-    out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\">");
-    out.println("<html>");
-    out.println("  <head>");
-    out.println("    <title>CDSi - " + dataModel.getLogicStep().getTitle() + "</title>");
-    out.println("    <link rel=\"stylesheet\" type=\"text/css\" href=\"index.css\">");
-    out.println("  </head>");
-    out.println("  <body>");
+
+    doHeader(out, session);
     out.println("  <form action=\"step\" method=\"POST\" id=\"stepForm\">");
     out.println("  <table border=\"0\" width=\"1710\" class=\"mainTable\">");
     out.println("    <tr class=\"mainTable\">");
@@ -76,15 +70,13 @@ public class StepServlet extends ForecastServlet {
       out.println("</pre>");
     } else {
       try {
-        out.println(
-            "  <a href=\"step\"><img src=\"Logo Large.png\" height=\"120\" align=\"left\"/></a>");
-        out.println("  <a href=\"dataModelView\" target=\"dataModelView\">View Data Model</a>");
-        out.println("<br clear=\"all\"/>");
+
+
         if (dataModel.getLogicStepPrevious() == null) {
-          out.println("<h1>CDSi Demonstration System</h1> ");
+          out.println("<h1>Step Into Immunization Forecasting</h1> ");
           if (req.getParameter(LogicStep.PARAM_EVAL_DATE) == null) {
             out.println(
-                "<p>This application will take the user step-by-step through the CDSi logic. </p>");
+                "<p>This is an immunization CDS engine demonstration system. For instructional purporses only.  </p>");
             out.println("<h2>Acknowledgements</h2>");
             out.println("<ul>");
             out.println("  <li>Nathan Bunker</li>");
@@ -113,6 +105,18 @@ public class StepServlet extends ForecastServlet {
     }
     out.println("      </td>");
     out.println("      <td width=\"1010\" valign=\"top\" class=\"mainTable\">");
+    if (dataModel.getLogicStep() != null) {
+      String prefix = dataModel.getLogicStep().getLogicStepType().getName().substring(0, 1);
+      out.println("        <table>");
+      out.println("          <tr>");
+      for (LogicStepType logicStepType : LogicStepType.values()) {
+        if (logicStepType.getName().startsWith(prefix)) {
+          out.println("            <td>" + logicStepType.getName() + "</td>");
+        }
+      }
+      out.println("          </tr>");
+      out.println("        </table>");
+    }
     if (dataModel.getLogicStepPrevious() == null || dataModel.getLogicStep() == null) {
       out.println(
           "        <img src=\"i.png\" width=\"1000\" onclick=\"document.getElementById('stepForm').submit();\">");
@@ -158,9 +162,10 @@ public class StepServlet extends ForecastServlet {
     out.println("    </tr>");
     out.println("  </table>");
     out.println("  </form>");
-    out.println("  </body>");
-    out.println("</html>");
+    doFooter(out, session);
     out.close();
   }
+
+
 
 }

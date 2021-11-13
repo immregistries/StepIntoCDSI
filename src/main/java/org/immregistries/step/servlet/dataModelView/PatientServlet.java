@@ -56,14 +56,14 @@ public class PatientServlet extends MainServlet {
 
     PrintWriter out = new PrintWriter(resp.getOutputStream());
     try {
-      printHeader(out, "Patient");
+      printHeader(out, session, MiniMenuItem.PATIENT);
       if (view.equals(VIEW_PATIENT)) {
         printViewPatient(dataModel, out);
       } else if (view.equals(VIEW_VACCINE)) {
         int pos = Integer.parseInt(req.getParameter(PARAM_POS));
         printViewVaccine(dataModel, pos, out);
       }
-      printFooter(out);
+      printFooter(out, session);
     } catch (Exception e) {
       e.printStackTrace();
     } finally {

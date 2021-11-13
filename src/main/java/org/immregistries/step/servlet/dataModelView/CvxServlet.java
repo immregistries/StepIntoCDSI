@@ -41,7 +41,7 @@ public class CvxServlet extends MainServlet {
 
 
     try {
-      printHeader(out, "CVX");
+      printHeader(out, session, MiniMenuItem.CVX);
 
       out.println("    <form action=\"" + SERVLET_NAME + "\">");
 
@@ -73,7 +73,7 @@ public class CvxServlet extends MainServlet {
       }
       // Do stuff here .....
       out.println("  </table>");
-      printFooter(out);
+      printFooter(out, session);
     } catch (Exception e) {
       e.printStackTrace();
     } finally {

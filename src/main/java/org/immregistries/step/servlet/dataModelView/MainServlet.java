@@ -3,7 +3,6 @@ package org.immregistries.step.servlet.dataModelView;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,9 +10,9 @@ import javax.servlet.http.HttpSession;
 import org.immregistries.step.core.data.DataModel;
 import org.immregistries.step.domain.AntigenAdministeredRecord;
 import org.immregistries.step.domain.TargetDose;
-import org.immregistries.step.servlet.ForecastServlet;
+import org.immregistries.step.servlet.HomeServlet;
 
-public class MainServlet extends ForecastServlet {
+public class MainServlet extends HomeServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -28,10 +27,9 @@ public class MainServlet extends ForecastServlet {
 
     PrintWriter out = new PrintWriter(resp.getOutputStream());
     try {
-      String section = null;
-      printHeader(out, section);
+      printHeader(out, session, MiniMenuItem.DATA_MODEL);
       printViewDataModel(dataModel, out);
-      printFooter(out);
+      printFooter(out, session);
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
@@ -39,32 +37,26 @@ public class MainServlet extends ForecastServlet {
     }
   }
 
-  protected void printFooter(PrintWriter out) {
-    out.println("  </body>");
-    out.println("</html>");
+  protected void printFooter(PrintWriter out, HttpSession session) {
+    out.println("  </div>");
+    out.println("</div>");
+    doFooter(out, session);
   }
 
-  protected void printHeader(PrintWriter out, String section) {
-    out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\">");
-    out.println("<html>");
-    out.println("  <head>");
-    if (section == null) {
-      out.println("    <title>CDSi - Data Model View</title>");
-    } else {
-      out.println("    <title>CDSi - Data Model View - " + section + "</title>");
+
+  protected void printHeader(PrintWriter out, HttpSession session, MiniMenuItem miniMenuItem) {
+    doHeader(out, session);
+
+    out.println("<div class=\"row\">");
+    out.println("  <div class=\"col-sm-4\">");
+    out.println("    <div class=\"list-group\">");
+    for (MiniMenuItem mmi : MiniMenuItem.values()) {
+      out.println("      <a href=\"" + mmi.getUrl() + "\"" + (mmi == miniMenuItem ? " active" : "")
+          + ">" + mmi.getName() + "</a>");
     }
-    out.println("    <link rel=\"stylesheet\" type=\"text/css\" href=\"index.css\">");
-    out.println("  </head>");
-    out.println("  <body>");
-    out.println("<p>");
-    out.println("      <a href=\"dataModelView\">Main</a> | ");
-    out.println("      <a href=\"dataModelViewAntigen\">Antigen</a> | ");
-    out.println("      <a href=\"dataModelViewCvx\">CVX</a> | ");
-    out.println("      <a href=\"dataModelViewLiveVirusConflict\">Live Virus Conflict</a> | ");
-    out.println("      <a href=\"dataModelViewPatient\">Patient</a> | ");
-    out.println("      <a href=\"dataModelViewSchedule\">Schedule</a> | ");
-    out.println("      <a href=\"dataModelViewVaccineGroup\">Vaccine Group</a> ");
-    out.println("</p>");
+    out.println("    </div>");
+    out.println("  </div>");
+    out.println("  <div class=\"col-sm-8\">");
   }
 
   public String n(Object o) {

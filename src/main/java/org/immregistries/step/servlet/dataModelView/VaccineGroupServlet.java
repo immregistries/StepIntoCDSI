@@ -39,7 +39,7 @@ public class VaccineGroupServlet extends MainServlet {
     }
     PrintWriter out = new PrintWriter(resp.getOutputStream());
     try {
-      printHeader(out, "Vaccine Group");
+      printHeader(out, session, MiniMenuItem.VACCINE_GROUP);
 
       out.println("    <form action=\"" + SERVLET_NAME + "\">");
 
@@ -91,7 +91,7 @@ public class VaccineGroupServlet extends MainServlet {
       // Do stuff here .....
       out.println("  </table>");
 
-      printFooter(out);
+      printFooter(out, session);
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
