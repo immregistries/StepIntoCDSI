@@ -34,7 +34,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.RecurringDose;
 import org.openimmunizationsoftware.cdsi.core.domain.RequiredGender;
 import org.openimmunizationsoftware.cdsi.core.domain.Schedule;
 import org.openimmunizationsoftware.cdsi.core.domain.SeasonalRecommendation;
-import org.openimmunizationsoftware.cdsi.core.domain.SelectBestPatientSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.SelectPatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.SubstituteDose;
 import org.openimmunizationsoftware.cdsi.core.domain.Vaccine;
@@ -205,14 +205,14 @@ public class DataModelLoader {
             antigenSeries.setSeriesName(seriesName);
           } else if (childNode.getNodeName().equals("targetDisease")) {
             targetDisease = dataModel.getOrCreateAntigen(DomUtils.getInternalValue(childNode));
-            antigenSeries.setTargetDisease(targetDisease);
+            antigenSeries.setAntigen(targetDisease);
           } else if (childNode.getNodeName().equals("vaccineGroup")) {
             String nameValue = DomUtils.getInternalValue(childNode);
             vaccineGroup = dataModel.getOrCreateVaccineGroup(nameValue);
             antigenSeries.setVaccineGroup(vaccineGroup);
           } else if (childNode.getNodeName().equals("selectBest")) {
-            SelectBestPatientSeries selectBestPatientSeries = new SelectBestPatientSeries();
-            antigenSeries.setSelectBestPatientSeries(selectBestPatientSeries);
+            SelectPatientSeries selectBestPatientSeries = new SelectPatientSeries();
+            antigenSeries.setSelectPatientSeries(selectBestPatientSeries);
             NodeList grandchildList = parentNode.getChildNodes();
             for (int k = 0; k < grandchildList.getLength(); k++) {
               Node grandchildNode = grandchildList.item(k);
@@ -228,7 +228,7 @@ public class DataModelLoader {
                       .setSeriesPreference(DomUtils.getInternalValue(grandchildNode));
                 } else if (grandchildNode.getNodeName().equals("maxAgeToStart")) {
                   selectBestPatientSeries
-                      .setMaxAgeToStart(new TimePeriod(DomUtils.getInternalValue(grandchildNode)));
+                      .setMaximumAgeToStart(new TimePeriod(DomUtils.getInternalValue(grandchildNode)));
                 }
               }
             }

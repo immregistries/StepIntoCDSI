@@ -136,9 +136,9 @@ public class CompletePatientSeries extends LogicStep {
     boolean productPatientSeries = false;
     boolean hasAllValidDoses = false;
 
-    if (patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries()
+    if (patientSeries.getTrackedAntigenSeries().getSelectPatientSeries()
         .getProductPath() != null) {
-      if (patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries().getProductPath()
+      if (patientSeries.getTrackedAntigenSeries().getSelectPatientSeries().getProductPath()
           .equals(YesNo.YES)) {
         productPatientSeries = true;
       }

@@ -50,7 +50,7 @@ public class BusinessRuleTable {
             }
             if (inRange) {
               Antigen antigen =
-                  conditionalSkipCondition.getSeriesDose().getAntigenSeries().getTargetDisease();
+                  conditionalSkipCondition.getSeriesDose().getAntigenSeries().getAntigen();
               Evaluation evaluation = vaccineDoseAdministered.getEvaluationMap().get(antigen);
               if (evaluation != null && evaluation.getEvaluationStatus() != null) {
                 if (conditionalSkipCondition.getDoseType() == DoseType.VALID

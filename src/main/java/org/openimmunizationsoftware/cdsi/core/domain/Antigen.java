@@ -8,10 +8,36 @@ public class Antigen {
   private VaccineGroup vaccineGroup = null;
   private List<VaccineType> cvxList = new ArrayList<VaccineType>();
   private List<Immunity> immunityList = new ArrayList<Immunity>();
-  private List<Contraindication> antigenList = new ArrayList<Contraindication>();
+  private List<Contraindication> contraindicationList = new ArrayList<Contraindication>();
+  private List<AntigenSeries> antigenSeriesList = new ArrayList<AntigenSeries>();
+  private PatientSeries patientSeries = null;
+  private SeriesDose seriesDose = null;
+  private List<Vaccine> vaccineList = new ArrayList<Vaccine>();
+  private List<Forecast> forecastList = new ArrayList<Forecast>();
+  private List<Evaluation> evaluationList = new ArrayList<Evaluation>();
 
-  public List<Contraindication> getAntigenList() {
-    return antigenList;
+  public List<Evaluation> getEvaluationList() {
+    return evaluationList;
+  }
+
+  public List<Forecast> getForecastList() {
+    return forecastList;
+  }
+
+  public List<Vaccine> getVaccineList() {
+    return vaccineList;
+  }
+
+  public List<AntigenSeries> getAntigenSeriesList() {
+    return antigenSeriesList;
+  }
+
+  public void setAntigenSeriesList(List<AntigenSeries> antigenSeriesList) {
+    this.antigenSeriesList = antigenSeriesList;
+  }
+
+  public List<Contraindication> getContraindicationList() {
+    return contraindicationList;
   }
 
   public List<Immunity> getImmunityList() {
@@ -58,6 +84,22 @@ public class Antigen {
       return other.getName().equals(this.getName());
     }
     return super.equals(obj);
+  }
+
+  public PatientSeries getPatientSeries() {
+    return patientSeries;
+  }
+
+  public void setPatientSeries(PatientSeries patientSeries) {
+    this.patientSeries = patientSeries;
+  }
+
+  public SeriesDose getSeriesDose() {
+    return seriesDose;
+  }
+
+  public void setSeriesDose(SeriesDose seriesDose) {
+    this.seriesDose = seriesDose;
   }
 
 }

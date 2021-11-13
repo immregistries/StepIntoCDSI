@@ -128,9 +128,9 @@ public class NoValidDoses extends LogicStep {
   private void evaluate_ACandidatePatientSeriesIsAProductPatientSeries() {
     boolean productPatientSeries = false;
     for (PatientSeries patientSeries : patientSeriesList) {
-      if (patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries()
+      if (patientSeries.getTrackedAntigenSeries().getSelectPatientSeries()
           .getProductPath() != null) {
-        if (patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries().getProductPath()
+        if (patientSeries.getTrackedAntigenSeries().getSelectPatientSeries().getProductPath()
             .equals(YesNo.YES)) {
           productPatientSeries = true;
         }

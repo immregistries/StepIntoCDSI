@@ -62,7 +62,7 @@ public class CreatePatientSeries extends LogicStep {
       out.println("       <td><input type=\"checkbox\" name=\"" + PARAM_ANTIGEN_SERIES_INCLUDE + i
           + "\" value=\"true\"></td>");
       out.println("       <td>" + antigenSeries.getSeriesName() + "</td>");
-      out.println("       <td>" + antigenSeries.getTargetDisease() + "</td>");
+      out.println("       <td>" + antigenSeries.getAntigen() + "</td>");
       out.println("       <td>" + (antigenSeries.getVaccineGroup() == null ? ""
           : antigenSeries.getVaccineGroup().getName()) + "</td>");
       out.println("     </tr>");
@@ -91,7 +91,7 @@ public class CreatePatientSeries extends LogicStep {
       AntigenSeries antigenSeries = patientSeries.getTrackedAntigenSeries();
       out.println("     <tr>");
       out.println("       <td>" + antigenSeries.getSeriesName() + "</td>");
-      out.println("       <td>" + antigenSeries.getTargetDisease() + "</td>");
+      out.println("       <td>" + antigenSeries.getAntigen() + "</td>");
       out.println("       <td>" + (antigenSeries.getVaccineGroup() == null ? ""
           : antigenSeries.getVaccineGroup().getName()) + "</td>");
       out.println("     </tr>");

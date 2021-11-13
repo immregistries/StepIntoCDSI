@@ -156,7 +156,7 @@ public class ScheduleServlet extends MainServlet {
     }
     out.println("        </td>");
 
-    out.println("        <td>" + antigenSeries.getTargetDisease() + "</td>");
+    out.println("        <td>" + antigenSeries.getAntigen() + "</td>");
     out.println("        <td>" + antigenSeries.getVaccineGroup() + "</td>");
 
     out.println("      </tr>");
@@ -173,13 +173,13 @@ public class ScheduleServlet extends MainServlet {
     out.println("      </tr>");
     out.println("      <tr>");
     out.println(
-        "        <td>" + antigenSeries.getSelectBestPatientSeries().getDefaultSeries() + "</td>");
+        "        <td>" + antigenSeries.getSelectPatientSeries().getDefaultSeries() + "</td>");
     out.println(
-        "        <td>" + antigenSeries.getSelectBestPatientSeries().getProductPath() + "</td>");
-    out.println("        <td>" + antigenSeries.getSelectBestPatientSeries().getSeriesPreference()
+        "        <td>" + antigenSeries.getSelectPatientSeries().getProductPath() + "</td>");
+    out.println("        <td>" + antigenSeries.getSelectPatientSeries().getSeriesPreference()
         + "</td>");
     out.println(
-        "        <td>" + antigenSeries.getSelectBestPatientSeries().getMaxAgeToStart() + "</td>");
+        "        <td>" + antigenSeries.getSelectPatientSeries().getMaximumAgeToStart() + "</td>");
     out.println("      </tr>");
     out.println("    </table>");
 

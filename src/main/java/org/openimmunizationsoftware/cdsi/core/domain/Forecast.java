@@ -1,6 +1,8 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Forecast {
   private Date adjustedRecommendedDate = null;
@@ -16,6 +18,13 @@ public class Forecast {
   private TargetDose targetDose = null;
   private boolean bestPatientSeries = false;
   private Interval interval = null;
+  private List<AdministrativeGuidance> administrativeGuidanceList = new ArrayList<AdministrativeGuidance>();
+  private Vaccine recommendedVaccine = null;
+  private Patient patient = null;
+
+  public List<AdministrativeGuidance> getAdministrativeGuidanceList() {
+    return administrativeGuidanceList;
+  }
 
   public Interval getInterval() {
     return interval;
@@ -119,6 +128,22 @@ public class Forecast {
 
   public void setBestPatientSeries(boolean bestPatientSeries) {
     this.bestPatientSeries = bestPatientSeries;
+  }
+
+  public Vaccine getRecommendedVaccine() {
+    return recommendedVaccine;
+  }
+
+  public void setRecommendedVaccine(Vaccine recommendedVaccine) {
+    this.recommendedVaccine = recommendedVaccine;
+  }
+
+  public Patient getPatient() {
+    return patient;
+  }
+
+  public void setPatient(Patient patient) {
+    this.patient = patient;
   }
 
 }

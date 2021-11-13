@@ -1,5 +1,6 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
+import java.util.Date;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 
@@ -7,11 +8,17 @@ public class Interval {
   private SeriesDose seriesDose = null;
   private YesNo fromImmediatePreviousDoseAdministered = null;
   private String fromTargetDoseNumberInSeries = "";
+  private String fromMostRecentVaccineType = "";
+  private String fromRelevantObserationCode = "";
   private TimePeriod absoluteMinimumInterval = null;
   private TimePeriod minimumInterval = null;
   private TimePeriod earliestRecommendedInterval = null;
   private TimePeriod latestRecommendedInterval = null;
   private IntervalPriority intervalPriority = null;
+  private Date effectiveDate = null;
+  private Date cessationDate = null;
+  private PreferableInterval preferableInterval = null;
+  private AllowableInterval allowableInterval = null;
 
   public IntervalPriority getIntervalPriority() {
     return intervalPriority;
@@ -76,5 +83,53 @@ public class Interval {
 
   public void setLatestRecommendedInterval(TimePeriod latestRecommendedInterval) {
     this.latestRecommendedInterval = latestRecommendedInterval;
+  }
+
+  public PreferableInterval getPreferableInterval() {
+    return preferableInterval;
+  }
+
+  public void setPreferableInterval(PreferableInterval preferableInterval) {
+    this.preferableInterval = preferableInterval;
+  }
+
+  public AllowableInterval getAllowableInterval() {
+    return allowableInterval;
+  }
+
+  public void setAllowableInterval(AllowableInterval allowableInterval) {
+    this.allowableInterval = allowableInterval;
+  }
+
+  public String getFromMostRecentVaccineType() {
+    return fromMostRecentVaccineType;
+  }
+
+  public void setFromMostRecentVaccineType(String fromMostRecentVaccineType) {
+    this.fromMostRecentVaccineType = fromMostRecentVaccineType;
+  }
+
+  public String getFromRelevantObserationCode() {
+    return fromRelevantObserationCode;
+  }
+
+  public void setFromRelevantObserationCode(String fromRelevantObserationCode) {
+    this.fromRelevantObserationCode = fromRelevantObserationCode;
+  }
+
+  public Date getEffectiveDate() {
+    return effectiveDate;
+  }
+
+  public void setEffectiveDate(Date effectiveDate) {
+    this.effectiveDate = effectiveDate;
+  }
+
+  public Date getCessationDate() {
+    return cessationDate;
+  }
+
+  public void setCessationDate(Date cessationDate) {
+    this.cessationDate = cessationDate;
   }
 }

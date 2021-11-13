@@ -16,7 +16,7 @@ public class ForecastDatesAndReasons extends LogicStep {
   @Override
   public LogicStep process() throws Exception {
     Forecast forecast = new Forecast();
-    forecast.setAntigen(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
+    forecast.setAntigen(dataModel.getPatientSeries().getTrackedAntigenSeries().getAntigen());
     forecast.setTargetDose(dataModel.getTargetDose());
     dataModel.setForecast(forecast);
     dataModel.getPatientSeries().setForecast(forecast);

@@ -74,7 +74,7 @@ public class OneBestPatientSeries extends LogicStep {
         protected LogicResult evaluateInternal() {
           int numberOfPatientSeries = 0;
           for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {
-            if (patientSeries.getTrackedAntigenSeries().getTargetDisease()
+            if (patientSeries.getTrackedAntigenSeries().getAntigen()
                 .equals(dataModel.getAntigen())) {
               numberOfPatientSeries++;
             }
@@ -173,9 +173,9 @@ public class OneBestPatientSeries extends LogicStep {
           int numberOfDefaultPatientSeries = 0;
           List<AntigenSeries> asl = dataModel.getAntigenSeriesSelectedList();
           for (AntigenSeries as : asl) {
-            if (as.getSelectBestPatientSeries().getDefaultSeries() != null) {
+            if (as.getSelectPatientSeries().getDefaultSeries() != null) {
               boolean isDefaultSeries =
-                  as.getSelectBestPatientSeries().getDefaultSeries().equals(YES);
+                  as.getSelectPatientSeries().getDefaultSeries().equals(YES);
               if (isDefaultSeries) {
                 numberOfDefaultPatientSeries++;
               }

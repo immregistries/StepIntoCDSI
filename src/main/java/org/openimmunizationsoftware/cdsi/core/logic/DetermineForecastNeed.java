@@ -132,7 +132,7 @@ public class DetermineForecastNeed extends LogicStep {
       for (Contraindication contraindication : dataModel.getPatient().getPatientHistory()
           .getContraindicationSet()) {
         if (contraindication.getAntigen()
-            .equals(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease())) {
+            .equals(dataModel.getPatientSeries().getTrackedAntigenSeries().getAntigen())) {
           out.println("<li>" + contraindication + "</li>");
         }
       }
@@ -196,7 +196,7 @@ public class DetermineForecastNeed extends LogicStep {
               for (Contraindication contraindication : dataModel.getPatient().getPatientHistory()
                   .getContraindicationSet()) {
                 if (contraindication.getAntigen().equals(
-                    dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease())) {
+                    dataModel.getPatientSeries().getTrackedAntigenSeries().getAntigen())) {
                   targetContraindictionList.add(contraindication);
                 }
               }
@@ -251,7 +251,7 @@ public class DetermineForecastNeed extends LogicStep {
           setNextLogicStepType(LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMEND_VACCINES);
           dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.COMPLETE);
           Antigen tmpAntigen =
-              dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
+              dataModel.getPatientSeries().getTrackedAntigenSeries().getAntigen();
           List<Forecast> forecastList = dataModel.getForecastList();
           for (Forecast forecast : forecastList) {
             if (forecast.getAntigen().equals(tmpAntigen)) {
@@ -269,7 +269,7 @@ public class DetermineForecastNeed extends LogicStep {
           log("No. The patient should not receive another dose .");
           dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.NOT_RECOMMENDED);
           Antigen tmpAntigen =
-              dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
+              dataModel.getPatientSeries().getTrackedAntigenSeries().getAntigen();
           List<Forecast> forecastList = dataModel.getForecastList();
           for (Forecast forecast : forecastList) {
             if (forecast.getAntigen().equals(tmpAntigen)) {
@@ -287,7 +287,7 @@ public class DetermineForecastNeed extends LogicStep {
           log("No. The patient should not receive another dose .");
           dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.CONTRAINDICATED);
           Antigen tmpAntigen =
-              dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
+              dataModel.getPatientSeries().getTrackedAntigenSeries().getAntigen();
           List<Forecast> forecastList = dataModel.getForecastList();
           for (Forecast forecast : forecastList) {
             if (forecast.getAntigen().equals(tmpAntigen)) {
@@ -304,7 +304,7 @@ public class DetermineForecastNeed extends LogicStep {
           log("No. The patient should not receive another dose .");
           dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.AGED_OUT);
           Antigen tmpAntigen =
-              dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
+              dataModel.getPatientSeries().getTrackedAntigenSeries().getAntigen();
           List<Forecast> forecastList = dataModel.getForecastList();
           for (Forecast forecast : forecastList) {
             if (forecast.getAntigen().equals(tmpAntigen)) {
@@ -321,7 +321,7 @@ public class DetermineForecastNeed extends LogicStep {
           log("No. The patient should not receive another dose .");
           dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.NOT_COMPLETE);
           Antigen tmpAntigen =
-              dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
+              dataModel.getPatientSeries().getTrackedAntigenSeries().getAntigen();
           List<Forecast> forecastList = dataModel.getForecastList();
           for (Forecast forecast : forecastList) {
             if (forecast.getAntigen().equals(tmpAntigen)) {

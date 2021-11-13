@@ -35,7 +35,7 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
     selectedList = new ArrayList<PatientSeries>();
     for (PatientSeries p : dataModel.getBestPatientSeriesList()) {
       for (Antigen a : dataModel.getVaccineGroup().getAntigenList()) {
-        if (p.getTrackedAntigenSeries().getTargetDisease().equals(a)) {
+        if (p.getTrackedAntigenSeries().getAntigen().equals(a)) {
           selectedList.add(p);
         }
       }
@@ -90,7 +90,7 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
     List<Antigen> antigensNeededList = new ArrayList<Antigen>();
     for (PatientSeries p : selectedList) {
       if (p.getPatientSeriesStatus() == PatientSeriesStatus.NOT_COMPLETE)
-        antigensNeededList.add(p.getTrackedAntigenSeries().getTargetDisease());
+        antigensNeededList.add(p.getTrackedAntigenSeries().getAntigen());
     }
     vgf.setAntigensNeededList(antigensNeededList);
   }
@@ -276,7 +276,7 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
     for (PatientSeries patientSeries : selectedList) {
       out.println("  <tr>");
       out.println(
-          "    <td>" + patientSeries.getTrackedAntigenSeries().getTargetDisease() + "</td>");
+          "    <td>" + patientSeries.getTrackedAntigenSeries().getAntigen() + "</td>");
       out.println("    <td>" + patientSeries.getPatientSeriesStatus() + "</td>");
       out.println("  </tr>");
     }

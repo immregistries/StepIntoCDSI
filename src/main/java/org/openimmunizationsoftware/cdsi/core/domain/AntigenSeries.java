@@ -6,11 +6,21 @@ import java.util.List;
 public class AntigenSeries {
   private String seriesName = "";
   private List<SeriesDose> seriesDoseList = new ArrayList<SeriesDose>();
-  private SelectBestPatientSeries selectBestPatientSeries = null;
-  private Antigen targetDisease = null;
+  private SelectPatientSeries selectPatientSeries = null;
+  private Antigen antigen = null;
   private VaccineGroup vaccineGroup = null;
+  private String seriesType = "";
   private Indication indication = null;
   private Schedule schedule = null;
+  private AdministrativeGuidance administrativeGuidance = null;
+
+  public AdministrativeGuidance getAdministrativeGuidance() {
+    return administrativeGuidance;
+  }
+
+  public void setAdministrativeGuidance(AdministrativeGuidance administrativeGuidance) {
+    this.administrativeGuidance = administrativeGuidance;
+  }
 
   public Indication getIndication() {
     return indication;
@@ -37,12 +47,12 @@ public class AntigenSeries {
     return super.equals(obj);
   }
 
-  public Antigen getTargetDisease() {
-    return targetDisease;
+  public Antigen getAntigen() {
+    return antigen;
   }
 
-  public void setTargetDisease(Antigen targetDisease) {
-    this.targetDisease = targetDisease;
+  public void setAntigen(Antigen targetDisease) {
+    this.antigen = targetDisease;
   }
 
   public VaccineGroup getVaccineGroup() {
@@ -65,12 +75,20 @@ public class AntigenSeries {
     return seriesDoseList;
   }
 
-  public SelectBestPatientSeries getSelectBestPatientSeries() {
-    return selectBestPatientSeries;
+  public SelectPatientSeries getSelectPatientSeries() {
+    return selectPatientSeries;
   }
 
-  public void setSelectBestPatientSeries(SelectBestPatientSeries selectBestPatientSeries) {
-    this.selectBestPatientSeries = selectBestPatientSeries;
+  public void setSelectPatientSeries(SelectPatientSeries selectBestPatientSeries) {
+    this.selectPatientSeries = selectBestPatientSeries;
+  }
+
+  public String getSeriesType() {
+    return seriesType;
+  }
+
+  public void setSeriesType(String seriesType) {
+    this.seriesType = seriesType;
   }
 
 

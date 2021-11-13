@@ -3,8 +3,8 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 
 public class Vaccine {
   private Date lotExpirationDate = null;
@@ -14,10 +14,49 @@ public class Vaccine {
   private TimePeriod vaccineTypeBeginAge = null;
   private TimePeriod vaccineTypeEndAge = null;
   private String volume = "";
+  private YesNo forecastVaccineType = YesNo.NOT_APPLICABLE;
   private List<Antigen> antigenList = new ArrayList<Antigen>();
   private List<SeriesDose> preferableVaccineForSeries = new ArrayList<SeriesDose>();
   private List<SeriesDose> allowableVaccineForSeries = new ArrayList<SeriesDose>();
-  private List<VaccineDoseAdministered> vaccineDoseAdministeredList = new ArrayList<VaccineDoseAdministered>();
+  private List<VaccineDoseAdministered> vaccineDoseAdministeredList =
+      new ArrayList<VaccineDoseAdministered>();
+  private List<VaccineGroup> vaccineGroupList = new ArrayList<VaccineGroup>();
+
+  private PreferrableVaccine preferrableVaccine = null;
+  private AllowableVaccine allowableVaccine = null;
+  private InadvertentVaccine inadvertentVaccine = null;
+
+  public PreferrableVaccine getPreferrableVaccine() {
+    return preferrableVaccine;
+  }
+
+  public void setPreferrableVaccine(PreferrableVaccine preferrableVaccine) {
+    this.preferrableVaccine = preferrableVaccine;
+  }
+
+  public AllowableVaccine getAllowableVaccine() {
+    return allowableVaccine;
+  }
+
+  public void setAllowableVaccine(AllowableVaccine allowableVaccine) {
+    this.allowableVaccine = allowableVaccine;
+  }
+
+  public InadvertentVaccine getInadvertentVaccine() {
+    return inadvertentVaccine;
+  }
+
+  public void setInadvertentVaccine(InadvertentVaccine inadvertentVaccine) {
+    this.inadvertentVaccine = inadvertentVaccine;
+  }
+
+  public YesNo getForecastVaccineType() {
+    return forecastVaccineType;
+  }
+
+  public void setForecastVaccineType(YesNo forecastVaccineType) {
+    this.forecastVaccineType = forecastVaccineType;
+  }
 
   public List<VaccineDoseAdministered> getVaccineDoseAdministeredList() {
     return vaccineDoseAdministeredList;
@@ -122,4 +161,5 @@ public class Vaccine {
   public String toString() {
     return vaccineType == null ? "" : (vaccineType.toString() + " - " + manufacturer);
   }
+
 }

@@ -1,5 +1,6 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
+import java.util.Date;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 
 public class Age {
@@ -9,6 +10,24 @@ public class Age {
   private TimePeriod earliestRecommendedAge = null;
   private TimePeriod latestRecommendedAge = null;
   private TimePeriod maximumAge = null;
+  private Date effectiveDate = null;
+  private Date cessationDate = null;
+
+  public Date getEffectiveDate() {
+    return effectiveDate;
+  }
+
+  public void setEffectiveDate(Date effectiveDate) {
+    this.effectiveDate = effectiveDate;
+  }
+
+  public Date getCessationDate() {
+    return cessationDate;
+  }
+
+  public void setCessationDate(Date cessationDate) {
+    this.cessationDate = cessationDate;
+  }
 
   public SeriesDose getSeriesDose() {
     return seriesDose;

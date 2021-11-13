@@ -26,12 +26,12 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
         .getAntigenAdministeredRecordList().size()) {
       AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecordList()
           .get(dataModel.getAntigenAdministeredRecordPos());
-      if (aar.getAntigen().equals(patientSeries.getTrackedAntigenSeries().getTargetDisease())) {
+      if (aar.getAntigen().equals(patientSeries.getTrackedAntigenSeries().getAntigen())) {
         break;
       } else {
         dataModel.incAntigenAdministeredRecordPos();
         log("   Skipping " + aar + " for antigen " + aar.getAntigen() + "rrrrr"
-            + patientSeries.getTrackedAntigenSeries().getTargetDisease());
+            + patientSeries.getTrackedAntigenSeries().getAntigen());
       }
     }
 

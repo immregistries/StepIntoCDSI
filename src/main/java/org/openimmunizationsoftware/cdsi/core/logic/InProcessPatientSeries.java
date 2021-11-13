@@ -38,9 +38,9 @@ public class InProcessPatientSeries extends LogicStep {
     boolean hasAllValidDoses = true;
 
     for (PatientSeries patientSeries : patientSeriesList) {
-      if (patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries()
+      if (patientSeries.getTrackedAntigenSeries().getSelectPatientSeries()
           .getProductPath() != null) {
-        if (patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries().getProductPath()
+        if (patientSeries.getTrackedAntigenSeries().getSelectPatientSeries().getProductPath()
             .equals(YesNo.YES)) {
           productPatientSeries = true;
         }

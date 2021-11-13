@@ -84,7 +84,7 @@ public class ForEachPatientSeries extends LogicStep {
         out.println("       <td></td>");
       }
       out.println("       <td>" + antigenSeries.getSeriesName() + "</td>");
-      out.println("       <td>" + antigenSeries.getTargetDisease() + "</td>");
+      out.println("       <td>" + antigenSeries.getAntigen() + "</td>");
       out.println("       <td>" + (antigenSeries.getVaccineGroup() == null ? ""
           : antigenSeries.getVaccineGroup().getName()) + "</td>");
       out.println("     </tr>");

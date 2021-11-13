@@ -11,6 +11,16 @@ public class Patient {
   private List<VaccineDoseAdministered> receivesList = new ArrayList<VaccineDoseAdministered>();
   private PatientHistory patientHistory = new PatientHistory();
   private List<EvidenceOfImmunity> hasProofOfList = new ArrayList<EvidenceOfImmunity>();
+  private List<Forecast> forecastList = new ArrayList<Forecast>();
+  private List<PatientSeries> patientSeriesList = new ArrayList<PatientSeries>();
+
+  public List<PatientSeries> getPatientSeriesList() {
+    return patientSeriesList;
+  }
+
+  public List<Forecast> getForecastList() {
+    return forecastList;
+  }
 
   public List<EvidenceOfImmunity> getHasProofOfList() {
     return hasProofOfList;

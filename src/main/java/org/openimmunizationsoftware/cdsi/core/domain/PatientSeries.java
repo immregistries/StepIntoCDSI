@@ -10,6 +10,7 @@ public class PatientSeries {
   private int scorePatientSeries = 0;
   private List<TargetDose> targetDoseList = null;
   private Forecast forecast = null;
+  private Patient patient = null;
 
   public Forecast getForecast() {
     return forecast;
@@ -76,6 +77,14 @@ public class PatientSeries {
   @Override
   public String toString() {
     return this.getTrackedAntigenSeries().getSeriesName();
+  }
+
+  public Patient getPatient() {
+    return patient;
+  }
+
+  public void setPatient(Patient patient) {
+    this.patient = patient;
   }
 
 }

@@ -8,6 +8,7 @@ public class Evaluation {
   private EvaluationReason evaluationReason = null;
   private VaccineDoseAdministered vaccineDoseAdministered = null;
   private Antigen antigen = null;
+  private TargetDose targetDose = null;
 
   public VaccineDoseAdministered getVaccineDoseAdministered() {
     return vaccineDoseAdministered;
@@ -39,5 +40,13 @@ public class Evaluation {
 
   public void setEvaluationReason(EvaluationReason evaluationReason) {
     this.evaluationReason = evaluationReason;
+  }
+
+  public TargetDose getTargetDose() {
+    return targetDose;
+  }
+
+  public void setTargetDose(TargetDose targetDose) {
+    this.targetDose = targetDose;
   }
 }

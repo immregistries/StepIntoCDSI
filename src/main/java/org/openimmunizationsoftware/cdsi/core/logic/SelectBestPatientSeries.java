@@ -22,7 +22,7 @@ public class SelectBestPatientSeries extends LogicStep {
       dataModel.setAntigen(dataModel.getAntigenList().get(dataModel.getAntigenPos()));
       ArrayList<AntigenSeries> antigenSeriesSelectedList = new ArrayList<AntigenSeries>();
       for (AntigenSeries antigenSeries : dataModel.getAntigenSeriesList()) {
-        if (antigenSeries.getTargetDisease().equals(antigen)) {
+        if (antigenSeries.getAntigen().equals(antigen)) {
           antigenSeriesSelectedList.add(antigenSeries);
         }
       }
@@ -31,7 +31,7 @@ public class SelectBestPatientSeries extends LogicStep {
 
       List<PatientSeries> patientSeriesSelectedList = new ArrayList<PatientSeries>();
       for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {
-        if (patientSeries.getTrackedAntigenSeries().getTargetDisease().equals(antigen)) {
+        if (patientSeries.getTrackedAntigenSeries().getAntigen().equals(antigen)) {
           patientSeriesSelectedList.add(patientSeries);
           break;
         }
