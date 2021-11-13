@@ -9,7 +9,7 @@ public class LogicStepFactory {
       return new GatherNecessaryData(dataModel);
     }
     if (stepName.equals(LogicStepType.CREATE_RELEVANT_PATIENT_SERIES)) {
-      return new CreatePatientSeries(dataModel);
+      return new CreateRelevantPatientSeries(dataModel);
     }
     if (stepName.equals(LogicStepType.ORGANIZE_IMMUNIZATION_HISTORY)) {
       return new OrganizeImmunizationHistory(dataModel);
@@ -119,7 +119,7 @@ public class LogicStepFactory {
       return new GatherNecessaryData(dataModel);
     }
     if (stepName.equals(LogicStepType.CREATE_RELEVANT_PATIENT_SERIES)) {
-      return new CreatePatientSeries(dataModel);
+      return new CreateRelevantPatientSeries(dataModel);
     }
     if (stepName.equals(LogicStepType.ORGANIZE_IMMUNIZATION_HISTORY)) {
       return new OrganizeImmunizationHistory(dataModel);

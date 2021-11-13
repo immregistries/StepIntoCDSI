@@ -5,9 +5,9 @@ import org.immregistries.step.core.data.DataModel;
 import org.immregistries.step.domain.AntigenSeries;
 import org.immregistries.step.domain.PatientSeries;
 
-public class CreatePatientSeries extends LogicStep {
+public class CreateRelevantPatientSeries extends LogicStep {
 
-  public CreatePatientSeries(DataModel dataModel) {
+  public CreateRelevantPatientSeries(DataModel dataModel) {
     super(LogicStepType.CREATE_RELEVANT_PATIENT_SERIES, dataModel);
   }
 
@@ -35,13 +35,16 @@ public class CreatePatientSeries extends LogicStep {
   }
 
   public void printPre(PrintWriter out) throws Exception {
-    out.println("   <h2>8.2 Create Patient Series</h2>");
+    out.println("   <h2>4.3 Create Relevant Patient Series</h2>");
     out.println(
-        "   <p>An antigen series is one way to reach perceived immunity against a disease.  "
-            + "An antigen series can be thought of as a \"path to immunity\" and is described in "
-            + "relative terms.  In many cases, a single antigen may have more than one successful "
-            + "path to immunity and as such may have more than one antigen series.  Antigen "
-            + "series are defined through supporting data spreadsheets defined in chapter 3.</p>");
+        "   <p>An antigen series is one way to reach perceived immunity against a disease. An antigen series can be thought "
+            + "of as a \"path to immunity\" and is described in relative terms. In many cases, a single antigen may have more "
+            + "than one successful path to immunity and as such may have more than one antigen series. Antigen series are "
+            + "defined through Supporting Data spreadsheets defined in Chapter 3. Some series, classified here as \"Standard\" "
+            + "series, are based on recommendations for all patients based on age. Other series, classified as \"Risk\" series, "
+            + "are based on recommendations for patients with specific characteristics or underlying conditions which put them "
+            + "at increased risk. Finally, some series are strictly for the purpose of \"Evaluation Only\" and should not be "
+            + "recommended for completion, but if already complete can be used as proof of series completion.</p>");
     out.println("   <h3>Instructions</h3>");
     out.println(
         "   <p>To support simple testing only antigen series selected will be run. In normal production mode all "
@@ -71,13 +74,16 @@ public class CreatePatientSeries extends LogicStep {
   }
 
   public void printPost(PrintWriter out) throws Exception {
-    out.println("   <h1>8.2 Create Patient Series</h2>");
+    out.println("   <h2>4.3 Create Relevant Patient Series</h2>");
     out.println(
-        "   <p>An antigen series is one way to reach perceived immunity against a disease.  "
-            + "An antigen series can be thought of as a \"path to immunity\" and is described in "
-            + "relative terms.  In many cases, a single antigen may have more than one successful "
-            + "path to immunity and as such may have more than one antigen series.  Antigen "
-            + "series are defined through supporting data spreadsheets defined in chapter 3.</p>");
+        "   <p>An antigen series is one way to reach perceived immunity against a disease. An antigen series can be thought "
+            + "of as a \"path to immunity\" and is described in relative terms. In many cases, a single antigen may have more "
+            + "than one successful path to immunity and as such may have more than one antigen series. Antigen series are "
+            + "defined through Supporting Data spreadsheets defined in Chapter 3. Some series, classified here as \"Standard\" "
+            + "series, are based on recommendations for all patients based on age. Other series, classified as \"Risk\" series, "
+            + "are based on recommendations for patients with specific characteristics or underlying conditions which put them "
+            + "at increased risk. Finally, some series are strictly for the purpose of \"Evaluation Only\" and should not be "
+            + "recommended for completion, but if already complete can be used as proof of series completion.</p>");
 
     out.println("   <h2>Patient Series Included</h2>");
     out.println("   <table>");
