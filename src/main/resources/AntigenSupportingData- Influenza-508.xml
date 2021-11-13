@@ -7,7 +7,7 @@
 <observationCode>085</observationCode>
 <observationTitle>Severe allergic reaction after previous dose of Influenza</observationTitle>
 <contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Influenza vaccine.</contraindicationText>
-<contraindicationGuidance/>
+<contraindicationGuidance>ACIP recommends an allergist consultation if the specific type of influenza vaccine is unknown.</contraindicationGuidance>
 <beginAge/>
 <endAge/>
 </contraindication>
@@ -297,6 +297,150 @@
 <endAge/>
 </contraindicatedVaccine>
 </contraindication>
+<contraindication>
+<observationCode>192</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of any egg-based IIV or LAIV influenza vaccine</observationTitle>
+<contraindicationText>Do not vaccinate with any egg-based IIV or LAIV influenza vaccine if the patient has had a severe allergic reaction after a previous dose of an egg-based IIV or LAIV influenza vaccine.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>Influenza, live, intranasal, quadrivalent</vaccineType>
+<cvx>149</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>Influenza, injectable, quadrivalent, preservative free</vaccineType>
+<cvx>150</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>Influenza, injectable, quadrivalent</vaccineType>
+<cvx>158</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>Influenza, injectable, quadrivalent, preservative free, peds</vaccineType>
+<cvx>161</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>Influenza, high dose, quadrivalent</vaccineType>
+<cvx>197</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>influenza, seasonal vaccine, quadrivalent, adjuvanted</vaccineType>
+<cvx>205</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>193</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of any ccIIV influenza vaccine</observationTitle>
+<contraindicationText>Do not vaccinate with any ccIIV or egg-based IIV or LAIV influenza vaccine if the patient has had a severe allergic reaction after a previous dose of a ccIIV influenza vaccine.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>Influenza, live, intranasal, quadrivalent</vaccineType>
+<cvx>149</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>Influenza, injectable, quadrivalent, preservative free</vaccineType>
+<cvx>150</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>Influenza, injectable, quadrivalent</vaccineType>
+<cvx>158</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>Influenza, injectable, quadrivalent, preservative free, peds</vaccineType>
+<cvx>161</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>Influenza, injectable, MDCK, preservative free, quadrivalent</vaccineType>
+<cvx>171</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>Influenza, injectable, MDCK, preservative, quadrivalent</vaccineType>
+<cvx>186</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>Influenza, high dose, quadrivalent</vaccineType>
+<cvx>197</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>influenza, seasonal vaccine, quadrivalent, adjuvanted</vaccineType>
+<cvx>205</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>194</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of any RIV influenza vaccine</observationTitle>
+<contraindicationText>Do not vaccinate with any RIV or egg-based IIV or LAIV influenza vaccine if the patient has had a severe allergic reaction after a previous dose of an RIV influenza vaccine.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>Influenza, live, intranasal, quadrivalent</vaccineType>
+<cvx>149</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>Influenza, injectable, quadrivalent, preservative free</vaccineType>
+<cvx>150</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>Influenza, injectable, quadrivalent</vaccineType>
+<cvx>158</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>Influenza, injectable, quadrivalent, preservative free, peds</vaccineType>
+<cvx>161</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>influenza, recombinant, quadriIvalent,injectable, preservative free</vaccineType>
+<cvx>185</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>Influenza, high dose, quadrivalent</vaccineType>
+<cvx>197</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>influenza, seasonal vaccine, quadrivalent, adjuvanted</vaccineType>
+<cvx>205</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
 </vaccine>
 </contraindications>
 <series>
@@ -435,7 +579,7 @@
 <preferableVaccine>
 <vaccineType>Influenza, injectable, MDCK, preservative free, quadrivalent</vaccineType>
 <cvx>171</cvx>
-<beginAge>2 years</beginAge>
+<beginAge>6 months</beginAge>
 <endAge/>
 <tradeName/>
 <mvx/>
@@ -445,7 +589,7 @@
 <preferableVaccine>
 <vaccineType>Influenza, injectable, MDCK, preservative, quadrivalent</vaccineType>
 <cvx>186</cvx>
-<beginAge>2 years</beginAge>
+<beginAge>6 months</beginAge>
 <endAge/>
 <tradeName/>
 <mvx/>
@@ -732,7 +876,7 @@
 <preferableVaccine>
 <vaccineType>Influenza, injectable, MDCK, preservative free, quadrivalent</vaccineType>
 <cvx>171</cvx>
-<beginAge>2 years</beginAge>
+<beginAge>6 months</beginAge>
 <endAge/>
 <tradeName/>
 <mvx/>
@@ -752,7 +896,7 @@
 <preferableVaccine>
 <vaccineType>Influenza, injectable, MDCK, preservative, quadrivalent</vaccineType>
 <cvx>186</cvx>
-<beginAge>2 years</beginAge>
+<beginAge>6 months</beginAge>
 <endAge/>
 <tradeName/>
 <mvx/>
@@ -973,7 +1117,7 @@
 </set>
 <set>
 <setID>3</setID>
-<setDescription>Dose is not required if the patient has received 1 or more doses during the current season AND patient has received 2 or more doses before July 1, 2020.</setDescription>
+<setDescription>Dose is not required if the patient has received 1 or more doses during the current season AND patient has received 2 or more doses before July 1, 2021.</setDescription>
 <effectiveDate/>
 <cessationDate/>
 <conditionLogic>AND</conditionLogic>

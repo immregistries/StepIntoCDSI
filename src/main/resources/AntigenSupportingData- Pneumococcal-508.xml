@@ -2434,9 +2434,9 @@
 <cessationDate/>
 </age>
 <interval>
-<fromPrevious>Y</fromPrevious>
+<fromPrevious>N</fromPrevious>
 <fromTargetDose/>
-<fromMostRecent/>
+<fromMostRecent>33; 109</fromMostRecent>
 <fromRelevantObs/>
 <absMinInt>0 days</absMinInt>
 <minInt>5 years</minInt>
@@ -2447,9 +2447,9 @@
 <cessationDate/>
 </interval>
 <interval>
-<fromPrevious>N</fromPrevious>
+<fromPrevious>Y</fromPrevious>
 <fromTargetDose/>
-<fromMostRecent>133</fromMostRecent>
+<fromMostRecent/>
 <fromRelevantObs/>
 <absMinInt>0 days</absMinInt>
 <minInt>1 year</minInt>

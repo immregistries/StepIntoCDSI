@@ -7576,6 +7576,15 @@
 </association>
 </cvxMap>
 <cvxMap>
+<cvx>218</cvx>
+<shortDescription>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</shortDescription>
+<association>
+<antigen>COVID-19</antigen>
+<associationBeginAge/>
+<associationEndAge/>
+</association>
+</cvxMap>
+<cvxMap>
 <cvx>500</cvx>
 <shortDescription>COVID-19 Non-US Vaccine, Product Unknown</shortDescription>
 <association>
@@ -7766,7 +7775,7 @@
 <observationCode>007</observationCode>
 <observationTitle>Pregnant</observationTitle>
 <group/>
-<indicationText>Administer to women who are pregnant.</indicationText>
+<indicationText>Administer to persons who are pregnant.</indicationText>
 <contraindicationText>Do not vaccinate if the patient is pregnant.</contraindicationText>
 <clarifyingText/>
 <codedValues>
@@ -8173,7 +8182,7 @@
 <observationCode>031</observationCode>
 <observationTitle>Tuberculosis</observationTitle>
 <group/>
-<indicationText/>
+<indicationText>Administer to persons who have tuberculosis</indicationText>
 <contraindicationText>Do not vaccinate if the patient has active untreated tuberculosis.</contraindicationText>
 <clarifyingText/>
 <codedValues>
@@ -11547,6 +11556,207 @@ vaccine</clarifyingText>
 <text>Chimeric antigen receptor T-cell immunotherapy [procedure]</text>
 </codedValue>
 </codedValues>
+</observation>
+<observation>
+<observationCode>192</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of any egg-based IIV or LAIV influenza vaccine</observationTitle>
+<group/>
+<indicationText/>
+<contraindicationText>Do not vaccinate with any egg-based IIV or LAIV influenza vaccine if the patient has had a severe allergic reaction after a previous dose of an egg-based IIV or LAIV influenza vaccine.</contraindicationText>
+<clarifyingText/>
+<codedValues/>
+</observation>
+<observation>
+<observationCode>193</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of any ccIIV influenza vaccine</observationTitle>
+<group/>
+<indicationText/>
+<contraindicationText>Do not vaccinate with any ccIIV or egg-based IIV or LAIV influenza vaccine if the patient has had a severe allergic reaction after a previous dose of a ccIIV influenza vaccine.</contraindicationText>
+<clarifyingText/>
+<codedValues/>
+</observation>
+<observation>
+<observationCode>194</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of any RIV influenza vaccine</observationTitle>
+<group/>
+<indicationText/>
+<contraindicationText>Do not vaccinate with any RIV or egg-based IIV or LAIV influenza vaccine if the patient has had a severe allergic reaction after a previous dose of an RIV influenza vaccine.</contraindicationText>
+<clarifyingText/>
+<codedValues/>
+</observation>
+<observation>
+<observationCode>195</observationCode>
+<observationTitle>Occupations at increased risk for COVID-19 exposure and transmission</observationTitle>
+<group/>
+<indicationText>Administer to persons at increased occupational risk for COVID-19 exposure and transmission.</indicationText>
+<contraindicationText/>
+<clarifyingText>Occupations at increased risk for COVID-19 exposure and transmission and may get a booster shot based on their individual benefits and risks</clarifyingText>
+<codedValues/>
+</observation>
+<observation>
+<observationCode>196</observationCode>
+<observationTitle>Residing in an institutional setting at increased risk for COVID-19 exposure and transmission</observationTitle>
+<group/>
+<indicationText>Administer to persons residing in institutional settings at increased risk for COVID-19 exposure and transmission.</indicationText>
+<contraindicationText/>
+<clarifyingText>Institutional settings such as health care, schools, correctional facilities, and homeless shelters at increased risk for COVID-19 exposure and transmission and may get a booster shot based on their individual benefits and risks including </clarifyingText>
+<codedValues/>
+</observation>
+<observation>
+<observationCode>197</observationCode>
+<observationTitle>Resident of a long term care facility</observationTitle>
+<group/>
+<indicationText>Administer to persons residing in a long term care facility</indicationText>
+<contraindicationText/>
+<clarifyingText/>
+<codedValues/>
+</observation>
+<observation>
+<observationCode>198</observationCode>
+<observationTitle>Cancer</observationTitle>
+<group/>
+<indicationText>Administer to persons with cancer</indicationText>
+<contraindicationText/>
+<clarifyingText/>
+<codedValues>
+<codedValue>
+<code>363346000</code>
+<codeSystem>SNOMED</codeSystem>
+<text>n/aMalignant neoplastic disease [disorder]</text>
+</codedValue>
+</codedValues>
+</observation>
+<observation>
+<observationCode>199</observationCode>
+<observationTitle>Interstitial lung disease</observationTitle>
+<group/>
+<indicationText>Administer to persons with interstitial lung disease</indicationText>
+<contraindicationText/>
+<clarifyingText>Having damaged or scarred lung tissue such as interstitial lung disesase</clarifyingText>
+<codedValues>
+<codedValue>
+<code>233703007</code>
+<codeSystem>SNOMED</codeSystem>
+<text>Interstitial lung disease [disorder]</text>
+</codedValue>
+</codedValues>
+</observation>
+<observation>
+<observationCode>200</observationCode>
+<observationTitle>Cystic fibrosis</observationTitle>
+<group/>
+<indicationText>Administer to persons with cystic fibrosis</indicationText>
+<contraindicationText/>
+<clarifyingText/>
+<codedValues>
+<codedValue>
+<code>190905008</code>
+<codeSystem>SNOMED</codeSystem>
+<text>cystic fibrosis [disorder]</text>
+</codedValue>
+</codedValues>
+</observation>
+<observation>
+<observationCode>201</observationCode>
+<observationTitle>Pulmonary hypertension</observationTitle>
+<group/>
+<indicationText>Administer to persons with hypertension</indicationText>
+<contraindicationText/>
+<clarifyingText/>
+<codedValues>
+<codedValue>
+<code>70995007</code>
+<codeSystem>SNOMED</codeSystem>
+<text>Pulmonary hypertension [disorder]</text>
+</codedValue>
+</codedValues>
+</observation>
+<observation>
+<observationCode>202</observationCode>
+<observationTitle>Dementia</observationTitle>
+<group/>
+<indicationText>Administer to persons with dementia</indicationText>
+<contraindicationText/>
+<clarifyingText/>
+<codedValues>
+<codedValue>
+<code>52448006</code>
+<codeSystem>SNOMED</codeSystem>
+<text>Dimensia [disorder]</text>
+</codedValue>
+</codedValues>
+</observation>
+<observation>
+<observationCode>203</observationCode>
+<observationTitle>Down syndrome</observationTitle>
+<group/>
+<indicationText>Administer to persons with down syndrome</indicationText>
+<contraindicationText/>
+<clarifyingText/>
+<codedValues>
+<codedValue>
+<code>41040004</code>
+<codeSystem>SNOMED</codeSystem>
+<text>Complete trisomy 21 syndrome [disorder]</text>
+</codedValue>
+</codedValues>
+</observation>
+<observation>
+<observationCode>204</observationCode>
+<observationTitle>Obesity</observationTitle>
+<group/>
+<indicationText>Administer to persons with obesity</indicationText>
+<contraindicationText/>
+<clarifyingText>includes BMIs categories of overweight, obese, and severely obese</clarifyingText>
+<codedValues/>
+</observation>
+<observation>
+<observationCode>205</observationCode>
+<observationTitle>Thalassemia</observationTitle>
+<group/>
+<indicationText>Administer to persons with thalassemia</indicationText>
+<contraindicationText/>
+<clarifyingText/>
+<codedValues>
+<codedValue>
+<code>40108008</code>
+<codeSystem>SNOMED</codeSystem>
+<text>Thalassemia [disorder]</text>
+</codedValue>
+</codedValues>
+</observation>
+<observation>
+<observationCode>206</observationCode>
+<observationTitle>Cerebrovascular disease</observationTitle>
+<group/>
+<indicationText>Administer to persons with cerebrovascular disease such as having a stroke</indicationText>
+<contraindicationText/>
+<clarifyingText/>
+<codedValues>
+<codedValue>
+<code>62914000</code>
+<codeSystem>SNOMED</codeSystem>
+<text>Cerebrovascular disease [disorder]</text>
+</codedValue>
+</codedValues>
+</observation>
+<observation>
+<observationCode>207</observationCode>
+<observationTitle>Substance use disorder</observationTitle>
+<group/>
+<indicationText>Administer to persons with substance use disorders (e.g., alcohol, opiod, cocaine)</indicationText>
+<contraindicationText/>
+<clarifyingText/>
+<codedValues/>
+</observation>
+<observation>
+<observationCode>208</observationCode>
+<observationTitle>Mental Health conditions</observationTitle>
+<group/>
+<indicationText>Administer to persons with mental health conditions</indicationText>
+<contraindicationText/>
+<clarifyingText>Includes mood disorders, depression, and schizophrenia spectrum disorders.</clarifyingText>
+<codedValues/>
 </observation>
 </observations>
 </scheduleSupportingData>

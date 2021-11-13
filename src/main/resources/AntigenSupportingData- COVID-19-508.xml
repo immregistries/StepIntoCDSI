@@ -50,16 +50,22 @@
 <beginAge/>
 <endAge/>
 </contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
 </contraindication>
 </vaccine>
 </contraindications>
 <series>
-<seriesName>2-dose Pfizer series</seriesName>
+<seriesName>2-dose 5-17 Pfizer Series</seriesName>
 <targetDisease>COVID-19</targetDisease>
 <vaccineGroup>COVID-19</vaccineGroup>
 <seriesAdminGuidance>COVID-19 vaccines and other vaccines may now be administered without regard to timing. This includes simultaneous administration of COVID-19 vaccines and other vaccines on the same day, as well as coadministration within 14 days. It is unknown whether reactogenicity of COVID-19 vaccine is increased with coadministration, including with other vaccines known to be more reactogenic, such as adjuvanted vaccines or live vaccines. When deciding whether to coadminister another vaccine(s) with COVID-19 vaccines, providers should consider whether the patient is behind or at risk of becoming behind on recommended vaccines, their risk of vaccine-preventable disease (e.g., during an outbreak or occupational exposures), and the reactogenicity profile of the vaccines.</seriesAdminGuidance>
 <seriesAdminGuidance>Vaccination should be deferred until recovery from acute illness (if person had symptoms) and criteria have been met to discontinue isolation.</seriesAdminGuidance>
-<seriesAdminGuidance>Current evidence suggests that the risk of SARS-CoV-2 reinfection is low in the months after initial infection but may increase with time due to waning immunity. Thus, people with a history of MIS-C or MIS-A should consider delaying vaccination until they have recovered from illness and for 90 days after the date of diagnosis of MIS-C or MIS-A, recognizing that the risk of reinfection and, therefore, the benefit from vaccination, might increase with time following initial infection.</seriesAdminGuidance>
+<seriesAdminGuidance>Given the lack of data on the safety of COVID-19 vaccines in people with a history of MIS-C or MIS-A, a conversation between the patient, their guardian(s), and their clinical team or a specialist is strongly encouraged to assist with decisions about the use of COVID-19 vaccines.</seriesAdminGuidance>
 <seriesAdminGuidance>Currently no data on safety or efficacy of COVID-19 vaccination in persons who received monoclonal antibodies or convalescent plasma as part of COVID-19 treatment. Vaccination should be deferred for at least 90 days to avoid interference of the treatment with vaccine-induced immune responses.</seriesAdminGuidance>
 <seriesType>Standard</seriesType>
 <equivalentSeriesGroups>2; 3</equivalentSeriesGroups>
@@ -72,15 +78,305 @@
 <seriesPriority>A</seriesPriority>
 <seriesPreference>1</seriesPreference>
 <minAgeToStart/>
-<maxAgeToStart/>
+<maxAgeToStart>18 years</maxAgeToStart>
 </selectSeries>
 <indication/>
 <seriesDose>
 <doseNumber>Dose 1</doseNumber>
 <age>
 <absMinAge>0 days</absMinAge>
-<minAge>12 years</minAge>
-<earliestRecAge>12 years</earliestRecAge>
+<minAge>5 years</minAge>
+<earliestRecAge>5 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>N</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent>207; 210; 211; 212; 213</fromMostRecent>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<allowableInterval/>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>12 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.3</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+<beginAge>5 years</beginAge>
+<endAge>12 years</endAge>
+<tradeName/>
+<mvx/>
+<volume>0.2</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+<beginAge>0 days</beginAge>
+<endAge>18 years</endAge>
+</allowableVaccine>
+<inadvertentVaccine/>
+<conditionalSkip/>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
+<seriesDose>
+<doseNumber>Dose 2</doseNumber>
+<age>
+<absMinAge>0 days</absMinAge>
+<minAge>5 years</minAge>
+<earliestRecAge>5 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>21 days</minInt>
+<earliestRecInt>21 days</earliestRecInt>
+<latestRecInt>42 days</latestRecInt>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate>20211024</cessationDate>
+</interval>
+<interval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>21 days - 4 days</absMinInt>
+<minInt>21 days</minInt>
+<earliestRecInt>21 days</earliestRecInt>
+<latestRecInt>42 days</latestRecInt>
+<intervalPriority/>
+<effectiveDate>20211025</effectiveDate>
+<cessationDate/>
+</interval>
+<allowableInterval/>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>12 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.3</volume>
+<forecastVaccineType>Y</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+<beginAge>5 years</beginAge>
+<endAge>12 years</endAge>
+<tradeName/>
+<mvx/>
+<volume>0.2</volume>
+<forecastVaccineType>Y</forecastVaccineType>
+</preferableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+<beginAge>0 days</beginAge>
+<endAge>18 years</endAge>
+</allowableVaccine>
+<inadvertentVaccine/>
+<conditionalSkip/>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
+<seriesDose>
+<doseNumber>Dose 3</doseNumber>
+<age>
+<absMinAge>0 days</absMinAge>
+<minAge>65 years</minAge>
+<earliestRecAge>65 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>N</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent>207; 210; 211; 212; 213</fromMostRecent>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<interval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>6 months - 4 days</absMinInt>
+<minInt>6 months</minInt>
+<earliestRecInt>6 months</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<allowableInterval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<absMinInt>0 days</absMinInt>
+<effectiveDate/>
+<cessationDate/>
+</allowableInterval>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.25</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>12 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.3</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, Unspecified Formulation</vaccineType>
+<cvx>213</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<inadvertentVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+</inadvertentVaccine>
+<conditionalSkip>
+<context>Forecast</context>
+<setLogic>n/a</setLogic>
+<set>
+<setID>1</setID>
+<setDescription>Target Dose should not be forecasted for anyone under 18 years of age</setDescription>
+<effectiveDate/>
+<cessationDate/>
+<conditionLogic/>
+<condition>
+<conditionID>1</conditionID>
+<conditionType>Age</conditionType>
+<startDate/>
+<endDate/>
+<beginAge/>
+<endAge>18 years</endAge>
+<interval/>
+<doseCount/>
+<doseType/>
+<doseCountLogic/>
+<vaccineTypes/>
+<seriesGroups/>
+</condition>
+</set>
+</conditionalSkip>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
+</series>
+<series>
+<seriesName>3-dose Pfizer series</seriesName>
+<targetDisease>COVID-19</targetDisease>
+<vaccineGroup>COVID-19</vaccineGroup>
+<seriesAdminGuidance>COVID-19 vaccines and other vaccines may now be administered without regard to timing. This includes simultaneous administration of COVID-19 vaccines and other vaccines on the same day, as well as coadministration within 14 days. It is unknown whether reactogenicity of COVID-19 vaccine is increased with coadministration, including with other vaccines known to be more reactogenic, such as adjuvanted vaccines or live vaccines. When deciding whether to coadminister another vaccine(s) with COVID-19 vaccines, providers should consider whether the patient is behind or at risk of becoming behind on recommended vaccines, their risk of vaccine-preventable disease (e.g., during an outbreak or occupational exposures), and the reactogenicity profile of the vaccines.</seriesAdminGuidance>
+<seriesAdminGuidance>Vaccination should be deferred until recovery from acute illness (if person had symptoms) and criteria have been met to discontinue isolation.</seriesAdminGuidance>
+<seriesAdminGuidance>Given the lack of data on the safety of COVID-19 vaccines in people with a history of MIS-C or MIS-A, a conversation between the patient, their guardian(s), and their clinical team or a specialist is strongly encouraged to assist with decisions about the use of COVID-19 vaccines.</seriesAdminGuidance>
+<seriesAdminGuidance>Currently no data on safety or efficacy of COVID-19 vaccination in persons who received monoclonal antibodies or convalescent plasma as part of COVID-19 treatment. Vaccination should be deferred for at least 90 days to avoid interference of the treatment with vaccine-induced immune responses.</seriesAdminGuidance>
+<seriesType>Standard</seriesType>
+<equivalentSeriesGroups>2; 3</equivalentSeriesGroups>
+<requiredGender/>
+<selectSeries>
+<defaultSeries>No</defaultSeries>
+<productPath>Yes</productPath>
+<seriesGroupName>Standard</seriesGroupName>
+<seriesGroup>1</seriesGroup>
+<seriesPriority>A</seriesPriority>
+<seriesPreference>2</seriesPreference>
+<minAgeToStart/>
+<maxAgeToStart/>
+</selectSeries>
+<indication/>
+<seriesDose>
+<doseNumber>Dose 1</doseNumber>
+<age>
+<absMinAge>18 years</absMinAge>
+<minAge>18 years</minAge>
+<earliestRecAge>18 years</earliestRecAge>
 <latestRecAge/>
 <maxAge/>
 <effectiveDate/>
@@ -116,7 +412,10 @@
 <beginAge>0 days</beginAge>
 <endAge/>
 </allowableVaccine>
-<inadvertentVaccine/>
+<inadvertentVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+</inadvertentVaccine>
 <conditionalSkip/>
 <recurringDose>No</recurringDose>
 <seasonalRecommendation/>
@@ -124,9 +423,9 @@
 <seriesDose>
 <doseNumber>Dose 2</doseNumber>
 <age>
-<absMinAge>0 days</absMinAge>
-<minAge>12 years</minAge>
-<earliestRecAge>12 years</earliestRecAge>
+<absMinAge>18 years</absMinAge>
+<minAge>18 years</minAge>
+<earliestRecAge>18 years</earliestRecAge>
 <latestRecAge/>
 <maxAge/>
 <effectiveDate/>
@@ -150,21 +449,28 @@
 <fromTargetDose/>
 <fromMostRecent/>
 <fromRelevantObs/>
-<absMinInt>21 days - 4 days</absMinInt>
+<absMinInt>0 days</absMinInt>
 <minInt>21 days</minInt>
 <earliestRecInt>21 days</earliestRecInt>
 <latestRecInt>42 days</latestRecInt>
 <intervalPriority/>
 <effectiveDate/>
-<cessationDate/>
+<cessationDate>20211024</cessationDate>
 </interval>
-<allowableInterval>
+<interval>
 <fromPrevious>Y</fromPrevious>
 <fromTargetDose/>
-<absMinInt>0 days</absMinInt>
-<effectiveDate/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>21 days - 4 days</absMinInt>
+<minInt>21 days</minInt>
+<earliestRecInt>21 days</earliestRecInt>
+<latestRecInt>42 days</latestRecInt>
+<intervalPriority/>
+<effectiveDate>20211025</effectiveDate>
 <cessationDate/>
-</allowableInterval>
+</interval>
+<allowableInterval/>
 <preferableVaccine>
 <vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
 <cvx>208</cvx>
@@ -181,21 +487,129 @@
 <beginAge>0 days</beginAge>
 <endAge/>
 </allowableVaccine>
-<inadvertentVaccine/>
+<inadvertentVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+</inadvertentVaccine>
+<conditionalSkip/>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
+<seriesDose>
+<doseNumber>Dose 3</doseNumber>
+<age>
+<absMinAge>0 days</absMinAge>
+<minAge>65 years</minAge>
+<earliestRecAge>65 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>N</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent>207; 210; 211; 212; 213</fromMostRecent>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<interval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>6 months - 4 days</absMinInt>
+<minInt>6 months</minInt>
+<earliestRecInt>6 months</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<allowableInterval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<absMinInt>0 days</absMinInt>
+<effectiveDate/>
+<cessationDate/>
+</allowableInterval>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.25</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>12 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.3</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, Unspecified Formulation</vaccineType>
+<cvx>213</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<inadvertentVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+</inadvertentVaccine>
 <conditionalSkip/>
 <recurringDose>No</recurringDose>
 <seasonalRecommendation/>
 </seriesDose>
 </series>
 <series>
-<seriesName>2-dose Moderna series</seriesName>
+<seriesName>3-dose Moderna series</seriesName>
 <targetDisease>COVID-19</targetDisease>
 <vaccineGroup>COVID-19</vaccineGroup>
 <seriesAdminGuidance>COVID-19 vaccines and other vaccines may now be administered without regard to timing. This includes simultaneous administration of COVID-19 vaccines and other vaccines on the same day, as well as coadministration within 14 days. It is unknown whether reactogenicity of COVID-19 vaccine is increased with coadministration, including with other vaccines known to be more reactogenic, such as adjuvanted vaccines or live vaccines. When deciding whether to coadminister another vaccine(s) with COVID-19 vaccines, providers should consider whether the patient is behind or at risk of becoming behind on recommended vaccines, their risk of vaccine-preventable disease (e.g., during an outbreak or occupational exposures), and the reactogenicity profile of the vaccines.</seriesAdminGuidance>
 <seriesAdminGuidance>Vaccination should be deferred until recovery from acute illness (if person had symptoms) and criteria have been met to discontinue isolation.</seriesAdminGuidance>
-<seriesAdminGuidance>Current evidence suggests that the risk of SARS-CoV-2 reinfection is low in the months after initial infection but may increase with time due to waning immunity. Thus, people with a history of MIS-C or MIS-A should consider delaying vaccination until they have recovered from illness and for 90 days after the date of diagnosis of MIS-C or MIS-A, recognizing that the risk of reinfection and, therefore, the benefit from vaccination, might increase with time following initial infection.</seriesAdminGuidance>
+<seriesAdminGuidance>Given the lack of data on the safety of COVID-19 vaccines in people with a history of MIS-C or MIS-A, a conversation between the patient, their guardian(s), and their clinical team or a specialist is strongly encouraged to assist with decisions about the use of COVID-19 vaccines.</seriesAdminGuidance>
 <seriesAdminGuidance>Currently no data on safety or efficacy of COVID-19 vaccination in persons who received monoclonal antibodies or convalescent plasma as part of COVID-19 treatment. Vaccination should be deferred for at least 90 days to avoid interference of the treatment with vaccine-induced immune responses.</seriesAdminGuidance>
-<seriesAdminGuidance>If age 12 through 17 years and Moderna vaccine inadvertently administered instead of Pfizer-BioNTech as the first dose, may administer Moderna vaccine as the second dose (as off-label use, because Moderna vaccine is not authorized in this age group).</seriesAdminGuidance>
 <seriesType>Standard</seriesType>
 <equivalentSeriesGroups>2; 3</equivalentSeriesGroups>
 <requiredGender/>
@@ -205,7 +619,7 @@
 <seriesGroupName>Standard</seriesGroupName>
 <seriesGroup>1</seriesGroup>
 <seriesPriority>A</seriesPriority>
-<seriesPreference>2</seriesPreference>
+<seriesPreference>3</seriesPreference>
 <minAgeToStart/>
 <maxAgeToStart/>
 </selectSeries>
@@ -213,7 +627,7 @@
 <seriesDose>
 <doseNumber>Dose 1</doseNumber>
 <age>
-<absMinAge>0 days</absMinAge>
+<absMinAge>18 years - 4 days</absMinAge>
 <minAge>18 years</minAge>
 <earliestRecAge>18 years</earliestRecAge>
 <latestRecAge/>
@@ -259,9 +673,9 @@
 <seriesDose>
 <doseNumber>Dose 2</doseNumber>
 <age>
-<absMinAge>0 days</absMinAge>
-<minAge>12 years</minAge>
-<earliestRecAge>12 years</earliestRecAge>
+<absMinAge>18 years - 4 days</absMinAge>
+<minAge>18 years</minAge>
+<earliestRecAge>18 years</earliestRecAge>
 <latestRecAge/>
 <maxAge/>
 <effectiveDate/>
@@ -285,21 +699,28 @@
 <fromTargetDose/>
 <fromMostRecent/>
 <fromRelevantObs/>
-<absMinInt>28 days - 4 days</absMinInt>
+<absMinInt>0 days</absMinInt>
 <minInt>28 days</minInt>
 <earliestRecInt>28 days</earliestRecInt>
 <latestRecInt>42 days</latestRecInt>
 <intervalPriority/>
 <effectiveDate/>
-<cessationDate/>
+<cessationDate>20211024</cessationDate>
 </interval>
-<allowableInterval>
+<interval>
 <fromPrevious>Y</fromPrevious>
 <fromTargetDose/>
-<absMinInt>0 days</absMinInt>
-<effectiveDate/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>28 days - 4 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt>42 days</latestRecInt>
+<intervalPriority/>
+<effectiveDate>20211025</effectiveDate>
 <cessationDate/>
-</allowableInterval>
+</interval>
+<allowableInterval/>
 <preferableVaccine>
 <vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
 <cvx>207</cvx>
@@ -321,15 +742,122 @@
 <recurringDose>No</recurringDose>
 <seasonalRecommendation/>
 </seriesDose>
+<seriesDose>
+<doseNumber>Dose 3</doseNumber>
+<age>
+<absMinAge>0 days</absMinAge>
+<minAge>65 years</minAge>
+<earliestRecAge>65 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>N</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent>208; 210; 211; 212; 213</fromMostRecent>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<interval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>6 months - 4 days</absMinInt>
+<minInt>6 months</minInt>
+<earliestRecInt>6 months</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<allowableInterval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<absMinInt>0 days</absMinInt>
+<effectiveDate/>
+<cessationDate/>
+</allowableInterval>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.25</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>12 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.3</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, Unspecified Formulation</vaccineType>
+<cvx>213</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<inadvertentVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+</inadvertentVaccine>
+<conditionalSkip/>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
 </series>
 <series>
-<seriesName>1-dose Janssen series</seriesName>
+<seriesName>2-dose Janssen series</seriesName>
 <targetDisease>COVID-19</targetDisease>
 <vaccineGroup>COVID-19</vaccineGroup>
 <seriesAdminGuidance>COVID-19 vaccines and other vaccines may now be administered without regard to timing. This includes simultaneous administration of COVID-19 vaccines and other vaccines on the same day, as well as coadministration within 14 days. It is unknown whether reactogenicity of COVID-19 vaccine is increased with coadministration, including with other vaccines known to be more reactogenic, such as adjuvanted vaccines or live vaccines. When deciding whether to coadminister another vaccine(s) with COVID-19 vaccines, providers should consider whether the patient is behind or at risk of becoming behind on recommended vaccines, their risk of vaccine-preventable disease (e.g., during an outbreak or occupational exposures), and the reactogenicity profile of the vaccines.</seriesAdminGuidance>
 <seriesAdminGuidance>Vaccination should be deferred until recovery from acute illness (if person had symptoms) and criteria have been met to discontinue isolation.</seriesAdminGuidance>
-<seriesAdminGuidance>Current evidence suggests that the risk of SARS-CoV-2 reinfection is low in the months after initial infection but may increase with time due to waning immunity. Thus, people with a history of MIS-C or MIS-A should consider delaying vaccination until they have recovered from illness and for 90 days after the date of diagnosis of MIS-C or MIS-A, recognizing that the risk of reinfection and, therefore, the benefit from vaccination, might increase with time following initial infection.</seriesAdminGuidance>
+<seriesAdminGuidance>Given the lack of data on the safety of COVID-19 vaccines in people with a history of MIS-C or MIS-A, a conversation between the patient, their guardian(s), and their clinical team or a specialist is strongly encouraged to assist with decisions about the use of COVID-19 vaccines.</seriesAdminGuidance>
 <seriesAdminGuidance>Currently no data on safety or efficacy of COVID-19 vaccination in persons who received monoclonal antibodies or convalescent plasma as part of COVID-19 treatment. Vaccination should be deferred for at least 90 days to avoid interference of the treatment with vaccine-induced immune responses.</seriesAdminGuidance>
+<seriesAdminGuidance>Because the efficacy of the Janssen vaccine in people aged less than 18 years has not been established, a single dose of the Pfizer-BioNTech COVID-19 Vaccine could be considered at least 2 months after the Janssen COVID-19 Vaccine.</seriesAdminGuidance>
 <seriesType>Standard</seriesType>
 <equivalentSeriesGroups>2; 3</equivalentSeriesGroups>
 <requiredGender/>
@@ -339,7 +867,7 @@
 <seriesGroupName>Standard</seriesGroupName>
 <seriesGroup>1</seriesGroup>
 <seriesPriority>A</seriesPriority>
-<seriesPreference>3</seriesPreference>
+<seriesPreference>4</seriesPreference>
 <minAgeToStart/>
 <maxAgeToStart/>
 </selectSeries>
@@ -390,15 +918,133 @@
 <recurringDose>No</recurringDose>
 <seasonalRecommendation/>
 </seriesDose>
+<seriesDose>
+<doseNumber>Dose 2</doseNumber>
+<age>
+<absMinAge>0 days</absMinAge>
+<minAge>18 years</minAge>
+<earliestRecAge>18 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>8 weeks - 4 days</absMinInt>
+<minInt>8 weeks</minInt>
+<earliestRecInt>8 weeks</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<allowableInterval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<absMinInt>0 days</absMinInt>
+<effectiveDate/>
+<cessationDate/>
+</allowableInterval>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.25</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>12 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.3</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, Unspecified Formulation</vaccineType>
+<cvx>213</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<inadvertentVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+</inadvertentVaccine>
+<conditionalSkip>
+<context>Forecast</context>
+<setLogic>n/a</setLogic>
+<set>
+<setID>1</setID>
+<setDescription>Target Dose should not be forecasted for anyone under 18 years of age</setDescription>
+<effectiveDate/>
+<cessationDate/>
+<conditionLogic/>
+<condition>
+<conditionID>1</conditionID>
+<conditionType>Age</conditionType>
+<startDate/>
+<endDate/>
+<beginAge/>
+<endAge>18 years</endAge>
+<interval/>
+<doseCount/>
+<doseType/>
+<doseCountLogic/>
+<vaccineTypes/>
+<seriesGroups/>
+</condition>
+</set>
+</conditionalSkip>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
 </series>
 <series>
-<seriesName>2-dose mRNA series</seriesName>
+<seriesName>3-dose mRNA series</seriesName>
 <targetDisease>COVID-19</targetDisease>
 <vaccineGroup>COVID-19</vaccineGroup>
 <seriesAdminGuidance>COVID-19 vaccines and other vaccines may now be administered without regard to timing. This includes simultaneous administration of COVID-19 vaccines and other vaccines on the same day, as well as coadministration within 14 days. It is unknown whether reactogenicity of COVID-19 vaccine is increased with coadministration, including with other vaccines known to be more reactogenic, such as adjuvanted vaccines or live vaccines. When deciding whether to coadminister another vaccine(s) with COVID-19 vaccines, providers should consider whether the patient is behind or at risk of becoming behind on recommended vaccines, their risk of vaccine-preventable disease (e.g., during an outbreak or occupational exposures), and the reactogenicity profile of the vaccines.</seriesAdminGuidance>
 <seriesAdminGuidance>Vaccination should be deferred until recovery from acute illness (if person had symptoms) and criteria have been met to discontinue isolation.</seriesAdminGuidance>
-<seriesAdminGuidance>Current evidence suggests that the risk of SARS-CoV-2 reinfection is low in the months after initial infection but may increase with time due to waning immunity. Thus, people with a history of MIS-C or MIS-A should consider delaying vaccination until they have recovered from illness and for 90 days after the date of diagnosis of MIS-C or MIS-A, recognizing that the risk of reinfection and, therefore, the benefit from vaccination, might increase with time following initial infection.</seriesAdminGuidance>
+<seriesAdminGuidance>Given the lack of data on the safety of COVID-19 vaccines in people with a history of MIS-C or MIS-A, a conversation between the patient, their guardian(s), and their clinical team or a specialist is strongly encouraged to assist with decisions about the use of COVID-19 vaccines.</seriesAdminGuidance>
 <seriesAdminGuidance>Currently no data on safety or efficacy of COVID-19 vaccination in persons who received monoclonal antibodies or convalescent plasma as part of COVID-19 treatment. Vaccination should be deferred for at least 90 days to avoid interference of the treatment with vaccine-induced immune responses.</seriesAdminGuidance>
+<seriesAdminGuidance>If Moderna vaccine administered as the first dose before 18 years, it is suggested to give Pfizer-BioNTech vaccine as the second dose (at least 28 days after the Moderna vaccine dose) because Pfizer-BioNTech is authorized in this age group.</seriesAdminGuidance>
 <seriesType>Standard</seriesType>
 <equivalentSeriesGroups>2; 3</equivalentSeriesGroups>
 <requiredGender/>
@@ -408,7 +1054,7 @@
 <seriesGroupName>Standard</seriesGroupName>
 <seriesGroup>1</seriesGroup>
 <seriesPriority>A</seriesPriority>
-<seriesPreference>4</seriesPreference>
+<seriesPreference>5</seriesPreference>
 <minAgeToStart/>
 <maxAgeToStart/>
 </selectSeries>
@@ -417,8 +1063,8 @@
 <doseNumber>Dose 1</doseNumber>
 <age>
 <absMinAge>0 days</absMinAge>
-<minAge>12 years</minAge>
-<earliestRecAge>12 years</earliestRecAge>
+<minAge>5 years</minAge>
+<earliestRecAge>5 years</earliestRecAge>
 <latestRecAge/>
 <maxAge/>
 <effectiveDate/>
@@ -458,6 +1104,16 @@
 <volume>0.3</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+<beginAge>5 years</beginAge>
+<endAge>12 years</endAge>
+<tradeName/>
+<mvx/>
+<volume>0.2</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
 <allowableVaccine>
 <vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
 <cvx>207</cvx>
@@ -476,6 +1132,12 @@
 <beginAge>0 days</beginAge>
 <endAge/>
 </allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+<beginAge>0 days</beginAge>
+<endAge>18 years</endAge>
+</allowableVaccine>
 <inadvertentVaccine/>
 <conditionalSkip/>
 <recurringDose>No</recurringDose>
@@ -484,9 +1146,9 @@
 <seriesDose>
 <doseNumber>Dose 2</doseNumber>
 <age>
-<absMinAge/>
-<minAge>12 years</minAge>
-<earliestRecAge>12 years</earliestRecAge>
+<absMinAge>0 days</absMinAge>
+<minAge>5 years</minAge>
+<earliestRecAge>5 years</earliestRecAge>
 <latestRecAge/>
 <maxAge/>
 <effectiveDate/>
@@ -510,10 +1172,120 @@
 <fromTargetDose/>
 <fromMostRecent/>
 <fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt>42 days</latestRecInt>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate>20211024</cessationDate>
+</interval>
+<interval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent/>
+<fromRelevantObs/>
 <absMinInt>28 days - 4 days</absMinInt>
 <minInt>28 days</minInt>
 <earliestRecInt>28 days</earliestRecInt>
 <latestRecInt>42 days</latestRecInt>
+<intervalPriority/>
+<effectiveDate>20211025</effectiveDate>
+<cessationDate/>
+</interval>
+<allowableInterval/>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>12 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.3</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+<beginAge>5 years</beginAge>
+<endAge>12 years</endAge>
+<tradeName/>
+<mvx/>
+<volume>0.2</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, Unspecified Formulation</vaccineType>
+<cvx>213</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+<beginAge>0 days</beginAge>
+<endAge>18 years</endAge>
+</allowableVaccine>
+<inadvertentVaccine/>
+<conditionalSkip/>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
+<seriesDose>
+<doseNumber>Dose 3</doseNumber>
+<age>
+<absMinAge>0 days</absMinAge>
+<minAge>65 years</minAge>
+<earliestRecAge>65 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>N</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent>210; 211; 212</fromMostRecent>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<interval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>6 months - 4 days</absMinInt>
+<minInt>6 months</minInt>
+<earliestRecInt>6 months</earliestRecInt>
+<latestRecInt/>
 <intervalPriority/>
 <effectiveDate/>
 <cessationDate/>
@@ -536,6 +1308,16 @@
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
 <preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.25</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
 <vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
 <cvx>208</cvx>
 <beginAge>12 years</beginAge>
@@ -545,6 +1327,22 @@
 <volume>0.3</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
+<preferableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
 <allowableVaccine>
 <vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
 <cvx>207</cvx>
@@ -558,19 +1356,52 @@
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
 <vaccineType>SARS-COV-2 (COVID-19) vaccine, Unspecified Formulation</vaccineType>
 <cvx>213</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
 </allowableVaccine>
-<inadvertentVaccine/>
-<conditionalSkip/>
+<inadvertentVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+</inadvertentVaccine>
+<conditionalSkip>
+<context>Forecast</context>
+<setLogic>n/a</setLogic>
+<set>
+<setID>1</setID>
+<setDescription>Target Dose should not be forecasted for anyone under 18 years of age</setDescription>
+<effectiveDate/>
+<cessationDate/>
+<conditionLogic/>
+<condition>
+<conditionID>1</conditionID>
+<conditionType>Age</conditionType>
+<startDate/>
+<endDate/>
+<beginAge/>
+<endAge>18 years</endAge>
+<interval/>
+<doseCount/>
+<doseType/>
+<doseCountLogic/>
+<vaccineTypes/>
+<seriesGroups/>
+</condition>
+</set>
+</conditionalSkip>
 <recurringDose>No</recurringDose>
 <seasonalRecommendation/>
 </seriesDose>
 </series>
 <series>
-<seriesName>Risk 3-dose Pfizer series</seriesName>
+<seriesName>Risk 4-dose Immunocompromised Pfizer series</seriesName>
 <targetDisease>COVID-19</targetDisease>
 <vaccineGroup>COVID-19</vaccineGroup>
 <seriesAdminGuidance>A patients clinical team is best positioned to determine the degree of immune compromise and appropriate timing of vaccination.
@@ -578,7 +1409,7 @@
 Factors to consider in assessing the general level of immune competence in a patient include disease severity, duration, clinical stability, complications, comorbidities, and any potentially immune-suppressing treatment.</seriesAdminGuidance>
 <seriesAdminGuidance>COVID-19 vaccines and other vaccines may now be administered without regard to timing. This includes simultaneous administration of COVID-19 vaccines and other vaccines on the same day, as well as coadministration within 14 days. It is unknown whether reactogenicity of COVID-19 vaccine is increased with coadministration, including with other vaccines known to be more reactogenic, such as adjuvanted vaccines or live vaccines. When deciding whether to coadminister another vaccine(s) with COVID-19 vaccines, providers should consider whether the patient is behind or at risk of becoming behind on recommended vaccines, their risk of vaccine-preventable disease (e.g., during an outbreak or occupational exposures), and the reactogenicity profile of the vaccines.</seriesAdminGuidance>
 <seriesAdminGuidance>Vaccination should be deferred until recovery from acute illness (if person had symptoms) and criteria have been met to discontinue isolation.</seriesAdminGuidance>
-<seriesAdminGuidance>Current evidence suggests that the risk of SARS-CoV-2 reinfection is low in the months after initial infection but may increase with time due to waning immunity. Thus, people with a history of MIS-C or MIS-A should consider delaying vaccination until they have recovered from illness and for 90 days after the date of diagnosis of MIS-C or MIS-A, recognizing that the risk of reinfection and, therefore, the benefit from vaccination, might increase with time following initial infection.</seriesAdminGuidance>
+<seriesAdminGuidance>Given the lack of data on the safety of COVID-19 vaccines in people with a history of MIS-C or MIS-A, a conversation between the patient, their guardian(s), and their clinical team or a specialist is strongly encouraged to assist with decisions about the use of COVID-19 vaccines.</seriesAdminGuidance>
 <seriesAdminGuidance>Currently no data on safety or efficacy of COVID-19 vaccination in persons who received monoclonal antibodies or convalescent plasma as part of COVID-19 treatment. Vaccination should be deferred for at least 90 days to avoid interference of the treatment with vaccine-induced immune responses.</seriesAdminGuidance>
 <seriesType>Risk</seriesType>
 <equivalentSeriesGroups>3</equivalentSeriesGroups>
@@ -754,6 +1585,12 @@ Factors to consider in assessing the general level of immune competence in a pat
 <beginAge>0 days</beginAge>
 <endAge/>
 </allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+<beginAge>0 days</beginAge>
+<endAge>18 years</endAge>
+</allowableVaccine>
 <inadvertentVaccine/>
 <conditionalSkip/>
 <recurringDose>No</recurringDose>
@@ -788,21 +1625,28 @@ Factors to consider in assessing the general level of immune competence in a pat
 <fromTargetDose/>
 <fromMostRecent/>
 <fromRelevantObs/>
-<absMinInt>21 days - 4 days</absMinInt>
+<absMinInt>0 days</absMinInt>
 <minInt>21 days</minInt>
 <earliestRecInt>21 days</earliestRecInt>
 <latestRecInt>42 days</latestRecInt>
 <intervalPriority/>
 <effectiveDate/>
-<cessationDate/>
+<cessationDate>20211024</cessationDate>
 </interval>
-<allowableInterval>
+<interval>
 <fromPrevious>Y</fromPrevious>
 <fromTargetDose/>
-<absMinInt>0 days</absMinInt>
-<effectiveDate/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>21 days - 4 days</absMinInt>
+<minInt>21 days</minInt>
+<earliestRecInt>21 days</earliestRecInt>
+<latestRecInt>42 days</latestRecInt>
+<intervalPriority/>
+<effectiveDate>20211025</effectiveDate>
 <cessationDate/>
-</allowableInterval>
+</interval>
+<allowableInterval/>
 <preferableVaccine>
 <vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
 <cvx>208</cvx>
@@ -818,6 +1662,12 @@ Factors to consider in assessing the general level of immune competence in a pat
 <cvx>208</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+<beginAge>0 days</beginAge>
+<endAge>18 years</endAge>
 </allowableVaccine>
 <inadvertentVaccine/>
 <conditionalSkip/>
@@ -853,21 +1703,28 @@ Factors to consider in assessing the general level of immune competence in a pat
 <fromTargetDose/>
 <fromMostRecent/>
 <fromRelevantObs/>
-<absMinInt>28 days - 4 days</absMinInt>
+<absMinInt>0 days</absMinInt>
 <minInt>28 days</minInt>
 <earliestRecInt>28 days</earliestRecInt>
 <latestRecInt>42 days</latestRecInt>
 <intervalPriority/>
 <effectiveDate/>
-<cessationDate/>
+<cessationDate>20211024</cessationDate>
 </interval>
-<allowableInterval>
+<interval>
 <fromPrevious>Y</fromPrevious>
 <fromTargetDose/>
-<absMinInt>0 days</absMinInt>
-<effectiveDate/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>28 days - 4 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt>42 days</latestRecInt>
+<intervalPriority/>
+<effectiveDate>20211025</effectiveDate>
 <cessationDate/>
-</allowableInterval>
+</interval>
+<allowableInterval/>
 <preferableVaccine>
 <vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
 <cvx>208</cvx>
@@ -884,14 +1741,150 @@ Factors to consider in assessing the general level of immune competence in a pat
 <beginAge>0 days</beginAge>
 <endAge/>
 </allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+<beginAge>0 days</beginAge>
+<endAge>18 years</endAge>
+</allowableVaccine>
 <inadvertentVaccine/>
 <conditionalSkip/>
 <recurringDose>No</recurringDose>
 <seasonalRecommendation/>
 </seriesDose>
+<seriesDose>
+<doseNumber>Dose 4</doseNumber>
+<age>
+<absMinAge>0 days</absMinAge>
+<minAge>18 years</minAge>
+<earliestRecAge>18 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>N</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent>207; 210; 211; 212; 213</fromMostRecent>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<interval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>6 months - 4 days</absMinInt>
+<minInt>6 months</minInt>
+<earliestRecInt>6 months</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<allowableInterval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<absMinInt>0 days</absMinInt>
+<effectiveDate/>
+<cessationDate/>
+</allowableInterval>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.25</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>12 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.3</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, Unspecified Formulation</vaccineType>
+<cvx>213</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<inadvertentVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+</inadvertentVaccine>
+<conditionalSkip>
+<context>Forecast</context>
+<setLogic>n/a</setLogic>
+<set>
+<setID>1</setID>
+<setDescription>Target Dose should not be forecasted for anyone under 18 years of age</setDescription>
+<effectiveDate/>
+<cessationDate/>
+<conditionLogic/>
+<condition>
+<conditionID>1</conditionID>
+<conditionType>Age</conditionType>
+<startDate/>
+<endDate/>
+<beginAge/>
+<endAge>18 years</endAge>
+<interval/>
+<doseCount/>
+<doseType/>
+<doseCountLogic/>
+<vaccineTypes/>
+<seriesGroups/>
+</condition>
+</set>
+</conditionalSkip>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
 </series>
 <series>
-<seriesName>Risk 3-dose Moderna series</seriesName>
+<seriesName>Risk 4-dose Immunocompromised Moderna series</seriesName>
 <targetDisease>COVID-19</targetDisease>
 <vaccineGroup>COVID-19</vaccineGroup>
 <seriesAdminGuidance>A patients clinical team is best positioned to determine the degree of immune compromise and appropriate timing of vaccination.
@@ -899,9 +1892,8 @@ Factors to consider in assessing the general level of immune competence in a pat
 Factors to consider in assessing the general level of immune competence in a patient include disease severity, duration, clinical stability, complications, comorbidities, and any potentially immune-suppressing treatment.</seriesAdminGuidance>
 <seriesAdminGuidance>COVID-19 vaccines and other vaccines may now be administered without regard to timing. This includes simultaneous administration of COVID-19 vaccines and other vaccines on the same day, as well as coadministration within 14 days. It is unknown whether reactogenicity of COVID-19 vaccine is increased with coadministration, including with other vaccines known to be more reactogenic, such as adjuvanted vaccines or live vaccines. When deciding whether to coadminister another vaccine(s) with COVID-19 vaccines, providers should consider whether the patient is behind or at risk of becoming behind on recommended vaccines, their risk of vaccine-preventable disease (e.g., during an outbreak or occupational exposures), and the reactogenicity profile of the vaccines.</seriesAdminGuidance>
 <seriesAdminGuidance>Vaccination should be deferred until recovery from acute illness (if person had symptoms) and criteria have been met to discontinue isolation.</seriesAdminGuidance>
-<seriesAdminGuidance>Current evidence suggests that the risk of SARS-CoV-2 reinfection is low in the months after initial infection but may increase with time due to waning immunity. Thus, people with a history of MIS-C or MIS-A should consider delaying vaccination until they have recovered from illness and for 90 days after the date of diagnosis of MIS-C or MIS-A, recognizing that the risk of reinfection and, therefore, the benefit from vaccination, might increase with time following initial infection.</seriesAdminGuidance>
+<seriesAdminGuidance>Given the lack of data on the safety of COVID-19 vaccines in people with a history of MIS-C or MIS-A, a conversation between the patient, their guardian(s), and their clinical team or a specialist is strongly encouraged to assist with decisions about the use of COVID-19 vaccines.</seriesAdminGuidance>
 <seriesAdminGuidance>Currently no data on safety or efficacy of COVID-19 vaccination in persons who received monoclonal antibodies or convalescent plasma as part of COVID-19 treatment. Vaccination should be deferred for at least 90 days to avoid interference of the treatment with vaccine-induced immune responses.</seriesAdminGuidance>
-<seriesAdminGuidance>If age 12 through 17 years and Moderna vaccine inadvertently administered instead of Pfizer-BioNTech as the first dose, may administer Moderna vaccine as the second dose (as off-label use, because Moderna vaccine is not authorized in this age group).</seriesAdminGuidance>
 <seriesType>Risk</seriesType>
 <equivalentSeriesGroups>3</equivalentSeriesGroups>
 <requiredGender/>
@@ -1038,7 +2030,7 @@ Factors to consider in assessing the general level of immune competence in a pat
 <seriesDose>
 <doseNumber>Dose 1</doseNumber>
 <age>
-<absMinAge>0 days</absMinAge>
+<absMinAge>18 years - 4 days</absMinAge>
 <minAge>18 years</minAge>
 <earliestRecAge>18 years</earliestRecAge>
 <latestRecAge/>
@@ -1084,9 +2076,9 @@ Factors to consider in assessing the general level of immune competence in a pat
 <seriesDose>
 <doseNumber>Dose 2</doseNumber>
 <age>
-<absMinAge>0 days</absMinAge>
-<minAge>12 years</minAge>
-<earliestRecAge>12 years</earliestRecAge>
+<absMinAge>18 years - 4 days</absMinAge>
+<minAge>18 years</minAge>
+<earliestRecAge>18 years</earliestRecAge>
 <latestRecAge/>
 <maxAge/>
 <effectiveDate/>
@@ -1110,21 +2102,28 @@ Factors to consider in assessing the general level of immune competence in a pat
 <fromTargetDose/>
 <fromMostRecent/>
 <fromRelevantObs/>
-<absMinInt>28 days - 4 days</absMinInt>
+<absMinInt>0 days</absMinInt>
 <minInt>28 days</minInt>
 <earliestRecInt>28 days</earliestRecInt>
 <latestRecInt>42 days</latestRecInt>
 <intervalPriority/>
 <effectiveDate/>
-<cessationDate/>
+<cessationDate>20211024</cessationDate>
 </interval>
-<allowableInterval>
+<interval>
 <fromPrevious>Y</fromPrevious>
 <fromTargetDose/>
-<absMinInt>0 days</absMinInt>
-<effectiveDate/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>28 days - 4 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt>42 days</latestRecInt>
+<intervalPriority/>
+<effectiveDate>20211025</effectiveDate>
 <cessationDate/>
-</allowableInterval>
+</interval>
+<allowableInterval/>
 <preferableVaccine>
 <vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
 <cvx>207</cvx>
@@ -1149,9 +2148,9 @@ Factors to consider in assessing the general level of immune competence in a pat
 <seriesDose>
 <doseNumber>Dose 3</doseNumber>
 <age>
-<absMinAge>0 days</absMinAge>
-<minAge>12 years</minAge>
-<earliestRecAge>12 years</earliestRecAge>
+<absMinAge>18 years - 4 days</absMinAge>
+<minAge>18 years</minAge>
+<earliestRecAge>18 years</earliestRecAge>
 <latestRecAge/>
 <maxAge/>
 <effectiveDate/>
@@ -1175,21 +2174,28 @@ Factors to consider in assessing the general level of immune competence in a pat
 <fromTargetDose/>
 <fromMostRecent/>
 <fromRelevantObs/>
-<absMinInt>28 days - 4 days</absMinInt>
+<absMinInt>0 days</absMinInt>
 <minInt>28 days</minInt>
 <earliestRecInt>28 days</earliestRecInt>
 <latestRecInt>42 days</latestRecInt>
 <intervalPriority/>
 <effectiveDate/>
-<cessationDate/>
+<cessationDate>20211024</cessationDate>
 </interval>
-<allowableInterval>
+<interval>
 <fromPrevious>Y</fromPrevious>
 <fromTargetDose/>
-<absMinInt>0 days</absMinInt>
-<effectiveDate/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>28 days - 4 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt>42 days</latestRecInt>
+<intervalPriority/>
+<effectiveDate>20211025</effectiveDate>
 <cessationDate/>
-</allowableInterval>
+</interval>
+<allowableInterval/>
 <preferableVaccine>
 <vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
 <cvx>207</cvx>
@@ -1211,9 +2217,115 @@ Factors to consider in assessing the general level of immune competence in a pat
 <recurringDose>No</recurringDose>
 <seasonalRecommendation/>
 </seriesDose>
+<seriesDose>
+<doseNumber>Dose 4</doseNumber>
+<age>
+<absMinAge>18 years - 4 days</absMinAge>
+<minAge>18 years</minAge>
+<earliestRecAge>18 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>N</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent>208; 210; 211; 212; 213</fromMostRecent>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<interval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>6 months - 4 days</absMinInt>
+<minInt>6 months</minInt>
+<earliestRecInt>6 months</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<allowableInterval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<absMinInt>0 days</absMinInt>
+<effectiveDate/>
+<cessationDate/>
+</allowableInterval>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.25</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>12 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.3</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, Unspecified Formulation</vaccineType>
+<cvx>213</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<inadvertentVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+</inadvertentVaccine>
+<conditionalSkip/>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
 </series>
 <series>
-<seriesName>Risk 1-dose Janssen series</seriesName>
+<seriesName>Risk 2-dose Immunocompromised Janssen series</seriesName>
 <targetDisease>COVID-19</targetDisease>
 <vaccineGroup>COVID-19</vaccineGroup>
 <seriesAdminGuidance>A patients clinical team is best positioned to determine the degree of immune compromise and appropriate timing of vaccination.
@@ -1221,8 +2333,9 @@ Factors to consider in assessing the general level of immune competence in a pat
 Factors to consider in assessing the general level of immune competence in a patient include disease severity, duration, clinical stability, complications, comorbidities, and any potentially immune-suppressing treatment.</seriesAdminGuidance>
 <seriesAdminGuidance>COVID-19 vaccines and other vaccines may now be administered without regard to timing. This includes simultaneous administration of COVID-19 vaccines and other vaccines on the same day, as well as coadministration within 14 days. It is unknown whether reactogenicity of COVID-19 vaccine is increased with coadministration, including with other vaccines known to be more reactogenic, such as adjuvanted vaccines or live vaccines. When deciding whether to coadminister another vaccine(s) with COVID-19 vaccines, providers should consider whether the patient is behind or at risk of becoming behind on recommended vaccines, their risk of vaccine-preventable disease (e.g., during an outbreak or occupational exposures), and the reactogenicity profile of the vaccines.</seriesAdminGuidance>
 <seriesAdminGuidance>Vaccination should be deferred until recovery from acute illness (if person had symptoms) and criteria have been met to discontinue isolation.</seriesAdminGuidance>
-<seriesAdminGuidance>Current evidence suggests that the risk of SARS-CoV-2 reinfection is low in the months after initial infection but may increase with time due to waning immunity. Thus, people with a history of MIS-C or MIS-A should consider delaying vaccination until they have recovered from illness and for 90 days after the date of diagnosis of MIS-C or MIS-A, recognizing that the risk of reinfection and, therefore, the benefit from vaccination, might increase with time following initial infection.</seriesAdminGuidance>
+<seriesAdminGuidance>Given the lack of data on the safety of COVID-19 vaccines in people with a history of MIS-C or MIS-A, a conversation between the patient, their guardian(s), and their clinical team or a specialist is strongly encouraged to assist with decisions about the use of COVID-19 vaccines.</seriesAdminGuidance>
 <seriesAdminGuidance>Currently no data on safety or efficacy of COVID-19 vaccination in persons who received monoclonal antibodies or convalescent plasma as part of COVID-19 treatment. Vaccination should be deferred for at least 90 days to avoid interference of the treatment with vaccine-induced immune responses.</seriesAdminGuidance>
+<seriesAdminGuidance>Because the efficacy of the Janssen vaccine in people aged less than 18 years has not been established, a single dose of the Pfizer-BioNTech COVID-19 Vaccine could be considered at least 2 months after the Janssen COVID-19 Vaccine.</seriesAdminGuidance>
 <seriesType>Risk</seriesType>
 <equivalentSeriesGroups>3</equivalentSeriesGroups>
 <requiredGender/>
@@ -1402,9 +2515,126 @@ Factors to consider in assessing the general level of immune competence in a pat
 <recurringDose>No</recurringDose>
 <seasonalRecommendation/>
 </seriesDose>
+<seriesDose>
+<doseNumber>Dose 2</doseNumber>
+<age>
+<absMinAge>0 days</absMinAge>
+<minAge>18 years</minAge>
+<earliestRecAge>18 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>8 weeks - 4 days</absMinInt>
+<minInt>8 weeks</minInt>
+<earliestRecInt>8 weeks</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<allowableInterval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<absMinInt>0 days</absMinInt>
+<effectiveDate/>
+<cessationDate/>
+</allowableInterval>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.25</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>12 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.3</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, Unspecified Formulation</vaccineType>
+<cvx>213</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<inadvertentVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+</inadvertentVaccine>
+<conditionalSkip>
+<context>Forecast</context>
+<setLogic>n/a</setLogic>
+<set>
+<setID>1</setID>
+<setDescription>Target Dose should not be forecasted for anyone under 18 years of age</setDescription>
+<effectiveDate/>
+<cessationDate/>
+<conditionLogic/>
+<condition>
+<conditionID>1</conditionID>
+<conditionType>Age</conditionType>
+<startDate/>
+<endDate/>
+<beginAge/>
+<endAge>18 years</endAge>
+<interval/>
+<doseCount/>
+<doseType/>
+<doseCountLogic/>
+<vaccineTypes/>
+<seriesGroups/>
+</condition>
+</set>
+</conditionalSkip>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
 </series>
 <series>
-<seriesName>Risk 3-dose mRNA series</seriesName>
+<seriesName>Risk 4-dose Immunocompromised mRNA series</seriesName>
 <targetDisease>COVID-19</targetDisease>
 <vaccineGroup>COVID-19</vaccineGroup>
 <seriesAdminGuidance>A patients clinical team is best positioned to determine the degree of immune compromise and appropriate timing of vaccination.
@@ -1412,8 +2642,9 @@ Factors to consider in assessing the general level of immune competence in a pat
 Factors to consider in assessing the general level of immune competence in a patient include disease severity, duration, clinical stability, complications, comorbidities, and any potentially immune-suppressing treatment.</seriesAdminGuidance>
 <seriesAdminGuidance>COVID-19 vaccines and other vaccines may now be administered without regard to timing. This includes simultaneous administration of COVID-19 vaccines and other vaccines on the same day, as well as coadministration within 14 days. It is unknown whether reactogenicity of COVID-19 vaccine is increased with coadministration, including with other vaccines known to be more reactogenic, such as adjuvanted vaccines or live vaccines. When deciding whether to coadminister another vaccine(s) with COVID-19 vaccines, providers should consider whether the patient is behind or at risk of becoming behind on recommended vaccines, their risk of vaccine-preventable disease (e.g., during an outbreak or occupational exposures), and the reactogenicity profile of the vaccines.</seriesAdminGuidance>
 <seriesAdminGuidance>Vaccination should be deferred until recovery from acute illness (if person had symptoms) and criteria have been met to discontinue isolation.</seriesAdminGuidance>
-<seriesAdminGuidance>Current evidence suggests that the risk of SARS-CoV-2 reinfection is low in the months after initial infection but may increase with time due to waning immunity. Thus, people with a history of MIS-C or MIS-A should consider delaying vaccination until they have recovered from illness and for 90 days after the date of diagnosis of MIS-C or MIS-A, recognizing that the risk of reinfection and, therefore, the benefit from vaccination, might increase with time following initial infection.</seriesAdminGuidance>
+<seriesAdminGuidance>Given the lack of data on the safety of COVID-19 vaccines in people with a history of MIS-C or MIS-A, a conversation between the patient, their guardian(s), and their clinical team or a specialist is strongly encouraged to assist with decisions about the use of COVID-19 vaccines.</seriesAdminGuidance>
 <seriesAdminGuidance>Currently no data on safety or efficacy of COVID-19 vaccination in persons who received monoclonal antibodies or convalescent plasma as part of COVID-19 treatment. Vaccination should be deferred for at least 90 days to avoid interference of the treatment with vaccine-induced immune responses.</seriesAdminGuidance>
+<seriesAdminGuidance>If Moderna vaccine administered as the first dose before 18 years, it is suggested to give Pfizer-BioNTech vaccine as the second dose (at least 28 days after the Moderna vaccine dose) because Pfizer-BioNTech is authorized in this age group.</seriesAdminGuidance>
 <seriesType>Risk</seriesType>
 <equivalentSeriesGroups>3</equivalentSeriesGroups>
 <requiredGender/>
@@ -1610,6 +2841,12 @@ Factors to consider in assessing the general level of immune competence in a pat
 <beginAge>0 days</beginAge>
 <endAge/>
 </allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+<beginAge>0 days</beginAge>
+<endAge>18 years</endAge>
+</allowableVaccine>
 <inadvertentVaccine/>
 <conditionalSkip/>
 <recurringDose>No</recurringDose>
@@ -1644,21 +2881,28 @@ Factors to consider in assessing the general level of immune competence in a pat
 <fromTargetDose/>
 <fromMostRecent/>
 <fromRelevantObs/>
-<absMinInt>28 days - 4 days</absMinInt>
+<absMinInt>0 days</absMinInt>
 <minInt>28 days</minInt>
 <earliestRecInt>28 days</earliestRecInt>
 <latestRecInt>42 days</latestRecInt>
 <intervalPriority/>
 <effectiveDate/>
-<cessationDate/>
+<cessationDate>20211024</cessationDate>
 </interval>
-<allowableInterval>
+<interval>
 <fromPrevious>Y</fromPrevious>
 <fromTargetDose/>
-<absMinInt>0 days</absMinInt>
-<effectiveDate/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>28 days - 4 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt>42 days</latestRecInt>
+<intervalPriority/>
+<effectiveDate>20211025</effectiveDate>
 <cessationDate/>
-</allowableInterval>
+</interval>
+<allowableInterval/>
 <preferableVaccine>
 <vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
 <cvx>207</cvx>
@@ -1696,6 +2940,12 @@ Factors to consider in assessing the general level of immune competence in a pat
 <cvx>213</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+<beginAge>0 days</beginAge>
+<endAge>18 years</endAge>
 </allowableVaccine>
 <inadvertentVaccine/>
 <conditionalSkip/>
@@ -1731,21 +2981,28 @@ Factors to consider in assessing the general level of immune competence in a pat
 <fromTargetDose/>
 <fromMostRecent/>
 <fromRelevantObs/>
-<absMinInt>28 days - 4 days</absMinInt>
+<absMinInt>0 days</absMinInt>
 <minInt>28 days</minInt>
 <earliestRecInt>28 days</earliestRecInt>
 <latestRecInt>42 days</latestRecInt>
 <intervalPriority/>
 <effectiveDate/>
-<cessationDate/>
+<cessationDate>20211024</cessationDate>
 </interval>
-<allowableInterval>
+<interval>
 <fromPrevious>Y</fromPrevious>
 <fromTargetDose/>
-<absMinInt>0 days</absMinInt>
-<effectiveDate/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>28 days - 4 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt>42 days</latestRecInt>
+<intervalPriority/>
+<effectiveDate>20211025</effectiveDate>
 <cessationDate/>
-</allowableInterval>
+</interval>
+<allowableInterval/>
 <preferableVaccine>
 <vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
 <cvx>207</cvx>
@@ -1784,8 +3041,2297 @@ Factors to consider in assessing the general level of immune competence in a pat
 <beginAge>0 days</beginAge>
 <endAge/>
 </allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+<beginAge>0 days</beginAge>
+<endAge>18 years</endAge>
+</allowableVaccine>
 <inadvertentVaccine/>
 <conditionalSkip/>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
+<seriesDose>
+<doseNumber>Dose 4</doseNumber>
+<age>
+<absMinAge>0 days</absMinAge>
+<minAge>18 years</minAge>
+<earliestRecAge>18 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>N</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent>210; 211; 212</fromMostRecent>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<interval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>6 months - 4 days</absMinInt>
+<minInt>6 months</minInt>
+<earliestRecInt>6 months</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<allowableInterval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<absMinInt>0 days</absMinInt>
+<effectiveDate/>
+<cessationDate/>
+</allowableInterval>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.25</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>12 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.3</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, Unspecified Formulation</vaccineType>
+<cvx>213</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<inadvertentVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+</inadvertentVaccine>
+<conditionalSkip>
+<context>Forecast</context>
+<setLogic>n/a</setLogic>
+<set>
+<setID>1</setID>
+<setDescription>Target Dose should not be forecasted for anyone under 18 years of age</setDescription>
+<effectiveDate/>
+<cessationDate/>
+<conditionLogic/>
+<condition>
+<conditionID>1</conditionID>
+<conditionType>Age</conditionType>
+<startDate/>
+<endDate/>
+<beginAge/>
+<endAge>18 years</endAge>
+<interval/>
+<doseCount/>
+<doseType/>
+<doseCountLogic/>
+<vaccineTypes/>
+<seriesGroups/>
+</condition>
+</set>
+</conditionalSkip>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
+</series>
+<series>
+<seriesName>Risk 3-dose Increased Risk Pfizer series</seriesName>
+<targetDisease>COVID-19</targetDisease>
+<vaccineGroup>COVID-19</vaccineGroup>
+<seriesAdminGuidance>COVID-19 vaccines and other vaccines may now be administered without regard to timing. This includes simultaneous administration of COVID-19 vaccines and other vaccines on the same day, as well as coadministration within 14 days. It is unknown whether reactogenicity of COVID-19 vaccine is increased with coadministration, including with other vaccines known to be more reactogenic, such as adjuvanted vaccines or live vaccines. When deciding whether to coadminister another vaccine(s) with COVID-19 vaccines, providers should consider whether the patient is behind or at risk of becoming behind on recommended vaccines, their risk of vaccine-preventable disease (e.g., during an outbreak or occupational exposures), and the reactogenicity profile of the vaccines.</seriesAdminGuidance>
+<seriesAdminGuidance>Vaccination should be deferred until recovery from acute illness (if person had symptoms) and criteria have been met to discontinue isolation.</seriesAdminGuidance>
+<seriesAdminGuidance>Given the lack of data on the safety of COVID-19 vaccines in people with a history of MIS-C or MIS-A, a conversation between the patient, their guardian(s), and their clinical team or a specialist is strongly encouraged to assist with decisions about the use of COVID-19 vaccines.</seriesAdminGuidance>
+<seriesAdminGuidance>Currently no data on safety or efficacy of COVID-19 vaccination in persons who received monoclonal antibodies or convalescent plasma as part of COVID-19 treatment. Vaccination should be deferred for at least 90 days to avoid interference of the treatment with vaccine-induced immune responses.</seriesAdminGuidance>
+<seriesType>Risk</seriesType>
+<equivalentSeriesGroups>3</equivalentSeriesGroups>
+<requiredGender/>
+<selectSeries>
+<defaultSeries>No</defaultSeries>
+<productPath>Yes</productPath>
+<seriesGroupName>Increased Risk</seriesGroupName>
+<seriesGroup>2</seriesGroup>
+<seriesPriority>B</seriesPriority>
+<seriesPreference>5</seriesPreference>
+<minAgeToStart/>
+<maxAgeToStart/>
+</selectSeries>
+<indication>
+<observationCode>
+<text>Pregnancy</text>
+<code>007</code>
+</observationCode>
+<description>Administer to persons who are pregnant.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Diabetes</text>
+<code>014</code>
+</observationCode>
+<description>Administer to persons who have diabetes.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Chronic liver disease</text>
+<code>015</code>
+</observationCode>
+<description>Administer to persons who have chronic liver disease.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Chronic heart disease</text>
+<code>016</code>
+</observationCode>
+<description>Administer to persons who have chronic heart disease.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks. Includes heart failure, coronary artery disease, etc.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Chronic lung disease</text>
+<code>017</code>
+</observationCode>
+<description>Administer to persons who have chronic lung disease.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks. Includes COPD</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Asthma</text>
+<code>027</code>
+</observationCode>
+<description>Administer to persons who have asthma.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years with moderate-to-severe asthma should receive a booster shot. Persons aged 18-49 years with moderate-to-severe asthma may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Tuberculosis</text>
+<code>031</code>
+</observationCode>
+<description>Administer to persons who have tuberculosis</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Smoke Cigarettes</text>
+<code>042</code>
+</observationCode>
+<description>Administer to persons who smoke cigarettes.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years who smoke cigarettes (current or former) should receive a booster shot. Persons aged 18-49 years smoke cigarettes (current or former) may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>B-lymphocyte [humoral] - Less severe antibody deficiencies</text>
+<code>146</code>
+</observationCode>
+<description>Administer to persons who have less severe B-lymphocyte [humoral] - antibody deficiencies [e.g., selective IgA deficiency and IgG subclass deficiency].</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Persistent complement, properdin, or factor B deficiency</text>
+<code>151</code>
+</observationCode>
+<description>Administer to persons who have persistent complement component deficiencies, including inherited or chronic deficiencies in C3, C5-9, properdin, factor D, factor H, or who are taking eculizumab [Soliris].</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - not severely immunocompromised</text>
+<code>155</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Anatomical or functional asplenia</text>
+<code>160</code>
+</observationCode>
+<description>Administer to persons with anatomic or functional asplenia, including sickle cell disease.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Chronic renal disease</text>
+<code>161</code>
+</observationCode>
+<description>Administer to persons who have chronic renal disease.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Occupations at increased risk for COVID-19 exposure and transmission</text>
+<code>195</code>
+</observationCode>
+<description>Administer to persons with occupations at increased risk for COVID-19 exposure and transmission.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Occupations at increased risk for COVID-19 exposure and transmission and may get a booster shot based on their individual benefits and risks. Occupatoins at increased risk can be found online at: https://www.cdc.gov/coronavirus/2019-ncov/vaccines/booster-shot.html#HighRisk</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Residing in an institutional setting at increased risk for COVID-19 exposure and transmission</text>
+<code>196</code>
+</observationCode>
+<description>Administer to persons residing in an institutional setting at increased risk for COVID-19 exposure and transmission</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Institutional settings such as health care, schools, correctional facilities, and homeless shelters at increased risk for COVID-19 exposure and transmission and may get a booster shot </guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Resident of long term care facility</text>
+<code>197</code>
+</observationCode>
+<description>Administer to persons residing in a long term care facility</description>
+<beginAge>18 years</beginAge>
+<endAge/>
+<guidance>Persons aged 18 years and older should receive a booster shot.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Cancer</text>
+<code>198</code>
+</observationCode>
+<description>Administer to persons with cancer</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Interstitial lung disease</text>
+<code>199</code>
+</observationCode>
+<description>Administer to persons with interstitial lung disease</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Cystic fibrosis</text>
+<code>200</code>
+</observationCode>
+<description>Administer to persons with cystic fibrosis</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Pulmonary hypertension</text>
+<code>201</code>
+</observationCode>
+<description>Administer to persons with pulmonary hypertension</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Dementia</text>
+<code>202</code>
+</observationCode>
+<description>Administer to persons with dementia</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Down syndrome</text>
+<code>203</code>
+</observationCode>
+<description>Administer to persons with down syndrome</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Obesity</text>
+<code>204</code>
+</observationCode>
+<description>Administer to persons with obesity</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks. Includes BMI calculations of overweight, obese, or severely obese</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Thalassemia</text>
+<code>205</code>
+</observationCode>
+<description>Administer to persons with thalassemia</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Cerebrovascular disease</text>
+<code>206</code>
+</observationCode>
+<description>Administer to persons with cerebrovascular disease such as having a stroke</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Substance use disorder</text>
+<code>207</code>
+</observationCode>
+<description>Administer to persons with substance use disorders (e.g., alcohol, opiod, cocaine)</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Mental health conditions</text>
+<code>208</code>
+</observationCode>
+<description>Administer to persons with mental health conditions</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks. Includes mood disorders, depression, and schizophrenia spectrum disorders.</guidance>
+</indication>
+<seriesDose>
+<doseNumber>Dose 1</doseNumber>
+<age>
+<absMinAge>0 days</absMinAge>
+<minAge>18 years</minAge>
+<earliestRecAge>18 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>N</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent>207; 210; 211; 212; 213</fromMostRecent>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<allowableInterval/>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>12 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.3</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+<beginAge>0 days</beginAge>
+<endAge>18 years</endAge>
+</allowableVaccine>
+<inadvertentVaccine/>
+<conditionalSkip/>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
+<seriesDose>
+<doseNumber>Dose 2</doseNumber>
+<age>
+<absMinAge>0 days</absMinAge>
+<minAge>18 years</minAge>
+<earliestRecAge>18 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>N</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent>207; 210; 211; 212; 213</fromMostRecent>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<interval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>21 days</minInt>
+<earliestRecInt>21 days</earliestRecInt>
+<latestRecInt>42 days</latestRecInt>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate>20211024</cessationDate>
+</interval>
+<interval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>21 days - 4 days</absMinInt>
+<minInt>21 days</minInt>
+<earliestRecInt>21 days</earliestRecInt>
+<latestRecInt>42 days</latestRecInt>
+<intervalPriority/>
+<effectiveDate>20211025</effectiveDate>
+<cessationDate/>
+</interval>
+<allowableInterval/>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>12 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.3</volume>
+<forecastVaccineType>Y</forecastVaccineType>
+</preferableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+<beginAge>0 days</beginAge>
+<endAge>18 years</endAge>
+</allowableVaccine>
+<inadvertentVaccine/>
+<conditionalSkip/>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
+<seriesDose>
+<doseNumber>Dose 3</doseNumber>
+<age>
+<absMinAge>0 days</absMinAge>
+<minAge>18 years</minAge>
+<earliestRecAge>18 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>N</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent>207; 210; 211; 212; 213</fromMostRecent>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<interval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>6 months - 4 days</absMinInt>
+<minInt>6 months</minInt>
+<earliestRecInt>6 months</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<allowableInterval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<absMinInt>0 days</absMinInt>
+<effectiveDate/>
+<cessationDate/>
+</allowableInterval>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.25</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>12 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.3</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, Unspecified Formulation</vaccineType>
+<cvx>213</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<inadvertentVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+</inadvertentVaccine>
+<conditionalSkip>
+<context>Forecast</context>
+<setLogic>n/a</setLogic>
+<set>
+<setID>1</setID>
+<setDescription>Target Dose should not be forecasted for anyone under 18 years of age</setDescription>
+<effectiveDate/>
+<cessationDate/>
+<conditionLogic/>
+<condition>
+<conditionID>1</conditionID>
+<conditionType>Age</conditionType>
+<startDate/>
+<endDate/>
+<beginAge/>
+<endAge>18 years</endAge>
+<interval/>
+<doseCount/>
+<doseType/>
+<doseCountLogic/>
+<vaccineTypes/>
+<seriesGroups/>
+</condition>
+</set>
+</conditionalSkip>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
+</series>
+<series>
+<seriesName>Risk 3-dose Increased Risk Moderna series</seriesName>
+<targetDisease>COVID-19</targetDisease>
+<vaccineGroup>COVID-19</vaccineGroup>
+<seriesAdminGuidance>COVID-19 vaccines and other vaccines may now be administered without regard to timing. This includes simultaneous administration of COVID-19 vaccines and other vaccines on the same day, as well as coadministration within 14 days. It is unknown whether reactogenicity of COVID-19 vaccine is increased with coadministration, including with other vaccines known to be more reactogenic, such as adjuvanted vaccines or live vaccines. When deciding whether to coadminister another vaccine(s) with COVID-19 vaccines, providers should consider whether the patient is behind or at risk of becoming behind on recommended vaccines, their risk of vaccine-preventable disease (e.g., during an outbreak or occupational exposures), and the reactogenicity profile of the vaccines.</seriesAdminGuidance>
+<seriesAdminGuidance>Vaccination should be deferred until recovery from acute illness (if person had symptoms) and criteria have been met to discontinue isolation.</seriesAdminGuidance>
+<seriesAdminGuidance>Given the lack of data on the safety of COVID-19 vaccines in people with a history of MIS-C or MIS-A, a conversation between the patient, their guardian(s), and their clinical team or a specialist is strongly encouraged to assist with decisions about the use of COVID-19 vaccines.</seriesAdminGuidance>
+<seriesAdminGuidance>Currently no data on safety or efficacy of COVID-19 vaccination in persons who received monoclonal antibodies or convalescent plasma as part of COVID-19 treatment. Vaccination should be deferred for at least 90 days to avoid interference of the treatment with vaccine-induced immune responses.</seriesAdminGuidance>
+<seriesType>Risk</seriesType>
+<equivalentSeriesGroups>3</equivalentSeriesGroups>
+<requiredGender/>
+<selectSeries>
+<defaultSeries>No</defaultSeries>
+<productPath>Yes</productPath>
+<seriesGroupName>Increased Risk</seriesGroupName>
+<seriesGroup>2</seriesGroup>
+<seriesPriority>B</seriesPriority>
+<seriesPreference>6</seriesPreference>
+<minAgeToStart/>
+<maxAgeToStart/>
+</selectSeries>
+<indication>
+<observationCode>
+<text>Pregnancy</text>
+<code>007</code>
+</observationCode>
+<description>Administer to persons who are pregnant.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Diabetes</text>
+<code>014</code>
+</observationCode>
+<description>Administer to persons who have diabetes.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Chronic liver disease</text>
+<code>015</code>
+</observationCode>
+<description>Administer to persons who have chronic liver disease.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Chronic heart disease</text>
+<code>016</code>
+</observationCode>
+<description>Administer to persons who have chronic heart disease.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks. Includes heart failure, coronary artery disease, etc.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Chronic lung disease</text>
+<code>017</code>
+</observationCode>
+<description>Administer to persons who have chronic lung disease.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks. Includes COPD</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Asthma</text>
+<code>027</code>
+</observationCode>
+<description>Administer to persons who have asthma.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years with moderate-to-severe asthma should receive a booster shot. Persons aged 18-49 years with moderate-to-severe asthma may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Tuberculosis</text>
+<code>031</code>
+</observationCode>
+<description>Administer to persons who have tuberculosis</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Smoke Cigarettes</text>
+<code>042</code>
+</observationCode>
+<description>Administer to persons who smoke cigarettes.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years who smoke cigarettes (current or former) should receive a booster shot. Persons aged 18-49 years smoke cigarettes (current or former) may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>B-lymphocyte [humoral] - Less severe antibody deficiencies</text>
+<code>146</code>
+</observationCode>
+<description>Administer to persons who have less severe B-lymphocyte [humoral] - antibody deficiencies [e.g., selective IgA deficiency and IgG subclass deficiency].</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Persistent complement, properdin, or factor B deficiency</text>
+<code>151</code>
+</observationCode>
+<description>Administer to persons who have persistent complement component deficiencies, including inherited or chronic deficiencies in C3, C5-9, properdin, factor D, factor H, or who are taking eculizumab [Soliris].</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - not severely immunocompromised</text>
+<code>155</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Anatomical or functional asplenia</text>
+<code>160</code>
+</observationCode>
+<description>Administer to persons with anatomic or functional asplenia, including sickle cell disease.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Chronic renal disease</text>
+<code>161</code>
+</observationCode>
+<description>Administer to persons who have chronic renal disease.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Occupations at increased risk for COVID-19 exposure and transmission</text>
+<code>195</code>
+</observationCode>
+<description>Administer to persons with occupations at increased risk for COVID-19 exposure and transmission.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Occupations at increased risk for COVID-19 exposure and transmission and may get a booster shot based on their individual benefits and risks. Occupatoins at increased risk can be found online at: https://www.cdc.gov/coronavirus/2019-ncov/vaccines/booster-shot.html#HighRisk</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Residing in an institutional setting at increased risk for COVID-19 exposure and transmission</text>
+<code>196</code>
+</observationCode>
+<description>Administer to persons residing in an institutional setting at increased risk for COVID-19 exposure and transmission</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Institutional settings such as health care, schools, correctional facilities, and homeless shelters at increased risk for COVID-19 exposure and transmission and may get a booster shot </guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Resident of long term care facility</text>
+<code>197</code>
+</observationCode>
+<description>Administer to persons residing in a long term care facility</description>
+<beginAge>18 years</beginAge>
+<endAge/>
+<guidance>Persons aged 18 years and older should receive a booster shot.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Cancer</text>
+<code>198</code>
+</observationCode>
+<description>Administer to persons with cancer</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Interstitial lung disease</text>
+<code>199</code>
+</observationCode>
+<description>Administer to persons with interstitial lung disease</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Cystic fibrosis</text>
+<code>200</code>
+</observationCode>
+<description>Administer to persons with cystic fibrosis</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Pulmonary hypertension</text>
+<code>201</code>
+</observationCode>
+<description>Administer to persons with pulmonary hypertension</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Dementia</text>
+<code>202</code>
+</observationCode>
+<description>Administer to persons with dementia</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Down syndrome</text>
+<code>203</code>
+</observationCode>
+<description>Administer to persons with down syndrome</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Obesity</text>
+<code>204</code>
+</observationCode>
+<description>Administer to persons with obesity</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks. Includes BMI calculations of overweight, obese, or severely obese</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Thalassemia</text>
+<code>205</code>
+</observationCode>
+<description>Administer to persons with thalassemia</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Cerebrovascular disease</text>
+<code>206</code>
+</observationCode>
+<description>Administer to persons with cerebrovascular disease such as having a stroke</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Substance use disorder</text>
+<code>207</code>
+</observationCode>
+<description>Administer to persons with substance use disorders (e.g., alcohol, opiod, cocaine)</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Mental health conditions</text>
+<code>208</code>
+</observationCode>
+<description>Administer to persons with mental health conditions</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks. Includes mood disorders, depression, and schizophrenia spectrum disorders.</guidance>
+</indication>
+<seriesDose>
+<doseNumber>Dose 1</doseNumber>
+<age>
+<absMinAge>18 years - 4 days</absMinAge>
+<minAge>18 years</minAge>
+<earliestRecAge>18 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>N</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent>208; 210; 211; 212; 213</fromMostRecent>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<allowableInterval/>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<inadvertentVaccine/>
+<conditionalSkip/>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
+<seriesDose>
+<doseNumber>Dose 2</doseNumber>
+<age>
+<absMinAge>18 years - 4 days</absMinAge>
+<minAge>18 years</minAge>
+<earliestRecAge>18 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>N</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent>208; 210; 211; 212; 213</fromMostRecent>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<interval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt>42 days</latestRecInt>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate>20211024</cessationDate>
+</interval>
+<interval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>28 days - 4 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt>42 days</latestRecInt>
+<intervalPriority/>
+<effectiveDate>20211025</effectiveDate>
+<cessationDate/>
+</interval>
+<allowableInterval/>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>Y</forecastVaccineType>
+</preferableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<inadvertentVaccine/>
+<conditionalSkip/>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
+<seriesDose>
+<doseNumber>Dose 3</doseNumber>
+<age>
+<absMinAge>18 years - 4 days</absMinAge>
+<minAge>18 years</minAge>
+<earliestRecAge>18 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>N</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent>208; 210; 211; 212; 213</fromMostRecent>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<interval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>6 months - 4 days</absMinInt>
+<minInt>6 months</minInt>
+<earliestRecInt>6 months</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<allowableInterval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<absMinInt>0 days</absMinInt>
+<effectiveDate/>
+<cessationDate/>
+</allowableInterval>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.25</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>12 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.3</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, Unspecified Formulation</vaccineType>
+<cvx>213</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<inadvertentVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+</inadvertentVaccine>
+<conditionalSkip/>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
+</series>
+<series>
+<seriesName>Risk 2-dose Increased Risk Janssen series</seriesName>
+<targetDisease>COVID-19</targetDisease>
+<vaccineGroup>COVID-19</vaccineGroup>
+<seriesAdminGuidance>COVID-19 vaccines and other vaccines may now be administered without regard to timing. This includes simultaneous administration of COVID-19 vaccines and other vaccines on the same day, as well as coadministration within 14 days. It is unknown whether reactogenicity of COVID-19 vaccine is increased with coadministration, including with other vaccines known to be more reactogenic, such as adjuvanted vaccines or live vaccines. When deciding whether to coadminister another vaccine(s) with COVID-19 vaccines, providers should consider whether the patient is behind or at risk of becoming behind on recommended vaccines, their risk of vaccine-preventable disease (e.g., during an outbreak or occupational exposures), and the reactogenicity profile of the vaccines.</seriesAdminGuidance>
+<seriesAdminGuidance>Vaccination should be deferred until recovery from acute illness (if person had symptoms) and criteria have been met to discontinue isolation.</seriesAdminGuidance>
+<seriesAdminGuidance>Given the lack of data on the safety of COVID-19 vaccines in people with a history of MIS-C or MIS-A, a conversation between the patient, their guardian(s), and their clinical team or a specialist is strongly encouraged to assist with decisions about the use of COVID-19 vaccines.</seriesAdminGuidance>
+<seriesAdminGuidance>Currently no data on safety or efficacy of COVID-19 vaccination in persons who received monoclonal antibodies or convalescent plasma as part of COVID-19 treatment. Vaccination should be deferred for at least 90 days to avoid interference of the treatment with vaccine-induced immune responses.</seriesAdminGuidance>
+<seriesAdminGuidance>Because the efficacy of the Janssen vaccine in people aged less than 18 years has not been established, a single dose of the Pfizer-BioNTech COVID-19 Vaccine could be considered at least 2 months after the Janssen COVID-19 Vaccine.</seriesAdminGuidance>
+<seriesType>Risk</seriesType>
+<equivalentSeriesGroups>3</equivalentSeriesGroups>
+<requiredGender/>
+<selectSeries>
+<defaultSeries>No</defaultSeries>
+<productPath>Yes</productPath>
+<seriesGroupName>Increased Risk</seriesGroupName>
+<seriesGroup>2</seriesGroup>
+<seriesPriority>B</seriesPriority>
+<seriesPreference>7</seriesPreference>
+<minAgeToStart/>
+<maxAgeToStart/>
+</selectSeries>
+<indication>
+<observationCode>
+<text>Pregnancy</text>
+<code>007</code>
+</observationCode>
+<description>Administer to persons who are pregnant.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Diabetes</text>
+<code>014</code>
+</observationCode>
+<description>Administer to persons who have diabetes.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Chronic liver disease</text>
+<code>015</code>
+</observationCode>
+<description>Administer to persons who have chronic liver disease.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Chronic heart disease</text>
+<code>016</code>
+</observationCode>
+<description>Administer to persons who have chronic heart disease.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks. Includes heart failure, coronary artery disease, etc.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Chronic lung disease</text>
+<code>017</code>
+</observationCode>
+<description>Administer to persons who have chronic lung disease.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks. Includes COPD</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Asthma</text>
+<code>027</code>
+</observationCode>
+<description>Administer to persons who have asthma.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years with moderate-to-severe asthma should receive a booster shot. Persons aged 18-49 years with moderate-to-severe asthma may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Tuberculosis</text>
+<code>031</code>
+</observationCode>
+<description>Administer to persons who have tuberculosis</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Smoke Cigarettes</text>
+<code>042</code>
+</observationCode>
+<description>Administer to persons who smoke cigarettes.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years who smoke cigarettes (current or former) should receive a booster shot. Persons aged 18-49 years smoke cigarettes (current or former) may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>B-lymphocyte [humoral] - Less severe antibody deficiencies</text>
+<code>146</code>
+</observationCode>
+<description>Administer to persons who have less severe B-lymphocyte [humoral] - antibody deficiencies [e.g., selective IgA deficiency and IgG subclass deficiency].</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Persistent complement, properdin, or factor B deficiency</text>
+<code>151</code>
+</observationCode>
+<description>Administer to persons who have persistent complement component deficiencies, including inherited or chronic deficiencies in C3, C5-9, properdin, factor D, factor H, or who are taking eculizumab [Soliris].</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - not severely immunocompromised</text>
+<code>155</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Anatomical or functional asplenia</text>
+<code>160</code>
+</observationCode>
+<description>Administer to persons with anatomic or functional asplenia, including sickle cell disease.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Chronic renal disease</text>
+<code>161</code>
+</observationCode>
+<description>Administer to persons who have chronic renal disease.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Occupations at increased risk for COVID-19 exposure and transmission</text>
+<code>195</code>
+</observationCode>
+<description>Administer to persons with occupations at increased risk for COVID-19 exposure and transmission.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Occupations at increased risk for COVID-19 exposure and transmission and may get a booster shot based on their individual benefits and risks. Occupatoins at increased risk can be found online at: https://www.cdc.gov/coronavirus/2019-ncov/vaccines/booster-shot.html#HighRisk</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Residing in an institutional setting at increased risk for COVID-19 exposure and transmission</text>
+<code>196</code>
+</observationCode>
+<description>Administer to persons residing in an institutional setting at increased risk for COVID-19 exposure and transmission</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Institutional settings such as health care, schools, correctional facilities, and homeless shelters at increased risk for COVID-19 exposure and transmission and may get a booster shot </guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Resident of long term care facility</text>
+<code>197</code>
+</observationCode>
+<description>Administer to persons residing in a long term care facility</description>
+<beginAge>18 years</beginAge>
+<endAge/>
+<guidance>Persons aged 18 years and older should receive a booster shot.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Cancer</text>
+<code>198</code>
+</observationCode>
+<description>Administer to persons with cancer</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Interstitial lung disease</text>
+<code>199</code>
+</observationCode>
+<description>Administer to persons with interstitial lung disease</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Cystic fibrosis</text>
+<code>200</code>
+</observationCode>
+<description>Administer to persons with cystic fibrosis</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Pulmonary hypertension</text>
+<code>201</code>
+</observationCode>
+<description>Administer to persons with pulmonary hypertension</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Dementia</text>
+<code>202</code>
+</observationCode>
+<description>Administer to persons with dementia</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Down syndrome</text>
+<code>203</code>
+</observationCode>
+<description>Administer to persons with down syndrome</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Obesity</text>
+<code>204</code>
+</observationCode>
+<description>Administer to persons with obesity</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks. Includes BMI calculations of overweight, obese, or severely obese</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Thalassemia</text>
+<code>205</code>
+</observationCode>
+<description>Administer to persons with thalassemia</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Cerebrovascular disease</text>
+<code>206</code>
+</observationCode>
+<description>Administer to persons with cerebrovascular disease such as having a stroke</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Substance use disorder</text>
+<code>207</code>
+</observationCode>
+<description>Administer to persons with substance use disorders (e.g., alcohol, opiod, cocaine)</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Mental health conditions</text>
+<code>208</code>
+</observationCode>
+<description>Administer to persons with mental health conditions</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks. Includes mood disorders, depression, and schizophrenia spectrum disorders.</guidance>
+</indication>
+<seriesDose>
+<doseNumber>Dose 1</doseNumber>
+<age>
+<absMinAge>0 days</absMinAge>
+<minAge>18 years</minAge>
+<earliestRecAge>18 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>N</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent>207; 208; 210; 211; 213</fromMostRecent>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<allowableInterval/>
+<preferableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<inadvertentVaccine/>
+<conditionalSkip/>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
+<seriesDose>
+<doseNumber>Dose 2</doseNumber>
+<age>
+<absMinAge>0 days</absMinAge>
+<minAge>18 years</minAge>
+<earliestRecAge>18 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>8 weeks - 4 days</absMinInt>
+<minInt>8 weeks</minInt>
+<earliestRecInt>8 weeks</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<allowableInterval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<absMinInt>0 days</absMinInt>
+<effectiveDate/>
+<cessationDate/>
+</allowableInterval>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.25</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>12 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.3</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, Unspecified Formulation</vaccineType>
+<cvx>213</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<inadvertentVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+</inadvertentVaccine>
+<conditionalSkip>
+<context>Forecast</context>
+<setLogic>n/a</setLogic>
+<set>
+<setID>1</setID>
+<setDescription>Target Dose should not be forecasted for anyone under 18 years of age</setDescription>
+<effectiveDate/>
+<cessationDate/>
+<conditionLogic/>
+<condition>
+<conditionID>1</conditionID>
+<conditionType>Age</conditionType>
+<startDate/>
+<endDate/>
+<beginAge/>
+<endAge>18 years</endAge>
+<interval/>
+<doseCount/>
+<doseType/>
+<doseCountLogic/>
+<vaccineTypes/>
+<seriesGroups/>
+</condition>
+</set>
+</conditionalSkip>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
+</series>
+<series>
+<seriesName>Risk 3-dose Increased Risk mRNA series</seriesName>
+<targetDisease>COVID-19</targetDisease>
+<vaccineGroup>COVID-19</vaccineGroup>
+<seriesAdminGuidance>COVID-19 vaccines and other vaccines may now be administered without regard to timing. This includes simultaneous administration of COVID-19 vaccines and other vaccines on the same day, as well as coadministration within 14 days. It is unknown whether reactogenicity of COVID-19 vaccine is increased with coadministration, including with other vaccines known to be more reactogenic, such as adjuvanted vaccines or live vaccines. When deciding whether to coadminister another vaccine(s) with COVID-19 vaccines, providers should consider whether the patient is behind or at risk of becoming behind on recommended vaccines, their risk of vaccine-preventable disease (e.g., during an outbreak or occupational exposures), and the reactogenicity profile of the vaccines.</seriesAdminGuidance>
+<seriesAdminGuidance>Vaccination should be deferred until recovery from acute illness (if person had symptoms) and criteria have been met to discontinue isolation.</seriesAdminGuidance>
+<seriesAdminGuidance>Given the lack of data on the safety of COVID-19 vaccines in people with a history of MIS-C or MIS-A, a conversation between the patient, their guardian(s), and their clinical team or a specialist is strongly encouraged to assist with decisions about the use of COVID-19 vaccines.</seriesAdminGuidance>
+<seriesAdminGuidance>Currently no data on safety or efficacy of COVID-19 vaccination in persons who received monoclonal antibodies or convalescent plasma as part of COVID-19 treatment. Vaccination should be deferred for at least 90 days to avoid interference of the treatment with vaccine-induced immune responses.</seriesAdminGuidance>
+<seriesAdminGuidance>If Moderna vaccine administered as the first dose before 18 years, it is suggested to give Pfizer-BioNTech vaccine as the second dose (at least 28 days after the Moderna vaccine dose) because Pfizer-BioNTech is authorized in this age group.</seriesAdminGuidance>
+<seriesType>Risk</seriesType>
+<equivalentSeriesGroups>3</equivalentSeriesGroups>
+<requiredGender/>
+<selectSeries>
+<defaultSeries>No</defaultSeries>
+<productPath>Yes</productPath>
+<seriesGroupName>Increased Risk</seriesGroupName>
+<seriesGroup>2</seriesGroup>
+<seriesPriority>B</seriesPriority>
+<seriesPreference>8</seriesPreference>
+<minAgeToStart/>
+<maxAgeToStart/>
+</selectSeries>
+<indication>
+<observationCode>
+<text>Pregnancy</text>
+<code>007</code>
+</observationCode>
+<description>Administer to persons who are pregnant.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Diabetes</text>
+<code>014</code>
+</observationCode>
+<description>Administer to persons who have diabetes.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Chronic liver disease</text>
+<code>015</code>
+</observationCode>
+<description>Administer to persons who have chronic liver disease.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Chronic heart disease</text>
+<code>016</code>
+</observationCode>
+<description>Administer to persons who have chronic heart disease.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks. Includes heart failure, coronary artery disease, etc.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Chronic lung disease</text>
+<code>017</code>
+</observationCode>
+<description>Administer to persons who have chronic lung disease.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks. Includes COPD</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Asthma</text>
+<code>027</code>
+</observationCode>
+<description>Administer to persons who have asthma.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years with moderate-to-severe asthma should receive a booster shot. Persons aged 18-49 years with moderate-to-severe asthma may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Tuberculosis</text>
+<code>031</code>
+</observationCode>
+<description>Administer to persons who have tuberculosis</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Smoke Cigarettes</text>
+<code>042</code>
+</observationCode>
+<description>Administer to persons who smoke cigarettes.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years who smoke cigarettes (current or former) should receive a booster shot. Persons aged 18-49 years smoke cigarettes (current or former) may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>B-lymphocyte [humoral] - Less severe antibody deficiencies</text>
+<code>146</code>
+</observationCode>
+<description>Administer to persons who have less severe B-lymphocyte [humoral] - antibody deficiencies [e.g., selective IgA deficiency and IgG subclass deficiency].</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Persistent complement, properdin, or factor B deficiency</text>
+<code>151</code>
+</observationCode>
+<description>Administer to persons who have persistent complement component deficiencies, including inherited or chronic deficiencies in C3, C5-9, properdin, factor D, factor H, or who are taking eculizumab [Soliris].</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - not severely immunocompromised</text>
+<code>155</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Anatomical or functional asplenia</text>
+<code>160</code>
+</observationCode>
+<description>Administer to persons with anatomic or functional asplenia, including sickle cell disease.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Chronic renal disease</text>
+<code>161</code>
+</observationCode>
+<description>Administer to persons who have chronic renal disease.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Occupations at increased risk for COVID-19 exposure and transmission</text>
+<code>195</code>
+</observationCode>
+<description>Administer to persons with occupations at increased risk for COVID-19 exposure and transmission.</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Occupations at increased risk for COVID-19 exposure and transmission and may get a booster shot based on their individual benefits and risks. Occupatoins at increased risk can be found online at: https://www.cdc.gov/coronavirus/2019-ncov/vaccines/booster-shot.html#HighRisk</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Residing in an institutional setting at increased risk for COVID-19 exposure and transmission</text>
+<code>196</code>
+</observationCode>
+<description>Administer to persons residing in an institutional setting at increased risk for COVID-19 exposure and transmission</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Institutional settings such as health care, schools, correctional facilities, and homeless shelters at increased risk for COVID-19 exposure and transmission and may get a booster shot </guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Resident of long term care facility</text>
+<code>197</code>
+</observationCode>
+<description>Administer to persons residing in a long term care facility</description>
+<beginAge>18 years</beginAge>
+<endAge/>
+<guidance>Persons aged 18 years and older should receive a booster shot.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Cancer</text>
+<code>198</code>
+</observationCode>
+<description>Administer to persons with cancer</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Interstitial lung disease</text>
+<code>199</code>
+</observationCode>
+<description>Administer to persons with interstitial lung disease</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Cystic fibrosis</text>
+<code>200</code>
+</observationCode>
+<description>Administer to persons with cystic fibrosis</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Pulmonary hypertension</text>
+<code>201</code>
+</observationCode>
+<description>Administer to persons with pulmonary hypertension</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Dementia</text>
+<code>202</code>
+</observationCode>
+<description>Administer to persons with dementia</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Down syndrome</text>
+<code>203</code>
+</observationCode>
+<description>Administer to persons with down syndrome</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Obesity</text>
+<code>204</code>
+</observationCode>
+<description>Administer to persons with obesity</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks. Includes BMI calculations of overweight, obese, or severely obese</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Thalassemia</text>
+<code>205</code>
+</observationCode>
+<description>Administer to persons with thalassemia</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Cerebrovascular disease</text>
+<code>206</code>
+</observationCode>
+<description>Administer to persons with cerebrovascular disease such as having a stroke</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Substance use disorder</text>
+<code>207</code>
+</observationCode>
+<description>Administer to persons with substance use disorders (e.g., alcohol, opiod, cocaine)</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks.</guidance>
+</indication>
+<indication>
+<observationCode>
+<text>Mental health conditions</text>
+<code>208</code>
+</observationCode>
+<description>Administer to persons with mental health conditions</description>
+<beginAge>18 years</beginAge>
+<endAge>65 years</endAge>
+<guidance>Persons aged 50-64 years should receive a booster shot. Persons aged 18-49 years may receive a booster shot based on their individual benefits and risks. Includes mood disorders, depression, and schizophrenia spectrum disorders.</guidance>
+</indication>
+<seriesDose>
+<doseNumber>Dose 1</doseNumber>
+<age>
+<absMinAge>0 days</absMinAge>
+<minAge>18 years</minAge>
+<earliestRecAge>18 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>N</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent>210; 211; 212</fromMostRecent>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<allowableInterval/>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>12 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.3</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, Unspecified Formulation</vaccineType>
+<cvx>213</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+<beginAge>0 days</beginAge>
+<endAge>18 years</endAge>
+</allowableVaccine>
+<inadvertentVaccine/>
+<conditionalSkip/>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
+<seriesDose>
+<doseNumber>Dose 2</doseNumber>
+<age>
+<absMinAge/>
+<minAge>18 years</minAge>
+<earliestRecAge>18 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>N</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent>210; 211; 212</fromMostRecent>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<interval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt>42 days</latestRecInt>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate>20211024</cessationDate>
+</interval>
+<interval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>28 days - 4 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt>42 days</latestRecInt>
+<intervalPriority/>
+<effectiveDate>20211025</effectiveDate>
+<cessationDate/>
+</interval>
+<allowableInterval/>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>12 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.3</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, Unspecified Formulation</vaccineType>
+<cvx>213</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+<beginAge>0 days</beginAge>
+<endAge>18 years</endAge>
+</allowableVaccine>
+<inadvertentVaccine/>
+<conditionalSkip/>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
+<seriesDose>
+<doseNumber>Dose 3</doseNumber>
+<age>
+<absMinAge>0 days</absMinAge>
+<minAge>18 years</minAge>
+<earliestRecAge>18 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>N</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent>210; 211; 212</fromMostRecent>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<interval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>6 months - 4 days</absMinInt>
+<minInt>6 months</minInt>
+<earliestRecInt>6 months</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<allowableInterval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<absMinInt>0 days</absMinInt>
+<effectiveDate/>
+<cessationDate/>
+</allowableInterval>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.25</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>12 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.3</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 100 mcg/0.5 mL dose</vaccineType>
+<cvx>207</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose</vaccineType>
+<cvx>208</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, vector non-replicating, recombinant spike protein-Ad26, preservative free, 0.5 mL</vaccineType>
+<cvx>212</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>SARS-COV-2 (COVID-19) vaccine, Unspecified Formulation</vaccineType>
+<cvx>213</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<inadvertentVaccine>
+<vaccineType>COVID-19, mRNA, LNP-S, PF, 10 mcg/0.2 mL dose, tris-sucrose</vaccineType>
+<cvx>218</cvx>
+</inadvertentVaccine>
+<conditionalSkip>
+<context>Forecast</context>
+<setLogic>n/a</setLogic>
+<set>
+<setID>1</setID>
+<setDescription>Target Dose should not be forecasted for anyone under 18 years of age</setDescription>
+<effectiveDate/>
+<cessationDate/>
+<conditionLogic/>
+<condition>
+<conditionID>1</conditionID>
+<conditionType>Age</conditionType>
+<startDate/>
+<endDate/>
+<beginAge/>
+<endAge>18 years</endAge>
+<interval/>
+<doseCount/>
+<doseType/>
+<doseCountLogic/>
+<vaccineTypes/>
+<seriesGroups/>
+</condition>
+</set>
+</conditionalSkip>
 <recurringDose>No</recurringDose>
 <seasonalRecommendation/>
 </seriesDose>
@@ -1801,7 +5347,7 @@ Factors to consider in assessing the general level of immune competence in a pat
 <selectSeries>
 <defaultSeries>No</defaultSeries>
 <productPath>No</productPath>
-<seriesGroupName>WHO-Authorized </seriesGroupName>
+<seriesGroupName>WHO-Authorized or Clinical Trial Vaccines</seriesGroupName>
 <seriesGroup>3</seriesGroup>
 <seriesPriority>A</seriesPriority>
 <seriesPreference>1</seriesPreference>
@@ -1889,7 +5435,7 @@ Factors to consider in assessing the general level of immune competence in a pat
 <selectSeries>
 <defaultSeries>No</defaultSeries>
 <productPath>No</productPath>
-<seriesGroupName>WHO-Authorized </seriesGroupName>
+<seriesGroupName>WHO-Authorized or Clinical Trial Vaccines</seriesGroupName>
 <seriesGroup>3</seriesGroup>
 <seriesPriority>A</seriesPriority>
 <seriesPreference>2</seriesPreference>
@@ -1977,7 +5523,7 @@ Factors to consider in assessing the general level of immune competence in a pat
 <selectSeries>
 <defaultSeries>No</defaultSeries>
 <productPath>No</productPath>
-<seriesGroupName>WHO-Authorized </seriesGroupName>
+<seriesGroupName>WHO-Authorized or Clinical Trial Vaccines</seriesGroupName>
 <seriesGroup>3</seriesGroup>
 <seriesPriority>A</seriesPriority>
 <seriesPreference>3</seriesPreference>
@@ -2045,6 +5591,170 @@ Factors to consider in assessing the general level of immune competence in a pat
 <allowableVaccine>
 <vaccineType>COVID-19 IV Non-US Vaccine (CoronaVac, Sinovac)</vaccineType>
 <cvx>511</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<inadvertentVaccine/>
+<conditionalSkip/>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
+</series>
+<series>
+<seriesName>2-dose Novavax Series</seriesName>
+<targetDisease>COVID-19</targetDisease>
+<vaccineGroup>COVID-19</vaccineGroup>
+<seriesAdminGuidance/>
+<seriesType>Evaluation Only</seriesType>
+<equivalentSeriesGroups/>
+<requiredGender/>
+<selectSeries>
+<defaultSeries>No</defaultSeries>
+<productPath>No</productPath>
+<seriesGroupName>WHO-Authorized or Clinical Trial Vaccines</seriesGroupName>
+<seriesGroup>3</seriesGroup>
+<seriesPriority>A</seriesPriority>
+<seriesPreference>4</seriesPreference>
+<minAgeToStart/>
+<maxAgeToStart/>
+</selectSeries>
+<indication/>
+<seriesDose>
+<doseNumber>Dose 1</doseNumber>
+<age>
+<absMinAge>18 years</absMinAge>
+<minAge>18 years</minAge>
+<earliestRecAge>18 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval/>
+<allowableInterval/>
+<preferableVaccine/>
+<allowableVaccine>
+<vaccineType>COVID-19 vaccine, Subunit, rS-nanoparticle+Matrix-M1 Adjuvant, PF, 0.5 mL</vaccineType>
+<cvx>211</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+</allowableVaccine>
+<inadvertentVaccine/>
+<conditionalSkip/>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
+<seriesDose>
+<doseNumber>Dose 2</doseNumber>
+<age>
+<absMinAge>18 years</absMinAge>
+<minAge>18 years</minAge>
+<earliestRecAge>18 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>21 days</minInt>
+<earliestRecInt>21 days</earliestRecInt>
+<latestRecInt>28 days</latestRecInt>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<allowableInterval/>
+<preferableVaccine/>
+<allowableVaccine>
+<vaccineType>COVID-19 vaccine, Subunit, rS-nanoparticle+Matrix-M1 Adjuvant, PF, 0.5 mL</vaccineType>
+<cvx>211</cvx>
+<beginAge>18 years</beginAge>
+<endAge/>
+</allowableVaccine>
+<inadvertentVaccine/>
+<conditionalSkip/>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
+</series>
+<series>
+<seriesName>2-dose COVAXIN Series</seriesName>
+<targetDisease>COVID-19</targetDisease>
+<vaccineGroup>COVID-19</vaccineGroup>
+<seriesAdminGuidance/>
+<seriesType>Evaluation Only</seriesType>
+<equivalentSeriesGroups/>
+<requiredGender/>
+<selectSeries>
+<defaultSeries>No</defaultSeries>
+<productPath>No</productPath>
+<seriesGroupName>WHO-Authorized or Clinical Trial Vaccines</seriesGroupName>
+<seriesGroup>3</seriesGroup>
+<seriesPriority>A</seriesPriority>
+<seriesPreference>5</seriesPreference>
+<minAgeToStart/>
+<maxAgeToStart/>
+</selectSeries>
+<indication/>
+<seriesDose>
+<doseNumber>Dose 1</doseNumber>
+<age>
+<absMinAge>0 days</absMinAge>
+<minAge>18 years</minAge>
+<earliestRecAge>18 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval/>
+<allowableInterval/>
+<preferableVaccine/>
+<allowableVaccine>
+<vaccineType>COVID-19 IV Non-US Vaccine (COVAXIN)</vaccineType>
+<cvx>502</cvx>
+<beginAge>0 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<inadvertentVaccine/>
+<conditionalSkip/>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
+<seriesDose>
+<doseNumber>Dose 2</doseNumber>
+<age>
+<absMinAge>0 days</absMinAge>
+<minAge>18 years</minAge>
+<earliestRecAge>18 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>Y</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent/>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>28 days</minInt>
+<earliestRecInt>28 days</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<allowableInterval/>
+<preferableVaccine/>
+<allowableVaccine>
+<vaccineType>COVID-19 IV Non-US Vaccine (COVAXIN)</vaccineType>
+<cvx>502</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
 </allowableVaccine>
