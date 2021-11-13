@@ -40,35 +40,34 @@ public class OrganizeImmunizationHistory extends LogicStep {
           }
         });
 
-    return LogicStepFactory.createLogicStep(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES,
+    return LogicStepFactory.createLogicStep(LogicStepType.CREATE_RELEVANT_PATIENT_SERIES,
         dataModel);
   }
 
   @Override
   public void printPre(PrintWriter out) throws Exception {
-    out.println("<h1>8.3 Organize Immunization History</h1>");
+    out.println("<h1>4.2 Organize Immunization History</h1>");
     out.println(
-        "   <p>The third step in the process is to look at the patient's immunization history and prepare those records "
-            + "for evaluation and forecasting by breaking them into their antigen parts. This allows the evaluation and "
-            + "forecasting engine to be as granular and specific as possible for both evaluation and forecasting purposes. "
-            + "Later in the process (section 8.6), these antigens are assembled into commonly known vaccine groups (vaccine families) "
-            + "for vaccine group forecasts.</p>");
+        "   <p>The second step in the process is to look at the patient’s immunization history and prepare those records for "
+            + "evaluation and forecasting by breaking them into their antigen parts. This allows the evaluation and forecasting "
+            + "engine to be as granular and specific as possible for both evaluation and forecasting purposes. Later in the "
+            + "process, these antigens are assembled into commonly known vaccine groups (vaccine families) for vaccine "
+            + "group forecasts.</p>");
 
   }
 
   @Override
   public void printPost(PrintWriter out) {
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-    out.println("<h1>8.3 Organize Immunization History</h1>");
-
+    out.println("<h1>4.2 Organize Immunization History</h1>");
     out.println(
-        "   <p>The third step in the process is to look at the patient's immunization history and prepare those records "
-            + "for evaluation and forecasting by breaking them into their antigen parts. This allows the evaluation and "
-            + "forecasting engine to be as granular and specific as possible for both evaluation and forecasting purposes. "
-            + "Later in the process (section 8.6), these antigens are assembled into commonly known vaccine groups (vaccine families) "
-            + "for vaccine group forecasts.</p>");
+        "   <p>The second step in the process is to look at the patient’s immunization history and prepare those records for "
+            + "evaluation and forecasting by breaking them into their antigen parts. This allows the evaluation and forecasting "
+            + "engine to be as granular and specific as possible for both evaluation and forecasting purposes. Later in the "
+            + "process, these antigens are assembled into commonly known vaccine groups (vaccine families) for vaccine "
+            + "group forecasts.</p>");
 
-    out.println("<h2>Table 8 - 2 Prior to Organize Immunization History Example</h2>");
+    out.println("<h2>Table 4-2 Prior to Organize Immunization History</h2>");
     out.println("<table>");
     out.println("  <tr>");
     out.println("    <th>Product (CVX/MVX) - Description</th>");
@@ -86,8 +85,7 @@ public class OrganizeImmunizationHistory extends LogicStep {
     }
     out.println("</table>");
 
-    out.println("<h2>Table 8 - 3 After Organize Immunization History Example</h2>");
-    out.println("<p>*Sorted by antigen and then by date</p>");
+    out.println("<h2>Table 4-3 After Organize Immunization History Example</h2>");
     out.println("<table>");
     out.println("  <tr>");
     out.println("    <th>Product (CVX/MVX) - Description</th>");
@@ -103,6 +101,7 @@ public class OrganizeImmunizationHistory extends LogicStep {
       out.println("  </tr>");
     }
     out.println("</table>");
+    out.println("<p>*Sorted by antigen and then by date</p>");
   }
 
 }

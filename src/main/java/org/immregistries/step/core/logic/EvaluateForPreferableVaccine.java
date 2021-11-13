@@ -19,7 +19,7 @@ public class EvaluateForPreferableVaccine extends LogicStep {
 
 
   public EvaluateForPreferableVaccine(DataModel dataModel) {
-    super(LogicStepType.EVALUATE_PREFERABLE_VACCINE_ADMINISTERED, dataModel);
+    super(LogicStepType.EVALUATE_PREFERABLE_VACCINE, dataModel);
     setConditionTableName("Table ");
 
 

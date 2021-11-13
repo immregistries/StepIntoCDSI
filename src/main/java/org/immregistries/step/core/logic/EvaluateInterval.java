@@ -23,7 +23,7 @@ public class EvaluateInterval extends LogicStep {
 
 
   public EvaluateInterval(DataModel dataModel) {
-    super(LogicStepType.EVALUATE_INTERVAL, dataModel);
+    super(LogicStepType.EVALUATE_PREFERABLE_INTERVAL, dataModel);
     setConditionTableName("Table ");
 
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();

@@ -24,7 +24,7 @@ public class OneBestPatientSeries extends LogicStep {
   // private ConditionAttribute<Date> caDateAdministered = null;
 
   public OneBestPatientSeries(DataModel dataModel) {
-    super(LogicStepType.ONE_BEST_PATIENT_SERIES, dataModel);
+    super(LogicStepType.IDENTIFY_ONE_PRIORITIZED_PATIENT_SERIES, dataModel);
     // setConditionTableName("Table ");
 
     // caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date
@@ -40,7 +40,7 @@ public class OneBestPatientSeries extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.SELECT_BEST_PATIENT_SERIES);
+    setNextLogicStepType(LogicStepType.SELECT_PATIENT_SERIES);
     evaluateLogicTables();
     return next();
   }
@@ -220,7 +220,7 @@ public class OneBestPatientSeries extends LogicStep {
               }
             }
           }
-          setNextLogicStepType(LogicStepType.SELECT_BEST_PATIENT_SERIES);
+          setNextLogicStepType(LogicStepType.SELECT_PATIENT_SERIES);
 
         }
       });
@@ -238,7 +238,7 @@ public class OneBestPatientSeries extends LogicStep {
               }
             }
           }
-          setNextLogicStepType(LogicStepType.SELECT_BEST_PATIENT_SERIES);
+          setNextLogicStepType(LogicStepType.SELECT_PATIENT_SERIES);
         }
       });
 
@@ -255,7 +255,7 @@ public class OneBestPatientSeries extends LogicStep {
               }
             }
           }
-          setNextLogicStepType(LogicStepType.SELECT_BEST_PATIENT_SERIES);
+          setNextLogicStepType(LogicStepType.SELECT_PATIENT_SERIES);
         }
       });
 
@@ -272,7 +272,7 @@ public class OneBestPatientSeries extends LogicStep {
               }
             }
           }
-          setNextLogicStepType(LogicStepType.SELECT_BEST_PATIENT_SERIES);
+          setNextLogicStepType(LogicStepType.SELECT_PATIENT_SERIES);
         }
       });
 
@@ -282,7 +282,7 @@ public class OneBestPatientSeries extends LogicStep {
         public void perform() {
           // TODO Auto-generated method stub
           log("No. More than one patient series has potential. All patient series are examined to see which should be scored and selected as the best patient series");
-          setNextLogicStepType(LogicStepType.CLASSIFY_PATIENT_SERIES);
+          setNextLogicStepType(LogicStepType.CLASSIFY_SCORABLE_PATIENT_SERIES);
 
         }
       });

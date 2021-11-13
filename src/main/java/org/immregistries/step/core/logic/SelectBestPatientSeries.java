@@ -10,7 +10,7 @@ import org.immregistries.step.domain.PatientSeries;
 
 public class SelectBestPatientSeries extends LogicStep {
   public SelectBestPatientSeries(DataModel dataModel) {
-    super(LogicStepType.SELECT_BEST_PATIENT_SERIES, dataModel);
+    super(LogicStepType.SELECT_PATIENT_SERIES, dataModel);
   }
 
   @Override
@@ -26,7 +26,7 @@ public class SelectBestPatientSeries extends LogicStep {
         }
       }
       dataModel.setAntigenSeriesSelectedList(antigenSeriesSelectedList);
-      setNextLogicStepType(LogicStepType.ONE_BEST_PATIENT_SERIES);
+      setNextLogicStepType(LogicStepType.IDENTIFY_ONE_PRIORITIZED_PATIENT_SERIES);
 
       List<PatientSeries> patientSeriesSelectedList = new ArrayList<PatientSeries>();
       for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {

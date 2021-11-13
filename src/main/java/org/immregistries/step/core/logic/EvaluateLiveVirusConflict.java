@@ -93,7 +93,7 @@ public class EvaluateLiveVirusConflict extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.EVALUATE_PREFERABLE_VACCINE_ADMINISTERED);
+    setNextLogicStepType(LogicStepType.EVALUATE_PREFERABLE_VACCINE);
     /*
      * for(LogicTable lt : logicTableList){ lt.evaluate(); }
      */

@@ -70,7 +70,7 @@ public class EvaluateAge extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.EVALUATE_INTERVAL);
+    setNextLogicStepType(LogicStepType.EVALUATE_PREFERABLE_INTERVAL);
     evaluateLogicTables();
     return next();
   }

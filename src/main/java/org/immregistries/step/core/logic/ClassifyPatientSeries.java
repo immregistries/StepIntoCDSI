@@ -23,7 +23,7 @@ public class ClassifyPatientSeries extends LogicStep {
   // private ConditionAttribute<Date> caDateAdministered = null;
 
   public ClassifyPatientSeries(DataModel dataModel) {
-    super(LogicStepType.CLASSIFY_PATIENT_SERIES, dataModel);
+    super(LogicStepType.CLASSIFY_SCORABLE_PATIENT_SERIES, dataModel);
     // setConditionTableName("Table ");
 
     // caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date

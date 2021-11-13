@@ -8,7 +8,7 @@ import org.immregistries.step.domain.PatientSeries;
 public class CreatePatientSeries extends LogicStep {
 
   public CreatePatientSeries(DataModel dataModel) {
-    super(LogicStepType.CREATE_PATIENT_SERIES, dataModel);
+    super(LogicStepType.CREATE_RELEVANT_PATIENT_SERIES, dataModel);
   }
 
   @Override

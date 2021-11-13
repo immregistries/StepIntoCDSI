@@ -34,7 +34,7 @@ public class ForEachPatientSeries extends LogicStep {
       }
     }
     if (patientSeriesSelected == null) {
-      return LogicStepFactory.createLogicStep(LogicStepType.SELECT_BEST_PATIENT_SERIES, dataModel);
+      return LogicStepFactory.createLogicStep(LogicStepType.SELECT_PATIENT_SERIES, dataModel);
     } else {
       dataModel.setPatientSeries(patientSeriesSelected);
       dataModel.setTargetDoseList(new ArrayList<TargetDose>());

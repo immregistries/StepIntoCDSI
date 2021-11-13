@@ -15,7 +15,7 @@ public class SelectBestCandidatePatientSeries extends LogicStep {
   private List<PatientSeries> patientSeriesList = dataModel.getSelectedPatientSeriesList();
 
   public SelectBestCandidatePatientSeries(DataModel dataModel) {
-    super(LogicStepType.SELECT_BEST_CANDIDATE_PATIENT_SERIES, dataModel);
+    super(LogicStepType.SELECT_PRIORITIZED_PATIENT_SERIES, dataModel);
     setConditionTableName("Table ");
 
   }
@@ -67,7 +67,7 @@ public class SelectBestCandidatePatientSeries extends LogicStep {
     if (bestPatientSeries != null) {
       dataModel.getBestPatientSeriesList().add(bestPatientSeries);
     }
-    setNextLogicStepType(LogicStepType.SELECT_BEST_PATIENT_SERIES);
+    setNextLogicStepType(LogicStepType.SELECT_PATIENT_SERIES);
     return next();
   }
 

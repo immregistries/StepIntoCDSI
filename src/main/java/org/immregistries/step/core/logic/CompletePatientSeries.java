@@ -253,7 +253,7 @@ public class CompletePatientSeries extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.SELECT_BEST_CANDIDATE_PATIENT_SERIES);
+    setNextLogicStepType(LogicStepType.SELECT_PRIORITIZED_PATIENT_SERIES);
     evaluateTable();
     return next();
   }
