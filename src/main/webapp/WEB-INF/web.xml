@@ -17,6 +17,10 @@
 		<servlet-class>org.immregistries.step.servlet.StepServlet</servlet-class>
 	</servlet>
 	<servlet>
+		<servlet-name>home</servlet-name>
+		<servlet-class>org.immregistries.step.servlet.HomeServlet</servlet-class>
+	</servlet>
+	<servlet>
 		<servlet-name>forecast</servlet-name>
 		<servlet-class>org.immregistries.step.servlet.ForecastServlet</servlet-class>
 	</servlet>
@@ -51,6 +55,10 @@
 
 
 
+	<servlet-mapping>
+		<servlet-name>home</servlet-name>
+		<url-pattern>/home</url-pattern>
+	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>forecast</servlet-name>
 		<url-pattern>/forecast</url-pattern>
