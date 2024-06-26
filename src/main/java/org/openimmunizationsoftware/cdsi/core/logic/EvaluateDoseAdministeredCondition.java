@@ -23,6 +23,12 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
   public EvaluateDoseAdministeredCondition(DataModel dataModel) {
     super(LogicStepType.EVALUATE_DOSE_ADMININISTERED_CONDITION, dataModel);
     setConditionTableName("Table 4 - 2 Dose Administered Condition Attributes");
+    
+    //TODO
+    //change table to 6 - 2
+    //change ConditionAttribute "Dose Condition" to "Dose Condition Flag"
+
+    
     // initialize condition attributes
     caDateAdministered =
         new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
@@ -56,6 +62,9 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
     return next();
   }
 
+  //TODO
+  //change table to 6 - 3
+  //change "Dose Condition indicated?" to "Is the dose condition flag 'Y'?"
 
 
   private class LT extends LogicTable {
@@ -76,6 +85,10 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
       setLogicCondition(1, new LogicCondition("Dose Condition indicated?") {
         @Override
         public LogicResult evaluateInternal() {
+          /* TODO
+          IF dose condition flag === 'Y'
+            return result YES;
+           */
           if (caDoseCondition.getFinalValue() != null) {
             return LogicResult.YES;
           }
