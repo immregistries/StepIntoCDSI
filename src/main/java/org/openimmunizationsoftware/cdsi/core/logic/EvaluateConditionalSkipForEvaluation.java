@@ -99,6 +99,25 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
           if (lt != null) {
             logicTableList.add(lt);
 
+            /* TODO
+            change table '4 - 4' to '6 - 4'
+            
+            change 'Conditional Skip Start Date' attribute name to 'Start Date'
+            change 'Conditional Skip End Date' attribute text to 'End Date'
+            remove 'Conditional Skip Dose Type'
+            remove 'Conditional Skip Dose Count Logic'
+            remove 'Conditional Skip Dose Count'
+
+            add attribute 'Runtime Data', 'Earliest Date', '-'
+            using
+              lt.caEarliestDate = new ConditionAttribute<Date>("Runtime Data", "Earliest Date");
+                  
+            add 'Supporting Data (Conditional Skip)', 'Conditional Skip Elements', '-'
+            using
+              lt.caConditionalSkipElements = new ConditionAttribute<Date>("Supporting Data (Conditional Skip)", "Conditional Skip Elements");
+                
+            */
+
             lt.caConditionalSkipBeginAgeDate = new ConditionAttribute<Date>(
                 "Calculated date (CALCDTSKIP-3)", "Conditional Skip Begin Age Date");
             lt.caConditionalSkipEndAgeDate = new ConditionAttribute<Date>(
@@ -132,7 +151,14 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
             caList.add(lt.caConditionalSkipReferenceDate);
             conditionAttributesAdditionalMap.put("Table 4 - 4 Conditional Skip Attributes "
                 + conditionalSkipSet.getSetId() + "." + condition.getConditionId(), caList);
+            /* TODO
+            change 'Conditional Skip Begin Age date' assumed value to '01/01/1900'
+            change 'Conditional Skip End Age Date' assumed value to '12/31/2999'
+            change 'Conditional Skip Start Date' assumed value to '01/01/1900'
+            change 'Conditional Skip End Date' assumed value to '12/31/2999'
 
+            using lt.caConditionalSkipBeginAgeDate.setInitialValue
+            */
             lt.caConditionalSkipBeginAgeDate
                 .setInitialValue(CALCDTSKIP_3.evaluate(dataModel, this, condition));
             lt.caConditionalSkipEndAgeDate
