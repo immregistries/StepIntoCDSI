@@ -32,8 +32,8 @@ public class EvaluateForAllowableVaccines extends LogicStep {
           new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
       logicTable.caVaccineType =
           new ConditionAttribute<VaccineType>("Vaccine Dose Administered", "Vaccine Type");
-      logicTable.caVaccineTypeAllowable = new ConditionAttribute<AllowableVaccine>(
-          "Supporting data (Allowable Vaccine)", "Vaccine Type");
+`      logicTable.caAllowableVaccineElements = new ConditionAttribute<AllowableVaccine>(
+          "Supporting data", "Allowable Vaccine elements");
       logicTable.caAllowableVaccineTypeBeginAgeDate = new ConditionAttribute<Date>(
           "Calculated data (CALCDTALLOW-1)", "Allowable Vaccine Type Begin Age Date");
       logicTable.caAllowableVaccineTypeEndAgeDate = new ConditionAttribute<Date>(
@@ -44,14 +44,14 @@ public class EvaluateForAllowableVaccines extends LogicStep {
 
       conditionAttributesList.add(logicTable.caDateAdministered);
       conditionAttributesList.add(logicTable.caVaccineType);
-      conditionAttributesList.add(logicTable.caVaccineTypeAllowable);
+      conditionAttributesList.add(logicTable.caAllowableVaccineElements);
       conditionAttributesList.add(logicTable.caAllowableVaccineTypeBeginAgeDate);
       conditionAttributesList.add(logicTable.caAllowableVaccineTypeEndAgeDate);
 
       AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
       logicTable.caDateAdministered.setInitialValue(aar.getDateAdministered());
       logicTable.caVaccineType.setInitialValue(aar.getVaccineType());
-      logicTable.caVaccineTypeAllowable.setInitialValue(pi);
+      logicTable.caAllowableVaccineElements.setInitialValue(pi);
 
 
       logicTableList.add(logicTable);
@@ -109,7 +109,7 @@ public class EvaluateForAllowableVaccines extends LogicStep {
 
     private ConditionAttribute<Date> caDateAdministered = null;
     private ConditionAttribute<VaccineType> caVaccineType = null;
-    private ConditionAttribute<AllowableVaccine> caVaccineTypeAllowable = null;
+    private ConditionAttribute<AllowableVaccine> caAllowableVaccineElements = null;
     private ConditionAttribute<Date> caAllowableVaccineTypeBeginAgeDate = null;
     private ConditionAttribute<Date> caAllowableVaccineTypeEndAgeDate = null;
     private YesNo result = null;
@@ -125,7 +125,7 @@ public class EvaluateForAllowableVaccines extends LogicStep {
             return LogicResult.NO;
           }
           VaccineType vt = caVaccineType.getFinalValue();
-          AllowableVaccine av = caVaccineTypeAllowable.getFinalValue();
+          AllowableVaccine av = caAllowableVaccineElements.getFinalValue();
           Date birthDate = dataModel.getPatient().getDateOfBirth();
           if (vt == av.getVaccineType()) {
             caAllowableVaccineTypeBeginAgeDate

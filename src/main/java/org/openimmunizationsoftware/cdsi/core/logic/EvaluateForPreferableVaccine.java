@@ -39,16 +39,17 @@ public class EvaluateForPreferableVaccine extends LogicStep {
           new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
 
       AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
-      logicTable.caPreferableVaccineTradeName = new ConditionAttribute<String>(
-          "Supporting data (Preferable Vaccine)", "Preferable Vaccine Trade Name ");
+      logicTable.caVolume = new ConditionAttribute<String>(
+          "Vaccine dose administered", "Preferable Vaccine Volume ");
       logicTable.caTradeName =
           new ConditionAttribute<String>("Vaccine dose administered", "Trade Name ");
+      logicTable.caPreferableVaccineElements = new ConditionAttribute<String>(
+          "Supporting Data", "Preferable Vaccine elements");
       logicTable.caVaccineTypeBeginAgeDate = new ConditionAttribute<Date>(
           "Vaccine Type Begin Age Date", "Calculated date (CALCDTPREF-1)");
       logicTable.caVaccineTypeEndAgeDate = new ConditionAttribute<Date>("Vaccine Type End Age Date",
           "Calculated date (CALCDTPREF-2)");
-      logicTable.caPreferableVaccineVolume = new ConditionAttribute<String>(
-          "Preferable Vaccine Volume ", "Supporting data (Preferable Vaccine)");
+          
       logicTable.caPreferableVaccineType = new ConditionAttribute<String>(
           "Preferable Vaccine Type ", "Supporting data (Preferable Vaccine)");
       logicTable.caVolume = aar.getVolume();
