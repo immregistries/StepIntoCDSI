@@ -66,7 +66,7 @@ public class SatisfyTargetDose extends LogicStep {
     public LT() {
       super(5, 7, "TABLE 4 - 32 WAS THE TARGET DOSE SATISFIED?");
 
-      setLogicCondition(0, new LogicCondition("Was the vaccine dose administered at a valid age?") {
+      setLogicCondition(0, new LogicCondition("Was the vaccine dose administered at a valid age for the target dose?") {
         @Override
         public LogicResult evaluateInternal() {
           AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
@@ -83,7 +83,7 @@ public class SatisfyTargetDose extends LogicStep {
       });
 
       setLogicCondition(1, new LogicCondition(
-          "Was the vaccine dose administered at a valid or allowable interval?") {
+          "Did the vaccine dose administered satisfy all preferable intervals or all allowable intervals for the target dose?") {
         @Override
         public LogicResult evaluateInternal() {
           if (dataModel.getTargetDose().getStatusCause().contains("Interval")) {
@@ -95,7 +95,7 @@ public class SatisfyTargetDose extends LogicStep {
 
 
       setLogicCondition(2, new LogicCondition(
-          "Was the vaccine dose administered in conflict with any previous live virus vaccine doses administered?") {
+          "Is the current vaccine dose administered an impacted vaccine dose administered?") {
         @Override
         public LogicResult evaluateInternal() {
           if (dataModel.getTargetDose().getStatusCause().contains("VirusConflict")) {
@@ -116,16 +116,6 @@ public class SatisfyTargetDose extends LogicStep {
             }
           });
 
-      setLogicCondition(4,
-          new LogicCondition("Is the patient's gender one of the required genders?") {
-            @Override
-            public LogicResult evaluateInternal() {
-              if (dataModel.getTargetDose().getStatusCause().contains("Gender")) {
-                return NO;
-              }
-              return YES;
-            }
-          });
 
       setLogicResults(0, LogicResult.YES, LogicResult.EXTRANEOUS, LogicResult.NO, LogicResult.ANY,
           LogicResult.ANY, LogicResult.ANY, LogicResult.ANY);
@@ -135,8 +125,6 @@ public class SatisfyTargetDose extends LogicStep {
           LogicResult.YES, LogicResult.ANY, LogicResult.ANY);
       setLogicResults(3, LogicResult.YES, LogicResult.ANY, LogicResult.ANY, LogicResult.ANY,
           LogicResult.ANY, LogicResult.NO, LogicResult.ANY);
-      setLogicResults(4, LogicResult.YES, LogicResult.ANY, LogicResult.ANY, LogicResult.ANY,
-          LogicResult.ANY, LogicResult.ANY, LogicResult.NO);
 
       setLogicOutcome(0, new LogicOutcome() {
         @Override
