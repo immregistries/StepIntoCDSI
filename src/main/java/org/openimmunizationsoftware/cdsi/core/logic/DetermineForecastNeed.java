@@ -27,7 +27,7 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 public class DetermineForecastNeed extends LogicStep {
 
   private ConditionAttribute<String> caVaccineDoseAdministered = null;
-  private ConditionAttribute<String> caAdvereseEvents = null;
+  private ConditionAttribute<String> caAdverseReactions = null;
   private ConditionAttribute<String> caRelevantMedicalObservation = null;
   private ConditionAttribute<TargetDose> caTargetDose = null;
   private ConditionAttribute<Date> caMaximumAgeDate = null;
@@ -68,7 +68,7 @@ public class DetermineForecastNeed extends LogicStep {
 
     caVaccineDoseAdministered =
         new ConditionAttribute<String>("Immunization history", "Vaccine Dose(s) Administered");
-    caAdvereseEvents = new ConditionAttribute<String>("Immunization history", "Adverse Events");
+    caAdverseReactions = new ConditionAttribute<String>("Immunization history", "Adverse Reactions");
     caRelevantMedicalObservation =
         new ConditionAttribute<String>("Medical History", "Relevant Medical Observation");
     caTargetDose = new ConditionAttribute<TargetDose>("Patient series", "Target Dose(s)");
@@ -91,7 +91,7 @@ public class DetermineForecastNeed extends LogicStep {
     caAssessmentDate.setAssumedValue(now);
 
     conditionAttributesList.add(caVaccineDoseAdministered);
-    conditionAttributesList.add(caAdvereseEvents);
+    conditionAttributesList.add(caAdverseReactions);
     conditionAttributesList.add(caRelevantMedicalObservation);
     conditionAttributesList.add(caTargetDose);
     conditionAttributesList.add(caMaximumAgeDate);

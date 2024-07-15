@@ -7,7 +7,7 @@ public class ImmunizationHistory {
   private List<VaccineDoseAdministered> vaccineDoseAdministeredList =
       new ArrayList<VaccineDoseAdministered>();
   private MedicalHistory medicalHistory = null;
-  private List<AdverseEvent> adverseEventList = new ArrayList<AdverseEvent>();
+  private List<AdverseReaction> adverseReactionList = new ArrayList<AdverseReaction>();
 
   public List<VaccineDoseAdministered> getVaccineDoseAdministeredList() {
     return vaccineDoseAdministeredList;
@@ -26,11 +26,11 @@ public class ImmunizationHistory {
     this.medicalHistory = medicalHistory;
   }
 
-  public List<AdverseEvent> getAdverseEventList() {
-    return adverseEventList;
+  public List<AdverseReaction> getAdverseReactionList() {
+    return adverseReactionList;
   }
 
-  public void setAdverseEventList(List<AdverseEvent> adverseEventList) {
-    this.adverseEventList = adverseEventList;
+  public void setAdverseReactionList(List<AdverseReaction> adverseReactionList) {
+    this.adverseReactionList = adverseReactionList;
   }
 }
