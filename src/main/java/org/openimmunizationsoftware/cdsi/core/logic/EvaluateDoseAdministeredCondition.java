@@ -22,10 +22,9 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
 
   public EvaluateDoseAdministeredCondition(DataModel dataModel) {
     super(LogicStepType.EVALUATE_DOSE_ADMININISTERED_CONDITION, dataModel);
-    setConditionTableName("Table 4 - 2 Dose Administered Condition Attributes");
+    setConditionTableName("Table 6 - 2 Dose Administered Condition Attributes");
     
     //TODO
-    //change table to 6 - 2
     //change ConditionAttribute "Dose Condition" to "Dose Condition Flag"
 
     
@@ -63,13 +62,12 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
   }
 
   //TODO
-  //change table to 6 - 3
   //change "Dose Condition indicated?" to "Is the dose condition flag 'Y'?"
 
 
   private class LT extends LogicTable {
     public LT() {
-      super(2, 3, "Table 4 - 3 Can the vaccine dose administered be evaluated?");
+      super(2, 3, "Table 6 - 3 Can the vaccine dose administered be evaluated?");
       setLogicCondition(0, new LogicCondition("Date administered > lot expiration date?") {
         @Override
         public LogicResult evaluateInternal() {

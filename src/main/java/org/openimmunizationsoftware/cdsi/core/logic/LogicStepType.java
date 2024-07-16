@@ -15,12 +15,12 @@ public enum LogicStepType {
 
   FOR_EACH_PATIENT_SERIES("for each Patient Series", "for each Patient Series",
       true), EVALUATE_VACCINE_DOSE_ADMINISTERED("Evaluate Vaccine Dose Administered",
-          "4 Evaluate Vaccine Dose Administered", true), EVALUATE_DOSE_ADMININISTERED_CONDITION(
-              "Evaluate Dose Administered Condition", "4.1 Evaluate Dose Administered Condition",
+          "6 Evaluate Vaccine Dose Administered", true), EVALUATE_DOSE_ADMININISTERED_CONDITION(
+              "Evaluate Dose Administered Condition", "6.1 Evaluate Dose Administered Condition",
               true), EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION("Evaluate Conditional Skip",
-                  "4.2 Evaluate Conditional Skip",
-                  true), EVALUATE_AGE("Evaluate Age", "4.3 Evaluate Age", true), EVALUATE_INTERVAL(
-                      "Evaluate Interval", "4.4 Evaluate Interval",
+                  "6.2 Evaluate Conditional Skip",
+                  true), EVALUATE_AGE("Evaluate Age", "6.3 Evaluate Age", true), EVALUATE_INTERVAL(
+                      "Evaluate Interval", "6.4 Evaluate Interval",
                       true), EVALUATE_ALLOWABLE_INTERVAL("Evaluate Allowable Interval",
                           "4.5 Evaluate Allowable Interval",
                           true), EVALUATE_FOR_LIVE_VIRUS_CONFLICT(
