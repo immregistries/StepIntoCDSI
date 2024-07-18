@@ -6,3 +6,4 @@ target/
 .settings/org.eclipse.jdt.core.prefs
 .idea/workspace.xml
 src/main/webapp/Thumbs.db
+.vscode/
