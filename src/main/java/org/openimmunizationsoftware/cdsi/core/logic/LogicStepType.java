@@ -19,8 +19,8 @@ public enum LogicStepType {
               "Evaluate Dose Administered Condition", "6.1 Evaluate Dose Administered Condition",
               true), EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION("Evaluate Conditional Skip",
                   "6.2 Evaluate Conditional Skip",
-                  true), EVALUATE_AGE("Evaluate Age", "6.3 Evaluate Age", true), EVALUATE_INTERVAL(
-                      "Evaluate Interval", "6.4 Evaluate Interval",
+                  true), EVALUATE_AGE("Evaluate Age", "6.4 Evaluate Age", true), EVALUATE_INTERVAL(
+                      "Evaluate Interval", "6.5 Evaluate Interval",
                       true), EVALUATE_ALLOWABLE_INTERVAL("Evaluate Allowable Interval",
                           "4.5 Evaluate Allowable Interval",
                           true), EVALUATE_FOR_LIVE_VIRUS_CONFLICT(
