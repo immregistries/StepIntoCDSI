@@ -1,5 +1,7 @@
 package org.openimmunizationsoftware.cdsi.core.logic.items;
 
+// Created by Nicole on 7/27/24.
+
 public class ConditionalSkipElements {
     private String doseType;
     private String doseCountLogic;
