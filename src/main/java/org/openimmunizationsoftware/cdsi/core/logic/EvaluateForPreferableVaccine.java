@@ -52,7 +52,7 @@ public class EvaluateForPreferableVaccine extends LogicStep {
           
       logicTable.caPreferableVaccineType = new ConditionAttribute<String>(
           "Preferable Vaccine Type ", "Supporting data (Preferable Vaccine)");
-      logicTable.caVolume = aar.getVolume();
+      logicTable.caVolume.setInitialValue(aar.getVolume());
       logicTable.caTradeName.setInitialValue(aar.getAntigen().getName());
       // caPreferableVaccineTradeName.setInitialValue(
       // dataModel.getAntigenSeriesList().get(0).getSeriesDoseList().get(0).getAllowableVaccineList().get(0).getTradeName())
@@ -61,25 +61,21 @@ public class EvaluateForPreferableVaccine extends LogicStep {
 
       logicTable.caVaccineTypeBeginAgeDate.setAssumedValue(PAST);
       logicTable.caVaccineTypeEndAgeDate.setAssumedValue(FUTURE);
-      logicTable.caPreferableVaccineTradeName.setAssumedValue(aar.getAntigen().getName());
-      logicTable.caPreferableVaccineVolume.setAssumedValue(aar.getVolume());
+      
+      logicTable.caPreferableVaccineVolume.setAssumedValue(pi.getVolume());
 
       List<ConditionAttribute<?>> caList = new ArrayList<ConditionAttribute<?>>();
       caList.add(logicTable.caDateAdministered);
       caList.add(logicTable.caTradeName);
       caList.add(logicTable.caVaccineTypeBeginAgeDate);
       caList.add(logicTable.caVaccineTypeEndAgeDate);
-      caList.add(logicTable.caPreferableVaccineTradeName);
-      caList.add(logicTable.caPreferableVaccineVolume);
       caList.add(logicTable.caPreferableVaccineType);
+      caList.add(logicTable.caPreferableVaccineElements);
 
       conditionAttributesAdditionalMap.put("Preferrable Vaccine #" + count, caList);
 
       if (pi.getTradeName() != null && !pi.getTradeName().equals("")) {
         logicTable.caPreferableVaccineTradeName.setInitialValue(pi.getTradeName());
-      }
-      if (pi.getVolume() != null && !pi.getVolume().equals("")) {
-        logicTable.caPreferableVaccineVolume.setInitialValue(pi.getVolume());
       }
       logicTable.pv = pi.getVolume();
       logicTable.caPreferableVaccineType.setInitialValue(pi.getVaccineType().getCvxCode());
@@ -150,16 +146,16 @@ public class EvaluateForPreferableVaccine extends LogicStep {
     private ConditionAttribute<String> caPreferableVaccineTradeName = null;
     private ConditionAttribute<String> caPreferableVaccineVolume = null;
     private ConditionAttribute<String> caPreferableVaccineType = null;
-    private String caVolume = null;
+    private ConditionAttribute<String> caVolume = null;
     private String pv = null;
     private YesNo result = null;
 
     public LT(int count) {
       super(4, 5,
-          "Table 4-5 Was the supporting data defined preferrable vaccine administered? #" + count);
+          "Table 6-26 Was the supporting data defined preferable vaccine administered? #" + count);
 
       setLogicCondition(0, new LogicCondition(
-          "Is the vaccine type of the vaccine dose administered the same as the vaccine type of the preferable vaccine? ") {
+          "Is the vaccine type of the vaccine dose administered the same as the vaccine type of a preferable vaccine for the target dose?") {
         @Override
         public LogicResult evaluateInternal() {
           if (caPreferableVaccineType.getFinalValue()
@@ -184,7 +180,7 @@ public class EvaluateForPreferableVaccine extends LogicStep {
         }
       });
       setLogicCondition(2, new LogicCondition(
-          "Is the vaccine dose administered trade name the same as the preferable vaccine trade name? ") {
+        "Is the trade name of the vaccine dose administered the same as the trade name of the preferable vaccine for the target dose?") {
         @Override
         public LogicResult evaluateInternal() {
           if (caTradeName.getFinalValue().equals(caPreferableVaccineTradeName.getFinalValue())) {
@@ -195,7 +191,7 @@ public class EvaluateForPreferableVaccine extends LogicStep {
         }
       });
       setLogicCondition(3, new LogicCondition(
-          "Is the Vaccine dose administered volume >= preferable vaccine volume? ") {
+          "Is the volume of the vaccine dose administered ≥ the volume of the preferable vaccine for the target dose?") {
         @Override
         public LogicResult evaluateInternal() {
           if (caVolume.equals("") || caVolume.equalsIgnoreCase(caPreferableVaccineVolume.getFinalValue())) {
