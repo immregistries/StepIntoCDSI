@@ -29,7 +29,7 @@ public class EvaluateAge extends LogicStep {
 
   public EvaluateAge(DataModel dataModel) {
     super(LogicStepType.EVALUATE_AGE, dataModel);
-    setConditionTableName("Table 4-8 Age Attributes");
+    setConditionTableName("Table 6-9 Age Attributes");
 
     caDateAdministered =
         new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");

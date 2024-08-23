@@ -333,7 +333,19 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
   // New Logic Table 6-7 (CONDITIONAL TYPE OF COMPLETED SERIES - IS THE CONDITION MET?) goes here
   protected class LT67 extends LTInnerSet{
     public LT67() {
-      
+      super(1,2,"Table 6 - 7 CONDITIONAL Type of Completed Series - is the condition met?");
+
+      setLogicCondition(0, new LogicCondition(
+        "Does the Conditional Group Series Group identify a Series Group with at least one relevant patient series with a patient series status of 'Complete'?") {
+          @Override
+          public LogicResult evaluateInternal(){
+            if (
+              ) {
+            return LogicResult.YES;
+            }
+            return LogicResult.NO;
+          }
+      });
     }
   }
 
