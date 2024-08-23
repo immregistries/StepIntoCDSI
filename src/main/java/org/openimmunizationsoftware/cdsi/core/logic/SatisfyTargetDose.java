@@ -56,15 +56,15 @@ public class SatisfyTargetDose extends LogicStep {
 
     out.println(
         "<p>The following processing model and decision table are used to determine if the target dose was satisfied</p>");
-    out.println("<img src=\"Figure 4.22.PNG\"/>");
-    out.println("<p>FIGURE 4 - 22 SATISFY TARGET DOSE PROCESS MODEL</p>");
+    out.println("<img src=\"Figure 6.23.PNG\"/>");
+    out.println("<p>FIGURE 6 - 23 SATISFY TARGET DOSE PROCESS MODEL</p>");
     printConditionAttributesTable(out);
     printLogicTables(out);
   }
 
   private class LT extends LogicTable {
     public LT() {
-      super(5, 7, "TABLE 4 - 32 WAS THE TARGET DOSE SATISFIED?");
+      super(5, 7, "TABLE 6 - 31 WAS THE TARGET DOSE SATISFIED?");
 
       setLogicCondition(0, new LogicCondition("Was the vaccine dose administered at a valid age for the target dose?") {
         @Override
@@ -106,7 +106,7 @@ public class SatisfyTargetDose extends LogicStep {
       });
 
       setLogicCondition(3,
-          new LogicCondition("Did the patient receive either a preferable or allowable vaccine?") {
+          new LogicCondition("Was the vaccine dose administered a preferable vaccine or an allowable vaccine for the target dose?") {
             @Override
             public LogicResult evaluateInternal() {
               if (dataModel.getTargetDose().getStatusCause().contains("Vaccine")) {
@@ -118,13 +118,13 @@ public class SatisfyTargetDose extends LogicStep {
 
 
       setLogicResults(0, LogicResult.YES, LogicResult.EXTRANEOUS, LogicResult.NO, LogicResult.ANY,
-          LogicResult.ANY, LogicResult.ANY, LogicResult.ANY);
+          LogicResult.ANY, LogicResult.ANY);
       setLogicResults(1, LogicResult.YES, LogicResult.ANY, LogicResult.ANY, LogicResult.NO,
-          LogicResult.ANY, LogicResult.ANY, LogicResult.ANY);
+          LogicResult.ANY, LogicResult.ANY);
       setLogicResults(2, LogicResult.NO, LogicResult.ANY, LogicResult.ANY, LogicResult.ANY,
-          LogicResult.YES, LogicResult.ANY, LogicResult.ANY);
+          LogicResult.YES, LogicResult.ANY);
       setLogicResults(3, LogicResult.YES, LogicResult.ANY, LogicResult.ANY, LogicResult.ANY,
-          LogicResult.ANY, LogicResult.NO, LogicResult.ANY);
+          LogicResult.ANY, LogicResult.NO);
 
       setLogicOutcome(0, new LogicOutcome() {
         @Override
@@ -133,7 +133,7 @@ public class SatisfyTargetDose extends LogicStep {
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.SATISFIED);
           dataModel.getTargetDose().setSatisfiedByVaccineDoseAdministered(
               dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered());
-          log("Yes. The target dose status is \"satisfied.\" Evaluation status is \"valid\" with possible evaluation reason(s).");
+          log("Yes. The target dose status is 'Satisfied'. Evaluation status is 'Valid' with evaluation reasons.");
         }
       });
 
@@ -142,7 +142,7 @@ public class SatisfyTargetDose extends LogicStep {
         public void perform() {
           // TODO Auto-generated method stub
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
-          log("No. The target dose status is \"not satisfied.\" Evaluation status is \"extraneous\" with possible evaluation reason(s).");
+          log("No. The target dose status is 'Not Satisfied'. Evaluation status is 'Extraneous' with evaluation reasons.");
 
         }
       });
@@ -152,7 +152,7 @@ public class SatisfyTargetDose extends LogicStep {
         public void perform() {
           // TODO Auto-generated method stub
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
-          log("No. The target dose status is \"not satisfied.\" Evaluation status is \"not valid\" with evaluation reason(s).");
+          log("No. The target dose status is 'Not Satisfied'. Evaluation status is 'Not Valid' with evaluation reasons.");
 
         }
       });
@@ -160,9 +160,10 @@ public class SatisfyTargetDose extends LogicStep {
       setLogicOutcome(3, new LogicOutcome() {
         @Override
         public void perform() {
-          // TODO Auto-generated method stub
+          // TODO Auto-gene
+          rated method stub
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
-          log("No. The target dose status is \"not satisfied.\" Evaluation status is \"not valid\" with evaluation reason(s).");
+          log("No. The target dose status is 'Not Satisfied'. Evaluation status is 'Not Valid' with evaluation reasons.");
 
         }
       });
@@ -172,7 +173,7 @@ public class SatisfyTargetDose extends LogicStep {
         public void perform() {
           // TODO Auto-generated method stub
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
-          log("No. The target dose status is \"not satisfied.\" Evaluation status is \"not valid\" with evaluation reason(s). ");
+          log("No. The target dose status is 'Not Satisfied'. Evaluation status is 'Not Valid' with evaluation reasons. ");
 
         }
       });
@@ -182,49 +183,10 @@ public class SatisfyTargetDose extends LogicStep {
         public void perform() {
           // TODO Auto-generated method stub
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
-          log("No. The target dose status is \"not satisfied.\" Evaluation status is \"not valid\" with evaluation reason(s).");
+          log("No. The target dose status is 'Not Satisfied'. Evaluation status is 'Not Valid' with evaluation reasons.");
 
         }
-      });
-
-      setLogicOutcome(6, new LogicOutcome() {
-        @Override
-        public void perform() {
-          // TODO Auto-generated method stub
-          dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
-          log("No. The target dose status is \"not satisfied.\" Evaluation status is \"not valid\" with evaluation reason(s).");
-
-        }
-      });
-      // setLogicCondition(0, new LogicCondition("date administered > lot
-      // expiration date?") {
-      // @Override
-      // public LogicResult evaluateInternal() {
-      // if (caDateAdministered.getFinalValue() == null ||
-      // caTriggerAgeDate.getFinalValue() == null) {
-      // return LogicResult.NO;
-      // }
-      // if
-      // (caDateAdministered.getFinalValue().before(caTriggerAgeDate.getFinalValue()))
-      // {
-      // return LogicResult.YES;
-      // }
-      // return LogicResult.NO;
-      // }
-      // });
-
-      // setLogicResults(0, LogicResult.YES, LogicResult.NO, LogicResult.NO,
-      // LogicResult.ANY);
-
-      // setLogicOutcome(0, new LogicOutcome() {
-      // @Override
-      // public void perform() {
-      // log("No. The target dose cannot be skipped. ");
-      // log("Setting next step: 4.3 Substitute Target Dose");
-      // setNextLogicStep(LogicStep.SUBSTITUTE_TARGET_DOSE_FOR_EVALUATION);
-      // }
-      // });
-      //
+      })
     }
   }
 

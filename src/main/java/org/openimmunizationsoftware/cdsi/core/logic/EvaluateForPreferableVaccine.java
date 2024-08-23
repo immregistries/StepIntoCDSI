@@ -40,7 +40,7 @@ public class EvaluateForPreferableVaccine extends LogicStep {
 
       AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
       logicTable.caVolume = new ConditionAttribute<String>(
-          "Vaccine dose administered", "Preferable Vaccine Volume ");
+          "Vaccine dose administered", "Preferable VaccicaPreferableVaccineTypene Volume ");
       logicTable.caTradeName =
           new ConditionAttribute<String>("Vaccine dose administered", "Trade Name ");
       logicTable.caPreferableVaccineElements = new ConditionAttribute<String>(
@@ -49,14 +49,8 @@ public class EvaluateForPreferableVaccine extends LogicStep {
           "Vaccine Type Begin Age Date", "Calculated date (CALCDTPREF-1)");
       logicTable.caVaccineTypeEndAgeDate = new ConditionAttribute<Date>("Vaccine Type End Age Date",
           "Calculated date (CALCDTPREF-2)");
-          
-      logicTable.caPreferableVaccineType = new ConditionAttribute<String>(
-          "Preferable Vaccine Type ", "Supporting data (Preferable Vaccine)");
+
       logicTable.caVolume.setInitialValue(aar.getVolume());
-      logicTable.caTradeName.setInitialValue(aar.getAntigen().getName());
-      // caPreferableVaccineTradeName.setInitialValue(
-      // dataModel.getAntigenSeriesList().get(0).getSeriesDoseList().get(0).getAllowableVaccineList().get(0).getTradeName())
-      // ;
       logicTable.caDateAdministered.setInitialValue(aar.getDateAdministered());
 
       logicTable.caVaccineTypeBeginAgeDate.setAssumedValue(PAST);
@@ -66,19 +60,16 @@ public class EvaluateForPreferableVaccine extends LogicStep {
 
       List<ConditionAttribute<?>> caList = new ArrayList<ConditionAttribute<?>>();
       caList.add(logicTable.caDateAdministered);
+      caList.add(logicTable.caVolume);
       caList.add(logicTable.caTradeName);
+      caList.add(logicTable.caPreferableVaccineElements);
       caList.add(logicTable.caVaccineTypeBeginAgeDate);
       caList.add(logicTable.caVaccineTypeEndAgeDate);
-      caList.add(logicTable.caPreferableVaccineType);
-      caList.add(logicTable.caPreferableVaccineElements);
 
       conditionAttributesAdditionalMap.put("Preferrable Vaccine #" + count, caList);
-
-      if (pi.getTradeName() != null && !pi.getTradeName().equals("")) {
-        logicTable.caPreferableVaccineTradeName.setInitialValue(pi.getTradeName());
-      }
-      logicTable.pv = pi.getVolume();
-      logicTable.caPreferableVaccineType.setInitialValue(pi.getVaccineType().getCvxCode());
+      
+      logicTable.caVolume.setInitialValue(pi.getVolume());
+      logicTable.caPreferableVaccineElements.setInitialValue(pi);
       if (pi.getVaccineTypeBeginAge() != null) {
         logicTable.caVaccineTypeBeginAgeDate
             .setInitialValue(pi.getVaccineTypeBeginAge().getDateFrom(birthDate));
@@ -139,26 +130,23 @@ public class EvaluateForPreferableVaccine extends LogicStep {
 
   private class LT extends LogicTable {
     private ConditionAttribute<Date> caDateAdministered = null;
-    // private ConditionAttribute<>
+    private ConditionAttribute<String> caVolume = null;
     private ConditionAttribute<String> caTradeName = null;
+    private ConditionAttribute<PreferrableVaccine> caPreferableVaccineElements = null;
     private ConditionAttribute<Date> caVaccineTypeBeginAgeDate = null;
     private ConditionAttribute<Date> caVaccineTypeEndAgeDate = null;
-    private ConditionAttribute<String> caPreferableVaccineTradeName = null;
-    private ConditionAttribute<String> caPreferableVaccineVolume = null;
-    private ConditionAttribute<String> caPreferableVaccineType = null;
-    private ConditionAttribute<String> caVolume = null;
-    private String pv = null;
+    
     private YesNo result = null;
 
     public LT(int count) {
       super(4, 5,
-          "Table 6-26 Was the supporting data defined preferable vaccine administered? #" + count);
+          "Table 6-26 WAS THE VACCINE DOSE ADMINISTERED A PREFERABLE VACCINE FOR THE TARGET DOSE? #" + count);
 
       setLogicCondition(0, new LogicCondition(
           "Is the vaccine type of the vaccine dose administered the same as the vaccine type of a preferable vaccine for the target dose?") {
         @Override
         public LogicResult evaluateInternal() {
-          if (caPreferableVaccineType.getFinalValue()
+          if (caPreferableVaccineElements.getVaccineType().getFinalValue()
               .equals(dataModel.getAntigenAdministeredRecord().getVaccineType().getCvxCode())) {
             return LogicResult.YES;
           } else {
@@ -167,7 +155,7 @@ public class EvaluateForPreferableVaccine extends LogicStep {
         }
       });
       setLogicCondition(1, new LogicCondition(
-          "Is the Preferable vaccine type begin age date <= date administered < preferable vaccine type end age date? ") {
+          "Is the preferable vaccine type begin age date <= date administered < preferable vaccine type end age date?") {
         @Override
         public LogicResult evaluateInternal() {
           if (caVaccineTypeBeginAgeDate.getFinalValue().before(caDateAdministered.getFinalValue())
@@ -183,7 +171,7 @@ public class EvaluateForPreferableVaccine extends LogicStep {
         "Is the trade name of the vaccine dose administered the same as the trade name of the preferable vaccine for the target dose?") {
         @Override
         public LogicResult evaluateInternal() {
-          if (caTradeName.getFinalValue().equals(caPreferableVaccineTradeName.getFinalValue())) {
+          if (caTradeName.getFinalValue().equals(caPreferableVaccineTElements.getTradeName().getFinalValue())) {
             return LogicResult.YES;
           } else {
             return LogicResult.NO;
@@ -194,12 +182,12 @@ public class EvaluateForPreferableVaccine extends LogicStep {
           "Is the volume of the vaccine dose administered ≥ the volume of the preferable vaccine for the target dose?") {
         @Override
         public LogicResult evaluateInternal() {
-          if (caVolume.equals("") || caVolume.equalsIgnoreCase(caPreferableVaccineVolume.getFinalValue())) {
+          if (caVolume.equals("") || caVolume.equalsIgnoreCase(caPreferableVaccineElements.getVolume().getFinalValue())) {
             return LogicResult.YES;
           }
           try {
             if (Double.parseDouble(caVolume) >= Double
-                .parseDouble(caPreferableVaccineVolume.getFinalValue())) {
+                .parseDouble(caPreferableVaccineElements.getVolume().getFinalValue())) {
               return LogicResult.YES;
             } else {
               return LogicResult.NO;
@@ -222,7 +210,7 @@ public class EvaluateForPreferableVaccine extends LogicStep {
         @Override
         public void perform() {
           result = YesNo.YES;
-          log("Yes. A preferable vaccine was administered.");
+          log("Yes. The vaccine dose administered was a preferable vaccine for the target dose.");
           // setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
         }
       });
@@ -231,7 +219,7 @@ public class EvaluateForPreferableVaccine extends LogicStep {
         @Override
         public void perform() {
           result = YesNo.YES;
-          log("Yes. A preferable vaccine was administered. Evaluation Reason is volume administered is \"less than recommended volume.\"");
+          log("Yes. The vaccine dose administered was a preferable vaccine for the target dose. Evaluation Reason is 'Volume administered is less than recommended volume'.");
           // setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
         }
       });
@@ -240,7 +228,7 @@ public class EvaluateForPreferableVaccine extends LogicStep {
         public void perform() {
           // setNextLogicStepType(LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED);
           result = YesNo.NO;
-          log("No.  This supporting data defined preferable vaccine was not administered.");
+          log("No. The vaccine dose administered was not a preferable vaccine for the target dose.");
         }
       });
       setLogicOutcome(3, new LogicOutcome() {
@@ -248,7 +236,7 @@ public class EvaluateForPreferableVaccine extends LogicStep {
         public void perform() {
           // setNextLogicStepType(LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED);
           result = YesNo.NO;
-          log("No.  This supporting data defined preferable vaccine was administered out of the preferred age range.");
+          log("No. The vaccine dose administered was not a preferable vaccine for the target dose. It was administered out of the recommended age range for the preferable vaccine.");
         }
       });
       setLogicOutcome(4, new LogicOutcome() {
@@ -256,7 +244,7 @@ public class EvaluateForPreferableVaccine extends LogicStep {
         public void perform() {
           // setNextLogicStepType(LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED);
           result = YesNo.NO;
-          log("No. This supporting data defined preferable vaccine was of the wrong trade name. ");
+          log("No. The vaccine dose administered was not a preferable vaccine for the target dose. The trade name of the vaccine dose administered is not the same as the trade name of the preferable vaccine.");
         }
       });
 
