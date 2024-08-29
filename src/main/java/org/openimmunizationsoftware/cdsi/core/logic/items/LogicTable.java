@@ -58,8 +58,8 @@ public class LogicTable {
     logicOutcomes = new LogicOutcome[outcomeCount];
   }
 
-  public void setLogicCondition(int pos, LogicCondition logicCondiction) {
-    logicConditions[pos] = logicCondiction;
+  public void setLogicCondition(int pos, LogicCondition logicCondition) {
+    logicConditions[pos] = logicCondition;
   }
 
   public void setLogicOutcome(int pos, LogicOutcome logicOutcome) {

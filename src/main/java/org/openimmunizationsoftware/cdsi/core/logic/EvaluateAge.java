@@ -26,11 +26,13 @@ public class EvaluateAge extends LogicStep {
   private ConditionAttribute<Date> caMinimumAgeDate = null;
   private ConditionAttribute<Date> caMaximumAgeDate = null;
   private ConditionAttribute<Date> caAbsoluteMinimumAgeDate = null;
+  private ConditionAttribute<Date> caDateOfBirth = null;
 
   public EvaluateAge(DataModel dataModel) {
     super(LogicStepType.EVALUATE_AGE, dataModel);
-    setConditionTableName("Table 6-9 Age Attributes");
+    setConditionTableName("Table 6-14 Age Attributes");
 
+    caDateOfBirth = new ConditionAttribute<Date>("Patient","Date of birth");
     caDateAdministered =
         new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
     caMinimumAgeDate = new ConditionAttribute<Date>("Calculated Date", "Minimum Age Date");
@@ -91,10 +93,10 @@ public class EvaluateAge extends LogicStep {
     out.println("<h1> " + logicStepType.getDisplay() + "</h1>");
     out.println(
         "<p>Evaluate age validates the age at administration of a vaccine dose administered against a defined age range of a target dose. In cases where a target dose does not specify age attributes, the age at administration is considered �valid.�</p>");
-    out.println("<img src=\"Figure 4.4.PNG\"/>");
-    out.println("<p>FIGURE 4 - 4 EVALUATE AGE TIMELINE</p>");
-    out.println("<img src=\"Figure 4.5.PNG\"/>");
-    out.println("<p>FIGURE 4 - 5 EVALUATE AGE PROCESS MODEL</p>");
+    out.println("<img src=\"Figure 6.5.PNG\"/>");
+    out.println("<p>FIGURE 6 - 5 EVALUATE AGE TIMELINE</p>");
+    out.println("<img src=\"Figure 6.6.PNG\"/>");
+    out.println("<p>FIGURE 6 - 6 EVALUATE AGE PROCESS MODEL</p>");
 
     printConditionAttributesTable(out);
     printLogicTables(out);
@@ -104,7 +106,7 @@ public class EvaluateAge extends LogicStep {
 
   private class LT extends LogicTable {
     public LT() {
-      super(6, 6, "Table 4-12 Was the Vaccine Dose Administered at a Valid Age?");
+      super(4, 4, "Table 6-15 Was the Vaccine Dose Administered at a Valid Age?");
 
       setLogicCondition(0, new LogicCondition("Date administered < absolute minimum age date?") {
         @Override
@@ -117,13 +119,10 @@ public class EvaluateAge extends LogicStep {
       });
 
       setLogicCondition(1,
-          new LogicCondition("Absolute minimum age date <= date administered < minimum age date?") {
+          // Removed check for absolute minimum age date
+          new LogicCondition("Date administered < minimum age date?") {
             @Override
             public LogicResult evaluateInternal() {
-              if (caDateAdministered.getFinalValue()
-                  .before(caAbsoluteMinimumAgeDate.getFinalValue())) {
-                return NO;
-              }
               if (caDateAdministered.getFinalValue().before(caMinimumAgeDate.getFinalValue())) {
                 return YES;
               }
@@ -155,42 +154,16 @@ public class EvaluateAge extends LogicStep {
         }
       });
 
-      setLogicCondition(4, new LogicCondition("Is this the first target dose?") {
-        @Override
-        public LogicResult evaluateInternal() {
-          TargetDose targetDose = dataModel.getTargetDose();
-          if (targetDose == dataModel.getTargetDoseList().get(0)) {
-            return YES;
-          }
-          return NO;
-        }
-      });
+      // removed "Is this the first target dose?" check
 
-      setLogicCondition(5, new LogicCondition(
-          "Is the previous vaccine dose administered \"not valid\" due to age or interval requirements?") {
-        @Override
-        public LogicResult evaluateInternal() {
-          AntigenAdministeredRecord previousAar = dataModel.getPreviousAntigenAdministeredRecord();
-          if (previousAar == null
-              || previousAar.getEvaluation().getEvaluationStatus() != EvaluationStatus.NOT_VALID) {
-            return NO;
-          }
-          if (previousAar.getEvaluation().getEvaluationReason() == EvaluationReason.TOO_OLD) {
-            return YES;
-          }
-          if (previousAar.getEvaluation().getEvaluationReason() == EvaluationReason.TOO_YOUNG) {
-            return YES;
-          }
-          return NO;
-        }
-      });
+      // removed "Is the previous vaccine dose administered 'not valid' due to age or interval requirements?" check
 
-      setLogicResults(0, YES, NO, NO, NO, NO, NO);
-      setLogicResults(1, NO, YES, YES, YES, NO, NO);
-      setLogicResults(2, NO, NO, NO, NO, YES, NO);
-      setLogicResults(3, NO, NO, NO, NO, NO, YES);
-      setLogicResults(4, ANY, NO, NO, YES, ANY, ANY);
-      setLogicResults(5, ANY, YES, NO, ANY, ANY, ANY);
+      setLogicResults(0, YES, NO, NO, NO);
+      setLogicResults(1, NO, YES, NO, NO);
+      setLogicResults(2, NO, NO, YES, NO);
+      setLogicResults(3, NO, NO, NO, YES);
+      //setLogicResults(4, ANY, NO, NO, YES, ANY, ANY);
+      //setLogicResults(5, ANY, YES, NO, ANY, ANY, ANY);
 
 
       setLogicOutcome(0, new LogicOutcome() {
@@ -207,10 +180,10 @@ public class EvaluateAge extends LogicStep {
         @Override
         public void perform() {
           AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
-          aar.getEvaluation().setEvaluationStatus(EvaluationStatus.NOT_VALID);
-          log("No. The vaccine dose was not administered at a valid age. ");
-          aar.getEvaluation().setEvaluationReason(EvaluationReason.TOO_YOUNG);
-          log("Evaluation reason is \"too young.\"");
+          aar.getEvaluation().setEvaluationStatus(EvaluationStatus.VALID);
+          log("Yes. The vaccine dose was not administered at a valid age for the target dose. ");
+          aar.getEvaluation().setEvaluationReason(EvaluationReason.GRACE_PERIOD);
+          log("Evaluation reason is \"Grace period.\"");
         }
       });
       setLogicOutcome(2, new LogicOutcome() {
@@ -218,7 +191,8 @@ public class EvaluateAge extends LogicStep {
         public void perform() {
           AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
           aar.getEvaluation().setEvaluationStatus(EvaluationStatus.VALID);
-          log("Yes. The vaccine dose was administered at a valid age.  ");
+          log("Yes. The vaccine dose was administered at a valid age for the target dose.");
+          // No EvaluationReason is given in the 4.5 table? Leaving it alone for now.
           log("Evaluation reason is \"grace period.\"");
           aar.getEvaluation().setEvaluationReason(EvaluationReason.GRACE_PERIOD);
         }
@@ -227,31 +201,13 @@ public class EvaluateAge extends LogicStep {
         @Override
         public void perform() {
           AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
-          aar.getEvaluation().setEvaluationStatus(EvaluationStatus.VALID);
-          log("Yes. The vaccine dose was administered at a valid age.  ");
-          log("Evaluation reason is \"grace period.\"");
+          aar.getEvaluation().setEvaluationStatus(EvaluationStatus.NOT_VALID);
+          log("No. The vaccine dose was administered at a valid age for the target dose.");
+          log("It is \"extraneous.\"");
+          // There is no EvaluationReason that properly reflects the reason being "it is extraneous." Leaving it alone for now.
           aar.getEvaluation().setEvaluationReason(EvaluationReason.GRACE_PERIOD);
         }
       });
-      setLogicOutcome(4, new LogicOutcome() {
-        @Override
-        public void perform() {
-          AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
-          aar.getEvaluation().setEvaluationStatus(EvaluationStatus.VALID);
-          log("Yes. The vaccine dose was administered at a valid age.  ");
-        }
-      });
-      setLogicOutcome(5, new LogicOutcome() {
-        @Override
-        public void perform() {
-          AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
-          aar.getEvaluation().setEvaluationStatus(EvaluationStatus.NOT_VALID);
-          log("No. The vaccine dose was administered after the maximum age and is extraneous.  ");
-          aar.getEvaluation().setEvaluationReason(EvaluationReason.TOO_OLD);
-          log("Evaluation reason is \"too old.\"");
-        }
-      });
-
     }
   }
 

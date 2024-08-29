@@ -351,21 +351,31 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
 
   // Logic Table 4-7 -> 6-8
   // Add a new logic check: Has at least one dose been administered to the patient? 
-  // A YES result now requires both conditions to be true. 
+  // A positive result now requires both conditions to be true. 
   protected class LT68 extends LTInnerSet {
     public LT68() {
-      super(1, 2, "Table 6 - 8 CONDITIONAL Type of Interval - Is the Condition Met?");
+      super(2, 4, "Table 6 - 8 CONDITIONAL Type of Interval - Is the Condition Met?");
 
       setLogicCondition(0, new LogicCondition(
-          "Is the Conditional Skip Reference Date ≥ Conditional Skip Interval Date?") {
-        @Override
-        public LogicResult evaluateInternal() {
-          if (caConditionalSkipIntervalDate.getFinalValue() == null
-              || caExpirationDate.getFinalValue() == null) {
+        "Has at least one dose been administered to the patient?"){
+          @Override
+          public LogicResult evaluateInternal() {
+            if (caConditionalSkipIntervalDate.getFinalValue() == null
+            || caExpirationDate.getFinalValue() == null) {
+              return LogicResult.NO;
+            }
+            if (caAdministeredDoseCount.getFinalValue() >= 1){
+              return LogicResult.YES;
+            }
             return LogicResult.NO;
           }
-          if (caAdministeredDoseCount.getFinalValue() >= 1
-              && caConditionalSkipIntervalDate.getFinalValue()
+        });
+
+      setLogicCondition(1, new LogicCondition(
+        "Is the Conditional Skip Reference Date ≥ Conditional Skip Interval Date?") {
+        @Override
+        public LogicResult evaluateInternal() {
+          if (caConditionalSkipIntervalDate.getFinalValue()
               .before(caExpirationDate.getFinalValue())
               ) {
             return LogicResult.YES;
@@ -374,7 +384,12 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
         }
       });
 
-      setLogicResults(0, new LogicResult[] {LogicResult.YES, LogicResult.NO});
+      // setLogicResults(0, new LogicResult[] {LogicResult.YES, LogicResult.NO}); I don't know if I'll need to restore this code later
+      // Do I have to type out all 4 possibilities? Or can it be truncated?
+      setLogicResults(0, LogicResult.YES, LogicResult.YES);
+      setLogicResults(1, LogicResult.NO, LogicResult.YES);
+      setLogicResults(2, LogicResult.NO, LogicResult.NO);
+      setLogicResults(3, LogicResult.YES, LogicResult.NO);
 
       setLogicOutcome(0, new LogicOutcome() {
         @Override
@@ -385,6 +400,22 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
       });
 
       setLogicOutcome(1, new LogicOutcome() {
+        @Override
+        public void perform() {
+          log("No. The condition is not met");
+          met = false;
+        }
+      });
+
+      setLogicOutcome(2, new LogicOutcome() {
+        @Override
+        public void perform() {
+          log("No. The condition is not met");
+          met = false;
+        }
+      });
+
+      setLogicOutcome(3, new LogicOutcome() {
         @Override
         public void perform() {
           log("No. The condition is not met");
