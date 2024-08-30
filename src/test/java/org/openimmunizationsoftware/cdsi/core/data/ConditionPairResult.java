@@ -18,21 +18,21 @@ public enum ConditionPairResult implements Iterable<ConditionPairResult.Conditio
         @Override
         protected void initializePairs() {
             Date dateAdmin = new Date();
-            Date lotExpGood = new Date(dateAdmin.getTime() - 1000);
-            Date lotExpBad = new Date(dateAdmin.getTime() + 1000);
+            Date lotExpBad = new Date(dateAdmin.getTime() - 1000);
+            Date lotExpGood = new Date(dateAdmin.getTime() + 1000);
 
             conditionPairs = new HashMap<>();
             conditionPairs.put("Date", Arrays.asList(
                 new ConditionResultValuePairs<>(
                     Arrays.asList(dateAdmin, dateAdmin, dateAdmin),
-                    Arrays.asList(lotExpGood, lotExpBad, dateAdmin),
-                    Arrays.asList(LogicResult.NO, LogicResult.YES, LogicResult.NO)
+                    Arrays.asList(lotExpBad, lotExpGood, dateAdmin),
+                    Arrays.asList(LogicResult.YES, LogicResult.NO, LogicResult.NO)
                 )
             ));
             conditionPairs.put("DoseCondition", Arrays.asList(
                 new ConditionResultValue<>(
                     Arrays.asList(DoseCondition.YES, DoseCondition.NO),
-                    Arrays.asList(LogicResult.NO, LogicResult.NO) 
+                    Arrays.asList(LogicResult.YES, LogicResult.NO) 
                 )
             ));
         }

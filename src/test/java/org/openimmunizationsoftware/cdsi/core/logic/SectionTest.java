@@ -42,32 +42,50 @@ public abstract class SectionTest {
     @Test
     public void testEvaluateLogicTables() {
         List<LogicTable> tables = step.getLogicTableList();
-        
         Iterator<LogicTable> tablesIterator = tables.iterator();
         Iterator<TableInfo> tableInfoIterator = tableInfo.iterator();
-
+    
         int i = 0;
         while (tablesIterator.hasNext() && tableInfoIterator.hasNext()) {
             LogicTable table = tablesIterator.next();
             TableInfo info = tableInfoIterator.next();
-
-            assertEquals(table.getLabel(), info.getTableName());
-            LogicCondition[] conditions  = table.getLogicConditions();
-
-            int numConditions = info.getExpectedLogicResultTable().length; //num rows
-            for(int j = 0; j < numConditions; j++){
-                conditions[j].evaluate();
-                assertArrayEquals("Got unexpected value in Logic results table",info.getExpectedLogicResultTable()[j], table.getLogicResultTable()[j]); 
-                assertEquals("Got unexpected value for condition evaluation", conditions[j].getLogicResult(), tableResults.get(i).get(j));
-            }
-            
-            info.getExpectedConditionText();
-            info.getExpectedOutcomeText();
-            info.getExpectedLogicResultTable();
+    
+            // Call helper methods for each set of related assertions
+            testTableLabel(table, info);
+            testLogicConditions(table, info, i);
+            // Add additional helper methods as needed for other assertions
+    
             i++;
         }
     }
-
+    
+    // Helper method to test table labels
+    private void testTableLabel(LogicTable table, TableInfo info) {
+        assertEquals(table.getLabel(), info.getTableName());
+    }
+    
+    // Helper method to test logic conditions and results
+    private void testLogicConditions(LogicTable table, TableInfo info, int index) {
+        LogicCondition[] conditions = table.getLogicConditions();
+        int numConditions = info.getExpectedLogicResultTable().length; // num rows
+    
+        for (int j = 0; j < numConditions; j++) {
+            conditions[j].evaluate();
+            assertArrayEquals(
+                "Got unexpected value in Logic results table",
+                info.getExpectedLogicResultTable()[j], 
+                table.getLogicResultTable()[j]
+            );
+            assertEquals(
+                "Got unexpected value for condition evaluation",
+                conditions[j].getLogicResult(),
+                tableResults.get(index).get(j)
+            );
+        }
+    }
+    
+    // You can add more helper methods to handle other specific logic checks
+    
 
     @Test
     public abstract void testSectionName();
