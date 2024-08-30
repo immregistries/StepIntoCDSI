@@ -1,0 +1,228 @@
+@startuml
+!define ENTITY(x) class x << (E,#FFAAAA) >>
+
+ENTITY(antigenSupportingData) {
+}
+
+ENTITY(immunity) {
+    + clinicalHistory : 0..*
+    + dateOfBirth : 0..*
+}
+
+ENTITY(clinicalHistory) {
+    + guidelineCode : string
+    + guidelineTitle : string
+}
+
+ENTITY(dateOfBirth) {
+    + immunityBirthDate : string
+    + birthCountry : string
+    + exclusion : 0..*
+}
+
+ENTITY(exclusion) {
+    + exclusionCode : string
+    + exclusionTitle : string
+}
+
+ENTITY(contraindications) {
+    + vaccineGroup : 0..1
+    + vaccine : 0..1
+}
+
+ENTITY(vaccineGroup) {
+    + contraindication : 0..*
+}
+
+ENTITY(contraindication) {
+    + observationCode : string
+    + observationTitle : string
+    + contraindicationText : string
+    + contraindicationGuidance : string
+    + beginAge : string
+    + endAge : string
+}
+
+ENTITY(vaccine) {
+    + contraindication : 0..*
+}
+
+ENTITY(contraindicatedVaccine) {
+    + vaccineType : string
+    + cvx : string
+    + beginAge : string
+    + endAge : string
+}
+
+ENTITY(series) {
+    + seriesName : string
+    + targetDisease : string
+    + vaccineGroup : string
+    + seriesAdminGuidance : 1..*
+    + seriesType : string
+    + equivalentSeriesGroups : string
+    + requiredGender : 1..*
+    + selectSeries : 1
+    + indication : 1..*
+    + seriesDose : 1..*
+}
+
+ENTITY(selectSeries) {
+    + defaultSeries : string
+    + productPath : string
+    + seriesGroupName : string
+    + seriesGroup : string
+    + seriesPriority : string
+    + seriesPreference : string
+    + minAgeToStart : string
+    + maxAgeToStart : string
+}
+
+ENTITY(indication) {
+    + observationCode : 0..1
+    + description : string
+    + beginAge : string
+    + endAge : string
+    + guidance : string
+}
+
+ENTITY(observationCode) {
+    + text : string
+    + code : string
+}
+
+ENTITY(seriesDose) {
+    + doseNumber : string
+    + age : 0..*
+    + interval : 0..*
+    + allowableInterval : 0..*
+    + preferableVaccine : 0..*
+    + allowableVaccine : 0..*
+    + inadvertentVaccine : 0..*
+    + conditionalSkip : 0..*
+    + recurringDose : string
+    + seasonalRecommendation : 0..1
+}
+
+ENTITY(age) {
+    + absMinAge : string
+    + minAge : string
+    + earliestRecAge : string
+    + latestRecAge : string
+    + maxAge : string
+    + effectiveDate : string
+    + cessationDate : string
+}
+
+ENTITY(interval) {
+    + fromPrevious : string
+    + fromTargetDose : string
+    + fromMostRecent : string
+    + fromRelevantObs : 0..1
+    + absMinInt : string
+    + minInt : string
+    + earliestRecInt : string
+    + latestRecInt : string
+    + intervalPriority : string
+    + effectiveDate : string
+    + cessationDate : string
+}
+
+ENTITY(allowableInterval) {
+    + fromPrevious : string
+    + fromTargetDose : string
+    + absMinInt : string
+    + effectiveDate : string
+    + cessationDate : string
+}
+
+ENTITY(preferableVaccine) {
+    + vaccineType : string
+    + cvx : string
+    + beginAge : string
+    + endAge : string
+    + tradeName : string
+    + mvx : string
+    + volume : string
+    + forecastVaccineType : string
+}
+
+ENTITY(allowableVaccine) {
+    + vaccineType : string
+    + cvx : string
+    + beginAge : string
+    + endAge : string
+}
+
+ENTITY(inadvertentVaccine) {
+    + vaccineType : string
+    + cvx : string
+}
+
+ENTITY(conditionalSkip) {
+    + context : string
+    + setLogic : string
+    + set : 0..*
+}
+
+ENTITY(set) {
+    + setID : string
+    + setDescription : string
+    + effectiveDate : string
+    + cessationDate : string
+    + conditionLogic : string
+    + condition : 0..*
+}
+
+ENTITY(condition) {
+    + conditionID : string
+    + conditionType : string
+    + startDate : string
+    + endDate : string
+    + beginAge : string
+    + endAge : string
+    + interval : string
+    + doseCount : string
+    + doseType : string
+    + doseCountLogic : string
+    + vaccineTypes : string
+    + seriesGroups : string
+}
+
+ENTITY(fromRelevantObs) {
+    + text : string
+    + code : string
+}
+
+ENTITY(seasonalRecommendation) {
+    + startDate : string
+    + endDate : string
+}
+
+antigenSupportingData --> immunity
+antigenSupportingData --> contraindications
+antigenSupportingData --> series
+immunity --> clinicalHistory
+immunity --> dateOfBirth
+dateOfBirth --> exclusion
+contraindications --> vaccineGroup
+contraindications --> vaccine
+vaccineGroup --> contraindication
+vaccine --> contraindication
+contraindication --> contraindicatedVaccine
+series --> selectSeries
+series --> indication
+series --> seriesDose
+indication --> observationCode
+seriesDose --> age
+seriesDose --> interval
+seriesDose --> allowableInterval
+seriesDose --> preferableVaccine
+seriesDose --> allowableVaccine
+seriesDose --> inadvertentVaccine
+seriesDose --> conditionalSkip
+seriesDose --> seasonalRecommendation
+interval --> fromRelevantObs
+conditionalSkip --> set
+set --> condition
+@enduml
