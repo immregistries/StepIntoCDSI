@@ -22,7 +22,7 @@ public class EvaluateForPreferableVaccine extends LogicStep {
 
   public EvaluateForPreferableVaccine(DataModel dataModel) {
     super(LogicStepType.EVALUATE_PREFERABLE_VACCINE_ADMINISTERED, dataModel);
-    setConditionTableName("Table ");
+    setConditionTableName("Table 6.8");
 
 
     Date birthDate = dataModel.getPatient().getDateOfBirth();
@@ -40,10 +40,10 @@ public class EvaluateForPreferableVaccine extends LogicStep {
 
       AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
       logicTable.caVolume = new ConditionAttribute<String>(
-          "Vaccine dose administered", "Preferable VaccicaPreferableVaccineTypene Volume ");
+          "Vaccine dose administered", "Volume");
       logicTable.caTradeName =
           new ConditionAttribute<String>("Vaccine dose administered", "Trade Name ");
-      logicTable.caPreferableVaccineElements = new ConditionAttribute<String>(
+      logicTable.caPreferableVaccineElements = new ConditionAttribute<PreferrableVaccine>(
           "Supporting Data", "Preferable Vaccine elements");
       logicTable.caVaccineTypeBeginAgeDate = new ConditionAttribute<Date>(
           "Vaccine Type Begin Age Date", "Calculated date (CALCDTPREF-1)");
@@ -55,8 +55,6 @@ public class EvaluateForPreferableVaccine extends LogicStep {
 
       logicTable.caVaccineTypeBeginAgeDate.setAssumedValue(PAST);
       logicTable.caVaccineTypeEndAgeDate.setAssumedValue(FUTURE);
-      
-      logicTable.caPreferableVaccineVolume.setAssumedValue(pi.getVolume());
 
       List<ConditionAttribute<?>> caList = new ArrayList<ConditionAttribute<?>>();
       caList.add(logicTable.caDateAdministered);
@@ -113,17 +111,17 @@ public class EvaluateForPreferableVaccine extends LogicStep {
     out.println(
         "<p>Evaluate for preferable vaccine validates the vaccine of a vaccine dose administered against the list of preferable vaccines.</p>");
     out.println(
-        "<p>Figures 4-15 depicts a patient who received a preferable vaccine while figure 4-16 depicts a patient who did not receive a preferable vaccine.</p>");
-    out.println("<img src=\"Figure 4.15.PNG\"/>");
-    out.println("<p>FIGURE 4 - 15 PATIENT RECEIVED A PREFERABLE VACCINE</p>");
-    out.println("<img src=\"Figure 4.16.PNG\"/>");
-    out.println("<p>FIGURE 4 - 16 PATIENT DID NOT RECEIVE A PREFERABLE VACCINE</p>");
+        "<p>Figures 6-17 depicts a patient who received a preferable vaccine while figure 6-18 depicts a patient who did not receive a preferable vaccine.</p>");
+    out.println("<img src=\"Figure 6.17.PNG\"/>");
+    out.println("<p>FIGURE 6 - 17 PATIENT RECEIVED A PREFERABLE VACCINE</p>");
+    out.println("<img src=\"Figure 6.18.PNG\"/>");
+    out.println("<p>FIGURE 6 - 18 PATIENT DID NOT RECEIVE A PREFERABLE VACCINE</p>");
     out.println(
         "<p>It should be noted that volume is sparsely populated and tracked differently in most systems. Therefore, volume will not be used to evaluate the validity of a vaccine dose administered. However, it will be provided as an evaluation reason that less than sufficient volume was administered.</p>");
     out.println(
         "<p>The following process model, attribute table, decision table, and business rule table are used to evaluate for a preferable vaccine.</p>");
-    out.println("<img src=\"Figure 4.17.PNG\"/>");
-    out.println("<p>FIGURE 4 - 17 EVALUATE FOR A PREFERABLE VACCINE PROCESS MODEL</p>");
+    out.println("<img src=\"Figure 6.19.PNG\"/>");
+    out.println("<p>FIGURE 6 - 19 EVALUATE FOR A PREFERABLE VACCINE PROCESS MODEL</p>");
     printConditionAttributesTable(out);
     printLogicTables(out);
   }
@@ -146,7 +144,7 @@ public class EvaluateForPreferableVaccine extends LogicStep {
           "Is the vaccine type of the vaccine dose administered the same as the vaccine type of a preferable vaccine for the target dose?") {
         @Override
         public LogicResult evaluateInternal() {
-          if (caPreferableVaccineElements.getVaccineType().getFinalValue()
+          if (caPreferableVaccineElements.getFinalValue().getSeriesDose()
               .equals(dataModel.getAntigenAdministeredRecord().getVaccineType().getCvxCode())) {
             return LogicResult.YES;
           } else {
@@ -171,7 +169,7 @@ public class EvaluateForPreferableVaccine extends LogicStep {
         "Is the trade name of the vaccine dose administered the same as the trade name of the preferable vaccine for the target dose?") {
         @Override
         public LogicResult evaluateInternal() {
-          if (caTradeName.getFinalValue().equals(caPreferableVaccineTElements.getTradeName().getFinalValue())) {
+          if (caTradeName.getFinalValue().equals(caPreferableVaccineElements.getFinalValue().getTradeName())) {
             return LogicResult.YES;
           } else {
             return LogicResult.NO;
@@ -182,12 +180,12 @@ public class EvaluateForPreferableVaccine extends LogicStep {
           "Is the volume of the vaccine dose administered ≥ the volume of the preferable vaccine for the target dose?") {
         @Override
         public LogicResult evaluateInternal() {
-          if (caVolume.equals("") || caVolume.equalsIgnoreCase(caPreferableVaccineElements.getVolume().getFinalValue())) {
+          if (caVolume.equals("") || caVolume.getFinalValue().equalsIgnoreCase(caPreferableVaccineElements.getFinalValue().getVolume())) {
             return LogicResult.YES;
           }
           try {
-            if (Double.parseDouble(caVolume) >= Double
-                .parseDouble(caPreferableVaccineElements.getVolume().getFinalValue())) {
+            if (Double.parseDouble(caVolume.getFinalValue()) >= Double
+                .parseDouble(caPreferableVaccineElements.getFinalValue().getVolume())) {
               return LogicResult.YES;
             } else {
               return LogicResult.NO;
@@ -247,18 +245,6 @@ public class EvaluateForPreferableVaccine extends LogicStep {
           log("No. The vaccine dose administered was not a preferable vaccine for the target dose. The trade name of the vaccine dose administered is not the same as the trade name of the preferable vaccine.");
         }
       });
-
-      // setLogicResults(0, LogicResult.YES, LogicResult.NO, LogicResult.NO, LogicResult.ANY);
-
-      // setLogicOutcome(0, new LogicOutcome() {
-      // @Override
-      // public void perform() {
-      // log("No. The target dose cannot be skipped. ");
-      // log("Setting next step: 4.3 Substitute Target Dose");
-      // setNextLogicStep(LogicStep.SUBSTITUTE_TARGET_DOSE_FOR_EVALUATION);
-      // }
-      // });
-      //
     }
 
     public YesNo getResult() { // TODO Auto-generated method stub

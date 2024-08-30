@@ -19,7 +19,7 @@ public class SatisfyTargetDose extends LogicStep {
 
   public SatisfyTargetDose(DataModel dataModel) {
     super(LogicStepType.SATISFY_TARGET_DOSE, dataModel);
-    setConditionTableName("Table ");
+    setConditionTableName("Table 6.10");
 
     LT logicTable = new LT();
     logicTableList.add(logicTable);
@@ -70,9 +70,6 @@ public class SatisfyTargetDose extends LogicStep {
         @Override
         public LogicResult evaluateInternal() {
           AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
-          // if (aar.getEvaluation().getEvaluationReason() == EvaluationReason.TOO_OLD) {
-          // return NO;
-          // }
           if (aar.getEvaluation().getEvaluationStatus() == EvaluationStatus.VALID) {
             return YES;
           } else if (aar.getEvaluation().getEvaluationStatus() == EvaluationStatus.EXTRANEOUS) {
@@ -160,8 +157,7 @@ public class SatisfyTargetDose extends LogicStep {
       setLogicOutcome(3, new LogicOutcome() {
         @Override
         public void perform() {
-          // TODO Auto-gene
-          rated method stub
+          // TODO Auto-generated method stub
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
           log("No. The target dose status is 'Not Satisfied'. Evaluation status is 'Not Valid' with evaluation reasons.");
 
@@ -186,7 +182,7 @@ public class SatisfyTargetDose extends LogicStep {
           log("No. The target dose status is 'Not Satisfied'. Evaluation status is 'Not Valid' with evaluation reasons.");
 
         }
-      })
+      });
     }
   }
 
