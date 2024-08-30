@@ -21,7 +21,7 @@ public class EvaluateForAllowableVaccines extends LogicStep {
 
   public EvaluateForAllowableVaccines(DataModel dataModel) {
     super(LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED, dataModel);
-    setConditionTableName("Table 4.8");
+    setConditionTableName("Table 6.9");
 
     for (AllowableVaccine pi : dataModel.getTargetDose().getTrackedSeriesDose()
         .getAllowableVaccineList()) {
@@ -32,7 +32,7 @@ public class EvaluateForAllowableVaccines extends LogicStep {
           new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
       logicTable.caVaccineType =
           new ConditionAttribute<VaccineType>("Vaccine Dose Administered", "Vaccine Type");
-`      logicTable.caAllowableVaccineElements = new ConditionAttribute<AllowableVaccine>(
+      logicTable.caAllowableVaccineElements = new ConditionAttribute<AllowableVaccine>(
           "Supporting data", "Allowable Vaccine elements");
       logicTable.caAllowableVaccineTypeBeginAgeDate = new ConditionAttribute<Date>(
           "Calculated data (CALCDTALLOW-1)", "Allowable Vaccine Type Begin Age Date");
@@ -166,7 +166,7 @@ public class EvaluateForAllowableVaccines extends LogicStep {
         public void perform() {
           result = YesNo.YES;
           log("Yes. The vaccine dose administered was an allowable vaccine for the target dose.");
-          log("Setting next step: 6.10 EvaluateForAllowableVaccines");
+          log("Setting next step: 6.9 EvaluateForAllowableVaccines");
         }
       });
       setLogicOutcome(1, new LogicOutcome() {
@@ -174,7 +174,7 @@ public class EvaluateForAllowableVaccines extends LogicStep {
         public void perform() {
           result = YesNo.NO;
           log("No. The vaccine dose administered was not an allowable vaccine for the target dose.");
-          log("Setting next step: 6.9 SatifyTargetDose");
+          log("Setting next step: 6.10 SatifyTargetDose");
         }
       });
       setLogicOutcome(2, new LogicOutcome() {
@@ -182,7 +182,7 @@ public class EvaluateForAllowableVaccines extends LogicStep {
         public void perform() {
           result = YesNo.NO;
           log("No. The vaccine dose administered was not an allowable vaccine for the target dose. It was administered out of the recommended age range for the allowable vaccine.");
-          log("Setting next step: 6.9 SatifyTargetDose");
+          log("Setting next step: 6.10 SatifyTargetDose");
         }
       });
 
