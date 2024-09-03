@@ -66,11 +66,12 @@ public class DataModelLoader {
 
       doc.getDocumentElement().normalize();
       readCvxToAntigenMap(dataModel, doc);
-      readContraindications(dataModel, doc);
       readVaccineGroups(dataModel, doc);
       readVaccineGroupToAntigenMap(dataModel, doc);
       readLiveVirusConflicts(dataModel, doc);
+      // TODO add readObservations(dataModel, doc);
     }
+    
     for (String scheduleName : scheduleNames) {
       InputStream is = DataModelLoader.class
           .getResourceAsStream(baseLocation + "AntigenSupportingData- " + scheduleName + "-508.xml");
@@ -557,7 +558,8 @@ public class DataModelLoader {
     }
   }
 
-  private static void readContraindications(DataModel dataModel, Document doc) {
+  // No longer called
+  private static void readContraindicationsDELETEME(DataModel dataModel, Document doc) {
     NodeList parentList = doc.getElementsByTagName("contraindications");
     for (int i = 0; i < parentList.getLength(); i++) {
       Node parentNode = parentList.item(i);
