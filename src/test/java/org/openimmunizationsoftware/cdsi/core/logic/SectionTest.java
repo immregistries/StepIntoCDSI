@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.data.TableInfo;
@@ -83,10 +82,14 @@ public abstract class SectionTest {
             );
         }
     }
-    
-    // You can add more helper methods to handle other specific logic checks
-    
 
     @Test
-    public abstract void testSectionName();
+    public void testCorrectNextStep(){
+        LogicStep step = LogicStepFactory.createLogicStep(stepName, model);
+        step.evaluateLogicTables();
+        assertEquals(this.nextStep, step.getNextLogicStepType());
+    }
+
+    @Test
+    public abstract void testSectionTitle();
 }

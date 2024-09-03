@@ -1,8 +1,5 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
-import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
-import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
-
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
@@ -15,6 +12,7 @@ import org.junit.Test;
 import org.junit.runners.Parameterized;
 import org.junit.runner.RunWith;
 
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.data.TableInfo;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
@@ -86,33 +84,9 @@ public class EvaluateDoseAdministeredConditionTest extends SectionTest {
         });
     }
 
+    //Not Sure this provides any value atm 
     @Test
-    public void testCorrectNextStep(){
-        LogicStep step = LogicStepFactory.createLogicStep(LogicStepType.EVALUATE_DOSE_ADMININISTERED_CONDITION, model);
-        step.evaluateLogicTables();
-        assertEquals(this.nextStep, step.getNextLogicStepType());
-    }
-
-
-    // @Test
-    // public void testProcess() {
-        
-    //     LogicTable table = step.logicTableList.get(0);
-    //     System.out.println(table.getLabel());
-
-    //     try {
-    //         step.process();
-    //         assertEquals(this.nextStep, step.getNextLogicStepType());
-    //         System.out.println("test");
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //         assertEquals("got Exception when attempting to run process in EvaluateDoseAdministeredCondition",0, 1);
-    //     }
-        
-    // }
-
-    @Test
-    public void testSectionName(){
-        assertEquals(1, 1); // Placeholder for now
+    public void testSectionTitle(){
+        assertEquals(stepName.getDisplay(), LogicStepType.EVALUATE_DOSE_ADMININISTERED_CONDITION.getDisplay());
     }
 }
