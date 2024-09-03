@@ -22,7 +22,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkip;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipCondition;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipConditionType;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipSet;
-import org.openimmunizationsoftware.cdsi.core.domain.Contraindication;
+import org.openimmunizationsoftware.cdsi.core.domain.Contraindication_TO_BE_REMOVED;
 import org.openimmunizationsoftware.cdsi.core.domain.DoseType;
 import org.openimmunizationsoftware.cdsi.core.domain.Exclusion;
 import org.openimmunizationsoftware.cdsi.core.domain.Immunity;
@@ -567,7 +567,7 @@ public class DataModelLoader {
         if (childNode.getNodeType() == Node.ELEMENT_NODE
             && childNode.getNodeName().equals("contraindication")) {
           NodeList grandchildList = childNode.getChildNodes();
-          Contraindication contraindication = new Contraindication();
+          Contraindication_TO_BE_REMOVED contraindication = new Contraindication_TO_BE_REMOVED();
           dataModel.getContraindicationList().add(contraindication);
           for (int k = 0; k < grandchildList.getLength(); k++) {
             Node grandchildNode = grandchildList.item(k);
