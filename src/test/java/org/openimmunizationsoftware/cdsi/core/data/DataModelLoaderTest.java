@@ -10,7 +10,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 
 public class DataModelLoaderTest {
 
-    @Test
+    @Test 
     public void testLoadData() throws Exception
     {
         DataModel dataModel = DataModelLoader.createDataModel();  
@@ -32,6 +32,7 @@ public class DataModelLoaderTest {
             }
         }
         assertTrue(foundCholera);
+        assertTrue(foundDtap);
     }
 
 }
