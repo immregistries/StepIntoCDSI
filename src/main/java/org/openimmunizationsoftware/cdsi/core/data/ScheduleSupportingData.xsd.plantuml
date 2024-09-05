@@ -12,64 +12,64 @@ class liveVirusConflict {
 }
 
 class previous {
-  +vaccineType: String
-  +cvx: String
+  + vaccineType : String
+  + cvx : String
 }
 
 class current {
-  +vaccineType: String
-  +cvx: String
+  + vaccineType : String
+  + cvx : String
 }
 
 class vaccineGroups {
 }
 
 class vaccineGroup {
-  +name: String
-  +administerFullVaccineGroup: String
+  + name : String
+  + administerFullVaccineGroup : String
 }
 
 class vaccineGroupToAntigenMap {
 }
 
 class vaccineGroupMap {
-  +name: String
-  +antigen: String [0..*]
+  + name : String
+  + antigen : String [0..*]
 }
 
 class cvxToAntigenMap {
 }
 
 class cvxMap {
-  +cvx: String
-  +shortDescription: String
+  + cvx : String
+  + shortDescription : String
 }
 
 class association {
-  +antigen: String
-  +associationBeginAge: String
-  +associationEndAge: String
+  + antigen : String
+  + associationBeginAge : String
+  + associationEndAge : String
 }
 
 class observations {
 }
 
 class observation {
-  +observationCode: String
-  +observationTitle: String
-  +group: String
-  +indicationText: String
-  +contraindicationText: String
-  +clarifyingText: String
+  + observationCode : String
+  + observationTitle : String
+  + group : String
+  + indicationText : String
+  + contraindicationText : String
+  + clarifyingText : String
 }
 
 class codedValues {
 }
 
 class codedValue {
-  +code: String
-  +codeSystem: String
-  +text: String
+  + code : String
+  + codeSystem : String
+  + text : String
 }
 
 scheduleSupportingData --* liveVirusConflicts

@@ -1,98 +1,99 @@
 @startuml
-!define ENTITY(x) class x << (E,#FFAAAA) >>
 
-ENTITY(antigenSupportingData) {
+!define complexType class
+
+class antigenSupportingData {
 }
 
-ENTITY(immunity) {
+class immunity {
     + clinicalHistory : 0..*
     + dateOfBirth : 0..*
 }
 
-ENTITY(clinicalHistory) {
-    + guidelineCode : string
-    + guidelineTitle : string
+class clinicalHistory {
+    + guidelineCode :  String
+    + guidelineTitle :  String
 }
 
-ENTITY(dateOfBirth) {
-    + immunityBirthDate : string
-    + birthCountry : string
+class dateOfBirth {
+    + immunityBirthDate :  String
+    + birthCountry :  String
     + exclusion : 0..*
 }
 
-ENTITY(exclusion) {
-    + exclusionCode : string
-    + exclusionTitle : string
+class exclusion {
+    + exclusionCode :  String
+    + exclusionTitle :  String
 }
 
-ENTITY(contraindications) {
+class contraindications {
     + vaccineGroup : 0..1
     + vaccine : 0..1
 }
 
-ENTITY(vaccineGroup) {
+class vaccineGroup {
     + contraindication : 0..*
 }
 
-ENTITY(contraindication) {
-    + observationCode : string
-    + observationTitle : string
-    + contraindicationText : string
-    + contraindicationGuidance : string
-    + beginAge : string
-    + endAge : string
+class contraindication {
+    + observationCode :  String
+    + observationTitle :  String
+    + contraindicationText :  String
+    + contraindicationGuidance :  String
+    + beginAge :  String
+    + endAge :  String
 }
 
-ENTITY(vaccine) {
+class vaccine {
     + contraindication : 0..*
 }
 
-ENTITY(contraindicatedVaccine) {
-    + vaccineType : string
-    + cvx : string
-    + beginAge : string
-    + endAge : string
+class contraindicatedVaccine {
+    + vaccineType :  String
+    + cvx :  String
+    + beginAge :  String
+    + endAge :  String
 }
 
-ENTITY(series) {
-    + seriesName : string
-    + targetDisease : string
-    + vaccineGroup : string
+class series {
+    + seriesName :  String
+    + targetDisease :  String
+    + vaccineGroup :  String
     + seriesAdminGuidance : 1..*
-    + seriesType : string
-    + equivalentSeriesGroups : string
+    + seriesType :  String
+    + equivalentSeriesGroups :  String
     + requiredGender : 1..*
     + selectSeries : 1
     + indication : 1..*
     + seriesDose : 1..*
 }
 
-ENTITY(selectSeries) {
-    + defaultSeries : string
-    + productPath : string
-    + seriesGroupName : string
-    + seriesGroup : string
-    + seriesPriority : string
-    + seriesPreference : string
-    + minAgeToStart : string
-    + maxAgeToStart : string
+class selectSeries {
+    + defaultSeries :  String
+    + productPath :  String
+    + seriesGroupName :  String
+    + seriesGroup :  String
+    + seriesPriority :  String
+    + seriesPreference :  String
+    + minAgeToStart :  String
+    + maxAgeToStart :  String
 }
 
-ENTITY(indication) {
+class indication {
     + observationCode : 0..1
-    + description : string
-    + beginAge : string
-    + endAge : string
-    + guidance : string
+    + description :  String
+    + beginAge :  String
+    + endAge :  String
+    + guidance :  String
 }
 
-ENTITY(observationCode) {
-    + text : string
-    + code : string
+class observationCode {
+    + text :  String
+    + code :  String
 }
 
-ENTITY(seriesDose) {
-    + doseNumber : string
+class seriesDose {
+    + doseNumber :  String
     + age : 0..*
     + interval : 0..*
     + allowableInterval : 0..*
@@ -100,103 +101,103 @@ ENTITY(seriesDose) {
     + allowableVaccine : 0..*
     + inadvertentVaccine : 0..*
     + conditionalSkip : 0..*
-    + recurringDose : string
+    + recurringDose :  String
     + seasonalRecommendation : 0..1
 }
 
-ENTITY(age) {
-    + absMinAge : string
-    + minAge : string
-    + earliestRecAge : string
-    + latestRecAge : string
-    + maxAge : string
-    + effectiveDate : string
-    + cessationDate : string
+class age {
+    + absMinAge :  String
+    + minAge :  String
+    + earliestRecAge :  String
+    + latestRecAge :  String
+    + maxAge :  String
+    + effectiveDate :  String
+    + cessationDate :  String
 }
 
-ENTITY(interval) {
-    + fromPrevious : string
-    + fromTargetDose : string
-    + fromMostRecent : string
+class interval {
+    + fromPrevious :  String
+    + fromTargetDose :  String
+    + fromMostRecent :  String
     + fromRelevantObs : 0..1
-    + absMinInt : string
-    + minInt : string
-    + earliestRecInt : string
-    + latestRecInt : string
-    + intervalPriority : string
-    + effectiveDate : string
-    + cessationDate : string
+    + absMinInt :  String
+    + minInt :  String
+    + earliestRecInt :  String
+    + latestRecInt :  String
+    + intervalPriority :  String
+    + effectiveDate :  String
+    + cessationDate :  String
 }
 
-ENTITY(allowableInterval) {
-    + fromPrevious : string
-    + fromTargetDose : string
-    + absMinInt : string
-    + effectiveDate : string
-    + cessationDate : string
+class allowableInterval {
+    + fromPrevious :  String
+    + fromTargetDose :  String
+    + absMinInt :  String
+    + effectiveDate :  String
+    + cessationDate :  String
 }
 
-ENTITY(preferableVaccine) {
-    + vaccineType : string
-    + cvx : string
-    + beginAge : string
-    + endAge : string
-    + tradeName : string
-    + mvx : string
-    + volume : string
-    + forecastVaccineType : string
+class preferableVaccine {
+    + vaccineType :  String
+    + cvx :  String
+    + beginAge :  String
+    + endAge :  String
+    + tradeName :  String
+    + mvx :  String
+    + volume :  String
+    + forecastVaccineType :  String
 }
 
-ENTITY(allowableVaccine) {
-    + vaccineType : string
-    + cvx : string
-    + beginAge : string
-    + endAge : string
+class allowableVaccine {
+    + vaccineType :  String
+    + cvx :  String
+    + beginAge :  String
+    + endAge :  String
 }
 
-ENTITY(inadvertentVaccine) {
-    + vaccineType : string
-    + cvx : string
+class inadvertentVaccine {
+    + vaccineType :  String
+    + cvx :  String
 }
 
-ENTITY(conditionalSkip) {
-    + context : string
-    + setLogic : string
+class conditionalSkip {
+    + context :  String
+    + setLogic :  String
     + set : 0..*
 }
 
-ENTITY(set) {
-    + setID : string
-    + setDescription : string
-    + effectiveDate : string
-    + cessationDate : string
-    + conditionLogic : string
+class set {
+    + setID :  String
+    + setDescription :  String
+    + effectiveDate :  String
+    + cessationDate :  String
+    + conditionLogic :  String
     + condition : 0..*
 }
 
-ENTITY(condition) {
-    + conditionID : string
-    + conditionType : string
-    + startDate : string
-    + endDate : string
-    + beginAge : string
-    + endAge : string
-    + interval : string
-    + doseCount : string
-    + doseType : string
-    + doseCountLogic : string
-    + vaccineTypes : string
-    + seriesGroups : string
+class condition {
+    + conditionID :  String
+    + conditionType :  String
+    + startDate :  String
+    + endDate :  String
+    + beginAge :  String
+    + endAge :  String
+    + interval :  String
+    + doseCount :  String
+    + doseType :  String
+    + doseCountLogic :  String
+    + vaccineTypes :  String
+    + seriesGroups :  String
 }
 
-ENTITY(fromRelevantObs) {
-    + text : string
-    + code : string
+class fromRelevantObs {
+    + text :  String
+    + code :  String
 }
 
-ENTITY(seasonalRecommendation) {
-    + startDate : string
-    + endDate : string
+class seasonalRecommendation {
+    + startDate :  String
+    + endDate :  String
 }
 
 antigenSupportingData --> immunity
@@ -225,4 +226,5 @@ seriesDose --> seasonalRecommendation
 interval --> fromRelevantObs
 conditionalSkip --> set
 set --> condition
+
 @enduml
