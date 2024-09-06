@@ -102,6 +102,7 @@ public class DataModelLoaderTest {
         for (String vaccineGroupKey : dataModel.getVaccineGroupMap().keySet()) {
             if(vaccineGroupKey.equals("DTaP/Tdap/Td")) {
                 foundDTap = true;
+                assertEquals(3, dataModel.getVaccineGroupMap().get(vaccineGroupKey).getAntigenList().size());
                 assertEquals("Pertussis",dataModel.getVaccineGroupMap().get(vaccineGroupKey).getAntigenList().get(1).toString());
             }
         }
