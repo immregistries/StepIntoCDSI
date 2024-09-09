@@ -33,10 +33,6 @@ public class EvaluateDoseAdministeredConditionTest extends SectionTest {
             Arrays.asList(
                 "Date administered > lot number expiration date?", 
                 "Is the dose condition flag 'Y'?"),
-            Arrays.asList(
-                "No. The vaccine dose administered cannot be evaluated. Target dose status is 'not satisfied.' Evaluation status is 'sub-standard.'",
-                "No. The vaccine dose administered cannot be evaluated. Target dose status is 'not satisfied.' Evaluation status is 'sub-standard.'",
-                "Yes. The vaccine dose administered can be evaluated."),
             new LogicResult[][]{
                 {LogicResult.YES, LogicResult.NO, LogicResult.NO},
                 {LogicResult.ANY, LogicResult.YES, LogicResult.NO}
