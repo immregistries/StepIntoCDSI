@@ -9,12 +9,10 @@ public class TableInfo {
 
     private String tableName;
     private List<String> expectedConditionText;
-    private List<String> expectedOutcomeText;
     private LogicResult[][] expectedLogicResultTable;
     
-    public TableInfo(String tableName, List<String> expectedConditionText, List<String> expectedOutcomeText, LogicResult[][] expectedLogicResultTable){ 
+    public TableInfo(String tableName, List<String> expectedConditionText, LogicResult[][] expectedLogicResultTable){ 
         this.tableName = tableName;
-        this.expectedOutcomeText = expectedOutcomeText;
         this.expectedLogicResultTable = expectedLogicResultTable;
         this.expectedConditionText = expectedConditionText;
     };
@@ -25,10 +23,6 @@ public class TableInfo {
 
     public List<String> getExpectedConditionText(){
         return expectedConditionText;
-    }
-    
-    public List<String> getExpectedOutcomeText(){
-        return expectedOutcomeText;
     }
     
     public LogicResult[][] getExpectedLogicResultTable(){
