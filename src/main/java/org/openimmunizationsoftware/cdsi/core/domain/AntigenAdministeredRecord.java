@@ -11,7 +11,6 @@ public class AntigenAdministeredRecord {
   private VaccineType vaccineType = null;
   private String manufacturer = "";
   private String tradeName = "";
-  private String amount = "";
   private Date lotExpirationDate = null;
   private DoseCondition doseCondition = null;
   private Evaluation evaluation = new Evaluation();
@@ -55,7 +54,6 @@ public class AntigenAdministeredRecord {
     this.vaccineType = vda.getVaccine().getVaccineType();
     this.manufacturer = vda.getVaccine().getManufacturer();
     this.tradeName = vda.getVaccine().getTradeName();
-    this.amount = vda.getVaccine().getVolume();
     this.lotExpirationDate = vda.getVaccine().getLotExpirationDate();
     this.doseCondition = vda.getDoseCondition();
     this.vaccineDoseAdministered = vda;
@@ -101,16 +99,8 @@ public class AntigenAdministeredRecord {
     this.tradeName = tradeName;
   }
 
-  public String getAmount() {
-    return amount;
-  }
-
   public String getVolume() {
-    return amount;
-  }
-
-  public void setAmount(String amount) {
-    this.amount = amount;
+    return vaccineDoseAdministered.getVaccine().getVolume();
   }
 
   public Date getLotExpirationDate() {

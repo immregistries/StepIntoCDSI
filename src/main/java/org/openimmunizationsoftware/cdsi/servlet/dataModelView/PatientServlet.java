@@ -232,7 +232,7 @@ public class PatientServlet extends MainServlet {
       out.println("     </tr>");
       out.println("     </tr>");
       out.println("       <th>Amount</th>");
-      out.println("       <td>" + antigenAdministeredRecord.getAmount() + "</td>");
+      out.println("       <td>" + antigenAdministeredRecord.getVolume() + "</td>");
       out.println("     </tr>");
       out.println("     </tr>");
       out.println("       <th>Lot Expiration Date</th>");
