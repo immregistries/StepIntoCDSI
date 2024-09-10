@@ -2,6 +2,7 @@ package org.openimmunizationsoftware.cdsi.core.data;
 
 import static org.junit.Assert.*;
 
+import java.text.DateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.Age;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
 import org.openimmunizationsoftware.cdsi.core.domain.Schedule;
+import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriodType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
@@ -202,16 +204,18 @@ public class DataModelLoaderTest {
                 //seriesGroupName, seriesGroup, seriesPriority and minAgeToStart all do not exist.
                 
                 //testing indication and observationCode.
-                //the entire indication section and all children do not exist outside the supporting data.
+                //the entire indication section and all children do not exist.
 
                 //testing seriesDose
                 assertEquals(4, currentSchedule.getAntigenSeriesList().get(1).getSeriesDoseList().size());
-                assertEquals("3",currentSchedule.getAntigenSeriesList().get(1).getSeriesDoseList().get(2).getDoseNumber());
-                assertEquals(YesNo.NO,currentSchedule.getAntigenSeriesList().get(1).getSeriesDoseList().get(2).getRecurringDose().getValue());
+
+                SeriesDose currentSeriesDose = currentSchedule.getAntigenSeriesList().get(1).getSeriesDoseList().get(2);
+                assertEquals("3",currentSeriesDose.getDoseNumber());
+                assertEquals(YesNo.NO,currentSeriesDose.getRecurringDose().getValue());
 
                 //testing age
-                assertEquals(1,currentSchedule.getAntigenSeriesList().get(1).getSeriesDoseList().get(2).getAgeList().size());
-                Age ageToCheck = currentSchedule.getAntigenSeriesList().get(1).getSeriesDoseList().get(2).getAgeList().get(0);
+                assertEquals(1,currentSeriesDose.getAgeList().size());
+                Age ageToCheck = currentSeriesDose.getAgeList().get(0);
                 assertNotNull(ageToCheck.getAbsoluteMinimumAge());
                 assertEquals("0 days",ageToCheck.getAbsoluteMinimumAge().toString());
                 assertNotNull(ageToCheck.getMinimumAge());
@@ -222,10 +226,49 @@ public class DataModelLoaderTest {
                 assertEquals("0 days",ageToCheck.getLatestRecommendedAge().toString());
                 assertNotNull(ageToCheck.getMaximumAge());
                 assertEquals("0 days",ageToCheck.getMaximumAge().toString());
-                //both effectiveDate and cessationDate do not exist outside the supporting data.
+                //both effectiveDate and cessationDate do not exist.
 
                 //testing interval
+                assertEquals(1,currentSeriesDose.getIntervalList().size());
+                assertEquals(YesNo.YES,currentSeriesDose.getIntervalList().get(0).getFromImmediatePreviousDoseAdministered());
+                assertEquals("",currentSeriesDose.getIntervalList().get(0).getFromTargetDoseNumberInSeries());
+                //both fromMostRecent and fromRelevantObs do not exist.
+                assertEquals("14 days",currentSeriesDose.getIntervalList().get(0).getAbsoluteMinimumInterval().toString());
+                assertEquals("14 days",currentSeriesDose.getIntervalList().get(0).getMinimumInterval().toString());
+                assertEquals("14 days",currentSeriesDose.getIntervalList().get(0).getEarliestRecommendedInterval().toString());
+                assertEquals("21 days",currentSeriesDose.getIntervalList().get(0).getLatestRecommendedInterval().toString());
+                assertNull(currentSeriesDose.getIntervalList().get(0).getIntervalPriority());
+                //both effectiveDate and cessationDate do not exist.
 
+                //testing allowableInterval
+                assertEquals(0,currentSeriesDose.getAllowableintervalList().size());
+
+                //testing preferableVaccine
+                assertEquals(2,currentSeriesDose.getPreferrableVaccineList().size());
+                assertEquals("Rabies - IM fibroblast culture (176)",currentSeriesDose.getPreferrableVaccineList().get(1).getVaccineType().toString());
+                assertEquals("176",currentSeriesDose.getPreferrableVaccineList().get(1).getVaccineType().getCvxCode());
+                assertEquals("0 days",currentSeriesDose.getPreferrableVaccineList().get(1).getVaccineTypeBeginAge().toString());
+                assertEquals("0 days",currentSeriesDose.getPreferrableVaccineList().get(1).getVaccineTypeEndAge().toString());
+                assertEquals("",currentSeriesDose.getPreferrableVaccineList().get(1).getTradeName());
+                //mvx does not exist except for in the supporting data.
+                assertEquals("1",currentSeriesDose.getPreferrableVaccineList().get(1).getVolume());
+                assertEquals(YesNo.NO,currentSeriesDose.getPreferrableVaccineList().get(1).getForecastVaccineType());
+
+                //testing allowableVaccine
+                assertEquals(4,currentSeriesDose.getAllowableVaccineList().size());
+                assertEquals("90",currentSeriesDose.getAllowableVaccineList().get(1).getVaccineType().getCvxCode());
+                assertEquals("0 days",currentSeriesDose.getAllowableVaccineList().get(1).getVaccineTypeBeginAge().toString());
+                assertEquals("0 days",currentSeriesDose.getAllowableVaccineList().get(1).getVaccineTypeEndAge().toString());
+
+                //testing inadvertentVaccine
+                //inadvertentVaccine does not exist.
+
+                //testing conditionalSkip
+                //getConditionalSkip() should be getConditionalSkipList() and should return a list of conditionalSkip classes if it is to match 'antigenSupportingData.xsd'
+                assertNull(currentSeriesDose.getConditionalSkip());
+
+                //testing seasonalRecommendation
+                assertEquals(0,currentSeriesDose.getSeasonalRecommendationList().size());
             }
         }
         assertTrue(foundRabies);
