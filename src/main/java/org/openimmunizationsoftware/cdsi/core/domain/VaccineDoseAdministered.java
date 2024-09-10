@@ -9,6 +9,8 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.DoseCondition;
 
 public class VaccineDoseAdministered {
   private Date dateAdministered = null;
+  private String tradeName = "";
+  private String Volume = "";
   private DoseCondition doseCondition = null;
   private Patient patient = null;
   private Vaccine vaccine = null;
@@ -23,6 +25,22 @@ public class VaccineDoseAdministered {
 
   public Antigen getAntigenAssigned() {
     return antigenAssigned;
+  }
+
+  public void setTradeName(String tradeName) {
+      this.tradeName = tradeName;
+  }
+
+  public void setVolume(String volume) {
+      this.Volume = volume;
+  }
+
+  public String getTradeName() {
+      return tradeName;
+  }
+
+  public String getVolume() {
+      return Volume;
   }
 
   public void setAntigenAssigned(Antigen antigenAssigned) {
