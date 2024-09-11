@@ -27,8 +27,6 @@ public class EvaluateForPreferableVaccine extends LogicStep {
 
     Date birthDate = dataModel.getPatient().getDateOfBirth();
 
-    int i = 0, j = 0, k = 0;
-    boolean allTrue = true;
     int count = 0;
     for (PreferrableVaccine pi : dataModel.getTargetDose().getTrackedSeriesDose()
         .getPreferrableVaccineList()) {
