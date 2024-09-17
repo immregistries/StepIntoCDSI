@@ -34,18 +34,15 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
   protected ConditionAttribute<Date> caAssessmentDate = null;
   protected ConditionAttribute<Integer> caAdministeredDoseCount = null;
   protected boolean isForecast;
+  protected boolean isValidating;
 
   // Constructor 1
-  // Presumably logicStepType and dataModel are passed into this class from code in another file?
   protected EvaluateConditionalSkipForEvaluation(LogicStepType logicStepType, DataModel dataModel) {
     super(logicStepType, dataModel);
   }
 
   // Constructor 2
   // Naming the condition table, using setupInternal function
-  /* TODO:
-
-   */
   public EvaluateConditionalSkipForEvaluation(DataModel dataModel) {
     super(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION, dataModel);
     setConditionTableName("Table 6.4 Conditional Skip Attributes");
@@ -55,12 +52,13 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
   // Defining setupInternal function; appears to change the isForecast variable depending on if noSkip == EVALUATE_AGE
   // If constructor 2 is called, noSkip will equal EVALUATE_AGE
   // isForecast is meant to identify whether or not this is for EvaluateConditionalSkipForEvaluation or EvaluateConditionalSkipForForecast
-  /* TODO: 
-   */
   protected void setupInternal(DataModel dataModel, final LogicStepType noSkip,
       final LogicStepType skip) {
     if (noSkip.equals(LogicStepType.EVALUATE_AGE)) {
       isForecast = false;
+      isValidating = false;
+    } else if(noSkip.equals(LogicStepType.VALIDATE_RECOMMENDATION)) {
+      isValidating = true;
     } else {
       isForecast = true;
     }
@@ -186,7 +184,11 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
             // this may need to change in the future to fit changes to AssessmentDate
             if (isForecast) {
               lt.caConditionalSkipReferenceDate.setInitialValue(caAssessmentDate.getFinalValue());
-            } else {
+            }
+            else if (isValidating){
+              lt.caConditionalSkipReferenceDate.setInitialValue(PAST);
+            }
+            else {
               lt.caConditionalSkipReferenceDate.setInitialValue(caDateAdministered.getFinalValue());
             }
             if (condition.getEndDate() != null) {
@@ -613,7 +615,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
         @Override
         public void perform() {
           log("No. The target dose cannot be skipped. ");
-          log("Setting next step: 6.4 Evaluate Age");
+          log("Setting next step: 6.3 Evaluate For Inadvertent Vaccine");
           setNextLogicStepType(noSkip);
         }
       });
