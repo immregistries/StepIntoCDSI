@@ -31,7 +31,9 @@ public class DataModel {
   private Map<String, VaccineType> cvxMap = new HashMap<String, VaccineType>();
   private Map<String, Antigen> antigenMap = new HashMap<String, Antigen>();
   private List<Antigen> antigenList = null;
+  private List<Antigen> antigenSelectedList = null;
   private int antigenPos = -1;
+  private int antigenSelectedPos = -1;
   private Antigen antigen = null;
   private List<AntigenSeries> antigenSeriesSelectedList = null;
   private List<PatientSeries> selectedPatientSeriesList = new ArrayList<PatientSeries>();
@@ -161,11 +163,17 @@ public class DataModel {
     return antigenList;
   }
 
+  public List<Antigen> getAntigenSelectedList() {
+    return antigenSelectedList;
+  }
+
+  public void setAntigenSelectedList(List<Antigen> antigenSelectedList) {
+    this.antigenSelectedList = antigenSelectedList;
+  }
+
   public int getAntigenPos() {
     return antigenPos;
   }
-
-
 
   public void setAntigenPos(int antigenPos) {
     this.antigenPos = antigenPos;
@@ -175,7 +183,17 @@ public class DataModel {
     this.antigenPos++;
   }
 
+  public int getAntigenSelectedPos() {
+    return antigenSelectedPos;
+  }
 
+  public void setAntigenSelectedPos(int antigenSelectedPos) {
+    this.antigenSelectedPos = antigenSelectedPos;
+  }
+
+  public void incAntigenSelectedPos() {
+    this.antigenSelectedPos++;
+  }
 
   public int getAntigenAdministeredRecordPos() {
     return antigenAdministeredRecordPos;
