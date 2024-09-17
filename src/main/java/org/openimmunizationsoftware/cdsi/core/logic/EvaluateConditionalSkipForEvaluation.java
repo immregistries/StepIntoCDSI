@@ -46,15 +46,15 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
   public EvaluateConditionalSkipForEvaluation(DataModel dataModel) {
     super(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION, dataModel);
     setConditionTableName("Table 6.4 Conditional Skip Attributes");
-    setupInternal(dataModel, LogicStepType.EVALUATE_AGE, LogicStepType.FOR_EACH_PATIENT_SERIES);
+    setupInternal(dataModel, LogicStepType.EVALUATE_FOR_INADVERTENT_VACCINE, LogicStepType.FOR_EACH_PATIENT_SERIES);
   }
 
-  // Defining setupInternal function; appears to change the isForecast variable depending on if noSkip == EVALUATE_AGE
-  // If constructor 2 is called, noSkip will equal EVALUATE_AGE
+  // Defining setupInternal function; appears to change the isForecast variable depending on if noSkip == EVALUATE_FOR_INADVERTENT_VACCINE
+  // If constructor 2 is called, noSkip will equal EVALUATE_FOR_INADVERTENT_VACCINE
   // isForecast is meant to identify whether or not this is for EvaluateConditionalSkipForEvaluation or EvaluateConditionalSkipForForecast
   protected void setupInternal(DataModel dataModel, final LogicStepType noSkip,
       final LogicStepType skip) {
-    if (noSkip.equals(LogicStepType.EVALUATE_AGE)) {
+    if (noSkip.equals(LogicStepType.EVALUATE_FOR_INADVERTENT_VACCINE)) {
       isForecast = false;
       isValidating = false;
     } else if(noSkip.equals(LogicStepType.VALIDATE_RECOMMENDATION)) {
@@ -213,7 +213,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
   // Overriding the methods of parent functions and redefining them
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.EVALUATE_AGE);
+    setNextLogicStepType(LogicStepType.EVALUATE_FOR_INADVERTENT_VACCINE);
     evaluateLogicTables();
     return next();
   }
@@ -341,8 +341,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
         "Does the Conditional Group Series Group identify a Series Group with at least one relevant patient series with a patient series status of 'Complete'?") {
           @Override
           public LogicResult evaluateInternal(){
-            if (
-              ) {
+            if() {
             return LogicResult.YES;
             }
             return LogicResult.NO;
@@ -615,7 +614,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
         @Override
         public void perform() {
           log("No. The target dose cannot be skipped. ");
-          log("Setting next step: 6.3 Evaluate For Inadvertent Vaccine");
+          log("Setting next step: Evaluate For Inadvertent Vaccine");
           setNextLogicStepType(noSkip);
         }
       });
