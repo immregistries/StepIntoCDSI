@@ -12,6 +12,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.ClinicalGuidelineObservation;
+import org.openimmunizationsoftware.cdsi.core.domain.CodedValue;
 import org.openimmunizationsoftware.cdsi.core.domain.Contraindication_TO_BE_REMOVED;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.Immunity;
@@ -31,6 +32,7 @@ public class DataModel {
   private List<LiveVirusConflict> liveVirusConflictList = new ArrayList<LiveVirusConflict>();
   private Map<String, VaccineType> cvxMap = new HashMap<String, VaccineType>();
   private Map<String, Antigen> antigenMap = new HashMap<String, Antigen>();
+  private Map<String, CodedValue> codedValueMap = new HashMap<String, CodedValue>();
   private List<Antigen> antigenList = null;
   private int antigenPos = -1;
   private Antigen antigen = null;
