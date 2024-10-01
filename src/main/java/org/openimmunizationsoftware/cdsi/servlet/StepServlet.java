@@ -116,11 +116,11 @@ public class StepServlet extends ForecastServlet {
     out.println("      <td width=\"1010\" valign=\"top\" class=\"mainTable\">");
     if (dataModel.getLogicStepPrevious() == null || dataModel.getLogicStep() == null) {
       out.println(
-          "        <img src=\"i.png\" width=\"1000\" onclick=\"document.getElementById('stepForm').submit();\">");
+          "        <img src=\"pm.png\" width=\"1000\" onclick=\"document.getElementById('stepForm').submit();\">");
     } else {
       out.println(
-          "        <img src=\"" + dataModel.getLogicStepPrevious().getLogicStepType().getName()
-              + "-" + dataModel.getLogicStep().getLogicStepType().getName()
+          "        <img src=\"pm-" + dataModel.getLogicStepPrevious().getLogicStepType().getChapter()
+              + "-" + dataModel.getLogicStep().getLogicStepType().getChapter()
               + ".png\" width=\"1000\" onclick=\"document.getElementById('stepForm').submit();\">");
     }
     if (dataModel.getLogicStepPrevious() != null

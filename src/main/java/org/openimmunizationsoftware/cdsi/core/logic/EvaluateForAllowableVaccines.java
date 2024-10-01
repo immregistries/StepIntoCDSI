@@ -21,7 +21,7 @@ public class EvaluateForAllowableVaccines extends LogicStep {
 
   public EvaluateForAllowableVaccines(DataModel dataModel) {
     super(LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED, dataModel);
-    setConditionTableName("Table 4.8");
+    setConditionTableName("Table 6.9");
 
     for (AllowableVaccine pi : dataModel.getTargetDose().getTrackedSeriesDose()
         .getAllowableVaccineList()) {
@@ -32,8 +32,8 @@ public class EvaluateForAllowableVaccines extends LogicStep {
           new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
       logicTable.caVaccineType =
           new ConditionAttribute<VaccineType>("Vaccine Dose Administered", "Vaccine Type");
-      logicTable.caVaccineTypeAllowable = new ConditionAttribute<AllowableVaccine>(
-          "Supporting data (Allowable Vaccine)", "Vaccine Type");
+      logicTable.caAllowableVaccineElements = new ConditionAttribute<AllowableVaccine>(
+          "Supporting data", "Allowable Vaccine elements");
       logicTable.caAllowableVaccineTypeBeginAgeDate = new ConditionAttribute<Date>(
           "Calculated data (CALCDTALLOW-1)", "Allowable Vaccine Type Begin Age Date");
       logicTable.caAllowableVaccineTypeEndAgeDate = new ConditionAttribute<Date>(
@@ -44,14 +44,14 @@ public class EvaluateForAllowableVaccines extends LogicStep {
 
       conditionAttributesList.add(logicTable.caDateAdministered);
       conditionAttributesList.add(logicTable.caVaccineType);
-      conditionAttributesList.add(logicTable.caVaccineTypeAllowable);
+      conditionAttributesList.add(logicTable.caAllowableVaccineElements);
       conditionAttributesList.add(logicTable.caAllowableVaccineTypeBeginAgeDate);
       conditionAttributesList.add(logicTable.caAllowableVaccineTypeEndAgeDate);
 
       AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
       logicTable.caDateAdministered.setInitialValue(aar.getDateAdministered());
       logicTable.caVaccineType.setInitialValue(aar.getVaccineType());
-      logicTable.caVaccineTypeAllowable.setInitialValue(pi);
+      logicTable.caAllowableVaccineElements.setInitialValue(pi);
 
 
       logicTableList.add(logicTable);
@@ -92,15 +92,15 @@ public class EvaluateForAllowableVaccines extends LogicStep {
     out.println(
         "<p>Evaluate for allowable vaccine validates the vaccine of a vaccine dose administered against the list of allowable vaccines. </p>");
     out.println(
-        "<p>Figures 4-18 depicts a patient who received an allowable vaccine while figure 4-19 depicts a patient who did not receive an allowable vaccine.</p>");
-    out.println("<img src=\"Figure 4.18.PNG\"/>");
-    out.println("<p>FIGURE 4 - 18 PATIENT RECEIVED AN ALLOWABLE VACCINE</p>");
-    out.println("<img src=\"Figure 4.19.PNG\"/>");
-    out.println("<p>FIGURE 4 - 19 PATIENT DID NOT RECEIVE AN ALLOWABLE VACCINE</p>");
+        "<p>Figures 6-20 depicts a patient who received an allowable vaccine while figure 6-21 depicts a patient who did not receive an allowable vaccine.</p>");
+    out.println("<img src=\"Figure 6.20.PNG\"/>");
+    out.println("<p>FIGURE 6 - 20 PATIENT RECEIVED AN ALLOWABLE VACCINE</p>");
+    out.println("<img src=\"Figure 6.21.PNG\"/>");
+    out.println("<p>FIGURE 6 - 21 PATIENT DID NOT RECEIVE AN ALLOWABLE VACCINE</p>");
     out.println(
         "<p>The following process model, attribute table, decision table, and business rule table are used to evaluate for an allowable vaccine.</p>");
-    out.println("<img src=\"Figure 4.20.PNG\"/>");
-    out.println("<p>FIGURE 4 - 20 EVALUATE FOR AN ALLOWABLE VACCINE PROCESS MODEL</p>");
+    out.println("<img src=\"Figure 6.22.PNG\"/>");
+    out.println("<p>FIGURE 6 - 22 EVALUATE FOR AN ALLOWABLE VACCINE PROCESS MODEL</p>");
     printConditionAttributesTable(out);
     printLogicTables(out);
   }
@@ -109,23 +109,23 @@ public class EvaluateForAllowableVaccines extends LogicStep {
 
     private ConditionAttribute<Date> caDateAdministered = null;
     private ConditionAttribute<VaccineType> caVaccineType = null;
-    private ConditionAttribute<AllowableVaccine> caVaccineTypeAllowable = null;
+    private ConditionAttribute<AllowableVaccine> caAllowableVaccineElements = null;
     private ConditionAttribute<Date> caAllowableVaccineTypeBeginAgeDate = null;
     private ConditionAttribute<Date> caAllowableVaccineTypeEndAgeDate = null;
     private YesNo result = null;
 
     public LT(String name) {
-      super(2, 3, "Table 4.28 " + name);
+      super(2, 3, "Table 6.29 " + name);
 
       setLogicCondition(0, new LogicCondition(
-          "Is the vaccine type of the vaccine dose administered the same as the vaccine type of the allowable vaccine?") {
+          "Is the vaccine type of the vaccine dose administered the same as the vaccine type of an allowable vaccine for the target dose?") {
         @Override
         public LogicResult evaluateInternal() {
           if (caDateAdministered.getFinalValue() == null) {
             return LogicResult.NO;
           }
           VaccineType vt = caVaccineType.getFinalValue();
-          AllowableVaccine av = caVaccineTypeAllowable.getFinalValue();
+          AllowableVaccine av = caAllowableVaccineElements.getFinalValue();
           Date birthDate = dataModel.getPatient().getDateOfBirth();
           if (vt == av.getVaccineType()) {
             caAllowableVaccineTypeBeginAgeDate
@@ -135,7 +135,6 @@ public class EvaluateForAllowableVaccines extends LogicStep {
             return LogicResult.YES;
 
           }
-          // }
           return LogicResult.NO;
         }
       });
@@ -166,24 +165,24 @@ public class EvaluateForAllowableVaccines extends LogicStep {
         @Override
         public void perform() {
           result = YesNo.YES;
-          log("Yes. An allowable vaccine was administered ");
-          log("Setting next step: 4.9 EvaluateGender");
+          log("Yes. The vaccine dose administered was an allowable vaccine for the target dose.");
+          log("Setting next step: 6.9 EvaluateForAllowableVaccines");
         }
       });
       setLogicOutcome(1, new LogicOutcome() {
         @Override
         public void perform() {
           result = YesNo.NO;
-          log("No.  This supporting data defined allowable vaccine was not administered.");
-          log("Setting next step: 4.9 EvaluateGender");
+          log("No. The vaccine dose administered was not an allowable vaccine for the target dose.");
+          log("Setting next step: 6.10 SatifyTargetDose");
         }
       });
       setLogicOutcome(2, new LogicOutcome() {
         @Override
         public void perform() {
           result = YesNo.NO;
-          log("No.  This supporting data defined allowable vaccine was administered out of the allowable age range.");
-          log("Setting next step: 4.9 EvaluateGender");
+          log("No. The vaccine dose administered was not an allowable vaccine for the target dose. It was administered out of the recommended age range for the allowable vaccine.");
+          log("Setting next step: 6.10 SatifyTargetDose");
         }
       });
 

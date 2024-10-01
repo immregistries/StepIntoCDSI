@@ -31,10 +31,11 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
     // initialize condition attributes
     caDateAdministered =
         new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
+  //use CALCDTLOTEXP-1 business rules now(not implemented yet), change attribute type to "Calculated date"
     caLotExpirationDate =
         new ConditionAttribute<Date>("Vaccine dose administered", "Lot Expiration Date");
     caDoseCondition =
-        new ConditionAttribute<DoseCondition>("Vaccine dose administered", "Dose Condition");
+        new ConditionAttribute<DoseCondition>("Vaccine dose administered", "Dose Condition"); //
 
     // set assumed values, if possible
     caLotExpirationDate.setAssumedValue(FUTURE);
@@ -42,8 +43,8 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
     // set actual values
     AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
     caDateAdministered.setInitialValue(aar.getDateAdministered());
-    caLotExpirationDate.setInitialValue(aar.getLotExpirationDate());
     caDoseCondition.setInitialValue(aar.getDoseCondition());
+    caLotExpirationDate.setInitialValue(aar.getLotExpirationDate()); 
 
     // add to list for display purposes
     conditionAttributesList.add(caDateAdministered);
