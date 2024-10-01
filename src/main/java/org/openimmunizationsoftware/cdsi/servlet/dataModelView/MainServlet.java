@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.openimmunizationsoftware.cdsi.SoftwareVersion;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
@@ -41,6 +42,12 @@ public class MainServlet extends ForecastServlet {
   }
 
   protected void printFooter(PrintWriter out) {
+    out.println("  </div>");
+    out.println("  <div class=\"w3-container w3-green\">");
+    out.println("      <p>Step Into CDSi " + SoftwareVersion.VERSION + " - ");
+    out.println("      <a href=\"https://aira.memberclicks.net/assets/docs/Organizational_Docs/AIRA%20Privacy%20Policy%20-%20Final%202024_.pdf\" class=\"underline\">AIRA Privacy Policy</a> - ");
+    out.println("      <a href=\"https://aira.memberclicks.net/assets/docs/Organizational_Docs/AIRA%20Terms%20of%20Use%20-%20Final%202024_.pdf\" class=\"underline\">AIRA Terms and Conditions of Use</a></p>");
+    out.println("    </div>");
     out.println("  </body>");
     out.println("</html>");
   }
@@ -54,18 +61,22 @@ public class MainServlet extends ForecastServlet {
     } else {
       out.println("    <title>CDSi - Data Model View - " + section + "</title>");
     }
-    out.println("    <link rel=\"stylesheet\" type=\"text/css\" href=\"index.css\">");
+    out.println("    <link rel=\"stylesheet\" href=\"https://www.w3schools.com/w3css/4/w3.css\"/>");
     out.println("  </head>");
     out.println("  <body>");
-    out.println("<p>");
-    out.println("      <a href=\"dataModelView\">Main</a> | ");
-    out.println("      <a href=\"dataModelViewAntigen\">Antigen</a> | ");
-    out.println("      <a href=\"dataModelViewCvx\">CVX</a> | ");
-    out.println("      <a href=\"dataModelViewLiveVirusConflict\">Live Virus Conflict</a> | ");
-    out.println("      <a href=\"dataModelViewPatient\">Patient</a> | ");
-    out.println("      <a href=\"dataModelViewSchedule\">Schedule</a> | ");
-    out.println("      <a href=\"dataModelViewVaccineGroup\">Vaccine Group</a> ");
-    out.println("</p>");
+
+    out.println("    <header class=\"w3-container w3-light-grey\">");
+    out.println("      <div class=\"w3-bar w3-light-grey\">");
+    out.println("        <a href=\"dataModelView\" class=\"w3-bar-item w3-button\">Main</a> ");
+    out.println("        <a href=\"dataModelViewAntigen\" class=\"w3-bar-item w3-button\">Antigen</a> ");
+    out.println("        <a href=\"dataModelViewCvx\" class=\"w3-bar-item w3-button\">CVX</a> ");
+    out.println("        <a href=\"dataModelViewLiveVirusConflict\" class=\"w3-bar-item w3-button\">Live Virus Conflict</a> ");
+    out.println("        <a href=\"dataModelViewPatient\" class=\"w3-bar-item w3-button\">Patient</a> ");
+    out.println("        <a href=\"dataModelViewSchedule\" class=\"w3-bar-item w3-button\">Schedule</a> ");
+    out.println("        <a href=\"dataModelViewVaccineGroup\" class=\"w3-bar-item w3-button\">Vaccine Group</a> ");
+    out.println("      </div>");
+    out.println("    </header>");
+    out.println("    <div class=\"w3-container\">");
   }
 
   public String n(Object o) {
