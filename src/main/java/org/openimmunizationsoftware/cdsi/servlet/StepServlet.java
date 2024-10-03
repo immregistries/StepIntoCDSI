@@ -41,6 +41,7 @@ public class StepServlet extends ForecastServlet {
         throw new ServletException(e);
       }
     } else {
+      dataModel.setRequest(req);
       try {
         String submit = req.getParameter("submit");
         if (submit != null && submit.equals("Jump")) {
