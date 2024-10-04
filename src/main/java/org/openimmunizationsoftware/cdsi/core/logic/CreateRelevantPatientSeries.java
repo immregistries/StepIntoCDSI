@@ -40,6 +40,7 @@ public class CreateRelevantPatientSeries extends LogicStep {
     }
     else { 
       dataModel.incAntigenAdministeredRecordPos();
+      dataModel.incAntigenSelectedPos();
     }
 
     if (dataModel.getAntigenSelectedPos() < dataModel.getAntigenSelectedList().size()) {
