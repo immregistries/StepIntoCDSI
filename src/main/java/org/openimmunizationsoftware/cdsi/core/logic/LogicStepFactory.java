@@ -8,8 +8,11 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.GATHER_NECESSARY_DATA)) {
       return new GatherNecessaryData(dataModel);
     }
-    if (stepName.equals(LogicStepType.CREATE_PATIENT_SERIES)) {
-      return new CreatePatientSeries(dataModel);
+    if (stepName.equals(LogicStepType.CREATE_RELEVANT_PATIENT_SERIES)) {
+      return new CreateRelevantPatientSeries(dataModel);
+    }
+    if (stepName.equals(LogicStepType.SELECT_RELEVANT_PATIENT_SERIES)) {
+      return new SelectRelevantPatientSeries(dataModel);
     }
     if (stepName.equals(LogicStepType.ORGANIZE_IMMUNIZATION_HISTORY)) {
       return new OrganizeImmunizationHistory(dataModel);
@@ -118,8 +121,8 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.GATHER_NECESSARY_DATA)) {
       return new GatherNecessaryData(dataModel);
     }
-    if (stepName.equals(LogicStepType.CREATE_PATIENT_SERIES)) {
-      return new CreatePatientSeries(dataModel);
+    if (stepName.equals(LogicStepType.CREATE_RELEVANT_PATIENT_SERIES)) {
+      return new CreateRelevantPatientSeries(dataModel);
     }
     if (stepName.equals(LogicStepType.ORGANIZE_IMMUNIZATION_HISTORY)) {
       return new OrganizeImmunizationHistory(dataModel);

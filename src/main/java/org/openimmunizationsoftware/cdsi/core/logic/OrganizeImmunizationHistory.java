@@ -41,7 +41,7 @@ public class OrganizeImmunizationHistory extends LogicStep {
           }
         });
 
-    return LogicStepFactory.createLogicStep(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES,
+    return LogicStepFactory.createLogicStep(LogicStepType.CREATE_RELEVANT_PATIENT_SERIES,
         dataModel);
   }
 

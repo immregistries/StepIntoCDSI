@@ -73,44 +73,54 @@ public class PatientServlet extends MainServlet {
   }
 
   private void printViewPatient(DataModel dataModel, PrintWriter out) {
-    out.println("   <table>");
-
-    out.println("     <tr>");
-    out.println("       <caption>Patient</caption>");
-    out.println("       <th>Patient DOB</th>");
+    //  class="w3-table w3-bordered w3-striped w3-border test w3-hoverable"
+    out.println("  <div class=\"w3-card w3-cell w3-margin\">");
+    out.println("    <header class=\"w3-container w3-khaki\">");
+    out.println("      <h2>Patient</h2>");
+    out.println("    </header>");
+    out.println("    <div class=\"w3-container\">");
+    out.println("      <table class=\"w3-table w3-bordered w3-striped w3-border test w3-hoverable w3-margin\">");
+    out.println("        <caption>Demographics</caption>");
+    out.println("        <tr>");
+    out.println("          <th>Patient DOB</th>");
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-    out.println("       <td>" + sdf.format(dataModel.getPatient().getDateOfBirth()) + "</td>");
-    out.println("     </tr>");
+    out.println("          <td>" + sdf.format(dataModel.getPatient().getDateOfBirth()) + "</td>");
+    out.println("        </tr>");
 
-    out.println("     <tr>");
-    out.println("       <th>Gender</th>");
-    out.println("       <td>" + dataModel.getPatient().getGender() + "</td>");
-    out.println("     </tr>");
+    out.println("        <tr>");
+    out.println("          <th>Gender</th>");
+    out.println("          <td>" + dataModel.getPatient().getGender() + "</td>");
+    out.println("        </tr>");
+    
+    out.println("        <tr>");
+    out.println("          <th>Country of Birth</th>");
+    out.println("          <td>" + dataModel.getPatient().getCountryOfBirth() + "</td>");
+    out.println("        </tr>");
+    out.println("      </table>");
+    out.println("    </div>");
+    out.println("  </div>");
 
-    out.println("     <tr>");
-    out.println("       <th>Country of Birth</th>");
-    out.println("       <td>" + dataModel.getPatient().getCountryOfBirth() + "</td>");
-    out.println("     </tr>");
-    out.println("   </table>");
-
-    out.println("   <table>");
-    out.println("     <caption>Vaccine Dose Administered</caption>");
-    out.println("     <tr>");
-    out.println("       <th>Date Administered</th>");
-    out.println("       <th>Vaccine</th>");
-    out.println("       <th>Dose Condition</th>");
-    // out.println(" <th>Target Dose</th>");
-    // out.println(" <th>Antigen</th>");
-    out.println("     </tr>");
-
+    out.println("  <div class=\"w3-card w3-cell w3-margin\">");
+    out.println("    <header class=\"w3-container w3-khaki\">");
+    out.println("      <h2>Vaccinations</h2>");
+    out.println("    </header>");
+    out.println("    <div class=\"w3-container\">");
+    out.println("      <table class=\"w3-table w3-bordered w3-striped w3-border test w3-hoverable\">");
+    out.println("        <caption>Vaccine Dose Administered</caption>");
+    out.println("        <tr>");
+    out.println("          <th>Date Administered</th>");
+    out.println("          <th>Vaccine</th>");
+    out.println("          <th>Dose Condition</th>");
+    out.println("        </tr>");
     int pos = 0;
     for (VaccineDoseAdministered vaccineDoseAdministered : dataModel.getPatient()
         .getReceivesList()) {
       printRowVaccineDoseAdmistered(vaccineDoseAdministered, pos, out);
       pos++;
     }
-
-    out.println("   </table>");
+    out.println("      </table>");
+    out.println("    </div>");
+    out.println("  </div>");
   }
 
   private void printViewVaccine(DataModel dataModel, int i, PrintWriter out) {

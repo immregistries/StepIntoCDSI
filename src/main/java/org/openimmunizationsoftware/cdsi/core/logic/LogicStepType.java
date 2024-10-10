@@ -4,7 +4,8 @@ public enum LogicStepType {
 
   GATHER_NECESSARY_DATA("4.1", "Gather Necessary Data", false),
   ORGANIZE_IMMUNIZATION_HISTORY("4.2", "Organize Immunization History", false), 
-  CREATE_PATIENT_SERIES("4.3", "Create Relevant Patient Series", false), 
+  CREATE_RELEVANT_PATIENT_SERIES("4.3", "Create Relevant Patient Series", false), 
+  SELECT_RELEVANT_PATIENT_SERIES("5.1", "Select Relevant Patient Series", false), 
   EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES("4.4", "Evaluate and Forecast all Patient Series", false), 
   SELECT_BEST_PATIENT_SERIES("4.5", "Select Best Patient Series", false), 
   IDENTIFY_AND_EVALUATE_VACCINE_GROUP("4.6", "Identify and Evaluate Vaccine Group", false),
