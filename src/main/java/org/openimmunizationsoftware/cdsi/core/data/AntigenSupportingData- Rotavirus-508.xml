@@ -1,9 +1,93 @@
 <antigenSupportingData>
 	<immunity>
 	</immunity>
+	<contraindications>
+		<vaccineGroup>
+			<contraindication>
+				<observationCode>
+					013
+				</observationCode>
+				<observationTitle>
+					Severe Combined Immunodeficiency [SCID]
+				</observationTitle>
+				<contraindicationText>
+					Do not vaccinate if the patient has Severe Combined Immunodeficiency [SCID].
+				</contraindicationText>
+				<contraindicationGuidance />
+				<beginAge />
+				<endAge />
+			</contraindication>
+			<contraindication>
+				<observationCode>
+					028
+				</observationCode>
+				<observationTitle>
+					Intussusception
+				</observationTitle>
+				<contraindicationText>
+					Do not vaccinate if the patient has intussusception.
+				</contraindicationText>
+				<contraindicationGuidance />
+				<beginAge />
+				<endAge />
+			</contraindication>
+			<contraindication>
+				<observationCode>
+					080
+				</observationCode>
+				<observationTitle>
+					Adverse reaction to vaccine component
+				</observationTitle>
+				<contraindicationText>
+					Do not vaccinate if the patient has had an adverse reaction to a vaccine component.
+				</contraindicationText>
+				<contraindicationGuidance />
+				<beginAge />
+				<endAge />
+			</contraindication>
+			<contraindication>
+				<observationCode>
+					083
+				</observationCode>
+				<observationTitle>
+					Severe allergic reaction after previous dose of Rotavirus
+				</observationTitle>
+				<contraindicationText>
+					Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Rotavirus vaccine.
+				</contraindicationText>
+				<contraindicationGuidance />
+				<beginAge />
+				<endAge />
+			</contraindication>
+		</vaccineGroup>
+		<vaccine>
+			<contraindication>
+				<observationCode>
+					104
+				</observationCode>
+				<observationTitle>
+					Allergic reaction to latex
+				</observationTitle>
+				<contraindicationText>
+					Do not vaccinate with Rotarix if the patient has an allergy to latex.
+				</contraindicationText>
+				<contraindicationGuidance />
+				<contraindicatedVaccine>
+					<vaccineType>
+						Rotavirus, monovalent
+					</vaccineType>
+					<cvx>
+						119
+					</cvx>
+					<beginAge />
+					<endAge />
+				</contraindicatedVaccine>
+			</contraindication>
+		</vaccine>
+	</contraindications>
 	<series>
 		<seriesName>
-			Rotavirus 3-dose
+			Rotavirus 3-dose series
 		</seriesName>
 		<targetDisease>
 			Rotavirus
@@ -11,23 +95,37 @@
 		<vaccineGroup>
 			Rotavirus
 		</vaccineGroup>
-		<selectBest>
+		<seriesAdminGuidance>
+			For children with known or suspected altered immunocompetence, ACIP advises consultation with an immunologist or infectious diseases specialist before administration of rotavirus vaccine.  Children who are immunocompromised because of congenital immunodeficiency, or hematopoietic stem cell or solid organ transplantation sometimes experience severe, prolonged, and even fatal wild-type rotavirus gastroenteritis.
+		</seriesAdminGuidance>
+		<seriesType>
+			Standard
+		</seriesType>
+		<equivalentSeriesGroups />
+		<requiredGender />
+		<selectSeries>
 			<defaultSeries>
 				Yes
 			</defaultSeries>
 			<productPath>
 				No
 			</productPath>
+			<seriesGroupName>
+				Standard
+			</seriesGroupName>
+			<seriesGroup>
+				1
+			</seriesGroup>
+			<seriesPriority>
+				A
+			</seriesPriority>
 			<seriesPreference>
 				1
 			</seriesPreference>
-			<minAgeToStart>
-				n/a
-			</minAgeToStart>
-			<maxAgeToStart>
-				n/a
-			</maxAgeToStart>
-		</selectBest>
+			<minAgeToStart />
+			<maxAgeToStart />
+		</selectSeries>
+		<indication />
 		<seriesDose>
 			<doseNumber>
 				Dose 1
@@ -40,12 +138,14 @@
 					6 weeks
 				</minAge>
 				<earliestRecAge>
-					2 Months
+					2 months
 				</earliestRecAge>
 				<latestRecAge />
 				<maxAge>
 					15 weeks
 				</maxAge>
+				<effectiveDate />
+				<cessationDate />
 			</age>
 			<interval />
 			<allowableInterval />
@@ -60,7 +160,7 @@
 					6 weeks
 				</beginAge>
 				<endAge>
-					8 Months + 1 day
+					8 months + 1 day
 				</endAge>
 				<tradeName />
 				<mvx />
@@ -68,7 +168,7 @@
 					2
 				</volume>
 				<forecastVaccineType>
-					Y
+					N
 				</forecastVaccineType>
 			</preferableVaccine>
 			<preferableVaccine>
@@ -82,7 +182,7 @@
 					6 weeks
 				</beginAge>
 				<endAge>
-					8 Months + 1 day
+					8 months + 1 day
 				</endAge>
 				<tradeName />
 				<mvx />
@@ -90,7 +190,7 @@
 					1
 				</volume>
 				<forecastVaccineType>
-					Y
+					N
 				</forecastVaccineType>
 			</preferableVaccine>
 			<allowableVaccine>
@@ -141,12 +241,12 @@
 				</beginAge>
 				<endAge />
 			</allowableVaccine>
+			<inadvertentVaccine />
 			<conditionalSkip />
 			<recurringDose>
 				No
 			</recurringDose>
 			<seasonalRecommendation />
-			<requiredGender />
 		</seriesDose>
 		<seriesDose>
 			<doseNumber>
@@ -168,6 +268,8 @@
 				<maxAge>
 					8 months + 1 day
 				</maxAge>
+				<effectiveDate />
+				<cessationDate />
 			</age>
 			<interval>
 				<fromPrevious>
@@ -175,6 +277,7 @@
 				</fromPrevious>
 				<fromTargetDose />
 				<fromMostRecent />
+				<fromRelevantObs />
 				<absMinInt>
 					4 weeks - 4 days
 				</absMinInt>
@@ -188,6 +291,8 @@
 					13 weeks
 				</latestRecInt>
 				<intervalPriority />
+				<effectiveDate />
+				<cessationDate />
 			</interval>
 			<allowableInterval />
 			<preferableVaccine>
@@ -201,7 +306,7 @@
 					6 weeks
 				</beginAge>
 				<endAge>
-					8 Months + 1 day
+					8 months + 1 day
 				</endAge>
 				<tradeName />
 				<mvx />
@@ -209,7 +314,7 @@
 					2
 				</volume>
 				<forecastVaccineType>
-					Y
+					N
 				</forecastVaccineType>
 			</preferableVaccine>
 			<preferableVaccine>
@@ -223,7 +328,7 @@
 					6 weeks
 				</beginAge>
 				<endAge>
-					8 Months + 1 day
+					8 months + 1 day
 				</endAge>
 				<tradeName />
 				<mvx />
@@ -231,7 +336,7 @@
 					1
 				</volume>
 				<forecastVaccineType>
-					Y
+					N
 				</forecastVaccineType>
 			</preferableVaccine>
 			<allowableVaccine>
@@ -282,12 +387,12 @@
 				</beginAge>
 				<endAge />
 			</allowableVaccine>
+			<inadvertentVaccine />
 			<conditionalSkip />
 			<recurringDose>
 				No
 			</recurringDose>
 			<seasonalRecommendation />
-			<requiredGender />
 		</seriesDose>
 		<seriesDose>
 			<doseNumber>
@@ -309,6 +414,8 @@
 				<maxAge>
 					8 months + 1 day
 				</maxAge>
+				<effectiveDate />
+				<cessationDate />
 			</age>
 			<interval>
 				<fromPrevious>
@@ -316,6 +423,7 @@
 				</fromPrevious>
 				<fromTargetDose />
 				<fromMostRecent />
+				<fromRelevantObs />
 				<absMinInt>
 					4 weeks - 4 days
 				</absMinInt>
@@ -329,6 +437,8 @@
 					13 weeks
 				</latestRecInt>
 				<intervalPriority />
+				<effectiveDate />
+				<cessationDate />
 			</interval>
 			<allowableInterval />
 			<preferableVaccine>
@@ -342,7 +452,7 @@
 					6 weeks
 				</beginAge>
 				<endAge>
-					8 Months + 1 day
+					8 months + 1 day
 				</endAge>
 				<tradeName />
 				<mvx />
@@ -350,7 +460,7 @@
 					2
 				</volume>
 				<forecastVaccineType>
-					Y
+					N
 				</forecastVaccineType>
 			</preferableVaccine>
 			<preferableVaccine>
@@ -364,7 +474,7 @@
 					6 weeks
 				</beginAge>
 				<endAge>
-					8 Months + 1 day
+					8 months + 1 day
 				</endAge>
 				<tradeName />
 				<mvx />
@@ -372,7 +482,7 @@
 					1
 				</volume>
 				<forecastVaccineType>
-					Y
+					N
 				</forecastVaccineType>
 			</preferableVaccine>
 			<allowableVaccine>
@@ -423,17 +533,17 @@
 				</beginAge>
 				<endAge />
 			</allowableVaccine>
+			<inadvertentVaccine />
 			<conditionalSkip />
 			<recurringDose>
 				No
 			</recurringDose>
 			<seasonalRecommendation />
-			<requiredGender />
 		</seriesDose>
 	</series>
 	<series>
 		<seriesName>
-			Rotavirus 3-dose late start
+			Rotavirus late start at 15 weeks 3-dose series
 		</seriesName>
 		<targetDisease>
 			Rotavirus
@@ -441,23 +551,40 @@
 		<vaccineGroup>
 			Rotavirus
 		</vaccineGroup>
-		<selectBest>
+		<seriesAdminGuidance>
+			For children with known or suspected altered immunocompetence, ACIP advises consultation with an immunologist or infectious diseases specialist before administration of rotavirus vaccine.  Children who are immunocompromised because of congenital immunodeficiency, or hematopoietic stem cell or solid organ transplantation sometimes experience severe, prolonged, and even fatal wild-type rotavirus gastroenteritis.
+		</seriesAdminGuidance>
+		<seriesAdminGuidance>
+			Vaccination should not be initiated for infants age 15 weeks 0 days or older because there are insufficient data on the safety of dose #1 in older infants. Infants for whom the first dose of rotavirus vaccine was inadvertently administered at age 15 weeks or older should receive the remaining doses of the series at the routinely recommended intervals.
+		</seriesAdminGuidance>
+		<seriesType>
+			Standard
+		</seriesType>
+		<equivalentSeriesGroups />
+		<requiredGender />
+		<selectSeries>
 			<defaultSeries>
 				No
 			</defaultSeries>
 			<productPath>
 				No
 			</productPath>
+			<seriesGroupName>
+				Standard
+			</seriesGroupName>
+			<seriesGroup>
+				1
+			</seriesGroup>
+			<seriesPriority>
+				A
+			</seriesPriority>
 			<seriesPreference>
 				3
 			</seriesPreference>
-			<minAgeToStart>
-				n/a
-			</minAgeToStart>
-			<maxAgeToStart>
-				n/a
-			</maxAgeToStart>
-		</selectBest>
+			<minAgeToStart />
+			<maxAgeToStart />
+		</selectSeries>
+		<indication />
 		<seriesDose>
 			<doseNumber>
 				Dose 1
@@ -474,6 +601,8 @@
 				<maxAge>
 					8 months + 1 day
 				</maxAge>
+				<effectiveDate />
+				<cessationDate />
 			</age>
 			<interval />
 			<allowableInterval />
@@ -488,7 +617,7 @@
 					6 weeks
 				</beginAge>
 				<endAge>
-					8 Months + 1 day
+					8 months + 1 day
 				</endAge>
 				<tradeName />
 				<mvx />
@@ -496,7 +625,7 @@
 					2
 				</volume>
 				<forecastVaccineType>
-					Y
+					N
 				</forecastVaccineType>
 			</preferableVaccine>
 			<preferableVaccine>
@@ -510,7 +639,7 @@
 					6 weeks
 				</beginAge>
 				<endAge>
-					8 Months + 1 day
+					8 months + 1 day
 				</endAge>
 				<tradeName />
 				<mvx />
@@ -518,7 +647,7 @@
 					1
 				</volume>
 				<forecastVaccineType>
-					Y
+					N
 				</forecastVaccineType>
 			</preferableVaccine>
 			<allowableVaccine>
@@ -569,12 +698,12 @@
 				</beginAge>
 				<endAge />
 			</allowableVaccine>
+			<inadvertentVaccine />
 			<conditionalSkip />
 			<recurringDose>
 				No
 			</recurringDose>
 			<seasonalRecommendation />
-			<requiredGender />
 		</seriesDose>
 		<seriesDose>
 			<doseNumber>
@@ -592,6 +721,8 @@
 				<maxAge>
 					8 months + 1 day
 				</maxAge>
+				<effectiveDate />
+				<cessationDate />
 			</age>
 			<interval>
 				<fromPrevious>
@@ -599,6 +730,7 @@
 				</fromPrevious>
 				<fromTargetDose />
 				<fromMostRecent />
+				<fromRelevantObs />
 				<absMinInt>
 					4 weeks - 4 days
 				</absMinInt>
@@ -612,6 +744,8 @@
 					13 weeks
 				</latestRecInt>
 				<intervalPriority />
+				<effectiveDate />
+				<cessationDate />
 			</interval>
 			<allowableInterval />
 			<preferableVaccine>
@@ -625,7 +759,7 @@
 					6 weeks
 				</beginAge>
 				<endAge>
-					8 Months + 1 day
+					8 months + 1 day
 				</endAge>
 				<tradeName />
 				<mvx />
@@ -633,7 +767,7 @@
 					2
 				</volume>
 				<forecastVaccineType>
-					Y
+					N
 				</forecastVaccineType>
 			</preferableVaccine>
 			<preferableVaccine>
@@ -647,7 +781,7 @@
 					6 weeks
 				</beginAge>
 				<endAge>
-					8 Months + 1 day
+					8 months + 1 day
 				</endAge>
 				<tradeName />
 				<mvx />
@@ -655,7 +789,7 @@
 					1
 				</volume>
 				<forecastVaccineType>
-					Y
+					N
 				</forecastVaccineType>
 			</preferableVaccine>
 			<allowableVaccine>
@@ -706,12 +840,12 @@
 				</beginAge>
 				<endAge />
 			</allowableVaccine>
+			<inadvertentVaccine />
 			<conditionalSkip />
 			<recurringDose>
 				No
 			</recurringDose>
 			<seasonalRecommendation />
-			<requiredGender />
 		</seriesDose>
 		<seriesDose>
 			<doseNumber>
@@ -729,6 +863,8 @@
 				<maxAge>
 					8 months + 1 day
 				</maxAge>
+				<effectiveDate />
+				<cessationDate />
 			</age>
 			<interval>
 				<fromPrevious>
@@ -736,6 +872,7 @@
 				</fromPrevious>
 				<fromTargetDose />
 				<fromMostRecent />
+				<fromRelevantObs />
 				<absMinInt>
 					4 weeks - 4 days
 				</absMinInt>
@@ -749,6 +886,8 @@
 					13 weeks
 				</latestRecInt>
 				<intervalPriority />
+				<effectiveDate />
+				<cessationDate />
 			</interval>
 			<allowableInterval />
 			<preferableVaccine>
@@ -762,7 +901,7 @@
 					6 weeks
 				</beginAge>
 				<endAge>
-					8 Months + 1 day
+					8 months + 1 day
 				</endAge>
 				<tradeName />
 				<mvx />
@@ -770,7 +909,7 @@
 					2
 				</volume>
 				<forecastVaccineType>
-					Y
+					N
 				</forecastVaccineType>
 			</preferableVaccine>
 			<preferableVaccine>
@@ -784,7 +923,7 @@
 					6 weeks
 				</beginAge>
 				<endAge>
-					8 Months + 1 day
+					8 months + 1 day
 				</endAge>
 				<tradeName />
 				<mvx />
@@ -792,7 +931,7 @@
 					1
 				</volume>
 				<forecastVaccineType>
-					Y
+					N
 				</forecastVaccineType>
 			</preferableVaccine>
 			<allowableVaccine>
@@ -843,17 +982,17 @@
 				</beginAge>
 				<endAge />
 			</allowableVaccine>
+			<inadvertentVaccine />
 			<conditionalSkip />
 			<recurringDose>
 				No
 			</recurringDose>
 			<seasonalRecommendation />
-			<requiredGender />
 		</seriesDose>
 	</series>
 	<series>
 		<seriesName>
-			Rotavirus, monovalent 2-dose
+			Rotavirus 2-dose series
 		</seriesName>
 		<targetDisease>
 			Rotavirus
@@ -861,23 +1000,37 @@
 		<vaccineGroup>
 			Rotavirus
 		</vaccineGroup>
-		<selectBest>
+		<seriesAdminGuidance>
+			For children with known or suspected altered immunocompetence, ACIP advises consultation with an immunologist or infectious diseases specialist before administration of rotavirus vaccine.  Children who are immunocompromised because of congenital immunodeficiency, or hematopoietic stem cell or solid organ transplantation sometimes experience severe, prolonged, and even fatal wild-type rotavirus gastroenteritis.
+		</seriesAdminGuidance>
+		<seriesType>
+			Standard
+		</seriesType>
+		<equivalentSeriesGroups />
+		<requiredGender />
+		<selectSeries>
 			<defaultSeries>
 				No
 			</defaultSeries>
 			<productPath>
 				Yes
 			</productPath>
+			<seriesGroupName>
+				Standard
+			</seriesGroupName>
+			<seriesGroup>
+				1
+			</seriesGroup>
+			<seriesPriority>
+				A
+			</seriesPriority>
 			<seriesPreference>
 				2
 			</seriesPreference>
-			<minAgeToStart>
-				n/a
-			</minAgeToStart>
-			<maxAgeToStart>
-				n/a
-			</maxAgeToStart>
-		</selectBest>
+			<minAgeToStart />
+			<maxAgeToStart />
+		</selectSeries>
+		<indication />
 		<seriesDose>
 			<doseNumber>
 				Dose 1
@@ -896,6 +1049,8 @@
 				<maxAge>
 					15 weeks
 				</maxAge>
+				<effectiveDate />
+				<cessationDate />
 			</age>
 			<interval />
 			<allowableInterval />
@@ -910,7 +1065,7 @@
 					6 weeks
 				</beginAge>
 				<endAge>
-					8 Months + 1 day
+					8 months + 1 day
 				</endAge>
 				<tradeName />
 				<mvx />
@@ -933,12 +1088,12 @@
 				</beginAge>
 				<endAge />
 			</allowableVaccine>
+			<inadvertentVaccine />
 			<conditionalSkip />
 			<recurringDose>
 				No
 			</recurringDose>
 			<seasonalRecommendation />
-			<requiredGender />
 		</seriesDose>
 		<seriesDose>
 			<doseNumber>
@@ -960,6 +1115,8 @@
 				<maxAge>
 					8 months + 1 day
 				</maxAge>
+				<effectiveDate />
+				<cessationDate />
 			</age>
 			<interval>
 				<fromPrevious>
@@ -967,6 +1124,7 @@
 				</fromPrevious>
 				<fromTargetDose />
 				<fromMostRecent />
+				<fromRelevantObs />
 				<absMinInt>
 					4 weeks - 4 days
 				</absMinInt>
@@ -980,6 +1138,8 @@
 					13 weeks
 				</latestRecInt>
 				<intervalPriority />
+				<effectiveDate />
+				<cessationDate />
 			</interval>
 			<allowableInterval />
 			<preferableVaccine>
@@ -993,7 +1153,7 @@
 					6 weeks
 				</beginAge>
 				<endAge>
-					8 Months + 1 day
+					8 months + 1 day
 				</endAge>
 				<tradeName />
 				<mvx />
@@ -1016,17 +1176,17 @@
 				</beginAge>
 				<endAge />
 			</allowableVaccine>
+			<inadvertentVaccine />
 			<conditionalSkip />
 			<recurringDose>
 				No
 			</recurringDose>
 			<seasonalRecommendation />
-			<requiredGender />
 		</seriesDose>
 	</series>
 	<series>
 		<seriesName>
-			Rotavirus, monovalent 2-dose late start
+			Rotavirus late start at 15 weeks 2-dose series
 		</seriesName>
 		<targetDisease>
 			Rotavirus
@@ -1034,23 +1194,40 @@
 		<vaccineGroup>
 			Rotavirus
 		</vaccineGroup>
-		<selectBest>
+		<seriesAdminGuidance>
+			For children with known or suspected altered immunocompetence, ACIP advises consultation with an immunologist or infectious diseases specialist before administration of rotavirus vaccine.  Children who are immunocompromised because of congenital immunodeficiency, or hematopoietic stem cell or solid organ transplantation sometimes experience severe, prolonged, and even fatal wild-type rotavirus gastroenteritis.
+		</seriesAdminGuidance>
+		<seriesAdminGuidance>
+			Vaccination should not be initiated for infants age 15 weeks 0 days or older because there are insufficient data on the safety of dose #1 in older infants. Infants for whom the first dose of rotavirus vaccine was inadvertently administered at age 15 weeks or older should receive the remaining doses of the series at the routinely recommended intervals.
+		</seriesAdminGuidance>
+		<seriesType>
+			Standard
+		</seriesType>
+		<equivalentSeriesGroups />
+		<requiredGender />
+		<selectSeries>
 			<defaultSeries>
 				No
 			</defaultSeries>
 			<productPath>
 				Yes
 			</productPath>
+			<seriesGroupName>
+				Standard
+			</seriesGroupName>
+			<seriesGroup>
+				1
+			</seriesGroup>
+			<seriesPriority>
+				A
+			</seriesPriority>
 			<seriesPreference>
 				4
 			</seriesPreference>
-			<minAgeToStart>
-				n/a
-			</minAgeToStart>
-			<maxAgeToStart>
-				n/a
-			</maxAgeToStart>
-		</selectBest>
+			<minAgeToStart />
+			<maxAgeToStart />
+		</selectSeries>
+		<indication />
 		<seriesDose>
 			<doseNumber>
 				Dose 1
@@ -1067,6 +1244,8 @@
 				<maxAge>
 					8 months + 1 day
 				</maxAge>
+				<effectiveDate />
+				<cessationDate />
 			</age>
 			<interval />
 			<allowableInterval />
@@ -1081,7 +1260,7 @@
 					6 weeks
 				</beginAge>
 				<endAge>
-					8 Months + 1 day
+					8 months + 1 day
 				</endAge>
 				<tradeName />
 				<mvx />
@@ -1104,12 +1283,12 @@
 				</beginAge>
 				<endAge />
 			</allowableVaccine>
+			<inadvertentVaccine />
 			<conditionalSkip />
 			<recurringDose>
 				No
 			</recurringDose>
 			<seasonalRecommendation />
-			<requiredGender />
 		</seriesDose>
 		<seriesDose>
 			<doseNumber>
@@ -1127,6 +1306,8 @@
 				<maxAge>
 					8 months + 1 day
 				</maxAge>
+				<effectiveDate />
+				<cessationDate />
 			</age>
 			<interval>
 				<fromPrevious>
@@ -1134,6 +1315,7 @@
 				</fromPrevious>
 				<fromTargetDose />
 				<fromMostRecent />
+				<fromRelevantObs />
 				<absMinInt>
 					4 weeks - 4 days
 				</absMinInt>
@@ -1147,6 +1329,8 @@
 					13 weeks
 				</latestRecInt>
 				<intervalPriority />
+				<effectiveDate />
+				<cessationDate />
 			</interval>
 			<allowableInterval />
 			<preferableVaccine>
@@ -1160,7 +1344,7 @@
 					6 weeks
 				</beginAge>
 				<endAge>
-					8 Months + 1 day
+					8 months + 1 day
 				</endAge>
 				<tradeName />
 				<mvx />
@@ -1183,12 +1367,12 @@
 				</beginAge>
 				<endAge />
 			</allowableVaccine>
+			<inadvertentVaccine />
 			<conditionalSkip />
 			<recurringDose>
 				No
 			</recurringDose>
 			<seasonalRecommendation />
-			<requiredGender />
 		</seriesDose>
 	</series>
 </antigenSupportingData>

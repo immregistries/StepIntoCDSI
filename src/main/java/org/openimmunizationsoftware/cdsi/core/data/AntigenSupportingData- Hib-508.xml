@@ -1,9 +1,208 @@
 <antigenSupportingData>
 	<immunity>
 	</immunity>
+	<contraindications>
+		<vaccineGroup>
+			<contraindication>
+				<observationCode>
+					080
+				</observationCode>
+				<observationTitle>
+					Adverse reaction to vaccine component
+				</observationTitle>
+				<contraindicationText>
+					Do not vaccinate if the patient has had an adverse reaction to a vaccine component.
+				</contraindicationText>
+				<contraindicationGuidance />
+				<beginAge />
+				<endAge />
+			</contraindication>
+			<contraindication>
+				<observationCode>
+					098
+				</observationCode>
+				<observationTitle>
+					Severe allergic reaction after previous dose of Hib
+				</observationTitle>
+				<contraindicationText>
+					Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Hib vaccine.
+				</contraindicationText>
+				<contraindicationGuidance />
+				<beginAge />
+				<endAge />
+			</contraindication>
+			<contraindication>
+				<observationCode>
+					159
+				</observationCode>
+				<observationTitle>
+					Radiation therapy
+				</observationTitle>
+				<contraindicationText>
+					Do not vaccinate if the patient is undergoing radiation therapy, including 14 days before the start of therapy and 3 months after the completion of therapy.
+				</contraindicationText>
+				<contraindicationGuidance />
+				<beginAge>
+					6 weeks
+				</beginAge>
+				<endAge>
+					5 years
+				</endAge>
+			</contraindication>
+			<contraindication>
+				<observationCode>
+					168
+				</observationCode>
+				<observationTitle>
+					Chemotherapy
+				</observationTitle>
+				<contraindicationText>
+					Do not vaccinate if the patient is undergoing chemotherapy, including 14 days before the start of therapy and 3 months after the completion of therapy.
+				</contraindicationText>
+				<contraindicationGuidance />
+				<beginAge>
+					6 weeks
+				</beginAge>
+				<endAge>
+					5 years
+				</endAge>
+			</contraindication>
+		</vaccineGroup>
+		<vaccine>
+			<contraindication>
+				<observationCode>
+					076
+				</observationCode>
+				<observationTitle>
+					Progressive neurologic disorder
+				</observationTitle>
+				<contraindicationText>
+					Do not vaccinate if the patient has progressive neurologic disorder until a treatment regimen has been
+					established and the condition has stabilized.
+				</contraindicationText>
+				<contraindicationGuidance />
+				<contraindicatedVaccine>
+					<vaccineType>
+						DTaP-IPV-Hib-HepB
+					</vaccineType>
+					<cvx>
+						146
+					</cvx>
+					<beginAge />
+					<endAge />
+				</contraindicatedVaccine>
+				<contraindicatedVaccine>
+					<vaccineType>
+						DTP-hepB-Hib Pentavalent Non-US
+					</vaccineType>
+					<cvx>
+						198
+					</cvx>
+					<beginAge />
+					<endAge />
+				</contraindicatedVaccine>
+			</contraindication>
+			<contraindication>
+				<observationCode>
+					079
+				</observationCode>
+				<observationTitle>
+					Encephalopathy not attributable to another identifiable cause within 7 days of administration of a previous dose of Tdap, DTP, or DTaP vaccine
+				</observationTitle>
+				<contraindicationText>
+					Do not vaccinate if the patient has had encephalopathy not attributable to another identifiable cause within 7 days of administration of a previous dose of Tdap, DTP, or DTaP vaccine.
+				</contraindicationText>
+				<contraindicationGuidance />
+				<contraindicatedVaccine>
+					<vaccineType>
+						DTaP-IPV-Hib-HepB
+					</vaccineType>
+					<cvx>
+						146
+					</cvx>
+					<beginAge />
+					<endAge />
+				</contraindicatedVaccine>
+				<contraindicatedVaccine>
+					<vaccineType>
+						DTP-hepB-Hib Pentavalent Non-US
+					</vaccineType>
+					<cvx>
+						198
+					</cvx>
+					<beginAge />
+					<endAge />
+				</contraindicatedVaccine>
+			</contraindication>
+			<contraindication>
+				<observationCode>
+					104
+				</observationCode>
+				<observationTitle>
+					Allergic reaction to latex
+				</observationTitle>
+				<contraindicationText>
+					Do not vaccinate if the patient has an allergy to latex.
+				</contraindicationText>
+				<contraindicationGuidance />
+				<contraindicatedVaccine>
+					<vaccineType>
+						PRP-T
+					</vaccineType>
+					<cvx>
+						48
+					</cvx>
+					<beginAge />
+					<endAge />
+				</contraindicatedVaccine>
+				<contraindicatedVaccine>
+					<vaccineType>
+						PRP-OMP
+					</vaccineType>
+					<cvx>
+						49
+					</cvx>
+					<beginAge />
+					<endAge />
+				</contraindicatedVaccine>
+				<contraindicatedVaccine>
+					<vaccineType>
+						Hib-Hep B
+					</vaccineType>
+					<cvx>
+						51
+					</cvx>
+					<beginAge />
+					<endAge />
+				</contraindicatedVaccine>
+			</contraindication>
+			<contraindication>
+				<observationCode>
+					110
+				</observationCode>
+				<observationTitle>
+					Hypersensitivity to yeast
+				</observationTitle>
+				<contraindicationText>
+					Do not vaccinate if the patient has a hypersensitivity to yeast.
+				</contraindicationText>
+				<contraindicationGuidance />
+				<contraindicatedVaccine>
+					<vaccineType>
+						Hib-Hep B
+					</vaccineType>
+					<cvx>
+						51
+					</cvx>
+					<beginAge />
+					<endAge />
+				</contraindicatedVaccine>
+			</contraindication>
+		</vaccine>
+	</contraindications>
 	<series>
 		<seriesName>
-			Hib Standard Series
+			Hib start at 2 months 4-dose series
 		</seriesName>
 		<targetDisease>
 			Hib
@@ -11,23 +210,39 @@
 		<vaccineGroup>
 			Hib
 		</vaccineGroup>
-		<selectBest>
+		<seriesAdminGuidance />
+		<seriesType>
+			Standard
+		</seriesType>
+		<equivalentSeriesGroups>
+			2
+		</equivalentSeriesGroups>
+		<requiredGender />
+		<selectSeries>
 			<defaultSeries>
 				Yes
 			</defaultSeries>
 			<productPath>
 				No
 			</productPath>
+			<seriesGroupName>
+				Standard
+			</seriesGroupName>
+			<seriesGroup>
+				1
+			</seriesGroup>
+			<seriesPriority>
+				A
+			</seriesPriority>
 			<seriesPreference>
 				1
 			</seriesPreference>
-			<minAgeToStart>
-				n/a
-			</minAgeToStart>
+			<minAgeToStart />
 			<maxAgeToStart>
 				7 months - 4 days
 			</maxAgeToStart>
-		</selectBest>
+		</selectSeries>
+		<indication />
 		<seriesDose>
 			<doseNumber>
 				Dose 1
@@ -48,6 +263,8 @@
 				<maxAge>
 					5 years
 				</maxAge>
+				<effectiveDate />
+				<cessationDate />
 			</age>
 			<interval />
 			<allowableInterval />
@@ -64,12 +281,8 @@
 				<endAge>
 					5 years
 				</endAge>
-				<tradeName>
-					ActHIB
-				</tradeName>
-				<mvx>
-					PMC
-				</mvx>
+				<tradeName />
+				<mvx />
 				<volume>
 					0.5
 				</volume>
@@ -96,15 +309,15 @@
 					0.5
 				</volume>
 				<forecastVaccineType>
-					Y
+					N
 				</forecastVaccineType>
 			</preferableVaccine>
 			<preferableVaccine>
 				<vaccineType>
-					Hib-HepB
+					DTaP-Hib-IPV
 				</vaccineType>
 				<cvx>
-					51
+					120
 				</cvx>
 				<beginAge>
 					6 weeks
@@ -123,10 +336,10 @@
 			</preferableVaccine>
 			<preferableVaccine>
 				<vaccineType>
-					DTaP-Hib-IPV
+					DTaP-IPV-Hib-HepB
 				</vaccineType>
 				<cvx>
-					120
+					146
 				</cvx>
 				<beginAge>
 					6 weeks
@@ -217,7 +430,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					Hib-HepB
+					Hib-Hep B
 				</vaccineType>
 				<cvx>
 					51
@@ -229,7 +442,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-Hib-HepB
+					DTP-Hib-HepB
 				</vaccineType>
 				<cvx>
 					102
@@ -253,7 +466,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-IPV-Hib-HepB,historical
+					DTaP-IPV-Hib-Hep B,historical
 				</vaccineType>
 				<cvx>
 					132
@@ -265,7 +478,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-IPV-Hib-HepB
+					DTaP-IPV-Hib-Hep B
 				</vaccineType>
 				<cvx>
 					146
@@ -289,12 +502,36 @@
 					19 months
 				</endAge>
 			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP-IPV-Hib
+				</vaccineType>
+				<cvx>
+					170
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTP-hepB-Hib Pentavalent Non-US
+				</vaccineType>
+				<cvx>
+					198
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<inadvertentVaccine />
 			<conditionalSkip />
 			<recurringDose>
 				No
 			</recurringDose>
 			<seasonalRecommendation />
-			<requiredGender />
 		</seriesDose>
 		<seriesDose>
 			<doseNumber>
@@ -316,6 +553,8 @@
 				<maxAge>
 					5 years
 				</maxAge>
+				<effectiveDate />
+				<cessationDate />
 			</age>
 			<interval>
 				<fromPrevious>
@@ -323,6 +562,7 @@
 				</fromPrevious>
 				<fromTargetDose />
 				<fromMostRecent />
+				<fromRelevantObs />
 				<absMinInt>
 					4 weeks - 4 days
 				</absMinInt>
@@ -336,6 +576,8 @@
 					16 weeks
 				</latestRecInt>
 				<intervalPriority />
+				<effectiveDate />
+				<cessationDate />
 			</interval>
 			<allowableInterval />
 			<preferableVaccine>
@@ -351,12 +593,8 @@
 				<endAge>
 					5 years
 				</endAge>
-				<tradeName>
-					ActHIB
-				</tradeName>
-				<mvx>
-					PMC
-				</mvx>
+				<tradeName />
+				<mvx />
 				<volume>
 					0.5
 				</volume>
@@ -383,15 +621,15 @@
 					0.5
 				</volume>
 				<forecastVaccineType>
-					Y
+					N
 				</forecastVaccineType>
 			</preferableVaccine>
 			<preferableVaccine>
 				<vaccineType>
-					Hib-HepB
+					DTaP-Hib-IPV
 				</vaccineType>
 				<cvx>
-					51
+					120
 				</cvx>
 				<beginAge>
 					6 weeks
@@ -410,10 +648,10 @@
 			</preferableVaccine>
 			<preferableVaccine>
 				<vaccineType>
-					DTaP-Hib-IPV
+					DTaP-IPV-Hib-HepB
 				</vaccineType>
 				<cvx>
-					120
+					146
 				</cvx>
 				<beginAge>
 					6 weeks
@@ -504,7 +742,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					Hib-HepB
+					Hib-Hep B
 				</vaccineType>
 				<cvx>
 					51
@@ -516,7 +754,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-Hib-HepB
+					DTP-Hib-HepB
 				</vaccineType>
 				<cvx>
 					102
@@ -540,7 +778,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-IPV-Hib-HepB,historical
+					DTaP-IPV-Hib-Hep B,historical
 				</vaccineType>
 				<cvx>
 					132
@@ -552,7 +790,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-IPV-Hib-HepB
+					DTaP-IPV-Hib-Hep B
 				</vaccineType>
 				<cvx>
 					146
@@ -576,7 +814,35 @@
 					19 months
 				</endAge>
 			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP-IPV-Hib
+				</vaccineType>
+				<cvx>
+					170
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTP-hepB-Hib Pentavalent Non-US
+				</vaccineType>
+				<cvx>
+					198
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<inadvertentVaccine />
 			<conditionalSkip>
+				<context>
+					Evaluation
+				</context>
 				<setLogic>
 					n/a
 				</setLogic>
@@ -585,8 +851,10 @@
 						1
 					</setID>
 					<setDescription>
-						Dose is not required for those 15 months or older
+						Target Dose is not required if the current dose was administered on or after 15 months - 4 days of age.
 					</setDescription>
+					<effectiveDate />
+					<cessationDate />
 					<conditionLogic />
 					<condition>
 						<conditionID>
@@ -606,6 +874,46 @@
 						<doseType />
 						<doseCountLogic />
 						<vaccineTypes />
+						<seriesGroups />
+					</condition>
+				</set>
+			</conditionalSkip>
+			<conditionalSkip>
+				<context>
+					Forecast
+				</context>
+				<setLogic>
+					n/a
+				</setLogic>
+				<set>
+					<setID>
+						2
+					</setID>
+					<setDescription>
+						Dose is not required for those 15 months or older
+					</setDescription>
+					<effectiveDate />
+					<cessationDate />
+					<conditionLogic />
+					<condition>
+						<conditionID>
+							1
+						</conditionID>
+						<conditionType>
+							Age
+						</conditionType>
+						<startDate />
+						<endDate />
+						<beginAge>
+							15 months
+						</beginAge>
+						<endAge />
+						<interval />
+						<doseCount />
+						<doseType />
+						<doseCountLogic />
+						<vaccineTypes />
+						<seriesGroups />
 					</condition>
 				</set>
 			</conditionalSkip>
@@ -613,7 +921,6 @@
 				No
 			</recurringDose>
 			<seasonalRecommendation />
-			<requiredGender />
 		</seriesDose>
 		<seriesDose>
 			<doseNumber>
@@ -635,6 +942,8 @@
 				<maxAge>
 					5 years
 				</maxAge>
+				<effectiveDate />
+				<cessationDate />
 			</age>
 			<interval>
 				<fromPrevious>
@@ -642,6 +951,7 @@
 				</fromPrevious>
 				<fromTargetDose />
 				<fromMostRecent />
+				<fromRelevantObs />
 				<absMinInt>
 					4 weeks - 4 days
 				</absMinInt>
@@ -655,6 +965,8 @@
 					16 weeks
 				</latestRecInt>
 				<intervalPriority />
+				<effectiveDate />
+				<cessationDate />
 			</interval>
 			<allowableInterval />
 			<preferableVaccine>
@@ -670,12 +982,8 @@
 				<endAge>
 					5 years
 				</endAge>
-				<tradeName>
-					ActHIB
-				</tradeName>
-				<mvx>
-					PMC
-				</mvx>
+				<tradeName />
+				<mvx />
 				<volume>
 					0.5
 				</volume>
@@ -702,15 +1010,15 @@
 					0.5
 				</volume>
 				<forecastVaccineType>
-					Y
+					N
 				</forecastVaccineType>
 			</preferableVaccine>
 			<preferableVaccine>
 				<vaccineType>
-					Hib-HepB
+					DTaP-Hib-IPV
 				</vaccineType>
 				<cvx>
-					51
+					120
 				</cvx>
 				<beginAge>
 					6 weeks
@@ -729,10 +1037,10 @@
 			</preferableVaccine>
 			<preferableVaccine>
 				<vaccineType>
-					DTaP-Hib-IPV
+					DTaP-IPV-Hib-HepB
 				</vaccineType>
 				<cvx>
-					120
+					146
 				</cvx>
 				<beginAge>
 					6 weeks
@@ -835,7 +1143,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					Hib-HepB
+					Hib-Hep B
 				</vaccineType>
 				<cvx>
 					51
@@ -847,7 +1155,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-Hib-HepB
+					DTP-Hib-HepB
 				</vaccineType>
 				<cvx>
 					102
@@ -871,7 +1179,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-IPV-Hib-HepB,historical
+					DTaP-IPV-Hib-Hep B,historical
 				</vaccineType>
 				<cvx>
 					132
@@ -883,7 +1191,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-IPV-Hib-HepB
+					DTaP-IPV-Hib-Hep B
 				</vaccineType>
 				<cvx>
 					146
@@ -907,18 +1215,81 @@
 					19 months
 				</endAge>
 			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP-IPV-Hib
+				</vaccineType>
+				<cvx>
+					170
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTP-hepB-Hib Pentavalent Non-US
+				</vaccineType>
+				<cvx>
+					198
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<inadvertentVaccine />
 			<conditionalSkip>
+				<context>
+					Evaluation
+				</context>
 				<setLogic>
-					n/a
+					OR
 				</setLogic>
 				<set>
 					<setID>
 						1
 					</setID>
 					<setDescription>
-						Dose is not required for those 12 months or older
+						Target Dose is not required if the current dose was administered on or after 12 months of age.
 					</setDescription>
+					<effectiveDate />
+					<cessationDate />
 					<conditionLogic />
+					<condition>
+						<conditionID>
+							1
+						</conditionID>
+						<conditionType>
+							Age
+						</conditionType>
+						<startDate />
+						<endDate />
+						<beginAge>
+							12 months
+						</beginAge>
+						<endAge />
+						<interval />
+						<doseCount />
+						<doseType />
+						<doseCountLogic />
+						<vaccineTypes />
+						<seriesGroups />
+					</condition>
+				</set>
+				<set>
+					<setID>
+						2
+					</setID>
+					<setDescription>
+						Target Dose is not required if the current dose was administered on or after 12 months - 4 days of age AND the previous dose was administered at least 8 weeks - 4 day from the current dose.
+					</setDescription>
+					<effectiveDate />
+					<cessationDate />
+					<conditionLogic>
+						AND
+					</conditionLogic>
 					<condition>
 						<conditionID>
 							1
@@ -937,6 +1308,66 @@
 						<doseType />
 						<doseCountLogic />
 						<vaccineTypes />
+						<seriesGroups />
+					</condition>
+					<condition>
+						<conditionID>
+							2
+						</conditionID>
+						<conditionType>
+							Interval
+						</conditionType>
+						<startDate />
+						<endDate />
+						<beginAge />
+						<endAge />
+						<interval>
+							8 weeks - 4 days
+						</interval>
+						<doseCount />
+						<doseType />
+						<doseCountLogic />
+						<vaccineTypes />
+						<seriesGroups />
+					</condition>
+				</set>
+			</conditionalSkip>
+			<conditionalSkip>
+				<context>
+					Forecast
+				</context>
+				<setLogic>
+					n/a
+				</setLogic>
+				<set>
+					<setID>
+						3
+					</setID>
+					<setDescription>
+						Dose is not required for those 12 months or older
+					</setDescription>
+					<effectiveDate />
+					<cessationDate />
+					<conditionLogic />
+					<condition>
+						<conditionID>
+							1
+						</conditionID>
+						<conditionType>
+							Age
+						</conditionType>
+						<startDate />
+						<endDate />
+						<beginAge>
+							12 months
+						</beginAge>
+						<endAge />
+						<interval />
+						<doseCount />
+						<doseType />
+						<doseCountLogic />
+						<vaccineTypes />
+						<seriesGroups />
 					</condition>
 				</set>
 			</conditionalSkip>
@@ -944,7 +1375,6 @@
 				No
 			</recurringDose>
 			<seasonalRecommendation />
-			<requiredGender />
 		</seriesDose>
 		<seriesDose>
 			<doseNumber>
@@ -966,6 +1396,8 @@
 				<maxAge>
 					5 years
 				</maxAge>
+				<effectiveDate />
+				<cessationDate />
 			</age>
 			<interval>
 				<fromPrevious>
@@ -973,6 +1405,7 @@
 				</fromPrevious>
 				<fromTargetDose />
 				<fromMostRecent />
+				<fromRelevantObs />
 				<absMinInt>
 					8 weeks - 4 days
 				</absMinInt>
@@ -986,6 +1419,8 @@
 					10 months + 4 weeks
 				</latestRecInt>
 				<intervalPriority />
+				<effectiveDate />
+				<cessationDate />
 			</interval>
 			<allowableInterval />
 			<preferableVaccine>
@@ -1001,38 +1436,8 @@
 				<endAge>
 					5 years
 				</endAge>
-				<tradeName>
-					ActHIB
-				</tradeName>
-				<mvx>
-					PMC
-				</mvx>
-				<volume>
-					0.5
-				</volume>
-				<forecastVaccineType>
-					N
-				</forecastVaccineType>
-			</preferableVaccine>
-			<preferableVaccine>
-				<vaccineType>
-					PRP-T
-				</vaccineType>
-				<cvx>
-					48
-				</cvx>
-				<beginAge>
-					12 months
-				</beginAge>
-				<endAge>
-					5 years
-				</endAge>
-				<tradeName>
-					HIBERIX
-				</tradeName>
-				<mvx>
-					SKB
-				</mvx>
+				<tradeName />
+				<mvx />
 				<volume>
 					0.5
 				</volume>
@@ -1046,28 +1451,6 @@
 				</vaccineType>
 				<cvx>
 					49
-				</cvx>
-				<beginAge>
-					6 weeks
-				</beginAge>
-				<endAge>
-					5 years
-				</endAge>
-				<tradeName />
-				<mvx />
-				<volume>
-					0.5
-				</volume>
-				<forecastVaccineType>
-					Y
-				</forecastVaccineType>
-			</preferableVaccine>
-			<preferableVaccine>
-				<vaccineType>
-					Hib-HepB
-				</vaccineType>
-				<cvx>
-					51
 				</cvx>
 				<beginAge>
 					6 weeks
@@ -1192,7 +1575,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					Hib-HepB
+					Hib-Hep B
 				</vaccineType>
 				<cvx>
 					51
@@ -1204,7 +1587,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-Hib-HepB
+					DTP-Hib-HepB
 				</vaccineType>
 				<cvx>
 					102
@@ -1228,7 +1611,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-IPV-Hib-HepB,historical
+					DTaP-IPV-Hib-Hep B,historical
 				</vaccineType>
 				<cvx>
 					132
@@ -1240,7 +1623,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-IPV-Hib-HepB
+					DTaP-IPV-Hib-Hep B
 				</vaccineType>
 				<cvx>
 					146
@@ -1264,17 +1647,41 @@
 					19 months
 				</endAge>
 			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP-IPV-Hib
+				</vaccineType>
+				<cvx>
+					170
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTP-hepB-Hib Pentavalent Non-US
+				</vaccineType>
+				<cvx>
+					198
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<inadvertentVaccine />
 			<conditionalSkip />
 			<recurringDose>
 				No
 			</recurringDose>
 			<seasonalRecommendation />
-			<requiredGender />
 		</seriesDose>
 	</series>
 	<series>
 		<seriesName>
-			Hib Start at 7 mo Series
+			Hib start at 7 months 3-dose series
 		</seriesName>
 		<targetDisease>
 			Hib
@@ -1282,23 +1689,39 @@
 		<vaccineGroup>
 			Hib
 		</vaccineGroup>
-		<selectBest>
+		<seriesAdminGuidance />
+		<seriesType>
+			Standard
+		</seriesType>
+		<equivalentSeriesGroups>
+			2
+		</equivalentSeriesGroups>
+		<requiredGender />
+		<selectSeries>
 			<defaultSeries>
 				No
 			</defaultSeries>
 			<productPath>
 				No
 			</productPath>
+			<seriesGroupName>
+				Standard
+			</seriesGroupName>
+			<seriesGroup>
+				1
+			</seriesGroup>
+			<seriesPriority>
+				A
+			</seriesPriority>
 			<seriesPreference>
 				3
 			</seriesPreference>
-			<minAgeToStart>
-				n/a
-			</minAgeToStart>
+			<minAgeToStart />
 			<maxAgeToStart>
 				12 months - 4 days
 			</maxAgeToStart>
-		</selectBest>
+		</selectSeries>
+		<indication />
 		<seriesDose>
 			<doseNumber>
 				Dose 1
@@ -1315,6 +1738,8 @@
 				<maxAge>
 					5 years
 				</maxAge>
+				<effectiveDate />
+				<cessationDate />
 			</age>
 			<interval />
 			<allowableInterval />
@@ -1331,12 +1756,8 @@
 				<endAge>
 					5 years
 				</endAge>
-				<tradeName>
-					ActHIB
-				</tradeName>
-				<mvx>
-					PMC
-				</mvx>
+				<tradeName />
+				<mvx />
 				<volume>
 					0.5
 				</volume>
@@ -1363,15 +1784,15 @@
 					0.5
 				</volume>
 				<forecastVaccineType>
-					Y
+					N
 				</forecastVaccineType>
 			</preferableVaccine>
 			<preferableVaccine>
 				<vaccineType>
-					Hib-HepB
+					DTaP-Hib-IPV
 				</vaccineType>
 				<cvx>
-					51
+					120
 				</cvx>
 				<beginAge>
 					6 weeks
@@ -1390,10 +1811,10 @@
 			</preferableVaccine>
 			<preferableVaccine>
 				<vaccineType>
-					DTaP-Hib-IPV
+					DTaP-IPV-Hib-HepB
 				</vaccineType>
 				<cvx>
-					120
+					146
 				</cvx>
 				<beginAge>
 					6 weeks
@@ -1484,7 +1905,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					Hib-HepB
+					Hib-Hep B
 				</vaccineType>
 				<cvx>
 					51
@@ -1496,7 +1917,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-Hib-HepB
+					DTP-Hib-HepB
 				</vaccineType>
 				<cvx>
 					102
@@ -1520,7 +1941,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-IPV-Hib-HepB,historical
+					DTaP-IPV-Hib-Hep B,historical
 				</vaccineType>
 				<cvx>
 					132
@@ -1532,7 +1953,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-IPV-Hib-HepB
+					DTaP-IPV-Hib-Hep B
 				</vaccineType>
 				<cvx>
 					146
@@ -1556,12 +1977,36 @@
 					19 months
 				</endAge>
 			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP-IPV-Hib
+				</vaccineType>
+				<cvx>
+					170
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTP-hepB-Hib Pentavalent Non-US
+				</vaccineType>
+				<cvx>
+					198
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<inadvertentVaccine />
 			<conditionalSkip />
 			<recurringDose>
 				No
 			</recurringDose>
 			<seasonalRecommendation />
-			<requiredGender />
 		</seriesDose>
 		<seriesDose>
 			<doseNumber>
@@ -1575,6 +2020,8 @@
 				<maxAge>
 					5 years
 				</maxAge>
+				<effectiveDate />
+				<cessationDate />
 			</age>
 			<interval>
 				<fromPrevious>
@@ -1582,6 +2029,7 @@
 				</fromPrevious>
 				<fromTargetDose />
 				<fromMostRecent />
+				<fromRelevantObs />
 				<absMinInt>
 					4 weeks - 4 days
 				</absMinInt>
@@ -1595,6 +2043,8 @@
 					4 weeks
 				</latestRecInt>
 				<intervalPriority />
+				<effectiveDate />
+				<cessationDate />
 			</interval>
 			<allowableInterval />
 			<preferableVaccine>
@@ -1610,12 +2060,8 @@
 				<endAge>
 					5 years
 				</endAge>
-				<tradeName>
-					ActHIB
-				</tradeName>
-				<mvx>
-					PMC
-				</mvx>
+				<tradeName />
+				<mvx />
 				<volume>
 					0.5
 				</volume>
@@ -1642,15 +2088,15 @@
 					0.5
 				</volume>
 				<forecastVaccineType>
-					Y
+					N
 				</forecastVaccineType>
 			</preferableVaccine>
 			<preferableVaccine>
 				<vaccineType>
-					Hib-HepB
+					DTaP-Hib-IPV
 				</vaccineType>
 				<cvx>
-					51
+					120
 				</cvx>
 				<beginAge>
 					6 weeks
@@ -1669,10 +2115,10 @@
 			</preferableVaccine>
 			<preferableVaccine>
 				<vaccineType>
-					DTaP-Hib-IPV
+					DTaP-IPV-Hib-HepB
 				</vaccineType>
 				<cvx>
-					120
+					146
 				</cvx>
 				<beginAge>
 					6 weeks
@@ -1775,7 +2221,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					Hib-HepB
+					Hib-Hep B
 				</vaccineType>
 				<cvx>
 					51
@@ -1787,7 +2233,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-Hib-HepB
+					DTP-Hib-HepB
 				</vaccineType>
 				<cvx>
 					102
@@ -1811,7 +2257,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-IPV-Hib-HepB,historical
+					DTaP-IPV-Hib-Hep B,historical
 				</vaccineType>
 				<cvx>
 					132
@@ -1823,7 +2269,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-IPV-Hib-HepB
+					DTaP-IPV-Hib-Hep B
 				</vaccineType>
 				<cvx>
 					146
@@ -1847,18 +2293,81 @@
 					19 months
 				</endAge>
 			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP-IPV-Hib
+				</vaccineType>
+				<cvx>
+					170
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTP-hepB-Hib Pentavalent Non-US
+				</vaccineType>
+				<cvx>
+					198
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<inadvertentVaccine />
 			<conditionalSkip>
+				<context>
+					Evaluation
+				</context>
 				<setLogic>
-					n/a
+					OR
 				</setLogic>
 				<set>
 					<setID>
 						1
 					</setID>
 					<setDescription>
-						Dose is not required for those 15 months or older
+						Target Dose is not required if the current dose was administered on or after 15 months of age.
 					</setDescription>
+					<effectiveDate />
+					<cessationDate />
 					<conditionLogic />
+					<condition>
+						<conditionID>
+							1
+						</conditionID>
+						<conditionType>
+							Age
+						</conditionType>
+						<startDate />
+						<endDate />
+						<beginAge>
+							15 months
+						</beginAge>
+						<endAge />
+						<interval />
+						<doseCount />
+						<doseType />
+						<doseCountLogic />
+						<vaccineTypes />
+						<seriesGroups />
+					</condition>
+				</set>
+				<set>
+					<setID>
+						2
+					</setID>
+					<setDescription>
+						Target Dose is not required if the current dose was administered on or after 15 months - 4 days of age AND the previous dose was administered at least 8 weeks - 4 day from the current dose.
+					</setDescription>
+					<effectiveDate />
+					<cessationDate />
+					<conditionLogic>
+						AND
+					</conditionLogic>
 					<condition>
 						<conditionID>
 							1
@@ -1877,6 +2386,66 @@
 						<doseType />
 						<doseCountLogic />
 						<vaccineTypes />
+						<seriesGroups />
+					</condition>
+					<condition>
+						<conditionID>
+							2
+						</conditionID>
+						<conditionType>
+							Interval
+						</conditionType>
+						<startDate />
+						<endDate />
+						<beginAge />
+						<endAge />
+						<interval>
+							8 weeks - 4 days
+						</interval>
+						<doseCount />
+						<doseType />
+						<doseCountLogic />
+						<vaccineTypes />
+						<seriesGroups />
+					</condition>
+				</set>
+			</conditionalSkip>
+			<conditionalSkip>
+				<context>
+					Forecast
+				</context>
+				<setLogic>
+					n/a
+				</setLogic>
+				<set>
+					<setID>
+						3
+					</setID>
+					<setDescription>
+						Dose is not required for those 15 months or older
+					</setDescription>
+					<effectiveDate />
+					<cessationDate />
+					<conditionLogic />
+					<condition>
+						<conditionID>
+							1
+						</conditionID>
+						<conditionType>
+							Age
+						</conditionType>
+						<startDate />
+						<endDate />
+						<beginAge>
+							15 months
+						</beginAge>
+						<endAge />
+						<interval />
+						<doseCount />
+						<doseType />
+						<doseCountLogic />
+						<vaccineTypes />
+						<seriesGroups />
 					</condition>
 				</set>
 			</conditionalSkip>
@@ -1884,7 +2453,6 @@
 				No
 			</recurringDose>
 			<seasonalRecommendation />
-			<requiredGender />
 		</seriesDose>
 		<seriesDose>
 			<doseNumber>
@@ -1906,6 +2474,8 @@
 				<maxAge>
 					5 years
 				</maxAge>
+				<effectiveDate />
+				<cessationDate />
 			</age>
 			<interval>
 				<fromPrevious>
@@ -1913,6 +2483,7 @@
 				</fromPrevious>
 				<fromTargetDose />
 				<fromMostRecent />
+				<fromRelevantObs />
 				<absMinInt>
 					8 weeks - 4 days
 				</absMinInt>
@@ -1926,6 +2497,8 @@
 					8 weeks
 				</latestRecInt>
 				<intervalPriority />
+				<effectiveDate />
+				<cessationDate />
 			</interval>
 			<allowableInterval />
 			<preferableVaccine>
@@ -1941,38 +2514,8 @@
 				<endAge>
 					5 years
 				</endAge>
-				<tradeName>
-					ActHIB
-				</tradeName>
-				<mvx>
-					PMC
-				</mvx>
-				<volume>
-					0.5
-				</volume>
-				<forecastVaccineType>
-					N
-				</forecastVaccineType>
-			</preferableVaccine>
-			<preferableVaccine>
-				<vaccineType>
-					PRP-T
-				</vaccineType>
-				<cvx>
-					48
-				</cvx>
-				<beginAge>
-					12 months
-				</beginAge>
-				<endAge>
-					5 years
-				</endAge>
-				<tradeName>
-					HIBERIX
-				</tradeName>
-				<mvx>
-					SKB
-				</mvx>
+				<tradeName />
+				<mvx />
 				<volume>
 					0.5
 				</volume>
@@ -1986,28 +2529,6 @@
 				</vaccineType>
 				<cvx>
 					49
-				</cvx>
-				<beginAge>
-					6 weeks
-				</beginAge>
-				<endAge>
-					5 years
-				</endAge>
-				<tradeName />
-				<mvx />
-				<volume>
-					0.5
-				</volume>
-				<forecastVaccineType>
-					Y
-				</forecastVaccineType>
-			</preferableVaccine>
-			<preferableVaccine>
-				<vaccineType>
-					Hib-HepB
-				</vaccineType>
-				<cvx>
-					51
 				</cvx>
 				<beginAge>
 					6 weeks
@@ -2132,7 +2653,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					Hib-HepB
+					Hib-Hep B
 				</vaccineType>
 				<cvx>
 					51
@@ -2144,7 +2665,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-Hib-HepB
+					DTP-Hib-HepB
 				</vaccineType>
 				<cvx>
 					102
@@ -2168,7 +2689,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-IPV-Hib-HepB,historical
+					DTaP-IPV-Hib-Hep B,historical
 				</vaccineType>
 				<cvx>
 					132
@@ -2180,7 +2701,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-IPV-Hib-HepB
+					DTaP-IPV-Hib-Hep B
 				</vaccineType>
 				<cvx>
 					146
@@ -2204,17 +2725,41 @@
 					19 months
 				</endAge>
 			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP-IPV-Hib
+				</vaccineType>
+				<cvx>
+					170
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTP-hepB-Hib Pentavalent Non-US
+				</vaccineType>
+				<cvx>
+					198
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<inadvertentVaccine />
 			<conditionalSkip />
 			<recurringDose>
 				No
 			</recurringDose>
 			<seasonalRecommendation />
-			<requiredGender />
 		</seriesDose>
 	</series>
 	<series>
 		<seriesName>
-			Hib Start at 12 mo Series
+			Hib start at 12 months 2-dose series
 		</seriesName>
 		<targetDisease>
 			Hib
@@ -2222,23 +2767,39 @@
 		<vaccineGroup>
 			Hib
 		</vaccineGroup>
-		<selectBest>
+		<seriesAdminGuidance />
+		<seriesType>
+			Standard
+		</seriesType>
+		<equivalentSeriesGroups>
+			2
+		</equivalentSeriesGroups>
+		<requiredGender />
+		<selectSeries>
 			<defaultSeries>
 				No
 			</defaultSeries>
 			<productPath>
 				No
 			</productPath>
+			<seriesGroupName>
+				Standard
+			</seriesGroupName>
+			<seriesGroup>
+				1
+			</seriesGroup>
+			<seriesPriority>
+				A
+			</seriesPriority>
 			<seriesPreference>
 				4
 			</seriesPreference>
-			<minAgeToStart>
-				n/a
-			</minAgeToStart>
+			<minAgeToStart />
 			<maxAgeToStart>
 				15 months - 4 days
 			</maxAgeToStart>
-		</selectBest>
+		</selectSeries>
+		<indication />
 		<seriesDose>
 			<doseNumber>
 				Dose 1
@@ -2255,6 +2816,8 @@
 				<maxAge>
 					5 years
 				</maxAge>
+				<effectiveDate />
+				<cessationDate />
 			</age>
 			<interval />
 			<allowableInterval />
@@ -2271,12 +2834,8 @@
 				<endAge>
 					5 years
 				</endAge>
-				<tradeName>
-					ActHIB
-				</tradeName>
-				<mvx>
-					PMC
-				</mvx>
+				<tradeName />
+				<mvx />
 				<volume>
 					0.5
 				</volume>
@@ -2303,15 +2862,15 @@
 					0.5
 				</volume>
 				<forecastVaccineType>
-					Y
+					N
 				</forecastVaccineType>
 			</preferableVaccine>
 			<preferableVaccine>
 				<vaccineType>
-					Hib-HepB
+					DTaP-Hib-IPV
 				</vaccineType>
 				<cvx>
-					51
+					120
 				</cvx>
 				<beginAge>
 					6 weeks
@@ -2330,10 +2889,10 @@
 			</preferableVaccine>
 			<preferableVaccine>
 				<vaccineType>
-					DTaP-Hib-IPV
+					DTaP-IPV-Hib-HepB
 				</vaccineType>
 				<cvx>
-					120
+					146
 				</cvx>
 				<beginAge>
 					6 weeks
@@ -2436,7 +2995,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					Hib-HepB
+					Hib-Hep B
 				</vaccineType>
 				<cvx>
 					51
@@ -2448,7 +3007,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-Hib-HepB
+					DTP-Hib-HepB
 				</vaccineType>
 				<cvx>
 					102
@@ -2472,7 +3031,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-IPV-Hib-HepB,historical
+					DTaP-IPV-Hib-Hep B,historical
 				</vaccineType>
 				<cvx>
 					132
@@ -2484,7 +3043,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-IPV-Hib-HepB
+					DTaP-IPV-Hib-Hep B
 				</vaccineType>
 				<cvx>
 					146
@@ -2508,12 +3067,36 @@
 					19 months
 				</endAge>
 			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP-IPV-Hib
+				</vaccineType>
+				<cvx>
+					170
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTP-hepB-Hib Pentavalent Non-US
+				</vaccineType>
+				<cvx>
+					198
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<inadvertentVaccine />
 			<conditionalSkip />
 			<recurringDose>
 				No
 			</recurringDose>
 			<seasonalRecommendation />
-			<requiredGender />
 		</seriesDose>
 		<seriesDose>
 			<doseNumber>
@@ -2527,6 +3110,8 @@
 				<maxAge>
 					5 years
 				</maxAge>
+				<effectiveDate />
+				<cessationDate />
 			</age>
 			<interval>
 				<fromPrevious>
@@ -2534,6 +3119,7 @@
 				</fromPrevious>
 				<fromTargetDose />
 				<fromMostRecent />
+				<fromRelevantObs />
 				<absMinInt>
 					8 weeks - 4 days
 				</absMinInt>
@@ -2547,6 +3133,8 @@
 					8 weeks
 				</latestRecInt>
 				<intervalPriority />
+				<effectiveDate />
+				<cessationDate />
 			</interval>
 			<allowableInterval />
 			<preferableVaccine>
@@ -2562,38 +3150,8 @@
 				<endAge>
 					5 years
 				</endAge>
-				<tradeName>
-					ActHIB
-				</tradeName>
-				<mvx>
-					PMC
-				</mvx>
-				<volume>
-					0.5
-				</volume>
-				<forecastVaccineType>
-					N
-				</forecastVaccineType>
-			</preferableVaccine>
-			<preferableVaccine>
-				<vaccineType>
-					PRP-T
-				</vaccineType>
-				<cvx>
-					48
-				</cvx>
-				<beginAge>
-					12 months
-				</beginAge>
-				<endAge>
-					5 years
-				</endAge>
-				<tradeName>
-					HIBERIX
-				</tradeName>
-				<mvx>
-					SKB
-				</mvx>
+				<tradeName />
+				<mvx />
 				<volume>
 					0.5
 				</volume>
@@ -2607,28 +3165,6 @@
 				</vaccineType>
 				<cvx>
 					49
-				</cvx>
-				<beginAge>
-					6 weeks
-				</beginAge>
-				<endAge>
-					5 years
-				</endAge>
-				<tradeName />
-				<mvx />
-				<volume>
-					0.5
-				</volume>
-				<forecastVaccineType>
-					Y
-				</forecastVaccineType>
-			</preferableVaccine>
-			<preferableVaccine>
-				<vaccineType>
-					Hib-HepB
-				</vaccineType>
-				<cvx>
-					51
 				</cvx>
 				<beginAge>
 					6 weeks
@@ -2753,7 +3289,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					Hib-HepB
+					Hib-Hep B
 				</vaccineType>
 				<cvx>
 					51
@@ -2765,7 +3301,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-Hib-HepB
+					DTP-Hib-HepB
 				</vaccineType>
 				<cvx>
 					102
@@ -2789,7 +3325,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-IPV-Hib-HepB,historical
+					DTaP-IPV-Hib-Hep B,historical
 				</vaccineType>
 				<cvx>
 					132
@@ -2801,7 +3337,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-IPV-Hib-HepB
+					DTaP-IPV-Hib-Hep B
 				</vaccineType>
 				<cvx>
 					146
@@ -2825,17 +3361,41 @@
 					19 months
 				</endAge>
 			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP-IPV-Hib
+				</vaccineType>
+				<cvx>
+					170
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTP-hepB-Hib Pentavalent Non-US
+				</vaccineType>
+				<cvx>
+					198
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<inadvertentVaccine />
 			<conditionalSkip />
 			<recurringDose>
 				No
 			</recurringDose>
 			<seasonalRecommendation />
-			<requiredGender />
 		</seriesDose>
 	</series>
 	<series>
 		<seriesName>
-			Hib Start at 15 mo Series
+			Hib start at 15 months 1-dose series
 		</seriesName>
 		<targetDisease>
 			Hib
@@ -2843,23 +3403,37 @@
 		<vaccineGroup>
 			Hib
 		</vaccineGroup>
-		<selectBest>
+		<seriesAdminGuidance />
+		<seriesType>
+			Standard
+		</seriesType>
+		<equivalentSeriesGroups>
+			2
+		</equivalentSeriesGroups>
+		<requiredGender />
+		<selectSeries>
 			<defaultSeries>
 				No
 			</defaultSeries>
 			<productPath>
 				No
 			</productPath>
+			<seriesGroupName>
+				Standard
+			</seriesGroupName>
+			<seriesGroup>
+				1
+			</seriesGroup>
+			<seriesPriority>
+				A
+			</seriesPriority>
 			<seriesPreference>
 				5
 			</seriesPreference>
-			<minAgeToStart>
-				n/a
-			</minAgeToStart>
-			<maxAgeToStart>
-				n/a
-			</maxAgeToStart>
-		</selectBest>
+			<minAgeToStart />
+			<maxAgeToStart />
+		</selectSeries>
+		<indication />
 		<seriesDose>
 			<doseNumber>
 				Dose 1
@@ -2876,6 +3450,8 @@
 				<maxAge>
 					5 years
 				</maxAge>
+				<effectiveDate />
+				<cessationDate />
 			</age>
 			<interval />
 			<allowableInterval />
@@ -2892,12 +3468,8 @@
 				<endAge>
 					5 years
 				</endAge>
-				<tradeName>
-					ActHIB
-				</tradeName>
-				<mvx>
-					PMC
-				</mvx>
+				<tradeName />
+				<mvx />
 				<volume>
 					0.5
 				</volume>
@@ -2911,28 +3483,6 @@
 				</vaccineType>
 				<cvx>
 					49
-				</cvx>
-				<beginAge>
-					6 weeks
-				</beginAge>
-				<endAge>
-					5 years
-				</endAge>
-				<tradeName />
-				<mvx />
-				<volume>
-					0.5
-				</volume>
-				<forecastVaccineType>
-					Y
-				</forecastVaccineType>
-			</preferableVaccine>
-			<preferableVaccine>
-				<vaccineType>
-					Hib-HepB
-				</vaccineType>
-				<cvx>
-					51
 				</cvx>
 				<beginAge>
 					6 weeks
@@ -3057,7 +3607,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					Hib-HepB
+					Hib-Hep B
 				</vaccineType>
 				<cvx>
 					51
@@ -3069,7 +3619,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-Hib-HepB
+					DTP-Hib-HepB
 				</vaccineType>
 				<cvx>
 					102
@@ -3093,7 +3643,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-IPV-Hib-HepB,historical
+					DTaP-IPV-Hib-Hep B,historical
 				</vaccineType>
 				<cvx>
 					132
@@ -3105,7 +3655,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-IPV-Hib-HepB
+					DTaP-IPV-Hib-Hep B
 				</vaccineType>
 				<cvx>
 					146
@@ -3129,17 +3679,41 @@
 					19 months
 				</endAge>
 			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP-IPV-Hib
+				</vaccineType>
+				<cvx>
+					170
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTP-hepB-Hib Pentavalent Non-US
+				</vaccineType>
+				<cvx>
+					198
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<inadvertentVaccine />
 			<conditionalSkip />
 			<recurringDose>
 				No
 			</recurringDose>
 			<seasonalRecommendation />
-			<requiredGender />
 		</seriesDose>
 	</series>
 	<series>
 		<seriesName>
-			Hib 3-dose PRP-OMP series
+			Hib PRP-OMP 3-dose series
 		</seriesName>
 		<targetDisease>
 			Hib
@@ -3147,23 +3721,37 @@
 		<vaccineGroup>
 			Hib
 		</vaccineGroup>
-		<selectBest>
+		<seriesAdminGuidance />
+		<seriesType>
+			Standard
+		</seriesType>
+		<equivalentSeriesGroups>
+			2
+		</equivalentSeriesGroups>
+		<requiredGender />
+		<selectSeries>
 			<defaultSeries>
 				No
 			</defaultSeries>
 			<productPath>
 				Yes
 			</productPath>
+			<seriesGroupName>
+				Standard
+			</seriesGroupName>
+			<seriesGroup>
+				1
+			</seriesGroup>
+			<seriesPriority>
+				A
+			</seriesPriority>
 			<seriesPreference>
 				2
 			</seriesPreference>
-			<minAgeToStart>
-				n/a
-			</minAgeToStart>
-			<maxAgeToStart>
-				n/a
-			</maxAgeToStart>
-		</selectBest>
+			<minAgeToStart />
+			<maxAgeToStart />
+		</selectSeries>
+		<indication />
 		<seriesDose>
 			<doseNumber>
 				Dose 1
@@ -3184,6 +3772,8 @@
 				<maxAge>
 					5 years
 				</maxAge>
+				<effectiveDate />
+				<cessationDate />
 			</age>
 			<interval />
 			<allowableInterval />
@@ -3193,28 +3783,6 @@
 				</vaccineType>
 				<cvx>
 					49
-				</cvx>
-				<beginAge>
-					6 weeks
-				</beginAge>
-				<endAge>
-					5 years
-				</endAge>
-				<tradeName />
-				<mvx />
-				<volume>
-					0.5
-				</volume>
-				<forecastVaccineType>
-					Y
-				</forecastVaccineType>
-			</preferableVaccine>
-			<preferableVaccine>
-				<vaccineType>
-					Hib-HepB
-				</vaccineType>
-				<cvx>
-					51
 				</cvx>
 				<beginAge>
 					6 weeks
@@ -3245,7 +3813,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					Hib-HepB
+					Hib-Hep B
 				</vaccineType>
 				<cvx>
 					51
@@ -3255,12 +3823,12 @@
 				</beginAge>
 				<endAge />
 			</allowableVaccine>
+			<inadvertentVaccine />
 			<conditionalSkip />
 			<recurringDose>
 				No
 			</recurringDose>
 			<seasonalRecommendation />
-			<requiredGender />
 		</seriesDose>
 		<seriesDose>
 			<doseNumber>
@@ -3282,6 +3850,8 @@
 				<maxAge>
 					5 years
 				</maxAge>
+				<effectiveDate />
+				<cessationDate />
 			</age>
 			<interval>
 				<fromPrevious>
@@ -3289,6 +3859,7 @@
 				</fromPrevious>
 				<fromTargetDose />
 				<fromMostRecent />
+				<fromRelevantObs />
 				<absMinInt>
 					4 weeks - 4 days
 				</absMinInt>
@@ -3302,6 +3873,8 @@
 					16 weeks
 				</latestRecInt>
 				<intervalPriority />
+				<effectiveDate />
+				<cessationDate />
 			</interval>
 			<allowableInterval />
 			<preferableVaccine>
@@ -3310,24 +3883,6 @@
 				</vaccineType>
 				<cvx>
 					49
-				</cvx>
-				<beginAge />
-				<endAge />
-				<tradeName />
-				<mvx />
-				<volume>
-					0.5
-				</volume>
-				<forecastVaccineType>
-					Y
-				</forecastVaccineType>
-			</preferableVaccine>
-			<preferableVaccine>
-				<vaccineType>
-					Hib-Hep B
-				</vaccineType>
-				<cvx>
-					51
 				</cvx>
 				<beginAge />
 				<endAge />
@@ -3354,7 +3909,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					Hib-HepB
+					Hib-Hep B
 				</vaccineType>
 				<cvx>
 					51
@@ -3364,12 +3919,12 @@
 				</beginAge>
 				<endAge />
 			</allowableVaccine>
+			<inadvertentVaccine />
 			<conditionalSkip />
 			<recurringDose>
 				No
 			</recurringDose>
 			<seasonalRecommendation />
-			<requiredGender />
 		</seriesDose>
 		<seriesDose>
 			<doseNumber>
@@ -3391,6 +3946,8 @@
 				<maxAge>
 					5 years
 				</maxAge>
+				<effectiveDate />
+				<cessationDate />
 			</age>
 			<interval>
 				<fromPrevious>
@@ -3398,6 +3955,7 @@
 				</fromPrevious>
 				<fromTargetDose />
 				<fromMostRecent />
+				<fromRelevantObs />
 				<absMinInt>
 					8 weeks - 4 days
 				</absMinInt>
@@ -3411,6 +3969,8 @@
 					10 months + 4 weeks
 				</latestRecInt>
 				<intervalPriority />
+				<effectiveDate />
+				<cessationDate />
 			</interval>
 			<allowableInterval />
 			<preferableVaccine>
@@ -3426,38 +3986,8 @@
 				<endAge>
 					5 years
 				</endAge>
-				<tradeName>
-					ActHIB
-				</tradeName>
-				<mvx>
-					PMC
-				</mvx>
-				<volume>
-					0.5
-				</volume>
-				<forecastVaccineType>
-					N
-				</forecastVaccineType>
-			</preferableVaccine>
-			<preferableVaccine>
-				<vaccineType>
-					PRP-T
-				</vaccineType>
-				<cvx>
-					48
-				</cvx>
-				<beginAge>
-					12 months
-				</beginAge>
-				<endAge>
-					5 years
-				</endAge>
-				<tradeName>
-					HIBERIX
-				</tradeName>
-				<mvx>
-					SKB
-				</mvx>
+				<tradeName />
+				<mvx />
 				<volume>
 					0.5
 				</volume>
@@ -3471,28 +4001,6 @@
 				</vaccineType>
 				<cvx>
 					49
-				</cvx>
-				<beginAge>
-					6 weeks
-				</beginAge>
-				<endAge>
-					5 years
-				</endAge>
-				<tradeName />
-				<mvx />
-				<volume>
-					0.5
-				</volume>
-				<forecastVaccineType>
-					Y
-				</forecastVaccineType>
-			</preferableVaccine>
-			<preferableVaccine>
-				<vaccineType>
-					Hib-HepB
-				</vaccineType>
-				<cvx>
-					51
 				</cvx>
 				<beginAge>
 					6 weeks
@@ -3617,7 +4125,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					Hib-HepB
+					Hib-Hep B
 				</vaccineType>
 				<cvx>
 					51
@@ -3629,7 +4137,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-Hib-HepB
+					DTP-Hib-HepB
 				</vaccineType>
 				<cvx>
 					102
@@ -3653,7 +4161,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-IPV-Hib-HepB,historical
+					DTaP-IPV-Hib-Hep B,historical
 				</vaccineType>
 				<cvx>
 					132
@@ -3665,7 +4173,7 @@
 			</allowableVaccine>
 			<allowableVaccine>
 				<vaccineType>
-					DTaP-IPV-Hib-HepB
+					DTaP-IPV-Hib-Hep B
 				</vaccineType>
 				<cvx>
 					146
@@ -3689,12 +4197,1639 @@
 					19 months
 				</endAge>
 			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP-IPV-Hib
+				</vaccineType>
+				<cvx>
+					170
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTP-hepB-Hib Pentavalent Non-US
+				</vaccineType>
+				<cvx>
+					198
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<inadvertentVaccine />
 			<conditionalSkip />
 			<recurringDose>
 				No
 			</recurringDose>
 			<seasonalRecommendation />
-			<requiredGender />
+		</seriesDose>
+	</series>
+	<series>
+		<seriesName>
+			Hib risk child 2-dose series
+		</seriesName>
+		<targetDisease>
+			Hib
+		</targetDisease>
+		<vaccineGroup>
+			Hib
+		</vaccineGroup>
+		<seriesAdminGuidance />
+		<seriesType>
+			Risk
+		</seriesType>
+		<equivalentSeriesGroups />
+		<requiredGender />
+		<selectSeries>
+			<defaultSeries>
+				No
+			</defaultSeries>
+			<productPath>
+				No
+			</productPath>
+			<seriesGroupName>
+				Increased Risk
+			</seriesGroupName>
+			<seriesGroup>
+				2
+			</seriesGroup>
+			<seriesPriority>
+				B
+			</seriesPriority>
+			<seriesPreference>
+				1
+			</seriesPreference>
+			<minAgeToStart>
+				12 months
+			</minAgeToStart>
+			<maxAgeToStart>
+				5 years
+			</maxAgeToStart>
+		</selectSeries>
+		<indication>
+			<observationCode>
+				<text>
+					Persistent complement, properdin, or factor B deficiency
+				</text>
+				<code>
+					151
+				</code>
+			</observationCode>
+			<description>
+				Administer to persons who have early complement component deficiencies.
+			</description>
+			<beginAge>
+				12 months
+			</beginAge>
+			<endAge>
+				5 years
+			</endAge>
+			<guidance />
+		</indication>
+		<indication>
+			<observationCode>
+				<text>
+					B-lymphocyte [humoral] - Less severe antibody deficiencies
+				</text>
+				<code>
+					146
+				</code>
+			</observationCode>
+			<description>
+				Administer to persons who have less severe B-lymphocyte [humoral] - antibody deficiencies [e.g., selective IgA deficiency and IgG subclass deficiency].
+			</description>
+			<beginAge>
+				12 months
+			</beginAge>
+			<endAge>
+				5 years
+			</endAge>
+			<guidance />
+		</indication>
+		<indication>
+			<observationCode>
+				<text>
+					Anatomical or functional asplenia
+				</text>
+				<code>
+					160
+				</code>
+			</observationCode>
+			<description>
+				Administer to persons with anatomic or functional asplenia, including sickle cell disease.
+			</description>
+			<beginAge>
+				12 months
+			</beginAge>
+			<endAge>
+				5 years
+			</endAge>
+			<guidance />
+		</indication>
+		<seriesDose>
+			<doseNumber>
+				Dose 1
+			</doseNumber>
+			<age>
+				<absMinAge>
+					12 months - 4 days
+				</absMinAge>
+				<minAge>
+					12 months
+				</minAge>
+				<earliestRecAge />
+				<latestRecAge />
+				<maxAge />
+				<effectiveDate />
+				<cessationDate />
+			</age>
+			<interval>
+				<fromPrevious>
+					Y
+				</fromPrevious>
+				<fromTargetDose />
+				<fromMostRecent />
+				<fromRelevantObs />
+				<absMinInt>
+					8 weeks - 4 days
+				</absMinInt>
+				<minInt>
+					8 weeks
+				</minInt>
+				<earliestRecInt>
+					8 weeks
+				</earliestRecInt>
+				<latestRecInt />
+				<intervalPriority />
+				<effectiveDate />
+				<cessationDate />
+			</interval>
+			<allowableInterval />
+			<preferableVaccine>
+				<vaccineType>
+					PRP-T
+				</vaccineType>
+				<cvx>
+					48
+				</cvx>
+				<beginAge>
+					6 weeks
+				</beginAge>
+				<endAge>
+					5 years
+				</endAge>
+				<tradeName />
+				<mvx />
+				<volume>
+					0.5
+				</volume>
+				<forecastVaccineType>
+					N
+				</forecastVaccineType>
+			</preferableVaccine>
+			<preferableVaccine>
+				<vaccineType>
+					PRP-OMP
+				</vaccineType>
+				<cvx>
+					49
+				</cvx>
+				<beginAge>
+					6 weeks
+				</beginAge>
+				<endAge>
+					5 years
+				</endAge>
+				<tradeName />
+				<mvx />
+				<volume>
+					0.5
+				</volume>
+				<forecastVaccineType>
+					N
+				</forecastVaccineType>
+			</preferableVaccine>
+			<preferableVaccine>
+				<vaccineType>
+					DTaP-Hib-IPV
+				</vaccineType>
+				<cvx>
+					120
+				</cvx>
+				<beginAge>
+					6 weeks
+				</beginAge>
+				<endAge>
+					5 years
+				</endAge>
+				<tradeName />
+				<mvx />
+				<volume>
+					0.5
+				</volume>
+				<forecastVaccineType>
+					N
+				</forecastVaccineType>
+			</preferableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					Hib, unspecified formulation
+				</vaccineType>
+				<cvx>
+					17
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTP-Hib
+				</vaccineType>
+				<cvx>
+					22
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					PRP-D
+				</vaccineType>
+				<cvx>
+					46
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					HbOC
+				</vaccineType>
+				<cvx>
+					47
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					PRP-T
+				</vaccineType>
+				<cvx>
+					48
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					PRP-OMP
+				</vaccineType>
+				<cvx>
+					49
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP/Hib
+				</vaccineType>
+				<cvx>
+					50
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					Hib-Hep B
+				</vaccineType>
+				<cvx>
+					51
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTP-Hib-HepB
+				</vaccineType>
+				<cvx>
+					102
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP-Hib-IPV
+				</vaccineType>
+				<cvx>
+					120
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP-IPV-Hib-Hep B,historical
+				</vaccineType>
+				<cvx>
+					132
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP-IPV-Hib-Hep B
+				</vaccineType>
+				<cvx>
+					146
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP-IPV-Hib
+				</vaccineType>
+				<cvx>
+					170
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTP-hepB-Hib Pentavalent Non-US
+				</vaccineType>
+				<cvx>
+					198
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<inadvertentVaccine />
+			<conditionalSkip>
+				<context>
+					Both
+				</context>
+				<setLogic>
+					n/a
+				</setLogic>
+				<set>
+					<setID>
+						1
+					</setID>
+					<setDescription>
+						Dose is not required if the patient has received 1 or more doses on or after the age of 12 months
+					</setDescription>
+					<effectiveDate />
+					<cessationDate />
+					<conditionLogic />
+					<condition>
+						<conditionID>
+							1
+						</conditionID>
+						<conditionType>
+							Vaccine Count by Age
+						</conditionType>
+						<startDate />
+						<endDate />
+						<beginAge>
+							12 months
+						</beginAge>
+						<endAge />
+						<interval />
+						<doseCount>
+							0
+						</doseCount>
+						<doseType>
+							Total
+						</doseType>
+						<doseCountLogic>
+							greater than
+						</doseCountLogic>
+						<vaccineTypes />
+						<seriesGroups />
+					</condition>
+				</set>
+			</conditionalSkip>
+			<recurringDose>
+				No
+			</recurringDose>
+			<seasonalRecommendation />
+		</seriesDose>
+		<seriesDose>
+			<doseNumber>
+				Dose 2
+			</doseNumber>
+			<age>
+				<absMinAge />
+				<minAge />
+				<earliestRecAge />
+				<latestRecAge />
+				<maxAge />
+				<effectiveDate />
+				<cessationDate />
+			</age>
+			<interval>
+				<fromPrevious>
+					Y
+				</fromPrevious>
+				<fromTargetDose />
+				<fromMostRecent />
+				<fromRelevantObs />
+				<absMinInt>
+					8 weeks - 4 days
+				</absMinInt>
+				<minInt>
+					8 weeks
+				</minInt>
+				<earliestRecInt>
+					8 weeks
+				</earliestRecInt>
+				<latestRecInt />
+				<intervalPriority />
+				<effectiveDate />
+				<cessationDate />
+			</interval>
+			<allowableInterval />
+			<preferableVaccine>
+				<vaccineType>
+					PRP-T
+				</vaccineType>
+				<cvx>
+					48
+				</cvx>
+				<beginAge>
+					6 weeks
+				</beginAge>
+				<endAge>
+					5 years
+				</endAge>
+				<tradeName />
+				<mvx />
+				<volume>
+					0.5
+				</volume>
+				<forecastVaccineType>
+					N
+				</forecastVaccineType>
+			</preferableVaccine>
+			<preferableVaccine>
+				<vaccineType>
+					PRP-OMP
+				</vaccineType>
+				<cvx>
+					49
+				</cvx>
+				<beginAge>
+					6 weeks
+				</beginAge>
+				<endAge>
+					5 years
+				</endAge>
+				<tradeName />
+				<mvx />
+				<volume>
+					0.5
+				</volume>
+				<forecastVaccineType>
+					N
+				</forecastVaccineType>
+			</preferableVaccine>
+			<preferableVaccine>
+				<vaccineType>
+					DTaP-Hib-IPV
+				</vaccineType>
+				<cvx>
+					120
+				</cvx>
+				<beginAge>
+					6 weeks
+				</beginAge>
+				<endAge>
+					5 years
+				</endAge>
+				<tradeName />
+				<mvx />
+				<volume>
+					0.5
+				</volume>
+				<forecastVaccineType>
+					N
+				</forecastVaccineType>
+			</preferableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					Hib, unspecified formulation
+				</vaccineType>
+				<cvx>
+					17
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTP-Hib
+				</vaccineType>
+				<cvx>
+					22
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					PRP-D
+				</vaccineType>
+				<cvx>
+					46
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					HbOC
+				</vaccineType>
+				<cvx>
+					47
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					PRP-T
+				</vaccineType>
+				<cvx>
+					48
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					PRP-OMP
+				</vaccineType>
+				<cvx>
+					49
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP/Hib
+				</vaccineType>
+				<cvx>
+					50
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					Hib-Hep B
+				</vaccineType>
+				<cvx>
+					51
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTP-Hib-HepB
+				</vaccineType>
+				<cvx>
+					102
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP-Hib-IPV
+				</vaccineType>
+				<cvx>
+					120
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP-IPV-Hib-Hep B,historical
+				</vaccineType>
+				<cvx>
+					132
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP-IPV-Hib-Hep B
+				</vaccineType>
+				<cvx>
+					146
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP-IPV-Hib
+				</vaccineType>
+				<cvx>
+					170
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTP-hepB-Hib Pentavalent Non-US
+				</vaccineType>
+				<cvx>
+					198
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<inadvertentVaccine />
+			<conditionalSkip>
+				<context>
+					Both
+				</context>
+				<setLogic>
+					OR
+				</setLogic>
+				<set>
+					<setID>
+						1
+					</setID>
+					<setDescription>
+						Dose is not required if the patient has received 2 or more doses before the age of 12 months
+					</setDescription>
+					<effectiveDate />
+					<cessationDate />
+					<conditionLogic />
+					<condition>
+						<conditionID>
+							1
+						</conditionID>
+						<conditionType>
+							Vaccine Count by Age
+						</conditionType>
+						<startDate />
+						<endDate />
+						<beginAge>
+							6 weeks - 4 days
+						</beginAge>
+						<endAge>
+							12 months
+						</endAge>
+						<interval />
+						<doseCount>
+							1
+						</doseCount>
+						<doseType>
+							Total
+						</doseType>
+						<doseCountLogic>
+							greater than
+						</doseCountLogic>
+						<vaccineTypes />
+						<seriesGroups />
+					</condition>
+				</set>
+				<set>
+					<setID>
+						2
+					</setID>
+					<setDescription>
+						Dose is not required if the patient has received 2 or more doses on or after the age of 12 months
+					</setDescription>
+					<effectiveDate />
+					<cessationDate />
+					<conditionLogic />
+					<condition>
+						<conditionID>
+							1
+						</conditionID>
+						<conditionType>
+							Vaccine Count by Age
+						</conditionType>
+						<startDate />
+						<endDate />
+						<beginAge>
+							12 months
+						</beginAge>
+						<endAge />
+						<interval />
+						<doseCount>
+							1
+						</doseCount>
+						<doseType>
+							Total
+						</doseType>
+						<doseCountLogic>
+							greater than
+						</doseCountLogic>
+						<vaccineTypes />
+						<seriesGroups />
+					</condition>
+				</set>
+			</conditionalSkip>
+			<recurringDose>
+				No
+			</recurringDose>
+			<seasonalRecommendation />
+		</seriesDose>
+	</series>
+	<series>
+		<seriesName>
+			Hib risk 1-dose series
+		</seriesName>
+		<targetDisease>
+			Hib
+		</targetDisease>
+		<vaccineGroup>
+			Hib
+		</vaccineGroup>
+		<seriesAdminGuidance />
+		<seriesType>
+			Risk
+		</seriesType>
+		<equivalentSeriesGroups>
+			1
+		</equivalentSeriesGroups>
+		<requiredGender />
+		<selectSeries>
+			<defaultSeries>
+				No
+			</defaultSeries>
+			<productPath>
+				No
+			</productPath>
+			<seriesGroupName>
+				Increased Risk
+			</seriesGroupName>
+			<seriesGroup>
+				2
+			</seriesGroup>
+			<seriesPriority>
+				C
+			</seriesPriority>
+			<seriesPreference>
+				1
+			</seriesPreference>
+			<minAgeToStart>
+				15 months
+			</minAgeToStart>
+			<maxAgeToStart />
+		</selectSeries>
+		<indication>
+			<observationCode>
+				<text>
+					Undergoing elective splenectomy
+				</text>
+				<code>
+					002
+				</code>
+			</observationCode>
+			<description>
+				Administered to persons who are undergoing elective splenectomy if they have not previously received Hib vaccine. Vaccination 14 or more days before splenectomy is suggested.
+			</description>
+			<beginAge>
+				15 months
+			</beginAge>
+			<endAge />
+			<guidance>
+				Vaccination 14 or more days before splenectomy is suggested.
+			</guidance>
+		</indication>
+		<indication>
+			<observationCode>
+				<text>
+					HIV/AIDS - severely immunocompromised
+				</text>
+				<code>
+					154
+				</code>
+			</observationCode>
+			<description>
+				Administer to persons who have HIV/AIDS and are severely immunocompromised (See the CDC general recommendations for a definition of "severely immunocompromised").
+			</description>
+			<beginAge>
+				5 years
+			</beginAge>
+			<endAge>
+				19 years
+			</endAge>
+			<guidance />
+		</indication>
+		<indication>
+			<observationCode>
+				<text>
+					HIV/AIDS - not severely immunocompromised
+				</text>
+				<code>
+					155
+				</code>
+			</observationCode>
+			<description>
+				Administer to persons who have HIV/AIDS and are not severely immunocompromised (See the CDC general recommendations for a definition of "severely immunocompromised").
+			</description>
+			<beginAge>
+				5 years
+			</beginAge>
+			<endAge>
+				19 years
+			</endAge>
+			<guidance />
+		</indication>
+		<indication>
+			<observationCode>
+				<text>
+					Anatomical or functional asplenia
+				</text>
+				<code>
+					160
+				</code>
+			</observationCode>
+			<description>
+				Administer to persons with anatomic or functional asplenia, including sickle cell disease.
+			</description>
+			<beginAge>
+				5 years
+			</beginAge>
+			<endAge />
+			<guidance />
+		</indication>
+		<seriesDose>
+			<doseNumber>
+				Dose 1
+			</doseNumber>
+			<age>
+				<absMinAge>
+					15 months - 4 days
+				</absMinAge>
+				<minAge>
+					15 months
+				</minAge>
+				<earliestRecAge>
+					15 months
+				</earliestRecAge>
+				<latestRecAge />
+				<maxAge />
+				<effectiveDate />
+				<cessationDate />
+			</age>
+			<interval />
+			<allowableInterval />
+			<preferableVaccine>
+				<vaccineType>
+					PRP-T
+				</vaccineType>
+				<cvx>
+					48
+				</cvx>
+				<beginAge>
+					6 weeks
+				</beginAge>
+				<endAge />
+				<tradeName />
+				<mvx />
+				<volume>
+					0.5
+				</volume>
+				<forecastVaccineType>
+					N
+				</forecastVaccineType>
+			</preferableVaccine>
+			<preferableVaccine>
+				<vaccineType>
+					PRP-OMP
+				</vaccineType>
+				<cvx>
+					49
+				</cvx>
+				<beginAge>
+					6 weeks
+				</beginAge>
+				<endAge />
+				<tradeName />
+				<mvx />
+				<volume>
+					0.5
+				</volume>
+				<forecastVaccineType>
+					N
+				</forecastVaccineType>
+			</preferableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					Hib, unspecified formulation
+				</vaccineType>
+				<cvx>
+					17
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTP-Hib
+				</vaccineType>
+				<cvx>
+					22
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					PRP-D
+				</vaccineType>
+				<cvx>
+					46
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					HbOC
+				</vaccineType>
+				<cvx>
+					47
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					PRP-T
+				</vaccineType>
+				<cvx>
+					48
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					PRP-OMP
+				</vaccineType>
+				<cvx>
+					49
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP/Hib
+				</vaccineType>
+				<cvx>
+					50
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					Hib-Hep B
+				</vaccineType>
+				<cvx>
+					51
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTP-Hib-HepB
+				</vaccineType>
+				<cvx>
+					102
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP-Hib-IPV
+				</vaccineType>
+				<cvx>
+					120
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP-IPV-Hib-Hep B,historical
+				</vaccineType>
+				<cvx>
+					132
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP-IPV-Hib-Hep B
+				</vaccineType>
+				<cvx>
+					146
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTaP-IPV-Hib
+				</vaccineType>
+				<cvx>
+					170
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					DTP-hepB-Hib Pentavalent Non-US
+				</vaccineType>
+				<cvx>
+					198
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<inadvertentVaccine />
+			<conditionalSkip />
+			<recurringDose>
+				No
+			</recurringDose>
+			<seasonalRecommendation />
+		</seriesDose>
+	</series>
+	<series>
+		<seriesName>
+			Hib risk 3-dose series
+		</seriesName>
+		<targetDisease>
+			Hib
+		</targetDisease>
+		<vaccineGroup>
+			Hib
+		</vaccineGroup>
+		<seriesAdminGuidance />
+		<seriesType>
+			Risk
+		</seriesType>
+		<equivalentSeriesGroups />
+		<requiredGender />
+		<selectSeries>
+			<defaultSeries>
+				No
+			</defaultSeries>
+			<productPath>
+				No
+			</productPath>
+			<seriesGroupName>
+				Increased Risk
+			</seriesGroupName>
+			<seriesGroup>
+				2
+			</seriesGroup>
+			<seriesPriority>
+				A
+			</seriesPriority>
+			<seriesPreference>
+				1
+			</seriesPreference>
+			<minAgeToStart>
+				6 weeks
+			</minAgeToStart>
+			<maxAgeToStart />
+		</selectSeries>
+		<indication>
+			<observationCode>
+				<text>
+					Recipient of a hematopoietic stem cell transplant
+				</text>
+				<code>
+					004
+				</code>
+			</observationCode>
+			<description>
+				Administer to recipients of a hematopoietic stem cell transplant (HSCT) 6 to 12 months after a successful transplant, regardless of vaccination history.
+			</description>
+			<beginAge>
+				6 weeks
+			</beginAge>
+			<endAge />
+			<guidance>
+				At least 4 weeks should separate doses, 6 to 12 months after a successful transplant.
+			</guidance>
+		</indication>
+		<seriesDose>
+			<doseNumber>
+				Dose 1
+			</doseNumber>
+			<age>
+				<absMinAge>
+					6 weeks - 4 days
+				</absMinAge>
+				<minAge>
+					6 weeks
+				</minAge>
+				<earliestRecAge />
+				<latestRecAge />
+				<maxAge />
+				<effectiveDate />
+				<cessationDate />
+			</age>
+			<interval>
+				<fromPrevious>
+					N
+				</fromPrevious>
+				<fromTargetDose />
+				<fromMostRecent />
+				<fromRelevantObs>
+					<text>
+						Date of hematopoietic stem cell transplant
+					</text>
+					<code>
+						171
+					</code>
+				</fromRelevantObs>
+				<absMinInt />
+				<minInt />
+				<earliestRecInt>
+					6 months
+				</earliestRecInt>
+				<latestRecInt>
+					12 months
+				</latestRecInt>
+				<intervalPriority />
+				<effectiveDate />
+				<cessationDate />
+			</interval>
+			<allowableInterval />
+			<preferableVaccine>
+				<vaccineType>
+					PRP-T
+				</vaccineType>
+				<cvx>
+					48
+				</cvx>
+				<beginAge>
+					6 weeks
+				</beginAge>
+				<endAge />
+				<tradeName />
+				<mvx />
+				<volume>
+					0.5
+				</volume>
+				<forecastVaccineType>
+					N
+				</forecastVaccineType>
+			</preferableVaccine>
+			<preferableVaccine>
+				<vaccineType>
+					PRP-OMP
+				</vaccineType>
+				<cvx>
+					49
+				</cvx>
+				<beginAge>
+					6 weeks
+				</beginAge>
+				<endAge />
+				<tradeName />
+				<mvx />
+				<volume>
+					0.5
+				</volume>
+				<forecastVaccineType>
+					N
+				</forecastVaccineType>
+			</preferableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					Hib, unspecified formulation
+				</vaccineType>
+				<cvx>
+					17
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					PRP-D
+				</vaccineType>
+				<cvx>
+					46
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					PRP-T
+				</vaccineType>
+				<cvx>
+					48
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					PRP-OMP
+				</vaccineType>
+				<cvx>
+					49
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<inadvertentVaccine />
+			<conditionalSkip />
+			<recurringDose>
+				No
+			</recurringDose>
+			<seasonalRecommendation />
+		</seriesDose>
+		<seriesDose>
+			<doseNumber>
+				Dose 2
+			</doseNumber>
+			<age>
+				<absMinAge />
+				<minAge />
+				<earliestRecAge />
+				<latestRecAge />
+				<maxAge />
+				<effectiveDate />
+				<cessationDate />
+			</age>
+			<interval>
+				<fromPrevious>
+					Y
+				</fromPrevious>
+				<fromTargetDose />
+				<fromMostRecent />
+				<fromRelevantObs />
+				<absMinInt>
+					4 weeks - 4 days
+				</absMinInt>
+				<minInt>
+					4 weeks
+				</minInt>
+				<earliestRecInt>
+					4 weeks
+				</earliestRecInt>
+				<latestRecInt />
+				<intervalPriority />
+				<effectiveDate />
+				<cessationDate />
+			</interval>
+			<allowableInterval />
+			<preferableVaccine>
+				<vaccineType>
+					PRP-T
+				</vaccineType>
+				<cvx>
+					48
+				</cvx>
+				<beginAge>
+					6 weeks
+				</beginAge>
+				<endAge />
+				<tradeName />
+				<mvx />
+				<volume>
+					0.5
+				</volume>
+				<forecastVaccineType>
+					N
+				</forecastVaccineType>
+			</preferableVaccine>
+			<preferableVaccine>
+				<vaccineType>
+					PRP-OMP
+				</vaccineType>
+				<cvx>
+					49
+				</cvx>
+				<beginAge>
+					6 weeks
+				</beginAge>
+				<endAge />
+				<tradeName />
+				<mvx />
+				<volume>
+					0.5
+				</volume>
+				<forecastVaccineType>
+					N
+				</forecastVaccineType>
+			</preferableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					Hib, unspecified formulation
+				</vaccineType>
+				<cvx>
+					17
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					PRP-D
+				</vaccineType>
+				<cvx>
+					46
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					PRP-T
+				</vaccineType>
+				<cvx>
+					48
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					PRP-OMP
+				</vaccineType>
+				<cvx>
+					49
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<inadvertentVaccine />
+			<conditionalSkip />
+			<recurringDose>
+				No
+			</recurringDose>
+			<seasonalRecommendation />
+		</seriesDose>
+		<seriesDose>
+			<doseNumber>
+				Dose 3
+			</doseNumber>
+			<age>
+				<absMinAge />
+				<minAge />
+				<earliestRecAge />
+				<latestRecAge />
+				<maxAge />
+				<effectiveDate />
+				<cessationDate />
+			</age>
+			<interval>
+				<fromPrevious>
+					Y
+				</fromPrevious>
+				<fromTargetDose />
+				<fromMostRecent />
+				<fromRelevantObs />
+				<absMinInt>
+					4 weeks - 4 days
+				</absMinInt>
+				<minInt>
+					4 weeks
+				</minInt>
+				<earliestRecInt>
+					4 weeks
+				</earliestRecInt>
+				<latestRecInt />
+				<intervalPriority />
+				<effectiveDate />
+				<cessationDate />
+			</interval>
+			<allowableInterval />
+			<preferableVaccine>
+				<vaccineType>
+					PRP-T
+				</vaccineType>
+				<cvx>
+					48
+				</cvx>
+				<beginAge>
+					6 weeks
+				</beginAge>
+				<endAge />
+				<tradeName />
+				<mvx />
+				<volume>
+					0.5
+				</volume>
+				<forecastVaccineType>
+					N
+				</forecastVaccineType>
+			</preferableVaccine>
+			<preferableVaccine>
+				<vaccineType>
+					PRP-OMP
+				</vaccineType>
+				<cvx>
+					49
+				</cvx>
+				<beginAge>
+					6 weeks
+				</beginAge>
+				<endAge />
+				<tradeName />
+				<mvx />
+				<volume>
+					0.5
+				</volume>
+				<forecastVaccineType>
+					N
+				</forecastVaccineType>
+			</preferableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					Hib, unspecified formulation
+				</vaccineType>
+				<cvx>
+					17
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					PRP-D
+				</vaccineType>
+				<cvx>
+					46
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					PRP-T
+				</vaccineType>
+				<cvx>
+					48
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<allowableVaccine>
+				<vaccineType>
+					PRP-OMP
+				</vaccineType>
+				<cvx>
+					49
+				</cvx>
+				<beginAge>
+					6 weeks - 4 days
+				</beginAge>
+				<endAge />
+			</allowableVaccine>
+			<inadvertentVaccine />
+			<conditionalSkip />
+			<recurringDose>
+				No
+			</recurringDose>
+			<seasonalRecommendation />
 		</seriesDose>
 	</series>
 </antigenSupportingData>
