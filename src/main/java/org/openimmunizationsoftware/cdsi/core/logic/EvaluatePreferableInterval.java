@@ -20,17 +20,22 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
-public class EvaluateInterval extends LogicStep {
+public class EvaluatePreferableInterval extends LogicStep {
+
+  // Evaluate preferable interval validates the date of a vaccine dose administered against defined preferable interval(s) from previous vaccine dose(s) administered or other events. In cases where a target dose does not specify preferable interval attributes, the interval is considered “valid.” 
+  // Add CALCDTINT-9.
+  // Remove EVALINT-1, EVALINT-2
+  
+  // Add Identify Relevant Preferable Intervals at the beginning.
+  // Replace Apply Date Calculation Rules with Apply Preferable Interval Rules
+  // Replace Get Next Supporting Data Defined Interval with Get Preferable Interval.
 
 
-
-  public EvaluateInterval(DataModel dataModel) {
+  public EvaluatePreferableInterval(DataModel dataModel) {
     super(LogicStepType.EVALUATE_INTERVAL, dataModel);
     setConditionTableName("Table ");
 
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-
-
 
     int intervalCount = 0;
     // if (seriesDose.getIntervalList().size() > 0) {
@@ -38,6 +43,7 @@ public class EvaluateInterval extends LogicStep {
       intervalCount++;
       LT logicTable = new LT();
 
+      // Change these to Preferable Interval Elements like in 6.2
       logicTable.caDateAdministered =
           new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
       logicTable.caFromImmediatePreviousDoseAdministered = new ConditionAttribute<YesNo>(
@@ -49,7 +55,7 @@ public class EvaluateInterval extends LogicStep {
       logicTable.caAbsoluteMinimumIntervalDate =
           new ConditionAttribute<Date>("Calculated Date", "Absolute Minimum Interval Date");
       logicTable.caMinimumIntervalDate =
-          new ConditionAttribute<Date>("Calculated Date", "Mimium Interval Date");
+          new ConditionAttribute<Date>("Calculated Date", "Minimum Interval Date");
 
       logicTable.caAbsoluteMinimumIntervalDate.setAssumedValue(PAST);
       logicTable.caMinimumIntervalDate.setAssumedValue(PAST);

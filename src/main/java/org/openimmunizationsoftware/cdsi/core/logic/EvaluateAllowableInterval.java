@@ -28,6 +28,8 @@ public class EvaluateAllowableInterval extends LogicStep {
     super(LogicStepType.EVALUATE_ALLOWABLE_INTERVAL, dataModel);
     setConditionTableName("Table ");
 
+    // Add Allowable Interval Elements in place of the supporting data.
+    // Logic changes are the same as in 6.5.
     caDateAdministered =
         new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
     caFromImmediatePreviousDoseAdministered = new ConditionAttribute<YesNo>("Supporting Data",

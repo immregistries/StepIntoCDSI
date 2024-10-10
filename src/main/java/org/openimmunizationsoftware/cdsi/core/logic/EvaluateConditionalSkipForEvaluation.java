@@ -333,6 +333,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
   }
 
   // New Logic Table 6-7 (CONDITIONAL TYPE OF COMPLETED SERIES - IS THE CONDITION MET?) goes here
+  /* 
   protected class LT67 extends LTInnerSet{
     public LT67() {
       super(1,2,"Table 6 - 7 CONDITIONAL Type of Completed Series - is the condition met?");
@@ -348,7 +349,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
           }
       });
     }
-  }
+  }*/
 
   // Logic Table 4-7 -> 6-8
   // Add a new logic check: Has at least one dose been administered to the patient? 

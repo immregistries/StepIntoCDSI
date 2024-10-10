@@ -19,6 +19,13 @@
           "ignoreFailures": true
         }
       ]
+    },
+    {
+      "type": "java",
+      "name": "Attach to Maven Process",
+      "request": "attach",
+      "hostName": "localhost",
+      "port": 5005
     }
   ]
 }

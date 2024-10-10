@@ -33,7 +33,7 @@ public class LogicStepFactory {
       return new EvaluateAge(dataModel);
     }
     if (stepName.equals(LogicStepType.EVALUATE_INTERVAL)) {
-      return new EvaluateInterval(dataModel);
+      return new EvaluatePreferableInterval(dataModel);
     }
     if (stepName.equals(LogicStepType.EVALUATE_ALLOWABLE_INTERVAL)) {
       return new EvaluateAllowableInterval(dataModel);
@@ -143,7 +143,7 @@ public class LogicStepFactory {
       return new EvaluateAge(dataModel);
     }
     if (stepName.equals(LogicStepType.EVALUATE_INTERVAL)) {
-      return new EvaluateInterval(dataModel);
+      return new EvaluatePreferableInterval(dataModel);
     }
     if (stepName.equals(LogicStepType.EVALUATE_ALLOWABLE_INTERVAL)) {
       return new EvaluateAllowableInterval(dataModel);
