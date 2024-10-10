@@ -11,7 +11,7 @@ import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
-import org.openimmunizationsoftware.cdsi.core.domain.Contraindication;
+import org.openimmunizationsoftware.cdsi.core.domain.Contraindication_TO_BE_REMOVED;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
@@ -129,7 +129,7 @@ public class DetermineForecastNeed extends LogicStep {
 
     if (!dataModel.getPatient().getMedicalHistory().getContraindicationSet().isEmpty()) {
       out.println("<h2>Contraindications for Patient</h2>");
-      for (Contraindication contraindication : dataModel.getPatient().getMedicalHistory()
+      for (Contraindication_TO_BE_REMOVED contraindication : dataModel.getPatient().getMedicalHistory()
           .getContraindicationSet()) {
         if (contraindication.getAntigen()
             .equals(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease())) {
@@ -192,8 +192,8 @@ public class DetermineForecastNeed extends LogicStep {
           new LogicCondition("Is the patient without a contradiction for this patient series ?") {
             @Override
             protected LogicResult evaluateInternal() {
-              List<Contraindication> targetContraindictionList = new ArrayList<Contraindication>();
-              for (Contraindication contraindication : dataModel.getPatient().getMedicalHistory()
+              List<Contraindication_TO_BE_REMOVED> targetContraindictionList = new ArrayList<Contraindication_TO_BE_REMOVED>();
+              for (Contraindication_TO_BE_REMOVED contraindication : dataModel.getPatient().getMedicalHistory()
                   .getContraindicationSet()) {
                 if (contraindication.getAntigen().equals(
                     dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease())) {

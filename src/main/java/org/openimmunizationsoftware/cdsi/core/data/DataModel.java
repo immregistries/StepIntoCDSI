@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
-import org.openimmunizationsoftware.cdsi.core.domain.Contraindication;
+import org.openimmunizationsoftware.cdsi.core.domain.ClinicalGuidelineObservation;
+import org.openimmunizationsoftware.cdsi.core.domain.CodedValue;
+import org.openimmunizationsoftware.cdsi.core.domain.Contraindication_TO_BE_REMOVED;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.Immunity;
 import org.openimmunizationsoftware.cdsi.core.domain.ImmunizationHistory;
@@ -30,6 +32,7 @@ public class DataModel {
   private List<LiveVirusConflict> liveVirusConflictList = new ArrayList<LiveVirusConflict>();
   private Map<String, VaccineType> cvxMap = new HashMap<String, VaccineType>();
   private Map<String, Antigen> antigenMap = new HashMap<String, Antigen>();
+  private Map<String, CodedValue> codedValueMap = new HashMap<String, CodedValue>();
   private List<Antigen> antigenList = null;
   private int antigenPos = -1;
   private Antigen antigen = null;
@@ -39,7 +42,7 @@ public class DataModel {
 
   private Map<String, VaccineGroup> vaccineGroupMap = new HashMap<String, VaccineGroup>();
   private List<Immunity> immunityList = new ArrayList<Immunity>();
-  private List<Contraindication> contraindicationList = new ArrayList<Contraindication>();
+  private List<Contraindication_TO_BE_REMOVED> contraindicationList = new ArrayList<Contraindication_TO_BE_REMOVED>();
   private List<Schedule> scheduleList = new ArrayList<Schedule>();
 
   private TargetDose targetDose = null;
@@ -66,6 +69,13 @@ public class DataModel {
   private List<VaccineGroup> vaccineGroupList;
   private int vaccineGroupPos = -1;
   private Forecast forecast = null;
+
+  private Map<String, ClinicalGuidelineObservation> clinicalGuidelineObservationMap =
+      new HashMap<String, ClinicalGuidelineObservation>();
+
+  public Map<String, ClinicalGuidelineObservation> getClinicalGuidelineObservationMap() {
+   return clinicalGuidelineObservationMap;
+  }
 
   public Forecast getForecast() {
     return forecast;
@@ -405,11 +415,11 @@ public class DataModel {
     this.immunityList = immunityList;
   }
 
-  public List<Contraindication> getContraindicationList() {
+  public List<Contraindication_TO_BE_REMOVED> getContraindicationList() {
     return contraindicationList;
   }
 
-  public void setContraindicationList(List<Contraindication> contraindicationList) {
+  public void setContraindicationList(List<Contraindication_TO_BE_REMOVED> contraindicationList) {
     this.contraindicationList = contraindicationList;
   }
 

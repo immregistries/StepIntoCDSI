@@ -8,6 +8,8 @@ public class AllowableInterval {
   private YesNo fromImmediatePreviousDoseAdministered = null;
   private String fromTargetDoseNumberInSeries = "";
   private TimePeriod absoluteMinimumInterval = null;
+  private TimePeriod effectiveDate = null;
+  private TimePeriod cessationDate = null;
 
   public SeriesDose getSeriesDose() {
     return seriesDose;
@@ -40,5 +42,21 @@ public class AllowableInterval {
 
   public void setAbsoluteMinimumInterval(TimePeriod absoluteMinimumInterval) {
     this.absoluteMinimumInterval = absoluteMinimumInterval;
+  }
+
+  public TimePeriod getEffectiveDate() {
+    return effectiveDate;
+  }
+
+  public void setEffectiveDate(TimePeriod effectiveDate) {
+    this.effectiveDate = effectiveDate;
+  }
+
+  public TimePeriod getCessationDate() {
+    return cessationDate;
+  }
+
+  public void setCessationDate(TimePeriod cessationDate) {
+    this.cessationDate = cessationDate;
   }
 }

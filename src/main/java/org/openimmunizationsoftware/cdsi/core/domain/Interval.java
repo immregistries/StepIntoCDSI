@@ -7,11 +7,15 @@ public class Interval {
   private SeriesDose seriesDose = null;
   private YesNo fromImmediatePreviousDoseAdministered = null;
   private String fromTargetDoseNumberInSeries = "";
+  private String fromMostRecentNumberInSeries = "";
+  private ObservationCode fromRelevantObservation = null;
   private TimePeriod absoluteMinimumInterval = null;
   private TimePeriod minimumInterval = null;
   private TimePeriod earliestRecommendedInterval = null;
   private TimePeriod latestRecommendedInterval = null;
   private IntervalPriority intervalPriority = null;
+  private TimePeriod effectiveDate = null;
+  private TimePeriod cessationDate = null;
 
   public IntervalPriority getIntervalPriority() {
     return intervalPriority;
@@ -46,6 +50,22 @@ public class Interval {
     this.fromTargetDoseNumberInSeries = fromTargetDoseNumberInSeries;
   }
 
+  public String getFromMostRecentNumberInSeries() {
+    return fromMostRecentNumberInSeries;
+  }
+
+  public void setFromMostRecentNumberInSeries(String fromMostRecentNumberInSeries) {
+    this.fromMostRecentNumberInSeries = fromMostRecentNumberInSeries;
+  }
+
+  public ObservationCode getFromRelevantObservation() {
+    return fromRelevantObservation;
+  }
+
+  public void setFromRelevantObservation(ObservationCode fromRelevantObservation) {
+    this.fromRelevantObservation = fromRelevantObservation;
+  }
+
   public TimePeriod getAbsoluteMinimumInterval() {
     return absoluteMinimumInterval;
   }
@@ -76,5 +96,21 @@ public class Interval {
 
   public void setLatestRecommendedInterval(TimePeriod latestRecommendedInterval) {
     this.latestRecommendedInterval = latestRecommendedInterval;
+  }
+
+  public TimePeriod getEffectiveDate() {
+    return effectiveDate;
+  }
+
+  public void setEffectiveDate(TimePeriod effectiveDate) {
+    this.effectiveDate = effectiveDate;
+  }
+
+  public TimePeriod getCessationDate() {
+    return cessationDate;
+  }
+
+  public void setCessationDate(TimePeriod cessationDate) {
+    this.cessationDate = cessationDate;
   }
 }

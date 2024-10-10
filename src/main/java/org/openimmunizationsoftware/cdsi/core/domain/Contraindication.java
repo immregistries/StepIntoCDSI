@@ -1,51 +1,34 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 
 public class Contraindication {
-  private Antigen antigen = null;
-  private String contraindicationLanguage = "";
-  private Concept concept = new Concept();
+  private String contraindicationTextDescription = "";
+  private TimePeriod contraindicationBeginAge = null;
+  private TimePeriod contraindicationEndAge = null;
+  private ClinicalGuidelineObservation clinicalGuidelineObservation = null;
 
-  @Override
-  public String toString() {
-    return antigen.getName() + ": " + contraindicationLanguage;
+  public TimePeriod getContraindicationBeginAge() {
+      return contraindicationBeginAge;
   }
 
-  private List<VaccineType> cvxList = new ArrayList<VaccineType>();
-
-  public Antigen getAntigen() {
-    return antigen;
+  public TimePeriod getContraindicationEndAge() {
+      return contraindicationEndAge;
   }
 
-  public void setAntigen(Antigen antigen) {
-    this.antigen = antigen;
+  public String getContraindicationTextDescription() {
+      return contraindicationTextDescription;
   }
 
-  public String getContraindicationLanguage() {
-    return contraindicationLanguage;
+  public void setContraindicationBeginAge(TimePeriod contraindicationBeginAge) {
+      this.contraindicationBeginAge = contraindicationBeginAge;
   }
 
-  public void setContraindicationLanguage(String contraindicationLanguage) {
-    this.contraindicationLanguage = contraindicationLanguage;
+  public void setContraindicationEndAge(TimePeriod contraindicationEndAge) {
+      this.contraindicationEndAge = contraindicationEndAge;
   }
 
-  public List<VaccineType> getCvxList() {
-    return cvxList;
+  public void setContraindicationTextDescription(String contraindicationTextDescription) {
+      this.contraindicationTextDescription = contraindicationTextDescription;
   }
-
-  public void setCvxList(List<VaccineType> cvxList) {
-    this.cvxList = cvxList;
-  }
-
-  public Concept getConcept() {
-    return concept;
-  }
-
-  public void setConcept(Concept concept) {
-    this.concept = concept;
-  }
-
 }
