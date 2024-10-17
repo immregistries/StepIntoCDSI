@@ -77,6 +77,9 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
       setLogicCondition(1, new LogicCondition("Is the dose condition flag 'Y'?") {
         @Override
         public LogicResult evaluateInternal() {
+          if (caDoseCondition == null) {
+            return LogicResult.NO;
+          }
           if (caDoseCondition.getFinalValue().equals(YesNo.YES)) {
             return LogicResult.YES;
           }
