@@ -20,7 +20,7 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 public abstract class LogicStep {
 
   public static final LogicStepType[] STEPS = {LogicStepType.GATHER_NECESSARY_DATA,
-      LogicStepType.CREATE_PATIENT_SERIES, LogicStepType.ORGANIZE_IMMUNIZATION_HISTORY,
+      LogicStepType.CREATE_RELEVANT_PATIENT_SERIES, LogicStepType.ORGANIZE_IMMUNIZATION_HISTORY,
       LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES, LogicStepType.FOR_EACH_PATIENT_SERIES,
       LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED,
       LogicStepType.EVALUATE_DOSE_ADMININISTERED_CONDITION,
@@ -68,6 +68,7 @@ public abstract class LogicStep {
   public static final String PARAM_ASSUME_SERIES_COMPLETED = "assumeSeriesCompleted";
 
   public static final String PARAM_ANTIGEN_SERIES_INCLUDE = "antigenSeriesInclude";
+  public static final String PARAM_ANTIGEN_INCLUDE = "antigenInclude";
 
   protected static SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
   protected static Date FUTURE = null;

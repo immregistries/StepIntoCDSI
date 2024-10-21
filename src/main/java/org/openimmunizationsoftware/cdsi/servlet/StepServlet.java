@@ -41,6 +41,7 @@ public class StepServlet extends ForecastServlet {
         throw new ServletException(e);
       }
     } else {
+      dataModel.setRequest(req);
       try {
         String submit = req.getParameter("submit");
         if (submit != null && submit.equals("Jump")) {
@@ -122,6 +123,8 @@ public class StepServlet extends ForecastServlet {
           "        <img src=\"pm-" + dataModel.getLogicStepPrevious().getLogicStepType().getChapter()
               + "-" + dataModel.getLogicStep().getLogicStepType().getChapter()
               + ".png\" width=\"1000\" onclick=\"document.getElementById('stepForm').submit();\">");
+      out.println("<br/>" + dataModel.getLogicStepPrevious().getLogicStepType().getChapter()
+              + "-" + dataModel.getLogicStep().getLogicStepType().getChapter());
     }
     if (dataModel.getLogicStepPrevious() != null
         || req.getParameter(LogicStep.PARAM_EVAL_DATE) != null) {
