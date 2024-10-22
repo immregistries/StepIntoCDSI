@@ -20,6 +20,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
+import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionalSkipElements;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
@@ -27,39 +28,53 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
 public class EvaluateConditionalSkipForEvaluation extends LogicStep {
 
+  // Creating null attributes for use later
   protected ConditionAttribute<Date> caDateAdministered = null;
   protected ConditionAttribute<Date> caExpirationDate = null;
   protected ConditionAttribute<Date> caAssessmentDate = null;
   protected ConditionAttribute<Integer> caAdministeredDoseCount = null;
   protected boolean isForecast;
+  protected boolean isValidating;
 
+  // Constructor 1
   protected EvaluateConditionalSkipForEvaluation(LogicStepType logicStepType, DataModel dataModel) {
     super(logicStepType, dataModel);
   }
 
+  // Constructor 2
+  // Naming the condition table, using setupInternal function
   public EvaluateConditionalSkipForEvaluation(DataModel dataModel) {
     super(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION, dataModel);
-    setConditionTableName("Table 4.4 Skip Target Dose Attributes");
-    setupInternal(dataModel, LogicStepType.EVALUATE_AGE, LogicStepType.FOR_EACH_PATIENT_SERIES);
+    setConditionTableName("Table 6.4 Conditional Skip Attributes");
+    setupInternal(dataModel, LogicStepType.EVALUATE_FOR_INADVERTENT_VACCINE, LogicStepType.FOR_EACH_PATIENT_SERIES);
   }
 
+  // Defining setupInternal function; appears to change the isForecast variable depending on if noSkip == EVALUATE_FOR_INADVERTENT_VACCINE
+  // If constructor 2 is called, noSkip will equal EVALUATE_FOR_INADVERTENT_VACCINE
+  // isForecast is meant to identify whether or not this is for EvaluateConditionalSkipForEvaluation or EvaluateConditionalSkipForForecast
   protected void setupInternal(DataModel dataModel, final LogicStepType noSkip,
       final LogicStepType skip) {
-    if (noSkip.equals(LogicStepType.EVALUATE_AGE)) {
+    if (noSkip.equals(LogicStepType.EVALUATE_FOR_INADVERTENT_VACCINE)) {
       isForecast = false;
+      isValidating = false;
+    } else if(noSkip.equals(LogicStepType.VALIDATE_RECOMMENDATIONS)) {
+      isValidating = true;
     } else {
       isForecast = true;
     }
 
+    // Defining variables initialized earlier
     caDateAdministered =
         new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
-    caAssessmentDate = new ConditionAttribute<Date>("Processing data", "Assessment Date");
     caAdministeredDoseCount =
         new ConditionAttribute<Integer>("Patient Immunization History", "Administered Dose Count");
+    
     caExpirationDate = new ConditionAttribute<Date>("Vaccine", "Expiration Date");
+    caAssessmentDate = new ConditionAttribute<Date>("Runtime data", "Assessment Date");
 
     caAssessmentDate.setAssumedValue(new Date());
 
+    // this list is just for printing?
     conditionAttributesList.add(caDateAdministered);
     conditionAttributesList.add(caAssessmentDate);
     conditionAttributesList.add(caAdministeredDoseCount);
@@ -70,125 +85,116 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
     caAssessmentDate.setInitialValue(dataModel.getAssessmentDate());
     caAdministeredDoseCount.setInitialValue(dataModel.getAntigenAdministeredRecordList().size());
 
-
+    // This appears to be the core logic of the function?
+    /*
+     * TODO: 
+      I'm sure there is a better place to list this but before the for loop starts, we should eliminate Conditional Skip instances without a context of Evaluation or Both
+     */
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
     if (seriesDose.getConditionalSkip() != null) {
-      LT410 logicTable410 = new LT410(noSkip, skip);
-      // logicTableList.add(logicTable410);
+      LT611 logicTable611 = new LT611(noSkip, skip);
+      // logicTableList.add(logicTable611);
       log("Conditional skip has been defined, now looking at the details.");
       ConditionalSkip conditionalSkip = seriesDose.getConditionalSkip();
-      logicTable410.setSetLogicType(conditionalSkip.getSetLogic());
-      for (ConditionalSkipSet conditionalSkipSet : conditionalSkip.getConditionalSkipSetList()) {
-        LT49 logicTable49 = new LT49();
-        // logicTableList.add(logicTable49);
-        // logicTable410.addInnerSet(logicTable49);
-        logicTable49.setConditionLogicType(conditionalSkipSet.getConditionLogic());
-        for (ConditionalSkipCondition condition : conditionalSkipSet.getConditionList()) {
+      logicTable611.setSetLogicType(conditionalSkip.getSetLogic());
 
+      // 2. First for loop box; For Each Conditional Skip Set
+      for (ConditionalSkipSet conditionalSkipSet : conditionalSkip.getConditionalSkipSetList()) {
+        LT610 logicTable610 = new LT610();
+        logicTable610.setConditionLogicType(conditionalSkipSet.getConditionLogic());
+
+        // 3. Second for loop box; For Each Condition in a Set
+        for (ConditionalSkipCondition condition : conditionalSkipSet.getConditionList()) {
+          
+          // 4. Evaluate condition; uses Business Rule Table 4-5 and Decision Tables 4-6, 4-7, and 4-8
+          // Defining the condition as a class that corresponds to each Decision Table
           LTInnerSet lt = null;
           if (condition.getConditionType() == ConditionalSkipConditionType.AGE) {
-            lt = new LT46();
+            lt = new LT66();
           } else if (condition.getConditionType() == ConditionalSkipConditionType.INTERVAL) {
-            lt = new LT47();
+            lt = new LT68();
           } else if (condition
               .getConditionType() == ConditionalSkipConditionType.VACCINE_COUNT_BY_AGE
               || condition
                   .getConditionType() == ConditionalSkipConditionType.VACCINE_COUNT_BY_DATE) {
-            lt = new LT48();
+            lt = new LT69();
           }
           if (lt != null) {
             logicTableList.add(lt);
-
-            /* TODO
-            change table '4 - 4' to '6 - 4'
-            
-            change 'Conditional Skip Start Date' attribute name to 'Start Date'
-            change 'Conditional Skip End Date' attribute text to 'End Date'
-            remove 'Conditional Skip Dose Type'
-            remove 'Conditional Skip Dose Count Logic'
-            remove 'Conditional Skip Dose Count'
-
-            add attribute 'Runtime Data', 'Earliest Date', '-'
-            using
-              lt.caEarliestDate = new ConditionAttribute<Date>("Runtime Data", "Earliest Date");
-                  
-            add 'Supporting Data (Conditional Skip)', 'Conditional Skip Elements', '-'
-            using
-              lt.caConditionalSkipElements = new ConditionAttribute<Date>("Supporting Data (Conditional Skip)", "Conditional Skip Elements");
-                
-            */
-
+            lt.caConditionalSkipElements = new ConditionAttribute<ConditionalSkipElements>("Supporting Data (Conditional Skip)", "Conditional Skip Elements");
+            lt.caStartDate = new ConditionAttribute<Date>(
+              "Supporting Data (Conditional Skip)", "Start Date");
+            lt.caEndDate = new ConditionAttribute<Date>(
+              "Supporting Data (Conditional Skip)", "End Date");
             lt.caConditionalSkipBeginAgeDate = new ConditionAttribute<Date>(
                 "Calculated date (CALCDTSKIP-3)", "Conditional Skip Begin Age Date");
             lt.caConditionalSkipEndAgeDate = new ConditionAttribute<Date>(
                 "Calculated date (CALCDTSKIP-4)", "Conditional Skip End Age Date");
             lt.caConditionalSkipIntervalDate = new ConditionAttribute<Date>(
                 "Calculated date (CALCDTSKIP-5)", "Conditional Skip Interval Date");
-            lt.caConditionalSkipStartDate = new ConditionAttribute<Date>(
-                "Supporting Data (Conditional Skip)", "Conditional Skip Start Date");
-            lt.caConditionalSkipEndDate = new ConditionAttribute<Date>(
-                "Supporting Data (Conditional Skip)", "Conditional SKip End Date");
-            lt.caConditionalSkipDoseType = new ConditionAttribute<String>(
-                "Supporting Data (Conditional Skip)", "Conditional Skip Dose Type");
-            lt.caConditionalSkipDoseCountLogic = new ConditionAttribute<String>(
-                "Supporting Data (Conditional Skip)", "Conditional Skip Doese Count Logic");
-            lt.caConditionalSkipDoseCount = new ConditionAttribute<Integer>(
-                "Supporting Data (Conditional Skip)", "Conditional Skip Dose Count");
             lt.caNumberofConditionalDosesAdministered = new ConditionAttribute<Integer>(
                 "Supporting Data (CONDSKIP-1)", "Number of Conditional Doses Administered");
             lt.caConditionalSkipReferenceDate = new ConditionAttribute<Date>(
                 "Supporting Data (CONDSKIP-2)", "Conditional Skip Reference Date");
 
+            // caList is also just for printing?
             List<ConditionAttribute<?>> caList = new ArrayList<ConditionAttribute<?>>();
+            caList.add(lt.caStartDate);
+            caList.add(lt.caEndDate);
+            caList.add(lt.caConditionalSkipElements);
             caList.add(lt.caConditionalSkipBeginAgeDate);
             caList.add(lt.caConditionalSkipEndAgeDate);
             caList.add(lt.caConditionalSkipIntervalDate);
-            caList.add(lt.caConditionalSkipStartDate);
-            caList.add(lt.caConditionalSkipEndDate);
-            caList.add(lt.caConditionalSkipDoseType);
-            caList.add(lt.caConditionalSkipDoseCountLogic);
-            caList.add(lt.caConditionalSkipDoseCount);
             caList.add(lt.caConditionalSkipReferenceDate);
-            conditionAttributesAdditionalMap.put("Table 4 - 4 Conditional Skip Attributes "
+            conditionAttributesAdditionalMap.put("Table 6 - 4 Conditional Skip Attributes "
                 + conditionalSkipSet.getSetId() + "." + condition.getConditionId(), caList);
-            /* TODO
-            change 'Conditional Skip Begin Age date' assumed value to '01/01/1900'
-            change 'Conditional Skip End Age Date' assumed value to '12/31/2999'
-            change 'Conditional Skip Start Date' assumed value to '01/01/1900'
-            change 'Conditional Skip End Date' assumed value to '12/31/2999'
 
-            using lt.caConditionalSkipBeginAgeDate.setInitialValue
-            */
+            // setting assumed values
+            lt.caStartDate.setAssumedValue(PAST);
+            lt.caEndDate.setAssumedValue(FUTURE);
+            lt.caConditionalSkipBeginAgeDate.setAssumedValue(PAST);
+            lt.caConditionalSkipEndAgeDate.setAssumedValue(FUTURE);
+
+            // setting initial values
+            lt.caStartDate.setInitialValue(condition.getStartDate());
+            lt.caEndDate.setInitialValue(condition.getEndDate());
             lt.caConditionalSkipBeginAgeDate
                 .setInitialValue(CALCDTSKIP_3.evaluate(dataModel, this, condition));
             lt.caConditionalSkipEndAgeDate
                 .setInitialValue(CALCDTSKIP_4.evaluate(dataModel, this, condition));
             lt.caConditionalSkipIntervalDate
                 .setInitialValue(CALCDTSKIP_5.evaluate(dataModel, this, condition));
-            lt.caConditionalSkipStartDate.setInitialValue(condition.getStartDate());
-            lt.caConditionalSkipEndDate.setInitialValue(condition.getEndDate());
-            if (condition.getDoseType() != null) {
-              lt.caConditionalSkipDoseType.setInitialValue(condition.getDoseType().name());
+
+            
+            if (condition.getDoseType() != null){
+              lt.caConditionalSkipElements.setInitialValue(new ConditionalSkipElements(condition.getDoseType().name(), condition.getDoseCountLogic(), 0));
             }
+            else {
+              lt.caConditionalSkipElements.setInitialValue(new ConditionalSkipElements(null, condition.getDoseCountLogic(), 0));
+            }
+
+            // this may need to change in the future to fit changes to AssessmentDate
             if (isForecast) {
               lt.caConditionalSkipReferenceDate.setInitialValue(caAssessmentDate.getFinalValue());
-            } else {
+            }
+            else if (isValidating){
+              lt.caConditionalSkipReferenceDate.setInitialValue(PAST);
+            }
+            else {
               lt.caConditionalSkipReferenceDate.setInitialValue(caDateAdministered.getFinalValue());
             }
-            lt.caConditionalSkipDoseCountLogic.setInitialValue(condition.getDoseCountLogic());
-            lt.caConditionalSkipDoseCount.setInitialValue(0);
             if (condition.getEndDate() != null) {
               lt.caNumberofConditionalDosesAdministered
                   .setInitialValue(CONDSKIP_1.evaluate(dataModel, condition));
             }
 
           }
-          logicTable49.addInnerSet(lt);
+          logicTable610.addInnerSet(lt);
         }
-        logicTableList.add(logicTable49);
-        logicTable410.addInnerSet(logicTable49);
+        logicTableList.add(logicTable610);
+        logicTable611.addInnerSet(logicTable610);
       }
-      logicTableList.add(logicTable410);
+      logicTableList.add(logicTable611);
 
     } else {
       log("No conditional skips are defined. ");
@@ -196,9 +202,10 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
     log("Looking to set Trigger values");
   }
 
+  // Overriding the methods of parent functions and redefining them
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.EVALUATE_AGE);
+    setNextLogicStepType(LogicStepType.EVALUATE_FOR_INADVERTENT_VACCINE);
     evaluateLogicTables();
     return next();
   }
@@ -233,22 +240,20 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
     out.println(
         "<p>Finally, in an effort to reduce page size and eliminate duplicate logic which could result in typographical and consistency errors, this section of logic is defined here once, but used in both Evaluation and Forecasting. The forecasting chapter refers the reader back to this section for appropriate logic.</p>");
 
-    out.println("<img src=\"Figure 4.3.png\"/>");
-    out.println("<p>FIGURE 4 - 3 CONDITIONAL SKIP PROCESS MODEL</p>");
+    out.println("<img src=\"Figure 6.3.png\"/>"); // make sure you have the right image source
+    out.println("<p>FIGURE 6 - 3 CONDITIONAL SKIP PROCESS MODEL</p>");
     printConditionAttributesTable(out);
     printLogicTables(out);
   }
 
+  // Defining condition attributes
   protected class LTInnerSet extends LogicTable {
-
+    protected ConditionAttribute<ConditionalSkipElements> caConditionalSkipElements = null; //???
     protected ConditionAttribute<Date> caConditionalSkipBeginAgeDate = null;
     protected ConditionAttribute<Date> caConditionalSkipEndAgeDate = null;
     protected ConditionAttribute<Date> caConditionalSkipIntervalDate = null;
-    protected ConditionAttribute<Date> caConditionalSkipStartDate = null;
-    protected ConditionAttribute<Date> caConditionalSkipEndDate = null;
-    protected ConditionAttribute<String> caConditionalSkipDoseType = null;
-    protected ConditionAttribute<String> caConditionalSkipDoseCountLogic = null;
-    protected ConditionAttribute<Integer> caConditionalSkipDoseCount = null;
+    protected ConditionAttribute<Date> caStartDate = null;
+    protected ConditionAttribute<Date> caEndDate = null;
     protected ConditionAttribute<Date> caConditionalSkipReferenceDate = null;
     protected ConditionAttribute<Integer> caNumberofConditionalDosesAdministered = null;
 
@@ -263,20 +268,35 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
     }
   }
 
-  protected class LT46 extends LTInnerSet {
-    public LT46() {
-      super(1, 2, "Table 4-6 CONDITIONAL Type of Age - Is the Condition Met?");
+  // Logic Tables are defined here.
+  /*
+   * TODO:
+   * Change name and code of the logic tables to that of their 4.5 equivalents 
+   * Add new logic table 6-7
+   */
+
+  // Logic Table 4-6 -> 6-6
+  // 2.1: "Is the Conditional Skip Reference Date ≥ Conditional Skip Begin Age Date" 
+  // 4.5: "Is the Conditional Skip End Age Date > Is the Conditional Skip Reference Date ≥ Conditional Skip Begin Age Date?"
+  protected class LT66 extends LTInnerSet {
+    public LT66() {
+      super(1, 2, "Table 6-6 CONDITIONAL Type of Age - Is the Condition Met?");
 
       setLogicCondition(0, new LogicCondition(
-          "Is the Conditional Skip Reference Date ≥ Conditional Skip Begin Age Date?") {
+          "Is the Conditional Skip End Age Date > Is the Conditional Skip Reference Date ≥ Conditional Skip Begin Age Date?") {
         @Override
         public LogicResult evaluateInternal() {
-          if (caConditionalSkipBeginAgeDate.getFinalValue() == null
-              || caExpirationDate.getFinalValue() == null) {
+          if (caConditionalSkipEndAgeDate.getFinalValue() == null 
+              || caConditionalSkipBeginAgeDate.getFinalValue() == null
+              || caExpirationDate.getFinalValue() == null) { 
+              // if anything is null, answer is NO
             return LogicResult.NO;
           }
           if (caConditionalSkipBeginAgeDate.getFinalValue()
-              .before(caExpirationDate.getFinalValue())) {
+              .before(caExpirationDate.getFinalValue()) 
+              && caExpirationDate.getFinalValue()
+              .before(caConditionalSkipEndAgeDate.getFinalValue())) { 
+            // So is expiration date the skip reference date? This code assumes it is for now, but it should be inquired about.
             return LogicResult.YES;
           }
           return LogicResult.NO;
@@ -304,27 +324,67 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
     }
   }
 
-  protected class LT47 extends LTInnerSet {
-    public LT47() {
-      super(1, 2, "Table 4 - 7 CONDITIONAL Type of Interval - Is the Condition Met?");
+  // New Logic Table 6-7 (CONDITIONAL TYPE OF COMPLETED SERIES - IS THE CONDITION MET?) goes here
+  // It requires Chapter 5 to work I think
+  /*
+  protected class LT67 extends LTInnerSet{
+    public LT67() {
+      super(1,2,"Table 6 - 7 CONDITIONAL Type of Completed Series - is the condition met?");
 
       setLogicCondition(0, new LogicCondition(
-          "Is the Conditional Skip Reference Date ≥ Conditional Skip Interval Date?") {
-        @Override
-        public LogicResult evaluateInternal() {
-          if (caConditionalSkipIntervalDate.getFinalValue() == null
-              || caExpirationDate.getFinalValue() == null) {
+        "Does the Conditional Group Series Group identify a Series Group with at least one relevant patient series with a patient series status of 'Complete'?") {
+          @Override
+          public LogicResult evaluateInternal(){
+            if() {
+            return LogicResult.YES;
+            }
             return LogicResult.NO;
           }
+      });
+    }
+  }*/
+
+  // Logic Table 4-7 -> 6-8
+  // Add a new logic check: Has at least one dose been administered to the patient? 
+  // A positive result now requires both conditions to be true. 
+  protected class LT68 extends LTInnerSet {
+    public LT68() {
+      super(2, 4, "Table 6 - 8 CONDITIONAL Type of Interval - Is the Condition Met?");
+
+      setLogicCondition(0, new LogicCondition(
+        "Has at least one dose been administered to the patient?"){
+          @Override
+          public LogicResult evaluateInternal() {
+            if (caConditionalSkipIntervalDate.getFinalValue() == null
+            || caExpirationDate.getFinalValue() == null) {
+              return LogicResult.NO;
+            }
+            if (caAdministeredDoseCount.getFinalValue() >= 1){
+              return LogicResult.YES;
+            }
+            return LogicResult.NO;
+          }
+        });
+
+      setLogicCondition(1, new LogicCondition(
+        "Is the Conditional Skip Reference Date ≥ Conditional Skip Interval Date?") {
+        @Override
+        public LogicResult evaluateInternal() {
           if (caConditionalSkipIntervalDate.getFinalValue()
-              .before(caExpirationDate.getFinalValue())) {
+              .before(caExpirationDate.getFinalValue())
+              ) {
             return LogicResult.YES;
           }
           return LogicResult.NO;
         }
       });
 
-      setLogicResults(0, new LogicResult[] {LogicResult.YES, LogicResult.NO});
+      // setLogicResults(0, new LogicResult[] {LogicResult.YES, LogicResult.NO}); I don't know if I'll need to restore this code later
+      // Do I have to type out all 4 possibilities? Or can it be truncated?
+      setLogicResults(0, LogicResult.YES, LogicResult.YES);
+      setLogicResults(1, LogicResult.NO, LogicResult.YES);
+      setLogicResults(2, LogicResult.NO, LogicResult.NO);
+      setLogicResults(3, LogicResult.YES, LogicResult.NO);
 
       setLogicOutcome(0, new LogicOutcome() {
         @Override
@@ -342,34 +402,55 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
         }
       });
 
+      setLogicOutcome(2, new LogicOutcome() {
+        @Override
+        public void perform() {
+          log("No. The condition is not met");
+          met = false;
+        }
+      });
+
+      setLogicOutcome(3, new LogicOutcome() {
+        @Override
+        public void perform() {
+          log("No. The condition is not met");
+          met = false;
+        }
+      });
+
     }
   }
 
-  protected class LT48 extends LTInnerSet {
-    public LT48() {
+  // Logic Table 4-8 -> 6-9
+  /*
+   * TODO:
+   * Fix the LogicResult to work with the new Conditional Skip Elements
+   */
+  protected class LT69 extends LTInnerSet {
+    public LT69() {
       super(1, 2,
-          "Table 4 - 8 CONDITIONAL Type of Vaccine Count By Age or Date - Is the Condition Met?");
+          "Table 6 - 9 CONDITIONAL Type of Vaccine Count By Age or Date - Is the Condition Met?");
 
       setLogicCondition(0, new LogicCondition(
           "Comparing the Number of Conditional Doses Administered with the Conditional Skip Dose Count") {
         @Override
         public LogicResult evaluateInternal() {
-          if (caConditionalSkipDoseCountLogic.getFinalValue().equalsIgnoreCase("greater than")) {
-            if (caConditionalSkipDoseCount.getFinalValue() < caAdministeredDoseCount
+          if (caConditionalSkipElements.getFinalValue().getDoseCountLogic().equalsIgnoreCase("greater than")) {
+            if (caConditionalSkipElements.getFinalValue().getDoseCount() < caAdministeredDoseCount
                 .getFinalValue()) {
               return LogicResult.YES;
             }
             return LogicResult.NO;
           }
-          if (caConditionalSkipDoseCountLogic.getFinalValue().equalsIgnoreCase("equal")) {
-            if (caConditionalSkipDoseCount.getFinalValue() == caAdministeredDoseCount
+          if (caConditionalSkipElements.getFinalValue().getDoseCountLogic().equalsIgnoreCase("equal")) {
+            if (caConditionalSkipElements.getFinalValue().getDoseCount() == caAdministeredDoseCount
                 .getFinalValue()) {
               return LogicResult.YES;
             }
             return LogicResult.NO;
           }
-          if (caConditionalSkipDoseCountLogic.getFinalValue().equalsIgnoreCase("less than")) {
-            if (caConditionalSkipDoseCount.getFinalValue() > caAdministeredDoseCount
+          if (caConditionalSkipElements.getFinalValue().getDoseCountLogic().equalsIgnoreCase("less than")) {
+            if (caConditionalSkipElements.getFinalValue().getDoseCount() > caAdministeredDoseCount
                 .getFinalValue()) {
               return LogicResult.YES;
             }
@@ -400,7 +481,9 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
     }
   }
 
-  protected class LT49 extends LogicTable {
+  // Logic Table 4-9 -> 6-10
+  // Extends LogicTable and not LTInnerSet
+  protected class LT610 extends LogicTable {
     protected String conditionLogicType = "";
 
     public void setConditionLogicType(String conditionLogicType) {
@@ -420,8 +503,8 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
       innerSetList.add(innerSet);
     }
 
-    public LT49() {
-      super(1, 2, "Table 4 - 9 Is the Conditional Skip Set Met?");
+    public LT610() {
+      super(1, 2, "Table 6 - 10 Is the Conditional Skip Set Met?");
 
       setLogicCondition(0, new LogicCondition("How many conditions were met?") {
         @Override
@@ -467,33 +550,34 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
     }
   }
 
-  protected class LT410 extends LogicTable {
+  // Logic Table 4-10 -> 6-11
+  protected class LT611 extends LogicTable {
     private String setLogicType = "";
 
     public void setSetLogicType(String setLogicType) {
       this.setLogicType = setLogicType;
     }
 
-    private List<LT49> innerSetList = new ArrayList<EvaluateConditionalSkipForEvaluation.LT49>();
+    private List<LT610> innerSetList = new ArrayList<EvaluateConditionalSkipForEvaluation.LT610>();
 
-    public void addInnerSet(LT49 innerSet) {
+    public void addInnerSet(LT610 innerSet) {
       innerSetList.add(innerSet);
     }
 
-    public LT410(final LogicStepType noSkip, final LogicStepType skip) {
-      super(1, 2, "Table 4 - 10 Can The Target Dose Be Skipped?");
+    public LT611(final LogicStepType noSkip, final LogicStepType skip) {
+      super(1, 2, "Table 6 - 11 Can The Target Dose Be Skipped?");
       setLogicCondition(0, new LogicCondition("How many sets were met?") {
         @Override
         public LogicResult evaluateInternal() {
           if (setLogicType.equals(ConditionalSkip.SET_LOGIC_AND)) {
-            for (LT49 innerSet : innerSetList) {
+            for (LT610 innerSet : innerSetList) {
               if (!innerSet.isMet()) {
                 return LogicResult.NO;
               }
             }
             return LogicResult.YES;
           } else if (setLogicType.equals(ConditionalSkip.SET_LOGIC_OR)) {
-            for (LT49 innerSet : innerSetList) {
+            for (LT610 innerSet : innerSetList) {
               if (innerSet.isMet()) {
                 return LogicResult.YES;
               }
@@ -512,7 +596,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
         public void perform() {
           log("Yes. The target dose can be skipped.");
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.SKIPPED);
-          log("The taget dose status is \"skipped\"");
+          log("The target dose status is \"skipped\"");
           log("Setting next step: Evaluate Immunization History");
           TargetDose targetDoseNext = dataModel.findNextTargetDose(dataModel.getTargetDose());
           dataModel.setTargetDose(targetDoseNext);
@@ -524,7 +608,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
         @Override
         public void perform() {
           log("No. The target dose cannot be skipped. ");
-          log("Setting next step: 4.3 Evaluate Age");
+          log("Setting next step: Evaluate For Inadvertent Vaccine");
           setNextLogicStepType(noSkip);
         }
       });

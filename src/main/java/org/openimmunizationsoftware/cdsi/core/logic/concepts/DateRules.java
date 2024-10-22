@@ -66,7 +66,7 @@ public class DateRules {
     };
     CALCDTSKIP_3.setBusinessRuleId("CALCDTSKIP-3");
     CALCDTSKIP_3.setBusinessRule(
-        "A patient's conditional skip begin age date must be calculated as the patient's date of birth plus the Begin Age of the conditional skip condition.");
+        "A patient's conditional skip begin age date must be calculated as the patient's date of birth plus the conditional skip begin age of a conditional skip.");
     CALCDTSKIP_3.setLogicalComponent("Skip Target Dose");
 
     CALCDTSKIP_4 = new DateRule<ConditionalSkipCondition>() {
@@ -83,7 +83,7 @@ public class DateRules {
     };
     CALCDTSKIP_4.setBusinessRuleId("CALCDTSKIP-4");
     CALCDTSKIP_4.setBusinessRule(
-        "A patient's conditional skip end age date must be calculated as the patient's date of birth plus the End Age of the conditional skip condition.");
+        "A patient's conditional skip end age date must be calculated as the patient's date of birth plus the conditional skip end age of a conditional skip.");
     CALCDTSKIP_4.setLogicalComponent("Skip Target Dose");
 
     CALCDTSKIP_5 = new DateRule<ConditionalSkipCondition>() {
@@ -103,7 +103,7 @@ public class DateRules {
     };
     CALCDTSKIP_5.setBusinessRuleId("CALCDTSKIP-5");
     CALCDTSKIP_5.setBusinessRule(
-        "A patient's conditional skip interval date must be calculated as the vaccine date administered which satisfied the previous target dose plus the Interval of the conditional skip condition.");
+        "A patient's conditional skip interval date must be calculated as the vaccine date administered from the immediate previous vaccine dose administered plus the Interval of the conditional skip condition. ");
     CALCDTSKIP_5.setLogicalComponent("Skip Target Dose");
 
     CALCDTAGE_1 = new DateRule<Age>() {
