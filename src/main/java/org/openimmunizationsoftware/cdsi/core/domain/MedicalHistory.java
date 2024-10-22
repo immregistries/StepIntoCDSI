@@ -9,9 +9,9 @@ public class MedicalHistory {
   private ImmunizationHistory immunizationHistory = null;
   private List<RelevantMedicalObservation> releventMedicalObservationList =
       new ArrayList<RelevantMedicalObservation>();
-  private Set<Contraindication> contraindicationSet = new HashSet<Contraindication>();
+  private Set<Contraindication_TO_BE_REMOVED> contraindicationSet = new HashSet<Contraindication_TO_BE_REMOVED>();
 
-  public Set<Contraindication> getContraindicationSet() {
+  public Set<Contraindication_TO_BE_REMOVED> getContraindicationSet() {
     return contraindicationSet;
   }
 

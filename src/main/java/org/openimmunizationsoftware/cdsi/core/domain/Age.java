@@ -9,6 +9,8 @@ public class Age {
   private TimePeriod earliestRecommendedAge = null;
   private TimePeriod latestRecommendedAge = null;
   private TimePeriod maximumAge = null;
+  private TimePeriod effectiveDate = null;
+  private TimePeriod cessationDate = null;
 
   public SeriesDose getSeriesDose() {
     return seriesDose;
@@ -56,5 +58,21 @@ public class Age {
 
   public void setMaximumAge(TimePeriod maximumAge) {
     this.maximumAge = maximumAge;
+  }
+
+  public TimePeriod getEffectiveDate() {
+    return effectiveDate;
+  }
+
+  public void setEffectiveDate(TimePeriod effectiveDate) {
+    this.effectiveDate = effectiveDate;
+  }
+
+  public TimePeriod getCessationDate() {
+    return cessationDate;
+  }
+
+  public void setCessationDate(TimePeriod cessationDate) {
+    this.cessationDate = cessationDate;
   }
 }

@@ -17,102 +17,7 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
-    LogicStepType nextLogicStep;
-
-    dataModel.incAntigenAdministeredRecordPos();
-    PatientSeries patientSeries = dataModel.getPatientSeries();
-
-    while (dataModel.getAntigenAdministeredRecordPos() < dataModel
-        .getAntigenAdministeredRecordList().size()) {
-      AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecordList()
-          .get(dataModel.getAntigenAdministeredRecordPos());
-      if (aar.getAntigen().equals(patientSeries.getTrackedAntigenSeries().getTargetDisease())) {
-        break;
-      } else {
-        dataModel.incAntigenAdministeredRecordPos();
-        log("   Skipping " + aar + " for antigen " + aar.getAntigen() + "rrrrr"
-            + patientSeries.getTrackedAntigenSeries().getTargetDisease());
-      }
-    }
-
-    if (dataModel.getAntigenAdministeredRecordPos() < dataModel.getAntigenAdministeredRecordList()
-        .size()) {
-      if (dataModel.getAntigenAdministeredRecordPos() == 0) {
-        log("   Looking at first dose administered");
-      }
-      dataModel.setAntigenAdministeredRecord(dataModel.getAntigenAdministeredRecordList()
-          .get(dataModel.getAntigenAdministeredRecordPos()));
-      if (gotoNextTargetDose()) {
-        nextLogicStep = LogicStepType.EVALUATE_DOSE_ADMINISTERED_CONDITION;
-      } else {
-        nextLogicStep = LogicStepType.FORECAST_DATES_AND_REASONS;
-      }
-    } else {
-      gotoNextTargetDose();
-      nextLogicStep = LogicStepType.FORECAST_DATES_AND_REASONS;
-    }
-
-    return LogicStepFactory.createLogicStep(nextLogicStep, dataModel);
-  }
-
-  private boolean gotoNextTargetDose() {
-    if (dataModel.getTargetDose() == null) {
-      log(" + Getting first target dose");
-      // log(" zzzzzzzzz " +
-      // dataModel.getAntigenAdministeredRecordList().get(dataModel.getAntigenAdministeredRecordPos()).getAntigen()
-      // + "rrrrr" + dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
-      dataModel.incTargetDoseListPos();
-      dataModel.setTargetDose(dataModel.getTargetDoseList().get(dataModel.getTargetDoseListPos()));
-      return true;
-    } else {
-      if (dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered() != null) {
-        log(" + Previous target dose was satisifed, getting next target dose");
-        RecurringDose recurringdose =
-            dataModel.getTargetDose().getTrackedSeriesDose().getRecurringDose();
-        if (recurringdose != null && recurringdose.getValue() == YesNo.YES) {
-          // Create another target dose
-          TargetDose targetDoseNext = new TargetDose(dataModel.getTargetDose());
-          dataModel.getTargetDoseList().add(targetDoseNext);
-        }
-        dataModel.incTargetDoseListPos();
-        if (dataModel.getTargetDoseListPos() < dataModel.getTargetDoseList().size()) {
-          dataModel
-              .setTargetDose(dataModel.getTargetDoseList().get(dataModel.getTargetDoseListPos()));
-          return true;
-        } else {
-          markRestAsExtraneous();
-          return false;
-        }
-      } else {
-
-        log(" + Previous target dose was NOT satisifed, staying on this target dose");
-        return true;
-      }
-    }
-  }
-
-  private AntigenAdministeredRecord findNextAntigenAdministeredRecord(
-      AntigenAdministeredRecord aar) {
-    AntigenAdministeredRecord aarNext = null;
-    boolean found = false;
-    for (AntigenAdministeredRecord antigenAdministeredRecord : dataModel
-        .getAntigenAdministeredRecordList()) {
-      if (found) {
-        aarNext = antigenAdministeredRecord;
-        break;
-      } else if (antigenAdministeredRecord == aar) {
-        found = true;
-      }
-    }
-    return aarNext;
-  }
-
-  private void markRestAsExtraneous() {
-    for (int i = dataModel.getAntigenAdministeredRecordPos() + 1; i < dataModel
-        .getAntigenAdministeredRecordList().size(); dataModel.incAntigenAdministeredRecordPos()) {
-      dataModel.getAntigenAdministeredRecordList().get(i).getEvaluation()
-          .setEvaluationStatus(EvaluationStatus.EXTRANEOUS);
-    }
+    return LogicStepFactory.createLogicStep(LogicStepType.EVALUATE_DOSE_ADMININISTERED_CONDITION, dataModel);
   }
 
   @Override
@@ -123,9 +28,9 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
   private void printStandard(PrintWriter out) {
     out.println("<h1>Evaluate Vaccine Dose Administered</h1>");
     out.println(
-        "<p>The core of a CDS engine is the process of evaluating a single vaccine dose administered against a defined target dose to determine if the vaccine dose administered is \"valid\" or \"not valid.\" The results will ultimately determine if all conditions of the target dose are satisfied and the dose does not need to be repeated.  This can be accomplished by breaking the evaluation process into simple and logical components.  After processing each logical component, the results of those logical components are used to determine if the vaccine dose administered satisfies the goals of the target dose.</p>");
+        "<p>The core of a CDS engine is the process of evaluating a single vaccine dose administered against a defined target dose within a relevant patient series to determine if the vaccine dose administered is \"valid\" or \"not valid\"for the relevant patient series. The results will ultimately determine if all requirements of the target dose are satisfied. This can be accomplished by breaking the evaluation process into simple logical components. After processing each logical component, the results of those logical components are used to determine if the vaccine dose administered satisfies the goals of the target dose.</p>");
     out.println(
-        "<p>Each logical component has its own set of business rules that are used to determine if a target dose is \"satisfied.\" These business rules are documented using the decision table format. (See section 3.5 to review an example of a decision table using a real-world scenario.)  The decision table describes the way that the CDS engine responds to various combinations of conditions. The implementer is able to clearly see the set of conditions, how they work in combination, and what actions should be taken on a given set of conditions.</p>");
+        "<p>Each logical component has its own set of business rules that are used to determine if a target dose is “satisfied.” These business rules are documented using business rules and decision tables. (See section 2.11 to review an example of a decision table using a real-world scenario.) The decision table describes the way that the CDS engine responds to various combinations of conditions. The implementer can clearly see the set of conditions, how they work in combination, and what actions should be taken on a given set of conditions.</p>");
     out.println(
         "<p>Specific attributes and decision tables are provided for each step of the evaluation process.</p>");
 

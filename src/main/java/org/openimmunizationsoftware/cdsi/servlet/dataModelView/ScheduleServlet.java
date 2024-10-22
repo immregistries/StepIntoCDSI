@@ -124,7 +124,7 @@ public class ScheduleServlet extends MainServlet {
         out.println("          <ul>");
 
         for (ClinicalHistory clinicalHistory : schedule.getImmunity().getClinicalHistoryList()) {
-          out.println("          <li>" + clinicalHistory.getImmunityGuideline() + "</li>");
+          out.println("          <li>" + clinicalHistory.getImmunityGuidelineCode() + ": " + clinicalHistory.getImmunityGuidelineTitle() + "</li>");
         }
         out.println("          </ul>");
       }

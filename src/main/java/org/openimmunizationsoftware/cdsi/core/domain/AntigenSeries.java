@@ -5,10 +5,11 @@ import java.util.List;
 
 public class AntigenSeries {
   private String seriesName = "";
-  private List<SeriesDose> seriesDoseList = new ArrayList<SeriesDose>();
   private SelectBestPatientSeries selectBestPatientSeries = null;
   private Antigen targetDisease = null;
   private VaccineGroup vaccineGroup = null;
+  private List<Indication> indicationList = new ArrayList<Indication>();
+  private List<SeriesDose> seriesDoseList = new ArrayList<SeriesDose>();
 
   @Override
   public boolean equals(Object obj) {
