@@ -43,7 +43,7 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
       dataModel.setAntigenAdministeredRecord(dataModel.getAntigenAdministeredRecordList()
           .get(dataModel.getAntigenAdministeredRecordPos()));
       if (gotoNextTargetDose()) {
-        nextLogicStep = LogicStepType.EVALUATE_DOSE_ADMININISTERED_CONDITION;
+        nextLogicStep = LogicStepType.EVALUATE_DOSE_ADMINISTERED_CONDITION;
       } else {
         nextLogicStep = LogicStepType.FORECAST_DATES_AND_REASONS;
       }

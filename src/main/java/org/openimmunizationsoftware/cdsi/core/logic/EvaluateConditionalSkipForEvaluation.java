@@ -57,7 +57,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
     if (noSkip.equals(LogicStepType.EVALUATE_FOR_INADVERTENT_VACCINE)) {
       isForecast = false;
       isValidating = false;
-    } else if(noSkip.equals(LogicStepType.VALIDATE_RECOMMENDATION)) {
+    } else if(noSkip.equals(LogicStepType.VALIDATE_RECOMMENDATIONS)) {
       isValidating = true;
     } else {
       isForecast = true;
@@ -148,14 +148,6 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
             caList.add(lt.caConditionalSkipReferenceDate);
             conditionAttributesAdditionalMap.put("Table 6 - 4 Conditional Skip Attributes "
                 + conditionalSkipSet.getSetId() + "." + condition.getConditionId(), caList);
-            /* TODO
-            change 'Conditional Skip Begin Age date' assumed value to '01/01/1900'
-            change 'Conditional Skip End Age Date' assumed value to '12/31/2999'
-            change 'Start Date' assumed value to '01/01/1900'
-            change 'End Date' assumed value to '12/31/2999'
-
-            using lt.caConditionalSkipBeginAgeDate.setAssumedValue
-            */
 
             // setting assumed values
             lt.caStartDate.setAssumedValue(PAST);
@@ -333,6 +325,8 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
   }
 
   // New Logic Table 6-7 (CONDITIONAL TYPE OF COMPLETED SERIES - IS THE CONDITION MET?) goes here
+  // It requires Chapter 5 to work I think
+  /*
   protected class LT67 extends LTInnerSet{
     public LT67() {
       super(1,2,"Table 6 - 7 CONDITIONAL Type of Completed Series - is the condition met?");
@@ -348,7 +342,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
           }
       });
     }
-  }
+  }*/
 
   // Logic Table 4-7 -> 6-8
   // Add a new logic check: Has at least one dose been administered to the patient? 

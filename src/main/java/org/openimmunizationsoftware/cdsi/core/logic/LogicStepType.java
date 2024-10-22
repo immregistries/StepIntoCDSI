@@ -10,7 +10,7 @@ public enum LogicStepType {
   IDENTIFY_AND_EVALUATE_VACCINE_GROUP("4.6", "Identify and Evaluate Vaccine Group", false),
   FOR_EACH_PATIENT_SERIES("xx", "for each Patient Series", true), 
   EVALUATE_VACCINE_DOSE_ADMINISTERED("6", "Evaluate Vaccine Doses Administered", true), 
-  EVALUATE_DOSE_ADMININISTERED_CONDITION("6.1", "Evaluate Dose Administered Condition", true), 
+  EVALUATE_DOSE_ADMINISTERED_CONDITION("6.1", "Evaluate Dose Administered Condition", true), 
   EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION("6.2", "Evaluate Conditional Skip", true), 
   EVALUATE_FOR_INADVERTENT_VACCINE("6.3", "Evaluate for Inadvertent Vaccine", true),
   EVALUATE_AGE("6.4", "Evaluate Age", true), 
