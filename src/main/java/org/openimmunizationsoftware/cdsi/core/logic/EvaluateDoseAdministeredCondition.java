@@ -8,6 +8,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.DoseCondition;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
@@ -24,18 +25,14 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
     super(LogicStepType.EVALUATE_DOSE_ADMINISTERED_CONDITION, dataModel);
     setConditionTableName("Table 6 - 2 Dose Administered Condition Attributes");
     
-    //TODO
-    //change ConditionAttribute "Dose Condition" to "Dose Condition Flag"
-
-    
     // initialize condition attributes
     caDateAdministered =
         new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
-  //use CALCDTLOTEXP-1 business rules now(not implemented yet), change attribute type to "Calculated date"
-    caLotExpirationDate =
-        new ConditionAttribute<Date>("Vaccine dose administered", "Lot Expiration Date");
     caDoseCondition =
-        new ConditionAttribute<DoseCondition>("Vaccine dose administered", "Dose Condition"); 
+        new ConditionAttribute<DoseCondition>("Vaccine dose administered", "Dose Condition Flag");
+    //use CALCDTLOTEXP-1 business rules now(not implemented yet), change attribute type to "Calculated date"
+    caLotExpirationDate =
+      new ConditionAttribute<Date>("Calculated date", "Lot Expiration Date");
 
     // set assumed values, if possible
     caLotExpirationDate.setAssumedValue(FUTURE);
@@ -62,7 +59,6 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
     return next();
   }
 
-
   private class LT extends LogicTable {
     public LT() {
       super(2, 3, "Table 6 - 3 Can the vaccine dose administered be evaluated?");
@@ -80,10 +76,13 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
         }
       });
       setLogicCondition(1, new LogicCondition("Is the dose condition flag 'Y'?") {
-        // As far as I can tell, there's no way for the flag to be 'Y', so I assumed they meant YES
+
         @Override
         public LogicResult evaluateInternal() {
-          if (caDoseCondition.getFinalValue() == DoseCondition.YES) {
+          if (caDoseCondition == null) {
+            return LogicResult.NO;
+          }
+          if (caDoseCondition.getFinalValue().equals(YesNo.YES)) {
             return LogicResult.YES;
           }
           return LogicResult.NO;
@@ -98,9 +97,9 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
           log("Setting target dose to \"not satisfied\"");
           //dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED); had to comment out because it was causing the tests to fail, currently getTargetDose() returns null.
           log("Setting evaluation status to \"sub-standard\"");
-          log("Setting next step: 7 Forecast Dates and Reasons");
+          log("Setting next step: 6.2 Evaluate Conditional Skip For Evaluation");
           dataModel.setEvaluationStatus(EvaluationStatus.SUB_STANDARD);
-          setNextLogicStepType(LogicStepType.FORECAST_DATES_AND_REASONS);
+          setNextLogicStepType(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION);
         }
       });
       setLogicOutcome(1, new LogicOutcome() {
@@ -110,17 +109,17 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
           log("Setting target dose to \"not satisfied\"");
           //dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
           log("Setting evaluation status to \"sub-standard\"");
-          log("Setting next step: 7 Forecast Dates and Reasons");
+          log("Setting next step:6.2 Evaluate Conditional Skip For Evaluation");
           dataModel.setEvaluationStatus(EvaluationStatus.SUB_STANDARD);
-          setNextLogicStepType(LogicStepType.FORECAST_DATES_AND_REASONS);
+          setNextLogicStepType(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION);
         }
       });
       setLogicOutcome(2, new LogicOutcome() {
         @Override
         public void perform() {
           log("Yes. The vaccine dose administered can be evaluated.");
-          log("Setting next step: 6.1 Evaluate Conditional Skip for Evaluation");
-          setNextLogicStepType(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION);
+          log("Setting next step: 6 Evaluate Vaccine Dose Administered");
+          setNextLogicStepType(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED);
         }
       });
 
@@ -145,7 +144,7 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
     out.println(
         "  <li>Doses which were administered after the lot expiration date or which contain a condition do not need to be evaluated.</li>");
     out.println(
-        "  <li>Examples of conditions which would prevent evaluation of dose range from misadministration to recalls.</li>");
+        "  <li>Examples of conditions which would prevent evaluation of dose range from misadministration to recalls to cold chain breaks.</li>");
     out.println("</ul>");
     out.println("<img src=\"Figure 4.2.png\"/>");
     out.println("<p>FIGURE 4 - 2 VACCINE DOSE ADMINISTERED CONDITION PROCESS MODEL</p>");
