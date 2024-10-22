@@ -26,7 +26,7 @@ public class EvaluateDoseAdministeredConditionTest extends SectionTest {
 
     // Constructor to inject the parameters
     public EvaluateDoseAdministeredConditionTest(DataModel model, List<List<LogicResult>> tableResults, LogicStepType nextStep) {
-        super(model, tableResults, "EvaluateDoseAdministeredCondition", LogicStepType.EVALUATE_DOSE_ADMININISTERED_CONDITION, nextStep);
+        super(model, tableResults, "EvaluateDoseAdministeredCondition", LogicStepType.EVALUATE_DOSE_ADMINISTERED_CONDITION, nextStep);
         
         tableInfo.add(new TableInfo(
             "TABLE 6-3 CAN THE VACCINE DOSE ADMINISTERED BE EVALUATED?",
@@ -87,6 +87,6 @@ public class EvaluateDoseAdministeredConditionTest extends SectionTest {
     //Not Sure this provides any value atm 
     @Test
     public void testSectionTitle(){
-        assertEquals(stepName.getDisplay(), LogicStepType.EVALUATE_DOSE_ADMININISTERED_CONDITION.getDisplay());
+        assertEquals(stepName.getDisplay(), LogicStepType.EVALUATE_DOSE_ADMINISTERED_CONDITION.getDisplay());
     }
 }

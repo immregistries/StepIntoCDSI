@@ -26,7 +26,7 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED)) {
       return new EvaluateVaccineDoseAdministered(dataModel);
     }
-    if (stepName.equals(LogicStepType.EVALUATE_DOSE_ADMININISTERED_CONDITION)) {
+    if (stepName.equals(LogicStepType.EVALUATE_DOSE_ADMINISTERED_CONDITION)) {
       return new EvaluateDoseAdministeredCondition(dataModel);
     }
     if (stepName.equals(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION)) {
@@ -136,7 +136,7 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED)) {
       return new EvaluateVaccineDoseAdministered(dataModel);
     }
-    if (stepName.equals(LogicStepType.EVALUATE_DOSE_ADMININISTERED_CONDITION)) {
+    if (stepName.equals(LogicStepType.EVALUATE_DOSE_ADMINISTERED_CONDITION)) {
       return new EvaluateDoseAdministeredCondition(dataModel);
     }
     if (stepName.equals(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION)) {
