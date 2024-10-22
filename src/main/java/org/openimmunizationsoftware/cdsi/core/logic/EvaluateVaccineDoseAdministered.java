@@ -17,7 +17,7 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
-    return LogicStepFactory.createLogicStep(LogicStepType.EVALUATE_DOSE_ADMININISTERED_CONDITION, dataModel);
+    return LogicStepFactory.createLogicStep(LogicStepType.EVALUATE_DOSE_ADMINISTERED_CONDITION, dataModel);
   }
 
   @Override
