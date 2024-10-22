@@ -64,7 +64,7 @@ public class GatherNecessaryData extends LogicStep {
       vaccineDoseAdministered.setVaccine(vaccine);
       i++;
     }
-    return LogicStepFactory.createLogicStep(LogicStepType.CREATE_PATIENT_SERIES, dataModel);
+    return LogicStepFactory.createLogicStep(LogicStepType.ORGANIZE_IMMUNIZATION_HISTORY, dataModel);
   }
 
   @Override
