@@ -105,9 +105,6 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
       for (ConditionalSkipSet conditionalSkipSet : conditionalSkip.getConditionalSkipSetList()) {
         LT610 logicTable610 = new LT610();
         logicTable610.setConditionLogicType(conditionalSkipSet.getConditionLogic());
-        for (ConditionalSkipCondition condition : conditionalSkipSet.getConditionList()) {
-
-
         // 3. Second for loop box; For Each Condition in a Set
         for (ConditionalSkipCondition condition : conditionalSkipSet.getConditionList()) {
           
@@ -323,7 +320,6 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
   }
 
 
-=======
   //TODO: add logic for 6-7
   protected class LT67 extends LTInnerSet {
     public LT67() {
@@ -364,35 +360,6 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
     }
   }
 
-  protected class LT68 extends LTInnerSet {
-    public LT68() {
-      super(1, 2, "Table 6 - 8 CONDITIONAL Type of Interval - Is the Condition Met?");
-
-      setLogicCondition(0, new LogicCondition(
-          "Has at least one dose been administered to the patient?") {
-        @Override
-        public LogicResult evaluateInternal() {
-          if (caAdministeredDoseCount == null) {
-            return LogicResult.NO;
-          }
-          if (caAdministeredDoseCount.getFinalValue() > 0) {
-            return LogicResult.YES;
-          }
-          return LogicResult.NO;
-        }
-      });
-
-      setLogicCondition(0, new LogicCondition(
-          "Is the Conditional Skip Reference Date ≥ Conditional Skip Interval Date?") {
-        @Override
-        public LogicResult evaluateInternal() {
-          if (caConditionalSkipIntervalDate.getFinalValue() == null) {
-            return LogicResult.NO;
-          }
-      });
-    }
-  }*/
-
   // Logic Table 4-7 -> 6-8
   // Add a new logic check: Has at least one dose been administered to the patient? 
   // A positive result now requires both conditions to be true. 
@@ -404,8 +371,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
         "Has at least one dose been administered to the patient?"){
           @Override
           public LogicResult evaluateInternal() {
-            if (caConditionalSkipIntervalDate.getFinalValue() == null
-            || caExpirationDate.getFinalValue() == null) {
+            if (caAdministeredDoseCount == null) {
               return LogicResult.NO;
             }
             if (caAdministeredDoseCount.getFinalValue() >= 1){
