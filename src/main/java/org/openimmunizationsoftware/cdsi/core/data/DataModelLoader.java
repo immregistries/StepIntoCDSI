@@ -22,7 +22,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkip;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipCondition;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipConditionType;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipSet;
-import org.openimmunizationsoftware.cdsi.core.domain.Contraindication;
+import org.openimmunizationsoftware.cdsi.core.domain.Contraindication_TO_BE_REMOVED;
 import org.openimmunizationsoftware.cdsi.core.domain.DoseType;
 import org.openimmunizationsoftware.cdsi.core.domain.Exclusion;
 import org.openimmunizationsoftware.cdsi.core.domain.Immunity;
@@ -48,8 +48,8 @@ import org.w3c.dom.NodeList;
 
 public class DataModelLoader {
   private static final String[] scheduleNames =
-      {"Diphtheria", "HepA", "HepB", "Hib", "HPV", "Influenza", "MCV", "Measles", "Mumps", "PCV",
-          "Pertussis", "Polio", "Rotavirus", "Rubella", "Tetanus", "Varicella"};
+      {"Cholera", "Diphtheria", "HepA", "HepB", "Hib", "HPV", "Influenza", "JE", "Measles", "Meningococcal B", "Meningococcal", "Mumps", 
+          "Pertussis", "Pneumococcal", "Polio", "Rabies", "Rotavirus", "Rubella", "Tetanus", "Typhoid", "Varicella", "YF", "Zoster"};
 
   public static DataModel createDataModel() throws Exception {
     DataModel dataModel = new DataModel();
@@ -66,14 +66,15 @@ public class DataModelLoader {
 
       doc.getDocumentElement().normalize();
       readCvxToAntigenMap(dataModel, doc);
-      readContraindications(dataModel, doc);
       readVaccineGroups(dataModel, doc);
       readVaccineGroupToAntigenMap(dataModel, doc);
       readLiveVirusConflicts(dataModel, doc);
+      // TODO add readObservations(dataModel, doc);
     }
+    
     for (String scheduleName : scheduleNames) {
       InputStream is = DataModelLoader.class
-          .getResourceAsStream(baseLocation + "AntigenSupportingData- " + scheduleName + ".xml");
+          .getResourceAsStream(baseLocation + "AntigenSupportingData- " + scheduleName + "-508.xml");
 
       if (is != null) {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -110,8 +111,10 @@ public class DataModelLoader {
             for (int k = 0; k < grandchildList.getLength(); k++) {
               Node grandchildNode = grandchildList.item(k);
               if (grandchildNode.getNodeType() == Node.ELEMENT_NODE) {
-                if (grandchildNode.getNodeName().equals("guideline")) {
-                  clinicalHistory.setImmunityGuideline(DomUtils.getInternalValue(grandchildNode));
+                if (grandchildNode.getNodeName().equals("guidelineCode")) {
+                  clinicalHistory.setImmunityGuidelineCode(DomUtils.getInternalValue(grandchildNode));
+                } if (grandchildNode.getNodeName().equals("guidelineTitle")) {
+                  clinicalHistory.setImmunityGuidelineTitle(DomUtils.getInternalValue(grandchildNode));
                 } else if (grandchildNode.getNodeName().equals("mapping")) {
                   Concept concept = readConcept(grandchildNode);
                   if (concept != null) {
@@ -145,9 +148,12 @@ public class DataModelLoader {
                         exclusion = new Exclusion();
                         birthDateImmunity.getExclusionList().add(exclusion);
                       }
-                      if (greatgrandchildNode.getNodeName().equals("exclusionCondition")) {
+                      if (greatgrandchildNode.getNodeName().equals("exclusionCode")) {
                         exclusion
-                            .setExclusionCondition(DomUtils.getInternalValue(greatgrandchildNode));
+                            .setExclusionCode(DomUtils.getInternalValue(greatgrandchildNode));
+                      } else if (greatgrandchildNode.getNodeName().equals("exclusionTitle")) {
+                        exclusion
+                            .setExclusionTitle(DomUtils.getInternalValue(greatgrandchildNode));
                       } else if (greatgrandchildNode.getNodeName().equals("mapping")) {
                         Concept concept = readConcept(greatgrandchildNode);
                         if (concept != null) {
@@ -162,6 +168,13 @@ public class DataModelLoader {
           }
         }
       }
+    }
+  }
+
+  private static void readContraindications(Schedule schedule, DataModel dataModel, Document doc) {
+    NodeList parentList = doc.getElementsByTagName("immunity");
+    for (int i = 0; i < parentList.getLength(); i++) {
+      
     }
   }
 
@@ -545,7 +558,8 @@ public class DataModelLoader {
     }
   }
 
-  private static void readContraindications(DataModel dataModel, Document doc) {
+  // No longer called
+  private static void readContraindicationsDELETEME(DataModel dataModel, Document doc) {
     NodeList parentList = doc.getElementsByTagName("contraindications");
     for (int i = 0; i < parentList.getLength(); i++) {
       Node parentNode = parentList.item(i);
@@ -555,7 +569,7 @@ public class DataModelLoader {
         if (childNode.getNodeType() == Node.ELEMENT_NODE
             && childNode.getNodeName().equals("contraindication")) {
           NodeList grandchildList = childNode.getChildNodes();
-          Contraindication contraindication = new Contraindication();
+          Contraindication_TO_BE_REMOVED contraindication = new Contraindication_TO_BE_REMOVED();
           dataModel.getContraindicationList().add(contraindication);
           for (int k = 0; k < grandchildList.getLength(); k++) {
             Node grandchildNode = grandchildList.item(k);

@@ -67,7 +67,7 @@ public class DomUtils {
         s = "";
       }
     }
-    return s;
+    return s.trim();
   }
 
   public static YesNo getInternalValueYesNo(Node node) {

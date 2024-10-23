@@ -64,7 +64,7 @@ public class GatherNecessaryData extends LogicStep {
       vaccineDoseAdministered.setVaccine(vaccine);
       i++;
     }
-    return LogicStepFactory.createLogicStep(LogicStepType.CREATE_PATIENT_SERIES, dataModel);
+    return LogicStepFactory.createLogicStep(LogicStepType.ORGANIZE_IMMUNIZATION_HISTORY, dataModel);
   }
 
   @Override
@@ -155,7 +155,7 @@ public class GatherNecessaryData extends LogicStep {
       out.println("     </tr>");
     }
     out.println("   </table>");
-    out.println("   <h3>Adverse Events</h3>");
+    out.println("   <h3>Adverse Reactions</h3>");
     out.println("   <p><em>Not implemented yet</em></p>");
     out.println("   <h3>Relevant Medical History</h3>");
     out.println("   <p><em>Not implemented yet</em></p>");

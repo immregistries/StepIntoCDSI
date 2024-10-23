@@ -21,6 +21,7 @@ public class SeriesDose {
   private List<RequiredGender> requiredGenderList = new ArrayList<RequiredGender>();
   private List<PreferrableVaccine> preferrableVaccineList = new ArrayList<PreferrableVaccine>();
   private List<AllowableVaccine> allowableVaccineList = new ArrayList<AllowableVaccine>();
+  private List<VaccineType> inadvertentVaccineList = new ArrayList<VaccineType>();
 
   @Override
   public String toString() {
@@ -345,5 +346,13 @@ public class SeriesDose {
 
   public void setAllowableintervalList(List<AllowableInterval> allowableintervalList) {
     this.allowableintervalList = allowableintervalList;
+  }
+
+  public List<VaccineType> getInadvertentVaccineList() {
+    return inadvertentVaccineList;
+  }
+
+  public void setInadvertentVaccineList(List<VaccineType> inadvertentVaccineList) {
+    this.inadvertentVaccineList = inadvertentVaccineList;
   }
 }

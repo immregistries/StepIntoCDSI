@@ -6,7 +6,7 @@ import java.util.List;
 public class Antigen {
   private String name = "";
   private VaccineGroup vaccineGroup = null;
-  private List<VaccineType> cvxList = new ArrayList<VaccineType>();
+  private List<VaccineType> vaccineTypeList = new ArrayList<VaccineType>();
   private List<Immunity> immunityList = new ArrayList<Immunity>();
 
   public List<Immunity> getImmunityList() {
@@ -18,11 +18,11 @@ public class Antigen {
   }
 
   public List<VaccineType> getCvxList() {
-    return cvxList;
+    return vaccineTypeList;
   }
 
-  public void setCvxList(List<VaccineType> cvxList) {
-    this.cvxList = cvxList;
+  public void setCvxList(List<VaccineType> vaccineTypeList) {
+    this.vaccineTypeList = vaccineTypeList;
   }
 
   public VaccineGroup getVaccineGroup() {

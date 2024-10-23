@@ -4,6 +4,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 
 public class PreferrableVaccine extends Vaccine {
   private SeriesDose seriesDose = null;
+  private String mvx = "";
   private YesNo forecastVaccineType = YesNo.NOT_APPLICABLE;
 
   public YesNo getForecastVaccineType() {
@@ -20,5 +21,13 @@ public class PreferrableVaccine extends Vaccine {
 
   public void setSeriesDose(SeriesDose seriesDose) {
     this.seriesDose = seriesDose;
+  }
+
+  public String getMvx() {
+    return mvx;
+  }
+
+  public void setMvx(String mvx) {
+    this.mvx = mvx;
   }
 }

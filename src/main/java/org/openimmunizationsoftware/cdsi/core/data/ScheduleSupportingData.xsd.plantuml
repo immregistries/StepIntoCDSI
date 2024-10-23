@@ -1,0 +1,98 @@
+@startuml
+
+!define complexType class
+
+class scheduleSupportingData {
+}
+
+class liveVirusConflicts {
+}
+
+class liveVirusConflict {
+}
+
+class previous {
+  + vaccineType : String
+  + cvx : String
+}
+
+class current {
+  + vaccineType : String
+  + cvx : String
+}
+
+class vaccineGroups {
+}
+
+class vaccineGroup {
+  + name : String
+  + administerFullVaccineGroup : String
+}
+
+class vaccineGroupToAntigenMap {
+}
+
+class vaccineGroupMap {
+  + name : String
+  + antigen : String [0..*]
+}
+
+class cvxToAntigenMap {
+}
+
+class cvxMap {
+  + cvx : String
+  + shortDescription : String
+}
+
+class association {
+  + antigen : String
+  + associationBeginAge : String
+  + associationEndAge : String
+}
+
+class observations {
+}
+
+class observation {
+  + observationCode : String
+  + observationTitle : String
+  + group : String
+  + indicationText : String
+  + contraindicationText : String
+  + clarifyingText : String
+}
+
+class codedValues {
+}
+
+class codedValue {
+  + code : String
+  + codeSystem : String
+  + text : String
+}
+
+scheduleSupportingData --* liveVirusConflicts
+liveVirusConflicts --* liveVirusConflict
+liveVirusConflict --* previous
+liveVirusConflict --* current
+liveVirusConflict --> conflictBeginInterval : String
+liveVirusConflict --> minConflictEndInterval : String
+liveVirusConflict --> conflictEndInterval : String
+
+scheduleSupportingData --* vaccineGroups
+vaccineGroups --* vaccineGroup
+
+scheduleSupportingData --* vaccineGroupToAntigenMap
+vaccineGroupToAntigenMap --* vaccineGroupMap
+
+scheduleSupportingData --* cvxToAntigenMap
+cvxToAntigenMap --* cvxMap
+cvxMap --* association
+
+scheduleSupportingData --* observations
+observations --* observation
+observation --* codedValues
+codedValues --* codedValue
+
+@enduml

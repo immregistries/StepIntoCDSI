@@ -4,15 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Exclusion {
-  private String exclusionCondition = "";
+  private String exclusionCode = "";
+  private String exclusionTitle = "";
   private List<Concept> conceptList = new ArrayList<Concept>();
 
-  public String getExclusionCondition() {
-    return exclusionCondition;
+  public String getExclusionCode() {
+    return exclusionCode;
   }
 
-  public void setExclusionCondition(String exclusionCondition) {
-    this.exclusionCondition = exclusionCondition;
+  public void setExclusionCode(String exclusionCode) {
+    this.exclusionCode = exclusionCode;
+  }
+
+  public String getExclusionTitle() {
+    return exclusionTitle;
+  }
+
+  public void setExclusionTitle(String exclusionTitle) {
+    this.exclusionTitle = exclusionTitle;
   }
 
   public List<Concept> getConceptList() {

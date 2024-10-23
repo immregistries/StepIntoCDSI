@@ -73,7 +73,7 @@ public class ForecastDatesAndReasons extends LogicStep {
     out.println("</table>");
     out.println("");
     out.println(
-        "<p>The figure below provides an illustration of the forecast dates and reasonsprocess.</p>");
+        "<p>The figure below provides an illustration of the forecast dates and reasons process.</p>");
     out.println("");
     out.println("<img src=\"Figure 5.1.png\"/>");
 

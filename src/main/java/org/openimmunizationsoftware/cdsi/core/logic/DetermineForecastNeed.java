@@ -11,7 +11,7 @@ import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
-import org.openimmunizationsoftware.cdsi.core.domain.Contraindication;
+import org.openimmunizationsoftware.cdsi.core.domain.Contraindication_TO_BE_REMOVED;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
@@ -27,7 +27,7 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 public class DetermineForecastNeed extends LogicStep {
 
   private ConditionAttribute<String> caVaccineDoseAdministered = null;
-  private ConditionAttribute<String> caAdvereseEvents = null;
+  private ConditionAttribute<String> caAdverseReactions = null;
   private ConditionAttribute<String> caRelevantMedicalObservation = null;
   private ConditionAttribute<TargetDose> caTargetDose = null;
   private ConditionAttribute<Date> caMaximumAgeDate = null;
@@ -68,7 +68,7 @@ public class DetermineForecastNeed extends LogicStep {
 
     caVaccineDoseAdministered =
         new ConditionAttribute<String>("Immunization history", "Vaccine Dose(s) Administered");
-    caAdvereseEvents = new ConditionAttribute<String>("Immunization history", "Adverse Events");
+    caAdverseReactions = new ConditionAttribute<String>("Immunization history", "Adverse Reactions");
     caRelevantMedicalObservation =
         new ConditionAttribute<String>("Medical History", "Relevant Medical Observation");
     caTargetDose = new ConditionAttribute<TargetDose>("Patient series", "Target Dose(s)");
@@ -91,7 +91,7 @@ public class DetermineForecastNeed extends LogicStep {
     caAssessmentDate.setAssumedValue(now);
 
     conditionAttributesList.add(caVaccineDoseAdministered);
-    conditionAttributesList.add(caAdvereseEvents);
+    conditionAttributesList.add(caAdverseReactions);
     conditionAttributesList.add(caRelevantMedicalObservation);
     conditionAttributesList.add(caTargetDose);
     conditionAttributesList.add(caMaximumAgeDate);
@@ -129,7 +129,7 @@ public class DetermineForecastNeed extends LogicStep {
 
     if (!dataModel.getPatient().getMedicalHistory().getContraindicationSet().isEmpty()) {
       out.println("<h2>Contraindications for Patient</h2>");
-      for (Contraindication contraindication : dataModel.getPatient().getMedicalHistory()
+      for (Contraindication_TO_BE_REMOVED contraindication : dataModel.getPatient().getMedicalHistory()
           .getContraindicationSet()) {
         if (contraindication.getAntigen()
             .equals(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease())) {
@@ -192,8 +192,8 @@ public class DetermineForecastNeed extends LogicStep {
           new LogicCondition("Is the patient without a contradiction for this patient series ?") {
             @Override
             protected LogicResult evaluateInternal() {
-              List<Contraindication> targetContraindictionList = new ArrayList<Contraindication>();
-              for (Contraindication contraindication : dataModel.getPatient().getMedicalHistory()
+              List<Contraindication_TO_BE_REMOVED> targetContraindictionList = new ArrayList<Contraindication_TO_BE_REMOVED>();
+              for (Contraindication_TO_BE_REMOVED contraindication : dataModel.getPatient().getMedicalHistory()
                   .getContraindicationSet()) {
                 if (contraindication.getAntigen().equals(
                     dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease())) {

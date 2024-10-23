@@ -196,7 +196,7 @@ public class SubstituteTargetDoseForEvaluation extends LogicStep {
             targetDoseNext = dataModel.findNextTargetDose(targetDose);
           }
           dataModel.setTargetDose(targetDoseNext);
-          setNextLogicStepType(LogicStepType.EVALUATE_DOSE_ADMININISTERED_CONDITION);
+          setNextLogicStepType(LogicStepType.EVALUATE_DOSE_ADMINISTERED_CONDITION);
           log("Setting next step: 4.1 Dose Administered Condition");
         }
       });
