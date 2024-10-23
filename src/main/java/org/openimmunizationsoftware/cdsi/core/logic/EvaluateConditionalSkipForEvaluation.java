@@ -590,7 +590,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
         public void perform() {
           log("Yes. The target dose can be skipped.");
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.SKIPPED);
-          log("The taget dose status is 'skipped'");
+          log("The target dose status is 'skipped'");
           log("Setting next step: 4.4 Evaluate And Forecast All Patient Series");
           TargetDose targetDoseNext = dataModel.findNextTargetDose(dataModel.getTargetDose());
           dataModel.setTargetDose(targetDoseNext);

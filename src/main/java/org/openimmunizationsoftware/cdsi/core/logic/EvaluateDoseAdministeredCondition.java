@@ -79,7 +79,7 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
 
         @Override
         public LogicResult evaluateInternal() {
-          if (caDoseCondition == null) {
+          if (caDoseCondition.getFinalValue() == null) {
             return LogicResult.NO;
           }
           if (caDoseCondition.getFinalValue().equals(YesNo.YES)) {
