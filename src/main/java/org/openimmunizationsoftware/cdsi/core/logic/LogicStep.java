@@ -30,7 +30,7 @@ public abstract class LogicStep {
       LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION,
       LogicStepType.EVALUATE_FOR_INADVERTENT_VACCINE,
       LogicStepType.EVALUATE_AGE,
-      LogicStepType.EVALUATE_INTERVAL,
+      LogicStepType.EVALUATE_PREFERABLE_INTERVAL,
       LogicStepType.EVALUATE_ALLOWABLE_INTERVAL,
       LogicStepType.EVALUATE_FOR_LIVE_VIRUS_CONFLICT,
       LogicStepType.EVALUATE_PREFERABLE_VACCINE_ADMINISTERED,
@@ -224,6 +224,9 @@ public abstract class LogicStep {
     out.println("    <th>Final Value</th>");
     out.println("  </tr>");
     for (ConditionAttribute<?> conditionAttribute : caList) {
+      if(conditionAttribute == null) {
+        continue;
+      }
       out.println("  <tr>");
       out.println("    <td>" + conditionAttribute.getAttributeType() + "</td>");
       out.println("    <td>" + conditionAttribute.getAttributeName() + "</td>");

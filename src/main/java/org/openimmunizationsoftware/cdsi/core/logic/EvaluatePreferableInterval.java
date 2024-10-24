@@ -20,12 +20,12 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
-public class EvaluateInterval extends LogicStep {
+public class EvaluatePreferableInterval extends LogicStep {
 
 
 
-  public EvaluateInterval(DataModel dataModel) {
-    super(LogicStepType.EVALUATE_INTERVAL, dataModel);
+  public EvaluatePreferableInterval(DataModel dataModel) {
+    super(LogicStepType.EVALUATE_PREFERABLE_INTERVAL, dataModel);
     setConditionTableName("Table ");
 
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();

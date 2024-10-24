@@ -38,8 +38,8 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.EVALUATE_AGE)) {
       return new EvaluateAge(dataModel);
     }
-    if (stepName.equals(LogicStepType.EVALUATE_INTERVAL)) {
-      return new EvaluateInterval(dataModel);
+    if (stepName.equals(LogicStepType.EVALUATE_PREFERABLE_INTERVAL)) {
+      return new EvaluatePreferableInterval(dataModel);
     }
     if (stepName.equals(LogicStepType.EVALUATE_ALLOWABLE_INTERVAL)) {
       return new EvaluateAllowableInterval(dataModel);
@@ -144,8 +144,8 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.EVALUATE_AGE)) {
       return new EvaluateAge(dataModel);
     }
-    if (stepName.equals(LogicStepType.EVALUATE_INTERVAL)) {
-      return new EvaluateInterval(dataModel);
+    if (stepName.equals(LogicStepType.EVALUATE_PREFERABLE_INTERVAL)) {
+      return new EvaluatePreferableInterval(dataModel);
     }
     if (stepName.equals(LogicStepType.EVALUATE_ALLOWABLE_INTERVAL)) {
       return new EvaluateAllowableInterval(dataModel);
