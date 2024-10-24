@@ -42,20 +42,6 @@ public class EvaluateForInadvertentVaccine extends LogicStep {
         
         LT logicTable = new LT();
         logicTableList.add(logicTable);
-
-
-        // Placeholder values
-        List<VaccineType> placeholderList = new ArrayList<>();
-        VaccineType one = new VaccineType();
-        VaccineType two = new VaccineType();
-        VaccineType three = new VaccineType();
-        one.setCvxCode("36");
-        two.setCvxCode("72");
-        three.setCvxCode("108");
-        placeholderList.add(one);
-        placeholderList.add(two);
-        placeholderList.add(three);
-        caInadvertentVaccineList = placeholderList;
     }
 
     @Override
@@ -83,7 +69,7 @@ public class EvaluateForInadvertentVaccine extends LogicStep {
 
     private class LT extends LogicTable{    
         public LT(){
-            super(1,1,"Table 6-13 Was the Vaccine Dose Administered an Inadvertent Administration for the Target Dose?");
+            super(1,2,"Table 6-13 Was the Vaccine Dose Administered an Inadvertent Administration for the Target Dose?");
 
             // Logic
             setLogicCondition(0, new LogicCondition("Is the vaccine type of the vaccine dose administered one of the vaccine types of an inadvertent vaccine for the target dose?") {

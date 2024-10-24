@@ -53,7 +53,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
   // Naming the condition table, using setupInternal function
   public EvaluateConditionalSkipForEvaluation(DataModel dataModel) {
     super(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION, dataModel);
-    setConditionTableName("Table 4.4 Skip Target Dose Attributes");
+    setConditionTableName("Table 6.4 Conditional Skip Attributes");
     setupInternal(dataModel, LogicStepType.EVALUATE_AGE, LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
   }
 
@@ -242,7 +242,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
     out.println(
         "<p>Finally, in an effort to reduce page size and eliminate duplicate logic which could result in typographical and consistency errors, this section of logic is defined here once, but used in both Evaluation and Forecasting. The forecasting chapter refers the reader back to this section for appropriate logic.</p>");
 
-    out.println("<img src=\"Figure 6.3.png\"/>"); // make sure you have the right image source
+    out.println("<img src=\"Figure 6.3.png\"/>");
     out.println("<p>FIGURE 6 - 3 CONDITIONAL SKIP PROCESS MODEL</p>");
     printConditionAttributesTable(out);
     printLogicTables(out);

@@ -97,9 +97,9 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
           log("Setting target dose to \"not satisfied\"");
           //dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED); had to comment out because it was causing the tests to fail, currently getTargetDose() returns null.
           log("Setting evaluation status to \"sub-standard\"");
-          log("Setting next step: 6.2 Evaluate Conditional Skip For Evaluation");
+          log("Setting next step: 6 Evaluate Vaccine Dose Administered");
           dataModel.setEvaluationStatus(EvaluationStatus.SUB_STANDARD);
-          setNextLogicStepType(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION);
+          setNextLogicStepType(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED);
         }
       });
       setLogicOutcome(1, new LogicOutcome() {
@@ -109,17 +109,17 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
           log("Setting target dose to \"not satisfied\"");
           //dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
           log("Setting evaluation status to \"sub-standard\"");
-          log("Setting next step:6.2 Evaluate Conditional Skip For Evaluation");
+          log("Setting next step: 6 Evaluate Vaccine Dose Administered");
           dataModel.setEvaluationStatus(EvaluationStatus.SUB_STANDARD);
-          setNextLogicStepType(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION);
+          setNextLogicStepType(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED);
         }
       });
       setLogicOutcome(2, new LogicOutcome() {
         @Override
         public void perform() {
           log("Yes. The vaccine dose administered can be evaluated.");
-          log("Setting next step: 6 Evaluate Vaccine Dose Administered");
-          setNextLogicStepType(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED);
+          log("Setting next step: 6.2 Evaluate Conditional Skip For Evaluation");
+          setNextLogicStepType(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION);
         }
       });
 
