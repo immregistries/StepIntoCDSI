@@ -15,7 +15,7 @@ public enum LogicStepType {
   EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION("6.2", "Evaluate Conditional Skip", true), 
   EVALUATE_FOR_INADVERTENT_VACCINE("6.3", "Evaluate for Inadvertent Vaccine", true),
   EVALUATE_AGE("6.4", "Evaluate Age", true), 
-  EVALUATE_INTERVAL("6.5", "Evaluate Preferable Age", true), 
+  EVALUATE_PREFERABLE_INTERVAL("6.5", "Evaluate Preferable Interval", true), 
   EVALUATE_ALLOWABLE_INTERVAL("6.6", "Evaluate Allowable Interval", true), 
   EVALUATE_FOR_LIVE_VIRUS_CONFLICT("6.7", "Evaluate Vaccine Conflict", true), 
   EVALUATE_PREFERABLE_VACCINE_ADMINISTERED("6.8", "Evaluate for Preferable Vaccine", true), 

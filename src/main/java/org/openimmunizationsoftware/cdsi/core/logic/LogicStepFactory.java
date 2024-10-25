@@ -32,16 +32,18 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION)) {
       return new EvaluateConditionalSkipForEvaluation(dataModel);
     }
+    if (stepName.equals(LogicStepType.EVALUATE_FOR_INADVERTENT_VACCINE)) {
+      return new EvaluateForInadvertentVaccine(dataModel);
+    }
     if (stepName.equals(LogicStepType.EVALUATE_AGE)) {
       return new EvaluateAge(dataModel);
     }
-    if (stepName.equals(LogicStepType.EVALUATE_INTERVAL)) {
-      return new EvaluateInterval(dataModel);
+    if (stepName.equals(LogicStepType.EVALUATE_PREFERABLE_INTERVAL)) {
+      return new EvaluatePreferableInterval(dataModel);
     }
     if (stepName.equals(LogicStepType.EVALUATE_ALLOWABLE_INTERVAL)) {
       return new EvaluateAllowableInterval(dataModel);
     }
-
     if (stepName.equals(LogicStepType.EVALUATE_FOR_LIVE_VIRUS_CONFLICT)) {
       return new EvaluateLiveVirusConflict(dataModel);
     }
@@ -57,7 +59,6 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.SATISFY_TARGET_DOSE)) {
       return new SatisfyTargetDose(dataModel);
     }
-
     if (stepName.equals(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST)) {
       return new EvaluateConditionalSkipForForecast(dataModel);
     }
@@ -70,7 +71,6 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMEND_VACCINES)) {
       return new GenerateForecastDates(dataModel);
     }
-
     if (stepName.equals(LogicStepType.SELECT_BEST_PATIENT_SERIES)) {
       return new SelectBestPatientSeries(dataModel);
     }
@@ -92,7 +92,6 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.SELECT_BEST_CANDIDATE_PATIENT_SERIES)) {
       return new SelectBestCandidatePatientSeries(dataModel);
     }
-
     if (stepName.equals(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP)) {
       return new IdentifyAndEvaluateVaccineGroup(dataModel);
     }
@@ -145,8 +144,8 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.EVALUATE_AGE)) {
       return new EvaluateAge(dataModel);
     }
-    if (stepName.equals(LogicStepType.EVALUATE_INTERVAL)) {
-      return new EvaluateInterval(dataModel);
+    if (stepName.equals(LogicStepType.EVALUATE_PREFERABLE_INTERVAL)) {
+      return new EvaluatePreferableInterval(dataModel);
     }
     if (stepName.equals(LogicStepType.EVALUATE_ALLOWABLE_INTERVAL)) {
       return new EvaluateAllowableInterval(dataModel);
