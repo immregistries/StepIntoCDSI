@@ -44,8 +44,8 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.EVALUATE_ALLOWABLE_INTERVAL)) {
       return new EvaluateAllowableInterval(dataModel);
     }
-    if (stepName.equals(LogicStepType.EVALUATE_FOR_LIVE_VIRUS_CONFLICT)) {
-      return new EvaluateLiveVirusConflict(dataModel);
+    if (stepName.equals(LogicStepType.EVALUATE_VACCINE_CONFLICT)) {
+      return new EvaluateVaccineConflict(dataModel);
     }
     if (stepName.equals(LogicStepType.EVALUATE_PREFERABLE_VACCINE_ADMINISTERED)) {
       return new EvaluateForPreferableVaccine(dataModel);
@@ -151,8 +151,8 @@ public class LogicStepFactory {
       return new EvaluateAllowableInterval(dataModel);
     }
 
-    if (stepName.equals(LogicStepType.EVALUATE_FOR_LIVE_VIRUS_CONFLICT)) {
-      return new EvaluateLiveVirusConflict(dataModel);
+    if (stepName.equals(LogicStepType.EVALUATE_VACCINE_CONFLICT)) {
+      return new EvaluateVaccineConflict(dataModel);
     }
     if (stepName.equals(LogicStepType.EVALUATE_PREFERABLE_VACCINE_ADMINISTERED)) {
       return new EvaluateForPreferableVaccine(dataModel);

@@ -17,7 +17,7 @@ public enum LogicStepType {
   EVALUATE_AGE("6.4", "Evaluate Age", true), 
   EVALUATE_PREFERABLE_INTERVAL("6.5", "Evaluate Preferable Interval", true), 
   EVALUATE_ALLOWABLE_INTERVAL("6.6", "Evaluate Allowable Interval", true), 
-  EVALUATE_FOR_LIVE_VIRUS_CONFLICT("6.7", "Evaluate Vaccine Conflict", true), 
+  EVALUATE_VACCINE_CONFLICT("6.7", "Evaluate Vaccine Conflict", true), 
   EVALUATE_PREFERABLE_VACCINE_ADMINISTERED("6.8", "Evaluate for Preferable Vaccine", true), 
   EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED("6.9", "Evaluate Allowable Vaccine ", true), 
   EVALUATE_GENDER("xx","Evaluate Gender", true), 

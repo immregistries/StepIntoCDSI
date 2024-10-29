@@ -20,15 +20,15 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
-public class EvaluateLiveVirusConflict extends LogicStep {
+public class EvaluateVaccineConflict extends LogicStep {
 
   private ConditionAttribute<Date> caDateAdministered = null;
 
   private ConditionAttribute<VaccineType> caCurrentVaccineType = null;
   private YesNo y = null;
 
-  public EvaluateLiveVirusConflict(DataModel dataModel) {
-    super(LogicStepType.EVALUATE_FOR_LIVE_VIRUS_CONFLICT, dataModel);
+  public EvaluateVaccineConflict(DataModel dataModel) {
+    super(LogicStepType.EVALUATE_VACCINE_CONFLICT, dataModel);
     setConditionTableName("Table ");
 
     caDateAdministered =

@@ -84,7 +84,7 @@ public class EvaluatePreferableInterval extends LogicStep {
     if (result == YesNo.YES) {
       setNextLogicStepType(LogicStepType.EVALUATE_ALLOWABLE_INTERVAL);
     } else {
-      setNextLogicStepType(LogicStepType.EVALUATE_FOR_LIVE_VIRUS_CONFLICT);
+      setNextLogicStepType(LogicStepType.EVALUATE_VACCINE_CONFLICT);
       dataModel.getTargetDose()
           .setStatusCause(dataModel.getTargetDose().getStatusCause() + "Interval");
     }
