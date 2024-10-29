@@ -12,6 +12,8 @@ import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
@@ -33,32 +35,25 @@ public class EvaluatePreferableInterval extends LogicStep {
 
 
     int intervalCount = 0;
-    // if (seriesDose.getIntervalList().size() > 0) {
     for (Interval interval : seriesDose.getIntervalList()) {
       intervalCount++;
       LT logicTable = new LT();
 
       logicTable.caDateAdministered =
           new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
-      logicTable.caFromImmediatePreviousDoseAdministered = new ConditionAttribute<YesNo>(
-          "Supporting Data", "From Immediate Previous Dose Administered");
-      logicTable.caFromTargetDoseNumberInSeries =
-          new ConditionAttribute<String>("Supporting Data", "From Target Dose Number In Series");
-      logicTable.caFromMostRecent =
-          new ConditionAttribute<String>("Supporting Data (Interval)", "From Most Recent (CVX)");
+      logicTable.caPreferableIntervalElements =
+          new ConditionAttribute<Interval>("Supporting Data", "Preferable Interval Elements");
       logicTable.caAbsoluteMinimumIntervalDate =
           new ConditionAttribute<Date>("Calculated Date", "Absolute Minimum Interval Date");
       logicTable.caMinimumIntervalDate =
           new ConditionAttribute<Date>("Calculated Date", "Mimium Interval Date");
-
+      
       logicTable.caAbsoluteMinimumIntervalDate.setAssumedValue(PAST);
       logicTable.caMinimumIntervalDate.setAssumedValue(PAST);
 
       List<ConditionAttribute<?>> caList = new ArrayList<ConditionAttribute<?>>();
       caList.add(logicTable.caDateAdministered);
-      caList.add(logicTable.caFromImmediatePreviousDoseAdministered);
-      caList.add(logicTable.caFromTargetDoseNumberInSeries);
-      caList.add(logicTable.caFromMostRecent);
+      caList.add(logicTable.caPreferableIntervalElements);
       caList.add(logicTable.caAbsoluteMinimumIntervalDate);
       caList.add(logicTable.caMinimumIntervalDate);
       conditionAttributesAdditionalMap.put("Interval Check #" + intervalCount,
@@ -66,10 +61,8 @@ public class EvaluatePreferableInterval extends LogicStep {
 
       AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
       logicTable.caDateAdministered.setInitialValue(aar.getDateAdministered());
-      logicTable.caFromImmediatePreviousDoseAdministered
-          .setInitialValue(interval.getFromImmediatePreviousDoseAdministered());
-      logicTable.caFromTargetDoseNumberInSeries
-          .setInitialValue(interval.getFromTargetDoseNumberInSeries());
+      logicTable.caPreferableIntervalElements
+          .setInitialValue(interval);
       logicTable.caAbsoluteMinimumIntervalDate
           .setInitialValue(CALCDTINT_3.evaluate(dataModel, this, null));
       logicTable.caMinimumIntervalDate.setInitialValue(CALCDTINT_4.evaluate(dataModel, this, null));
@@ -78,7 +71,6 @@ public class EvaluatePreferableInterval extends LogicStep {
 
     }
   }
-  // }
 
   @Override
   public LogicStep process() throws Exception {
@@ -175,9 +167,7 @@ public class EvaluatePreferableInterval extends LogicStep {
   private class LT extends LogicTable {
 
     private ConditionAttribute<Date> caDateAdministered = null;
-    private ConditionAttribute<YesNo> caFromImmediatePreviousDoseAdministered = null;
-    private ConditionAttribute<String> caFromTargetDoseNumberInSeries = null;
-    private ConditionAttribute<String> caFromMostRecent = null;
+    private ConditionAttribute<Interval> caPreferableIntervalElements = null;
     private ConditionAttribute<Date> caAbsoluteMinimumIntervalDate = null;
     private ConditionAttribute<Date> caMinimumIntervalDate = null;
 
@@ -190,14 +180,14 @@ public class EvaluatePreferableInterval extends LogicStep {
 
     public LT() {
 
-      super(5, 5, "Table 4 - 14 Did the vaccine dose administered satisfy the defined interval?");
+      super(3, 3, "Table 6 - 18 Did the vaccine dose administered satisfy the defined interval?");
 
       setLogicCondition(0,
-          new LogicCondition("Absolute minimum interval date > date administered?") {
+          new LogicCondition("Is the date administered < absolute minimum interval date?") {
             @Override
             public LogicResult evaluateInternal() {
-              if (caAbsoluteMinimumIntervalDate.getFinalValue()
-                  .after(caDateAdministered.getFinalValue())) {
+              if (caDateAdministered.getFinalValue()
+                  .before(caAbsoluteMinimumIntervalDate.getFinalValue())) {
                 return LogicResult.YES;
               }
               return LogicResult.NO;
@@ -229,42 +219,14 @@ public class EvaluatePreferableInterval extends LogicStep {
         }
       });
 
-      setLogicCondition(3, new LogicCondition("Is this the first target dose?") {
-        @Override
-        public LogicResult evaluateInternal() {
-          if (caFromTargetDoseNumberInSeries.getFinalValue().equals(String.valueOf(1))) {
-            return LogicResult.YES;
-          }
-          return LogicResult.NO;
-        }
-      });
-
-      setLogicCondition(4, new LogicCondition(
-          "Is the evaluation status of the previous vaccine dose administered \"not valid\" due to age or interval recommendations? ") {
-        @Override
-        public LogicResult evaluateInternal() {
-          if (dataModel.getTargetDose().getTargetDoseStatus() == TargetDoseStatus.NOT_SATISFIED)
-            return LogicResult.YES;
-          return LogicResult.NO;
-        }
-      });
-
-      setLogicResults(0, LogicResult.YES, LogicResult.NO, LogicResult.NO, LogicResult.NO,
-          LogicResult.NO);
-      setLogicResults(1, LogicResult.NO, LogicResult.YES, LogicResult.YES, LogicResult.YES,
-          LogicResult.NO);
-      setLogicResults(2, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.NO,
-          LogicResult.YES);
-      setLogicResults(3, LogicResult.ANY, LogicResult.NO, LogicResult.NO, LogicResult.YES,
-          LogicResult.ANY);
-      setLogicResults(4, LogicResult.ANY, LogicResult.YES, LogicResult.NO, LogicResult.ANY,
-          LogicResult.ANY);
+      setLogicResults(0, LogicResult.YES, LogicResult.NO, LogicResult.NO);
+      setLogicResults(1, LogicResult.NO, LogicResult.YES, LogicResult.NO);
+      setLogicResults(2, LogicResult.NO, LogicResult.NO, LogicResult.YES);
 
       setLogicOutcome(0, new LogicOutcome() {
         @Override
         public void perform() {
-          // TODO Auto-generated method stub
-          log("No. The vaccine dose administered did not satisfy the defined interval.  Evaluation Reason is \"too soon.\"");
+          log("No. The vaccine dose administered did not satisfy the preferable interval for the target dose. Evaluation reason is 'Grace Period'.");
           result = YesNo.NO;
         }
       });
@@ -272,8 +234,7 @@ public class EvaluatePreferableInterval extends LogicStep {
       setLogicOutcome(1, new LogicOutcome() {
         @Override
         public void perform() {
-          // TODO Auto-generated method stub
-          log("No. The vaccine dose administered did not satisfy the defined interval.  Evaluation Reason is \"too soon.\"");
+          log("No. The vaccine dose administered did not satisfy the preferable interval for the target dose. Evaluation reason is 'Too soon'.");
           result = YesNo.NO;
         }
       });
@@ -281,26 +242,7 @@ public class EvaluatePreferableInterval extends LogicStep {
       setLogicOutcome(2, new LogicOutcome() {
         @Override
         public void perform() {
-          // TODO Auto-generated method stub
-          log("Yes. The vaccine dose administered satisfied the defined interval.  Evaluation Reason is \"grace period.\"");
-          result = YesNo.YES;
-        }
-      });
-
-      setLogicOutcome(3, new LogicOutcome() {
-        @Override
-        public void perform() {
-          // TODO Auto-generated method stub
-          log("Yes. The vaccine dose administered satisfied the defined interval.  Evaluation Reason is \"grace period.\"");
-          result = YesNo.YES;
-        }
-      });
-
-      setLogicOutcome(4, new LogicOutcome() {
-        @Override
-        public void perform() {
-          // TODO Auto-generated method stub
-          log("Yes. The vaccine dose administered did satisfy the defined interval.");
+          log("Yes. The vaccine dose administered satisfied the preferable interval for the target dose.");
           result = YesNo.YES;
         }
       });

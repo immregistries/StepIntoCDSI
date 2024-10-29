@@ -95,7 +95,7 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
         public void perform() {
           log("No. The vaccine dose administered cannot be evaluated. ");
           log("Setting target dose to \"not satisfied\"");
-          //dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED); had to comment out because it was causing the tests to fail, currently getTargetDose() returns null.
+          dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
           log("Setting evaluation status to \"sub-standard\"");
           log("Setting next step: 6 Evaluate Vaccine Dose Administered");
           dataModel.setEvaluationStatus(EvaluationStatus.SUB_STANDARD);
