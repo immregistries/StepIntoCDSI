@@ -10,61 +10,52 @@ import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.BirthDateImmunity;
+import org.openimmunizationsoftware.cdsi.core.domain.MedicalHistory;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
+import org.openimmunizationsoftware.cdsi.core.logic.items.ImmunityElements;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
 public class DetermineEvidenceOfImmunityDose extends LogicStep {
 
+  // ConditionAttributes to be used
   private ConditionAttribute<Date> caDateofBirth = null;
   private ConditionAttribute<String> caCountryofBirth = null;
-  private ConditionAttribute<Date> caMaximumAgeDate = null;
-  private ConditionAttribute<String> caImmunityGuideline = null;
-  private ConditionAttribute<Date> caImmunityDate = null;
-  private ConditionAttribute<String> caExclusionCondition = null;
-  private ConditionAttribute<String> caCountryofBirthWorking = null;
+  private ConditionAttribute<MedicalHistory> caEvidenceOfImmunity = null; // Is this the right class?
+  private ConditionAttribute<ImmunityElements> caImmunityElements = null;
 
   public DetermineEvidenceOfImmunityDose(DataModel dataModel) {
     super(LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY, dataModel);
-    setConditionTableName("Table 5-2 Immunity attributes");
+
+    // Table 7-2
+    setConditionTableName("Table 7-2 Immunity attributes");
     caDateofBirth = new ConditionAttribute<Date>("Patient Data", "Date of Birth");
+    caCountryofBirth = new ConditionAttribute<String>("Patient Data", "Country of Birth");     
+    caImmunityElements = new ConditionAttribute<ImmunityElements>("Supporting Data", "Immunity Elements");
+    caEvidenceOfImmunity = new ConditionAttribute<MedicalHistory>("Patient Data", "Evidence of Immunity");
+
+    // Sets initial and assumed values
     caDateofBirth.setInitialValue(dataModel.getPatient().getDateOfBirth());
-    caCountryofBirth = new ConditionAttribute<String>("Patient Data", "Country of Birth");
     caCountryofBirth.setInitialValue(dataModel.getPatient().getCountryOfBirth());
-    caMaximumAgeDate =
-        new ConditionAttribute<Date>("Calculated date (CALCDTAGE-1)", "Maximum Age Date");
-
-    caImmunityGuideline = new ConditionAttribute<String>(
-        "Supporting Data (Clinical History Immunity", "Immunity Guideline");
-    caImmunityDate =
-        new ConditionAttribute<Date>("Supporting Data (Birth Date Immunity", "Immunity Date");
-    caExclusionCondition = new ConditionAttribute<String>("Supporting Data (Birth Date Immunity)",
-        "Exclusion Condition");
-    caCountryofBirthWorking =
-        new ConditionAttribute<String>("Supporting Data (Birth Date Immunity)", "Country of Birth");
-
-    caMaximumAgeDate.setAssumedValue(FUTURE);
-
+    caEvidenceOfImmunity.setInitialValue(dataModel.getPatient().getMedicalHistory());
+    caImmunityElements.setInitialValue(new ImmunityElements(PARAM_ANTIGEN_SERIES_INCLUDE, FUTURE, PARAM_ANTIGEN_INCLUDE));
+    
+    // Adds items to conditionAttributesList
     conditionAttributesList.add(caDateofBirth);
-    caDateofBirth.setInitialValue(dataModel.getPatient().getDateOfBirth());
     conditionAttributesList.add(caCountryofBirth);
-    caCountryofBirth.setInitialValue(dataModel.getPatient().getCountryOfBirth());
-    conditionAttributesList.add(caMaximumAgeDate);
-    caMaximumAgeDate.setAssumedValue(FUTURE);
-    conditionAttributesList.add(caImmunityGuideline);
-    conditionAttributesList.add(caImmunityDate);
-    conditionAttributesList.add(caExclusionCondition);
-    conditionAttributesList.add(caCountryofBirthWorking);
+    conditionAttributesList.add(caImmunityElements);
 
+
+    // Adds logic table 7-2 to logicTableList
     LT logicTable = new LT();
     logicTableList.add(logicTable);
 
-
   }
 
+  // I think these are for printing in the web app?
   @Override
   public LogicStep process() throws Exception {
     setNextLogicStepType(LogicStepType.DETERMINE_FORECAST_NEED);
@@ -89,21 +80,21 @@ public class DetermineEvidenceOfImmunityDose extends LogicStep {
     out.println(
         "<p>A patient may be considered immune due to their clinical history or if they were born before a defined date for the given target disease.</p>");
     out.println("<img src=\"Figure 5.2.png\"/>");
-    out.println("<p>FIGURE 5 - 2 EVIDENCE OF IMMUNITY PROCESS MODEL</p>");
+    out.println("<p>FIGURE 7 - 2 EVIDENCE OF IMMUNITY PROCESS MODEL</p>");
 
     printConditionAttributesTable(out);
     printLogicTables(out);
   }
 
+  // Table 7-3, no actual changes to functional logic but it has to work with the new 7-2 attributes
   private class LT extends LogicTable {
     public LT() {
-      super(4, 5, "Table 5-3 Does the patient have evidence of immunity ?");
-
-
+      super(4, 5, "Table 7-3 Does the patient have evidence of immunity ?");
 
       setLogicCondition(0, new LogicCondition(
           "Does the patient clinical history contain one of the supporting data defined immunity guidelines ?") {
         @Override
+        // "Dead code"??????
         protected LogicResult evaluateInternal() {
           if (false && dataModel.getPatient().getMedicalHistory() != null) {
             /**
@@ -159,6 +150,7 @@ public class DetermineEvidenceOfImmunityDose extends LogicStep {
                       /***
                        * Checking if the patient has any immunity
                        */
+                      // I hope this comment isn't supposed to be a placeholder for real code
                       return YES;
                     }
                   }
@@ -197,15 +189,14 @@ public class DetermineEvidenceOfImmunityDose extends LogicStep {
           } else {
             return NO;
           }
-
         }
       });
 
+      // Outcomes of 7-3 logic
       setLogicResults(0, YES, NO, NO, NO, NO);
       setLogicResults(1, ANY, YES, YES, YES, NO);
       setLogicResults(2, ANY, YES, NO, NO, ANY);
       setLogicResults(3, ANY, ANY, YES, NO, ANY);
-
 
       setLogicOutcome(0, new LogicOutcome() {
         @Override
