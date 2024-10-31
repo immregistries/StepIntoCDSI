@@ -94,10 +94,7 @@ public class EvaluateVaccineConflict extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.EVALUATE_PREFERABLE_VACCINE_ADMINISTERED);
-    /*
-     * for(LogicTable lt : logicTableList){ lt.evaluate(); }
-     */
+    setNextLogicStepType(LogicStepType.EVALUATE_FOR_PREFERABLE_VACCINE);
     evaluateLogicTables();
     if (y == YesNo.YES) {
       dataModel.getTargetDose()

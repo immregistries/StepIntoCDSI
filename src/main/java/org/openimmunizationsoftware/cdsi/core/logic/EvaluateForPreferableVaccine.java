@@ -17,11 +17,8 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
 public class EvaluateForPreferableVaccine extends LogicStep {
-
-
-
   public EvaluateForPreferableVaccine(DataModel dataModel) {
-    super(LogicStepType.EVALUATE_PREFERABLE_VACCINE_ADMINISTERED, dataModel);
+    super(LogicStepType.EVALUATE_FOR_PREFERABLE_VACCINE, dataModel);
     setConditionTableName("Table 6.8");
 
 
@@ -50,9 +47,11 @@ public class EvaluateForPreferableVaccine extends LogicStep {
       logicTable.caVaccineTypeEndAgeDate = new ConditionAttribute<Date>("Vaccine Type End Age Date",
           "Calculated date (CALCDTPREF-2)");
 
-      logicTable.caVolume.setInitialValue(aar.getVolume());
+      
       logicTable.caDateAdministered.setInitialValue(aar.getDateAdministered());
-
+      logicTable.caVolume.setInitialValue(aar.getVolume());
+      logicTable.caTradeName.setInitialValue(aar.getTradeName());
+      logicTable.caPreferableVaccineElements.setInitialValue(pi);
       logicTable.caVaccineTypeBeginAgeDate.setAssumedValue(PAST);
       logicTable.caVaccineTypeEndAgeDate.setAssumedValue(FUTURE);
 
@@ -66,8 +65,6 @@ public class EvaluateForPreferableVaccine extends LogicStep {
 
       conditionAttributesAdditionalMap.put("Preferrable Vaccine #" + count, caList);
       
-      logicTable.caVolume.setInitialValue(pi.getVolume());
-      logicTable.caPreferableVaccineElements.setInitialValue(pi);
       if (pi.getVaccineTypeBeginAge() != null) {
         logicTable.caVaccineTypeBeginAgeDate
             .setInitialValue(pi.getVaccineTypeBeginAge().getDateFrom(birthDate));
@@ -85,11 +82,11 @@ public class EvaluateForPreferableVaccine extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED);
+    setNextLogicStepType(LogicStepType.EVALUATE_FOR_ALLOWABLE_VACCINE);
     for (LogicTable logicTable : logicTableList) {
       logicTable.evaluate();
       if (((LT) logicTable).getResult() == YesNo.YES) {
-        setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
+        setNextLogicStepType(LogicStepType.SATISFY_TARGET_DOSE);
         break;
       }
     }
@@ -209,22 +206,18 @@ public class EvaluateForPreferableVaccine extends LogicStep {
         public void perform() {
           result = YesNo.YES;
           log("Yes. The vaccine dose administered was a preferable vaccine for the target dose.");
-          // setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
         }
       });
-
       setLogicOutcome(1, new LogicOutcome() {
         @Override
         public void perform() {
           result = YesNo.YES;
           log("Yes. The vaccine dose administered was a preferable vaccine for the target dose. Evaluation Reason is 'Volume administered is less than recommended volume'.");
-          // setNextLogicStepType(LogicStepType.EVALUATE_GENDER);
         }
       });
       setLogicOutcome(2, new LogicOutcome() {
         @Override
         public void perform() {
-          // setNextLogicStepType(LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED);
           result = YesNo.NO;
           log("No. The vaccine dose administered was not a preferable vaccine for the target dose.");
         }
@@ -232,7 +225,6 @@ public class EvaluateForPreferableVaccine extends LogicStep {
       setLogicOutcome(3, new LogicOutcome() {
         @Override
         public void perform() {
-          // setNextLogicStepType(LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED);
           result = YesNo.NO;
           log("No. The vaccine dose administered was not a preferable vaccine for the target dose. It was administered out of the recommended age range for the preferable vaccine.");
         }
@@ -240,14 +232,13 @@ public class EvaluateForPreferableVaccine extends LogicStep {
       setLogicOutcome(4, new LogicOutcome() {
         @Override
         public void perform() {
-          // setNextLogicStepType(LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED);
           result = YesNo.NO;
           log("No. The vaccine dose administered was not a preferable vaccine for the target dose. The trade name of the vaccine dose administered is not the same as the trade name of the preferable vaccine.");
         }
       });
     }
 
-    public YesNo getResult() { // TODO Auto-generated method stub
+    public YesNo getResult() {
       return result;
     }
   }
