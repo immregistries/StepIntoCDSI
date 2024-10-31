@@ -58,7 +58,7 @@ public class SatisfyTargetDose extends LogicStep {
 
   private class LT extends LogicTable {
     public LT() {
-      super(5, 7, "TABLE 6 - 31 WAS THE TARGET DOSE SATISFIED?");
+      super(4, 6, "TABLE 6 - 31 WAS THE TARGET DOSE SATISFIED?");
 
       setLogicCondition(0, new LogicCondition("Was the vaccine dose administered at a valid age for the target dose?") {
         @Override
