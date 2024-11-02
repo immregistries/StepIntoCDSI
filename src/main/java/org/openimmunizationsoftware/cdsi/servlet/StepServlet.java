@@ -54,7 +54,7 @@ public class StepServlet extends ForecastServlet {
           String jumpTo = "Select Best Patient Series";
           jump(dataModel, jumpTo);
         } else if (submit != null && submit.equals("Jump4.6")) {
-          String jumpTo = "Select Best Patient Series";
+          String jumpTo = "Identify and Evaluate Vaccine Group";
           jump(dataModel, jumpTo);
         }
         if (dataModel.getLogicStep().getLogicStepType() != LogicStepType.END) {
