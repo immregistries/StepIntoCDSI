@@ -1,6 +1,5 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
-
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.ANY;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
@@ -29,7 +28,8 @@ public class OneBestPatientSeries extends LogicStep {
     super(LogicStepType.ONE_BEST_PATIENT_SERIES, dataModel);
     // setConditionTableName("Table ");
 
-    // caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date
+    // caDateAdministered = new ConditionAttribute<Date>("Vaccine dose
+    // administered", "Date
     // Administered");
 
     // caTriggerAgeDate.setAssumedValue(FUTURE);
@@ -42,7 +42,7 @@ public class OneBestPatientSeries extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.SELECT_BEST_PATIENT_SERIES);
+    setNextLogicStepType(LogicStepType.DETERMINE_BEST_PATIENT_SERIES);
     evaluateLogicTables();
     return next();
   }
@@ -88,7 +88,6 @@ public class OneBestPatientSeries extends LogicStep {
         }
       });
 
-
       setLogicCondition(1, new LogicCondition("Patient has only 1 complete patient series?") {
         @Override
         protected LogicResult evaluateInternal() {
@@ -121,18 +120,20 @@ public class OneBestPatientSeries extends LogicStep {
             }
           }
           /**
-           * An in-process patient series must be a patient series with at least one target dose
+           * An in-process patient series must be a patient series with at least one
+           * target dose
            * status satisfied and the patient series status not complete.
            */
           List<String> antigenSerieNameWithASatisfiedTargetDose = new ArrayList<String>();
 
           List<TargetDose> targetDoseList = dataModel.getTargetDoseList();
-          for (TargetDose targetDose : targetDoseList) {
-            if (targetDose.getTargetDoseStatus() != null) {
-              if (targetDose.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
-                String antigenSeriesName1 =
-                    targetDose.getTrackedSeriesDose().getAntigenSeries().getSeriesName();
-                antigenSerieNameWithASatisfiedTargetDose.add(antigenSeriesName1);
+          if (targetDoseList != null) {
+            for (TargetDose targetDose : targetDoseList) {
+              if (targetDose.getTargetDoseStatus() != null) {
+                if (targetDose.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
+                  String antigenSeriesName1 = targetDose.getTrackedSeriesDose().getAntigenSeries().getSeriesName();
+                  antigenSerieNameWithASatisfiedTargetDose.add(antigenSeriesName1);
+                }
               }
             }
           }
@@ -153,9 +154,7 @@ public class OneBestPatientSeries extends LogicStep {
           antigenSerieNameWithANotCompletePatientSerieStatus
               .retainAll(new HashSet<String>(antigenSerieNameWithASatisfiedTargetDose));
 
-          int inProcessPatientSeriesNumber =
-              antigenSerieNameWithANotCompletePatientSerieStatus.size();
-
+          int inProcessPatientSeriesNumber = antigenSerieNameWithANotCompletePatientSerieStatus.size();
 
           if (inProcessPatientSeriesNumber == 1 && notCompletePatientSeries == 0) {
             return LogicResult.YES;
@@ -165,7 +164,6 @@ public class OneBestPatientSeries extends LogicStep {
         }
       });
 
-
       setLogicCondition(3, new LogicCondition(
           "Patient has all Patient Series with 0 valid doses and 1 patient series is identified as the default patient series ?") {
         @Override
@@ -173,9 +171,8 @@ public class OneBestPatientSeries extends LogicStep {
           int numberOfDefaultPatientSeries = 0;
           List<AntigenSeries> asl = dataModel.getAntigenSeriesSelectedList();
           for (AntigenSeries as : asl) {
-            if (as.getSelectBestPatientSeries().getDefaultSeries() != null) {
-              boolean isDefaultSeries =
-                  as.getSelectBestPatientSeries().getDefaultSeries().equals(YES);
+            if (as.getSelectBestPatientSeries() != null && as.getSelectBestPatientSeries().getDefaultSeries() != null) {
+              boolean isDefaultSeries = as.getSelectBestPatientSeries().getDefaultSeries().equals(YES);
               if (isDefaultSeries) {
                 numberOfDefaultPatientSeries++;
               }
@@ -186,13 +183,14 @@ public class OneBestPatientSeries extends LogicStep {
           // A valid dose is a dose with
           List<TargetDose> targetDoseList = dataModel.getTargetDoseList();
           boolean isThereAVlidDose = false;
-          for (TargetDose targetDose : targetDoseList) {
-            if (targetDose.getTargetDoseStatus() != null) {
-              if (targetDose.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
-                isThereAVlidDose = true;
+          if (targetDoseList != null) {
+            for (TargetDose targetDose : targetDoseList) {
+              if (targetDose.getTargetDoseStatus() != null) {
+                if (targetDose.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
+                  isThereAVlidDose = true;
+                }
               }
             }
-
           }
           if (!isThereAVlidDose && numberOfDefaultPatientSeries == 1) {
             return LogicResult.YES;
@@ -201,7 +199,6 @@ public class OneBestPatientSeries extends LogicStep {
           }
         }
       });
-
 
       setLogicResults(0, YES, NO, NO, NO, NO);
       setLogicResults(1, ANY, YES, NO, NO, NO);
@@ -222,7 +219,7 @@ public class OneBestPatientSeries extends LogicStep {
               }
             }
           }
-          setNextLogicStepType(LogicStepType.SELECT_BEST_PATIENT_SERIES);
+          setNextLogicStepType(LogicStepType.DETERMINE_BEST_PATIENT_SERIES);
 
         }
       });
@@ -240,7 +237,7 @@ public class OneBestPatientSeries extends LogicStep {
               }
             }
           }
-          setNextLogicStepType(LogicStepType.SELECT_BEST_PATIENT_SERIES);
+          setNextLogicStepType(LogicStepType.DETERMINE_BEST_PATIENT_SERIES);
         }
       });
 
@@ -257,7 +254,7 @@ public class OneBestPatientSeries extends LogicStep {
               }
             }
           }
-          setNextLogicStepType(LogicStepType.SELECT_BEST_PATIENT_SERIES);
+          setNextLogicStepType(LogicStepType.DETERMINE_BEST_PATIENT_SERIES);
         }
       });
 
@@ -274,7 +271,7 @@ public class OneBestPatientSeries extends LogicStep {
               }
             }
           }
-          setNextLogicStepType(LogicStepType.SELECT_BEST_PATIENT_SERIES);
+          setNextLogicStepType(LogicStepType.DETERMINE_BEST_PATIENT_SERIES);
         }
       });
 
@@ -284,13 +281,12 @@ public class OneBestPatientSeries extends LogicStep {
         public void perform() {
           // TODO Auto-generated method stub
           log("No. More than one patient series has potential. All patient series are examined to see which should be scored and selected as the best patient series");
-          setNextLogicStepType(LogicStepType.CLASSIFY_PATIENT_SERIES);
+          setNextLogicStepType(LogicStepType.CLASSIFY_SCORABLE_PATIENT_SERIES);
 
         }
       });
 
     }
   }
-
 
 }

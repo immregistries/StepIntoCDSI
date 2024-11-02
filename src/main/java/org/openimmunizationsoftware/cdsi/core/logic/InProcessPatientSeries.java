@@ -29,7 +29,8 @@ public class InProcessPatientSeries extends LogicStep {
   private List<PatientSeries> patientSeriesList = dataModel.getPatientSeriesList();
 
   /***
-   * cond1 A candidate patient series is a product patient series and has all valid doses.
+   * cond1 A candidate patient series is a product patient series and has all
+   * valid doses.
    * 
    */
 
@@ -89,8 +90,8 @@ public class InProcessPatientSeries extends LogicStep {
 
   private Date findMaximumAgeDate(PatientSeries patientSeries) {
     Date dob = dataModel.getPatient().getDateOfBirth();
-    SeriesDose referenceSeriesDose =
-        patientSeries.getForecast().getTargetDose().getTrackedSeriesDose();;
+    SeriesDose referenceSeriesDose = patientSeries.getForecast().getTargetDose().getTrackedSeriesDose();
+    ;
     TimePeriod timePeriod = referenceSeriesDose.getAgeList().get(0).getMaximumAge();
     Date maximumAgeDate = addTimePeriodtotoDate(dob, timePeriod);
     return maximumAgeDate;
@@ -137,8 +138,7 @@ public class InProcessPatientSeries extends LogicStep {
 
   private Map<Integer, Integer> sortByComparator(Map<Integer, Integer> unsortMap) {
 
-    List<Entry<Integer, Integer>> list =
-        new LinkedList<Entry<Integer, Integer>>(unsortMap.entrySet());
+    List<Entry<Integer, Integer>> list = new LinkedList<Entry<Integer, Integer>>(unsortMap.entrySet());
 
     // Sorting the list based on values
     Collections.sort(list, new Comparator<Entry<Integer, Integer>>() {
@@ -344,7 +344,6 @@ public class InProcessPatientSeries extends LogicStep {
     }
   }
 
-
   private void evaluateTable() {
     evaluate_ACandidatePatientSeriesIsAProductPatientSeriesAndHasAllValidDoses();
     evaluate_ACandidatePatientSeriesIsCompletable();
@@ -354,8 +353,6 @@ public class InProcessPatientSeries extends LogicStep {
     evaluate_ACandidatePatientSeriesExceededMaximumAgeToStart();
   }
 
-
-
   public InProcessPatientSeries(DataModel dataModel) {
     super(LogicStepType.IN_PROCESS_PATIENT_SERIES, dataModel);
     setConditionTableName("Table ");
@@ -364,7 +361,7 @@ public class InProcessPatientSeries extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.SELECT_BEST_CANDIDATE_PATIENT_SERIES);
+    setNextLogicStepType(LogicStepType.SELECT_PRIORITIZED_PATIENT_SERIES);
     evaluateTable();
     return next();
   }
@@ -433,7 +430,5 @@ public class InProcessPatientSeries extends LogicStep {
     out.println("  </tr> ");
     out.println("</table>");
   }
-
-
 
 }

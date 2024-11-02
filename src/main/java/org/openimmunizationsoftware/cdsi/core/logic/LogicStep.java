@@ -19,13 +19,11 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
 public abstract class LogicStep {
 
-  public static final LogicStepType[] STEPS = {LogicStepType.GATHER_NECESSARY_DATA,
+  public static final LogicStepType[] STEPS = { LogicStepType.GATHER_NECESSARY_DATA,
 
       LogicStepType.CREATE_RELEVANT_PATIENT_SERIES,
       LogicStepType.ORGANIZE_IMMUNIZATION_HISTORY,
-      LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES, 
-      LogicStepType.FOR_EACH_PATIENT_SERIES,
-      LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED,
+      LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES,
       LogicStepType.EVALUATE_DOSE_ADMINISTERED_CONDITION,
       LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION,
       LogicStepType.EVALUATE_FOR_INADVERTENT_VACCINE,
@@ -44,15 +42,16 @@ public abstract class LogicStep {
       LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMENDED_VACCINES,
       LogicStepType.SELECT_BEST_PATIENT_SERIES,
       LogicStepType.ONE_BEST_PATIENT_SERIES,
-      LogicStepType.CLASSIFY_PATIENT_SERIES,
+      LogicStepType.CLASSIFY_SCORABLE_PATIENT_SERIES,
       LogicStepType.COMPLETE_PATIENT_SERIES,
       LogicStepType.IN_PROCESS_PATIENT_SERIES,
       LogicStepType.NO_VALID_DOSES,
-      LogicStepType.SELECT_BEST_CANDIDATE_PATIENT_SERIES,
+      LogicStepType.SELECT_PRIORITIZED_PATIENT_SERIES,
       LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP,
-      LogicStepType.CLASSIFY_VACCINE_GROUP,
+      LogicStepType.APPLY_GENERAL_VACCINE_GROUP_RULES,
       LogicStepType.SINGLE_ANTIGEN_VACCINE_GROUP,
-      LogicStepType.MULTIPLE_ANTIGEN_VACCINE_GROUP};
+      LogicStepType.MULTIPLE_ANTIGEN_VACCINE_GROUP,
+      LogicStepType.END };
 
   public static final String PARAM_VACCINE_MVX = "vaccineMvx";
   public static final String PARAM_VACCINE_CVX = "vaccineCvx";
@@ -67,16 +66,11 @@ public abstract class LogicStep {
   public static final String PARAM_FLU_SEASON_OVERDUE = "fluSeasonOverdue";
   public static final String PARAM_FLU_SEASON_END = "fluSeasonEnd";
   public static final String PARAM_DUE_USE_EARLY = "dueUseEarly";
-  public static final String PARAM_ASSUME_DTAP_SERIES_COMPLETE_AT_AGE =
-      "assumeDtapSeriesCompleteAtAge";
-  public static final String PARAM_ASSUME_HEPA_SERIES_COMPLETE_AT_AGE =
-      "assumeHepASeriesCompleteAtAge";
-  public static final String PARAM_ASSUME_HEPB_SERIES_COMPLETE_AT_AGE =
-      "assumeHepBSeriesCompleteAtAge";
-  public static final String PARAM_ASSUME_MMR_SERIES_COMPLETE_AT_AGE =
-      "assumeMMRSeriesCompleteAtAge";
-  public static final String PARAM_ASSUME_VAR_SERIES_COMPLETE_AT_AGE =
-      "assumeVarSeriesCompleteAtAge";
+  public static final String PARAM_ASSUME_DTAP_SERIES_COMPLETE_AT_AGE = "assumeDtapSeriesCompleteAtAge";
+  public static final String PARAM_ASSUME_HEPA_SERIES_COMPLETE_AT_AGE = "assumeHepASeriesCompleteAtAge";
+  public static final String PARAM_ASSUME_HEPB_SERIES_COMPLETE_AT_AGE = "assumeHepBSeriesCompleteAtAge";
+  public static final String PARAM_ASSUME_MMR_SERIES_COMPLETE_AT_AGE = "assumeMMRSeriesCompleteAtAge";
+  public static final String PARAM_ASSUME_VAR_SERIES_COMPLETE_AT_AGE = "assumeVarSeriesCompleteAtAge";
   public static final String PARAM_IGNORE_FOUR_DAY_GRACE = "ignoreFourDayGrace";
   public static final String PARAM_SCHEDULE_NAME = "scheduleName";
   public static final String PARAM_ASSUME_SERIES_COMPLETED = "assumeSeriesCompleted";
@@ -165,10 +159,8 @@ public abstract class LogicStep {
     this.dataModel = dataModel;
   }
 
-  protected List<ConditionAttribute<?>> conditionAttributesList =
-      new ArrayList<ConditionAttribute<?>>();
-  protected Map<String, List<ConditionAttribute<?>>> conditionAttributesAdditionalMap =
-      new HashMap<String, List<ConditionAttribute<?>>>();
+  protected List<ConditionAttribute<?>> conditionAttributesList = new ArrayList<ConditionAttribute<?>>();
+  protected Map<String, List<ConditionAttribute<?>>> conditionAttributesAdditionalMap = new HashMap<String, List<ConditionAttribute<?>>>();
 
   protected List<LogicTable> logicTableList = new ArrayList<LogicTable>();
 
@@ -224,7 +216,7 @@ public abstract class LogicStep {
     out.println("    <th>Final Value</th>");
     out.println("  </tr>");
     for (ConditionAttribute<?> conditionAttribute : caList) {
-      if(conditionAttribute == null) {
+      if (conditionAttribute == null) {
         continue;
       }
       out.println("  <tr>");

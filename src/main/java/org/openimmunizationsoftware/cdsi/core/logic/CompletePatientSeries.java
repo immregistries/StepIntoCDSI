@@ -19,12 +19,9 @@ import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 
-
 public class CompletePatientSeries extends LogicStep {
 
-
   private List<PatientSeries> patientSeriesList = dataModel.getPatientSeriesList();
-
 
   private int numberOfValidDoses(PatientSeries patientSeries) {
     int nbOfValidDoses = 0;
@@ -39,12 +36,9 @@ public class CompletePatientSeries extends LogicStep {
     return nbOfValidDoses;
   }
 
-
-
   private Map<Integer, Integer> sortByComparator(Map<Integer, Integer> unsortMap) {
 
-    List<Entry<Integer, Integer>> list =
-        new LinkedList<Entry<Integer, Integer>>(unsortMap.entrySet());
+    List<Entry<Integer, Integer>> list = new LinkedList<Entry<Integer, Integer>>(unsortMap.entrySet());
 
     // Sorting the list based on values
     Collections.sort(list, new Comparator<Entry<Integer, Integer>>() {
@@ -66,7 +60,6 @@ public class CompletePatientSeries extends LogicStep {
 
     return sortedMap;
   }
-
 
   public CompletePatientSeries(DataModel dataModel) {
     super(LogicStepType.COMPLETE_PATIENT_SERIES, dataModel);
@@ -127,7 +120,8 @@ public class CompletePatientSeries extends LogicStep {
   }
 
   /***
-   * cond2 A candidate patient series is a product patient series and has all valid doses.
+   * cond2 A candidate patient series is a product patient series and has all
+   * valid doses.
    * 
    * P66 SelectB-23 "patient path" or "product path"
    */
@@ -174,7 +168,8 @@ public class CompletePatientSeries extends LogicStep {
   /***
    * cond3 A candidate patient series is the earliest completing.
    * 
-   * A complete patient series must be considered to be the earliest completing if the actual finish
+   * A complete patient series must be considered to be the earliest completing if
+   * the actual finish
    * date is before the actual finish date for all other complete patient series.
    */
 
@@ -244,7 +239,6 @@ public class CompletePatientSeries extends LogicStep {
 
   }
 
-
   private void evaluateTable() {
     evaluate_ACandidatePatientSeriesHasTheMostValidDoses();
     evaluate_ACandidatePatientSeriesIsAProductPatientSeriesAndHasAllValidDoses();
@@ -254,7 +248,7 @@ public class CompletePatientSeries extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.SELECT_BEST_CANDIDATE_PATIENT_SERIES);
+    setNextLogicStepType(LogicStepType.SELECT_PRIORITIZED_PATIENT_SERIES);
     evaluateTable();
     return next();
   }
@@ -308,7 +302,5 @@ public class CompletePatientSeries extends LogicStep {
     out.println("</table>");
 
   }
-
-
 
 }

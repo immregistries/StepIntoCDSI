@@ -20,12 +20,6 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES)) {
       return new EvaluateAndForecastAllPatientSeries(dataModel);
     }
-    if (stepName.equals(LogicStepType.FOR_EACH_PATIENT_SERIES)) {
-      return new ForEachPatientSeries(dataModel);
-    }
-    if (stepName.equals(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED)) {
-      return new EvaluateVaccineDoseAdministered(dataModel);
-    }
     if (stepName.equals(LogicStepType.EVALUATE_DOSE_ADMINISTERED_CONDITION)) {
       return new EvaluateDoseAdministeredCondition(dataModel);
     }
@@ -77,8 +71,8 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.ONE_BEST_PATIENT_SERIES)) {
       return new OneBestPatientSeries(dataModel);
     }
-    if (stepName.equals(LogicStepType.CLASSIFY_PATIENT_SERIES)) {
-      return new ClassifyPatientSeries(dataModel);
+    if (stepName.equals(LogicStepType.CLASSIFY_SCORABLE_PATIENT_SERIES)) {
+      return new ClassifyScorablePatientSeries(dataModel);
     }
     if (stepName.equals(LogicStepType.COMPLETE_PATIENT_SERIES)) {
       return new CompletePatientSeries(dataModel);
@@ -89,14 +83,14 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.IN_PROCESS_PATIENT_SERIES)) {
       return new InProcessPatientSeries(dataModel);
     }
-    if (stepName.equals(LogicStepType.SELECT_BEST_CANDIDATE_PATIENT_SERIES)) {
-      return new SelectBestCandidatePatientSeries(dataModel);
+    if (stepName.equals(LogicStepType.SELECT_PRIORITIZED_PATIENT_SERIES)) {
+      return new SelectPrioritizedPatientSeries(dataModel);
     }
     if (stepName.equals(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP)) {
       return new IdentifyAndEvaluateVaccineGroup(dataModel);
     }
-    if (stepName.equals(LogicStepType.CLASSIFY_VACCINE_GROUP)) {
-      return new ClassifyVaccineGroup(dataModel);
+    if (stepName.equals(LogicStepType.APPLY_GENERAL_VACCINE_GROUP_RULES)) {
+      return new ApplyGeneralVaccineGroupRules(dataModel);
     }
     if (stepName.equals(LogicStepType.MULTIPLE_ANTIGEN_VACCINE_GROUP)) {
       return new MultipleAntigenVaccineGroup(dataModel);
@@ -107,14 +101,21 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.FORECAST_DATES_AND_REASONS)) {
       return new ForecastDatesAndReasons(dataModel);
     }
+    if (stepName.equals(LogicStepType.VALIDATE_RECOMMENDATION)) {
+      return new ValidateRecommendation(dataModel);
+    }
+    if (stepName.equals(LogicStepType.DETERMINE_BEST_PATIENT_SERIES)) {
+      return new DetermineBestPatientSeries(dataModel);
+    }
+    if (stepName.equals(LogicStepType.PRE_FILTER_PATIENT_SERIES)) {
+      return new PreFilterPatientSeries(dataModel);
+    }
     if (stepName.equals(LogicStepType.END)) {
       return new End(dataModel);
     }
 
     throw new IllegalArgumentException("Step '" + stepName + "' is not yet implemented");
   }
-
-
 
   public static LogicStep createLogicStep(LogicStepType stepName, DataModel dataModel, boolean b) {
     if (stepName.equals(LogicStepType.GATHER_NECESSARY_DATA)) {
@@ -128,12 +129,6 @@ public class LogicStepFactory {
     }
     if (stepName.equals(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES)) {
       return new EvaluateAndForecastAllPatientSeries(dataModel);
-    }
-    if (stepName.equals(LogicStepType.FOR_EACH_PATIENT_SERIES)) {
-      return new ForEachPatientSeries(dataModel);
-    }
-    if (stepName.equals(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED)) {
-      return new EvaluateVaccineDoseAdministered(dataModel);
     }
     if (stepName.equals(LogicStepType.EVALUATE_DOSE_ADMINISTERED_CONDITION)) {
       return new EvaluateDoseAdministeredCondition(dataModel);
@@ -186,8 +181,8 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.ONE_BEST_PATIENT_SERIES)) {
       return new OneBestPatientSeries(dataModel);
     }
-    if (stepName.equals(LogicStepType.CLASSIFY_PATIENT_SERIES)) {
-      return new ClassifyPatientSeries(dataModel);
+    if (stepName.equals(LogicStepType.CLASSIFY_SCORABLE_PATIENT_SERIES)) {
+      return new ClassifyScorablePatientSeries(dataModel);
     }
     if (stepName.equals(LogicStepType.COMPLETE_PATIENT_SERIES)) {
       return new CompletePatientSeries(dataModel);
@@ -198,15 +193,15 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.IN_PROCESS_PATIENT_SERIES)) {
       return new InProcessPatientSeries(dataModel);
     }
-    if (stepName.equals(LogicStepType.SELECT_BEST_CANDIDATE_PATIENT_SERIES)) {
-      return new SelectBestCandidatePatientSeries(dataModel);
+    if (stepName.equals(LogicStepType.SELECT_PRIORITIZED_PATIENT_SERIES)) {
+      return new SelectPrioritizedPatientSeries(dataModel);
     }
 
     if (stepName.equals(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP)) {
       return new IdentifyAndEvaluateVaccineGroup(dataModel);
     }
-    if (stepName.equals(LogicStepType.CLASSIFY_VACCINE_GROUP)) {
-      return new ClassifyVaccineGroup(dataModel);
+    if (stepName.equals(LogicStepType.APPLY_GENERAL_VACCINE_GROUP_RULES)) {
+      return new ApplyGeneralVaccineGroupRules(dataModel);
     }
     if (stepName.equals(LogicStepType.MULTIPLE_ANTIGEN_VACCINE_GROUP)) {
       return new MultipleAntigenVaccineGroup(dataModel);
@@ -216,6 +211,15 @@ public class LogicStepFactory {
     }
     if (stepName.equals(LogicStepType.FORECAST_DATES_AND_REASONS)) {
       return new ForecastDatesAndReasons(dataModel);
+    }
+    if (stepName.equals(LogicStepType.VALIDATE_RECOMMENDATION)) {
+      return new ValidateRecommendation(dataModel);
+    }
+    if (stepName.equals(LogicStepType.DETERMINE_BEST_PATIENT_SERIES)) {
+      return new DetermineBestPatientSeries(dataModel);
+    }
+    if (stepName.equals(LogicStepType.PRE_FILTER_PATIENT_SERIES)) {
+      return new PreFilterPatientSeries(dataModel);
     }
     if (stepName.equals(LogicStepType.END)) {
       return new End(dataModel);

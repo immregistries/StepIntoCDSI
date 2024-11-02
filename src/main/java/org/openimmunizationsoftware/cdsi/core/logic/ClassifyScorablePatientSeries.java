@@ -1,6 +1,5 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
-
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.ANY;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
@@ -20,15 +19,16 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
-public class ClassifyPatientSeries extends LogicStep {
+public class ClassifyScorablePatientSeries extends LogicStep {
 
   // private ConditionAttribute<Date> caDateAdministered = null;
 
-  public ClassifyPatientSeries(DataModel dataModel) {
-    super(LogicStepType.CLASSIFY_PATIENT_SERIES, dataModel);
+  public ClassifyScorablePatientSeries(DataModel dataModel) {
+    super(LogicStepType.CLASSIFY_SCORABLE_PATIENT_SERIES, dataModel);
     // setConditionTableName("Table ");
 
-    // caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date
+    // caDateAdministered = new ConditionAttribute<Date>("Vaccine dose
+    // administered", "Date
     // Administered");
 
     // caTriggerAgeDate.setAssumedValue(FUTURE);
@@ -110,18 +110,20 @@ public class ClassifyPatientSeries extends LogicStep {
           }
 
           /**
-           * An in-process patient series must be a patient series with at least one target dose
+           * An in-process patient series must be a patient series with at least one
+           * target dose
            * status satisfied and the patient series status not complete.
            */
           List<String> antigenSerieNameWithASatisfiedTargetDose = new ArrayList<String>();
 
           List<TargetDose> targetDoseList = dataModel.getTargetDoseList();
-          for (TargetDose targetDose : targetDoseList) {
-            if (targetDose.getTargetDoseStatus() != null) {
-              if (targetDose.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
-                String antigenSeriesName1 =
-                    targetDose.getTrackedSeriesDose().getAntigenSeries().getSeriesName();
-                antigenSerieNameWithASatisfiedTargetDose.add(antigenSeriesName1);
+          if (targetDoseList != null) {
+            for (TargetDose targetDose : targetDoseList) {
+              if (targetDose.getTargetDoseStatus() != null) {
+                if (targetDose.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
+                  String antigenSeriesName1 = targetDose.getTrackedSeriesDose().getAntigenSeries().getSeriesName();
+                  antigenSerieNameWithASatisfiedTargetDose.add(antigenSeriesName1);
+                }
               }
             }
           }
@@ -144,7 +146,6 @@ public class ClassifyPatientSeries extends LogicStep {
 
           inProcessPatientSeries = antigenSerieNameWithANotCompletePatientSerieStatus.size();
 
-
           if (inProcessPatientSeries > 1 && completePatientSeries == 0) {
             return LogicResult.YES;
           } else {
@@ -160,10 +161,12 @@ public class ClassifyPatientSeries extends LogicStep {
           // A valid dose is a dose with a satisfied target dose
           List<TargetDose> targetDoseList = dataModel.getTargetDoseList();
           boolean isThereAVlidDose = false;
-          for (TargetDose targetDose : targetDoseList) {
-            if (targetDose.getTargetDoseStatus() != null) {
-              if (targetDose.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
-                isThereAVlidDose = true;
+          if (targetDoseList != null) {
+            for (TargetDose targetDose : targetDoseList) {
+              if (targetDose.getTargetDoseStatus() != null) {
+                if (targetDose.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
+                  isThereAVlidDose = true;
+                }
               }
             }
           }
@@ -175,7 +178,6 @@ public class ClassifyPatientSeries extends LogicStep {
 
         }
       });
-
 
       setLogicResults(0, YES, NO, NO);
       setLogicResults(1, ANY, YES, NO);
@@ -211,23 +213,26 @@ public class ClassifyPatientSeries extends LogicStep {
         }
       });
 
-
-
-      // setLogicCondition(0, new LogicCondition("date administered > lot expiration date?") {
+      // setLogicCondition(0, new LogicCondition("date administered > lot expiration
+      // date?") {
       // @Override
       // public LogicResult evaluateInternal() {
-      // if (caDateAdministered.getFinalValue() == null || caTriggerAgeDate.getFinalValue() == null)
+      // if (caDateAdministered.getFinalValue() == null ||
+      // caTriggerAgeDate.getFinalValue() == null)
       // {
       // return LogicResult.NO;
       // }
-      // if (caDateAdministered.getFinalValue().before(caTriggerAgeDate.getFinalValue())) {
+      // if
+      // (caDateAdministered.getFinalValue().before(caTriggerAgeDate.getFinalValue()))
+      // {
       // return LogicResult.YES;
       // }
       // return LogicResult.NO;
       // }
       // });
 
-      // setLogicResults(0, LogicResult.YES, LogicResult.NO, LogicResult.NO, LogicResult.ANY);
+      // setLogicResults(0, LogicResult.YES, LogicResult.NO, LogicResult.NO,
+      // LogicResult.ANY);
 
       // setLogicOutcome(0, new LogicOutcome() {
       // @Override
