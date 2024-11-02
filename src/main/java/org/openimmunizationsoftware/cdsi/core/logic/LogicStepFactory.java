@@ -67,8 +67,8 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.DETERMINE_FORECAST_NEED)) {
       return new DetermineForecastNeed(dataModel);
     }
-    if (stepName.equals(LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMEND_VACCINES)) {
-      return new GenerateForecastDates(dataModel);
+    if (stepName.equals(LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMENDED_VACCINES)) {
+      return new GenerateForecastDatesAndRecommendedVaccines(dataModel);
     }
 
     if (stepName.equals(LogicStepType.SELECT_BEST_PATIENT_SERIES)) {
@@ -177,8 +177,8 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.DETERMINE_FORECAST_NEED)) {
       return new DetermineForecastNeed(dataModel);
     }
-    if (stepName.equals(LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMEND_VACCINES)) {
-      return new GenerateForecastDates(dataModel);
+    if (stepName.equals(LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMENDED_VACCINES)) {
+      return new GenerateForecastDatesAndRecommendedVaccines(dataModel);
     }
 
     if (stepName.equals(LogicStepType.SELECT_BEST_PATIENT_SERIES)) {

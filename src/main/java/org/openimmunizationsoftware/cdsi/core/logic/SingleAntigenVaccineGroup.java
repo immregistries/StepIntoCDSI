@@ -79,7 +79,7 @@ public class SingleAntigenVaccineGroup extends LogicStep {
         vgf.setAntigen(forecast.getAntigen());
       }
     }
-    dataModel.getVaccineGroupForcastList().add(vgf);
+    dataModel.getVaccineGroupForecastList().add(vgf);
 
     setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
     return next();

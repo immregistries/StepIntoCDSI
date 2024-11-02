@@ -65,7 +65,7 @@ public class DataModel {
   private List<PatientSeries> patientSeriesList = new ArrayList<PatientSeries>();
   private PatientSeries patientSeries = null;
   private List<Forecast> forecastList = new ArrayList<Forecast>();
-  private List<VaccineGroupForecast> vaccineGroupForcastList =
+  private List<VaccineGroupForecast> vaccineGroupForecastList =
       new ArrayList<VaccineGroupForecast>();
   private VaccineGroup vaccineGroup;
   private List<VaccineGroup> vaccineGroupList;
@@ -142,12 +142,12 @@ public class DataModel {
     this.forecastList = forecastList;
   }
 
-  public List<VaccineGroupForecast> getVaccineGroupForcastList() {
-    return vaccineGroupForcastList;
+  public List<VaccineGroupForecast> getVaccineGroupForecastList() {
+    return vaccineGroupForecastList;
   }
 
-  public void setVaccineGroupForcastList(List<VaccineGroupForecast> vaccienGroupForcastList) {
-    this.vaccineGroupForcastList = vaccienGroupForcastList;
+  public void setVaccineGroupForecastList(List<VaccineGroupForecast> vaccineGroupForecastList) {
+    this.vaccineGroupForecastList = vaccineGroupForecastList;
   }
 
   public Antigen getAntigen() {

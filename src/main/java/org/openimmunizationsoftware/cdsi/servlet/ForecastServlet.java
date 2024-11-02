@@ -70,7 +70,7 @@ public class ForecastServlet extends HttpServlet {
 
 
     List<Forecast> fl = dataModel.getForecastList();
-    List<VaccineGroupForecast> vgfl = dataModel.getVaccineGroupForcastList();
+    List<VaccineGroupForecast> vgfl = dataModel.getVaccineGroupForecastList();
 
     List<VaccineGroupForecast> vgfNow = new ArrayList<VaccineGroupForecast>();
     List<VaccineGroupForecast> vgfLater = new ArrayList<VaccineGroupForecast>();

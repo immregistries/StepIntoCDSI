@@ -27,7 +27,7 @@ public enum LogicStepType {
   DETERMINE_EVIDENCE_OF_IMMUNITY("7.2", "Determine Evidence of Immunity", true),
   DETERMINE_CONTRAINDICATIONS("7.3", "Determine Contraindications", true),
   DETERMINE_FORECAST_NEED("7.4", "Determine Forecast Need", true),
-  GENERATE_FORECAST_DATES_AND_RECOMMEND_VACCINES("7.5", "Generate Forecast Dates and Recommend Vaccines", true), 
+  GENERATE_FORECAST_DATES_AND_RECOMMENDED_VACCINES("7.5", "Generate Forecast Dates and Recommended Vaccines", true), 
   VALIDATE_RECOMMENDATIONS("7.6", "Validate Recommendations", true),
   SELECT_BEST_PATIENT_SERIES_("8", "Select Best Patient Series", true),
   PRE_FILTER_PATIENT_SERIES("8.1", "Pre-Filter Patient Series", true),

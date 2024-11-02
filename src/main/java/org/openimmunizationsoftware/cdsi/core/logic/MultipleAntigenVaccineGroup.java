@@ -80,7 +80,7 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
         vgf.setAntigen(p.getForecast().getAntigen());
         vgf.getAntigenList().add(p.getForecast().getAntigen());
       }
-      dataModel.getVaccineGroupForcastList().add(vgf);
+      dataModel.getVaccineGroupForecastList().add(vgf);
     }
 
     return next();
