@@ -19,21 +19,15 @@ public class SatisfyTargetDose extends LogicStep {
 
   public SatisfyTargetDose(DataModel dataModel) {
     super(LogicStepType.SATISFY_TARGET_DOSE, dataModel);
-    setConditionTableName("Table 6.10");
+    setConditionTableName("Table ");
 
     LT logicTable = new LT();
     logicTableList.add(logicTable);
   }
 
-  // :P
   @Override
   public LogicStep process() throws Exception {
-
-    /***
-     * Bypassing "4 Evaluate Vaccine Dose Administrated"
-     * setNextLogicStepType(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED);
-     */
-    setNextLogicStepType(logicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED);
+    setNextLogicStepType(logicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
     evaluateLogicTables();
     dataModel.getTargetDose().setStatusCause("");
     return next(true);
@@ -64,7 +58,7 @@ public class SatisfyTargetDose extends LogicStep {
 
   private class LT extends LogicTable {
     public LT() {
-      super(5, 7, "TABLE 6 - 31 WAS THE TARGET DOSE SATISFIED?");
+      super(4, 6, "TABLE 6 - 31 WAS THE TARGET DOSE SATISFIED?");
 
       setLogicCondition(0, new LogicCondition("Was the vaccine dose administered at a valid age for the target dose?") {
         @Override
@@ -126,7 +120,6 @@ public class SatisfyTargetDose extends LogicStep {
       setLogicOutcome(0, new LogicOutcome() {
         @Override
         public void perform() {
-          // TODO Auto-generated method stub
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.SATISFIED);
           dataModel.getTargetDose().setSatisfiedByVaccineDoseAdministered(
               dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered());
@@ -137,7 +130,6 @@ public class SatisfyTargetDose extends LogicStep {
       setLogicOutcome(1, new LogicOutcome() {
         @Override
         public void perform() {
-          // TODO Auto-generated method stub
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
           log("No. The target dose status is 'Not Satisfied'. Evaluation status is 'Extraneous' with evaluation reasons.");
 
@@ -147,7 +139,6 @@ public class SatisfyTargetDose extends LogicStep {
       setLogicOutcome(2, new LogicOutcome() {
         @Override
         public void perform() {
-          // TODO Auto-generated method stub
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
           log("No. The target dose status is 'Not Satisfied'. Evaluation status is 'Not Valid' with evaluation reasons.");
 
@@ -157,7 +148,6 @@ public class SatisfyTargetDose extends LogicStep {
       setLogicOutcome(3, new LogicOutcome() {
         @Override
         public void perform() {
-          // TODO Auto-generated method stub
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
           log("No. The target dose status is 'Not Satisfied'. Evaluation status is 'Not Valid' with evaluation reasons.");
 
@@ -167,7 +157,6 @@ public class SatisfyTargetDose extends LogicStep {
       setLogicOutcome(4, new LogicOutcome() {
         @Override
         public void perform() {
-          // TODO Auto-generated method stub
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
           log("No. The target dose status is 'Not Satisfied'. Evaluation status is 'Not Valid' with evaluation reasons. ");
 
@@ -177,7 +166,6 @@ public class SatisfyTargetDose extends LogicStep {
       setLogicOutcome(5, new LogicOutcome() {
         @Override
         public void perform() {
-          // TODO Auto-generated method stub
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
           log("No. The target dose status is 'Not Satisfied'. Evaluation status is 'Not Valid' with evaluation reasons.");
 

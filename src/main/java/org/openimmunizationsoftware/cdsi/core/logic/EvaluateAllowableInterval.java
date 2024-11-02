@@ -11,6 +11,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
+import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
@@ -20,8 +21,7 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 public class EvaluateAllowableInterval extends LogicStep {
 
   private ConditionAttribute<Date> caDateAdministered = null;
-  private ConditionAttribute<YesNo> caFromImmediatePreviousDoseAdministered = null;
-  private ConditionAttribute<String> caFromTargetDoseNumberInSeries = null;
+  private ConditionAttribute<AllowableInterval> caAllowableIntervalElements = null;
   private ConditionAttribute<Date> caAbsoluteMinimumIntervalDate = null;
 
   public EvaluateAllowableInterval(DataModel dataModel) {
@@ -30,18 +30,15 @@ public class EvaluateAllowableInterval extends LogicStep {
 
     caDateAdministered =
         new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
-    caFromImmediatePreviousDoseAdministered = new ConditionAttribute<YesNo>("Supporting Data",
-        "From Immediate Previous Dose Administered");
-    caFromTargetDoseNumberInSeries =
-        new ConditionAttribute<String>("Supporting Data", "From Target Dose Number In Series");
+    caAllowableIntervalElements = new ConditionAttribute<AllowableInterval>("Supporting Data",
+        "Allowable Interval Elements");
     caAbsoluteMinimumIntervalDate =
         new ConditionAttribute<Date>("Calculated Date", "Absolute Minimum Interval Date");
 
     caAbsoluteMinimumIntervalDate.setAssumedValue(PAST);
 
     conditionAttributesList.add(caDateAdministered);
-    conditionAttributesList.add(caFromImmediatePreviousDoseAdministered);
-    conditionAttributesList.add(caFromTargetDoseNumberInSeries);
+    conditionAttributesList.add(caAllowableIntervalElements);
     conditionAttributesList.add(caAbsoluteMinimumIntervalDate);
 
     AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
@@ -50,9 +47,8 @@ public class EvaluateAllowableInterval extends LogicStep {
 
     if (seriesDose.getAllowableintervalList().size() > 0) {
       for (AllowableInterval ainterval : seriesDose.getAllowableintervalList()) {
-        caFromImmediatePreviousDoseAdministered
-            .setInitialValue(ainterval.getFromImmediatePreviousDoseAdministered());
-        caFromTargetDoseNumberInSeries.setInitialValue(ainterval.getFromTargetDoseNumberInSeries());
+        caAllowableIntervalElements
+            .setInitialValue(ainterval);
         caAbsoluteMinimumIntervalDate.setInitialValue(CALCDTINT_3.evaluate(dataModel, this, null));
 
         LT logicTable = new LT();
@@ -72,7 +68,7 @@ public class EvaluateAllowableInterval extends LogicStep {
         y = YesNo.NO;
       }
     }
-    setNextLogicStepType(LogicStepType.EVALUATE_FOR_LIVE_VIRUS_CONFLICT);
+    setNextLogicStepType(LogicStepType.EVALUATE_VACCINE_CONFLICT);
 
     return next();
   }
@@ -106,7 +102,7 @@ public class EvaluateAllowableInterval extends LogicStep {
     out.println(
         "<p>The following process model, attribute table, decision table, and business rule table are used to evaluate interval of a vaccine dose administered.</p>");
     out.println("<img src=\"Figure 4.12.PNG\"/>");
-    out.println("<p>FIGURE 4 - 12 EVALUATE ALLOWABLE INTERVAL PROCESS MODEL</p>");
+    out.println("<p>FIGURE 6 - 14 EVALUATE ALLOWABLE INTERVAL PROCESS MODEL</p>");
     printConditionAttributesTable(out);
     printLogicTables(out);
   }
@@ -116,10 +112,10 @@ public class EvaluateAllowableInterval extends LogicStep {
 
     public LT() {
       super(1, 2,
-          "Table 4 - 17 Did the vaccine dose administered satisfy the defined Allowable interval?");
+          "Table 6 - 21 Did the vaccine dose administered satisfy the defined Allowable interval?");
 
       setLogicCondition(0,
-          new LogicCondition("date administered < Absolute minimum interval date?") {
+          new LogicCondition("Is the date administered < absolute minimum interval date?") {
             @Override
             public LogicResult evaluateInternal() {
 
@@ -136,7 +132,7 @@ public class EvaluateAllowableInterval extends LogicStep {
       setLogicOutcome(0, new LogicOutcome() {
         @Override
         public void perform() {
-          log("No. The vaccine dose administered did not satisfy the defined allowable interval.  Evaluation Reason is \" too soon. \" ");
+          log("No. The vaccine dose administered did not satisfy the defined allowable interval for the target dose. Evaluation Reason is ' too soon. '");
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
           dataModel.getTargetDose()
               .setStatusCause(dataModel.getTargetDose().getStatusCause() + "Interval");
@@ -147,7 +143,7 @@ public class EvaluateAllowableInterval extends LogicStep {
       setLogicOutcome(1, new LogicOutcome() {
         @Override
         public void perform() {
-          log("Yes. The vaccine dose administered did satisfy the defined allowable interval. ");
+          log("Yes. The vaccine dose administered satisfied the allowable interval for the target dose.");
           result = YesNo.YES;
         }
       });

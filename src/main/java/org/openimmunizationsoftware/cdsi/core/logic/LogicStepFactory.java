@@ -44,14 +44,14 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.EVALUATE_ALLOWABLE_INTERVAL)) {
       return new EvaluateAllowableInterval(dataModel);
     }
-    if (stepName.equals(LogicStepType.EVALUATE_FOR_LIVE_VIRUS_CONFLICT)) {
-      return new EvaluateLiveVirusConflict(dataModel);
+    if (stepName.equals(LogicStepType.EVALUATE_VACCINE_CONFLICT)) {
+      return new EvaluateVaccineConflict(dataModel);
     }
-    if (stepName.equals(LogicStepType.EVALUATE_PREFERABLE_VACCINE_ADMINISTERED)) {
+    if (stepName.equals(LogicStepType.EVALUATE_FOR_PREFERABLE_VACCINE)) {
       return new EvaluateForPreferableVaccine(dataModel);
     }
-    if (stepName.equals(LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED)) {
-      return new EvaluateForAllowableVaccines(dataModel);
+    if (stepName.equals(LogicStepType.EVALUATE_FOR_ALLOWABLE_VACCINE)) {
+      return new EvaluateForAllowableVaccine(dataModel);
     }
     if (stepName.equals(LogicStepType.EVALUATE_GENDER)) {
       return new EvaluateGender(dataModel);
@@ -151,14 +151,14 @@ public class LogicStepFactory {
       return new EvaluateAllowableInterval(dataModel);
     }
 
-    if (stepName.equals(LogicStepType.EVALUATE_FOR_LIVE_VIRUS_CONFLICT)) {
-      return new EvaluateLiveVirusConflict(dataModel);
+    if (stepName.equals(LogicStepType.EVALUATE_VACCINE_CONFLICT)) {
+      return new EvaluateVaccineConflict(dataModel);
     }
-    if (stepName.equals(LogicStepType.EVALUATE_PREFERABLE_VACCINE_ADMINISTERED)) {
+    if (stepName.equals(LogicStepType.EVALUATE_FOR_PREFERABLE_VACCINE)) {
       return new EvaluateForPreferableVaccine(dataModel);
     }
-    if (stepName.equals(LogicStepType.EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED)) {
-      return new EvaluateForAllowableVaccines(dataModel);
+    if (stepName.equals(LogicStepType.EVALUATE_FOR_ALLOWABLE_VACCINE)) {
+      return new EvaluateForAllowableVaccine(dataModel);
     }
     if (stepName.equals(LogicStepType.EVALUATE_GENDER)) {
       return new EvaluateGender(dataModel);
