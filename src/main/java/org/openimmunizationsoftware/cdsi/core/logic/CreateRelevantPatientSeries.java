@@ -85,7 +85,7 @@ public class CreateRelevantPatientSeries extends LogicStep {
   }
 
   public void printPost(PrintWriter out) throws Exception {
-    out.println("   <h1>8.2 Create Patient Series</h2>");
+    out.println("   <h1>4.3 Create Patient Series</h2>");
     out.println(
         "   <p>An antigen series is one way to reach perceived immunity against a disease.  "
             + "An antigen series can be thought of as a \"path to immunity\" and is described in "

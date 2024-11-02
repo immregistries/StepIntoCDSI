@@ -46,7 +46,7 @@ public class EvaluatePreferableInterval extends LogicStep {
       logicTable.caAbsoluteMinimumIntervalDate =
           new ConditionAttribute<Date>("Calculated Date", "Absolute Minimum Interval Date");
       logicTable.caMinimumIntervalDate =
-          new ConditionAttribute<Date>("Calculated Date", "Mimium Interval Date");
+          new ConditionAttribute<Date>("Calculated Date", "Minimum Interval Date");
       
       logicTable.caAbsoluteMinimumIntervalDate.setAssumedValue(PAST);
       logicTable.caMinimumIntervalDate.setAssumedValue(PAST);
@@ -116,23 +116,37 @@ public class EvaluatePreferableInterval extends LogicStep {
     out.println("</ul>");
     out.println(
         "<p>It is possible for a given dose to use multiple interval types. For example, dose 3 of HepB and dose 3 of HPV, each have two intervals.  The first interval is from the immediate previous vaccine dose administered.  The second interval is from satisfied target dose 1 in each respective series. Note that if multiple intervals are specified, then all intervals must be satisfied in order for the dose to satisfy the interval requirements.</p>");
+
     out.println(
-        "<p>Figure 4-6 provides the evaluation interval timeline used to define adjacent intervals by using from immediate previous dose administered as the reference point.</p>");
-    out.println("<img src=\"Figure 4.6.PNG\"/>");
-    out.println("<p>FIGURE 4 - 6 EVALUATE INTERVAL 'FROM IMMEDIATE PREVIOUS DOSE' TIMELINE</p>");
-    out.println("<img src=\"Figure 4.7.png\"/>");
+        "<p>Figure 6-7 provides the evaluation interval timeline used to define adjacent intervals by using from immediate previous dose administered as the reference point.</p>");
+    out.println("<img src=\"Figure 6.7.PNG\"/>");
+    out.println("<p>FIGURE 6 - 7 EVALUATE INTERVAL 'FROM IMMEDIATE PREVIOUS DOSE ADMINISTERED FLAG' TIMELINE</p>");
+
     out.println(
-        "<p>FIGURE 4 - 7 EVALUATE INTERVAL 'FROM TARGET DOSE NUMBER IN SERIES' TIMELINE</p>");
-    out.println("<img src=\"Figure 4.8.PNG\"/>");
+      "<p>Figure 6-8 illustrates the evaluation interval timeline used to define non-adjacent intervals by using from target dose number in series as the reference point. This timeline is used only when from immediate previous dose administered flag is 'N'.</p>");
+    out.println("<img src=\"Figure 6.8.png\"/>");
     out.println(
-        "<p>FIGURE 4 - 8 EVALUATE INTERVAL ‘FROM MOST RECENT DOSE OF SPECIFIED VACCINE TYPE’ TIMELINE</p>");
-    out.println("<img src=\"Figure 4.9.png\"/>");
-    out.println("<p>FIGURE 4 - 9 EVALUATE INTERVAL PROCESS MODEL</p>");
+        "<p>FIGURE 6 - 8 EVALUATE INTERVAL 'FROM TARGET DOSE NUMBER IN SERIES' TIMELINE</p>");
+
+    out.println(
+        "<p>Figure 6-9 illustrates the evaluation interval timeline used to define most recent vaccine intervals.</p>");
+    out.println("<img src=\"Figure 6.9.PNG\"/>");
+    out.println(
+        "<p>FIGURE 6 - 9 EVALUATE INTERVAL ‘FROM MOST RECENT VACCINE TYPE’ TIMELINE</p>");
+
+    //TODO: Add figure 6-10 EVALUATE INTERVAL 'FROM RELEVANT OBSERVATION CODE' TIMELINE
+
+    out.println(
+        "<p>The following process model, attribute table, decision table, and business rule table are used to evaluate the preferable interval of a vaccine dose administered</p>");    
+    out.println("<img src=\"Figure 6.11.png\"/>");
+    out.println("<p>FIGURE 6 - 11 EVALUATE INTERVAL PROCESS MODEL</p>");
+
     out.println("<h2>Intervals</h2>");
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
     if (seriesDose.getIntervalList().size() == 0) {
       out.println("<p>No intervals for series dose " + seriesDose + "</p>");
     } else {
+      //TODO: change this table to match 4.5
       out.println("<table>");
       out.println("  <tr>");
       out.println("    <th>From Immediate Previous Dose Administered?</th>");

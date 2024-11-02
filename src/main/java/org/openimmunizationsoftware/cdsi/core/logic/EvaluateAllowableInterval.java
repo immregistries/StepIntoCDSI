@@ -91,17 +91,17 @@ public class EvaluateAllowableInterval extends LogicStep {
         "<p>In cases where a target dose does not specify allowable interval attributes, evaluate allowable interval cannot be used to validate a vaccine dose administered.  To avoid a false validation, the allowable interval should be considered \"not valid\" in these cases.</p>");
     out.println(
         "<p>The figure below provides evaluate allowable interval timeline used to define all adjacent intervals by using from immediate previous dose administered as the reference dose.</p>");
-    out.println("<img src=\"Figure 4.10.PNG\"/>");
+    out.println("<img src=\"Figure 6.12.PNG\"/>");
     out.println(
-        "<p>FIGURE 4 - 10 EVALUATE ALLOWABLE INTERVAL 'FROM IMMEDIATE PREVIOUS DOSE' TIMELINE</p>");
+        "<p>FIGURE 6 - 12 EVALUATE ALLOWABLE INTERVAL 'FROM IMMEDIATE PREVIOUS DOSE ADMINISTERED FLAG' TIMELINE</p>");
     out.println(
         "<p>The figure below illustrates evaluate allowable interval timeline used to define all non-adjacent intervals by using from target dose number in series as the reference dose.</p>");
-    out.println("<img src=\"Figure 4.11.PNG\"/>");
+    out.println("<img src=\"Figure 6.13.PNG\"/>");
     out.println(
-        "<p>FIGURE 4 - 11 EVALUATE ALLOWABLE INTERVAL 'FROM TARGET DOSE NUMBER IN SERIES' TIMELINE</p>");
+        "<p>FIGURE 6 - 13 EVALUATE ALLOWABLE INTERVAL 'FROM TARGET DOSE NUMBER IN SERIES' TIMELINE</p>");
     out.println(
         "<p>The following process model, attribute table, decision table, and business rule table are used to evaluate interval of a vaccine dose administered.</p>");
-    out.println("<img src=\"Figure 4.12.PNG\"/>");
+    out.println("<img src=\"Figure 6.14.PNG\"/>");
     out.println("<p>FIGURE 6 - 14 EVALUATE ALLOWABLE INTERVAL PROCESS MODEL</p>");
     printConditionAttributesTable(out);
     printLogicTables(out);

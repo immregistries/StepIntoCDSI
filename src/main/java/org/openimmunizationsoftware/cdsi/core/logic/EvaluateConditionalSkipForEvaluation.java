@@ -277,7 +277,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
 
   protected class LT66 extends LTInnerSet {
     public LT66() {
-      super(1, 2, "Table 4-6 CONDITIONAL Type of Age - Is the Condition Met?");
+      super(1, 2, "Table 6 - 6 CONDITIONAL Type of Age - Is the Condition Met?");
 
       setLogicCondition(0, new LogicCondition(
           "Is the Conditional Skip End Age Date > Conditional Skip Reference Date ≥ Conditional Skip Begin Age Date?") {
@@ -323,7 +323,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
   //TODO: add logic for 6-7
   protected class LT67 extends LTInnerSet {
     public LT67() {
-      super(1, 2, "TABLE 6-7 CONDITIONAL TYPE OF COMPLETED SERIES – IS THE CONDITION MET?");
+      super(1, 2, "TABLE 6 - 7 CONDITIONAL TYPE OF COMPLETED SERIES – IS THE CONDITION MET?");
 
       setLogicCondition(0, new LogicCondition(
           "Does the Conditional Skip Series Group identify a Series Group with at least one relevant patient series with a patient series status of 'Complete'?") {

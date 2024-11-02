@@ -1,3 +1,5 @@
+//TODO: Remove file
+
 package org.openimmunizationsoftware.cdsi.core.logic;
 
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;

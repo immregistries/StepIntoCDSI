@@ -118,24 +118,25 @@ public class EvaluateVaccineConflict extends LogicStep {
 
     out.println(
         "<p>Evaluate live virus conflict validates the date administered of a live virus vaccine dose administered against previous live virus administered vaccines to ensure proper spacing between administrations. For some live virus vaccines and for inactivated virus or recombinant vaccines, this condition does not exist. Therefore, if no live virus supporting data exists for the vaccine dose administered being evaluated, the vaccine dose administered is not in conflict with any other vaccine dose administered.</p>");// <------------------------------------------------------
-    out.println("<img src=\"Figure 4.13.PNG\"/>");
-    out.println("<p>FIGURE 4 - 13 EVALUATE LIVE VIRUS CONFLICT TIMELINE</p>");
+    out.println("<img src=\"Figure 6.15.PNG\"/>");
+    out.println("<p>FIGURE 6 - 15 EVALUATE LIVE VIRUS CONFLICT TIMELINE</p>");
     out.println(
         "<p>The following process model, attribute table, decision tables, and business rule table are used to evaluate for a live virus conflict.</p>");
-    out.println("<img src=\"Figure 4.14.PNG\"/>");
-    out.println("<p>FIGURE 4 - 14 EVALUATE LIVE VIRUS CONFLICT PROCESS MODEL</p>");
+    out.println("<img src=\"Figure 6.16.PNG\"/>");
+    out.println("<p>FIGURE 6 - 16 EVALUATE LIVE VIRUS CONFLICT PROCESS MODEL</p>");
     printConditionAttributesTable(out);
     printLogicTables(out);
 
   }
 
+  //TODO: Remove Tables 4-20 -> 4-22
   private class LT420 extends LogicTable {
     private YesNo y420 = YesNo.NO;
 
     public LT420() {
 
       super(2, 3,
-          "Table 4-20 Should the current vaccine dose administrated be evaluted for a live virus conflict ? ");
+          "Table 4-20 Should the current vaccine dose administered be evaluated for a live virus conflict ? ");
 
       setLogicCondition(0, new LogicCondition(
           "Is the current vaccine type of the vaccine dose administered one of the supporting data defined live virus conflict current vaccine types?") {

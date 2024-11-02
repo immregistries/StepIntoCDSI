@@ -146,8 +146,8 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
     out.println(
         "  <li>Examples of conditions which would prevent evaluation of dose range from misadministration to recalls to cold chain breaks.</li>");
     out.println("</ul>");
-    out.println("<img src=\"Figure 4.2.png\"/>");
-    out.println("<p>FIGURE 4 - 2 VACCINE DOSE ADMINISTERED CONDITION PROCESS MODEL</p>");
+    out.println("<img src=\"Figure 6.2.png\"/>");
+    out.println("<p>FIGURE 6 - 2 VACCINE DOSE ADMINISTERED CONDITION PROCESS MODEL</p>");
 
 
     printConditionAttributesTable(out);

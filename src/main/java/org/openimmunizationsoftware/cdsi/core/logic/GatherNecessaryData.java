@@ -69,7 +69,7 @@ public class GatherNecessaryData extends LogicStep {
 
   @Override
   public void printPre(PrintWriter out) throws Exception {
-    out.println("<h1>8.1 Gather Necessary Data</h2>");
+    out.println("<h1>4.1 Gather Necessary Data</h2>");
     out.println("<h2>Input Data</h2>");
 
     HttpServletRequest req = dataModel.getRequest();
@@ -124,7 +124,7 @@ public class GatherNecessaryData extends LogicStep {
 
   @Override
   public void printPost(PrintWriter out) throws Exception {
-    out.println("<h1>8.1 Gather Necessary Data</h2>");
+    out.println("<h1>4.1 Gather Necessary Data</h2>");
 
     out.println("   <h2>Patient-Related Data</h2>");
     out.println("   <h3>Patient</h3>");

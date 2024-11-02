@@ -34,10 +34,10 @@ public class EvaluateVaccineDoseAdministered extends LogicStep {
     out.println(
         "<p>Specific attributes and decision tables are provided for each step of the evaluation process.</p>");
 
-    out.println("<img src=\"TABLE 4 - 1 EVALUATION PROCESS STEPS.PNG\"/>");
-    out.println("<p>TABLE 4 - 1 EVALUATION PROCESS STEPS</p>");
-    out.println("<img src=\"Figure 4.1.png\"/>");
-    out.println("<p>FIGURE 4 - 1 EVALUATION PROCESS MODEL</p>");
+    out.println("<img src=\"TABLE 6 - 1 EVALUATION PROCESS STEPS.PNG\"/>");
+    out.println("<p>TABLE 6 - 1 EVALUATION PROCESS STEPS</p>");
+    out.println("<img src=\"Figure 6.1.png\"/>");
+    out.println("<p>FIGURE 6 - 1 EVALUATION PROCESS MODEL</p>");
 
     if (dataModel.getTargetDose() != null) {
       out.println("<p>Target dose is dose number #"
