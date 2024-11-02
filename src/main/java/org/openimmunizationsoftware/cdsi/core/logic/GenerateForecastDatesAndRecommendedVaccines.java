@@ -22,7 +22,10 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 
-public class GenerateForecastDates extends LogicStep {
+public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
+
+  //TODO: Add rules FORECASTGUIDANCE-1, FORECASTDN-1
+  //More TODOs below
 
   private ConditionAttribute<Date> caMinimumAgeDate = null;
   private ConditionAttribute<Date> caEarliestRecommendedAgeDate = null;
@@ -133,31 +136,31 @@ public class GenerateForecastDates extends LogicStep {
           .getSeasonalRecommendationStartDate();
       caSeasonalRecommendationStartDate.setInitialValue(seasonalRecommendationstartDate);
     } else {
-      // Couldn't find seasonalRecommandation start date
+      // Couldn't find seasonalRecommendation start date
     }
 
   }
 
-  int size = dataModel.getVaccineGroupForcastList().size();
+  int size = dataModel.getVaccineGroupForecastList().size();
 
-  public GenerateForecastDates(DataModel dataModel) {
-    super(LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMEND_VACCINES, dataModel);
+  public GenerateForecastDatesAndRecommendedVaccines(DataModel dataModel) {
+    super(LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMENDED_VACCINES, dataModel);
     setConditionTableName("Table ");
 
     caMinimumAgeDate =
         new ConditionAttribute<Date>("Calculated date (CALCDTAGE-4)", "Minimum Age Date");
     caEarliestRecommendedAgeDate = new ConditionAttribute<Date>("Calculated date (CALCDTAGE-3)",
         "Earliest Recommended Age Date");
-    caLatestRecommendedAgeDate = new ConditionAttribute<Date>("Calcualted date (CALCDTAGE-2)",
+    caLatestRecommendedAgeDate = new ConditionAttribute<Date>("Calculated date (CALCDTAGE-2)",
         "Latest Recommended Age Date");
     caMaximumAgeDate =
         new ConditionAttribute<Date>("Calculated date (CALCDTAGE-1)", "Maximum Age Date");
     caMinimumIntervalDate =
-        new ConditionAttribute<Date>("Calcualated date (CALCDTINT-4)", "Minimal Interval Date(s)");
+        new ConditionAttribute<Date>("Calculated date (CALCDTINT-4)", "Minimal Interval Date(s)");
     caEarliestRecommendedIntervalDate = new ConditionAttribute<Date>(
         "Calculated date (CALCDTINT-5)", "Earliest Recommended Interval Date(s)");
     caLatestRecommendedIntervalDate = new ConditionAttribute<Date>("Calculated date (CALCDTINT-6)",
-        "Lastest Recommended Interval Date(s)");
+        "Latest Recommended Interval Date(s)");
     caLatestConflictEndIntervalDate = new ConditionAttribute<Date>("Calculated date (CALCDTINT-4)",
         "Latest Conflict End Interval Date");
     caSeasonalRecommendationStartDate = new ConditionAttribute<Date>(
@@ -200,17 +203,17 @@ public class GenerateForecastDates extends LogicStep {
      * ByPassing "For Each Patient Series"
      */
     Forecast forecast = dataModel.getForecast();
-    generateForcastDates(forecast);
+    GenerateForecastDatesAndRecommendedVaccines(forecast);
 
     Antigen newAntigenForeCast = forecast.getAntigen();
-    List<Antigen> antigenFromForcastList = new ArrayList<Antigen>();
+    List<Antigen> antigenFromForecastList = new ArrayList<Antigen>();
     List<Forecast> forecastList = dataModel.getForecastList();
 
     for (Forecast foreCast : forecastList) {
-      antigenFromForcastList.add(foreCast.getAntigen());
+      antigenFromForecastList.add(foreCast.getAntigen());
     }
 
-    if (!antigenFromForcastList.contains(newAntigenForeCast)) {
+    if (!antigenFromForecastList.contains(newAntigenForeCast)) {
       forecastList.add(forecast);
     }
     dataModel.getPatientSeries().setForecast(forecast);
@@ -241,13 +244,13 @@ public class GenerateForecastDates extends LogicStep {
     out.println(
         "<p>Generate forecast dates  and recommend vaccines  determines the forecast dates for the next  target dose  and identifies one  or  more recommended vaccines if the target dose warrants specific vaccine recommendations. The forecast dates are generated based on the patient’s immunization history. If the patient has not adhered to  the preferred schedule, then the forecast dates  are  adjusted to provide  the best  dates for the next target dose.</p>");
     out.println(
-        "<p>Figure 5-4 below provides an illustration of how forecast dates appear on the timeline.</p>");
-    out.println("<img src=\"Figure 5.4.png\"/>");
-    out.println("<p>FIGURE 5 - 4 FORECAST DATES TIMELINE</p>");
+        "<p>Figure 7-7 below provides an illustration of how forecast dates appear on the timeline.</p>");
+    out.println("<img src=\"Figure 7.7.png\"/>");
+    out.println("<p>FIGURE 7 - 7 FORECAST DATES TIMELINE</p>");
     out.println(
         "<p>The following process model, attribute table, and business rule table are used to generate forecast dates.If an attribute value is empty, then the date calculations will remain empty. No assumptions will be made for the attribute.</p>");
-    out.println("<img src=\"Figure 5.5.png\"/>");
-    out.print("<p>FIGURE 5 - 5GENERATE FORECAST DATESAND RECOMMENDED VACCINE PROCESS MODEL</p>");
+    out.println("<img src=\"Figure 7.8.png\"/>");
+    out.print("<p>FIGURE 7 - 8 GENERATE FORECAST DATES AND RECOMMENDED VACCINE PROCESS MODEL</p>");
     printConditionAttributesTable(out);
     printLogicTables(out);
     out.println("<p>Patient Series Status: " + dataModel.getPatientSeries().getPatientSeriesStatus()
@@ -337,9 +340,9 @@ public class GenerateForecastDates extends LogicStep {
         if (biggeestAmout != 0 || patientReferenceDoseDate != null) {
           unadjustedRecommandedDate = DateUtils.addDays(patientReferenceDoseDate, biggeestAmout);
         } else {
-          if (dataModel.getVaccineGroupForcastList().size() > 0) {
-            Forecast forecast = dataModel.getVaccineGroupForcastList()
-                .get(dataModel.getVaccineGroupForcastList().size() - 1);
+          if (dataModel.getVaccineGroupForecastList().size() > 0) {
+            Forecast forecast = dataModel.getVaccineGroupForecastList()
+                .get(dataModel.getVaccineGroupForecastList().size() - 1);
             unadjustedRecommandedDate = forecast.getEarliestDate();
           }
         }
@@ -358,6 +361,7 @@ public class GenerateForecastDates extends LogicStep {
   }
 
   private Date computeUnadjustedPastDueDate() {
+    //TODO: Add instructions for what to do if no max age
     Date patientReferenceDoseDate = null;
     if (dataModel.getPreviousAntigenAdministeredRecord() != null) {
       patientReferenceDoseDate =
@@ -387,6 +391,8 @@ public class GenerateForecastDates extends LogicStep {
   }
 
   private Date computeAdjustedRecommendedDate() {
+    // TODO: Change the first condition to the earliest date of the patient series forecast.
+    // TODO: Remove empty field specification (??)
     Date adjustedRecommendedDate = new Date();
     Date earliestDate = computeEarliestDate();
     Date unadjustedRecommendedDate = computeUnadjustedRecommandedDate();
@@ -412,6 +418,7 @@ public class GenerateForecastDates extends LogicStep {
   }
 
   private List<Vaccine> recommendedVaccines() {
+    // TODO: Completely rework
     List<Vaccine> vaccineList = new ArrayList<Vaccine>();
     List<AntigenSeries> antigenSeriesList = dataModel.getAntigenSeriesList();
     for (AntigenSeries antigenSeries : antigenSeriesList) {
@@ -430,7 +437,7 @@ public class GenerateForecastDates extends LogicStep {
     return vaccineList;
   }
 
-  private Forecast generateForcastDates(Forecast forecast) {
+  private Forecast GenerateForecastDatesAndRecommendedVaccines(Forecast forecast) {
     forecast.setAdjustedPastDueDate(computeAdjustedPastDueDate());
     Date d = computeAdjustedRecommendedDate();
     forecast.setAdjustedRecommendedDate(d);
@@ -455,7 +462,7 @@ public class GenerateForecastDates extends LogicStep {
 
   private void TablePost(PrintWriter out) throws ParseException {
     out.println(
-        "<p> TABLE 5 - 7 GENERATE FORECAST DATE AND RECOMMENDED VACCINE BUSINESS RULES</p>");
+        "<p> TABLE 7 - 13 GENERATE FORECAST DATE AND RECOMMENDED VACCINE BUSINESS RULES</p>");
     out.println("<table BORDER=\"1\"> ");
     insertTableInit(out);
     insertTableRow(out, "FORECASTDT-1", "Earliest Date", computeEarliestDate().toString());
