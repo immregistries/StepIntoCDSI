@@ -11,12 +11,12 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
-public class ClassifyVaccineGroup extends LogicStep {
+public class ApplyGeneralVaccineGroupRules extends LogicStep {
 
   // private ConditionAttribute<Date> caDateAdministered = null;
 
-  public ClassifyVaccineGroup(DataModel dataModel) {
-    super(LogicStepType.CLASSIFY_VACCINE_GROUP, dataModel);
+  public ApplyGeneralVaccineGroupRules(DataModel dataModel) {
+    super(LogicStepType.APPLY_GENERAL_VACCINE_GROUP_RULES, dataModel);
     LT logicTable = new LT();
     logicTableList.add(logicTable);
   }
@@ -79,6 +79,5 @@ public class ClassifyVaccineGroup extends LogicStep {
 
     }
   }
-
 
 }

@@ -42,15 +42,16 @@ public abstract class LogicStep {
       LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMENDED_VACCINES,
       LogicStepType.SELECT_BEST_PATIENT_SERIES,
       LogicStepType.ONE_BEST_PATIENT_SERIES,
-      LogicStepType.CLASSIFY_PATIENT_SERIES,
+      LogicStepType.CLASSIFY_SCORABLE_PATIENT_SERIES,
       LogicStepType.COMPLETE_PATIENT_SERIES,
       LogicStepType.IN_PROCESS_PATIENT_SERIES,
       LogicStepType.NO_VALID_DOSES,
-      LogicStepType.SELECT_BEST_CANDIDATE_PATIENT_SERIES,
+      LogicStepType.SELECT_PRIORITIZED_PATIENT_SERIES,
       LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP,
-      LogicStepType.CLASSIFY_VACCINE_GROUP,
+      LogicStepType.APPLY_GENERAL_VACCINE_GROUP_RULES,
       LogicStepType.SINGLE_ANTIGEN_VACCINE_GROUP,
-      LogicStepType.MULTIPLE_ANTIGEN_VACCINE_GROUP };
+      LogicStepType.MULTIPLE_ANTIGEN_VACCINE_GROUP,
+      LogicStepType.END };
 
   public static final String PARAM_VACCINE_MVX = "vaccineMvx";
   public static final String PARAM_VACCINE_CVX = "vaccineCvx";

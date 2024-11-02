@@ -11,12 +11,12 @@ import java.util.Map.Entry;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 
-public class SelectBestCandidatePatientSeries extends LogicStep {
+public class SelectPrioritizedPatientSeries extends LogicStep {
 
   private List<PatientSeries> patientSeriesList = dataModel.getSelectedPatientSeriesList();
 
-  public SelectBestCandidatePatientSeries(DataModel dataModel) {
-    super(LogicStepType.SELECT_BEST_CANDIDATE_PATIENT_SERIES, dataModel);
+  public SelectPrioritizedPatientSeries(DataModel dataModel) {
+    super(LogicStepType.SELECT_PRIORITIZED_PATIENT_SERIES, dataModel);
     setConditionTableName("Table ");
 
   }
@@ -24,8 +24,7 @@ public class SelectBestCandidatePatientSeries extends LogicStep {
   private LinkedHashMap<PatientSeries, Integer> sortByComparator(
       LinkedHashMap<PatientSeries, Integer> unsortMap) {
 
-    List<Entry<PatientSeries, Integer>> list =
-        new LinkedList<Entry<PatientSeries, Integer>>(unsortMap.entrySet());
+    List<Entry<PatientSeries, Integer>> list = new LinkedList<Entry<PatientSeries, Integer>>(unsortMap.entrySet());
 
     // Sorting the list based on values
     Collections.sort(list, new Comparator<Entry<PatientSeries, Integer>>() {
@@ -48,8 +47,7 @@ public class SelectBestCandidatePatientSeries extends LogicStep {
     return sortedMap;
   }
 
-  private LinkedHashMap<PatientSeries, Integer> patientSeriesMap =
-      new LinkedHashMap<PatientSeries, Integer>();
+  private LinkedHashMap<PatientSeries, Integer> patientSeriesMap = new LinkedHashMap<PatientSeries, Integer>();
   private PatientSeries bestPatientSeries = null;
 
   private void selectBestPatientSeries() {
@@ -68,7 +66,7 @@ public class SelectBestCandidatePatientSeries extends LogicStep {
     if (bestPatientSeries != null) {
       dataModel.getBestPatientSeriesList().add(bestPatientSeries);
     }
-    setNextLogicStepType(LogicStepType.SELECT_BEST_PATIENT_SERIES);
+    setNextLogicStepType(LogicStepType.DETERMINE_BEST_PATIENT_SERIES);
     return next();
   }
 

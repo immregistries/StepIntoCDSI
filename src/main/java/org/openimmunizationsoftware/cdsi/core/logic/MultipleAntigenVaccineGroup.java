@@ -176,7 +176,7 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
         }
       }
     }
-    if (vgf.getEarliestDate().after(earliestRecommendedDate)) {
+    if (vgf.getEarliestDate() != null && vgf.getEarliestDate().after(earliestRecommendedDate)) {
       earliestRecommendedDate = vgf.getEarliestDate();
     }
     if (vgf.getTargetDose() == null && td != null)

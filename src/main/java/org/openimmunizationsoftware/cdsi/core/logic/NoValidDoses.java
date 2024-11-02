@@ -38,11 +38,10 @@ public class NoValidDoses extends LogicStep {
     return date;
   }
 
-
   private Date findMaximumAgeDate(PatientSeries patientSeries) {
     Date dob = dataModel.getPatient().getDateOfBirth();
-    SeriesDose referenceSeriesDose =
-        patientSeries.getForecast().getTargetDose().getTrackedSeriesDose();;
+    SeriesDose referenceSeriesDose = patientSeries.getForecast().getTargetDose().getTrackedSeriesDose();
+    ;
     TimePeriod timePeriod = referenceSeriesDose.getAgeList().get(0).getMaximumAge();
     Date maximumAgeDate = addTimePeriodtotoDate(dob, timePeriod);
     return maximumAgeDate;
@@ -54,7 +53,7 @@ public class NoValidDoses extends LogicStep {
 
   private void evaluate_ACandidatePatientSeriesCanStartEarliest() {
     int j = 0;
-    if (patientSeriesList.get(0).getForecast() != null) {
+    if (patientSeriesList.size() != 0 && patientSeriesList.get(0).getForecast() != null) {
       Date tmpDate = patientSeriesList.get(0).getForecast().getEarliestDate();
       for (int i = 0; i < patientSeriesList.size(); i++) {
         PatientSeries patientSeries = patientSeriesList.get(i);
@@ -80,7 +79,6 @@ public class NoValidDoses extends LogicStep {
     }
   }
 
-
   /**
    * cond2 A candidate patient series is completable.
    */
@@ -98,22 +96,23 @@ public class NoValidDoses extends LogicStep {
   }
 
   /**
-   * cond3 A candidate patient series is a gender-specific patient series and the patient‘s gender
+   * cond3 A candidate patient series is a gender-specific patient series and the
+   * patient‘s gender
    * matches a required gender specified on the first target dose.
    */
 
   private void evaluate_ACandidatePatientSeriesGenderSpecific() {
     for (PatientSeries patientSeries : patientSeriesList) {
       boolean patientSeriesIsGenderSpecefic = false;
-      SeriesDose referenceSeriesDose =
-          patientSeries.getForecast().getTargetDose().getTrackedSeriesDose();
-      String gender = referenceSeriesDose.getRequiredGenderList().get(0).getValue();
-      if (!gender.isEmpty()) {
+      SeriesDose referenceSeriesDose = patientSeries.getForecast().getTargetDose().getTrackedSeriesDose();
+      String gender = referenceSeriesDose.getRequiredGenderList().size() == 0 ? null
+          : referenceSeriesDose.getRequiredGenderList().get(0).getValue();
+      if (gender != null && !gender.isEmpty()) {
         patientSeriesIsGenderSpecefic = true;
       }
       if (patientSeriesIsGenderSpecefic) {
         String targetDoseGender = dataModel.getPatient().getGender();
-        if (targetDoseGender.equals(gender)) {
+        if (gender != null && targetDoseGender.equals(gender)) {
           patientSeries.incPatientScoreSeries();
         }
       }
@@ -128,8 +127,9 @@ public class NoValidDoses extends LogicStep {
   private void evaluate_ACandidatePatientSeriesIsAProductPatientSeries() {
     boolean productPatientSeries = false;
     for (PatientSeries patientSeries : patientSeriesList) {
-      if (patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries()
-          .getProductPath() != null) {
+      if (patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries() != null &&
+          patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries()
+              .getProductPath() != null) {
         if (patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries().getProductPath()
             .equals(YesNo.YES)) {
           productPatientSeries = true;
@@ -169,15 +169,13 @@ public class NoValidDoses extends LogicStep {
     evaluate_ACandidatePatientSeriesHasExceededTheMaximumAge();
   }
 
-
-
   public NoValidDoses(DataModel dataModel) {
     super(LogicStepType.NO_VALID_DOSES, dataModel);
   }
 
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.SELECT_BEST_CANDIDATE_PATIENT_SERIES);
+    setNextLogicStepType(LogicStepType.SELECT_PRIORITIZED_PATIENT_SERIES);
     evaluateLogicTables();
     evalTable();
     return next();
@@ -243,9 +241,6 @@ public class NoValidDoses extends LogicStep {
     out.println("  </tr> ");
     out.println("</table>");
 
-
   }
-
-
 
 }

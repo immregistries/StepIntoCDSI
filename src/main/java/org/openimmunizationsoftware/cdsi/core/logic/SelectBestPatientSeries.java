@@ -27,7 +27,7 @@ public class SelectBestPatientSeries extends LogicStep {
         }
       }
       dataModel.setAntigenSeriesSelectedList(antigenSeriesSelectedList);
-      setNextLogicStepType(LogicStepType.ONE_BEST_PATIENT_SERIES);
+      setNextLogicStepType(LogicStepType.PRE_FILTER_PATIENT_SERIES);
 
       List<PatientSeries> patientSeriesSelectedList = new ArrayList<PatientSeries>();
       for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {

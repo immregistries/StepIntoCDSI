@@ -18,7 +18,7 @@ public class IdentifyAndEvaluateVaccineGroup extends LogicStep {
     if (dataModel.getVaccineGroupPos() < dataModel.getVaccineGroupList().size()) {
       dataModel
           .setVaccineGroup(dataModel.getVaccineGroupList().get(dataModel.getVaccineGroupPos()));
-      setNextLogicStepType(LogicStepType.CLASSIFY_VACCINE_GROUP);
+      setNextLogicStepType(LogicStepType.APPLY_GENERAL_VACCINE_GROUP_RULES);
     } else {
       setNextLogicStepType(LogicStepType.END);
     }
