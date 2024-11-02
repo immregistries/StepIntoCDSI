@@ -12,7 +12,6 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 
-
 public class EvaluateAndForecastAllPatientSeries extends LogicStep {
   public EvaluateAndForecastAllPatientSeries(DataModel dataModel) {
     super(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES, dataModel);
@@ -20,30 +19,48 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
 
   @Override
   public LogicStep process() {
-    //get current patient series
+    boolean patientSeriesNeedsSetup = true;
+    // get current patient series
     PatientSeries patientSeriesSelected = null;
-    if (dataModel.getPatientSeriesList().size() > 0) {
+    if (dataModel.getPatientSeriesList().size() == 0) {
+      log("The patient series list is empty, no patient series to process");
+    } else {
       if (dataModel.getPatientSeries() == null) {
+        // when we first start, we haven't done anything yet.
+
         patientSeriesSelected = dataModel.getPatientSeriesList().get(0);
+        log("Setting patient series, as it has not yet been set.");
       } else {
-        boolean found = false;
-        for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {
-          if (found) {
-            patientSeriesSelected = patientSeries;
-            break;
-          }
-          if (dataModel.getPatientSeries() == patientSeries) {
-            found = true;
+        // We may need to stay on this patient series, need to check if we are done
+        if (dataModel.getAntigenAdministeredRecordPos() < dataModel.getAntigenAdministeredRecordList()
+            .size()) {
+          patientSeriesSelected = dataModel.getPatientSeries();
+          patientSeriesNeedsSetup = false;
+        } else {
+          log("Looking in patient series list for the next patient series to work on (list size = "
+              + dataModel.getPatientSeriesList().size() + ")");
+          boolean found = false;
+          for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {
+            if (found) {
+              patientSeriesSelected = patientSeries;
+              break;
+            }
+            if (dataModel.getPatientSeries() == patientSeries) {
+              log("Found the next patient series to work on");
+              found = true;
+            }
           }
         }
+
       }
     }
-    
-    //Is there another relevant patientSeries to process?
+
+    // Is there another relevant patientSeries to process?
+    log("Checking for another patient series to process");
     if (patientSeriesSelected == null) {
+      log("No more patient series to process");
       return LogicStepFactory.createLogicStep(LogicStepType.SELECT_BEST_PATIENT_SERIES, dataModel);
-    } 
-    else {
+    } else if (patientSeriesNeedsSetup) {
       dataModel.setPatientSeries(patientSeriesSelected);
       dataModel.setTargetDoseList(new ArrayList<TargetDose>());
       patientSeriesSelected.setTargetDoseList(dataModel.getTargetDoseList());
@@ -60,23 +77,8 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
     LogicStepType nextLogicStep;
 
     dataModel.incAntigenAdministeredRecordPos();
-    PatientSeries patientSeries = dataModel.getPatientSeries();
 
-    //log skips
-    while (dataModel.getAntigenAdministeredRecordPos() < dataModel
-        .getAntigenAdministeredRecordList().size()) {
-      AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecordList()
-          .get(dataModel.getAntigenAdministeredRecordPos());
-      if (aar.getAntigen().equals(patientSeries.getTrackedAntigenSeries().getTargetDisease())) {
-        break;
-      } else {
-        dataModel.incAntigenAdministeredRecordPos();
-        log("   Skipping " + aar + " for antigen " + aar.getAntigen() + "rrrrr"
-            + patientSeries.getTrackedAntigenSeries().getTargetDisease());
-      }
-    }
-
-    //choose whether chapter 6 or chapter 7 is next
+    // choose whether chapter 6 or chapter 7 is next
     if (dataModel.getAntigenAdministeredRecordPos() < dataModel.getAntigenAdministeredRecordList()
         .size()) {
       if (dataModel.getAntigenAdministeredRecordPos() == 0) {
@@ -95,9 +97,8 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
     }
 
     return LogicStepFactory.createLogicStep(nextLogicStep, dataModel);
-  
+
   }
-  
 
   private boolean gotoNextTargetDose() {
     if (dataModel.getTargetDose() == null) {
@@ -108,8 +109,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
     } else {
       if (dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered() != null) {
         log(" + Previous target dose was satisifed, getting next target dose");
-        RecurringDose recurringdose =
-            dataModel.getTargetDose().getTrackedSeriesDose().getRecurringDose();
+        RecurringDose recurringdose = dataModel.getTargetDose().getTrackedSeriesDose().getRecurringDose();
         if (recurringdose != null && recurringdose.getValue() == YesNo.YES) {
           // Create another target dose
           TargetDose targetDoseNext = new TargetDose(dataModel.getTargetDose());
@@ -158,7 +158,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
 
   @Override
   public void printPre(PrintWriter out) throws Exception {
-    out.println("<h1>8.4 Evaluate and Forecast all Patient Series</h1>");
+    out.println("<h1>4.4 Evaluate and Forecast all Patient Series</h1>");
 
     out.println(
         "<p>This step is the core of the business logic and decision points many people think of when describing evaluation and forecasting. In the Logic Specification, this step contains all of the clinical business rules and decision logic in the form of business rules and decision tables.</p>");
@@ -169,13 +169,12 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
 
   @Override
   public void printPost(PrintWriter out) {
-    out.println("<h1>8.4 Evaluate and Forecast all Patient Series</h1>");
+    out.println("<h1>4.4 Evaluate and Forecast all Patient Series</h1>");
 
     out.println(
         "<p>This step is the core of the business logic and decision points many people think of when describing evaluation and forecasting. In the Logic Specification, this step contains all of the clinical business rules and decision logic in the form of business rules and decision tables.</p>");
     out.println(
         "<p>At the end of this step, each patient series will have an evaluated history and a forecast.</p>");
-
 
   }
 

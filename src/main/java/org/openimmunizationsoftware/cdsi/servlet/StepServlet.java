@@ -46,10 +46,10 @@ public class StepServlet extends ForecastServlet {
         String submit = req.getParameter("submit");
         if (submit != null && submit.equals("Jump")) {
           String jumpTo = req.getParameter("jumpTo");
-          while (dataModel.getLogicStep().getLogicStepType() != LogicStepType.END
-              && !dataModel.getLogicStep().getLogicStepType().getName().equals(jumpTo)) {
-            dataModel.setNextLogicStep(dataModel.getLogicStep().process());
-          }
+          jump(dataModel, jumpTo);
+        } else if (submit != null && submit.equals("Jump4.4")) {
+          String jumpTo = "Evaluate and Forecast all Patient Series";
+          jump(dataModel, jumpTo);
         }
         dataModel.setNextLogicStep(dataModel.getLogicStep().process());
       } catch (Exception e) {
@@ -124,14 +124,14 @@ public class StepServlet extends ForecastServlet {
               + "-" + dataModel.getLogicStep().getLogicStepType().getChapter()
               + ".png\" width=\"1000\" onclick=\"document.getElementById('stepForm').submit();\">");
       out.println("<br/>" + dataModel.getLogicStepPrevious().getLogicStepType().getChapter()
-              + "-" + dataModel.getLogicStep().getLogicStepType().getChapter());
+          + "-" + dataModel.getLogicStep().getLogicStepType().getChapter());
     }
     if (dataModel.getLogicStepPrevious() != null
         || req.getParameter(LogicStep.PARAM_EVAL_DATE) != null) {
       out.println("        <br/><input type=\"submit\" name=\"submit\" value=\"Next Step\"/>");
       out.println("        <select name=\"jumpTo\">");
       for (LogicStepType logicStepType : LogicStep.STEPS) {
-        String display = logicStepType.getDisplay();
+        String display = logicStepType.getName();
         if (logicStepType.isIndent()) {
           display = " + " + display;
         }
@@ -145,6 +145,7 @@ public class StepServlet extends ForecastServlet {
       }
       out.println("        </select>");
       out.println("        <input type=\"submit\" name=\"submit\" value=\"Jump\"/>");
+      out.println("        <input type=\"submit\" name=\"submit\" value=\"Jump4.4\"/>");
       out.println("        <input type=\"hidden\" name=\"action\" value=\"next\"/>");
 
       try {
@@ -165,6 +166,17 @@ public class StepServlet extends ForecastServlet {
     out.println("  </body>");
     out.println("</html>");
     out.close();
+  }
+
+  private void jump(DataModel dataModel, String jumpTo) throws Exception {
+    int count = 0;
+    while (dataModel.getLogicStep().getLogicStepType() != LogicStepType.END
+        && !dataModel.getLogicStep().getLogicStepType().getName().equals(jumpTo)) {
+      dataModel.setNextLogicStep(dataModel.getLogicStep().process());
+      if (count++ > 1000) {
+        throw new Exception("Jump loop over 1000 detected");
+      }
+    }
   }
 
 }
