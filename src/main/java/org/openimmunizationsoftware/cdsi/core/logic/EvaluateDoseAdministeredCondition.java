@@ -24,15 +24,13 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
   public EvaluateDoseAdministeredCondition(DataModel dataModel) {
     super(LogicStepType.EVALUATE_DOSE_ADMINISTERED_CONDITION, dataModel);
     setConditionTableName("Table 6 - 2 Dose Administered Condition Attributes");
-    
+
     // initialize condition attributes
-    caDateAdministered =
-        new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
-    caDoseCondition =
-        new ConditionAttribute<DoseCondition>("Vaccine dose administered", "Dose Condition Flag");
-    //use CALCDTLOTEXP-1 business rules now(not implemented yet), change attribute type to "Calculated date"
-    caLotExpirationDate =
-      new ConditionAttribute<Date>("Calculated date", "Lot Expiration Date");
+    caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
+    caDoseCondition = new ConditionAttribute<DoseCondition>("Vaccine dose administered", "Dose Condition Flag");
+    // use CALCDTLOTEXP-1 business rules now(not implemented yet), change attribute
+    // type to "Calculated date"
+    caLotExpirationDate = new ConditionAttribute<Date>("Calculated date", "Lot Expiration Date");
 
     // set assumed values, if possible
     caLotExpirationDate.setAssumedValue(FUTURE);
@@ -41,7 +39,7 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
     AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
     caDateAdministered.setInitialValue(aar.getDateAdministered());
     caDoseCondition.setInitialValue(aar.getDoseCondition());
-    caLotExpirationDate.setInitialValue(aar.getLotExpirationDate()); 
+    caLotExpirationDate.setInitialValue(aar.getLotExpirationDate());
 
     // add to list for display purposes
     conditionAttributesList.add(caDateAdministered);
@@ -88,8 +86,8 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
           return LogicResult.NO;
         }
       });
-      setLogicResults(0, new LogicResult[] {LogicResult.YES, LogicResult.NO, LogicResult.NO});
-      setLogicResults(1, new LogicResult[] {LogicResult.ANY, LogicResult.YES, LogicResult.NO});
+      setLogicResults(0, new LogicResult[] { LogicResult.YES, LogicResult.NO, LogicResult.NO });
+      setLogicResults(1, new LogicResult[] { LogicResult.ANY, LogicResult.YES, LogicResult.NO });
       setLogicOutcome(0, new LogicOutcome() {
         @Override
         public void perform() {
@@ -99,7 +97,7 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
           log("Setting evaluation status to \"sub-standard\"");
           log("Setting next step: 6 Evaluate Vaccine Dose Administered");
           dataModel.setEvaluationStatus(EvaluationStatus.SUB_STANDARD);
-          setNextLogicStepType(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED);
+          setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
         }
       });
       setLogicOutcome(1, new LogicOutcome() {
@@ -107,11 +105,11 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
         public void perform() {
           log("No. The vaccine dose administered cannot be evaluated.");
           log("Setting target dose to \"not satisfied\"");
-          //dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
+          // dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
           log("Setting evaluation status to \"sub-standard\"");
           log("Setting next step: 6 Evaluate Vaccine Dose Administered");
           dataModel.setEvaluationStatus(EvaluationStatus.SUB_STANDARD);
-          setNextLogicStepType(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED);
+          setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
         }
       });
       setLogicOutcome(2, new LogicOutcome() {
@@ -149,12 +147,9 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
     out.println("<img src=\"Figure 4.2.png\"/>");
     out.println("<p>FIGURE 4 - 2 VACCINE DOSE ADMINISTERED CONDITION PROCESS MODEL</p>");
 
-
     printConditionAttributesTable(out);
     printLogicTables(out);
   }
-
-
 
   @Override
   public void printPost(PrintWriter out) {

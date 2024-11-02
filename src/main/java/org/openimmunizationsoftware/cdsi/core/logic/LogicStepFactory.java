@@ -1,5 +1,6 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
+import org.apache.commons.lang.Validate;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 
 public class LogicStepFactory {
@@ -19,12 +20,6 @@ public class LogicStepFactory {
     }
     if (stepName.equals(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES)) {
       return new EvaluateAndForecastAllPatientSeries(dataModel);
-    }
-    if (stepName.equals(LogicStepType.FOR_EACH_PATIENT_SERIES)) {
-      return new ForEachPatientSeries(dataModel);
-    }
-    if (stepName.equals(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED)) {
-      return new EvaluateVaccineDoseAdministered(dataModel);
     }
     if (stepName.equals(LogicStepType.EVALUATE_DOSE_ADMINISTERED_CONDITION)) {
       return new EvaluateDoseAdministeredCondition(dataModel);
@@ -107,14 +102,15 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.FORECAST_DATES_AND_REASONS)) {
       return new ForecastDatesAndReasons(dataModel);
     }
+    if (stepName.equals(LogicStepType.VALIDATE_RECOMMENDATION)) {
+      return new ValidateRecommendation(dataModel);
+    }
     if (stepName.equals(LogicStepType.END)) {
       return new End(dataModel);
     }
 
     throw new IllegalArgumentException("Step '" + stepName + "' is not yet implemented");
   }
-
-
 
   public static LogicStep createLogicStep(LogicStepType stepName, DataModel dataModel, boolean b) {
     if (stepName.equals(LogicStepType.GATHER_NECESSARY_DATA)) {
@@ -128,12 +124,6 @@ public class LogicStepFactory {
     }
     if (stepName.equals(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES)) {
       return new EvaluateAndForecastAllPatientSeries(dataModel);
-    }
-    if (stepName.equals(LogicStepType.FOR_EACH_PATIENT_SERIES)) {
-      return new ForEachPatientSeries(dataModel);
-    }
-    if (stepName.equals(LogicStepType.EVALUATE_VACCINE_DOSE_ADMINISTERED)) {
-      return new EvaluateVaccineDoseAdministered(dataModel);
     }
     if (stepName.equals(LogicStepType.EVALUATE_DOSE_ADMINISTERED_CONDITION)) {
       return new EvaluateDoseAdministeredCondition(dataModel);
@@ -216,6 +206,9 @@ public class LogicStepFactory {
     }
     if (stepName.equals(LogicStepType.FORECAST_DATES_AND_REASONS)) {
       return new ForecastDatesAndReasons(dataModel);
+    }
+    if (stepName.equals(LogicStepType.VALIDATE_RECOMMENDATION)) {
+      return new ValidateRecommendation(dataModel);
     }
     if (stepName.equals(LogicStepType.END)) {
       return new End(dataModel);
