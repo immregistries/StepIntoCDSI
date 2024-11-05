@@ -143,7 +143,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
 
   public GenerateForecastDatesAndRecommendedVaccines(DataModel dataModel) {
     super(LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMENDED_VACCINES, dataModel);
-    setConditionTableName("Table ");
+    setConditionTableName("Table 7-12 GENERATE FORECAST DATE AND RECOMMENDED VACCINE ATTRIBUTES");
 
     caMinimumAgeDate = new ConditionAttribute<Date>("Calculated date (CALCDTAGE-4)", "Minimum Age Date");
     caEarliestRecommendedAgeDate = new ConditionAttribute<Date>("Calculated date (CALCDTAGE-3)",
@@ -437,7 +437,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
   }
 
   private void TablePre(PrintWriter out) {
-    out.println("<p>TABLE 5 - 7 GENERATE FORECAST DATE AND RECOMMENDED VACCINE BUSINESS RULES</p>");
+    out.println("<p>TABLE 7 - 13 GENERATE FORECAST DATE AND RECOMMENDED VACCINE BUSINESS RULES</p>");
     out.println("<table BORDER=\"1\"> ");
     insertTableInit(out);
     insertTableRow(out, "FORECASTDT-1", "Earliest Date", "");

@@ -117,6 +117,10 @@ public class Forecast {
     return bestPatientSeries;
   }
 
+  public boolean getBestPatientSeries() {
+    return bestPatientSeries;
+  }
+
   public void setBestPatientSeries(boolean bestPatientSeries) {
     this.bestPatientSeries = bestPatientSeries;
   }

@@ -15,6 +15,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
 import org.openimmunizationsoftware.cdsi.core.domain.Patient;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
+import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 
 public class PatientServlet extends MainServlet {
 
@@ -64,6 +65,7 @@ public class PatientServlet extends MainServlet {
         int pos = Integer.parseInt(req.getParameter(PARAM_POS));
         printViewVaccine(dataModel, pos, out);
       }
+      printViewForecast(dataModel, out);
       printFooter(out);
     } catch (Exception e) {
       e.printStackTrace();
@@ -201,6 +203,52 @@ public class PatientServlet extends MainServlet {
     out.println("     </tr>");
   }
 
+  private void printViewForecast(DataModel dataModel, PrintWriter out) {
+    out.println("  <div class=\"w3-card w3-cell w3-margin\">");
+    out.println("    <header class=\"w3-container w3-khaki\">");
+    out.println("      <h2>Forecast</h2>");
+    out.println("    </header>");
+    out.println("    <div class=\"w3-container\">");
+    out.println("      <table class=\"w3-table w3-bordered w3-striped w3-border test w3-hoverable\">");
+    out.println("        <caption>Forecast Doses</caption>");
+    out.println("        <tr>");
+    out.println("          <th>Antigen</th>");
+    out.println("          <th>Adjusted Recommended Date</th>");
+    out.println("          <th>Adjusted Past Due Date</th>");
+    out.println("          <th>Earliest Date</th>");
+    out.println("          <th>Forecast Reason</th>");
+    out.println("          <th>Latest Date</th>");
+    out.println("          <th>Unadjusted Recommended Date</th>");
+    out.println("          <th>Unadjusted Past Due Date</th>");
+    out.println("          <th>Vaccine Assessment Date</th>");
+    out.println("          <th>Target Dose</th>");
+    out.println("          <th>Best Patient Series</th>");
+    out.println("        </tr>");
+    int pos = 0;
+    for (Forecast forecast : dataModel.getForecastList()) {
+      printRowForecast(forecast, pos, out);
+      pos++;
+    }
+    out.println("      </table>");
+    out.println("    </div>");
+    out.println("  </div>");
+  }
+
+  private void printRowForecast(Forecast forecast, int pos, PrintWriter out) {
+    out.println("     <tr>");
+    out.println("       <td>" + forecast.getAntigen().toString() + "</td>");
+    out.println("       <td>" + n(forecast.getAdjustedRecommendedDate()) + "</td>");
+    out.println("       <td>" + n(forecast.getAdjustedPastDueDate()) + "</td>");
+    out.println("       <td>" + n(forecast.getEarliestDate()) + "</td>");
+    out.println("       <td>" + forecast.getForecastReason() + "</td>");
+    out.println("       <td>" + n(forecast.getLatestDate()) + "</td>");
+    out.println("       <td>" + n(forecast.getUnadjustedRecommendedDate()) + "</td>");
+    out.println("       <td>" + n(forecast.getUnadjustedPastDueDate()) + "</td>");
+    out.println("       <td>" + n(forecast.getAssessmentDate()) + "</td>");
+    out.println("       <td>" + forecast.getTargetDose().getTargetDoseStatus() + "</td>");
+    out.println("       <td>" + forecast.getBestPatientSeries() + "</td>");
+    out.println("     </tr>");
+  }
 
   private String n(Date d) {
     if (d == null) {
