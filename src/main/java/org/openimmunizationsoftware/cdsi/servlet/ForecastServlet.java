@@ -68,14 +68,12 @@ public class ForecastServlet extends HttpServlet {
     out.println();
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 
-
     List<Forecast> fl = dataModel.getForecastList();
     List<VaccineGroupForecast> vgfl = dataModel.getVaccineGroupForecastList();
 
     List<VaccineGroupForecast> vgfNow = new ArrayList<VaccineGroupForecast>();
     List<VaccineGroupForecast> vgfLater = new ArrayList<VaccineGroupForecast>();
     List<VaccineGroupForecast> vgfDone = new ArrayList<VaccineGroupForecast>();
-
 
     Date today = new Date();
     try {
@@ -102,7 +100,8 @@ public class ForecastServlet extends HttpServlet {
     printList(dataModel, out, sdf, today, vgfLater, "VACCINATIONS RECOMMENDED AFTER");
     printList(dataModel, out, sdf, today, vgfDone, "VACCINATIONS COMPLETE OR NOT RECOMMENDED");
 
-    // printListRaw(dataModel, out, sdf, today, dataModel.getForecastList(), "RAW LIST FOR DEBUG");
+    // printListRaw(dataModel, out, sdf, today, dataModel.getForecastList(), "RAW
+    // LIST FOR DEBUG");
 
     if (dataModel.getAntigenAdministeredRecordList().size() > 0) {
       out.println("IMMUNIZATION EVALUATION");
@@ -137,8 +136,8 @@ public class ForecastServlet extends HttpServlet {
     if (vaccineGroupForecastList.size() > 0) {
       out.println(title + " " + sdf.format(dataModel.getAssessmentDate()));
       for (VaccineGroupForecast vgf : vaccineGroupForecastList) {
-        if (vgf.getAntigen() != null) {
-          String name = vgf.getAntigen().getName();
+        if (true || vgf.getAntigen() != null) {
+          String name = vgf.getAntigen() == null ? "No Antigen" : vgf.getAntigen().getName();
           // down to here
           if (name.equals("Tetanus")) {
             Calendar c = Calendar.getInstance();
@@ -154,7 +153,7 @@ public class ForecastServlet extends HttpServlet {
           }
           out.print("Forecasting " + name + " status ");
           if (vgf.getPatientSeriesStatus() == PatientSeriesStatus.NOT_COMPLETE) {
-            if (vgf.getAdjustedRecommendedDate().after(today)) {
+            if (vgf.getAdjustedRecommendedDate() != null && vgf.getAdjustedRecommendedDate().after(today)) {
               out.print("due later ");
             } else {
               out.print("due ");
@@ -195,7 +194,6 @@ public class ForecastServlet extends HttpServlet {
       out.println();
     }
   }
-
 
   private void printListRaw(DataModel dataModel, PrintWriter out, SimpleDateFormat sdf, Date today,
       List<Forecast> forecastList, String title) {
@@ -250,7 +248,6 @@ public class ForecastServlet extends HttpServlet {
       out.println();
     }
   }
-
 
   private void process(DataModel dataModel) throws Exception {
     int count = 0;

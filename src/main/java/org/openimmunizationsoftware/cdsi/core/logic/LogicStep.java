@@ -306,4 +306,12 @@ public abstract class LogicStep {
       out.println("</table>");
     }
   }
+
+  protected static String n(Date d) {
+    if (d == null) {
+      return "-";
+    }
+    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+    return sdf.format(d);
+  }
 }

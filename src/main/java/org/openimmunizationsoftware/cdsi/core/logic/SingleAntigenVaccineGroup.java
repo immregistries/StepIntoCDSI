@@ -1,6 +1,7 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,8 +130,67 @@ public class SingleAntigenVaccineGroup extends LogicStep {
     out.println(
         "<p>The forecasting rules which need to be applied to a single antigen vaccine group are listed in the table below</p>");
 
-    // printConditionAttributesTable(out);
-    // printLogicTables(out);
+    List<VaccineGroupForecast> vaccineGroupForecastList = new ArrayList<VaccineGroupForecast>();
+    VaccineGroup vaccineGroup = dataModel.getVaccineGroup();
+    out.println("<h2>" + vaccineGroup.getName() + "</h2>");
+    VaccineGroupForecast vgf = new VaccineGroupForecast();
+
+    PatientSeries p = dataModel.getBestPatientSeriesList().size() == 0 ? null
+        : dataModel.getBestPatientSeriesList().get(0);
+    if (dataModel.getBestPatientSeriesList() == null) {
+      out.println("<p>Best Patient Series List is null!</p>");
+    } else {
+      out.println("<p>Best Patient Series List size = " + dataModel.getBestPatientSeriesList().size() + "</p>");
+    }
+    out.println("<p>Forecast List size = " + dataModel.getForecastList().size() + "</p>");
+    out.println("<table>");
+    out.println("  <tr>");
+    out.println("    <th>Antigen</th>");
+    out.println("    <th>Target Dose</th>");
+    out.println("    <th>Patient Series Status</th>");
+    out.println("    <th>Earliest Date</th>");
+    out.println("    <th>Adjusted Recommended Date</th>");
+    out.println("    <th>Adjusted Past Due Date</th>");
+    out.println("    <th>Latest Date</th>");
+    out.println("    <th>Unadjusted Recommended Date</th>");
+    out.println("    <th>Unadjusted Past Due Date</th>");
+    out.println("    <th>Forecast Reason</th>");
+    out.println("  </tr>");
+
+    for (Forecast forecast : dataModel.getForecastList()) {
+      out.println("  <tr>");
+      out.println("    <td>" + forecast.getAntigen().getName() + "</td>");
+      if (forecast.getAntigen().equals(vaccineGroup.getAntigenList().get(0))) {
+
+        vgf.setTargetDose(p == null ? null : p.getForecast().getTargetDose());
+        out.println("    <td>" + (p == null ? null : p.getForecast().getTargetDose()) + "</td>");
+        vgf.setVaccineGroupStatus(p == null ? null : p.getPatientSeriesStatus());
+        out.println("    <td>" + (p == null ? null : p.getPatientSeriesStatus()) + "</td>");
+        vgf.setEarliestDate(forecast.getEarliestDate());
+        out.println("    <td>" + n(forecast.getEarliestDate()) + "</td>");
+        vgf.setAdjustedRecommendedDate(forecast.getAdjustedRecommendedDate());
+        out.println("    <td>" + n(forecast.getAdjustedRecommendedDate()) + "</td>");
+        vgf.setAdjustedPastDueDate(forecast.getAdjustedPastDueDate());
+        out.println("    <td>" + n(forecast.getAdjustedPastDueDate()) + "</td>");
+        vgf.setLatestDate(forecast.getLatestDate());
+        out.println("    <td>" + n(forecast.getLatestDate()) + "</td>");
+        vgf.setUnadjustedRecommendedDate(forecast.getUnadjustedRecommendedDate());
+        out.println("    <td>" + n(forecast.getUnadjustedRecommendedDate()) + "</td>");
+        vgf.setUnadjustedPastDueDate(forecast.getUnadjustedPastDueDate());
+        out.println("    <td>" + n(forecast.getUnadjustedPastDueDate()) + "</td>");
+        vgf.setForecastReason(forecast.getForecastReason());
+        out.println("    <td>" + forecast.getForecastReason() + "</td>");
+        vgf.setAntigen(forecast.getAntigen());
+      } else {
+        out.println("    <td colspan=\"9\">&nbsp;</td>");
+      }
+      out.println("  </tr>");
+    }
+    out.println("</table>");
+    dataModel.getVaccineGroupForecastList().add(vgf);
+
+    setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
+
   }
 
   private class LT extends LogicTable {
