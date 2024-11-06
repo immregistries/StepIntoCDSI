@@ -3,6 +3,7 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 import java.io.PrintWriter;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkipForEvaluation;
 
 public class EvaluateConditionalSkipForForecast extends EvaluateConditionalSkipForEvaluation {
 
@@ -14,8 +15,8 @@ public class EvaluateConditionalSkipForForecast extends EvaluateConditionalSkipF
 
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY);
-
+    setNextLogicStepType(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION);
+    setupInternal(dataModel, LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES, LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY);
     return next();
   }
 
