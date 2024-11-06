@@ -20,6 +20,9 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
+import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTCI_1;
+import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTCI_2;
+
 /* TODO: Adjust logic as follows, finish creating entire file
     The null ConditionAttributes need to be declared inside of LTInnerset or something
     Then each of the logic tables that happen within 7.3 will be their own instance of LTInnerset
@@ -49,29 +52,34 @@ public class DetermineContraindications extends LogicStep{
         setConditionTableName("Table 7-4 Determine Contraindication Attributes");
         caActivePatientObservations = new ConditionAttribute<List<RelevantMedicalObservation>>("Patient Data", "Active Patient Observations");
         caAdverseReactions = new ConditionAttribute<List<AdverseReaction>>("Patient Data", "Adverse Reactions");
+        caContraindicationElements = new ConditionAttribute<Contraindication>("Supporting Data","Contraindication Elements");
         caAssessmentDate = new ConditionAttribute<Date>("Processing Data","Assessment Date");
         caContraindicationBeginAgeDate = new ConditionAttribute<Date>("Calculated Date (CALCDTCI-1)","Contraindication Begin Age Date");
         caContraindicationEndAgeDate = new ConditionAttribute<Date>("Calculated Date (CALCDTCI-2)","Contraindication End Age Date");
+        
+        //set assumed values, if any
+        caAssessmentDate.setAssumedValue(new Date());
+        caContraindicationBeginAgeDate.setAssumedValue(FUTURE);
+        caContraindicationEndAgeDate.setAssumedValue(PAST);
 
-        // Sets initial and assumed values
-        /* TODO: 
-            Create CALCDTI1 and CALCDTI2 in business rules
-            Set initial values for caContraindicationBeginAgeDate, caContraindicationEndAgeDate
-            Find out what ContraindicationElements is supposed to contain and adjust its initial value to match
-            */
+        //set initial values
         caActivePatientObservations.setInitialValue(dataModel.getPatient().getMedicalHistory().getRelevantMedicalObservationList());
         caAdverseReactions.setInitialValue(dataModel.getPatient().getMedicalHistory().getImmunizationHistory().getAdverseReactionList());
+        /* TODO: 
+            the ContraindicationElements condition attribute cannot be set correctly until 'Contraindication_TO_BE_REMOVED' get replaced with 'Contraindication' to allow for the DataModelLoader to work properly
+            Find out what ContraindicationElements is supposed to contain and adjust its initial value to match
+        */
+        //caContraindicationElements.setInitialValue(dataModel.getContraindicationList().get(0));
         caAssessmentDate.setInitialValue(dataModel.getAssessmentDate());
-        caAssessmentDate.setAssumedValue(new Date());
-        //caContradictionBeginAgeDate.setInitialValue(CALCDTCI-1.evaluate());
-        caContraindicationBeginAgeDate.setAssumedValue(FUTURE);
-        //caContradictionEndAgeDate.setInitialValue(CALCDTI-2.evaluate());
-        caContraindicationEndAgeDate.setAssumedValue(PAST);
+        caContraindicationBeginAgeDate.setInitialValue(CALCDTCI_1.evaluate(dataModel, this, caContraindicationElements.getFinalValue()));
+        caContraindicationEndAgeDate.setInitialValue(CALCDTCI_2.evaluate(dataModel, this, caContraindicationElements.getFinalValue()));
+        
 
         // Adds items to conditionAttributesList
         conditionAttributesList.add(caActivePatientObservations);
         conditionAttributesList.add(caAdverseReactions);
-        conditionAttributesList.add(caAssessmentDate); // Isn't this one in there already?
+        conditionAttributesList.add(caContraindicationElements);
+        conditionAttributesList.add(caAssessmentDate);
         conditionAttributesList.add(caContraindicationBeginAgeDate);
         conditionAttributesList.add(caContraindicationEndAgeDate);
     }

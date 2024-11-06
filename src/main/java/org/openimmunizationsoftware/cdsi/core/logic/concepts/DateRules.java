@@ -7,6 +7,7 @@ import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Age;
 import org.openimmunizationsoftware.cdsi.core.domain.AllowableVaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipCondition;
+import org.openimmunizationsoftware.cdsi.core.domain.Contraindication;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
 import org.openimmunizationsoftware.cdsi.core.domain.PreferrableVaccine;
@@ -47,6 +48,9 @@ public class DateRules {
   public static DateRule<PreferrableVaccine> CALCDTPREF_2 = null;
   public static DateRule<AllowableVaccine> CALCDTALLOW_1 = null;
   public static DateRule<AllowableVaccine> CALCDTALLOW_2 = null;
+  public static DateRule<Contraindication> CALCDTCI_1 = null;
+  public static DateRule<Contraindication> CALCDTCI_2 = null;
+  
   // public static DateRule CALCDTCOND_1 = null;
   // public static DateRule CALCDTCOND_2 = null;
 
@@ -421,6 +425,34 @@ public class DateRules {
         "The patient's allowable vaccine type end age date must be calculated as the patient's date of birth plus the allowable vaccine type end Age.");
     CALCDTALLOW_2.setLogicalComponent("Allowable Vaccine");
     CALCDTALLOW_2.setFieldName("patient's allowable vaccine type end age date");
+
+    CALCDTCI_1 = new DateRule<Contraindication>() {
+      @Override
+      protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep,
+          Contraindication contraindication) {
+        if (contraindication.getContraindicationBeginAge() == null) {
+          return null;
+        }
+        return contraindication.getContraindicationBeginAge().getDateFrom(dataModel.getPatient().getDateOfBirth());
+      }
+    };
+    CALCDTCI_1.setBusinessRuleId("CALCDTCI_1");
+    CALCDTCI_1.setBusinessRule("A patient's contraindication begin age date must be calculated as the patient's date of birth plus the contraindication begin age of a contraindication.");
+    CALCDTCI_1.setLogicalComponent("Contraindication begin age date");
+
+    CALCDTCI_2 = new DateRule<Contraindication>() {
+      @Override
+      protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep,
+          Contraindication contraindication) {
+        if (contraindication.getContraindicationEndAge() == null) {
+          return null;
+        }
+        return contraindication.getContraindicationEndAge().getDateFrom(dataModel.getPatient().getDateOfBirth());
+      }
+    };
+    CALCDTCI_2.setBusinessRuleId("CALCDTCI_2");
+    CALCDTCI_2.setBusinessRule("A patient's contraindication end age date must be calculated as the patient's date of birth plus the contraindication end age of a contraindication.");
+    CALCDTCI_2.setLogicalComponent("Contraindication begin end date");
 
     // CALCDTCOND_1 = new DateRule() {
     // @Override

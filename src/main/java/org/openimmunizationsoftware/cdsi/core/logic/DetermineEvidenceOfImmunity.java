@@ -99,18 +99,19 @@ public class DetermineEvidenceOfImmunity extends LogicStep {
         @Override
         protected LogicResult evaluateInternal() {
           if (caEvidenceOfImmunity != null) {
-            //for(int i = 0; i <= caEvidenceOfImmunity.get; )
-            //for (VaccineDoseAdministered vda : caEvidenceOfImmunity.getFinalValue().getImmunizationHistory().getVaccineDoseAdministeredList()) {
-                /*
-                  YES if the immunity guideline is somewhere in evidence of immunity
-                  where to find immunity guidelines?
-                    dataModel -> immunityList -> Immunity -> clinicalHistoryList -> clinicalHistory -> immunityGuidelineCode
-                    OR dataModel -> forecast -> antigen -> immunityList -> Immunity -> clinicalHistoryList -> clinicalHistory -> immunityGuidelineCode
-                    
-                    where to find evidence of immunity/patient history?
-
-
-                */
+            /*
+              TODO add logic condition
+              for(int i = 0; i <= caEvidenceOfImmunity.get; )
+              OR
+              for (VaccineDoseAdministered vda : caEvidenceOfImmunity.getFinalValue().getImmunizationHistory().getVaccineDoseAdministeredList()) {
+                  
+              YES if the immunity guideline is somewhere in evidence of immunity
+              where to find immunity guidelines?
+              dataModel -> immunityList -> Immunity -> clinicalHistoryList -> clinicalHistory -> immunityGuidelineCode
+              OR dataModel -> forecast -> antigen -> immunityList -> Immunity -> clinicalHistoryList -> clinicalHistory -> immunityGuidelineCode
+              
+              where to find evidence of immunity/patient history?
+            */
             return YES; // placeholder for now, above logic should determine YES or NO
           }
           return NO;
