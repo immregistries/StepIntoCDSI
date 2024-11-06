@@ -37,6 +37,7 @@ public class DetermineContraindications extends LogicStep{
     // ConditionAttributes to be used
     private ConditionAttribute<List<RelevantMedicalObservation>> caActivePatientObservations = null;
     private ConditionAttribute<List<AdverseReaction>> caAdverseReactions = null;
+    private ConditionAttribute<Contraindication> caContraindicationElements = null;
     private ConditionAttribute<Date> caAssessmentDate = null;
     private ConditionAttribute<Date> caContraindicationBeginAgeDate = null;
     private ConditionAttribute<Date> caContraindicationEndAgeDate = null;
@@ -75,10 +76,10 @@ public class DetermineContraindications extends LogicStep{
         conditionAttributesList.add(caContraindicationEndAgeDate);
     }
 
-    // Print, placeholder for now
+    // TODO add Print, placeholder for now
     @Override
     public LogicStep process() throws Exception {
-      setNextLogicStepType(LogicStepType.DETERMINE_CONTRAINDICATIONS);
+      setNextLogicStepType(LogicStepType.DETERMINE_FORECAST_NEED);
       evaluateLogicTables();
       return next();
     }

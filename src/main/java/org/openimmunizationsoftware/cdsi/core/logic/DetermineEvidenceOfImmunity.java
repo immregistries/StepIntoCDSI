@@ -11,6 +11,7 @@ import java.util.List;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.BirthDateImmunity;
 import org.openimmunizationsoftware.cdsi.core.domain.MedicalHistory;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.Immunity;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
@@ -27,25 +28,24 @@ public class DetermineEvidenceOfImmunity extends LogicStep {
   // ConditionAttributes to be used
   private ConditionAttribute<Date> caDateofBirth = null;
   private ConditionAttribute<String> caCountryofBirth = null;
-  private ConditionAttribute<List<Immunity>> caEvidenceOfImmunity = null;
+  private ConditionAttribute<MedicalHistory> caEvidenceOfImmunity = null;
+  private ConditionAttribute<List<Immunity>> caImmunityElements = null;
 
   public DetermineEvidenceOfImmunity(DataModel dataModel) {
     super(LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY, dataModel);
 
     // Table 7-2
     setConditionTableName("Table 7-2 Immunity attributes");
-    caDateofBirth = new ConditionAttribute<Date>("Patient Data", "Date of Birth");
-    caCountryofBirth = new ConditionAttribute<String>("Patient Data", "Country of Birth");     
-    caEvidenceOfImmunity = new ConditionAttribute<List<Immunity>>("Patient Data", "Evidence of Immunity");
+    caDateofBirth = new ConditionAttribute<Date>("Patient", "Date of Birth");
+    caCountryofBirth = new ConditionAttribute<String>("Patient", "Country of Birth");     
+    caEvidenceOfImmunity = new ConditionAttribute<MedicalHistory>("Patient", "Evidence of Immunity");
+    caImmunityElements = new ConditionAttribute<List<Immunity>>("Supporting Data", "Immunity Elements");
 
     // Sets initial and assumed values
     caDateofBirth.setInitialValue(dataModel.getPatient().getDateOfBirth());
     caCountryofBirth.setInitialValue(dataModel.getPatient().getCountryOfBirth());
-
-
-    //caEvidenceOfImmunity.setInitialValue(
-
-    //dataModel.getPatient().getMedicalHistory());
+    caEvidenceOfImmunity.setInitialValue(dataModel.getPatient().getMedicalHistory());
+    caImmunityElements.setInitialValue(dataModel.getForecast().getAntigen().getImmunityList());
 
     // Adds items to conditionAttributesList
     conditionAttributesList.add(caDateofBirth);
@@ -59,10 +59,9 @@ public class DetermineEvidenceOfImmunity extends LogicStep {
 
   }
 
-  // I think these are for printing in the web app?
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.DETERMINE_FORECAST_NEED);
+    setNextLogicStepType(LogicStepType.DETERMINE_CONTRAINDICATIONS);
     evaluateLogicTables();
     return next();
   }
@@ -101,11 +100,15 @@ public class DetermineEvidenceOfImmunity extends LogicStep {
         protected LogicResult evaluateInternal() {
           if (caEvidenceOfImmunity != null) {
             //for(int i = 0; i <= caEvidenceOfImmunity.get; )
+            //for (VaccineDoseAdministered vda : caEvidenceOfImmunity.getFinalValue().getImmunizationHistory().getVaccineDoseAdministeredList()) {
                 /*
                   YES if the immunity guideline is somewhere in evidence of immunity
                   where to find immunity guidelines?
                     dataModel -> immunityList -> Immunity -> clinicalHistoryList -> clinicalHistory -> immunityGuidelineCode
-                  
+                    OR dataModel -> forecast -> antigen -> immunityList -> Immunity -> clinicalHistoryList -> clinicalHistory -> immunityGuidelineCode
+                    
+                    where to find evidence of immunity/patient history?
+
 
                 */
             return YES; // placeholder for now, above logic should determine YES or NO
@@ -153,10 +156,6 @@ public class DetermineEvidenceOfImmunity extends LogicStep {
                       dataModel.getImmunityList().get(0).getBirthDateImmunityList();
                   for (BirthDateImmunity bdi : birthDateImmunityList) {
                     if (bdi.getExclusionList().size() > 0) {
-                      /***
-                       * Checking if the patient has any immunity
-                       */
-                      // 
                       return YES;
                     }
                   }
