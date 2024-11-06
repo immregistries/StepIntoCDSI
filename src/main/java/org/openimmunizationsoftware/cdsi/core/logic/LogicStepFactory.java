@@ -57,7 +57,7 @@ public class LogicStepFactory {
       return new EvaluateConditionalSkipForForecast(dataModel);
     }
     if (stepName.equals(LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY)) {
-      return new DetermineEvidenceOfImmunityDose(dataModel);
+      return new DetermineEvidenceOfImmunity(dataModel);
     }
     if (stepName.equals(LogicStepType.DETERMINE_FORECAST_NEED)) {
       return new DetermineForecastNeed(dataModel);
@@ -166,7 +166,7 @@ public class LogicStepFactory {
       return new EvaluateConditionalSkipForForecast(dataModel);
     }
     if (stepName.equals(LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY)) {
-      return new DetermineEvidenceOfImmunityDose(dataModel);
+      return new DetermineEvidenceOfImmunity(dataModel);
     }
     if (stepName.equals(LogicStepType.DETERMINE_FORECAST_NEED)) {
       return new DetermineForecastNeed(dataModel);

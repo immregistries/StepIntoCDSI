@@ -19,7 +19,7 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
-public class DetermineEvidenceOfImmunityDose extends LogicStep {
+public class DetermineEvidenceOfImmunity extends LogicStep {
 
   //TODO: write all the tables and other stuff for this class
 
@@ -29,7 +29,7 @@ public class DetermineEvidenceOfImmunityDose extends LogicStep {
   private ConditionAttribute<String> caCountryofBirth = null;
   private ConditionAttribute<List<Immunity>> caEvidenceOfImmunity = null;
 
-  public DetermineEvidenceOfImmunityDose(DataModel dataModel) {
+  public DetermineEvidenceOfImmunity(DataModel dataModel) {
     super(LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY, dataModel);
 
     // Table 7-2
