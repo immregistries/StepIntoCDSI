@@ -24,17 +24,19 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
+import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTAGE_1;
+import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.FORECASTDTCAN_1;
+
 public class DetermineForecastNeed extends LogicStep {
 
   private ConditionAttribute<String> caVaccineDoseAdministered = null;
-  private ConditionAttribute<String> caAdverseReactions = null;
-  private ConditionAttribute<String> caRelevantMedicalObservation = null;
-  private ConditionAttribute<TargetDose> caTargetDose = null;
-  private ConditionAttribute<Date> caMaximumAgeDate = null;
-  private ConditionAttribute<Date> caEndDate = null;
-  private ConditionAttribute<Date> caAssessmentDate = null;
-  private ConditionAttribute<String> caContraindicatedPatientSeries = null;
+  private ConditionAttribute<TargetDose> caTargetDoseStatuses = null;
+  private ConditionAttribute<Date> caSeasonalRecommendationEndDate = null;
   private ConditionAttribute<String> caEvidenceOfImmunity = null;
+  private ConditionAttribute<String> caContraindicatedPatientSeries = null;
+  private ConditionAttribute<Date> caAssessmentDate = null;
+  private ConditionAttribute<Date> caMaximumAgeDate = null;
+  private ConditionAttribute<Date> caCandidateEarliestDate = null;
 
   private void findEndDate() {
     if (dataModel.getTargetDose() == null) {
@@ -44,7 +46,7 @@ public class DetermineForecastNeed extends LogicStep {
     if (referenceSeriesDose.getSeasonalRecommendationList().size() > 0) {
       Date seasonalRecommendationEndDate = referenceSeriesDose.getSeasonalRecommendationList()
           .get(0).getSeasonalRecommendationEndDate();
-      caEndDate.setInitialValue(seasonalRecommendationEndDate);
+          caSeasonalRecommendationEndDate.setInitialValue(seasonalRecommendationEndDate);
     } else {
       //// System.err.println("Recommendation End date is not referenced");
     }
@@ -69,36 +71,36 @@ public class DetermineForecastNeed extends LogicStep {
 
     caVaccineDoseAdministered =
         new ConditionAttribute<String>("Immunization history", "Vaccine Dose(s) Administered");
-
-    caTargetDose = new ConditionAttribute<TargetDose>("Relevant Patient series", "Target Dose Statuses");
-
-    caTargetDose.setInitialValue(dataModel.getTargetDose());
-    caMaximumAgeDate =
-        new ConditionAttribute<Date>("Calculated date (CALCDTAGE-1)", "Maximum Age Date");
-    findMaximumAgeDate();
-    caEndDate =
-        new ConditionAttribute<Date>("Supporting data (Seasonal Recommendation", "Seasonal Recommendation End Date");
-    findEndDate();
-    caAssessmentDate = new ConditionAttribute<Date>("Runtime Data", "Assessment Date");
-    caAssessmentDate.setInitialValue(dataModel.getAssessmentDate());
+    caTargetDoseStatuses = new ConditionAttribute<TargetDose>("Relevant Patient series", "Target Dose Statuses");
+    caSeasonalRecommendationEndDate = new ConditionAttribute<Date>("Supporting data (Seasonal Recommendation", "Seasonal Recommendation End Date");
     caEvidenceOfImmunity = new ConditionAttribute<String>("Section 7.2 Outcome", "Evidence of Immunity");
     caContraindicatedPatientSeries = new ConditionAttribute<String>("Section 7.3 Outcome", "Contraindicated Patient Series");
+    caAssessmentDate = new ConditionAttribute<Date>("Runtime Data", "Assessment Date"); 
+    caMaximumAgeDate = new ConditionAttribute<Date>("Calculated date (CALCDTAGE-1)", "Maximum Age Date");
+    caCandidateEarliestDate = new ConditionAttribute<Date>("Calculated date (FORECASTDTCAN-1)", "Candidate Earliest Date");
 
     caMaximumAgeDate.setAssumedValue(FUTURE);
-    caEndDate.setAssumedValue(FUTURE);
-    Date now = new Date();
-    caAssessmentDate.setAssumedValue(now);
+    caSeasonalRecommendationEndDate.setAssumedValue(FUTURE);
+    caAssessmentDate.setAssumedValue(new Date());
+    caCandidateEarliestDate.setAssumedValue(FUTURE);
+    
     // TODO: Add assumed values for caEvidenceOfImmunity and caContraindicatedPatientSeries
 
+    caTargetDoseStatuses.setInitialValue(dataModel.getTargetDose());
+    findMaximumAgeDate();
+    findEndDate();
+    caAssessmentDate.setInitialValue(dataModel.getAssessmentDate());
+    caMaximumAgeDate.setInitialValue(CALCDTAGE_1.evaluate(dataModel, this, null));
+    caCandidateEarliestDate.setInitialValue(FORECASTDTCAN_1.evaluate(dataModel, this, null));
+
     conditionAttributesList.add(caVaccineDoseAdministered);
-    conditionAttributesList.add(caAdverseReactions);
-    conditionAttributesList.add(caRelevantMedicalObservation);
-    conditionAttributesList.add(caTargetDose);
-    conditionAttributesList.add(caMaximumAgeDate);
-    conditionAttributesList.add(caEndDate);
-    conditionAttributesList.add(caAssessmentDate);
-    conditionAttributesList.add(caContraindicatedPatientSeries);
+    conditionAttributesList.add(caTargetDoseStatuses);
+    conditionAttributesList.add(caSeasonalRecommendationEndDate);
     conditionAttributesList.add(caEvidenceOfImmunity);
+    conditionAttributesList.add(caContraindicatedPatientSeries);
+    conditionAttributesList.add(caAssessmentDate);
+    conditionAttributesList.add(caMaximumAgeDate);
+    conditionAttributesList.add(caCandidateEarliestDate);
 
     LT logicTable = new LT();
     logicTableList.add(logicTable);
@@ -226,7 +228,7 @@ public class DetermineForecastNeed extends LogicStep {
           new LogicCondition("Is the assessment date < seasonal recommendation end date ?") {
             @Override
             protected LogicResult evaluateInternal() {
-              if (caAssessmentDate.getFinalValue().before(caEndDate.getFinalValue())) {
+              if (caAssessmentDate.getFinalValue().before(caSeasonalRecommendationEndDate.getFinalValue())) {
                 return LogicResult.YES;
               } else {
                 return LogicResult.NO;

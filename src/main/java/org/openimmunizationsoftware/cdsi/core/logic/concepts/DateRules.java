@@ -50,6 +50,7 @@ public class DateRules {
   public static DateRule<AllowableVaccine> CALCDTALLOW_2 = null;
   public static DateRule<Contraindication> CALCDTCI_1 = null;
   public static DateRule<Contraindication> CALCDTCI_2 = null;
+  public static DateRule<Contraindication> FORECASTDTCAN_1 = null;
   
   // public static DateRule CALCDTCOND_1 = null;
   // public static DateRule CALCDTCOND_2 = null;
@@ -453,6 +454,21 @@ public class DateRules {
     CALCDTCI_2.setBusinessRuleId("CALCDTCI_2");
     CALCDTCI_2.setBusinessRule("A patient's contraindication end age date must be calculated as the patient's date of birth plus the contraindication end age of a contraindication.");
     CALCDTCI_2.setLogicalComponent("Contraindication begin end date");
+
+    FORECASTDTCAN_1 = new DateRule<Contraindication>() {
+      //TODO logic not correct
+      @Override
+      protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep,
+          Contraindication contraindication) {
+        if (contraindication.getContraindicationBeginAge() == null) {
+          return null;
+        }
+        return contraindication.getContraindicationBeginAge().getDateFrom(dataModel.getPatient().getDateOfBirth());
+      }
+    };
+    FORECASTDTCAN_1.setBusinessRuleId("FORECASTDTCAN_1");
+    FORECASTDTCAN_1.setBusinessRule("");
+    FORECASTDTCAN_1.setLogicalComponent("Candidate Earliest Date");
 
     // CALCDTCOND_1 = new DateRule() {
     // @Override
