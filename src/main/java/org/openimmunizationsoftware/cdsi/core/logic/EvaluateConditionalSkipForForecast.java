@@ -3,19 +3,15 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 import java.io.PrintWriter;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
-import org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkipForEvaluation;
 
-public class EvaluateConditionalSkipForForecast extends EvaluateConditionalSkipForEvaluation {
+public class EvaluateConditionalSkipForForecast extends EvaluateConditionalSkip {
 
   public EvaluateConditionalSkipForForecast(DataModel dataModel) {
-    super(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST, dataModel);
-  }
-
-  @Override
-  public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION);
-    setupInternal(dataModel, LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY, LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
-    return next();
+    super(dataModel, ConditionalSkipType.FORECAST,
+        LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST,
+        LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY,
+        LogicStepType.FORECAST_DATES_AND_REASONS);
+    setConditionTableName("Table 6.4 Conditional Skip Attributes");
   }
 
   @Override
@@ -45,6 +41,5 @@ public class EvaluateConditionalSkipForForecast extends EvaluateConditionalSkipF
     out.println(
         "<p>The process model, attribute table, and decision table are used to determine if the target dose can be skipped is the same as described in Chapter 4.2.</p>");
   }
-
 
 }

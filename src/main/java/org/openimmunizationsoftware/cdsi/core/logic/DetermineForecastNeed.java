@@ -46,7 +46,7 @@ public class DetermineForecastNeed extends LogicStep {
     if (referenceSeriesDose.getSeasonalRecommendationList().size() > 0) {
       Date seasonalRecommendationEndDate = referenceSeriesDose.getSeasonalRecommendationList()
           .get(0).getSeasonalRecommendationEndDate();
-          caSeasonalRecommendationEndDate.setInitialValue(seasonalRecommendationEndDate);
+      caSeasonalRecommendationEndDate.setInitialValue(seasonalRecommendationEndDate);
     } else {
       //// System.err.println("Recommendation End date is not referenced");
     }
@@ -68,22 +68,25 @@ public class DetermineForecastNeed extends LogicStep {
     super(LogicStepType.DETERMINE_FORECAST_NEED, dataModel);
     setConditionTableName("Table 7-0 : Determine Forecast Need Attributes");
 
-    caVaccineDoseAdministered =
-        new ConditionAttribute<String>("Immunization history", "Vaccine Dose(s) Administered");
+    caVaccineDoseAdministered = new ConditionAttribute<String>("Immunization history", "Vaccine Dose(s) Administered");
     caTargetDoseStatuses = new ConditionAttribute<TargetDose>("Relevant Patient series", "Target Dose Statuses");
-    caSeasonalRecommendationEndDate = new ConditionAttribute<Date>("Supporting data (Seasonal Recommendation", "Seasonal Recommendation End Date");
+    caSeasonalRecommendationEndDate = new ConditionAttribute<Date>("Supporting data (Seasonal Recommendation",
+        "Seasonal Recommendation End Date");
     caEvidenceOfImmunity = new ConditionAttribute<String>("Section 7.2 Outcome", "Evidence of Immunity");
-    caContraindicatedPatientSeries = new ConditionAttribute<String>("Section 7.3 Outcome", "Contraindicated Patient Series");
-    caAssessmentDate = new ConditionAttribute<Date>("Runtime Data", "Assessment Date"); 
+    caContraindicatedPatientSeries = new ConditionAttribute<String>("Section 7.3 Outcome",
+        "Contraindicated Patient Series");
+    caAssessmentDate = new ConditionAttribute<Date>("Runtime Data", "Assessment Date");
     caMaximumAgeDate = new ConditionAttribute<Date>("Calculated date (CALCDTAGE-1)", "Maximum Age Date");
-    caCandidateEarliestDate = new ConditionAttribute<Date>("Calculated date (FORECASTDTCAN-1)", "Candidate Earliest Date");
+    caCandidateEarliestDate = new ConditionAttribute<Date>("Calculated date (FORECASTDTCAN-1)",
+        "Candidate Earliest Date");
 
     caMaximumAgeDate.setAssumedValue(FUTURE);
     caSeasonalRecommendationEndDate.setAssumedValue(FUTURE);
     caAssessmentDate.setAssumedValue(new Date());
     caCandidateEarliestDate.setAssumedValue(FUTURE);
-    
-    // TODO: Add assumed values for caEvidenceOfImmunity and caContraindicatedPatientSeries
+
+    // TODO: Add assumed values for caEvidenceOfImmunity and
+    // caContraindicatedPatientSeries
 
     caTargetDoseStatuses.setInitialValue(dataModel.getTargetDose());
     findMaximumAgeDate();
@@ -154,7 +157,7 @@ public class DetermineForecastNeed extends LogicStep {
 
   private class LT extends LogicTable {
     public LT() {
-      super(8, 7, "Table 7-10 Should the patient receive another target dose?");
+      super(7, 8, "Table 7-10 Should the patient receive another target dose?");
       setLogicCondition(0, new LogicCondition(
           "Does the patient have at least one target dose with a target dose status of \"not satisfied\"?") {
         @Override
@@ -193,7 +196,7 @@ public class DetermineForecastNeed extends LogicStep {
           "Does the patient have evidence of immunity?") {
         @Override
         protected LogicResult evaluateInternal() {
-          //TODO add logic for this logic condition
+          // TODO add logic for this logic condition
           return LogicResult.NO;
         }
       });
@@ -272,8 +275,7 @@ public class DetermineForecastNeed extends LogicStep {
           log("No. The patient should not receive another dose.");
           setNextLogicStepType(LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMENDED_VACCINES);
           dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.COMPLETE);
-          Antigen tmpAntigen =
-              dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
+          Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
           List<Forecast> forecastList = dataModel.getForecastList();
           for (Forecast forecast : forecastList) {
             if (forecast.getAntigen().equals(tmpAntigen)) {
@@ -290,8 +292,7 @@ public class DetermineForecastNeed extends LogicStep {
         public void perform() {
           log("No. The patient should not receive another dose.");
           dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.NOT_RECOMMENDED);
-          Antigen tmpAntigen =
-              dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
+          Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
           List<Forecast> forecastList = dataModel.getForecastList();
           for (Forecast forecast : forecastList) {
             if (forecast.getAntigen().equals(tmpAntigen)) {
@@ -308,8 +309,7 @@ public class DetermineForecastNeed extends LogicStep {
         public void perform() {
           log("No. The patient should not receive another doses.");
           dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.CONTRAINDICATED);
-          Antigen tmpAntigen =
-              dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
+          Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
           List<Forecast> forecastList = dataModel.getForecastList();
           for (Forecast forecast : forecastList) {
             if (forecast.getAntigen().equals(tmpAntigen)) {
@@ -325,8 +325,7 @@ public class DetermineForecastNeed extends LogicStep {
         public void perform() {
           log("No. The patient should not receive another doses.");
           dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.AGED_OUT);
-          Antigen tmpAntigen =
-              dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
+          Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
           List<Forecast> forecastList = dataModel.getForecastList();
           for (Forecast forecast : forecastList) {
             if (forecast.getAntigen().equals(tmpAntigen)) {
@@ -342,8 +341,7 @@ public class DetermineForecastNeed extends LogicStep {
         public void perform() {
           log("No. The patient should not receive another dose.");
           dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.NOT_COMPLETE);
-          Antigen tmpAntigen =
-              dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
+          Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
           List<Forecast> forecastList = dataModel.getForecastList();
           for (Forecast forecast : forecastList) {
             if (forecast.getAntigen().equals(tmpAntigen)) {
@@ -352,6 +350,20 @@ public class DetermineForecastNeed extends LogicStep {
           }
           log("Forecast reason is \"past seasonal recommendation end date.\"");
 
+        }
+      });
+
+      setLogicOutcome(6, new LogicOutcome() {
+        @Override
+        public void perform() {
+          // do something
+        }
+      });
+
+      setLogicOutcome(7, new LogicOutcome() {
+        @Override
+        public void perform() {
+          // do something
         }
       });
 

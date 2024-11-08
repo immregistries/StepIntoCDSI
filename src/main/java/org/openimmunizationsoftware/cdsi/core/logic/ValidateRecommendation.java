@@ -4,10 +4,15 @@ import java.io.PrintWriter;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 
-public class ValidateRecommendation extends LogicStep {
+public class ValidateRecommendation extends EvaluateConditionalSkip {
 
     public ValidateRecommendation(DataModel dataModel) {
-        super(LogicStepType.VALIDATE_RECOMMENDATION, dataModel);
+        super(dataModel, ConditionalSkipType.VALIDATING,
+                LogicStepType.VALIDATE_RECOMMENDATION,
+                LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES,
+                LogicStepType.FORECAST_DATES_AND_REASONS);
+        setConditionTableName("Table 6.4 Conditional Skip Attributes");
+
     }
 
     @Override
