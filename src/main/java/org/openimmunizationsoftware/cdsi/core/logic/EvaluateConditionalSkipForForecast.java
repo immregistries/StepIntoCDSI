@@ -8,15 +8,13 @@ import org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkipForEv
 public class EvaluateConditionalSkipForForecast extends EvaluateConditionalSkipForEvaluation {
 
   public EvaluateConditionalSkipForForecast(DataModel dataModel) {
-
     super(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST, dataModel);
-
   }
 
   @Override
   public LogicStep process() throws Exception {
     setNextLogicStepType(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION);
-    setupInternal(dataModel, LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES, LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY);
+    setupInternal(dataModel, LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY, LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
     return next();
   }
 

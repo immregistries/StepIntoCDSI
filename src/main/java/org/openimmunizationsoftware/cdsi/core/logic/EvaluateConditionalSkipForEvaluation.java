@@ -44,6 +44,9 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
   protected boolean isForecast;
   protected boolean isValidating;
 
+  protected LogicStepType noSkipLogicStep;
+  protected LogicStepType skipLogicStep;
+
   // Constructor 1
   protected EvaluateConditionalSkipForEvaluation(LogicStepType logicStepType, DataModel dataModel) {
     super(logicStepType, dataModel);
@@ -65,15 +68,19 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
   // EvaluateConditionalSkipForEvaluation or EvaluateConditionalSkipForForecast
   protected void setupInternal(DataModel dataModel, final LogicStepType noSkip,
       final LogicStepType skip) {
+    noSkipLogicStep = noSkip;
+    skipLogicStep = skip;
     if (noSkip.equals(LogicStepType.EVALUATE_FOR_INADVERTENT_VACCINE)) {
       isForecast = false;
       isValidating = false;
       log("Evaluate Conditional Skip is being called from 6.2");
     } else if (noSkip.equals(LogicStepType.VALIDATE_RECOMMENDATION)) {
       isValidating = true;
+      isForecast = false;
       log("Evaluate Conditional Skip is being called from 'Validate Recommendation'");
     } else {
       isForecast = true;
+      isValidating = false;
       log("Evaluate Conditional Skip is being called from 7.1");
     }
 
@@ -213,7 +220,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
   // Overriding the methods of parent functions and redefining them
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.EVALUATE_FOR_INADVERTENT_VACCINE);
+    setNextLogicStepType(noSkipLogicStep);
     evaluateLogicTables();
     return next();
   }
@@ -591,7 +598,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
           log("Yes. The target dose can be skipped.");
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.SKIPPED);
           log("The target dose status is 'skipped'");
-          log("Setting next step: 4.4 Evaluate And Forecast All Patient Series");
+          log("Setting next step: " + skip.getName());
           TargetDose targetDoseNext = dataModel.findNextTargetDose(dataModel.getTargetDose());
           dataModel.setTargetDose(targetDoseNext);
           setNextLogicStepType(skip);
@@ -602,7 +609,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
         @Override
         public void perform() {
           log("No. The target dose cannot be skipped.");
-          log("Setting next step: 6.4 Evaluate Age");
+          log("Setting next step: " + noSkip.getName());
           setNextLogicStepType(noSkip);
         }
       });

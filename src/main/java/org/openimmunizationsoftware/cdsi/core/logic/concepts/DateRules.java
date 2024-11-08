@@ -52,9 +52,6 @@ public class DateRules {
   public static DateRule<Contraindication> CALCDTCI_2 = null;
   public static DateRule<Contraindication> FORECASTDTCAN_1 = null;
   
-  // public static DateRule CALCDTCOND_1 = null;
-  // public static DateRule CALCDTCOND_2 = null;
-
   static {
 
     CALCDTSKIP_3 = new DateRule<ConditionalSkipCondition>() {
