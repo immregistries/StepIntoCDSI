@@ -94,6 +94,9 @@ public class OneBestPatientSeries extends LogicStep {
           int completePatientSeries = 0;
           List<PatientSeries> psl = dataModel.getPatientSeriesList();
           for (PatientSeries ps : psl) {
+            if(ps.getPatientSeriesStatus() == null) {
+              continue;
+            }
             if (ps.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)) {
               completePatientSeries++;
             }
@@ -115,6 +118,9 @@ public class OneBestPatientSeries extends LogicStep {
           int notCompletePatientSeries = 0;
           List<PatientSeries> psl = dataModel.getPatientSeriesList();
           for (PatientSeries ps : psl) {
+            if(ps.getPatientSeriesStatus() == null) {
+              continue;
+            }
             if (ps.getPatientSeriesStatus().equals(PatientSeriesStatus.NOT_COMPLETE)) {
               notCompletePatientSeries++;
             }

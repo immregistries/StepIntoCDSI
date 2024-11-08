@@ -65,7 +65,6 @@ public class DetermineForecastNeed extends LogicStep {
   }
 
   public DetermineForecastNeed(DataModel dataModel) {
-    // TODO: add Calculated Date (FORECASTDTCAN-1) to table 7-9
     super(LogicStepType.DETERMINE_FORECAST_NEED, dataModel);
     setConditionTableName("Table 7-0 : Determine Forecast Need Attributes");
 
@@ -155,11 +154,7 @@ public class DetermineForecastNeed extends LogicStep {
 
   private class LT extends LogicTable {
     public LT() {
-      /*  TODO: Add the following conditions to 7-10
-       * Does the patient have evidence of immunity?
-       * Is the candidate earliest date < the maximum age date?
-      */
-      super(5, 6, "Table 7-10 Should the patient receive another target dose ?");
+      super(8, 7, "Table 7-10 Should the patient receive another target dose?");
       setLogicCondition(0, new LogicCondition(
           "Does the patient have at least one target dose with a target dose status of \"not satisfied\"?") {
         @Override
@@ -194,8 +189,17 @@ public class DetermineForecastNeed extends LogicStep {
         }
       });
 
-      setLogicCondition(2,
-          new LogicCondition("Is the patient without a contradiction for this patient series ?") {
+      setLogicCondition(2, new LogicCondition(
+          "Does the patient have evidence of immunity?") {
+        @Override
+        protected LogicResult evaluateInternal() {
+          //TODO add logic for this logic condition
+          return LogicResult.NO;
+        }
+      });
+
+      setLogicCondition(3,
+          new LogicCondition("Is the relevant patient series a contraindicated patient series?") {
             @Override
             protected LogicResult evaluateInternal() {
               List<Contraindication_TO_BE_REMOVED> targetContraindictionList = new ArrayList<Contraindication_TO_BE_REMOVED>();
@@ -214,33 +218,45 @@ public class DetermineForecastNeed extends LogicStep {
             }
           });
 
-      setLogicCondition(3, new LogicCondition("Is the assessment date < the maximum age date ?") {
+      setLogicCondition(4, new LogicCondition("Is the assessment date <= the seasonal recommendation end date?") {
+        @Override
+        protected LogicResult evaluateInternal() {
+          if (caAssessmentDate.getFinalValue().after(caSeasonalRecommendationEndDate.getFinalValue())) {
+            return LogicResult.NO;
+          }
+          return LogicResult.YES;
+        }
+      });
+
+      setLogicCondition(5, new LogicCondition("Is the assessment date < maximum end date ?") {
         @Override
         protected LogicResult evaluateInternal() {
           if (caAssessmentDate.getFinalValue().before(caMaximumAgeDate.getFinalValue())) {
             return LogicResult.YES;
+          } else {
+            return LogicResult.NO;
           }
-          return LogicResult.NO;
         }
       });
 
-      setLogicCondition(4,
-          new LogicCondition("Is the assessment date < seasonal recommendation end date ?") {
-            @Override
-            protected LogicResult evaluateInternal() {
-              if (caAssessmentDate.getFinalValue().before(caSeasonalRecommendationEndDate.getFinalValue())) {
-                return LogicResult.YES;
-              } else {
-                return LogicResult.NO;
-              }
-            }
-          });
+      setLogicCondition(6, new LogicCondition("Is the candidate earliest date < the maximum age date?") {
+        @Override
+        protected LogicResult evaluateInternal() {
+          if (caCandidateEarliestDate.getFinalValue().before(caMaximumAgeDate.getFinalValue())) {
+            return LogicResult.YES;
+          } else {
+            return LogicResult.NO;
+          }
+        }
+      });
 
-      setLogicResults(0, YES, NO, NO, ANY, ANY, ANY);
-      setLogicResults(1, ANY, YES, NO, ANY, ANY, ANY);
-      setLogicResults(2, YES, ANY, ANY, NO, ANY, ANY);
-      setLogicResults(3, YES, ANY, ANY, ANY, NO, ANY);
-      setLogicResults(4, YES, ANY, ANY, ANY, ANY, NO);
+      setLogicResults(0, YES, NO, NO, ANY, ANY, ANY, ANY, ANY);
+      setLogicResults(1, ANY, YES, NO, ANY, ANY, ANY, ANY, ANY);
+      setLogicResults(2, NO, ANY, ANY, YES, ANY, ANY, ANY, ANY);
+      setLogicResults(3, NO, ANY, ANY, ANY, YES, ANY, ANY, ANY);
+      setLogicResults(4, YES, ANY, ANY, ANY, ANY, NO, ANY, ANY);
+      setLogicResults(5, YES, ANY, ANY, ANY, ANY, ANY, NO, ANY);
+      setLogicResults(6, YES, ANY, ANY, ANY, ANY, ANY, ANY, NO);
 
       setLogicOutcome(0, new LogicOutcome() {
         @Override

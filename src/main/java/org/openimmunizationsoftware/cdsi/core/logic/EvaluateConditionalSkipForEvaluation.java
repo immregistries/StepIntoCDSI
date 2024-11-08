@@ -54,7 +54,7 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
   public EvaluateConditionalSkipForEvaluation(DataModel dataModel) {
     super(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION, dataModel);
     setConditionTableName("Table 6.4 Conditional Skip Attributes");
-    setupInternal(dataModel, LogicStepType.EVALUATE_AGE, LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
+    setupInternal(dataModel, LogicStepType.EVALUATE_FOR_INADVERTENT_VACCINE, LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
   }
 
   // Defining setupInternal function; appears to change the isForecast variable
@@ -68,10 +68,13 @@ public class EvaluateConditionalSkipForEvaluation extends LogicStep {
     if (noSkip.equals(LogicStepType.EVALUATE_FOR_INADVERTENT_VACCINE)) {
       isForecast = false;
       isValidating = false;
+      log("Evaluate Conditional Skip is being called from 6.2");
     } else if (noSkip.equals(LogicStepType.VALIDATE_RECOMMENDATION)) {
       isValidating = true;
+      log("Evaluate Conditional Skip is being called from 'Validate Recommendation'");
     } else {
       isForecast = true;
+      log("Evaluate Conditional Skip is being called from 7.1");
     }
 
     // Defining variables initialized earlier
