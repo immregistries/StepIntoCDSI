@@ -179,8 +179,10 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
     if (vgf.getEarliestDate() != null && vgf.getEarliestDate().after(earliestRecommendedDate)) {
       earliestRecommendedDate = vgf.getEarliestDate();
     }
-    if (vgf.getTargetDose() == null && td != null)
+    if (vgf.getTargetDose() == null && td != null) {
       vgf.setTargetDose(td);
+    }
+
     vgf.setAdjustedPastDueDate(earliestRecommendedDate);
   }
 
@@ -210,8 +212,9 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
         }
       }
     }
-    if (vgf.getTargetDose() == null && td != null)
+    if (vgf.getTargetDose() == null && td != null) {
       vgf.setTargetDose(td);
+    }
     vgf.setAdjustedRecommendedDate(earliestRecommendedDate);
   }
 

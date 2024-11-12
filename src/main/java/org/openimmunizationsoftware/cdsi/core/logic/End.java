@@ -32,7 +32,6 @@ public class End extends LogicStep {
     List<VaccineGroupForecast> vaccineGroupForecastList = new ArrayList<VaccineGroupForecast>();
     VaccineGroup vaccineGroup = dataModel.getVaccineGroup();
     out.println("<h2>" + vaccineGroup.getName() + "</h2>");
-    
 
     PatientSeries p = dataModel.getBestPatientSeriesList().size() == 0 ? null
         : dataModel.getBestPatientSeriesList().get(0);
@@ -41,7 +40,8 @@ public class End extends LogicStep {
     } else {
       out.println("<p>Best Patient Series List size = " + dataModel.getBestPatientSeriesList().size() + "</p>");
     }
-    out.println("<p>Forecast List size = " + dataModel.getForecastList().size() + "</p>");
+    out.println("<p>Forecast List size = " + dataModel.getForecastList().size() + " for list "
+        + dataModel.getForecastList() + "</p>");
     out.println("<table>");
     out.println("  <tr>");
     out.println("    <th>Antigen</th>");
@@ -59,7 +59,7 @@ public class End extends LogicStep {
     for (Forecast forecast : dataModel.getForecastList()) {
       for (Antigen antigen : dataModel.getAntigenList()) {
         VaccineGroupForecast vgf = new VaccineGroupForecast();
-      
+
         if (forecast.getAntigen().equals(antigen)) {
           out.println("  <tr>");
           out.println("    <td>" + forecast.getAntigen().getName() + "</td>");
@@ -85,7 +85,7 @@ public class End extends LogicStep {
           out.println("  </tr>");
           dataModel.getVaccineGroupForecastList().add(vgf);
         }
-        
+
       }
     }
     out.println("</table>");
