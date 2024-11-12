@@ -23,6 +23,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
+import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepFactory;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepType;
 
@@ -40,9 +41,14 @@ public class ForecastServlet extends HttpServlet {
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
     try {
-      DataModel dataModel = readRequest(req);
-      process(dataModel);
       PrintWriter out = new PrintWriter(resp.getOutputStream());
+      DataModel dataModel = readRequest(req);
+      String logStep = req.getParameter("logStep");
+      LogicStepType logStepType = null;
+      if (logStep != null) {
+        logStepType = LogicStepType.valueOf(logStep);
+      }
+      process(dataModel, out, logStepType);
       String resultFormat = req.getParameter(PARAM_RESULT_FORMAT);
       if (resultFormat == null) {
         resultFormat = RESULT_FORMAT_TEXT;
@@ -136,9 +142,8 @@ public class ForecastServlet extends HttpServlet {
       List<VaccineGroupForecast> vaccineGroupForecastList, String title) {
     if (vaccineGroupForecastList.size() > 0) {
       out.println(title + " " + sdf.format(dataModel.getAssessmentDate()));
-      out.println("    <p> VaccineGroupForecastList size is: " + vaccineGroupForecastList.size() + "</p>");
       for (VaccineGroupForecast vgf : vaccineGroupForecastList) {
-        if (vgf.getAntigen() != null) {//always null!
+        if (vgf.getAntigen() != null) {
           String name = vgf.getAntigen() == null ? "No Antigen" : vgf.getAntigen().getName();
           if (name.equals("Tetanus")) {
             Calendar c = Calendar.getInstance();
@@ -250,10 +255,24 @@ public class ForecastServlet extends HttpServlet {
     }
   }
 
-  private void process(DataModel dataModel) throws Exception {
+  private void process(DataModel dataModel, PrintWriter out, LogicStepType logLogicStepType) throws Exception {
     int count = 0;
     while (dataModel.getLogicStep().getLogicStepType() != LogicStepType.END) {
-      dataModel.setNextLogicStep(dataModel.getLogicStep().process());
+      LogicStep currentStep = dataModel.getLogicStep();
+      LogicStep nextLogicStep = dataModel.getLogicStep().process();
+      dataModel.setNextLogicStep(nextLogicStep);
+      if (logLogicStepType != null) {
+        if (logLogicStepType == currentStep.getLogicStepType()) {
+          out.println("========================================================================================");
+          out.println(
+              "Step " + count + ": " + currentStep.getLogicStepType().getName() + " -> "
+                  + nextLogicStep.getLogicStepType().getName());
+          currentStep.printPost(out);
+          currentStep.printLog(out);
+          out.println("========================================================================================");
+        }
+      }
+
       count++;
       if (count > 100000) {
         System.err.println(

@@ -17,18 +17,15 @@ public class SelectRelevantPatientSeries extends LogicStep {
   public LogicStep process() throws Exception {
 
     Antigen antigen = dataModel.getAntigenSelectedList().get(dataModel.getAntigenSelectedPos());
+    log("Creating patient series for antigen " + antigen.getName());
 
-    int i = 1;
     for (AntigenSeries antigenSeries : dataModel.getAntigenSeriesList()) {
       if (!antigenSeries.getTargetDisease().equals(antigen)) {
         continue;
       }
-      if (dataModel.getRequest().getParameter(PARAM_ANTIGEN_SERIES_INCLUDE + i) != null) {
-        // Logic table goes here to see if Antigen should be added to PatientSeries
-        PatientSeries patientSeries = new PatientSeries(antigenSeries);
-        dataModel.getPatientSeriesList().add(patientSeries);
-      }
-      i++;
+      // Logic table goes here to see if Antigen should be added to PatientSeries
+      PatientSeries patientSeries = new PatientSeries(antigenSeries);
+      dataModel.getPatientSeriesList().add(patientSeries);
     }
 
     return LogicStepFactory.createLogicStep(LogicStepType.CREATE_RELEVANT_PATIENT_SERIES, dataModel);
@@ -37,8 +34,8 @@ public class SelectRelevantPatientSeries extends LogicStep {
   public void printPre(PrintWriter out) throws Exception {
     out.println("   <h2>5.1 Create Relevant Patient Series</h2>");
     out.println("   <h2>Antigen Series</h2>");
-    out.println("     <p>Looking at antigen " + (dataModel.getAntigenSelectedPos() + 1) 
-      + " out of " + dataModel.getAntigenSelectedList().size() + " antigens selected. </p>");
+    out.println("     <p>Looking at antigen " + (dataModel.getAntigenSelectedPos() + 1)
+        + " out of " + dataModel.getAntigenSelectedList().size() + " antigens selected. </p>");
     out.println("   <table>");
     out.println("     <tr>");
     out.println("       <th>Include</th>");

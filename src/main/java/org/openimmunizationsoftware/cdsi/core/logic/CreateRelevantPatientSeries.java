@@ -19,37 +19,46 @@ public class CreateRelevantPatientSeries extends LogicStep {
   public LogicStep process() throws Exception {
 
     if (dataModel.getAntigenSelectedList() == null) {
+      log("Antigen selected list is null, creating");
       List<Antigen> antigenSelectedList = new ArrayList<Antigen>();
       dataModel.setAntigenSelectedList(antigenSelectedList);
       int i = 1;
       boolean foundAtLeastOne = false;
       for (Antigen antigen : dataModel.getAntigenList()) {
         if (dataModel.getRequest().getParameter(PARAM_ANTIGEN_INCLUDE + i) != null) {
+          log("  + antigen indicated " + antigen.getName());
           foundAtLeastOne = true;
           antigenSelectedList.add(antigen);
+        } else {
+          log("  - antigen not indicated " + antigen.getName());
         }
         i++;
       }
-      // If none are checked then check them all
-      if (!foundAtLeastOne) {
+      if (foundAtLeastOne) {
+        log("Found at least one antigen selected, only forecasting for selected antigens");
+      } else {
+        log("No antigens selected, forecasting for all antigens");
         for (Antigen antigen : dataModel.getAntigenList()) {
           antigenSelectedList.add(antigen);
         }
       }
+      log("Forecasting for " + antigenSelectedList.size() + " antigens");
       dataModel.setAntigenSelectedPos(0);
-    }
-    else { 
+    } else {
+      log("Antigen selected list already exists, incrementing");
       dataModel.incAntigenAdministeredRecordPos();
       dataModel.incAntigenSelectedPos();
     }
 
     if (dataModel.getAntigenSelectedPos() < dataModel.getAntigenSelectedList().size()) {
+      log("Selecting antigen series for this antigen: "
+          + dataModel.getAntigenSelectedList().get(dataModel.getAntigenSelectedPos()).getName());
       return LogicStepFactory.createLogicStep(LogicStepType.SELECT_RELEVANT_PATIENT_SERIES, dataModel);
-    }
-    else {
+    } else {
+      log("Done, now evaluating and forecasting all patient series");
       return LogicStepFactory.createLogicStep(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES, dataModel);
     }
-    
+
   }
 
   public void printPre(PrintWriter out) throws Exception {
@@ -70,8 +79,7 @@ public class CreateRelevantPatientSeries extends LogicStep {
         out.println("     </tr>");
         i++;
       }
-    }
-    else {
+    } else {
       out.println("     <tr>");
       out.println("       <th>Antigen</th>");
       out.println("     </tr>");
@@ -85,7 +93,7 @@ public class CreateRelevantPatientSeries extends LogicStep {
   }
 
   public void printPost(PrintWriter out) throws Exception {
-    out.println("   <h1>8.2 Create Patient Series</h2>");
+    out.println("   <h1>4.3 Create Patient Series</h2>");
     out.println(
         "   <p>An antigen series is one way to reach perceived immunity against a disease.  "
             + "An antigen series can be thought of as a \"path to immunity\" and is described in "
