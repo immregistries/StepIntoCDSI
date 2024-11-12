@@ -2,6 +2,9 @@ package org.openimmunizationsoftware.cdsi.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +16,53 @@ import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepType;
 
 public class StepServlet extends ForecastServlet {
+
+  static List<StepExample> stepExamples = null;
+  static int stepExampleStartCount = 0;
+  static {
+    stepExamples = new ArrayList<StepExample>();
+    {
+      StepExample stepExample = new StepExample(
+          "Original Hib",
+          "evalDate=20160630&scheduleName=default&resultFormat=text&patientDob=20150630&patientSex=F&vaccineDate1=20150826&vaccineCvx1=47&vaccineMvx1=&vaccineDate2=20151027&vaccineCvx2=47&vaccineMvx2=&vaccineDate3=20151229&vaccineCvx3=47&vaccineMvx3=");
+      stepExamples.add(stepExample);
+    }
+    {
+      StepExample stepExample = new StepExample(
+          "Original Complete Record",
+          "evalDate=20140515&scheduleName=default&resultFormat=text&patientDob=20051215&patientSex=M&vaccineDate1=20060213&vaccineCvx1=10&vaccineMvx1=&vaccineDate2=20060214&vaccineCvx2=100&vaccineMvx2=&vaccineDate3=20060420&vaccineCvx3=10&vaccineMvx3=&vaccineDate4=20060420&vaccineCvx4=20&vaccineMvx4=&vaccineDate5=20060420&vaccineCvx5=17&vaccineMvx5=&vaccineDate6=20060616&vaccineCvx6=17&vaccineMvx6=&vaccineDate7=20060616&vaccineCvx7=10&vaccineMvx7=&vaccineDate8=20060616&vaccineCvx8=08&vaccineMvx8=&vaccineDate9=20060616&vaccineCvx9=20&vaccineMvx9=&vaccineDate10=20060616&vaccineCvx10=100&vaccineMvx10=&vaccineDate11=20060929&vaccineCvx11=08&vaccineMvx11=&vaccineDate12=20060929&vaccineCvx12=100&vaccineMvx12=&vaccineDate13=20061213&vaccineCvx13=20&vaccineMvx13=&vaccineDate14=20061215&vaccineCvx14=08&vaccineMvx14=&vaccineDate15=20061215&vaccineCvx15=85&vaccineMvx15=&vaccineDate16=20061215&vaccineCvx16=03&vaccineMvx16=&vaccineDate17=20061215&vaccineCvx17=21&vaccineMvx17=&vaccineDate18=20071105&vaccineCvx18=17&vaccineMvx18=&vaccineDate19=20071105&vaccineCvx19=20&vaccineMvx19=&vaccineDate20=20071105&vaccineCvx20=10&vaccineMvx20=&vaccineDate21=20080110&vaccineCvx21=85&vaccineMvx21=&vaccineDate22=20080110&vaccineCvx22=100&vaccineMvx22=&vaccineDate23=20140515&vaccineCvx23=21&vaccineMvx23=&vaccineDate24=20140515&vaccineCvx24=139&vaccineMvx24=&vaccineDate25=20140515&vaccineCvx25=10&vaccineMvx25=&vaccineDate26=20140515&vaccineCvx26=03&vaccineMvx26=");
+      stepExamples.add(stepExample);
+    }
+    {
+      StepExample stepExample = new StepExample(
+          "#2022-0001 Dose #1 Tdap at 9 years, Dose #2 Td at 4 weeks, Dose #3 Td at 10 years",
+          "evalDate=20241112&scheduleName=&resultFormat=text&patientDob=20141112&patientSex=m&vaccineDate1=20240312&vaccineCvx1=115&vaccineMvx1=SKB&vaccineDate2=20240409&vaccineCvx2=113&vaccineMvx2=PMC&vaccineDate3=20241112&vaccineCvx3=113&vaccineMvx3=PMC");
+      stepExamples.add(stepExample);
+    }
+    {
+      StepExample stepExample = new StepExample(
+          "#2022-0002 Dose #1 Tdap at 9 years, Dose #2 Td at 4 weeks, Dose #3 Tdap at 10 years",
+          "evalDate=20241112&scheduleName=&resultFormat=text&patientDob=20141112&patientSex=m&vaccineDate1=20240312&vaccineCvx1=115&vaccineMvx1=SKB&vaccineDate2=20240409&vaccineCvx2=113&vaccineMvx2=PMC&vaccineDate3=20241112&vaccineCvx3=115&vaccineMvx3=SKB");
+      stepExamples.add(stepExample);
+    }
+    stepExampleStartCount = stepExamples.size();
+  }
+
+  private static final int MAX_STEP_EXAMPLES = 100;
+
+  public static void registerRequest(HttpServletRequest req) {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    String label = req.getParameter("Received forecast " + sdf.format(new java.util.Date()));
+    String requestString = req.getQueryString();
+    StepExample stepExample = new StepExample(label, requestString);
+    synchronized (stepExamples) {
+      stepExamples.add(stepExampleStartCount, stepExample);
+      if (stepExamples.size() > stepExampleStartCount + MAX_STEP_EXAMPLES) {
+        stepExamples.remove(stepExampleStartCount + MAX_STEP_EXAMPLES);
+      }
+    }
+  }
+
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
@@ -56,6 +106,9 @@ public class StepServlet extends ForecastServlet {
         } else if (submit != null && submit.equals("Jump4.6")) {
           String jumpTo = "Identify and Evaluate Vaccine Group";
           jump(dataModel, jumpTo);
+        } else if (submit != null && submit.equals("End")) {
+          String jumpTo = "End";
+          jump(dataModel, jumpTo);
         }
         if (dataModel.getLogicStep().getLogicStepType() != LogicStepType.END) {
           dataModel.setNextLogicStep(dataModel.getLogicStep().process());
@@ -93,22 +146,27 @@ public class StepServlet extends ForecastServlet {
         if (dataModel.getLogicStepPrevious() == null) {
           out.println("<h1>CDSi Demonstration System</h1> ");
           if (req.getParameter(LogicStep.PARAM_EVAL_DATE) == null) {
-            out.println(
-                "<p>This application will take the user step-by-step through the CDSi logic. </p>");
-            out.println("<h2>Acknowledgements</h2>");
-            out.println("<ul>");
-            out.println("  <li>Nathan Bunker</li>");
-            out.println("  <li>Jordan Coleman</li>");
-            out.println("  <li>Eric Ostrom</li>");
-            out.println("  <li>Lee Grygla</li>");
-            out.println("</ul>");
-            out.println("<h2>Demonstration Links</h2>");
-            out.println("<ul>");
-            out.println(
-                "  <li><a href=\"step?evalDate=20160630&scheduleName=default&resultFormat=text&patientDob=20150630&patientSex=F&vaccineDate1=20150826&vaccineCvx1=47&vaccineMvx1=&vaccineDate2=20151027&vaccineCvx2=47&vaccineMvx2=&vaccineDate3=20151229&vaccineCvx3=47&vaccineMvx3=\">Hib Example</a></li>");
-            out.println(
-                "  <li><a href=\"step?evalDate=20140515&scheduleName=default&resultFormat=text&patientDob=20051215&patientSex=M&vaccineDate1=20060213&vaccineCvx1=10&vaccineMvx1=&vaccineDate2=20060214&vaccineCvx2=100&vaccineMvx2=&vaccineDate3=20060420&vaccineCvx3=10&vaccineMvx3=&vaccineDate4=20060420&vaccineCvx4=20&vaccineMvx4=&vaccineDate5=20060420&vaccineCvx5=17&vaccineMvx5=&vaccineDate6=20060616&vaccineCvx6=17&vaccineMvx6=&vaccineDate7=20060616&vaccineCvx7=10&vaccineMvx7=&vaccineDate8=20060616&vaccineCvx8=08&vaccineMvx8=&vaccineDate9=20060616&vaccineCvx9=20&vaccineMvx9=&vaccineDate10=20060616&vaccineCvx10=100&vaccineMvx10=&vaccineDate11=20060929&vaccineCvx11=08&vaccineMvx11=&vaccineDate12=20060929&vaccineCvx12=100&vaccineMvx12=&vaccineDate13=20061213&vaccineCvx13=20&vaccineMvx13=&vaccineDate14=20061215&vaccineCvx14=08&vaccineMvx14=&vaccineDate15=20061215&vaccineCvx15=85&vaccineMvx15=&vaccineDate16=20061215&vaccineCvx16=03&vaccineMvx16=&vaccineDate17=20061215&vaccineCvx17=21&vaccineMvx17=&vaccineDate18=20071105&vaccineCvx18=17&vaccineMvx18=&vaccineDate19=20071105&vaccineCvx19=20&vaccineMvx19=&vaccineDate20=20071105&vaccineCvx20=10&vaccineMvx20=&vaccineDate21=20080110&vaccineCvx21=85&vaccineMvx21=&vaccineDate22=20080110&vaccineCvx22=100&vaccineMvx22=&vaccineDate23=20140515&vaccineCvx23=21&vaccineMvx23=&vaccineDate24=20140515&vaccineCvx24=139&vaccineMvx24=&vaccineDate25=20140515&vaccineCvx25=10&vaccineMvx25=&vaccineDate26=20140515&vaccineCvx26=03&vaccineMvx26=\">Complete Record</a></li>");
-            out.println("</ul>");
+            // make a table with two columns one with the step link and label and the other
+            // with forecast
+            out.println("<h2>Step Examples</h2>");
+            out.println("<table>");
+            out.println("  <tr>");
+            out.println("    <th>Step</th>");
+            out.println("    <th>Forecast</th>");
+            out.println("  </tr>");
+            List<StepExample> stepExamplesCopy = new ArrayList<StepExample>();
+            synchronized (stepExamples) {
+              stepExamplesCopy.addAll(stepExamples);
+            }
+            for (StepExample stepExample : stepExamples) {
+              out.println("  <tr>");
+              String stepLink = "step?" + stepExample.getRequestString();
+              String forecastLink = "forecast?" + stepExample.getRequestString();
+              out.println("      <td><a href=\"" + stepLink + "\">" + stepExample.getLabel() + "</a></td><td><a href=\""
+                  + forecastLink + "\">Forecast</a></td>");
+              out.println("  </tr>");
+            }
+            out.println("</table>");
           }
         } else {
           dataModel.getLogicStepPrevious().printPost(out);
@@ -156,6 +214,7 @@ public class StepServlet extends ForecastServlet {
       out.println("        <input type=\"submit\" name=\"submit\" value=\"Jump4.4\"/>");
       out.println("        <input type=\"submit\" name=\"submit\" value=\"Jump4.5\"/>");
       out.println("        <input type=\"submit\" name=\"submit\" value=\"Jump4.6\"/>");
+      out.println("        <input type=\"submit\" name=\"submit\" value=\"End\"/>");
       out.println("        <input type=\"hidden\" name=\"action\" value=\"next\"/>");
 
       try {
