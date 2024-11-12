@@ -90,7 +90,7 @@ public class ForecastServlet extends HttpServlet {
     }
     {
       for (VaccineGroupForecast vgf : vgfl) {
-        if (vgf.getForecastReason().equals("")) {
+        if (!vgf.getForecastReason().equals("Patient series is complete")) {
           if (vgf.getAdjustedRecommendedDate() != null
               && vgf.getAdjustedRecommendedDate().after(today)) {
             vgfLater.add(vgf);
