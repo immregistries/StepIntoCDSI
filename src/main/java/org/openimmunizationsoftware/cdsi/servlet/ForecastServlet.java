@@ -19,6 +19,7 @@ import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.data.DataModelLoader;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
+import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
@@ -135,10 +136,10 @@ public class ForecastServlet extends HttpServlet {
       List<VaccineGroupForecast> vaccineGroupForecastList, String title) {
     if (vaccineGroupForecastList.size() > 0) {
       out.println(title + " " + sdf.format(dataModel.getAssessmentDate()));
+      out.println("    <p> VaccineGroupForecastList size is: " + vaccineGroupForecastList.size() + "</p>");
       for (VaccineGroupForecast vgf : vaccineGroupForecastList) {
-        if (true || vgf.getAntigen() != null) {
+        if (vgf.getAntigen() != null) {//always null!
           String name = vgf.getAntigen() == null ? "No Antigen" : vgf.getAntigen().getName();
-          // down to here
           if (name.equals("Tetanus")) {
             Calendar c = Calendar.getInstance();
             c.setTime(dataModel.getPatient().getDateOfBirth());
