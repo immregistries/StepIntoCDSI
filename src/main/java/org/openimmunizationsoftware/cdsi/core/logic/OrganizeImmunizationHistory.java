@@ -47,7 +47,7 @@ public class OrganizeImmunizationHistory extends LogicStep {
 
   @Override
   public void printPre(PrintWriter out) throws Exception {
-    out.println("<h1>8.3 Organize Immunization History</h1>");
+    out.println("<h1>4.2 Organize Immunization History</h1>");
     out.println(
         "   <p>The third step in the process is to look at the patient's immunization history and prepare those records "
             + "for evaluation and forecasting by breaking them into their antigen parts. This allows the evaluation and "
@@ -60,7 +60,7 @@ public class OrganizeImmunizationHistory extends LogicStep {
   @Override
   public void printPost(PrintWriter out) {
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-    out.println("<h1>8.3 Organize Immunization History</h1>");
+    out.println("<h1>4.2 Organize Immunization History</h1>");
 
     out.println(
         "   <p>The third step in the process is to look at the patient's immunization history and prepare those records "

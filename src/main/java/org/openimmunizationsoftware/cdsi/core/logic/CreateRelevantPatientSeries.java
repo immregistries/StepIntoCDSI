@@ -2,12 +2,15 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 
 public class CreateRelevantPatientSeries extends LogicStep {
 
@@ -66,15 +69,26 @@ public class CreateRelevantPatientSeries extends LogicStep {
     out.println("   <h2>Antigen Series</h2>");
     out.println("   <table>");
     if (dataModel.getAntigenSelectedList() == null) {
+      Set<Antigen> antigenSet = new HashSet<Antigen>();
+      for (VaccineDoseAdministered vda : dataModel.getImmunizationHistory()
+          .getVaccineDoseAdministeredList()) {
+        for (Antigen antigen : vda.getVaccine().getVaccineType().getAntigenList()) {
+          antigenSet.add(antigen);
+        }
+      }
       out.println("     <tr>");
       out.println("       <th>Include</th>");
       out.println("       <th>Antigen</th>");
       out.println("     </tr>");
       int i = 1;
       for (Antigen antigen : dataModel.getAntigenList()) {
+        String checked = "";
+        if (antigenSet.contains(antigen)) {
+          checked = " checked";
+        }
         out.println("     <tr>");
         out.println("       <td><input type=\"checkbox\" name=\"" + PARAM_ANTIGEN_INCLUDE + i
-            + "\" value=\"true\"></td>");
+            + "\" value=\"true\"" + checked + "></td>");
         out.println("       <td>" + antigen.getName() + "</td>");
         out.println("     </tr>");
         i++;
