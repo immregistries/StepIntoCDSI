@@ -41,6 +41,7 @@ public class ForecastServlet extends HttpServlet {
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
     try {
+      StepServlet.registerRequest(req);
       PrintWriter out = new PrintWriter(resp.getOutputStream());
       DataModel dataModel = readRequest(req);
       String logStep = req.getParameter("logStep");
