@@ -63,27 +63,16 @@ public class End extends LogicStep {
         if (forecast.getAntigen().equals(antigen)) {
           out.println("  <tr>");
           out.println("    <td>" + forecast.getAntigen().getName() + "</td>");
-          vgf.setTargetDose(p == null ? null : p.getForecast().getTargetDose());
           out.println("    <td>" + (p == null ? null : p.getForecast().getTargetDose()) + "</td>");
-          vgf.setVaccineGroupStatus(p == null ? null : p.getPatientSeriesStatus());
           out.println("    <td>" + (p == null ? null : p.getPatientSeriesStatus()) + "</td>");
-          vgf.setEarliestDate(forecast.getEarliestDate());
           out.println("    <td>" + n(forecast.getEarliestDate()) + "</td>");
-          vgf.setAdjustedRecommendedDate(forecast.getAdjustedRecommendedDate());
           out.println("    <td>" + n(forecast.getAdjustedRecommendedDate()) + "</td>");
-          vgf.setAdjustedPastDueDate(forecast.getAdjustedPastDueDate());
           out.println("    <td>" + n(forecast.getAdjustedPastDueDate()) + "</td>");
-          vgf.setLatestDate(forecast.getLatestDate());
           out.println("    <td>" + n(forecast.getLatestDate()) + "</td>");
-          vgf.setUnadjustedRecommendedDate(forecast.getUnadjustedRecommendedDate());
           out.println("    <td>" + n(forecast.getUnadjustedRecommendedDate()) + "</td>");
-          vgf.setUnadjustedPastDueDate(forecast.getUnadjustedPastDueDate());
           out.println("    <td>" + n(forecast.getUnadjustedPastDueDate()) + "</td>");
-          vgf.setForecastReason(forecast.getForecastReason());
           out.println("    <td>" + forecast.getForecastReason() + "</td>");
-          vgf.setAntigen(forecast.getAntigen());
           out.println("  </tr>");
-          dataModel.getVaccineGroupForecastList().add(vgf);
         }
 
       }

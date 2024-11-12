@@ -42,8 +42,9 @@ public class SingleAntigenVaccineGroup extends LogicStep {
     PatientSeries p = dataModel.getBestPatientSeriesList().size() == 0 ? null
         : dataModel.getBestPatientSeriesList().get(0);
     for (Forecast forecast : dataModel.getForecastList()) {
+      log("<p> looping through forecast list</p>");
       if (forecast.getAntigen().equals(vaccineGroup.getAntigenList().get(0))) {
-
+        log("<p>    forecast antigen equals first antigen in vaccine group, creating VGF</p>");
         // Règle en plus
         vgf.setTargetDose(p == null ? null : p.getForecast().getTargetDose());
         // SINGLEANTVG-1 The vaccine group status for a single antigen vaccine group
@@ -94,9 +95,10 @@ public class SingleAntigenVaccineGroup extends LogicStep {
         // vaccine group must be the best patient series forecast recommended vaccines.
         //
         vgf.setAntigen(forecast.getAntigen());
+        dataModel.getVaccineGroupForecastList().add(vgf);
       }
     }
-    dataModel.getVaccineGroupForecastList().add(vgf);
+    
 
     setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
     return next();
@@ -161,29 +163,18 @@ public class SingleAntigenVaccineGroup extends LogicStep {
     for (Forecast forecast : dataModel.getForecastList()) {
       out.println("  <tr>");
       out.println("    <td>" + forecast.getAntigen().getName() + "</td>");
-      vgf.setTargetDose(p == null ? null : p.getForecast().getTargetDose());
       out.println("    <td>" + (p == null ? null : p.getForecast().getTargetDose()) + "</td>");
-      vgf.setVaccineGroupStatus(p == null ? null : p.getPatientSeriesStatus());
       out.println("    <td>" + (p == null ? null : p.getPatientSeriesStatus()) + "</td>");
-      vgf.setEarliestDate(forecast.getEarliestDate());
       out.println("    <td>" + n(forecast.getEarliestDate()) + "</td>");
-      vgf.setAdjustedRecommendedDate(forecast.getAdjustedRecommendedDate());
       out.println("    <td>" + n(forecast.getAdjustedRecommendedDate()) + "</td>");
-      vgf.setAdjustedPastDueDate(forecast.getAdjustedPastDueDate());
       out.println("    <td>" + n(forecast.getAdjustedPastDueDate()) + "</td>");
-      vgf.setLatestDate(forecast.getLatestDate());
       out.println("    <td>" + n(forecast.getLatestDate()) + "</td>");
-      vgf.setUnadjustedRecommendedDate(forecast.getUnadjustedRecommendedDate());
       out.println("    <td>" + n(forecast.getUnadjustedRecommendedDate()) + "</td>");
-      vgf.setUnadjustedPastDueDate(forecast.getUnadjustedPastDueDate());
       out.println("    <td>" + n(forecast.getUnadjustedPastDueDate()) + "</td>");
-      vgf.setForecastReason(forecast.getForecastReason());
       out.println("    <td>" + forecast.getForecastReason() + "</td>");
-      vgf.setAntigen(forecast.getAntigen());
       out.println("  </tr>");
     }
     out.println("</table>");
-    dataModel.getVaccineGroupForecastList().add(vgf);
 
     setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
 
