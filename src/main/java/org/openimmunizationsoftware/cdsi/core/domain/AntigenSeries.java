@@ -48,6 +48,14 @@ public class AntigenSeries {
     return seriesDoseList;
   }
 
+  public List<Indication> getIndicationList() {
+    return indicationList;
+  }
+
+  public void setIndicationList(List<Indication> indicationList) {
+    this.indicationList = indicationList;
+  }
+
   public SelectBestPatientSeries getSelectBestPatientSeries() {
     return selectBestPatientSeries;
   }

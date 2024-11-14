@@ -8,6 +8,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.Age;
 import org.openimmunizationsoftware.cdsi.core.domain.AllowableVaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipCondition;
 import org.openimmunizationsoftware.cdsi.core.domain.Contraindication;
+import org.openimmunizationsoftware.cdsi.core.domain.Indication;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
 import org.openimmunizationsoftware.cdsi.core.domain.PreferrableVaccine;
@@ -51,6 +52,8 @@ public class DateRules {
   public static DateRule<Contraindication> CALCDTCI_1 = null;
   public static DateRule<Contraindication> CALCDTCI_2 = null;
   public static DateRule<Contraindication> FORECASTDTCAN_1 = null;
+  public static DateRule<Indication> CALCDTIND_1 = null;
+  public static DateRule<Indication> CALCDTIND_2 = null;
 
   static {
 
@@ -483,6 +486,36 @@ public class DateRules {
     FORECASTDTCAN_1.setBusinessRuleId("FORECASTDTCAN_1");
     FORECASTDTCAN_1.setBusinessRule("");
     FORECASTDTCAN_1.setLogicalComponent("Contraindication");
+
+    CALCDTIND_1 = new DateRule<Indication>() {
+      @Override
+      protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep,
+          Indication indication) {
+        if (indication == null || indication.getBeginAge() == null) {
+          return null;
+        }
+        return indication.getBeginAge().getDateFrom(dataModel.getPatient().getDateOfBirth());
+      }
+    };
+    CALCDTIND_1.setBusinessRuleId("CALCDTIND_1");
+    CALCDTIND_1.setBusinessRule(
+        "A patient's indication begin age date must be calculated as the patient's date of birth plus the indication begin age of an indication.");
+    CALCDTIND_1.setLogicalComponent("Indication");
+
+    CALCDTIND_2 = new DateRule<Indication>() {
+      @Override
+      protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep,
+          Indication indication) {
+        if (indication == null || indication.getEndAge() == null) {
+          return null;
+        }
+        return indication.getEndAge().getDateFrom(dataModel.getPatient().getDateOfBirth());
+      }
+    };
+    CALCDTIND_2.setBusinessRuleId("CALCDTIND_2");
+    CALCDTIND_2.setBusinessRule(
+        "A patient's indication end age date must be calculated as the patient's date of birth plus the indication end age of an indication.");
+    CALCDTIND_2.setLogicalComponent("Indication");
 
     // CALCDTCOND_1 = new DateRule() {
     // @Override
