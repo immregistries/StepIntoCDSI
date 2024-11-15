@@ -41,7 +41,6 @@ public class SelectRelevantPatientSeries extends LogicStep {
       if (!antigenSeries.getTargetDisease().equals(antigen)) {
         continue;
       }
-      log("creating logic table 5-5 for " + antigenSeries.getTargetDisease());
       LT55 logicTable55 = new LT55();
       logicTable55.antigenSeries = antigenSeries;
       
@@ -53,7 +52,7 @@ public class SelectRelevantPatientSeries extends LogicStep {
         logicTable54.caDateOfBirth = new ConditionAttribute<Date>("Patient", "Date Of Birth");
         //TODO: 'MedicalHistory' needs to be replaced with new class 'PatientHistory'
         logicTable54.caActivePatientObservations = new ConditionAttribute<MedicalHistory>("Patient history", "Active Patient Observation(s)");
-        logicTable54.caRequiredGender = new ConditionAttribute<String>("Supporting Data (Gender)", "Required Gender");
+        logicTable54.caRequiredGender = new ConditionAttribute<List<String>>("Supporting Data (Gender)", "Required Gender");
         logicTable54.caSeriesType = new ConditionAttribute<String>("Supporting Data (Series Type)", "Series Type");
         logicTable54.caObservationCode = new ConditionAttribute<ObservationCode>("Supporting Data (Indication)", "Observation Code");
         logicTable54.caAssessmentDate = new ConditionAttribute<Date>("Runtime data", "Assessment Date");
@@ -62,7 +61,11 @@ public class SelectRelevantPatientSeries extends LogicStep {
 
         //setting assumed values, if any
         logicTable54.caGender.setAssumedValue("Unknown");
-        logicTable54.caRequiredGender.setAssumedValue(dataModel.getPatient().getGender());
+
+        List<String> assumedRequiredGenderList = new ArrayList<String>();
+        assumedRequiredGenderList.add(dataModel.getPatient().getGender());
+        logicTable54.caRequiredGender.setAssumedValue(assumedRequiredGenderList);
+
         logicTable54.caAssessmentDate.setAssumedValue(new Date());
         logicTable54.caIndicationBeginAgeDate.setAssumedValue(PAST);
         logicTable54.caIndicationEndAgeDate.setAssumedValue(FUTURE); 
@@ -71,8 +74,7 @@ public class SelectRelevantPatientSeries extends LogicStep {
         logicTable54.caGender.setInitialValue(dataModel.getPatient().getGender());
         logicTable54.caDateOfBirth.setInitialValue(dataModel.getPatient().getDateOfBirth());
         logicTable54.caActivePatientObservations.setInitialValue(dataModel.getPatient().getMedicalHistory());
-        //TODO find RequiredGender
-        //logicTable54.caRequiredGender.setInitialValue();
+        logicTable54.caRequiredGender.setInitialValue(antigenSeries.getRequiredGenderList());
         logicTable54.caSeriesType.setInitialValue(antigenSeries.getSeriesName());
         logicTable54.caObservationCode.setInitialValue(indication.getObservationCode());
         logicTable54.caAssessmentDate.setInitialValue(dataModel.getAssessmentDate());
@@ -156,7 +158,7 @@ public class SelectRelevantPatientSeries extends LogicStep {
     protected ConditionAttribute<String> caGender = null;
     protected ConditionAttribute<Date> caDateOfBirth = null;
     protected ConditionAttribute<MedicalHistory> caActivePatientObservations = null;
-    protected ConditionAttribute<String> caRequiredGender = null;
+    protected ConditionAttribute<List<String>> caRequiredGender = null;
     protected ConditionAttribute<String> caSeriesType = null;
     protected ConditionAttribute<ObservationCode> caObservationCode = null;
     protected ConditionAttribute<Date> caAssessmentDate = null;
@@ -241,7 +243,7 @@ public class SelectRelevantPatientSeries extends LogicStep {
     }
   }
 
-  protected class LT55 extends LogicTable {
+  protected class LT55 extends LTInnerSet {
     private List<LTInnerSet> innerSetList = new ArrayList<SelectRelevantPatientSeries.LTInnerSet>();
     protected AntigenSeries antigenSeries = null;
 
@@ -253,17 +255,34 @@ public class SelectRelevantPatientSeries extends LogicStep {
       super(3, 4, "TABLE 5-5 IS AN ANTIGEN SERIES A RELEVANT PATIENT SERIES FOR A PATIENT?");
 
       setLogicCondition(0, new LogicCondition("Is the patient gender one of the required genders of the antigen series?") {
-        //TODO add logic
         @Override
         public LogicResult evaluateInternal() {
-          return LogicResult.YES;
+          if(caRequiredGender == null || caRequiredGender.getFinalValue() == null) {
+            return LogicResult.YES;
+          }
+          if(caRequiredGender.getFinalValue().size() == 0) {
+            return LogicResult.YES;
+          }
+
+          LogicResult result = LogicResult.NO;
+          for(String requiredGender : caRequiredGender.getFinalValue()) {
+            if(caGender.equals(requiredGender)) {
+              result = LogicResult.YES;
+            }
+          }
+          return result;
         }
       });
 
       setLogicCondition(1, new LogicCondition("Is the series type of the antigen series 'Standard' or 'Evaluation Only'?") {
-        //TODO add logic
         @Override
         public LogicResult evaluateInternal() {
+          if(antigenSeries.getSeriesType() == null) {
+            return LogicResult.NO;
+          }
+          if(antigenSeries.getSeriesType().equals("Standard") || antigenSeries.getSeriesType().equals("Evaluation Only")) {
+            return LogicResult.YES;
+          }
           return LogicResult.NO;
         }
       });

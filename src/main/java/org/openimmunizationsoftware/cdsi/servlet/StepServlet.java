@@ -242,8 +242,8 @@ public class StepServlet extends ForecastServlet {
     while (dataModel.getLogicStep().getLogicStepType() != LogicStepType.END
         && !dataModel.getLogicStep().getLogicStepType().getName().equals(jumpTo)) {
       dataModel.setNextLogicStep(dataModel.getLogicStep().process());
-      if (count++ > 10000) {
-        throw new Exception("Jump loop over 10000 detected");
+      if (count++ > 100000) {
+        throw new Exception("Jump loop over 100000 detected");
       }
     }
   }
