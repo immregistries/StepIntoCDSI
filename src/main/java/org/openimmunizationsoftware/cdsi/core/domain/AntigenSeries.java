@@ -5,6 +5,8 @@ import java.util.List;
 
 public class AntigenSeries {
   private String seriesName = "";
+  private String seriesType = "";
+  private List<String> requiredGenderList = new ArrayList<String>();
   private SelectBestPatientSeries selectBestPatientSeries = null;
   private Antigen targetDisease = null;
   private VaccineGroup vaccineGroup = null;
@@ -44,8 +46,32 @@ public class AntigenSeries {
     this.seriesName = seriesName;
   }
 
+  public String getSeriesType() {
+    return seriesType;
+  }
+
+  public void setSeriesType(String seriesType) {
+    this.seriesType = seriesType;
+  }
+
+  public List<String> getRequiredGenderList() {
+    return requiredGenderList;
+  }
+
+  public void setRequiredGenderList(List<String> requiredGenderList) {
+    this.requiredGenderList = requiredGenderList;
+  }
+
   public List<SeriesDose> getSeriesDoseList() {
     return seriesDoseList;
+  }
+
+  public List<Indication> getIndicationList() {
+    return indicationList;
+  }
+
+  public void setIndicationList(List<Indication> indicationList) {
+    this.indicationList = indicationList;
   }
 
   public SelectBestPatientSeries getSelectBestPatientSeries() {
