@@ -28,7 +28,8 @@ public class CreateRelevantPatientSeries extends LogicStep {
       int i = 1;
       boolean foundAtLeastOne = false;
       for (Antigen antigen : dataModel.getAntigenList()) {
-        if (dataModel.getRequest().getParameter(PARAM_ANTIGEN_INCLUDE + i) != null) {
+        if (dataModel.getTestCaseRegistered() != null
+            || dataModel.getRequest().getParameter(PARAM_ANTIGEN_INCLUDE + i) != null) {
           log("  + antigen indicated " + antigen.getName());
           foundAtLeastOne = true;
           antigenSelectedList.add(antigen);

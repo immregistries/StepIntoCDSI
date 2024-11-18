@@ -17,6 +17,9 @@ import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.DoseCondition;
 import org.openimmunizationsoftware.cdsi.servlet.dataModelView.AntigenServlet;
+import org.openimmunizationsoftware.cdsi.servlet.fits.TestCaseRegistered;
+
+import gov.nist.healthcare.cds.domain.TestCase;
 
 public class GatherNecessaryData extends LogicStep {
 
@@ -27,42 +30,76 @@ public class GatherNecessaryData extends LogicStep {
   @Override
   public LogicStep process() throws Exception {
 
-    HttpServletRequest req = dataModel.getRequest();
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-    Patient patient = new Patient();
-    dataModel.setPatient(patient);
-    patient.setDateOfBirth(sdf.parse(req.getParameter(PARAM_PATIENT_DOB)));
-    patient.setGender(req.getParameter(PARAM_PATIENT_SEX));
-    dataModel.setAssessmentDate(sdf.parse(req.getParameter(PARAM_EVAL_DATE)));
+    if (dataModel.getRequest() != null) {
+      HttpServletRequest req = dataModel.getRequest();
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+      Patient patient = new Patient();
+      dataModel.setPatient(patient);
+      patient.setDateOfBirth(sdf.parse(req.getParameter(PARAM_PATIENT_DOB)));
+      patient.setGender(req.getParameter(PARAM_PATIENT_SEX));
+      dataModel.setAssessmentDate(sdf.parse(req.getParameter(PARAM_EVAL_DATE)));
 
-    ImmunizationHistory immunizationHistory = new ImmunizationHistory();
-    dataModel.setImmunizationHistory(immunizationHistory);
-    int i = 1;
-    while (req.getParameter(PARAM_VACCINE_CVX + i) != null) {
-      VaccineDoseAdministered vaccineDoseAdministered = new VaccineDoseAdministered();
-      vaccineDoseAdministered.setPatient(patient);
-      vaccineDoseAdministered.setImmunizationHistory(immunizationHistory);
-      immunizationHistory.getVaccineDoseAdministeredList().add(vaccineDoseAdministered);
-      patient.getReceivesList().add(vaccineDoseAdministered);
-      vaccineDoseAdministered
-          .setDateAdministered(sdf.parse(req.getParameter(PARAM_VACCINE_DATE + i)));
-      if (req.getParameter(PARAM_VACCINE_CONDITION_CODE + i) != null
-          && !req.getParameter(PARAM_VACCINE_CONDITION_CODE + i).equals("")) {
-        vaccineDoseAdministered.setDoseCondition(
-            req.getParameter(PARAM_VACCINE_CONDITION_CODE + i).equalsIgnoreCase("yes")
-                ? DoseCondition.YES : DoseCondition.NO);
+      ImmunizationHistory immunizationHistory = new ImmunizationHistory();
+      dataModel.setImmunizationHistory(immunizationHistory);
+      int i = 1;
+      while (req.getParameter(PARAM_VACCINE_CVX + i) != null) {
+        VaccineDoseAdministered vaccineDoseAdministered = new VaccineDoseAdministered();
+        vaccineDoseAdministered.setPatient(patient);
+        vaccineDoseAdministered.setImmunizationHistory(immunizationHistory);
+        immunizationHistory.getVaccineDoseAdministeredList().add(vaccineDoseAdministered);
+        patient.getReceivesList().add(vaccineDoseAdministered);
+        vaccineDoseAdministered
+            .setDateAdministered(sdf.parse(req.getParameter(PARAM_VACCINE_DATE + i)));
+        if (req.getParameter(PARAM_VACCINE_CONDITION_CODE + i) != null
+            && !req.getParameter(PARAM_VACCINE_CONDITION_CODE + i).equals("")) {
+          vaccineDoseAdministered.setDoseCondition(
+              req.getParameter(PARAM_VACCINE_CONDITION_CODE + i).equalsIgnoreCase("yes")
+                  ? DoseCondition.YES
+                  : DoseCondition.NO);
+        }
+        String cvxCode = req.getParameter(PARAM_VACCINE_CVX + i);
+        String mvxCode = req.getParameter(PARAM_VACCINE_MVX + i);
+        Vaccine vaccine = new Vaccine();
+        VaccineType cvx = dataModel.getCvxMap().get(cvxCode);
+        if (cvx == null) {
+          throw new IllegalArgumentException("Unrecognized cvx code '" + cvxCode + "'");
+        }
+        vaccine.setVaccineType(cvx);
+        vaccine.setManufacturer(mvxCode);
+        vaccineDoseAdministered.setVaccine(vaccine);
+        i++;
       }
-      String cvxCode = req.getParameter(PARAM_VACCINE_CVX + i);
-      String mvxCode = req.getParameter(PARAM_VACCINE_MVX + i);
-      Vaccine vaccine = new Vaccine();
-      VaccineType cvx = dataModel.getCvxMap().get(cvxCode);
-      if (cvx == null) {
-        throw new IllegalArgumentException("Unrecognized cvx code '" + cvxCode + "'");
+    } else if (dataModel.getTestCaseRegistered() != null) {
+      TestCaseRegistered tcr = dataModel.getTestCaseRegistered();
+      Patient patient = new Patient();
+      dataModel.setPatient(patient);
+      patient.setDateOfBirth(tcr.getBirthDate());
+      patient.setGender("F");
+      dataModel.setAssessmentDate(tcr.getEvalDate());
+
+      ImmunizationHistory immunizationHistory = new ImmunizationHistory();
+      dataModel.setImmunizationHistory(immunizationHistory);
+      int i = 1;
+      for (TestCaseRegistered.Vaccination v : tcr.getVaccinationList()) {
+        VaccineDoseAdministered vaccineDoseAdministered = new VaccineDoseAdministered();
+        vaccineDoseAdministered.setPatient(patient);
+        vaccineDoseAdministered.setImmunizationHistory(immunizationHistory);
+        immunizationHistory.getVaccineDoseAdministeredList().add(vaccineDoseAdministered);
+        patient.getReceivesList().add(vaccineDoseAdministered);
+        vaccineDoseAdministered
+            .setDateAdministered(v.getVaccineDate());
+        String cvxCode = v.getVaccineCvx();
+        String mvxCode = v.getVaccineMvx();
+        Vaccine vaccine = new Vaccine();
+        VaccineType cvx = dataModel.getCvxMap().get(cvxCode);
+        if (cvx == null) {
+          throw new IllegalArgumentException("Unrecognized cvx code '" + cvxCode + "'");
+        }
+        vaccine.setVaccineType(cvx);
+        vaccine.setManufacturer(mvxCode);
+        vaccineDoseAdministered.setVaccine(vaccine);
+        i++;
       }
-      vaccine.setVaccineType(cvx);
-      vaccine.setManufacturer(mvxCode);
-      vaccineDoseAdministered.setVaccine(vaccine);
-      i++;
     }
     return LogicStepFactory.createLogicStep(LogicStepType.ORGANIZE_IMMUNIZATION_HISTORY, dataModel);
   }

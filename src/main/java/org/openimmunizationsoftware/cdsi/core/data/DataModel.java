@@ -27,6 +27,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
+import org.openimmunizationsoftware.cdsi.servlet.fits.TestCaseRegistered;
 
 public class DataModel {
   private List<LiveVirusConflict> liveVirusConflictList = new ArrayList<LiveVirusConflict>();
@@ -55,8 +56,7 @@ public class DataModel {
   private ImmunizationHistory immunizationHistory = null;
   private Date assessmentDate = new Date();
   private HttpServletRequest request = null;
-  private List<AntigenAdministeredRecord> antigenAdministeredRecordList =
-      new ArrayList<AntigenAdministeredRecord>();
+  private List<AntigenAdministeredRecord> antigenAdministeredRecordList = new ArrayList<AntigenAdministeredRecord>();
   private int targetDoseListPos = -1;
   private int antigenAdministeredRecordPos = -1;
   private AntigenAdministeredRecord antigenAdministeredRecord = null;
@@ -65,18 +65,25 @@ public class DataModel {
   private List<PatientSeries> patientSeriesList = new ArrayList<PatientSeries>();
   private PatientSeries patientSeries = null;
   private List<Forecast> forecastList = new ArrayList<Forecast>();
-  private List<VaccineGroupForecast> vaccineGroupForecastList =
-      new ArrayList<VaccineGroupForecast>();
+  private List<VaccineGroupForecast> vaccineGroupForecastList = new ArrayList<VaccineGroupForecast>();
   private VaccineGroup vaccineGroup;
   private List<VaccineGroup> vaccineGroupList;
   private int vaccineGroupPos = -1;
   private Forecast forecast = null;
+  private TestCaseRegistered testCaseRegistered = null;
 
-  private Map<String, ClinicalGuidelineObservation> clinicalGuidelineObservationMap =
-      new HashMap<String, ClinicalGuidelineObservation>();
+  public void setTestCaseRegistered(TestCaseRegistered testCaseRegistered) {
+    this.testCaseRegistered = testCaseRegistered;
+  }
+
+  public TestCaseRegistered getTestCaseRegistered() {
+    return testCaseRegistered;
+  }
+
+  private Map<String, ClinicalGuidelineObservation> clinicalGuidelineObservationMap = new HashMap<String, ClinicalGuidelineObservation>();
 
   public Map<String, ClinicalGuidelineObservation> getClinicalGuidelineObservationMap() {
-   return clinicalGuidelineObservationMap;
+    return clinicalGuidelineObservationMap;
   }
 
   public Forecast getForecast() {
@@ -235,8 +242,7 @@ public class DataModel {
 
   public void setAntigenAdministeredRecordThatSatisfiedPreviousTargetDose(
       AntigenAdministeredRecord antigenAdministeredRecordThatSatisfiedPreviousTargetDose) {
-    this.antigenAdministeredRecordThatSatisfiedPreviousTargetDose =
-        antigenAdministeredRecordThatSatisfiedPreviousTargetDose;
+    this.antigenAdministeredRecordThatSatisfiedPreviousTargetDose = antigenAdministeredRecordThatSatisfiedPreviousTargetDose;
   }
 
   public List<TargetDose> getTargetDoseList() {
@@ -374,8 +380,6 @@ public class DataModel {
   public Map<String, Antigen> getAntigenMap() {
     return antigenMap;
   }
-
-
 
   public Map<String, VaccineGroup> getVaccineGroupMap() {
     return vaccineGroupMap;
