@@ -293,6 +293,10 @@ public class DateRules {
     CALCDTINT_5 = new DateRule<Interval>() {
       @Override
       protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep, Interval interval) {
+        if (interval == null || interval.getEarliestRecommendedInterval() == null) {
+          return null;
+        }
+        //TODO add logic
         return null;
       }
     };

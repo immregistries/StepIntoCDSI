@@ -115,7 +115,6 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
       minimalInterval = referenceSeriesDose.getAgeList().get(0).getSeriesDose().getIntervalList()
           .get(0).getMinimumInterval();
       Date minimalIntervalDate = new Date();
-      Date patientReferenceDoseDate = new Date();
       minimalIntervalDate = minimalInterval.getDateFrom(patientReferenceDoseDate);
       caMinimumIntervalDate.setInitialValue(minimalIntervalDate);
     }
@@ -134,7 +133,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
           .getSeasonalRecommendationStartDate();
       caSeasonalRecommendationStartDate.setInitialValue(seasonalRecommendationStartDate);
     } else {
-      // Couldn't find seasonalRecommendation start date
+      log("Couldn't find seasonalRecommendation start date");
     }
 
   }
@@ -271,10 +270,17 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
   }
 
   private Date getEarliestDate(List<Date> dateList) {
-    Date tmp = null;
+    if(dateList == null || dateList.size() == 0) {
+      return null;
+    }
+    if(dateList.size() == 1) {
+      return dateList.get(0);
+    }
+    Date tmp = dateList.get(0);
     for (Date item : dateList) {
-      
-      if (item != null && (tmp == null || item.before(tmp))) {
+      if(tmp == null) {
+        tmp = item;
+      } else if (item != null && item.after(tmp)) {
         tmp = item;
       }
     }
@@ -288,7 +294,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     log("Item for consideration for Earliest date is: " + caMinimumAgeDate.getAttributeName() + " with value of " + caMinimumAgeDate.getFinalValue());
     list.add(caMinimumIntervalDate.getFinalValue());
     log("Item for consideration for Earliest date is: " + caMinimumIntervalDate.getAttributeName() + " with value of " + caMinimumIntervalDate.getFinalValue());
-    list.add(caLatestConflictEndIntervalDate.getFinalValue());
+    list.add(caLatestConflictEndIntervalDate.getFinalValue());//CALCDTLIVE-4 is both used and removed?
     log("Item for consideration for Earliest date is: " + caLatestConflictEndIntervalDate.getAttributeName() + " with value of " + caLatestConflictEndIntervalDate.getFinalValue());
     list.add(caSeasonalRecommendationStartDate.getFinalValue());
     log("Item for consideration for Earliest date is: " + caSeasonalRecommendationStartDate.getAttributeName() + " with value of " + caSeasonalRecommendationStartDate.getFinalValue());
