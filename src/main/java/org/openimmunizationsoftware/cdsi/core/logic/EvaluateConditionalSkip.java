@@ -72,8 +72,10 @@ public class EvaluateConditionalSkip extends LogicStep {
         conditionAttributesList.add(caAdministeredDoseCount);
         conditionAttributesList.add(caEarliestDate);
 
-        AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
-        caDateAdministered.setInitialValue(aar.getDateAdministered());
+        {
+            AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
+            caDateAdministered.setInitialValue(aar == null ? null : aar.getDateAdministered());
+        }
         caAssessmentDate.setInitialValue(dataModel.getAssessmentDate());
         caAdministeredDoseCount.setInitialValue(dataModel.getAntigenAdministeredRecordList().size());
 
