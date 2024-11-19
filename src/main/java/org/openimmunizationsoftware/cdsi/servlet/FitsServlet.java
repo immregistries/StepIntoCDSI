@@ -234,7 +234,7 @@ public class FitsServlet extends ForecastServlet {
                                     out.println("        <td" + ts + ">" + f.getSerieStatusAct() + "</td>");
                                     ts = "";
                                     if (f.getEarliestExp() != null && f.getEarliestAct() != null) {
-                                        if (f.getEarliestExp().equals(f.getEarliestAct())) {
+                                        if (format(f.getEarliestExp()).equals(format(f.getEarliestAct()))) {
                                             ts = " class=\"pass\"";
                                         } else {
                                             ts = " class=\"fail\"";
@@ -243,7 +243,7 @@ public class FitsServlet extends ForecastServlet {
                                     out.println("        <td" + ts + ">" + format(f.getEarliestAct()) + "</td>");
                                     ts = "";
                                     if (f.getRecommendedExp() != null && f.getRecommendedAct() != null) {
-                                        if (f.getRecommendedExp().equals(f.getRecommendedAct())) {
+                                        if (format(f.getRecommendedExp()).equals(format(f.getRecommendedAct()))) {
                                             ts = " class=\"pass\"";
                                         } else {
                                             ts = " class=\"fail\"";

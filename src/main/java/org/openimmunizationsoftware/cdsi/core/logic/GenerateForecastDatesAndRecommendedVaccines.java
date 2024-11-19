@@ -31,7 +31,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
   private ConditionAttribute<Date> caEarliestRecommendedAgeDate = null;
   private ConditionAttribute<Date> caLatestRecommendedAgeDate = null;
   private ConditionAttribute<Date> caMaximumAgeDate = null;
-  private ConditionAttribute<Date> caMinimumIntervalDate = null;
+  private ConditionAttribute<List<Date>> caMinimumIntervalDates = null;
   private ConditionAttribute<Date> caEarliestRecommendedIntervalDate = null;
   private ConditionAttribute<Date> caLatestRecommendedIntervalDate = null;
   private ConditionAttribute<Date> caLatestConflictEndIntervalDate = null;
@@ -109,15 +109,18 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     }
   }
 
-  private void findMinimalIntervalDate() {
-    TimePeriod minimalInterval;
-    if (referenceSeriesDose.getAgeList().get(0).getSeriesDose() != null) {
-      minimalInterval = referenceSeriesDose.getAgeList().get(0).getSeriesDose().getIntervalList()
-          .get(0).getMinimumInterval();
-      Date minimalIntervalDate = new Date();
-      minimalIntervalDate = minimalInterval.getDateFrom(patientReferenceDoseDate);
-      caMinimumIntervalDate.setInitialValue(minimalIntervalDate);
-    }
+  private void findMinimumIntervalDates() {
+    List<Date> minimumIntervalList = new ArrayList<Date>();
+    if (referenceSeriesDose.getIntervalList() != null) {
+      for(Interval minIn : referenceSeriesDose.getIntervalList()) {
+        TimePeriod minimalIntervalFromReferenceSeriesDose = minIn.getMinimumInterval();
+        log(" + adding to minimumIntervalList " + minimalIntervalFromReferenceSeriesDose.getDateFrom(patientReferenceDoseDate) + ",");
+        minimumIntervalList.add(minimalIntervalFromReferenceSeriesDose.getDateFrom(patientReferenceDoseDate));
+      }
+      caMinimumIntervalDates.setInitialValue(minimumIntervalList);
+    } else {
+      log(" - nothing added to minimumIntervalList");
+    } 
   }
 
   private void findLatestConflictEndIntervalDate() {
@@ -133,7 +136,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
           .getSeasonalRecommendationStartDate();
       caSeasonalRecommendationStartDate.setInitialValue(seasonalRecommendationStartDate);
     } else {
-      log("Couldn't find seasonalRecommendation start date");
+      //log("Couldn't find seasonalRecommendation start date");
     }
 
   }
@@ -150,7 +153,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     caLatestRecommendedAgeDate = new ConditionAttribute<Date>("Calculated date (CALCDTAGE-2)",
         "Latest Recommended Age Date");
     caMaximumAgeDate = new ConditionAttribute<Date>("Calculated date (CALCDTAGE-1)", "Maximum Age Date");
-    caMinimumIntervalDate = new ConditionAttribute<Date>("Calculated date (CALCDTINT-4)", "Minimal Interval Date(s)");
+    caMinimumIntervalDates = new ConditionAttribute<List<Date>>("Calculated date (CALCDTINT-4)", "Minimal Interval Date(s)");
     caEarliestRecommendedIntervalDate = new ConditionAttribute<Date>(
         "Calculated date (CALCDTINT-5)", "Earliest Recommended Interval Date(s)");
     caLatestRecommendedIntervalDate = new ConditionAttribute<Date>("Calculated date (CALCDTINT-6)",
@@ -170,7 +173,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     findLatestRecommendedAgeDate();
     findEarliestRecommendedIntervalDate();
     findLatestRecommendedIntervalDate();
-    findMinimalIntervalDate();
+    findMinimumIntervalDates();
     findLatestConflictEndIntervalDate();
     findSeasonalRecommendationStartDate();
 
@@ -181,7 +184,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     conditionAttributesList.add(caEarliestRecommendedAgeDate);
     conditionAttributesList.add(caLatestRecommendedAgeDate);
     conditionAttributesList.add(caMaximumAgeDate);
-    conditionAttributesList.add(caMinimumIntervalDate);
+    conditionAttributesList.add(caMinimumIntervalDates);
     conditionAttributesList.add(caEarliestRecommendedIntervalDate);
     conditionAttributesList.add(caLatestRecommendedIntervalDate);
     conditionAttributesList.add(caLatestConflictEndIntervalDate);
@@ -269,7 +272,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     out.println("  </tr>");
   }
 
-  private Date getEarliestDate(List<Date> dateList) {
+  private Date getLatestDate(List<Date> dateList) {
     if(dateList == null || dateList.size() == 0) {
       return null;
     }
@@ -292,13 +295,14 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     List<Date> list = new ArrayList<Date>();
     list.add(caMinimumAgeDate.getFinalValue());
     log("Item for consideration for Earliest date is: " + caMinimumAgeDate.getAttributeName() + " with value of " + caMinimumAgeDate.getFinalValue());
-    list.add(caMinimumIntervalDate.getFinalValue());
-    log("Item for consideration for Earliest date is: " + caMinimumIntervalDate.getAttributeName() + " with value of " + caMinimumIntervalDate.getFinalValue());
+    Date latestMinimumIntervalDate = getLatestDate(caMinimumIntervalDates.getFinalValue());
+    list.add(latestMinimumIntervalDate);
+    log("Item for consideration for Earliest date is: " + caMinimumIntervalDates.getAttributeName() + " with value of " + caMinimumIntervalDates.getFinalValue());
     list.add(caLatestConflictEndIntervalDate.getFinalValue());//CALCDTLIVE-4 is both used and removed?
     log("Item for consideration for Earliest date is: " + caLatestConflictEndIntervalDate.getAttributeName() + " with value of " + caLatestConflictEndIntervalDate.getFinalValue());
     list.add(caSeasonalRecommendationStartDate.getFinalValue());
     log("Item for consideration for Earliest date is: " + caSeasonalRecommendationStartDate.getAttributeName() + " with value of " + caSeasonalRecommendationStartDate.getFinalValue());
-    Date earliestDate = getEarliestDate(list);
+    Date earliestDate = getLatestDate(list);
     return earliestDate;
   }
 

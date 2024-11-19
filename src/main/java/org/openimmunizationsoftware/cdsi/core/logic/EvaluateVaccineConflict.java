@@ -297,10 +297,10 @@ public class EvaluateVaccineConflict extends LogicStep {
 
     public LT422() {
       super(1, 2,
-          "Table 4-22 Is the current vaccine dose administrated in conflict with previous vaccije dose administrated ?");
+          "Table 4-22 Is the current vaccine dose administrated in conflict with previous vaccine dose administrated ?");
 
       setLogicCondition(0, new LogicCondition(
-          "Is the conflict begin interval date <= current date administered<conflict end interval date?") {
+          "Is the conflict begin interval date <= current date administered < conflict end interval date?") {
 
         @Override
         protected LogicResult evaluateInternal() {
