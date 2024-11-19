@@ -214,8 +214,12 @@ public class FitsServlet extends ForecastServlet {
                                 out.println("        <td>" + format(f.getEarliestExp()) + "</td>");
                                 out.println("        <td>" + format(f.getRecommendedExp()) + "</td>");
                                 if (testCaseRegistered.getException() != null) {
-                                    out.println("        <td colspan=\"3\">"
-                                            + testCaseRegistered.getException().getMessage() + "</td>");
+                                    out.println("        <td colspan=\"3\">");
+                                    out.println(testCaseRegistered.getException().getMessage());
+                                    out.println("<pre>");
+                                    testCaseRegistered.getException().printStackTrace(out);
+                                    out.println("</pre>");
+                                    out.println("        </td>");
                                 } else {
                                     String ts = "";
                                     // if forecast.getSerieStatusExp is not null and forecast.getSerieStatusAct is
