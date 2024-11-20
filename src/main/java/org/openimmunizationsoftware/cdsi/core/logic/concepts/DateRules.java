@@ -6,6 +6,7 @@ import org.apache.commons.lang.time.DateUtils;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Age;
 import org.openimmunizationsoftware.cdsi.core.domain.AllowableVaccine;
+import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipCondition;
 import org.openimmunizationsoftware.cdsi.core.domain.Contraindication;
 import org.openimmunizationsoftware.cdsi.core.domain.Indication;
@@ -296,8 +297,11 @@ public class DateRules {
         if (interval == null || interval.getEarliestRecommendedInterval() == null) {
           return null;
         }
-        //TODO add logic
-        return null;
+        Date patientReferenceDoseDate = new Date();
+        AntigenAdministeredRecord previousAAR = dataModel.getPreviousAntigenAdministeredRecord();
+        patientReferenceDoseDate = previousAAR.getDateAdministered();
+
+        return interval.getEarliestRecommendedInterval().getDateFrom(patientReferenceDoseDate);
       }
     };
     CALCDTINT_5.setBusinessRuleId("CALCDTINT-5");
