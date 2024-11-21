@@ -32,13 +32,11 @@ public class EvaluateAge extends LogicStep {
     super(LogicStepType.EVALUATE_AGE, dataModel);
     setConditionTableName("Table 6-14 Age Attributes");
 
-    caDateOfBirth = new ConditionAttribute<Date>("Patient","Date of birth");
-    caDateAdministered =
-        new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
+    caDateOfBirth = new ConditionAttribute<Date>("Patient", "Date of birth");
+    caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
     caMinimumAgeDate = new ConditionAttribute<Date>("Calculated Date", "Minimum Age Date");
     caMaximumAgeDate = new ConditionAttribute<Date>("Calculated Date", "Maximum Age Date");
-    caAbsoluteMinimumAgeDate =
-        new ConditionAttribute<Date>("Calculated Date", "Absolute Minimum Age Date");
+    caAbsoluteMinimumAgeDate = new ConditionAttribute<Date>("Calculated Date", "Absolute Minimum Age Date");
 
     caMaximumAgeDate.setAssumedValue(FUTURE);
     caMinimumAgeDate.setAssumedValue(PAST);
@@ -56,6 +54,7 @@ public class EvaluateAge extends LogicStep {
     AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
     caDateAdministered.setInitialValue(aar.getDateAdministered());
     Date dateOfBirth = dataModel.getPatient().getDateOfBirth();
+    caDateOfBirth.setInitialValue(dateOfBirth);
     log("Date of Birth = " + sdf.format(dateOfBirth));
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
     if (seriesDose.getAgeList().size() > 0) {
@@ -124,7 +123,7 @@ public class EvaluateAge extends LogicStep {
             @Override
             public LogicResult evaluateInternal() {
               if (caAbsoluteMinimumAgeDate.getFinalValue().before(caDateAdministered.getFinalValue())
-                && caDateAdministered.getFinalValue().before(caMinimumAgeDate.getFinalValue())) {
+                  && caDateAdministered.getFinalValue().before(caMinimumAgeDate.getFinalValue())) {
                 return YES;
               }
               return NO;
@@ -136,7 +135,7 @@ public class EvaluateAge extends LogicStep {
             @Override
             public LogicResult evaluateInternal() {
               if (caMinimumAgeDate.getFinalValue().before(caDateAdministered.getFinalValue())
-              && caDateAdministered.getFinalValue().before(caMaximumAgeDate.getFinalValue())) {
+                  && caDateAdministered.getFinalValue().before(caMaximumAgeDate.getFinalValue())) {
                 return YES;
               }
               return NO;
@@ -147,16 +146,16 @@ public class EvaluateAge extends LogicStep {
         @Override
         public LogicResult evaluateInternal() {
           if (caDateAdministered.getFinalValue().before(caMaximumAgeDate.getFinalValue())) {
-            return YES;
+            return NO;
           }
-          return NO;
+          return YES;
         }
       });
 
-      setLogicResults(0, new LogicResult[] {YES, NO, NO, NO});
-      setLogicResults(1, new LogicResult[] {NO, YES, NO, NO});
-      setLogicResults(2, new LogicResult[] {NO, NO, YES, NO});
-      setLogicResults(3, new LogicResult[] {NO, NO, NO, YES});
+      setLogicResults(0, new LogicResult[] { YES, NO, NO, NO });
+      setLogicResults(1, new LogicResult[] { NO, YES, NO, NO });
+      setLogicResults(2, new LogicResult[] { NO, NO, YES, NO });
+      setLogicResults(3, new LogicResult[] { NO, NO, NO, YES });
 
       setLogicOutcome(0, new LogicOutcome() {
         @Override
@@ -184,9 +183,6 @@ public class EvaluateAge extends LogicStep {
           AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
           aar.getEvaluation().setEvaluationStatus(EvaluationStatus.VALID);
           log("Yes. The vaccine dose was administered at a valid age for the target dose.");
-          // No EvaluationReason is given in the 4.5 table?
-          log("Evaluation reason is \"grace period.\"");
-          aar.getEvaluation().setEvaluationReason(EvaluationReason.GRACE_PERIOD);
         }
       });
       setLogicOutcome(3, new LogicOutcome() {

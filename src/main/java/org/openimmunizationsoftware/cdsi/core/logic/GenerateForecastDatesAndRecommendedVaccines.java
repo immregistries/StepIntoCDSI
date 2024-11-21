@@ -2,6 +2,7 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -71,7 +72,6 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     TimePeriod timePeriod = referenceSeriesDose.getAgeList().get(0).getLatestRecommendedAge();
     Date latestRecommendedAgeDate = timePeriod.getDateFrom(dob);
     caLatestRecommendedAgeDate.setInitialValue(latestRecommendedAgeDate);
-
   }
 
   private Date computePatientReferenceDoseDate() {
@@ -89,18 +89,18 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
   private void findEarliestRecommendedIntervalDates() {
     List<Date> tmpEarliestRecommendedIntervalList = new ArrayList<Date>();
     try {
-      for(Interval in : referenceSeriesDose.getAgeList().get(0).getSeriesDose()
-      .getIntervalList()) {
+      for (Interval in : referenceSeriesDose.getAgeList().get(0).getSeriesDose()
+          .getIntervalList()) {
         Date earliestRecommendedIntervalDate = CALCDTINT_5.evaluate(dataModel, this, in);
         tmpEarliestRecommendedIntervalList.add(earliestRecommendedIntervalDate);
       }
-      if(tmpEarliestRecommendedIntervalList.size() > 0) {
+      if (tmpEarliestRecommendedIntervalList.size() > 0) {
         caEarliestRecommendedIntervalDates.setInitialValue(tmpEarliestRecommendedIntervalList);
       }
     } catch (NullPointerException np) {
       //// System.err.println("earliestRecommendedInterval is null");
     }
-    
+
   }
 
   private void findLatestRecommendedIntervalDate() {
@@ -118,46 +118,52 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
   private void findMinimumIntervalDates() {
     List<Date> minimumIntervalList = new ArrayList<Date>();
     if (referenceSeriesDose.getIntervalList() != null) {
-      for(Interval minIn : referenceSeriesDose.getIntervalList()) {
+      for (Interval minIn : referenceSeriesDose.getIntervalList()) {
         TimePeriod minimalIntervalFromReferenceSeriesDose = minIn.getMinimumInterval();
-        if(minimalIntervalFromReferenceSeriesDose == null) {
+        if (minimalIntervalFromReferenceSeriesDose == null) {
           continue;
         }
-        log(" + adding to minimumIntervalList " + minimalIntervalFromReferenceSeriesDose.getDateFrom(patientReferenceDoseDate) + ",");
+        log(" + adding to minimumIntervalList "
+            + minimalIntervalFromReferenceSeriesDose.getDateFrom(patientReferenceDoseDate) + ",");
         minimumIntervalList.add(minimalIntervalFromReferenceSeriesDose.getDateFrom(patientReferenceDoseDate));
       }
-      if(minimumIntervalList.size() > 0) {
+      if (minimumIntervalList.size() > 0) {
         caMinimumIntervalDates.setInitialValue(minimumIntervalList);
       }
     } else {
-      //log("nothing added to minimumIntervalList");
-    } 
-  }
-
-  private void findLatestConflictEndIntervalDate() {
-    //TODO not implemented, and not in 4.5 document
-    Date latestDate = null;
-    for(LiveVirusConflict lvc : dataModel.getLiveVirusConflictList()) {
-      bool isImpactedVaccineDoseAdministered = false;
-      if(dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered().before(lvc.getConflictBeginInterval())) {
-        isImpactedVaccineDoseAdministered = false;
-      } else {
-        if(dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered().before(lvc.getConflictEndInterval())) {
-          isImpactedVaccineDoseAdministered = true;
-        }
-      }
-      
-      if(true) {
-        caLatestConflictEndIntervalDate = lvc.getMinimalConflictEndInterval().getDateFrom(dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered());
-      }
-
-      if(lvc.getCurrentVaccineType().equals(caVaccineType.getFinalValue())) {
-        if (lvc.getPreviousVaccineType().equals(dataModel.getPreviousAntigenAdministeredRecord().getVaccineType())) {
-        }
-      }
-      //dateRule CALCDTLIVE-3
+      // log("nothing added to minimumIntervalList");
     }
   }
+
+  // private void findLatestConflictEndIntervalDate() {
+  // //TODO not implemented, and not in 4.5 document
+  // Date latestDate = null;
+  // for(LiveVirusConflict lvc : dataModel.getLiveVirusConflictList()) {
+  // boolean isImpactedVaccineDoseAdministered = false;
+  // if(dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered().before(lvc.getConflictBeginInterval()))
+  // {
+  // isImpactedVaccineDoseAdministered = false;
+  // } else {
+  // if(dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered().before(lvc.getConflictEndInterval()))
+  // {
+  // isImpactedVaccineDoseAdministered = true;
+  // }
+  // }
+
+  // if(isImpactedVaccineDoseAdministered) {
+  // caLatestConflictEndIntervalDate =
+  // lvc.getMinimalConflictEndInterval().getDateFrom(dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered());
+  // }
+
+  // if(lvc.getCurrentVaccineType().equals(caVaccineType.getFinalValue())) {
+  // if
+  // (lvc.getPreviousVaccineType().equals(dataModel.getPreviousAntigenAdministeredRecord().getVaccineType()))
+  // {
+  // }
+  // }
+  // //dateRule CALCDTLIVE-3
+  // }
+  // }
 
   private void findSeasonalRecommendationStartDate() {
     SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
@@ -168,7 +174,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
           .getSeasonalRecommendationStartDate();
       caSeasonalRecommendationStartDate.setInitialValue(seasonalRecommendationStartDate);
     } else {
-      //log("Couldn't find seasonalRecommendation start date");
+      // log("Couldn't find seasonalRecommendation start date");
     }
 
   }
@@ -185,7 +191,8 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     caLatestRecommendedAgeDate = new ConditionAttribute<Date>("Calculated date (CALCDTAGE-2)",
         "Latest Recommended Age Date");
     caMaximumAgeDate = new ConditionAttribute<Date>("Calculated date (CALCDTAGE-1)", "Maximum Age Date");
-    caMinimumIntervalDates = new ConditionAttribute<List<Date>>("Calculated date (CALCDTINT-4)", "Minimum Interval Date(s)");
+    caMinimumIntervalDates = new ConditionAttribute<List<Date>>("Calculated date (CALCDTINT-4)",
+        "Minimum Interval Date(s)");
     caEarliestRecommendedIntervalDates = new ConditionAttribute<List<Date>>(
         "Calculated date (CALCDTINT-5)", "Earliest Recommended Interval Date(s)");
     caLatestRecommendedIntervalDate = new ConditionAttribute<Date>("Calculated date (CALCDTINT-6)",
@@ -206,7 +213,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     findEarliestRecommendedIntervalDates();
     findLatestRecommendedIntervalDate();
     findMinimumIntervalDates();
-    findLatestConflictEndIntervalDate();
+    // findLatestConflictEndIntervalDate();
     findSeasonalRecommendationStartDate();
 
     caSeasonalRecommendationStartDate.setAssumedValue(PAST);
@@ -283,6 +290,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     printLogicTables(out);
     out.println("<p>Patient Series Status: " + dataModel.getPatientSeries().getPatientSeriesStatus()
         + "</p>");
+    out.println("<p>" + dataModel.getPatientSeries().getTrackedAntigenSeries().getSeriesName() + "</p>");
   }
 
   private void insertTableRow(PrintWriter out, String BusinessRuleID, String Term,
@@ -305,15 +313,15 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
   }
 
   private Date getLatestDate(List<Date> dateList) {
-    if(dateList == null || dateList.size() == 0) {
+    if (dateList == null || dateList.size() == 0) {
       return null;
     }
-    if(dateList.size() == 1) {
+    if (dateList.size() == 1) {
       return dateList.get(0);
     }
     Date tmp = dateList.get(0);
     for (Date item : dateList) {
-      if(tmp == null) {
+      if (tmp == null) {
         tmp = item;
       } else if (item != null && item.after(tmp)) {
         tmp = item;
@@ -326,14 +334,18 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
   private Date computeEarliestDate() {
     List<Date> list = new ArrayList<Date>();
     list.add(caMinimumAgeDate.getFinalValue());
-    log("Item for consideration for Earliest date is: " + caMinimumAgeDate.getAttributeName() + " with value of " + caMinimumAgeDate.getFinalValue());
+    log("Item for consideration for Earliest date is: " + caMinimumAgeDate.getAttributeName() + " with value of "
+        + caMinimumAgeDate.getFinalValue());
     Date latestMinimumIntervalDate = getLatestDate(caMinimumIntervalDates.getFinalValue());
     list.add(latestMinimumIntervalDate);
-    log("Item for consideration for Earliest date is: " + caMinimumIntervalDates.getAttributeName() + " with value of " + caMinimumIntervalDates.getFinalValue());
-    list.add(caLatestConflictEndIntervalDate.getFinalValue());//CALCDTLIVE-4 is both used and removed?
-    log("Item for consideration for Earliest date is: " + caLatestConflictEndIntervalDate.getAttributeName() + " with value of " + caLatestConflictEndIntervalDate.getFinalValue());
+    log("Item for consideration for Earliest date is: " + caMinimumIntervalDates.getAttributeName() + " with value of "
+        + caMinimumIntervalDates.getFinalValue());
+    list.add(caLatestConflictEndIntervalDate.getFinalValue());// CALCDTLIVE-4 is both used and removed?
+    log("Item for consideration for Earliest date is: " + caLatestConflictEndIntervalDate.getAttributeName()
+        + " with value of " + caLatestConflictEndIntervalDate.getFinalValue());
     list.add(caSeasonalRecommendationStartDate.getFinalValue());
-    log("Item for consideration for Earliest date is: " + caSeasonalRecommendationStartDate.getAttributeName() + " with value of " + caSeasonalRecommendationStartDate.getFinalValue());
+    log("Item for consideration for Earliest date is: " + caSeasonalRecommendationStartDate.getAttributeName()
+        + " with value of " + caSeasonalRecommendationStartDate.getFinalValue());
     Date earliestDate = getLatestDate(list);
     return earliestDate;
   }
@@ -347,7 +359,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
       unadjustedRecommendedDate = earliestRecommendedAgeDate;
       return unadjustedRecommendedDate;
     } else {
-      
+
       int biggestAmount = 0;
       for (Interval interval : intervalList) {
         int tmp = 0;
@@ -384,7 +396,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
           if (dataModel.getVaccineGroupForecastList().size() > 0) {
             Forecast forecast = dataModel.getVaccineGroupForecastList()
                 .get(dataModel.getVaccineGroupForecastList().size() - 1);
-                        unadjustedRecommendedDate = forecast.getEarliestDate();
+            unadjustedRecommendedDate = forecast.getEarliestDate();
           }
         }
       } catch (NullPointerException np) {
@@ -412,18 +424,24 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     if (caLatestRecommendedAgeDate.getFinalValue() != null) {
       unadjustedPastDueDate = DateUtils.addDays(caLatestRecommendedAgeDate.getFinalValue(), -1);
     } else {
+      // String log = "no patientReferenceDoseDate";
       if (patientReferenceDoseDate != null) {
+        // log = "patientReferenceDoseDate: " + new
+        // SimpleDateFormat("MM/dd/yyyy").format(patientReferenceDoseDate);
         List<Interval> intervalList = dataModel.getTargetDose().getTrackedSeriesDose().getIntervalList();
+        // log += ", intervalList.size() = " + intervalList.size();
         for (Interval interval : intervalList) {
           Date d = interval.getLatestRecommendedInterval().getDateFrom(patientReferenceDoseDate);
+          // log += ", d = " + new SimpleDateFormat("MM/dd/yyyy").format(d);
           if (unadjustedPastDueDate == null || d.after(unadjustedPastDueDate)) {
             unadjustedPastDueDate = d;
           }
         }
       }
-      if (unadjustedPastDueDate == null) {
-        throw new NullPointerException("Unadjusted Past Due Date was not set");
-      }
+      // if (unadjustedPastDueDate == null) {
+      // throw new NullPointerException(
+      // "Unadjusted Past Due Date was not set " + log);
+      // }
     }
     return unadjustedPastDueDate;
   }
@@ -447,7 +465,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     Date adjustedPastDueDate = null;
     Date earliestDate = computeEarliestDate();
     Date unadjustedPastDueDate = computeUnadjustedPastDueDate();
-    if (earliestDate.after(unadjustedPastDueDate)) {
+    if (unadjustedPastDueDate != null && earliestDate.after(unadjustedPastDueDate)) {
       adjustedPastDueDate = earliestDate;
     } else {
       adjustedPastDueDate = unadjustedPastDueDate;
@@ -505,15 +523,11 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     out.println("<table BORDER=\"1\"> ");
     insertTableInit(out);
     insertTableRow(out, "FORECASTDT-1", "Earliest Date", computeEarliestDate().toString());
-    insertTableRow(out, "FORECASTDT-2", "Unadjusted Recommended Date",
-        computeUnadjustedRecommendedDate().toString());
-    insertTableRow(out, "FORECASTDT-3", "Unadjusted Past Due Date",
-        computeUnadjustedPastDueDate().toString());
-    insertTableRow(out, "FORECASTDT-4", "Latest Date", computeUnadjustedPastDueDate().toString());
-    insertTableRow(out, "FORECASTDT-5", "Adjusted Recommended Date",
-        computeAdjustedRecommendedDate().toString());
-    insertTableRow(out, "FORECASTDT-6", "Adjusted Past Due Date",
-        computeAdjustedPastDueDate().toString());
+    insertTableRow(out, "FORECASTDT-2", "Unadjusted Recommended Date", computeUnadjustedRecommendedDate().toString());
+    insertTableRow(out, "FORECASTDT-3", "Unadjusted Past Due Date", n(computeUnadjustedPastDueDate()));
+    insertTableRow(out, "FORECASTDT-4", "Latest Date", n(computeUnadjustedPastDueDate()));
+    insertTableRow(out, "FORECASTDT-5", "Adjusted Recommended Date", computeAdjustedRecommendedDate().toString());
+    insertTableRow(out, "FORECASTDT-6", "Adjusted Past Due Date", n(computeAdjustedPastDueDate()));
     insertTableRow(out, "FORECASTRECVACT-1", "Recommended Vaccine", "recommendedVaccine");
     out.println("</table>");
   }

@@ -24,10 +24,8 @@ public class EvaluateForAllowableVaccine extends LogicStep {
 
       LT logicTable = new LT(pi.toString());
 
-      logicTable.caDateAdministered =
-          new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
-      logicTable.caVaccineType =
-          new ConditionAttribute<VaccineType>("Vaccine Dose Administered", "Vaccine Type");
+      logicTable.caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
+      logicTable.caVaccineType = new ConditionAttribute<VaccineType>("Vaccine Dose Administered", "Vaccine Type");
       logicTable.caAllowableVaccineElements = new ConditionAttribute<AllowableVaccine>(
           "Supporting data", "Allowable Vaccine elements");
       logicTable.caAllowableVaccineTypeBeginAgeDate = new ConditionAttribute<Date>(
@@ -49,10 +47,8 @@ public class EvaluateForAllowableVaccine extends LogicStep {
       logicTable.caVaccineType.setInitialValue(aar.getVaccineType());
       logicTable.caAllowableVaccineElements.setInitialValue(pi);
 
-
       logicTableList.add(logicTable);
     }
-
 
   }
 
@@ -129,7 +125,6 @@ public class EvaluateForAllowableVaccine extends LogicStep {
             caAllowableVaccineTypeEndAgeDate
                 .setInitialValue(av.getVaccineTypeEndAge().getDateFrom(birthDate));
             return LogicResult.YES;
-
           }
           return LogicResult.NO;
         }
@@ -154,8 +149,8 @@ public class EvaluateForAllowableVaccine extends LogicStep {
         }
       });
 
-      setLogicResults(0, new LogicResult[] {LogicResult.YES, LogicResult.NO, LogicResult.YES});
-      setLogicResults(1, new LogicResult[] {LogicResult.YES, LogicResult.ANY, LogicResult.NO});
+      setLogicResults(0, new LogicResult[] { LogicResult.YES, LogicResult.NO, LogicResult.YES });
+      setLogicResults(1, new LogicResult[] { LogicResult.YES, LogicResult.ANY, LogicResult.NO });
 
       setLogicOutcome(0, new LogicOutcome() {
         @Override

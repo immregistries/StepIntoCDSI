@@ -47,6 +47,7 @@ public class TimePeriod {
   }
 
   public void setValue(String value) {
+    valued = false;
     value = value.trim();
     this.originalValue = value;
     this.type = TimePeriodType.DAY;
@@ -122,6 +123,9 @@ public class TimePeriod {
 
   @Override
   public String toString() {
+    if (!valued) {
+      return "n/a";
+    }
     StringBuilder sb = new StringBuilder();
     if (amount < 0) {
       sb.append("- ");
@@ -148,6 +152,9 @@ public class TimePeriod {
   }
 
   public Date getDateFrom(Date date) {
+    if (!valued) {
+      return null;
+    }
     Calendar startingDate = Calendar.getInstance();
     startingDate.setTime(date);
     int year = startingDate.get(Calendar.YEAR);

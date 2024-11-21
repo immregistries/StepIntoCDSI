@@ -87,7 +87,7 @@ public class NoValidDoses extends LogicStep {
     for (PatientSeries patientSeries : patientSeriesList) {
       Date finishDate = patientSeries.getForecast().getAdjustedPastDueDate();
       Date maximumAgeDate = findMaximumAgeDate(patientSeries);
-      if (finishDate.before(maximumAgeDate)) {
+      if (finishDate != null && finishDate.before(maximumAgeDate)) {
         patientSeries.incPatientScoreSeries();
       } else {
         patientSeries.incPatientScoreSeries();
