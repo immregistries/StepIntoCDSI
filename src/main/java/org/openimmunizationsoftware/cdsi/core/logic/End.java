@@ -58,8 +58,6 @@ public class End extends LogicStep {
 
     for (Forecast forecast : dataModel.getForecastList()) {
       for (Antigen antigen : dataModel.getAntigenList()) {
-        VaccineGroupForecast vgf = new VaccineGroupForecast();
-
         if (forecast.getAntigen().equals(antigen)) {
           out.println("  <tr>");
           out.println("    <td>" + forecast.getAntigen().getName() + "</td>");

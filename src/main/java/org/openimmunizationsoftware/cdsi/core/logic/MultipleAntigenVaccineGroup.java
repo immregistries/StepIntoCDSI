@@ -288,88 +288,121 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
 
   private class LT extends LogicTable {
     public LT(final VaccineGroupForecast vgf, final List<PatientSeries> selectedList) {
-      super(4, 6, "Table 7 - 4 WHAT IS THE VACCINE GROUP STATUS OF A MULTIPLE VACCINE GROUP?");
+      super(6, 6, "Table 9 - 3 WHAT IS THE VACCINE GROUP STATUS OF A MULTIPLE VACCINE GROUP?");
 
       setLogicCondition(0, new LogicCondition(
-          "Is there at least one best patient series status of \"Not Completed\"?") {
+          "Is there a patient series forecast contained in the vaccine group forecast with a patient series status of 'Contraindicated'?") {
         @Override
         public LogicResult evaluateInternal() {
-          for (PatientSeries p : dataModel.getBestPatientSeriesList()) {
-            if (p.getPatientSeriesStatus().equals(PatientSeriesStatus.NOT_COMPLETE))
+          for (PatientSeries p : selectedList) {
+            if (p.getPatientSeriesStatus().equals(PatientSeriesStatus.CONTRAINDICATED)) {
               return LogicResult.YES;
+            }
           }
           return LogicResult.NO;
         }
       });
 
-      setLogicCondition(1, new LogicCondition("Are all best patient series status \"Immune\"?") {
+      setLogicCondition(1, new LogicCondition(
+          "Is there a patient series forecast contained in the vaccine group forecast with a patient series status of 'Aged Out'?") {
         @Override
         public LogicResult evaluateInternal() {
-          if (selectedList.size() == 0) {
-            return LogicResult.NO;
-          }
           for (PatientSeries p : selectedList) {
-            if (!p.getPatientSeriesStatus().equals(PatientSeriesStatus.IMMUNE))
-              return LogicResult.NO;
+            if (p.getPatientSeriesStatus().equals(PatientSeriesStatus.AGED_OUT)) {
+              return LogicResult.YES;
+            }
           }
-          return LogicResult.YES;
+          return LogicResult.NO;
         }
       });
 
       setLogicCondition(2, new LogicCondition(
-          "Is there at least one best patient series status of \"Contraindicated\"?") {
+          "Is there a patient series forecast contained in the vaccine group forecast with a patient series status of 'Not Recommended'?") {
         @Override
         public LogicResult evaluateInternal() {
           for (PatientSeries p : selectedList) {
-            if (p.getPatientSeriesStatus().equals(PatientSeriesStatus.CONTRAINDICATED))
+            if (p.getPatientSeriesStatus().equals(PatientSeriesStatus.NOT_RECOMMENDED)) {
               return LogicResult.YES;
+            }
           }
           return LogicResult.NO;
         }
       });
 
       setLogicCondition(3, new LogicCondition(
-          "Is the recommendation for the vaccine group to administer full vaccine group?") {
+          "Is there a patient series forecast contained in the vaccine group forecast with a patient series status of 'Not Complete'?") {
         @Override
         public LogicResult evaluateInternal() {
-          // if (vgf.get)
+          for (PatientSeries p : dataModel.getBestPatientSeriesList()) {
+            if (p.getPatientSeriesStatus().equals(PatientSeriesStatus.NOT_COMPLETE)) {
+              return LogicResult.YES;
+            }
+          }
+          return LogicResult.NO;
+        }
+      });
+
+      setLogicCondition(4, new LogicCondition("Do all patient series forecasts contained in the vaccine group forecast have a patient series status of 'Immune'?") {
+        @Override
+        public LogicResult evaluateInternal() {
+          if (selectedList.size() == 0) {
+            return LogicResult.NO;
+          }
+          for (PatientSeries p : selectedList) {
+            if (!p.getPatientSeriesStatus().equals(PatientSeriesStatus.IMMUNE)) {
+              return LogicResult.NO;
+            }
+          }
           return LogicResult.YES;
         }
       });
 
-      setLogicResults(0, LogicResult.NO, LogicResult.NO, LogicResult.ANY, LogicResult.YES,
-          LogicResult.YES, LogicResult.ANY);
-      setLogicResults(1, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.NO,
-          LogicResult.NO, LogicResult.YES);
-      setLogicResults(2, LogicResult.NO, LogicResult.YES, LogicResult.YES, LogicResult.NO,
-          LogicResult.ANY, LogicResult.ANY);
-      setLogicResults(3, LogicResult.ANY, LogicResult.NO, LogicResult.YES, LogicResult.YES,
-          LogicResult.NO, LogicResult.ANY);
+      setLogicCondition(5, new LogicCondition("Do all patient series forecasts contained in the vaccine group forecast have a patient series status of 'Complete' or 'Immune'?") {
+        @Override
+        public LogicResult evaluateInternal() {
+          if (selectedList.size() == 0) {
+            return LogicResult.NO;
+          }
+          for (PatientSeries p : selectedList) {
+            if (!p.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE) && !p.getPatientSeriesStatus().equals(PatientSeriesStatus.IMMUNE)) {
+              return LogicResult.NO;
+            }
+          }
+          return LogicResult.YES;
+        }
+      });
+
+      setLogicResults(0, LogicResult.YES, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.NO);
+      setLogicResults(1, LogicResult.ANY, LogicResult.YES, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.NO);
+      setLogicResults(2, LogicResult.ANY, LogicResult.ANY, LogicResult.YES, LogicResult.NO, LogicResult.NO, LogicResult.NO);
+      setLogicResults(3, LogicResult.ANY, LogicResult.ANY, LogicResult.ANY, LogicResult.YES, LogicResult.NO, LogicResult.NO);
+      setLogicResults(4, LogicResult.ANY, LogicResult.ANY, LogicResult.ANY, LogicResult.ANY, LogicResult.YES, LogicResult.NO);
+      setLogicResults(5, LogicResult.ANY, LogicResult.ANY, LogicResult.ANY, LogicResult.ANY, LogicResult.ANY, LogicResult.YES);
 
       setLogicOutcome(0, new LogicOutcome() {
         @Override
         public void perform() {
-          log("Completed");
-          vgf.setVaccineGroupStatus(PatientSeriesStatus.COMPLETE);
-          vgf.setPatientSeriesStatus(PatientSeriesStatus.COMPLETE);
+          log("Contraindicated");
+          vgf.setVaccineGroupStatus(PatientSeriesStatus.CONTRAINDICATED);
+          vgf.setPatientSeriesStatus(PatientSeriesStatus.CONTRAINDICATED);
           setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
         }
       });
       setLogicOutcome(1, new LogicOutcome() {
         @Override
         public void perform() {
-          log("Contraindicated");
-          vgf.setVaccineGroupStatus(PatientSeriesStatus.CONTRAINDICATED);
-          vgf.setPatientSeriesStatus(PatientSeriesStatus.CONTRAINDICATED);
+          log("Aged Out");
+          vgf.setVaccineGroupStatus(PatientSeriesStatus.AGED_OUT);
+          vgf.setPatientSeriesStatus(PatientSeriesStatus.AGED_OUT);
           setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
         }
       });
       setLogicOutcome(2, new LogicOutcome() {
         @Override
         public void perform() {
-          log("Contraindicated");
-          vgf.setVaccineGroupStatus(PatientSeriesStatus.CONTRAINDICATED);
-          vgf.setPatientSeriesStatus(PatientSeriesStatus.CONTRAINDICATED);
+          log("Not Recommended");
+          vgf.setVaccineGroupStatus(PatientSeriesStatus.NOT_RECOMMENDED);
+          vgf.setPatientSeriesStatus(PatientSeriesStatus.NOT_RECOMMENDED);
           setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
         }
       });
@@ -385,18 +418,18 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
       setLogicOutcome(4, new LogicOutcome() {
         @Override
         public void perform() {
-          log("Not Complete");
-          vgf.setVaccineGroupStatus(PatientSeriesStatus.NOT_COMPLETE);
-          vgf.setPatientSeriesStatus(PatientSeriesStatus.NOT_COMPLETE);
+          log("Immune");
+          vgf.setVaccineGroupStatus(PatientSeriesStatus.IMMUNE);
+          vgf.setPatientSeriesStatus(PatientSeriesStatus.IMMUNE);
           setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
         }
       });
       setLogicOutcome(5, new LogicOutcome() {
         @Override
         public void perform() {
-          log("Immune");
-          vgf.setVaccineGroupStatus(PatientSeriesStatus.IMMUNE);
-          vgf.setPatientSeriesStatus(PatientSeriesStatus.IMMUNE);
+          log("Complete");
+          vgf.setVaccineGroupStatus(PatientSeriesStatus.COMPLETE);
+          vgf.setPatientSeriesStatus(PatientSeriesStatus.COMPLETE);
           setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
         }
       });

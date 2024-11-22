@@ -79,12 +79,10 @@ public class FitsServlet extends ForecastServlet {
                                 for (TestCaseRegistered.Forecast forecast : testCaseRegistered.getForecastList()) {
                                     for (VaccineGroupForecast vgf : vaccineGroupForecastList) {
                                         if (forecast.getVaccineCvxExp().equals(vgf.getAntigen().getCvxForForecast())) {
+                                            forecast.setSerieStatusAct(SerieStatus.getSerieStatus(vgf.getPatientSeriesStatus().toString()));
                                             if (vgf.getPatientSeriesStatus() == PatientSeriesStatus.NOT_COMPLETE) {
-                                                forecast.setSerieStatusAct(SerieStatus.N);
                                                 forecast.setEarliestAct(vgf.getEarliestDate());
                                                 forecast.setRecommendedAct(vgf.getAdjustedRecommendedDate());
-                                            } else {
-                                                forecast.setSerieStatusAct(SerieStatus.C);
                                             }
                                             break;
                                         }

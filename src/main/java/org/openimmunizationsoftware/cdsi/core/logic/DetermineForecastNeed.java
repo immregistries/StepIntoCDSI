@@ -9,10 +9,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.Contraindication_TO_BE_REMOVED;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
+import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
@@ -38,7 +40,7 @@ public class DetermineForecastNeed extends LogicStep {
   private ConditionAttribute<Date> caMaximumAgeDate = null;
   private ConditionAttribute<Date> caCandidateEarliestDate = null;
 
-  private void findEndDate() {
+  private void findSeasonalRecommendationEndDate() {
     if (dataModel.getTargetDose() == null) {
       return;
     }
@@ -58,11 +60,13 @@ public class DetermineForecastNeed extends LogicStep {
     }
     SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
     TimePeriod timePeriod = referenceSeriesDose.getAgeList().get(0).getMaximumAge();
+
     if (timePeriod.isValued()) {
       Date dob = dataModel.getPatient().getDateOfBirth();
       caMaximumAgeDate.setInitialValue(timePeriod.getDateFrom(dob));
     }
   }
+
 
   public DetermineForecastNeed(DataModel dataModel) {
     super(LogicStepType.DETERMINE_FORECAST_NEED, dataModel);
@@ -89,11 +93,13 @@ public class DetermineForecastNeed extends LogicStep {
     // caContraindicatedPatientSeries
 
     caTargetDoseStatuses.setInitialValue(dataModel.getTargetDose());
-    findMaximumAgeDate();
-    findEndDate();
-    caAssessmentDate.setInitialValue(dataModel.getAssessmentDate());
+    //TODO move DateRule calculations to DateRules file
     caMaximumAgeDate.setInitialValue(CALCDTAGE_1.evaluate(dataModel, this, null));
     caCandidateEarliestDate.setInitialValue(FORECASTDTCAN_1.evaluate(dataModel, this, null));
+    findMaximumAgeDate();
+    findSeasonalRecommendationEndDate();
+    caAssessmentDate.setInitialValue(dataModel.getAssessmentDate());
+    
 
     conditionAttributesList.add(caVaccineDoseAdministered);
     conditionAttributesList.add(caTargetDoseStatuses);
@@ -205,19 +211,11 @@ public class DetermineForecastNeed extends LogicStep {
           new LogicCondition("Is the relevant patient series a contraindicated patient series?") {
             @Override
             protected LogicResult evaluateInternal() {
-              List<Contraindication_TO_BE_REMOVED> targetContraindictionList = new ArrayList<Contraindication_TO_BE_REMOVED>();
-              for (Contraindication_TO_BE_REMOVED contraindication : dataModel.getPatient().getMedicalHistory()
-                  .getContraindicationSet()) {
-                if (contraindication.getAntigen().equals(
-                    dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease())) {
-                  targetContraindictionList.add(contraindication);
-                }
-              }
+              //TODO add logic
               if (dataModel.getPatient().getMedicalHistory().getContraindicationSet().isEmpty()) {
-                return LogicResult.YES;
+                return LogicResult.NO;
               }
-              return LogicResult.NO;
-
+              return LogicResult.YES;
             }
           });
 
@@ -231,7 +229,7 @@ public class DetermineForecastNeed extends LogicStep {
         }
       });
 
-      setLogicCondition(5, new LogicCondition("Is the assessment date < maximum end date ?") {
+      setLogicCondition(5, new LogicCondition("Is the assessment date < maximum age date?") {
         @Override
         protected LogicResult evaluateInternal() {
           if (caAssessmentDate.getFinalValue().before(caMaximumAgeDate.getFinalValue())) {

@@ -1,5 +1,6 @@
 package org.openimmunizationsoftware.cdsi.core.logic.concepts;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.commons.lang.time.DateUtils;
@@ -485,10 +486,7 @@ public class DateRules {
       @Override
       protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep,
           Contraindication contraindication) {
-        if (contraindication == null || contraindication.getContraindicationBeginAge() == null) {
-          return null;
-        }
-        return contraindication.getContraindicationBeginAge().getDateFrom(dataModel.getPatient().getDateOfBirth());
+        return null;
       }
     };
     FORECASTDTCAN_1.setBusinessRuleId("FORECASTDTCAN_1");
