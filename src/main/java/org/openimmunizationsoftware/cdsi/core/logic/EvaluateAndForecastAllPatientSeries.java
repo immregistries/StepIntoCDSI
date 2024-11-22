@@ -149,8 +149,8 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
   }
 
   private void markRestAsExtraneous() {
-    for (int i = dataModel.getAntigenAdministeredRecordPos() + 1; i < dataModel
-        .getAntigenAdministeredRecordList().size(); dataModel.incAntigenAdministeredRecordPos()) {
+    for (int i = dataModel.getAntigenAdministeredRecordPos() + 1; i < dataModel.getAntigenAdministeredRecordList()
+        .size(); i++) {
       dataModel.getAntigenAdministeredRecordList().get(i).getEvaluation()
           .setEvaluationStatus(EvaluationStatus.EXTRANEOUS);
     }

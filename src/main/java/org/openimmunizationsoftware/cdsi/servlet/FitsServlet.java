@@ -64,8 +64,15 @@ public class FitsServlet extends ForecastServlet {
                 Map<String, TestCaseRegistered> testCaseMap = fitsManager.getGroupTestCaseMap(testPlanIdSelected)
                         .get(groupNameSelected);
                 if (testCaseMap != null) {
+                    logToOut("Running forecaster for " + testPlanIdSelected + " - " + groupNameSelected);
                     for (TestCaseRegistered testCaseRegistered : testCaseMap.values()) {
                         try {
+                            String link = createLink(testCaseRegistered);
+                            String linkStep = "step" + link;
+                            String linkForecast = "forecast" + link;
+                            logToOut(" - Running " + testCaseRegistered.getTestCase().getUid());
+                            logToOut("   - " + linkStep);
+                            logToOut("   - " + linkForecast);
                             DataModel dataModel = DataModelLoader.createDataModel();
                             // setup data model
                             dataModel.setTestCaseRegistered(testCaseRegistered);
@@ -79,7 +86,8 @@ public class FitsServlet extends ForecastServlet {
                                 for (TestCaseRegistered.Forecast forecast : testCaseRegistered.getForecastList()) {
                                     for (VaccineGroupForecast vgf : vaccineGroupForecastList) {
                                         if (forecast.getVaccineCvxExp().equals(vgf.getAntigen().getCvxForForecast())) {
-                                            forecast.setSerieStatusAct(SerieStatus.getSerieStatus(vgf.getPatientSeriesStatus().toString()));
+                                            forecast.setSerieStatusAct(SerieStatus
+                                                    .getSerieStatus(vgf.getPatientSeriesStatus().toString()));
                                             if (vgf.getPatientSeriesStatus() == PatientSeriesStatus.NOT_COMPLETE) {
                                                 forecast.setEarliestAct(vgf.getEarliestDate());
                                                 forecast.setRecommendedAct(vgf.getAdjustedRecommendedDate());
@@ -274,6 +282,11 @@ public class FitsServlet extends ForecastServlet {
         out.println("  </body>");
         out.println("</html>");
         out.close();
+    }
+
+    private void logToOut(String log) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        System.out.println(sdf.format(new Date()) + " " + log);
     }
 
     private void process(DataModel dataModel) throws Exception {
