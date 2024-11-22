@@ -48,30 +48,40 @@ public class NoValidDoses extends LogicStep {
   }
 
   /**
-   * cond1 A candidate patient series can start earliest
+   * cond1 A scorable patient series can start earliest
    */
 
-  private void evaluate_ACandidatePatientSeriesCanStartEarliest() {
-    int j = 0;
-    if (patientSeriesList.size() != 0 && patientSeriesList.get(0).getForecast() != null) {
-      Date tmpDate = patientSeriesList.get(0).getForecast().getEarliestDate();
-      for (int i = 0; i < patientSeriesList.size(); i++) {
-        PatientSeries patientSeries = patientSeriesList.get(i);
-        if (tmpDate == patientSeries.getForecast().getEarliestDate()) {
-          j++;
+  private void evaluate_AScorablePatientSeriesCanStartEarliest() {
+    int numOfEarliestDates = 0;
+    if (patientSeriesList.size() != 0 && patientSeriesList.get(0).getForecast() != null && patientSeriesList.get(0).getForecast().getEarliestDate() != null) {
+      Date earliestDate = patientSeriesList.get(0).getForecast().getEarliestDate();
+      for (PatientSeries patientSeries : patientSeriesList) {
+        if(earliestDate == null) {
+          earliestDate = patientSeries.getForecast().getEarliestDate();
+          continue;
+        }
+        if(patientSeries.getForecast() == null || patientSeries.getForecast().getEarliestDate() == null) {
+          continue;
+        }
+        if (earliestDate == patientSeries.getForecast().getEarliestDate()) {
+          numOfEarliestDates++;
         } else {
-          if (tmpDate.after(patientSeries.getForecast().getEarliestDate())) {
-            tmpDate = patientSeries.getForecast().getEarliestDate();
-            j = 0;
+          if (earliestDate.after(patientSeries.getForecast().getEarliestDate())) {
+            earliestDate = patientSeries.getForecast().getEarliestDate();
+            numOfEarliestDates = 0;
           }
         }
       }
       for (PatientSeries patientSeries : patientSeriesList) {
-        if (patientSeries.getForecast().getEarliestDate() != tmpDate) {
+        if(patientSeries.getForecast() == null) {
+          continue;
+        }
+        if (patientSeries.getForecast().getEarliestDate() != earliestDate) {
           patientSeries.descPatientScoreSeries();
         } else {
-          if (j == 1)
+          if (numOfEarliestDates == 1) {
             patientSeries.incPatientScoreSeries();
+          }
         }
       }
     } else {
@@ -80,7 +90,7 @@ public class NoValidDoses extends LogicStep {
   }
 
   /**
-   * cond2 A candidate patient series is completable.
+   * cond2 A scorable patient series is completable.
    */
 
   private void evaluate_ACandidatePatientSeriesIsCompletable() {
@@ -96,7 +106,7 @@ public class NoValidDoses extends LogicStep {
   }
 
   /**
-   * cond3 A candidate patient series is a gender-specific patient series and the
+   * cond3 A scorable patient series is a gender-specific patient series and the
    * patient‘s gender
    * matches a required gender specified on the first target dose.
    */
@@ -121,7 +131,7 @@ public class NoValidDoses extends LogicStep {
   }
 
   /**
-   * cond4 A candidate patient series is a product patient series.
+   * cond4 A scorable patient series is a product patient series.
    */
 
   private void evaluate_ACandidatePatientSeriesIsAProductPatientSeries() {
@@ -145,7 +155,7 @@ public class NoValidDoses extends LogicStep {
   }
 
   /**
-   * cond5 A candidate patient series exceeded maximum age to start
+   * cond5 A scorable patient series exceeded maximum age to start
    */
 
   private void evaluate_ACandidatePatientSeriesHasExceededTheMaximumAge() {
@@ -162,7 +172,7 @@ public class NoValidDoses extends LogicStep {
   }
 
   private void evalTable() {
-    evaluate_ACandidatePatientSeriesCanStartEarliest();
+    evaluate_AScorablePatientSeriesCanStartEarliest();
     evaluate_ACandidatePatientSeriesIsCompletable();
     evaluate_ACandidatePatientSeriesGenderSpecific();
     evaluate_ACandidatePatientSeriesIsAProductPatientSeries();
@@ -194,7 +204,7 @@ public class NoValidDoses extends LogicStep {
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + getTitle() + "</h1>");
     out.println(
-        "<p>This section  provides the decision table for determining the number of points to assign to a  candidate  patient series when there are no valid doses.</p>");
+        "<p>This section  provides the decision table for determining the number of points to assign to a scorable patient series when there are no valid doses.</p>");
     printTable(out);
     // printConditionAttributesTable(out);
     // printLogicTables(out);
@@ -204,37 +214,37 @@ public class NoValidDoses extends LogicStep {
     out.println("<table BORDER=\"1\"> ");
     out.println("  <tr> ");
     out.println(" <th> Conditions </th> ");
-    out.println(" <th> If this condition is true for the candidate patient series </th> ");
-    out.println(" <th>If this condition is true for two or more candidate patient series </th> ");
-    out.println(" <th>If this condition is not true for the candidate patient serie </th> ");
+    out.println(" <th> If this condition is true for the scorable patient series </th> ");
+    out.println(" <th>If this condition is true for two or more scorable patient series </th> ");
+    out.println(" <th>If this condition is not true for the scorable patient series </th> ");
     out.println("  </tr> ");
     out.println("  <tr> ");
-    out.println(" <td >A candidate patient series can start earliest. </th> ");
+    out.println(" <td >A scorable patient series can start earliest. </th> ");
     out.println(" <td align=\"center\"> +1</td> ");
     out.println(" <td align=\"center\"> 0</td> ");
     out.println(" <td align=\"center\"> -1 </td> ");
     out.println("  </tr> ");
     out.println("<tr> ");
-    out.println(" <td>A candidate patient series is completable.</th> ");
+    out.println(" <td>A scorable patient series is completable.</th> ");
     out.println(" <td align=\"center\"> +1</td> ");
     out.println(" <td align=\"center\"> n/a</td> ");
     out.println(" <td align=\"center\"> -1 </td> ");
     out.println("  </tr> ");
     out.println("<tr> ");
     out.println(
-        " <td>A candidate patient series is a gender-specific patient series and the patient‘s gender matches a required gender specified on the first target dose.</th> ");
+        " <td>A scorable patient series is a gender-specific patient series and the patient's gender matches a required gender specified on the first target dose.</th> ");
     out.println(" <td align=\"center\"> +1</td> ");
     out.println(" <td align=\"center\"> n/a</td> ");
     out.println(" <td align=\"center\"> 0 </td> ");
     out.println("  </tr> ");
     out.println("<tr> ");
-    out.println(" <td>A candidate patient series is a product patient series. </th> ");
+    out.println(" <td>A scorable patient series is a product patient series. </th> ");
     out.println(" <td align=\"center\"> -1</td> ");
     out.println(" <td align=\"center\"> n/a</td> ");
     out.println(" <td align=\"center\"> +1 </td> ");
     out.println("  </tr> ");
     out.println("<tr> ");
-    out.println(" <td>A candidate patient series has exceeded maximum age. </th> ");
+    out.println(" <td>A scorable patient series has exceeded maximum age. </th> ");
     out.println(" <td align=\"center\"> -1</td> ");
     out.println(" <td align=\"center\"> n/a</td> ");
     out.println(" <td align=\"center\"> +1 </td> ");
