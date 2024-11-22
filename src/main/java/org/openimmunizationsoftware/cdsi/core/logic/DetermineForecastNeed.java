@@ -12,6 +12,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
+import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.Contraindication_TO_BE_REMOVED;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
@@ -67,7 +68,6 @@ public class DetermineForecastNeed extends LogicStep {
     }
   }
 
-
   public DetermineForecastNeed(DataModel dataModel) {
     super(LogicStepType.DETERMINE_FORECAST_NEED, dataModel);
     setConditionTableName("Table 7-9 : Determine Forecast Need Attributes");
@@ -93,13 +93,12 @@ public class DetermineForecastNeed extends LogicStep {
     // caContraindicatedPatientSeries
 
     caTargetDoseStatuses.setInitialValue(dataModel.getTargetDose());
-    //TODO move DateRule calculations to DateRules file
+    // TODO move DateRule calculations to DateRules file
     caMaximumAgeDate.setInitialValue(CALCDTAGE_1.evaluate(dataModel, this, null));
-    caCandidateEarliestDate.setInitialValue(FORECASTDTCAN_1.evaluate(dataModel, this, null));
+    caCandidateEarliestDate.setInitialValue(computeEarliestDate());
     findMaximumAgeDate();
     findSeasonalRecommendationEndDate();
     caAssessmentDate.setInitialValue(dataModel.getAssessmentDate());
-    
 
     conditionAttributesList.add(caVaccineDoseAdministered);
     conditionAttributesList.add(caTargetDoseStatuses);
@@ -211,7 +210,7 @@ public class DetermineForecastNeed extends LogicStep {
           new LogicCondition("Is the relevant patient series a contraindicated patient series?") {
             @Override
             protected LogicResult evaluateInternal() {
-              //TODO add logic
+              // TODO add logic
               if (dataModel.getPatient().getMedicalHistory().getContraindicationSet().isEmpty()) {
                 return LogicResult.NO;
               }
@@ -271,7 +270,7 @@ public class DetermineForecastNeed extends LogicStep {
         @Override
         public void perform() {
           log("No. The patient should not receive another dose.");
-          setNextLogicStepType(LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMENDED_VACCINES);
+          setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
           dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.COMPLETE);
           Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
           List<Forecast> forecastList = dataModel.getForecastList();
@@ -289,6 +288,7 @@ public class DetermineForecastNeed extends LogicStep {
         @Override
         public void perform() {
           log("No. The patient should not receive another dose.");
+          setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
           dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.NOT_RECOMMENDED);
           Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
           List<Forecast> forecastList = dataModel.getForecastList();
@@ -306,6 +306,7 @@ public class DetermineForecastNeed extends LogicStep {
         @Override
         public void perform() {
           log("No. The patient should not receive another dose.");
+          setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
           dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.IMMUNE);
           Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
           List<Forecast> forecastList = dataModel.getForecastList();
@@ -322,6 +323,7 @@ public class DetermineForecastNeed extends LogicStep {
         @Override
         public void perform() {
           log("No. The patient should not receive another dose.");
+          setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
           dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.CONTRAINDICATED);
           Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
           List<Forecast> forecastList = dataModel.getForecastList();
@@ -338,6 +340,7 @@ public class DetermineForecastNeed extends LogicStep {
         @Override
         public void perform() {
           log("No. The patient should not receive another doses.");
+          setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
           dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.NOT_RECOMMENDED);
           Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
           List<Forecast> forecastList = dataModel.getForecastList();
@@ -354,6 +357,7 @@ public class DetermineForecastNeed extends LogicStep {
         @Override
         public void perform() {
           log("No. The patient should not receive another dose.");
+          setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
           dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.AGED_OUT);
           Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
           List<Forecast> forecastList = dataModel.getForecastList();
@@ -370,6 +374,7 @@ public class DetermineForecastNeed extends LogicStep {
         @Override
         public void perform() {
           log("No. The patient should not receive another dose.");
+          setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
           dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.AGED_OUT);
           Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
           List<Forecast> forecastList = dataModel.getForecastList();
@@ -383,6 +388,55 @@ public class DetermineForecastNeed extends LogicStep {
       });
 
     }
+  }
+
+  private Date computeEarliestDate() {
+    List<Date> list = new ArrayList<Date>();
+
+    SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
+    Date dob = dataModel.getPatient().getDateOfBirth();
+
+    {
+      TimePeriod timePeriod = referenceSeriesDose.getAgeList().get(0).getMinimumAge();
+      Date minimumAgeDate = timePeriod.getDateFrom(dob);
+      list.add(minimumAgeDate);
+    }
+    Date latestMinimumIntervalDate = GenerateForecastDatesAndRecommendedVaccines
+        .getLatestDate(findMinimumIntervalDates());
+    list.add(latestMinimumIntervalDate);
+    // list.add(caLatestConflictEndIntervalDate.getFinalValue());// CALCDTLIVE-4 is
+    // both used and removed?
+    // list.add(caSeasonalRecommendationStartDate.getFinalValue());
+    Date earliestDate = GenerateForecastDatesAndRecommendedVaccines.getLatestDate(list);
+    return earliestDate;
+  }
+
+  private List<Date> findMinimumIntervalDates() {
+    List<Date> minimumIntervalList = new ArrayList<Date>();
+    SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
+    Date patientReferenceDoseDate = computePatientReferenceDoseDate();
+    if (referenceSeriesDose.getIntervalList() != null) {
+      for (Interval minIn : referenceSeriesDose.getIntervalList()) {
+        TimePeriod minimalIntervalFromReferenceSeriesDose = minIn.getMinimumInterval();
+        if (minimalIntervalFromReferenceSeriesDose == null) {
+          continue;
+        }
+        minimumIntervalList.add(minimalIntervalFromReferenceSeriesDose.getDateFrom(patientReferenceDoseDate));
+      }
+    }
+    return minimumIntervalList;
+  }
+
+  private Date computePatientReferenceDoseDate() {
+    Date tmpPatientReferenceDoseDate = new Date();
+    try {
+      AntigenAdministeredRecord previousAAR = dataModel.getPreviousAntigenAdministeredRecord();
+      tmpPatientReferenceDoseDate = previousAAR.getDateAdministered();
+    } catch (NullPointerException np) {
+      np.getCause();
+    }
+    return tmpPatientReferenceDoseDate;
+
   }
 
 }

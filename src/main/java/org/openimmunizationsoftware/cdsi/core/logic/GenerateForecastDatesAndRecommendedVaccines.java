@@ -312,7 +312,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     out.println("  </tr>");
   }
 
-  private Date getLatestDate(List<Date> dateList) {
+  public static Date getLatestDate(List<Date> dateList) {
     if (dateList == null || dateList.size() == 0) {
       return null;
     }
@@ -332,6 +332,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
   }
 
   private Date computeEarliestDate() {
+
     List<Date> list = new ArrayList<Date>();
     list.add(caMinimumAgeDate.getFinalValue());
     log("Item for consideration for Earliest date is: " + caMinimumAgeDate.getAttributeName() + " with value of "

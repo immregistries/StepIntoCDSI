@@ -153,6 +153,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
         .size(); i++) {
       dataModel.getAntigenAdministeredRecordList().get(i).getEvaluation()
           .setEvaluationStatus(EvaluationStatus.EXTRANEOUS);
+      dataModel.incAntigenAdministeredRecordPos();
     }
   }
 
