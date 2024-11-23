@@ -22,6 +22,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepFactory;
@@ -91,7 +92,7 @@ public class ForecastServlet extends HttpServlet {
     }
     {
       for (VaccineGroupForecast vgf : vgfl) {
-        if (!vgf.getForecastReason().equals("Patient series is complete")) {
+        if (!vgf.getVaccineGroupStatus().equals(VaccineGroupStatus.COMPLETE)) {
           if (vgf.getAdjustedRecommendedDate() != null
               && vgf.getAdjustedRecommendedDate().after(today)) {
             vgfLater.add(vgf);

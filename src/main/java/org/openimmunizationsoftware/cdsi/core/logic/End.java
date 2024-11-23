@@ -29,7 +29,6 @@ public class End extends LogicStep {
     out.println(
         "<p>End printing forecast stuff</p>");
 
-    List<VaccineGroupForecast> vaccineGroupForecastList = new ArrayList<VaccineGroupForecast>();
     VaccineGroup vaccineGroup = dataModel.getVaccineGroup();
     out.println("<h2>" + vaccineGroup.getName() + "</h2>");
 
@@ -72,7 +71,6 @@ public class End extends LogicStep {
           out.println("    <td>" + forecast.getForecastReason() + "</td>");
           out.println("  </tr>");
         }
-
       }
     }
     out.println("</table>");

@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.data.DataModelLoader;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepFactory;
@@ -88,7 +89,7 @@ public class FitsServlet extends ForecastServlet {
                                         if (forecast.getVaccineCvxExp().equals(vgf.getAntigen().getCvxForForecast())) {
                                             forecast.setSerieStatusAct(SerieStatus
                                                     .getSerieStatus(vgf.getPatientSeriesStatus().toString()));
-                                            if (vgf.getPatientSeriesStatus() == PatientSeriesStatus.NOT_COMPLETE) {
+                                            if (vgf.getVaccineGroupStatus() == VaccineGroupStatus.NOT_COMPLETE) {
                                                 forecast.setEarliestAct(vgf.getEarliestDate());
                                                 forecast.setRecommendedAct(vgf.getAdjustedRecommendedDate());
                                             }

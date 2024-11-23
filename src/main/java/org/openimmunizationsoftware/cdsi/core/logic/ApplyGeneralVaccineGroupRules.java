@@ -59,7 +59,7 @@ public class ApplyGeneralVaccineGroupRules extends LogicStep {
         }
       });
       setLogicResults(0, YES, NO);
-      // setLogicResults(0, new LogicResult[] { LogicResult.YES, LogicResult.NO });
+
 
       setLogicOutcome(0, new LogicOutcome() {
         @Override
