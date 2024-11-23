@@ -75,7 +75,7 @@ public class PatientServlet extends MainServlet {
   }
 
   private void printViewPatient(DataModel dataModel, PrintWriter out) {
-    //  class="w3-table w3-bordered w3-striped w3-border test w3-hoverable"
+    // class="w3-table w3-bordered w3-striped w3-border test w3-hoverable"
     out.println("  <div class=\"w3-card w3-cell w3-margin\">");
     out.println("    <header class=\"w3-container w3-khaki\">");
     out.println("      <h2>Patient</h2>");
@@ -93,7 +93,7 @@ public class PatientServlet extends MainServlet {
     out.println("          <th>Gender</th>");
     out.println("          <td>" + dataModel.getPatient().getGender() + "</td>");
     out.println("        </tr>");
-    
+
     out.println("        <tr>");
     out.println("          <th>Country of Birth</th>");
     out.println("          <td>" + dataModel.getPatient().getCountryOfBirth() + "</td>");
@@ -299,10 +299,6 @@ public class PatientServlet extends MainServlet {
       out.println("     </tr>");
       out.println("       <th>Dose Condition</th>");
       out.println("       <td>" + antigenAdministeredRecord.getDoseCondition() + "</td>");
-      out.println("     </tr>");
-      out.println("     </tr>");
-      out.println("       <th>Evaluation</th>");
-      out.println("       <td>" + antigenAdministeredRecord.getEvaluation() + "</td>");
       out.println("     </tr>");
       out.println("   </table>");
     }

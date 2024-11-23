@@ -10,6 +10,7 @@ import java.util.Date;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Age;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
+import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
@@ -160,39 +161,32 @@ public class EvaluateAge extends LogicStep {
       setLogicOutcome(0, new LogicOutcome() {
         @Override
         public void perform() {
-          AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
-          aar.getEvaluation().setEvaluationStatus(EvaluationStatus.NOT_VALID);
+          dataModel.setEvaluationForCurrentTargetDose(EvaluationStatus.NOT_VALID, EvaluationReason.TOO_YOUNG);
           log("No. The vaccine dose was not administered at a valid age for the target dose.");
-          aar.getEvaluation().setEvaluationReason(EvaluationReason.TOO_YOUNG);
           log("Evaluation reason is \'too young.\'");
         }
       });
       setLogicOutcome(1, new LogicOutcome() {
         @Override
         public void perform() {
-          AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
-          aar.getEvaluation().setEvaluationStatus(EvaluationStatus.VALID);
+          dataModel.setEvaluationForCurrentTargetDose(EvaluationStatus.NOT_VALID, EvaluationReason.GRACE_PERIOD);
           log("Yes. The vaccine dose was administered at a valid age for the target dose.");
-          aar.getEvaluation().setEvaluationReason(EvaluationReason.GRACE_PERIOD);
           log("Evaluation reason is \"Grace period.\"");
         }
       });
       setLogicOutcome(2, new LogicOutcome() {
         @Override
         public void perform() {
-          AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
-          aar.getEvaluation().setEvaluationStatus(EvaluationStatus.VALID);
+          dataModel.setEvaluationForCurrentTargetDose(EvaluationStatus.VALID, null);
           log("Yes. The vaccine dose was administered at a valid age for the target dose.");
         }
       });
       setLogicOutcome(3, new LogicOutcome() {
         @Override
         public void perform() {
-          AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
-          aar.getEvaluation().setEvaluationStatus(EvaluationStatus.NOT_VALID);
+          dataModel.setEvaluationForCurrentTargetDose(EvaluationStatus.NOT_VALID, EvaluationReason.TOO_OLD);
           log("No. The vaccine dose was not administered at a valid age for the target dose.");
           log("It is extraneous.");
-          aar.getEvaluation().setEvaluationReason(EvaluationReason.TOO_OLD);
           log("Evaluation reason is 'Too old'.");
         }
       });

@@ -45,8 +45,10 @@ public class MainServlet extends ForecastServlet {
     out.println("  </div>");
     out.println("  <div class=\"w3-container w3-green\">");
     out.println("      <p>Step Into CDSi " + SoftwareVersion.VERSION + " - ");
-    out.println("      <a href=\"https://aira.memberclicks.net/assets/docs/Organizational_Docs/AIRA%20Privacy%20Policy%20-%20Final%202024_.pdf\" class=\"underline\">AIRA Privacy Policy</a> - ");
-    out.println("      <a href=\"https://aira.memberclicks.net/assets/docs/Organizational_Docs/AIRA%20Terms%20of%20Use%20-%20Final%202024_.pdf\" class=\"underline\">AIRA Terms and Conditions of Use</a></p>");
+    out.println(
+        "      <a href=\"https://aira.memberclicks.net/assets/docs/Organizational_Docs/AIRA%20Privacy%20Policy%20-%20Final%202024_.pdf\" class=\"underline\">AIRA Privacy Policy</a> - ");
+    out.println(
+        "      <a href=\"https://aira.memberclicks.net/assets/docs/Organizational_Docs/AIRA%20Terms%20of%20Use%20-%20Final%202024_.pdf\" class=\"underline\">AIRA Terms and Conditions of Use</a></p>");
     out.println("    </div>");
     out.println("  </body>");
     out.println("</html>");
@@ -70,7 +72,8 @@ public class MainServlet extends ForecastServlet {
     out.println("        <a href=\"dataModelView\" class=\"w3-bar-item w3-button\">Main</a> ");
     out.println("        <a href=\"dataModelViewAntigen\" class=\"w3-bar-item w3-button\">Antigen</a> ");
     out.println("        <a href=\"dataModelViewCvx\" class=\"w3-bar-item w3-button\">CVX</a> ");
-    out.println("        <a href=\"dataModelViewLiveVirusConflict\" class=\"w3-bar-item w3-button\">Live Virus Conflict</a> ");
+    out.println(
+        "        <a href=\"dataModelViewLiveVirusConflict\" class=\"w3-bar-item w3-button\">Live Virus Conflict</a> ");
     out.println("        <a href=\"dataModelViewPatient\" class=\"w3-bar-item w3-button\">Patient</a> ");
     out.println("        <a href=\"dataModelViewSchedule\" class=\"w3-bar-item w3-button\">Schedule</a> ");
     out.println("        <a href=\"dataModelViewVaccineGroup\" class=\"w3-bar-item w3-button\">Vaccine Group</a> ");
@@ -104,7 +107,6 @@ public class MainServlet extends ForecastServlet {
     out.println("       <td>" + sdf.format(dataModel.getAssessmentDate()) + "</td>");
     out.println("     </tr>");
     out.println("   </table>");
-
 
     if (dataModel.getTargetDoseList() != null) {
       out.println("   <table>");
@@ -141,23 +143,29 @@ public class MainServlet extends ForecastServlet {
       out.println("   </table>");
     }
     /*
-     * out.println("     <tr>"); out.println("       <th>cvx Map</th>"); out.println("       <td>" +
+     * out.println("     <tr>"); out.println("       <th>cvx Map</th>");
+     * out.println("       <td>" +
      * + "</td>"); out.println("     </tr>"); out.println("     <tr>");
-     * out.println("       <th>Antigen Map</th>"); out.println("       <td>" + + "</td>");
+     * out.println("       <th>Antigen Map</th>"); out.println("       <td>" + +
+     * "</td>");
      * out.println("     </tr>"); out.println("     <tr>");
-     * out.println("       <th>Vaccine Group Map</th>" ); out.println("       <td>" + + "</td>");
+     * out.println("       <th>Vaccine Group Map</th>" ); out.println("       <td>"
+     * + + "</td>");
      * out.println("     </tr>");
      */
 
     /*
-     * out.println("     <tr>"); out.println( "       <th>Constraindictation List</th>");
-     * out.println("       <td>" + + "</td>"); out.println("     </tr>"); out.println("     <tr>");
-     * out.println("       <th>Schedule List</th>"); out.println("       <td>" + + "</td>");
+     * out.println("     <tr>"); out.println(
+     * "       <th>Constraindictation List</th>");
+     * out.println("       <td>" + + "</td>"); out.println("     </tr>");
+     * out.println("     <tr>");
+     * out.println("       <th>Schedule List</th>"); out.println("       <td>" + +
+     * "</td>");
      * out.println("     </tr>");
      */
 
-    AntigenAdministeredRecord antigenAdministeredRecordThatSatisfiedPreviousTargetDose =
-        dataModel.getAntigenAdministeredRecordThatSatisfiedPreviousTargetDose();
+    AntigenAdministeredRecord antigenAdministeredRecordThatSatisfiedPreviousTargetDose = dataModel
+        .getAntigenAdministeredRecordThatSatisfiedPreviousTargetDose();
     printAntigenAdministeredRecordTable(antigenAdministeredRecordThatSatisfiedPreviousTargetDose,
         "Antigen Administered Record That Satisfied Previous Target Dose", out);
 
@@ -165,21 +173,24 @@ public class MainServlet extends ForecastServlet {
     printAntigenAdministeredRecordTable(antigenAdministeredRecord, "Antigen Administered Record",
         out);
 
-    AntigenAdministeredRecord previousAntigenAdministeredRecord =
-        dataModel.getPreviousAntigenAdministeredRecord();
+    AntigenAdministeredRecord previousAntigenAdministeredRecord = dataModel.getPreviousAntigenAdministeredRecord();
     printAntigenAdministeredRecordTable(previousAntigenAdministeredRecord,
         "Previous Antigen Administered Record", out);
 
     /*
      * out.println("     <tr>");
      * 
-     * out.println("       <th>Antigen Administered Record List</th>"); out.println("       <td>" +
+     * out.println("       <th>Antigen Administered Record List</th>");
+     * out.println("       <td>" +
      * + "</td>"); out.println("     </tr>"); out.println("     <tr>"); out.println(
-     * "       <th>Antigen Series List</th>"); out.println("       <td>" + + "</td>");
+     * "       <th>Antigen Series List</th>"); out.println("       <td>" + +
+     * "</td>");
      * out.println("     </tr>"); out.println("     <tr>");
-     * out.println("       <th>Patient Series List</th>"); out.println( "       <td>" + + "</td>");
+     * out.println("       <th>Patient Series List</th>"); out.println(
+     * "       <td>" + + "</td>");
      * out.println("     </tr>"); out.println( "     <tr>");
-     * out.println("       <th>Patient Series</th>"); out.println( "       <td>" + + "</td>");
+     * out.println("       <th>Patient Series</th>"); out.println( "       <td>" + +
+     * "</td>");
      * out.println("     </tr>"); out.println( "   </table>");
      */
   }
@@ -226,14 +237,9 @@ public class MainServlet extends ForecastServlet {
       out.println("       <td>" + antigenAdministeredRecord.getDoseCondition() + "</td>");
       out.println("     </tr>");
       out.println("     </tr>");
-      out.println("       <th>Evaluation</th>");
-      out.println("       <td>" + antigenAdministeredRecord.getEvaluation() + "</td>");
-      out.println("     </tr>");
       out.println("   </table>");
     }
   }
-
-
 
   void printRowTargetDoseList(TargetDose targetDose, PrintWriter out) {
     out.println("     <tr>");

@@ -51,7 +51,7 @@ public class DetermineForecastNeed extends LogicStep {
           .get(0).getSeasonalRecommendationEndDate();
       caSeasonalRecommendationEndDate.setInitialValue(seasonalRecommendationEndDate);
     } else {
-      //// System.err.println("Recommendation End date is not referenced");
+      log("Recommendation End date is not referenced");
     }
   }
 

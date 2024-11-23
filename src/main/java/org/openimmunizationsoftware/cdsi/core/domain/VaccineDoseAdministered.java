@@ -15,11 +15,6 @@ public class VaccineDoseAdministered {
   private ImmunizationHistory immunizationHistory = null;
   private TargetDose targetDose = null;
   private Antigen antigenAssigned = null;
-  private Map<Antigen, Evaluation> evaluationMap = new HashMap<Antigen, Evaluation>();
-
-  public Map<Antigen, Evaluation> getEvaluationMap() {
-    return evaluationMap;
-  }
 
   public Antigen getAntigenAssigned() {
     return antigenAssigned;

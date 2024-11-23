@@ -7,6 +7,15 @@ public class TargetDose {
   private SeriesDose trackedSeriesDose = null;
   private VaccineDoseAdministered satisfiedByVaccineDoseAdministered = null;
   private String statusCause = "";
+  private Evaluation evaluation = null;
+
+  public Evaluation getEvaluation() {
+    return evaluation;
+  }
+
+  public void setEvaluation(Evaluation evaluation) {
+    this.evaluation = evaluation;
+  }
 
   public TargetDose() {
     // default
@@ -28,7 +37,6 @@ public class TargetDose {
       VaccineDoseAdministered satisfiedByVaccineDoseAdministered) {
     this.satisfiedByVaccineDoseAdministered = satisfiedByVaccineDoseAdministered;
   }
-
 
   public TargetDoseStatus getTargetDoseStatus() {
     return targetDoseStatus;

@@ -39,9 +39,9 @@ public class InProcessPatientSeries extends LogicStep {
     boolean hasAllValidDoses = true;
 
     for (PatientSeries patientSeries : patientSeriesList) {
-      if (patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries()
+      if (patientSeries.getTrackedAntigenSeries().getSelectPatientSeries()
           .getProductPath() != null) {
-        if (patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries().getProductPath()
+        if (patientSeries.getTrackedAntigenSeries().getSelectPatientSeries().getProductPath()
             .equals(YesNo.YES)) {
           productPatientSeries = true;
         }
@@ -293,7 +293,6 @@ public class InProcessPatientSeries extends LogicStep {
   private void evaluate_ACandidatePatientSeriesCanFinishEarliest() {
     int j = 0;
     if (patientSeriesList.get(0).getForecast() != null) {
-      System.err.println("Forecast is set");
       Date tmpDate = patientSeriesList.get(0).getForecast().getLatestDate();
       for (int i = 0; i < patientSeriesList.size(); i++) {
         PatientSeries patientSeries = patientSeriesList.get(i);
@@ -314,8 +313,6 @@ public class InProcessPatientSeries extends LogicStep {
             patientSeries.incPatientScoreSeries();
         }
       }
-    } else {
-      System.err.println("Forecast is not set");
     }
   }
 
@@ -381,6 +378,7 @@ public class InProcessPatientSeries extends LogicStep {
     out.println(
         "<p>In-process  patient series provides the decision table for determining the number of points to assign to an  inprocess patient series based on a specified condition.</p>");
     printTable(out);
+    printBestPatientSeries(out);
   }
 
   private void printTable(PrintWriter out) {

@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.openimmunizationsoftware.cdsi.SoftwareVersion;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.data.DataModelLoader;
+import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
@@ -71,8 +72,12 @@ public class ForecastServlet extends HttpServlet {
     }
   }
 
-  private void printText(HttpServletResponse resp, DataModel dataModel, PrintWriter out) {
+  private static void printText(HttpServletResponse resp, DataModel dataModel, PrintWriter out) {
     resp.setContentType("text/plain");
+    printText(dataModel, out);
+  }
+
+  public static void printText(DataModel dataModel, PrintWriter out) {
     out.println("Step Into Clinical Decision Support for Immunizations - Demonstration //System");
     out.println();
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
@@ -135,12 +140,53 @@ public class ForecastServlet extends HttpServlet {
 
     out.println("Forecast generated " + sdf.format(new Date()) + " using software version "
         + SoftwareVersion.VERSION + ".");
+
+    // extra junk
+
+    PatientSeries p = dataModel.getBestPatientSeriesList().size() == 0 ? null
+        : dataModel.getBestPatientSeriesList().get(0);
+    if (dataModel.getBestPatientSeriesList() == null) {
+      out.println("Best Patient Series List is null!");
+    } else {
+      out.println("Best Patient Series List size = " + dataModel.getBestPatientSeriesList().size());
+    }
+    out.println("Forecast List size = " + dataModel.getForecastList().size() + " for list "
+        + dataModel.getForecastList());
+
+    for (Forecast forecast : dataModel.getForecastList()) {
+      for (Antigen antigen : dataModel.getAntigenSelectedList()) {
+        if (forecast.getAntigen().equals(antigen)) {
+          out.println("  - " + forecast.getAntigen().getName());
+          out.println("    + " + (p == null ? null : p.getForecast().getTargetDose()));
+          out.println("    + " + (p == null ? null : p.getPatientSeriesStatus()));
+          out.println("    + " + forecast.getEarliestDate());
+          out.println("    + " + forecast.getAdjustedRecommendedDate());
+          out.println("    + " + forecast.getAdjustedPastDueDate());
+          out.println("    + " + forecast.getLatestDate());
+          out.println("    + " + forecast.getUnadjustedRecommendedDate());
+          out.println("    + " + forecast.getUnadjustedPastDueDate());
+          out.println("    + " + forecast.getForecastReason());
+        }
+      }
+    }
+
+    out.println("Vaccine Group Forecast List size = " + dataModel.getVaccineGroupForecastList().size());
+    for (VaccineGroupForecast vgf : dataModel.getVaccineGroupForecastList()) {
+      out.println("  - " + (vgf.getAntigen() == null ? "null" : vgf.getAntigen().getName()));
+      out.println("    + pss  = " + vgf.getPatientSeriesStatus());
+      out.println("    + vgs  = " + vgf.getVaccineGroupStatus());
+      out.println("    + ard  = " + vgf.getAdjustedRecommendedDate());
+      out.println("    + apdd = " + vgf.getAdjustedPastDueDate());
+      out.println("    + ed   = " + vgf.getEarliestDate());
+      out.println("    + ld   = " + vgf.getLatestDate());
+      out.println("    + fl   = " + vgf.getForecastList().size());
+    }
   }
 
   // Measles Mumps Rubella
   // combined into MMR
 
-  private void printList(DataModel dataModel, PrintWriter out, SimpleDateFormat sdf, Date today,
+  private static void printList(DataModel dataModel, PrintWriter out, SimpleDateFormat sdf, Date today,
       List<VaccineGroupForecast> vaccineGroupForecastList, String title) {
     if (vaccineGroupForecastList.size() > 0) {
       out.println(title + " " + sdf.format(dataModel.getAssessmentDate()));

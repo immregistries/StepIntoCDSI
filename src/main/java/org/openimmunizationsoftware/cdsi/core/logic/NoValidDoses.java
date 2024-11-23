@@ -53,14 +53,15 @@ public class NoValidDoses extends LogicStep {
 
   private void evaluate_AScorablePatientSeriesCanStartEarliest() {
     int numOfEarliestDates = 0;
-    if (patientSeriesList.size() != 0 && patientSeriesList.get(0).getForecast() != null && patientSeriesList.get(0).getForecast().getEarliestDate() != null) {
+    if (patientSeriesList.size() != 0 && patientSeriesList.get(0).getForecast() != null
+        && patientSeriesList.get(0).getForecast().getEarliestDate() != null) {
       Date earliestDate = patientSeriesList.get(0).getForecast().getEarliestDate();
       for (PatientSeries patientSeries : patientSeriesList) {
-        if(earliestDate == null) {
+        if (earliestDate == null) {
           earliestDate = patientSeries.getForecast().getEarliestDate();
           continue;
         }
-        if(patientSeries.getForecast() == null || patientSeries.getForecast().getEarliestDate() == null) {
+        if (patientSeries.getForecast() == null || patientSeries.getForecast().getEarliestDate() == null) {
           continue;
         }
         if (earliestDate == patientSeries.getForecast().getEarliestDate()) {
@@ -73,7 +74,7 @@ public class NoValidDoses extends LogicStep {
         }
       }
       for (PatientSeries patientSeries : patientSeriesList) {
-        if(patientSeries.getForecast() == null) {
+        if (patientSeries.getForecast() == null) {
           continue;
         }
         if (patientSeries.getForecast().getEarliestDate() != earliestDate) {
@@ -85,7 +86,7 @@ public class NoValidDoses extends LogicStep {
         }
       }
     } else {
-      System.err.println("Forecast is not set");
+      log("Forecast is not set");
     }
   }
 
@@ -137,10 +138,10 @@ public class NoValidDoses extends LogicStep {
   private void evaluate_ACandidatePatientSeriesIsAProductPatientSeries() {
     boolean productPatientSeries = false;
     for (PatientSeries patientSeries : patientSeriesList) {
-      if (patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries() != null &&
-          patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries()
+      if (patientSeries.getTrackedAntigenSeries().getSelectPatientSeries() != null &&
+          patientSeries.getTrackedAntigenSeries().getSelectPatientSeries()
               .getProductPath() != null) {
-        if (patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries().getProductPath()
+        if (patientSeries.getTrackedAntigenSeries().getSelectPatientSeries().getProductPath()
             .equals(YesNo.YES)) {
           productPatientSeries = true;
         }
@@ -208,6 +209,7 @@ public class NoValidDoses extends LogicStep {
     printTable(out);
     // printConditionAttributesTable(out);
     // printLogicTables(out);
+    printBestPatientSeries(out);
   }
 
   private void printTable(PrintWriter out) {

@@ -30,7 +30,8 @@ public class ScheduleServlet extends MainServlet {
   private static final String VIEW_ANTIGEN = "antigen";
 
   /*
-   * public static String makeLink(Schedule schedule) { return "<a href=\"" + SERVLET_NAME +
+   * public static String makeLink(Schedule schedule) { return "<a href=\"" +
+   * SERVLET_NAME +
    * "?\" target=\"dataModelView\">" "</a>"; }
    */
 
@@ -124,7 +125,8 @@ public class ScheduleServlet extends MainServlet {
         out.println("          <ul>");
 
         for (ClinicalHistory clinicalHistory : schedule.getImmunity().getClinicalHistoryList()) {
-          out.println("          <li>" + clinicalHistory.getImmunityGuidelineCode() + ": " + clinicalHistory.getImmunityGuidelineTitle() + "</li>");
+          out.println("          <li>" + clinicalHistory.getImmunityGuidelineCode() + ": "
+              + clinicalHistory.getImmunityGuidelineTitle() + "</li>");
         }
         out.println("          </ul>");
       }
@@ -173,18 +175,16 @@ public class ScheduleServlet extends MainServlet {
     out.println("      </tr>");
     out.println("      <tr>");
     out.println(
-        "        <td>" + antigenSeries.getSelectBestPatientSeries().getDefaultSeries() + "</td>");
+        "        <td>" + antigenSeries.getSelectPatientSeries().getDefaultSeries() + "</td>");
     out.println(
-        "        <td>" + antigenSeries.getSelectBestPatientSeries().getProductPath() + "</td>");
-    out.println("        <td>" + antigenSeries.getSelectBestPatientSeries().getSeriesPreference()
+        "        <td>" + antigenSeries.getSelectPatientSeries().getProductPath() + "</td>");
+    out.println("        <td>" + antigenSeries.getSelectPatientSeries().getSeriesPreference()
         + "</td>");
     out.println(
-        "        <td>" + antigenSeries.getSelectBestPatientSeries().getMaxAgeToStart() + "</td>");
+        "        <td>" + antigenSeries.getSelectPatientSeries().getMaxAgeToStart() + "</td>");
     out.println("      </tr>");
     out.println("    </table>");
 
-
   }
-
 
 }

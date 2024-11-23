@@ -15,8 +15,7 @@ public class SeriesDose {
   private ConditionalSkip conditionalSkip = null;
   private List<RecurringDose> recurringDoseList = new ArrayList<RecurringDose>();
   private List<ConditionalNeed> conditionalNeedList = new ArrayList<ConditionalNeed>();
-  private List<SeasonalRecommendation> seasonalRecommendationList =
-      new ArrayList<SeasonalRecommendation>();
+  private List<SeasonalRecommendation> seasonalRecommendationList = new ArrayList<SeasonalRecommendation>();
   private List<SubstituteDose> substituteDoseList = new ArrayList<SubstituteDose>();
   private List<RequiredGender> requiredGenderList = new ArrayList<RequiredGender>();
   private List<PreferrableVaccine> preferrableVaccineList = new ArrayList<PreferrableVaccine>();

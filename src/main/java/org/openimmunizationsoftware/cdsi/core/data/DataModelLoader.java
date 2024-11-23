@@ -34,8 +34,9 @@ import org.openimmunizationsoftware.cdsi.core.domain.RecurringDose;
 import org.openimmunizationsoftware.cdsi.core.domain.RequiredGender;
 import org.openimmunizationsoftware.cdsi.core.domain.Schedule;
 import org.openimmunizationsoftware.cdsi.core.domain.SeasonalRecommendation;
-import org.openimmunizationsoftware.cdsi.core.domain.SelectBestPatientSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.SelectPatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
+import org.openimmunizationsoftware.cdsi.core.domain.SeriesType;
 import org.openimmunizationsoftware.cdsi.core.domain.SubstituteDose;
 import org.openimmunizationsoftware.cdsi.core.domain.Vaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
@@ -47,9 +48,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class DataModelLoader {
-  private static final String[] scheduleNames =
-      {"Cholera", "Diphtheria", "HepA", "HepB", "Hib", "HPV", "Influenza", "JE", "Measles", "Meningococcal B", "Meningococcal", "Mumps", 
-          "Pertussis", "Pneumococcal", "Polio", "Rabies", "Rotavirus", "Rubella", "Tetanus", "Typhoid", "Varicella", "YF", "Zoster"};
+  private static final String[] scheduleNames = { "Cholera", "Diphtheria", "HepA", "HepB", "Hib", "HPV", "Influenza",
+      "JE", "Measles", "Meningococcal B", "Meningococcal", "Mumps",
+      "Pertussis", "Pneumococcal", "Polio", "Rabies", "Rotavirus", "Rubella", "Tetanus", "Typhoid", "Varicella", "YF",
+      "Zoster" };
 
   public static DataModel createDataModel() throws Exception {
     DataModel dataModel = new DataModel();
@@ -57,8 +59,7 @@ public class DataModelLoader {
     String baseLocation = "";
 
     {
-      InputStream is =
-          DataModelLoader.class.getResourceAsStream(baseLocation + "ScheduleSupportingData.xml");
+      InputStream is = DataModelLoader.class.getResourceAsStream(baseLocation + "ScheduleSupportingData.xml");
 
       DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
       DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -71,7 +72,7 @@ public class DataModelLoader {
       readLiveVirusConflicts(dataModel, doc);
       // TODO add readObservations(dataModel, doc);
     }
-    
+
     for (String scheduleName : scheduleNames) {
       InputStream is = DataModelLoader.class
           .getResourceAsStream(baseLocation + "AntigenSupportingData- " + scheduleName + "-508.xml");
@@ -113,7 +114,8 @@ public class DataModelLoader {
               if (grandchildNode.getNodeType() == Node.ELEMENT_NODE) {
                 if (grandchildNode.getNodeName().equals("guidelineCode")) {
                   clinicalHistory.setImmunityGuidelineCode(DomUtils.getInternalValue(grandchildNode));
-                } if (grandchildNode.getNodeName().equals("guidelineTitle")) {
+                }
+                if (grandchildNode.getNodeName().equals("guidelineTitle")) {
                   clinicalHistory.setImmunityGuidelineTitle(DomUtils.getInternalValue(grandchildNode));
                 } else if (grandchildNode.getNodeName().equals("mapping")) {
                   Concept concept = readConcept(grandchildNode);
@@ -174,7 +176,7 @@ public class DataModelLoader {
   private static void readContraindications(Schedule schedule, DataModel dataModel, Document doc) {
     NodeList parentList = doc.getElementsByTagName("immunity");
     for (int i = 0; i < parentList.getLength(); i++) {
-      
+
     }
   }
 
@@ -216,6 +218,7 @@ public class DataModelLoader {
           if (childNode.getNodeName().equals("seriesName")) {
             String seriesName = DomUtils.getInternalValue(childNode);
             antigenSeries.setSeriesName(seriesName);
+            System.out.println("--> reading antigenSeries = " + seriesName);
           } else if (childNode.getNodeName().equals("targetDisease")) {
             targetDisease = dataModel.getOrCreateAntigen(DomUtils.getInternalValue(childNode));
             antigenSeries.setTargetDisease(targetDisease);
@@ -223,24 +226,36 @@ public class DataModelLoader {
             String nameValue = DomUtils.getInternalValue(childNode);
             vaccineGroup = dataModel.getOrCreateVaccineGroup(nameValue);
             antigenSeries.setVaccineGroup(vaccineGroup);
-          } else if (childNode.getNodeName().equals("selectBest")) {
-            SelectBestPatientSeries selectBestPatientSeries = new SelectBestPatientSeries();
-            antigenSeries.setSelectBestPatientSeries(selectBestPatientSeries);
-            NodeList grandchildList = parentNode.getChildNodes();
+          } else if (childNode.getNodeName().equals("seriesType")) {
+            String nameValue = DomUtils.getInternalValue(childNode);
+            SeriesType seriesType = SeriesType.getSeriestType(nameValue);
+            antigenSeries.setSeriesType(seriesType);
+          } else if (childNode.getNodeName().equals("selectSeries")) {
+            System.out.println("--> reading selectSeries");
+            SelectPatientSeries selectPatientSeries = new SelectPatientSeries();
+            antigenSeries.setSelectPatientSeries(selectPatientSeries);
+            NodeList grandchildList = childNode.getChildNodes();
             for (int k = 0; k < grandchildList.getLength(); k++) {
               Node grandchildNode = grandchildList.item(k);
               if (grandchildNode.getNodeType() == Node.ELEMENT_NODE) {
+                System.out.println("--> looking at node " + grandchildNode.getNodeName());
                 if (grandchildNode.getNodeName().equals("defaultSeries")) {
-                  selectBestPatientSeries
-                      .setDefaultSeries(DomUtils.getInternalValueYesNo(grandchildNode));
+                  selectPatientSeries.setDefaultSeries(DomUtils.getInternalValueYesNo(grandchildNode));
+                  System.out.println("-->  - defaultSeries = " + DomUtils.getInternalValue(grandchildNode) + " ("
+                      + selectPatientSeries.getDefaultSeries() + ")");
                 } else if (grandchildNode.getNodeName().equals("productPath")) {
-                  selectBestPatientSeries
-                      .setProductPath(DomUtils.getInternalValueYesNo(grandchildNode));
+                  selectPatientSeries.setProductPath(DomUtils.getInternalValueYesNo(grandchildNode));
+                } else if (grandchildNode.getNodeName().equals("seriesGroupName")) {
+                  selectPatientSeries.setSeriesGroupName(DomUtils.getInternalValue(grandchildNode));
+                } else if (grandchildNode.getNodeName().equals("seriesGroup")) {
+                  selectPatientSeries.setSeriesGroup(DomUtils.getInternalValue(grandchildNode));
+                } else if (grandchildNode.getNodeName().equals("seriesPriority")) {
+                  selectPatientSeries.setSeriesPriority(DomUtils.getInternalValue(grandchildNode));
                 } else if (grandchildNode.getNodeName().equals("seriesPreference")) {
-                  selectBestPatientSeries
+                  selectPatientSeries
                       .setSeriesPreference(DomUtils.getInternalValue(grandchildNode));
                 } else if (grandchildNode.getNodeName().equals("maxAgeToStart")) {
-                  selectBestPatientSeries
+                  selectPatientSeries
                       .setMaxAgeToStart(new TimePeriod(DomUtils.getInternalValue(grandchildNode)));
                 }
               }

@@ -43,8 +43,19 @@ public class SingleAntigenVaccineGroup extends LogicStep {
         : dataModel.getBestPatientSeriesList().get(0);
     for (Forecast forecast : dataModel.getForecastList()) {
       if (forecast.getAntigen().equals(vaccineGroup.getAntigenList().get(0))) {
+        // System.out.println("--> antigen = " + forecast.getAntigen());
+        // dataModel.getVaccineGroupForecastList().size()
+        // System.out.println("--> getBestPatientSeriesList.size() = " +
+        // dataModel.getBestPatientSeriesList().size());
+        // for (PatientSeries ps : dataModel.getBestPatientSeriesList()) {
+        // System.out.println("--> getPatientSeriesStatus = " +
+        // ps.getPatientSeriesStatus() + " for "
+        // + ps.getTrackedAntigenSeries().getSeriesName() + " for "
+        // + ps.getTrackedAntigenSeries().getTargetDisease());
+        // }
         log("<p>    forecast antigen equals first antigen in vaccine group, creating VGF</p>");
         // Règle en plus
+        vgf.setAntigen(forecast.getAntigen());
         vgf.setTargetDose(p == null ? null : p.getForecast().getTargetDose());
         // SINGLEANTVG-1 The vaccine group status for a single antigen vaccine group
         // must be the
@@ -93,11 +104,9 @@ public class SingleAntigenVaccineGroup extends LogicStep {
         // antigen
         // vaccine group must be the best patient series forecast recommended vaccines.
         //
-        vgf.setAntigen(forecast.getAntigen());
         dataModel.getVaccineGroupForecastList().add(vgf);
       }
     }
-    
 
     setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
     return next();
@@ -160,18 +169,18 @@ public class SingleAntigenVaccineGroup extends LogicStep {
     out.println("  </tr>");
 
     for (Forecast forecast : dataModel.getForecastList()) {
-        out.println("  <tr>");
-        out.println("    <td>" + forecast.getAntigen().getName() + "</td>");
-        out.println("    <td>" + (p == null ? null : p.getForecast().getTargetDose()) + "</td>");
-        out.println("    <td>" + (p == null ? null : p.getPatientSeriesStatus()) + "</td>");
-        out.println("    <td>" + n(forecast.getEarliestDate()) + "</td>");
-        out.println("    <td>" + n(forecast.getAdjustedRecommendedDate()) + "</td>");
-        out.println("    <td>" + n(forecast.getAdjustedPastDueDate()) + "</td>");
-        out.println("    <td>" + n(forecast.getLatestDate()) + "</td>");
-        out.println("    <td>" + n(forecast.getUnadjustedRecommendedDate()) + "</td>");
-        out.println("    <td>" + n(forecast.getUnadjustedPastDueDate()) + "</td>");
-        out.println("    <td>" + forecast.getForecastReason() + "</td>");
-        out.println("  </tr>");
+      out.println("  <tr>");
+      out.println("    <td>" + forecast.getAntigen().getName() + "</td>");
+      out.println("    <td>" + (p == null ? null : p.getForecast().getTargetDose()) + "</td>");
+      out.println("    <td>" + (p == null ? null : p.getPatientSeriesStatus()) + "</td>");
+      out.println("    <td>" + n(forecast.getEarliestDate()) + "</td>");
+      out.println("    <td>" + n(forecast.getAdjustedRecommendedDate()) + "</td>");
+      out.println("    <td>" + n(forecast.getAdjustedPastDueDate()) + "</td>");
+      out.println("    <td>" + n(forecast.getLatestDate()) + "</td>");
+      out.println("    <td>" + n(forecast.getUnadjustedRecommendedDate()) + "</td>");
+      out.println("    <td>" + n(forecast.getUnadjustedPastDueDate()) + "</td>");
+      out.println("    <td>" + forecast.getForecastReason() + "</td>");
+      out.println("  </tr>");
     }
     out.println("</table>");
 

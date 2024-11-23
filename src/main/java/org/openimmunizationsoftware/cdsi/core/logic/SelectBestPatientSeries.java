@@ -17,9 +17,9 @@ public class SelectBestPatientSeries extends LogicStep {
   @Override
   public LogicStep process() {
     dataModel.incAntigenPos();
-    if (dataModel.getAntigenPos() < dataModel.getAntigenList().size()) {
-      Antigen antigen = dataModel.getAntigenList().get(dataModel.getAntigenPos());
-      dataModel.setAntigen(dataModel.getAntigenList().get(dataModel.getAntigenPos()));
+    if (dataModel.getAntigenPos() < dataModel.getAntigenSelectedList().size()) {
+      Antigen antigen = dataModel.getAntigenSelectedList().get(dataModel.getAntigenPos());
+      dataModel.setAntigen(dataModel.getAntigenSelectedList().get(dataModel.getAntigenPos()));
       ArrayList<AntigenSeries> antigenSeriesSelectedList = new ArrayList<AntigenSeries>();
       for (AntigenSeries antigenSeries : dataModel.getAntigenSeriesList()) {
         if (antigenSeries.getTargetDisease().equals(antigen)) {
@@ -92,14 +92,13 @@ public class SelectBestPatientSeries extends LogicStep {
   public void printPre(PrintWriter out) throws Exception {
     // out.println("<h1>8.5 Select Best Patient Series</h1>");
     printStandard(out);
-
   }
 
   @Override
   public void printPost(PrintWriter out) {
     // out.println("<h1>8.5 Select Best Patient Series</h1>");
     printStandard(out);
-    if (dataModel.getAntigenPos() < dataModel.getAntigenList().size()) {
+    if (dataModel.getAntigenPos() < dataModel.getAntigenSelectedList().size()) {
       out.println("<p>Now looking at Antigen: " + dataModel.getAntigen() + "</p>");
     } else {
       out.println("<p>Done checking Antigens, moving onto Identify and Evaluate Vaccine Group</p>");
@@ -110,7 +109,7 @@ public class SelectBestPatientSeries extends LogicStep {
       out.println("<li>" + ps.getTrackedAntigenSeries().getSeriesName() + "</li>");
     }
     out.println("</ul>");
-
+    printBestPatientSeries(out);
   }
 
   private void printStandard(PrintWriter out) {

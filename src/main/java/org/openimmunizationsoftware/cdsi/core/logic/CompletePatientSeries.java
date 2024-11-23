@@ -2,10 +2,8 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -17,7 +15,6 @@ import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 
 public class CompletePatientSeries extends LogicStep {
 
@@ -119,7 +116,6 @@ public class CompletePatientSeries extends LogicStep {
 
   }
 
-
   private void evaluateTable() {
     evaluate_ACandidatePatientSeriesHasTheMostValidDoses();
   }
@@ -144,8 +140,10 @@ public class CompletePatientSeries extends LogicStep {
   private void printStandard(PrintWriter out) {
     out.println("<h1> " + logicStepType.getDisplay() + "</h1>");
     out.println(
-        "<p>Complete  patient  series  provides  the  decision  table  for  determining  the  number  of  points  to  assign  to  a complete patient series based on a specified condition. </p>");
+        "<p>Complete  patient  series  provides  the  decision  table  for  determining  the  "
+            + "number  of  points  to  assign  to  a complete patient series based on a specified condition. </p>");
     printTable(out);
+    printBestPatientSeries(out);
   }
 
   private void printTable(PrintWriter out) {

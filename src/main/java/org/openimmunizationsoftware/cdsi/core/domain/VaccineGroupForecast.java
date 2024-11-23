@@ -54,6 +54,10 @@ public class VaccineGroupForecast extends Forecast {
   }
 
   public void setVaccineGroupStatus(VaccineGroupStatus vaccineGroupStatus) {
+    // Exception e = new Exception();
+    // System.out.println("--> setting vaccine group status = " + vaccineGroupStatus
+    // + " where antigen = " + getAntigen());
+    // e.printStackTrace(System.out);
     this.vaccineGroupStatus = vaccineGroupStatus;
   }
 

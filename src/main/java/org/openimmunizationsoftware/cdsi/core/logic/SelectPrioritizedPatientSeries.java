@@ -92,7 +92,7 @@ public class SelectPrioritizedPatientSeries extends LogicStep {
         "<p>Select best candidate patient series  provides the business rules to  be applied to  the scored candidate patient series which will result in the best patient series for the patient.</p>");
 
     out.print("<h4> " + dataModel.getAntigen().getName() + " </h4>");
-
+    printBestPatientSeries(out);
   }
 
 }

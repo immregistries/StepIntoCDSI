@@ -64,20 +64,21 @@ public class ClassifyScorablePatientSeries extends LogicStep {
 
     // printConditionAttributesTable(out);
     printLogicTables(out);
+    printBestPatientSeries(out);
   }
 
   private class LT extends LogicTable {
     public LT() {
-      super(3, 3, "Table 6-4 : Which patient series should be scored ? ");
+      super(3, 3, "Table 8-5 Which scorable patient series should be scored? ");
 
-      setLogicCondition(0, new LogicCondition("2 or more complete patient series?") {
+      setLogicCondition(0, new LogicCondition("Are there 2 or more complete patient series in the series group?") {
 
         @Override
         protected LogicResult evaluateInternal() {
           // TODO Auto-generated method stub
           int completePatientSeries = 0;
-          List<PatientSeries> patientSeriesList = dataModel.getPatientSeriesList();
-          for (PatientSeries patientSeries : patientSeriesList) {
+          List<PatientSeries> relevantPatientSeriesList = dataModel.getScorablePatientSeriesList();
+          for (PatientSeries patientSeries : relevantPatientSeriesList) {
             if (patientSeries != null) {
               if (patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)) {
                 completePatientSeries++;
@@ -93,14 +94,14 @@ public class ClassifyScorablePatientSeries extends LogicStep {
       });
 
       setLogicCondition(1, new LogicCondition(
-          "2 or more in-process patient series and 0 are complete patient series ?") {
+          "Are there 2 or more in-process patient series and no complete patient series in the series group?") {
 
         @Override
         protected LogicResult evaluateInternal() {
           // TODO Auto-generated method stub
           int completePatientSeries = 0;
           int inProcessPatientSeries = 0;
-          List<PatientSeries> patientSeriesList = dataModel.getPatientSeriesList();
+          List<PatientSeries> patientSeriesList = dataModel.getScorablePatientSeriesList();
           for (PatientSeries patientSeries : patientSeriesList) {
             if (patientSeries != null) {
               if (patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)) {
@@ -130,7 +131,7 @@ public class ClassifyScorablePatientSeries extends LogicStep {
 
           List<String> antigenSerieNameWithANotCompletePatientSerieStatus = new ArrayList<String>();
 
-          List<PatientSeries> ps2 = dataModel.getPatientSeriesList();
+          List<PatientSeries> ps2 = dataModel.getScorablePatientSeriesList();
           for (PatientSeries ps : ps2) {
             if (ps != null) {
               if (ps.getPatientSeriesStatus().equals(PatientSeriesStatus.NOT_COMPLETE)) {
@@ -154,30 +155,31 @@ public class ClassifyScorablePatientSeries extends LogicStep {
         }
       });
 
-      setLogicCondition(2, new LogicCondition("All patient series have 0 valid doses ?") {
+      setLogicCondition(2,
+          new LogicCondition("Is the number of valid doses = 0 for all scorable patient series in the series group?") {
 
-        @Override
-        protected LogicResult evaluateInternal() {
-          // A valid dose is a dose with a satisfied target dose
-          List<TargetDose> targetDoseList = dataModel.getTargetDoseList();
-          boolean isThereAVlidDose = false;
-          if (targetDoseList != null) {
-            for (TargetDose targetDose : targetDoseList) {
-              if (targetDose.getTargetDoseStatus() != null) {
-                if (targetDose.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
-                  isThereAVlidDose = true;
+            @Override
+            protected LogicResult evaluateInternal() {
+              // A valid dose is a dose with a satisfied target dose
+              List<TargetDose> targetDoseList = dataModel.getTargetDoseList();
+              boolean isThereAVlidDose = false;
+              if (targetDoseList != null) {
+                for (TargetDose targetDose : targetDoseList) {
+                  if (targetDose.getTargetDoseStatus() != null) {
+                    if (targetDose.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
+                      isThereAVlidDose = true;
+                    }
+                  }
                 }
               }
-            }
-          }
-          if (!isThereAVlidDose) {
-            return LogicResult.YES;
-          } else {
-            return LogicResult.NO;
-          }
+              if (!isThereAVlidDose) {
+                return LogicResult.YES;
+              } else {
+                return LogicResult.NO;
+              }
 
-        }
-      });
+            }
+          });
 
       setLogicResults(0, YES, NO, NO);
       setLogicResults(1, ANY, YES, NO);
@@ -187,7 +189,8 @@ public class ClassifyScorablePatientSeries extends LogicStep {
 
         @Override
         public void perform() {
-          log("Apply complete patient series scoring business rules to all complete patient series. Inprocess patient series and patient series with 0 valid doses are not scored and dropped from consideration");
+          log("Apply complete patient series scoring business rules to all complete patient series. "
+              + "Inprocess patient series and patient series with 0 valid doses are not scored and dropped from consideration");
           setNextLogicStepType(LogicStepType.COMPLETE_PATIENT_SERIES);
 
         }
@@ -197,7 +200,8 @@ public class ClassifyScorablePatientSeries extends LogicStep {
 
         @Override
         public void perform() {
-          log("Apply in-process patient series scoring business rules to all in-process patient series. Patient Series with 0 valid doses are not scored and dropped from consideration.");
+          log("Apply in-process patient series scoring business rules to all in-process patient series. "
+              + "Patient Series with 0 valid doses are not scored and dropped from consideration.");
           setNextLogicStepType(LogicStepType.IN_PROCESS_PATIENT_SERIES);
 
         }
@@ -213,36 +217,6 @@ public class ClassifyScorablePatientSeries extends LogicStep {
         }
       });
 
-      // setLogicCondition(0, new LogicCondition("date administered > lot expiration
-      // date?") {
-      // @Override
-      // public LogicResult evaluateInternal() {
-      // if (caDateAdministered.getFinalValue() == null ||
-      // caTriggerAgeDate.getFinalValue() == null)
-      // {
-      // return LogicResult.NO;
-      // }
-      // if
-      // (caDateAdministered.getFinalValue().before(caTriggerAgeDate.getFinalValue()))
-      // {
-      // return LogicResult.YES;
-      // }
-      // return LogicResult.NO;
-      // }
-      // });
-
-      // setLogicResults(0, LogicResult.YES, LogicResult.NO, LogicResult.NO,
-      // LogicResult.ANY);
-
-      // setLogicOutcome(0, new LogicOutcome() {
-      // @Override
-      // public void perform() {
-      // log("No. The target dose cannot be skipped. ");
-      // log("Setting next step: 4.3 Substitute Target Dose");
-      // setNextLogicStep(LogicStep.SUBSTITUTE_TARGET_DOSE_FOR_EVALUATION);
-      // }
-      // });
-      //
     }
   }
 }

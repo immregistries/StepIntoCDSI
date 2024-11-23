@@ -10,6 +10,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
+import org.openimmunizationsoftware.cdsi.servlet.ForecastServlet;
 
 public class End extends LogicStep {
 
@@ -56,7 +57,7 @@ public class End extends LogicStep {
     out.println("  </tr>");
 
     for (Forecast forecast : dataModel.getForecastList()) {
-      for (Antigen antigen : dataModel.getAntigenList()) {
+      for (Antigen antigen : dataModel.getAntigenSelectedList()) {
         if (forecast.getAntigen().equals(antigen)) {
           out.println("  <tr>");
           out.println("    <td>" + forecast.getAntigen().getName() + "</td>");
@@ -74,6 +75,10 @@ public class End extends LogicStep {
       }
     }
     out.println("</table>");
+
+    out.println("<pre>");
+    ForecastServlet.printText(dataModel, out);
+    out.println("</pre>");
     out.println("<h2>Printing Standard</h2>");
     printStandard(out);
 

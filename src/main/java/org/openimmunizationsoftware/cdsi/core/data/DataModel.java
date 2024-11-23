@@ -14,6 +14,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.ClinicalGuidelineObservation;
 import org.openimmunizationsoftware.cdsi.core.domain.CodedValue;
 import org.openimmunizationsoftware.cdsi.core.domain.Contraindication_TO_BE_REMOVED;
+import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.Immunity;
 import org.openimmunizationsoftware.cdsi.core.domain.ImmunizationHistory;
@@ -25,6 +26,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 import org.openimmunizationsoftware.cdsi.servlet.fits.TestCaseRegistered;
@@ -63,6 +65,7 @@ public class DataModel {
   private AntigenAdministeredRecord previousAntigenAdministeredRecord = null;
   private List<AntigenSeries> antigenSeriesList = new ArrayList<AntigenSeries>();
   private List<PatientSeries> patientSeriesList = new ArrayList<PatientSeries>();
+  private List<PatientSeries> scorablePatientSeriesList = null;
   private PatientSeries patientSeries = null;
   private List<Forecast> forecastList = new ArrayList<Forecast>();
   private List<VaccineGroupForecast> vaccineGroupForecastList = new ArrayList<VaccineGroupForecast>();
@@ -71,6 +74,14 @@ public class DataModel {
   private int vaccineGroupPos = -1;
   private Forecast forecast = null;
   private TestCaseRegistered testCaseRegistered = null;
+
+  public List<PatientSeries> getScorablePatientSeriesList() {
+    return scorablePatientSeriesList;
+  }
+
+  public void setScorablePatientSeriesList(List<PatientSeries> relevantPatientSeriesList) {
+    this.scorablePatientSeriesList = relevantPatientSeriesList;
+  }
 
   public void setTestCaseRegistered(TestCaseRegistered testCaseRegistered) {
     this.testCaseRegistered = testCaseRegistered;
@@ -269,6 +280,17 @@ public class DataModel {
 
   public AntigenAdministeredRecord getAntigenAdministeredRecord() {
     return antigenAdministeredRecord;
+  }
+
+  public void setEvaluationForCurrentTargetDose(EvaluationStatus evaluationStatus, EvaluationReason evaluationReason) {
+    Evaluation evaluation = new Evaluation();
+    evaluation.setAntigen(antigen);
+    evaluation.setEvaluationStatus(evaluationStatus);
+    if (evaluationReason != null) {
+      evaluation.setEvaluationReason(evaluationReason);
+    }
+    evaluation.setVaccineDoseAdministered(antigenAdministeredRecord.getVaccineDoseAdministered());
+    targetDose.setEvaluation(evaluation);
   }
 
   public AntigenAdministeredRecord getPreviousAntigenAdministeredRecord() {

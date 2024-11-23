@@ -5,9 +5,9 @@ import java.util.List;
 
 public class AntigenSeries {
   private String seriesName = "";
-  private String seriesType = "";
+  private SeriesType seriesType = null;
   private List<String> requiredGenderList = new ArrayList<String>();
-  private SelectBestPatientSeries selectBestPatientSeries = null;
+  private SelectPatientSeries selectPatientSeries = null;
   private Antigen targetDisease = null;
   private VaccineGroup vaccineGroup = null;
   private List<Indication> indicationList = new ArrayList<Indication>();
@@ -46,11 +46,11 @@ public class AntigenSeries {
     this.seriesName = seriesName;
   }
 
-  public String getSeriesType() {
+  public SeriesType getSeriesType() {
     return seriesType;
   }
 
-  public void setSeriesType(String seriesType) {
+  public void setSeriesType(SeriesType seriesType) {
     this.seriesType = seriesType;
   }
 
@@ -74,13 +74,12 @@ public class AntigenSeries {
     this.indicationList = indicationList;
   }
 
-  public SelectBestPatientSeries getSelectBestPatientSeries() {
-    return selectBestPatientSeries;
+  public SelectPatientSeries getSelectPatientSeries() {
+    return selectPatientSeries;
   }
 
-  public void setSelectBestPatientSeries(SelectBestPatientSeries selectBestPatientSeries) {
-    this.selectBestPatientSeries = selectBestPatientSeries;
+  public void setSelectPatientSeries(SelectPatientSeries selectPatientSeries) {
+    this.selectPatientSeries = selectPatientSeries;
   }
-
 
 }

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
@@ -41,6 +42,7 @@ public abstract class LogicStep {
       LogicStepType.DETERMINE_FORECAST_NEED,
       LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMENDED_VACCINES,
       LogicStepType.SELECT_BEST_PATIENT_SERIES,
+      LogicStepType.PRE_FILTER_PATIENT_SERIES,
       LogicStepType.ONE_BEST_PATIENT_SERIES,
       LogicStepType.CLASSIFY_SCORABLE_PATIENT_SERIES,
       LogicStepType.COMPLETE_PATIENT_SERIES,
@@ -282,6 +284,16 @@ public abstract class LogicStep {
             out.println("    <td class=\"" + style + "\">No</td>");
           } else if (logicResult == LogicResult.ANY) {
             out.println("    <td class=\"" + style + "\">-</td>");
+          } else if (logicResult == LogicResult.UNKNOWN) {
+            out.println("    <td class=\"" + style + "\">Unknown</td>");
+          } else if (logicResult == LogicResult.EXTRANEOUS) {
+            out.println("    <td class=\"" + style + "\">Extraneous</td>");
+          } else if (logicResult == LogicResult.ZERO) {
+            out.println("    <td class=\"" + style + "\">0</td>");
+          } else if (logicResult == LogicResult.ONE) {
+            out.println("    <td class=\"" + style + "\">1</td>");
+          } else if (logicResult == LogicResult.MORE_THAN_ONE) {
+            out.println("    <td class=\"" + style + "\">&gt;1</td>");
           }
         }
         out.println("  </tr>");
@@ -313,5 +325,61 @@ public abstract class LogicStep {
     }
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
     return sdf.format(d);
+  }
+
+  protected void printBestPatientSeries(PrintWriter out) {
+    // print out best patient series
+    if (dataModel.getBestPatientSeriesList() != null) {
+      out.println("<h2>Best Patient Series</h2>");
+      out.println("<ul>");
+      for (PatientSeries ps : dataModel.getBestPatientSeriesList()) {
+        out.println("<li>" + ps.getTrackedAntigenSeries().getTargetDisease().getName() + ": "
+            + ps.getTrackedAntigenSeries().getSeriesName() + "</li>");
+      }
+      out.println("</ul>");
+    }
+  }
+
+  protected void printPatientSeriesList(PrintWriter out) {
+    out.println("<h2> Patient Series List </h2>");
+    out.println("<table>");
+    out.println("  <tr>");
+    out.println("    <th> Antigen </th>");
+    out.println("    <th> Antigen Series </th>");
+    out.println("    <th> Patient Series Status </th>");
+    out.println("    <th> Target Dose List size </th>");
+    out.println("  </tr>");
+    for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {
+      out.println("  <tr>");
+      out.println("    <td>" + patientSeries.getTrackedAntigenSeries().getTargetDisease().getName() + "</td>");
+      out.println("    <td>" + patientSeries.getTrackedAntigenSeries().getSeriesName() + "</td>");
+      out.println("    <td>" + patientSeries.getPatientSeriesStatus() + "</td>");
+      int size = patientSeries.getTargetDoseList() == null ? 0 : patientSeries.getTargetDoseList().size();
+      out.println("    <td>" + size + "</td>");
+      out.println("  </tr>");
+    }
+    out.println("</table>");
+
+    if (dataModel.getScorablePatientSeriesList() != null) {
+      out.println("<h2> Scorable Patient Series List </h2>");
+      out.println("<table>");
+      out.println("  <tr>");
+      out.println("    <th> Antigen </th>");
+      out.println("    <th> Antigen Series </th>");
+      out.println("    <th> Patient Series Status </th>");
+      out.println("    <th> Target Dose List size </th>");
+      out.println("  </tr>");
+      for (PatientSeries patientSeries : dataModel.getScorablePatientSeriesList()) {
+        out.println("  <tr>");
+        out.println("    <td>" + patientSeries.getTrackedAntigenSeries().getTargetDisease().getName() + "</td>");
+        out.println("    <td>" + patientSeries.getTrackedAntigenSeries().getSeriesName() + "</td>");
+        out.println("    <td>" + patientSeries.getPatientSeriesStatus() + "</td>");
+        int size = patientSeries.getTargetDoseList() == null ? 0 : patientSeries.getTargetDoseList().size();
+        out.println("    <td>" + size + "</td>");
+        out.println("  </tr>");
+      }
+      out.println("</table>");
+    }
+
   }
 }

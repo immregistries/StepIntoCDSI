@@ -69,7 +69,7 @@ public class LogicStepFactory {
       return new SelectBestPatientSeries(dataModel);
     }
     if (stepName.equals(LogicStepType.ONE_BEST_PATIENT_SERIES)) {
-      return new OneBestPatientSeries(dataModel);
+      return new IdentifyOnePrioritizedPatientSeries(dataModel);
     }
     if (stepName.equals(LogicStepType.CLASSIFY_SCORABLE_PATIENT_SERIES)) {
       return new ClassifyScorablePatientSeries(dataModel);
@@ -182,7 +182,7 @@ public class LogicStepFactory {
       return new SelectBestPatientSeries(dataModel);
     }
     if (stepName.equals(LogicStepType.ONE_BEST_PATIENT_SERIES)) {
-      return new OneBestPatientSeries(dataModel);
+      return new IdentifyOnePrioritizedPatientSeries(dataModel);
     }
     if (stepName.equals(LogicStepType.CLASSIFY_SCORABLE_PATIENT_SERIES)) {
       return new ClassifyScorablePatientSeries(dataModel);

@@ -3,7 +3,7 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 
-public class SelectBestPatientSeries {
+public class SelectPatientSeries {
   private YesNo defaultSeries = null;
   private YesNo productPath = null;
   private String seriesGroupName = "";
@@ -12,7 +12,6 @@ public class SelectBestPatientSeries {
   private String seriesPreference = "";
   private TimePeriod minAgeToStart = null;
   private TimePeriod maxAgeToStart = null;
-  
 
   public YesNo getDefaultSeries() {
     return defaultSeries;

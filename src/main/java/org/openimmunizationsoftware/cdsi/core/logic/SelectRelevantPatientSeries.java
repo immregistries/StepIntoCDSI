@@ -9,19 +9,13 @@ import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CA
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTIND_2;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
-import org.openimmunizationsoftware.cdsi.core.domain.AllowableVaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
-import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipCondition;
-import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipSet;
 import org.openimmunizationsoftware.cdsi.core.domain.Indication;
 import org.openimmunizationsoftware.cdsi.core.domain.MedicalHistory;
 import org.openimmunizationsoftware.cdsi.core.domain.ObservationCode;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
-import org.openimmunizationsoftware.cdsi.core.domain.RelevantMedicalObservation;
-import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
-import org.openimmunizationsoftware.cdsi.core.logic.SelectRelevantPatientSeries.LT55;
+import org.openimmunizationsoftware.cdsi.core.domain.SeriesType;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
@@ -41,25 +35,29 @@ public class SelectRelevantPatientSeries extends LogicStep {
       if (!antigenSeries.getTargetDisease().equals(antigen)) {
         continue;
       }
-      LT55 logicTable55 = new LT55();
-      logicTable55.antigenSeries = antigenSeries;
-      
+      LT55 logicTable55 = new LT55(antigenSeries);
+
       for (Indication indication : antigenSeries.getIndicationList()) {
         LT54 logicTable54 = new LT54();
         logicTable54.antigenSeries = antigenSeries;
 
         logicTable54.caGender = new ConditionAttribute<String>("Patient", "Gender");
         logicTable54.caDateOfBirth = new ConditionAttribute<Date>("Patient", "Date Of Birth");
-        //TODO: 'MedicalHistory' needs to be replaced with new class 'PatientHistory'
-        logicTable54.caActivePatientObservations = new ConditionAttribute<MedicalHistory>("Patient history", "Active Patient Observation(s)");
-        logicTable54.caRequiredGender = new ConditionAttribute<List<String>>("Supporting Data (Gender)", "Required Gender");
+        // TODO: 'MedicalHistory' needs to be replaced with new class 'PatientHistory'
+        logicTable54.caActivePatientObservations = new ConditionAttribute<MedicalHistory>("Patient history",
+            "Active Patient Observation(s)");
+        logicTable54.caRequiredGender = new ConditionAttribute<List<String>>("Supporting Data (Gender)",
+            "Required Gender");
         logicTable54.caSeriesType = new ConditionAttribute<String>("Supporting Data (Series Type)", "Series Type");
-        logicTable54.caObservationCode = new ConditionAttribute<ObservationCode>("Supporting Data (Indication)", "Observation Code");
+        logicTable54.caObservationCode = new ConditionAttribute<ObservationCode>("Supporting Data (Indication)",
+            "Observation Code");
         logicTable54.caAssessmentDate = new ConditionAttribute<Date>("Runtime data", "Assessment Date");
-        logicTable54.caIndicationBeginAgeDate = new ConditionAttribute<Date>("Calculated date (CALCDTIND-1)", "Indication Begin Age Date");
-        logicTable54.caIndicationEndAgeDate = new ConditionAttribute<Date>("Calculated date (CALCDTIND-2)", "Indication End Age Date");
+        logicTable54.caIndicationBeginAgeDate = new ConditionAttribute<Date>("Calculated date (CALCDTIND-1)",
+            "Indication Begin Age Date");
+        logicTable54.caIndicationEndAgeDate = new ConditionAttribute<Date>("Calculated date (CALCDTIND-2)",
+            "Indication End Age Date");
 
-        //setting assumed values, if any
+        // setting assumed values, if any
         logicTable54.caGender.setAssumedValue("Unknown");
 
         List<String> assumedRequiredGenderList = new ArrayList<String>();
@@ -68,9 +66,9 @@ public class SelectRelevantPatientSeries extends LogicStep {
 
         logicTable54.caAssessmentDate.setAssumedValue(new Date());
         logicTable54.caIndicationBeginAgeDate.setAssumedValue(PAST);
-        logicTable54.caIndicationEndAgeDate.setAssumedValue(FUTURE); 
+        logicTable54.caIndicationEndAgeDate.setAssumedValue(FUTURE);
 
-        //setting initial values
+        // setting initial values
         logicTable54.caGender.setInitialValue(dataModel.getPatient().getGender());
         logicTable54.caDateOfBirth.setInitialValue(dataModel.getPatient().getDateOfBirth());
         logicTable54.caActivePatientObservations.setInitialValue(dataModel.getPatient().getMedicalHistory());
@@ -90,7 +88,7 @@ public class SelectRelevantPatientSeries extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
-    
+
     evaluateLogicTables();
     return LogicStepFactory.createLogicStep(LogicStepType.CREATE_RELEVANT_PATIENT_SERIES, dataModel);
   }
@@ -135,6 +133,8 @@ public class SelectRelevantPatientSeries extends LogicStep {
             + "path to immunity and as such may have more than one antigen series.  Antigen "
             + "series are defined through supporting data spreadsheets defined in chapter 3.</p>");
 
+    printLogicTables(out);
+
     out.println("   <h2>Patient Series Included</h2>");
     out.println("   <table>");
     out.println("     <tr>");
@@ -167,25 +167,31 @@ public class SelectRelevantPatientSeries extends LogicStep {
     protected AntigenSeries antigenSeries = null;
 
     protected LogicResult result = LogicResult.YES;
+    protected boolean applies = false;
+
+    protected boolean isApplies() {
+      return applies;
+    }
 
     public LogicResult getResult() {
-        return result;
+      return result;
     }
 
     public LTInnerSet(int conditionCount, int outcomeCount, String label) {
-        super(conditionCount, outcomeCount, label);
+      super(conditionCount, outcomeCount, label);
     }
   }
 
   private class LT54 extends LTInnerSet {
+
     public LT54() {
       super(2, 4, "TABLE 5-4 DOES THE INDICATION APPLY TO THE PATIENT?");
       setLogicCondition(0, new LogicCondition(
           "Does the indication describe any active patient observations?") {
         @Override
         public LogicResult evaluateInternal() {
-          //TODO add logic
-          return LogicResult.YES;
+          // TODO not yet implemented
+          return LogicResult.NO;
         }
       });
 
@@ -196,10 +202,10 @@ public class SelectRelevantPatientSeries extends LogicStep {
           if (caIndicationBeginAgeDate == null || caIndicationEndAgeDate == null || caAssessmentDate == null) {
             return LogicResult.NO;
           }
-          if(caIndicationBeginAgeDate.getFinalValue().after(caAssessmentDate.getFinalValue())) {
+          if (caIndicationBeginAgeDate.getFinalValue().after(caAssessmentDate.getFinalValue())) {
             return LogicResult.NO;
           }
-          if(caAssessmentDate.getFinalValue().after(caIndicationEndAgeDate.getFinalValue())) {
+          if (caAssessmentDate.getFinalValue().after(caIndicationEndAgeDate.getFinalValue())) {
             log("yes, indication begin age date is <= assesment date is < indication end age date");
             return LogicResult.YES;
           }
@@ -207,39 +213,40 @@ public class SelectRelevantPatientSeries extends LogicStep {
         }
       });
 
-      //TODO logic result 0, 2 asks for an 'UNKNOWN' value, should this be added to the LogicResult ENUM?
-      setLogicResults(0, new LogicResult[] {LogicResult.YES, LogicResult.NO, LogicResult.ANY, LogicResult.ANY});
-      setLogicResults(1, new LogicResult[] {LogicResult.YES, LogicResult.YES, LogicResult.YES, LogicResult.NO});
+      // TODO logic result 0, 2 asks for an 'UNKNOWN' value, should this be added to
+      // the LogicResult ENUM?
+      setLogicResults(0, new LogicResult[] { LogicResult.YES, LogicResult.NO, LogicResult.ANY, LogicResult.ANY });
+      setLogicResults(1, new LogicResult[] { LogicResult.YES, LogicResult.YES, LogicResult.YES, LogicResult.NO });
 
       setLogicOutcome(0, new LogicOutcome() {
         @Override
         public void perform() {
-          result = LogicResult.YES;
+          applies = true;
           log("Yes. The Indication applies to the patient.");
         }
       });
       setLogicOutcome(1, new LogicOutcome() {
         @Override
         public void perform() {
-          result = LogicResult.NO;
+          applies = false;
           log("No. The Indication does not apply to the patient.");
         }
       });
       setLogicOutcome(2, new LogicOutcome() {
         @Override
         public void perform() {
-          result = LogicResult.NO;
+          applies = false;
           log("No. The Indication does not apply to the patient; however, the Indication Text Description should be made available to the clinician for manual determination.");
         }
       });
       setLogicOutcome(3, new LogicOutcome() {
         @Override
         public void perform() {
-          result = LogicResult.NO;
+          applies = false;
           log("No. The Indication does not apply to the patient.");
         }
       });
-      
+
     }
   }
 
@@ -248,59 +255,63 @@ public class SelectRelevantPatientSeries extends LogicStep {
     protected AntigenSeries antigenSeries = null;
 
     public void addInnerSet(LTInnerSet innerSet) {
-        innerSetList.add(innerSet);
+      innerSetList.add(innerSet);
     }
 
-    public LT55() {
-      super(3, 4, "TABLE 5-5 IS AN ANTIGEN SERIES A RELEVANT PATIENT SERIES FOR A PATIENT?");
+    public LT55(AntigenSeries antigenSeries) {
 
-      setLogicCondition(0, new LogicCondition("Is the patient gender one of the required genders of the antigen series?") {
-        @Override
-        public LogicResult evaluateInternal() {
-          if(caRequiredGender == null || caRequiredGender.getFinalValue() == null) {
-            return LogicResult.YES;
-          }
-          if(caRequiredGender.getFinalValue().size() == 0) {
-            return LogicResult.YES;
-          }
+      super(3, 4,
+          "TABLE 5-5 IS AN ANTIGEN SERIES '" + antigenSeries.getSeriesName()
+              + "' A RELEVANT PATIENT SERIES FOR A PATIENT?");
 
-          LogicResult result = LogicResult.NO;
-          for(String requiredGender : caRequiredGender.getFinalValue()) {
-            if(caGender.equals(requiredGender)) {
-              result = LogicResult.YES;
+      setLogicCondition(0,
+          new LogicCondition("Is the patient gender one of the required genders of the antigen series?") {
+            @Override
+            public LogicResult evaluateInternal() {
+              if (caRequiredGender == null || caRequiredGender.getFinalValue() == null) {
+                return LogicResult.YES;
+              }
+              if (caRequiredGender.getFinalValue().size() == 0) {
+                return LogicResult.YES;
+              }
+
+              LogicResult result = LogicResult.NO;
+              for (String requiredGender : caRequiredGender.getFinalValue()) {
+                if (caGender.equals(requiredGender)) {
+                  result = LogicResult.YES;
+                }
+              }
+              return result;
             }
-          }
-          return result;
-        }
-      });
+          });
 
-      setLogicCondition(1, new LogicCondition("Is the series type of the antigen series 'Standard' or 'Evaluation Only'?") {
+      setLogicCondition(1,
+          new LogicCondition("Is the series type of the antigen series 'Standard' or 'Evaluation Only'?") {
+            @Override
+            public LogicResult evaluateInternal() {
+              SeriesType seriesType = antigenSeries.getSeriesType();
+              if (seriesType == null) {
+                return LogicResult.NO;
+              }
+              if (seriesType == SeriesType.STANDARD || seriesType == SeriesType.EVALUATION_ONLY) {
+                return LogicResult.YES;
+              }
+              return LogicResult.NO;
+            }
+          });
+
+      setLogicCondition(2, new LogicCondition(
+          "Does at least one indication that drives the need for the antigen series apply to the patient?") {
         @Override
         public LogicResult evaluateInternal() {
-          if(antigenSeries.getSeriesType() == null) {
-            return LogicResult.NO;
-          }
-          if(antigenSeries.getSeriesType().equals("Standard") || antigenSeries.getSeriesType().equals("Evaluation Only")) {
-            return LogicResult.YES;
+          for (LTInnerSet innerSet : innerSetList) {
+            if (innerSet.isApplies()) {
+              return LogicResult.YES;
+            }
           }
           return LogicResult.NO;
         }
-      });
 
-      setLogicCondition(2, new LogicCondition("Does at least one indication that drives the need for the antigen series apply to the patient?") {
-          @Override
-          public LogicResult evaluateInternal() {
-            for (LTInnerSet innerSet : innerSetList) {
-                if (innerSet.getResult().equals(LogicResult.YES)) {
-                  return LogicResult.YES;
-                }
-            }
-            if(innerSetList.size() == 0) {
-              return LogicResult.YES;
-            }
-            return LogicResult.NO;
-          }
-          
       });
 
       setLogicResults(0, new LogicResult[] { LogicResult.YES, LogicResult.NO, LogicResult.YES, LogicResult.YES, });
@@ -308,19 +319,19 @@ public class SelectRelevantPatientSeries extends LogicStep {
       setLogicResults(2, new LogicResult[] { LogicResult.ANY, LogicResult.ANY, LogicResult.YES, LogicResult.NO, });
 
       setLogicOutcome(0, new LogicOutcome() {
-          @Override
-          public void perform() {
-            log("Yes. The antigen series is a relevant patient series for the patient.");
-            PatientSeries patientSeries = new PatientSeries(antigenSeries);
-            dataModel.getPatientSeriesList().add(patientSeries);
-          }
+        @Override
+        public void perform() {
+          log("Yes. The antigen series is a relevant patient series for the patient.");
+          PatientSeries patientSeries = new PatientSeries(antigenSeries);
+          dataModel.getPatientSeriesList().add(patientSeries);
+        }
       });
 
       setLogicOutcome(1, new LogicOutcome() {
-          @Override
-          public void perform() {
-            log("No. The antigen series is not a relevant patient series for the patient.");
-          }
+        @Override
+        public void perform() {
+          log("No. The antigen series is not a relevant patient series for the patient.");
+        }
       });
 
       setLogicOutcome(2, new LogicOutcome() {

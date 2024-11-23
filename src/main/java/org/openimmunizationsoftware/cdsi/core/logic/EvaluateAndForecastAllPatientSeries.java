@@ -64,6 +64,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
       dataModel.setPatientSeries(patientSeriesSelected);
       dataModel.setTargetDoseList(new ArrayList<TargetDose>());
       patientSeriesSelected.setTargetDoseList(dataModel.getTargetDoseList());
+      dataModel.setAntigen(patientSeriesSelected.getTrackedAntigenSeries().getTargetDisease());
       for (SeriesDose seriesDose : dataModel.getPatientSeries().getTrackedAntigenSeries()
           .getSeriesDoseList()) {
         TargetDose targetDose = new TargetDose(seriesDose);
@@ -151,8 +152,11 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
   private void markRestAsExtraneous() {
     for (int i = dataModel.getAntigenAdministeredRecordPos() + 1; i < dataModel.getAntigenAdministeredRecordList()
         .size(); i++) {
-      dataModel.getAntigenAdministeredRecordList().get(i).getEvaluation()
-          .setEvaluationStatus(EvaluationStatus.EXTRANEOUS);
+      dataModel.setAntigenAdministeredRecord(dataModel.getAntigenAdministeredRecordList().get(i));
+      TargetDose targetDose = new TargetDose();
+      dataModel.getTargetDoseList().add(targetDose);
+      dataModel.setTargetDose(targetDose);
+      dataModel.setEvaluationForCurrentTargetDose(EvaluationStatus.EXTRANEOUS, null);
       dataModel.incAntigenAdministeredRecordPos();
     }
   }

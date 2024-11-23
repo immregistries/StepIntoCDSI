@@ -14,7 +14,6 @@ public class AntigenAdministeredRecord {
   private String amount = "";
   private Date lotExpirationDate = null;
   private DoseCondition doseCondition = null;
-  private Evaluation evaluation = new Evaluation();
   private String assignedTargetDoseNumberInSeries = "";
   private VaccineDoseAdministered vaccineDoseAdministered = null;
 
@@ -38,11 +37,6 @@ public class AntigenAdministeredRecord {
 
   public void setAssignedTargetDoseNumberInSeries(String assignedTargetDoseNumberInSeries) {
     this.assignedTargetDoseNumberInSeries = assignedTargetDoseNumberInSeries;
-  }
-
-  public Evaluation getEvaluation() {
-
-    return evaluation;
   }
 
   public AntigenAdministeredRecord() {
