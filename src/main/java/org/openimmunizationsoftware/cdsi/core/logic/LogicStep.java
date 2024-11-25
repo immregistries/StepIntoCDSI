@@ -49,6 +49,7 @@ public abstract class LogicStep {
       LogicStepType.IN_PROCESS_PATIENT_SERIES,
       LogicStepType.NO_VALID_DOSES,
       LogicStepType.SELECT_PRIORITIZED_PATIENT_SERIES,
+      LogicStepType.DETERMINE_BEST_PATIENT_SERIES,
       LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP,
       LogicStepType.APPLY_GENERAL_VACCINE_GROUP_RULES,
       LogicStepType.SINGLE_ANTIGEN_VACCINE_GROUP,
