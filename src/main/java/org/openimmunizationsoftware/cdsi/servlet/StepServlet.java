@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
+import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
@@ -221,6 +222,27 @@ public class StepServlet extends ForecastServlet {
             }
             out.println("</table>");
           }
+
+          if(dataModel.getForecastList().size() > 0) {
+            out.println("<p>Forecasts:</p>");
+            out.println("<table>");
+            out.println("  <tr>");
+            out.println("    <th>Antigen</th>");
+            out.println("    <th>VGF Status</th>");
+            out.println("    <th>Earliest</th>");
+            out.println("    <th>Recommended</th>");
+            out.println("  </tr>");
+            for(Forecast forecast : dataModel.getForecastList()) {
+              out.println("  <tr>");
+              out.println("    <td>" + forecast.getAntigen().getName() + "</td>");
+              out.println("    <td>" + (forecast.getVaccineGroupForecast() == null ? "null" : forecast.getVaccineGroupForecast().getVaccineGroupStatus()) + "</td>");
+              out.println("    <td>" + n(forecast.getEarliestDate()) + "</td>");
+              out.println("    <td>" + n(forecast.getAdjustedRecommendedDate()) + "</td>");
+              out.println("  </tr>");
+            }
+            out.println("</table>");
+          }
+
 
           if (dataModel.getBestPatientSeriesList() != null) {
             out.println("<h3>Best Patient Series</h3>");

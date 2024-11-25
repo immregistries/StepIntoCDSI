@@ -344,7 +344,7 @@ public class ForecastServlet extends HttpServlet {
 
   public static String n(Date date) {
     if (date == null) {
-      return "";
+      return "<center>-</center>";
     } else {
       SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
       return sdf.format(date);

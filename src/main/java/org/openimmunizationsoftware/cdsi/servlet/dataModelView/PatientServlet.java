@@ -250,15 +250,6 @@ public class PatientServlet extends MainServlet {
     out.println("     </tr>");
   }
 
-  private String n(Date d) {
-    if (d == null) {
-      return "<center>-</center>";
-    } else {
-      SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-      return sdf.format(d);
-    }
-  }
-
   private void printAntigenAdministeredRecordTable(
       AntigenAdministeredRecord antigenAdministeredRecord, String caption, PrintWriter out) {
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
