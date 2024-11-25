@@ -43,7 +43,7 @@ public class DataModel {
   private Antigen antigen = null;
   private List<AntigenSeries> antigenSeriesSelectedList = null;
   private List<PatientSeries> selectedPatientSeriesList = new ArrayList<PatientSeries>();
-  private List<PatientSeries> bestPatientSeriesList = new ArrayList<PatientSeries>();
+  private List<PatientSeries> bestPatientSeriesList = null;
 
   private Map<String, VaccineGroup> vaccineGroupMap = new HashMap<String, VaccineGroup>();
   private List<Immunity> immunityList = new ArrayList<Immunity>();

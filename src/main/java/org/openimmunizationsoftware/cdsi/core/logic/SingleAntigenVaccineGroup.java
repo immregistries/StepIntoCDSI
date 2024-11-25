@@ -34,14 +34,11 @@ public class SingleAntigenVaccineGroup extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
-    List<VaccineGroupForecast> vaccineGroupForecastList = new ArrayList<VaccineGroupForecast>();
-
     VaccineGroup vaccineGroup = dataModel.getVaccineGroup();
     VaccineGroupForecast vgf = new VaccineGroupForecast();
     vgf.setVaccineGroup(vaccineGroup);
-    PatientSeries p = dataModel.getBestPatientSeriesList().size() == 0 ? null
-        : dataModel.getBestPatientSeriesList().get(0);
-    for (Forecast forecast : dataModel.getForecastList()) {
+    for (PatientSeries p : dataModel.getBestPatientSeriesList()) {
+      Forecast forecast = p.getForecast();
       if (forecast.getAntigen().equals(vaccineGroup.getAntigenList().get(0))) {
         // System.out.println("--> antigen = " + forecast.getAntigen());
         // dataModel.getVaccineGroupForecastList().size()
@@ -56,12 +53,12 @@ public class SingleAntigenVaccineGroup extends LogicStep {
         log("<p>    forecast antigen equals first antigen in vaccine group, creating VGF</p>");
         // Règle en plus
         vgf.setAntigen(forecast.getAntigen());
-        vgf.setTargetDose(p == null ? null : p.getForecast().getTargetDose());
+        vgf.setTargetDose(p.getForecast().getTargetDose());
         // SINGLEANTVG-1 The vaccine group status for a single antigen vaccine group
         // must be the
         // patient series status of the best patient series.
-        vgf.setVaccineGroupStatus(p == null ? null : p.getPatientSeriesStatus());
-        vgf.setPatientSeriesStatus(p == null ? null : p.getPatientSeriesStatus());
+        vgf.setVaccineGroupStatus(p.getPatientSeriesStatus());
+        vgf.setPatientSeriesStatus(p.getPatientSeriesStatus());
 
         // SINGLEANTVG-2 The vaccine group forecast earliest date for a single antigen
         // vaccine group

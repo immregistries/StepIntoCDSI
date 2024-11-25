@@ -341,4 +341,14 @@ public class ForecastServlet extends HttpServlet {
         LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel));
     return dataModel;
   }
+
+  public static String n(Date date) {
+    if (date == null) {
+      return "";
+    } else {
+      SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+      return sdf.format(date);
+    }
+  }
+
 }

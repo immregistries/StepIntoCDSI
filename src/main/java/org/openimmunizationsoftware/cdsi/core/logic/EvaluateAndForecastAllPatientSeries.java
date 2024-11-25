@@ -59,6 +59,12 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
     log("Checking for another patient series to process");
     if (patientSeriesSelected == null) {
       log("No more patient series to process");
+      dataModel.setPatientSeries(null);
+      dataModel.setTargetDose(null);
+      dataModel.setTargetDoseList(null);
+      dataModel.setTargetDoseListPos(-1);
+      dataModel.setAntigen(null);
+      dataModel.setAntigenAdministeredRecord(null);
       return LogicStepFactory.createLogicStep(LogicStepType.SELECT_BEST_PATIENT_SERIES, dataModel);
     } else if (patientSeriesNeedsSetup) {
       dataModel.setPatientSeries(patientSeriesSelected);
@@ -150,10 +156,11 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
   }
 
   private void markRestAsExtraneous() {
+    SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
     for (int i = dataModel.getAntigenAdministeredRecordPos() + 1; i < dataModel.getAntigenAdministeredRecordList()
         .size(); i++) {
       dataModel.setAntigenAdministeredRecord(dataModel.getAntigenAdministeredRecordList().get(i));
-      TargetDose targetDose = new TargetDose();
+      TargetDose targetDose = new TargetDose(seriesDose);
       dataModel.getTargetDoseList().add(targetDose);
       dataModel.setTargetDose(targetDose);
       dataModel.setEvaluationForCurrentTargetDose(EvaluationStatus.EXTRANEOUS, null);

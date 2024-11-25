@@ -12,6 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
+import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepType;
 
@@ -169,6 +175,81 @@ public class StepServlet extends ForecastServlet {
             out.println("</table>");
           }
         } else {
+
+          // print out antigen
+          if (dataModel.getAntigen() != null) {
+            out.println("<p>Antigen: " + dataModel.getAntigen().getName() + "</p>");
+          }
+          if (dataModel.getPatientSeries() != null) {
+            out.println("<p>Antigen Series: "
+                + dataModel.getPatientSeries().getTrackedAntigenSeries().getSeriesName() + "</p>");
+          }
+          if (dataModel.getTargetDoseList() != null) {
+            out.println("<table>");
+            out.println("  <tr>");
+            out.println("    <th>Selected</th>");
+            out.println("    <th>Dose</th>");
+            out.println("    <th>Status</th>");
+            out.println("    <th>VDA</th>");
+            out.println("  </tr>");
+            for (TargetDose targetDose : dataModel.getTargetDoseList()) {
+              TargetDose targetDoseSelected = dataModel.getTargetDose();
+              Evaluation evaluation = targetDose.getEvaluation();
+              String doseNumber = targetDose.getTrackedSeriesDose().getDoseNumber();
+              out.println("  <tr>");
+              if (targetDoseSelected != null && targetDoseSelected == targetDose) {
+                out.println("    <td>X</td>");
+              } else {
+                out.println("    <td></td>");
+              }
+              out.println("    <td>" + doseNumber + "</td>");
+              if (evaluation == null) {
+                out.println("    <td></td>");
+              } else {
+                out.println("    <td>" + evaluation.getEvaluationStatus() + "</td>");
+              }
+              VaccineDoseAdministered vda = targetDose.getSatisfiedByVaccineDoseAdministered();
+              if (vda == null) {
+                out.println("    <td></td>");
+              } else {
+                VaccineType vaccineType = vda.getVaccine().getVaccineType();
+                String vaccineLabel = vaccineType.getShortDescription() + " (" + vaccineType.getCvxCode() + ") given "
+                    + n(vda.getDateAdministered());
+                out.println("    <td>" + vaccineLabel + "</td>");
+              }
+              out.println("  </tr>");
+            }
+            out.println("</table>");
+          }
+
+          if (dataModel.getBestPatientSeriesList() != null) {
+            out.println("<h3>Best Patient Series</h3>");
+            out.println("<table>");
+            out.println("  <tr>");
+            out.println("    <th>Antigen</th>");
+            out.println("    <th>Antigen Series</th>");
+            out.println("    <th>Status</th>");
+            out.println("    <th>Earliest</th>");
+            out.println("    <th>Recommended</th>");
+            out.println("  </tr>");
+            for (PatientSeries patientSeries : dataModel.getBestPatientSeriesList()) {
+              AntigenSeries antigenSeries = patientSeries.getTrackedAntigenSeries();
+              out.println("  <tr>");
+              out.println("    <td>" + antigenSeries.getTargetDisease().getName() + "</td>");
+              out.println("    <td>" + antigenSeries.getSeriesName() + "</td>");
+              out.println("    <td>" + patientSeries.getPatientSeriesStatus() + "</td>");
+              if (patientSeries.getForecast() == null) {
+                out.println("    <td>null</td>");
+                out.println("    <td>null</td>");
+              } else {
+                out.println("    <td>" + n(patientSeries.getForecast().getEarliestDate()) + "</td>");
+                out.println("    <td>" + n(patientSeries.getForecast().getAdjustedRecommendedDate()) + "</td>");
+              }
+              out.println("  </tr>");
+            }
+            out.println("</table>");
+          }
+
           dataModel.getLogicStepPrevious().printPost(out);
           dataModel.getLogicStepPrevious().printLog(out);
         }
