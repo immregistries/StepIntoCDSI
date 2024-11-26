@@ -19,7 +19,9 @@ import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
 import org.openimmunizationsoftware.cdsi.core.domain.PreferrableVaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.Vaccine;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
@@ -152,7 +154,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
         if (minimalIntervalFromReferenceSeriesDose == null) {
           continue;
         }
-        log(" + adding to minimumIntervalList "
+        log("ADD adding to minimumIntervalList "
             + minimalIntervalFromReferenceSeriesDose.getDateFrom(patientReferenceDoseDate) + ",");
         minimumIntervalList.add(minimalIntervalFromReferenceSeriesDose.getDateFrom(patientReferenceDoseDate));
       }
@@ -370,13 +372,37 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
   }
 
   private Date computeEarliestDate() {
-
+    //FORECASTDTCAN-1
     List<Date> list = new ArrayList<Date>();
+
     list.add(caMinimumAgeDate.getFinalValue());
+    log("CONS Item for consideration for Earliest date is: " + caMinimumAgeDate.getAttributeName() + " with value of "
+        + caMinimumAgeDate.getFinalValue());
+
     Date latestMinimumIntervalDate = getLatestDate(caMinimumIntervalDates.getFinalValue());
     list.add(latestMinimumIntervalDate);
+    log("CONS Item for consideration for Earliest date is: " + caMinimumIntervalDates.getAttributeName() + " with value of "
+        + caMinimumIntervalDates.getFinalValue());
+
     list.add(caLatestConflictEndIntervalDate.getFinalValue());
+    log("CONS Item for consideration for Earliest date is: " + caLatestConflictEndIntervalDate.getAttributeName()
+        + " with value of " + caLatestConflictEndIntervalDate.getFinalValue());
+
     list.add(caSeasonalRecommendationStartDate.getFinalValue());
+    log("CONS Item for consideration for Earliest date is: " + caSeasonalRecommendationStartDate.getAttributeName()
+        + " with value of " + caSeasonalRecommendationStartDate.getFinalValue());
+
+    List<Date> allDatesAdministered = new ArrayList<Date>();
+    for(AntigenAdministeredRecord aar : dataModel.getAntigenAdministeredRecordList()) {
+      VaccineDoseAdministered vda = aar.getVaccineDoseAdministered();
+      if(vda.getTargetDose() != null) {
+        if(vda.getTargetDose().getEvaluation().getEvaluationReason().equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
+          allDatesAdministered.add(vda.getDateAdministered());
+        }
+      }
+    }
+    //list.add(getLatestDate(allDatesAdministered));
+
     Date earliestDate = getLatestDate(list);
     return earliestDate;
   }
@@ -388,7 +414,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
 
     if (earliestRecommendedAgeDate != null) {
       unadjustedRecommendedDate = earliestRecommendedAgeDate;
-      log(" > unadjusted recommended age date set to earliest recommended age date");
+      log("SET unadjusted recommended age date set to earliest recommended age date");
       return unadjustedRecommendedDate;
     } else {
 
