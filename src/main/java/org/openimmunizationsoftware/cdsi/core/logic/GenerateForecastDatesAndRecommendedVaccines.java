@@ -373,18 +373,10 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
 
     List<Date> list = new ArrayList<Date>();
     list.add(caMinimumAgeDate.getFinalValue());
-    log("Item for consideration for Earliest date is: " + caMinimumAgeDate.getAttributeName() + " with value of "
-        + caMinimumAgeDate.getFinalValue());
     Date latestMinimumIntervalDate = getLatestDate(caMinimumIntervalDates.getFinalValue());
     list.add(latestMinimumIntervalDate);
-    log("Item for consideration for Earliest date is: " + caMinimumIntervalDates.getAttributeName() + " with value of "
-        + caMinimumIntervalDates.getFinalValue());
     list.add(caLatestConflictEndIntervalDate.getFinalValue());
-    log("Item for consideration for Earliest date is: " + caLatestConflictEndIntervalDate.getAttributeName()
-        + " with value of " + caLatestConflictEndIntervalDate.getFinalValue());
     list.add(caSeasonalRecommendationStartDate.getFinalValue());
-    log("Item for consideration for Earliest date is: " + caSeasonalRecommendationStartDate.getAttributeName()
-        + " with value of " + caSeasonalRecommendationStartDate.getFinalValue());
     Date earliestDate = getLatestDate(list);
     return earliestDate;
   }
@@ -396,6 +388,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
 
     if (earliestRecommendedAgeDate != null) {
       unadjustedRecommendedDate = earliestRecommendedAgeDate;
+      log(" > unadjusted recommended age date set to earliest recommended age date");
       return unadjustedRecommendedDate;
     } else {
 

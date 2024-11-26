@@ -68,6 +68,9 @@ public class SatisfyTargetDose extends LogicStep {
         @Override
         public LogicResult evaluateInternal() {
           TargetDose targetDose = dataModel.getTargetDose();
+          if(targetDose.getEvaluation() == null) {
+            return NO;
+          }
           if (targetDose.getEvaluation().getEvaluationStatus() == EvaluationStatus.VALID) {
             return YES;
           } else if (targetDose.getEvaluation().getEvaluationStatus() == EvaluationStatus.EXTRANEOUS) {
