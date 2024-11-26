@@ -10,9 +10,12 @@ import java.util.Date;
 import org.apache.commons.lang.time.DateUtils;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
+import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
@@ -31,16 +34,16 @@ public class EvaluateVaccineConflict extends LogicStep {
     super(LogicStepType.EVALUATE_VACCINE_CONFLICT, dataModel);
     setConditionTableName("Table ");
 
-    caDateAdministered =
-        new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
-    // caConflictBeginIntervalDate = new ConditionAttribute<Date>("Calculated date (CALCDTLIVE-1)",
+    caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
+    // caConflictBeginIntervalDate = new ConditionAttribute<Date>("Calculated date
+    // (CALCDTLIVE-1)",
     // "Conflict Begin Interval Date");
-    // caConflictEndIntervalDate = new ConditionAttribute<Date>("Calculated date(CALCDTLIVE-2 &
+    // caConflictEndIntervalDate = new ConditionAttribute<Date>("Calculated
+    // date(CALCDTLIVE-2 &
     // CALCDTLIVE-3",
     // "Conflict End Interval Date");
     caCurrentVaccineType = new ConditionAttribute<VaccineType>(
         "Supporting Data (Live Virus Conflict)", "Current Vaccine Type");
-
 
     conditionAttributesList.add(caDateAdministered);
 
@@ -52,7 +55,6 @@ public class EvaluateVaccineConflict extends LogicStep {
     // if (dataModel.getAntigenAdministeredRecord().getVaccineType()!= null)
     caCurrentVaccineType.setInitialValue(dataModel.getAntigenAdministeredRecord().getVaccineType());
 
-
     LT420 logicTable = new LT420();
     // logicTableList.add(logicTable);
     logicTableList.add(logicTable);
@@ -61,8 +63,7 @@ public class EvaluateVaccineConflict extends LogicStep {
     if (logicTable.getY420() == YesNo.YES) {
       for (int i = dataModel.getAntigenAdministeredRecordPos() + 1; i < dataModel
           .getAntigenAdministeredRecordList().size(); i++) {
-        AntigenAdministeredRecord vaccineAdministered =
-            dataModel.getAntigenAdministeredRecordList().get(i);
+        AntigenAdministeredRecord vaccineAdministered = dataModel.getAntigenAdministeredRecordList().get(i);
         LT421 logicTab = new LT421();
         logicTab.caPreviousVaccineType = new ConditionAttribute<VaccineType>(
             "Supporting Data (Live Virus Conflict)", "Previous Vaccine Type");
@@ -91,7 +92,6 @@ public class EvaluateVaccineConflict extends LogicStep {
     }
   }
 
-
   @Override
   public LogicStep process() throws Exception {
     setNextLogicStepType(LogicStepType.EVALUATE_FOR_PREFERABLE_VACCINE);
@@ -99,6 +99,7 @@ public class EvaluateVaccineConflict extends LogicStep {
     if (y == YesNo.YES) {
       dataModel.getTargetDose()
           .setStatusCause(dataModel.getTargetDose().getStatusCause() + "VirusConflict");
+
     }
     return next();
   }
@@ -230,7 +231,6 @@ public class EvaluateVaccineConflict extends LogicStep {
       });
 
       setLogicResults(0, YES, NO);
-
 
       setLogicOutcome(0, new LogicOutcome() {
 

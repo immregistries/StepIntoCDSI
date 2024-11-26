@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -223,7 +224,7 @@ public class StepServlet extends ForecastServlet {
             out.println("</table>");
           }
 
-          if(dataModel.getForecastList().size() > 0) {
+          if (dataModel.getForecastList().size() > 0) {
             out.println("<p>Forecasts:</p>");
             out.println("<table>");
             out.println("  <tr>");
@@ -232,17 +233,17 @@ public class StepServlet extends ForecastServlet {
             out.println("    <th>Earliest</th>");
             out.println("    <th>Recommended</th>");
             out.println("  </tr>");
-            for(Forecast forecast : dataModel.getForecastList()) {
+            for (Forecast forecast : dataModel.getForecastList()) {
               out.println("  <tr>");
               out.println("    <td>" + forecast.getAntigen().getName() + "</td>");
-              out.println("    <td>" + (forecast.getVaccineGroupForecast() == null ? "null" : forecast.getVaccineGroupForecast().getVaccineGroupStatus()) + "</td>");
+              out.println("    <td>" + (forecast.getVaccineGroupForecast() == null ? "null"
+                  : forecast.getVaccineGroupForecast().getVaccineGroupStatus()) + "</td>");
               out.println("    <td>" + n(forecast.getEarliestDate()) + "</td>");
               out.println("    <td>" + n(forecast.getAdjustedRecommendedDate()) + "</td>");
               out.println("  </tr>");
             }
             out.println("</table>");
           }
-
 
           if (dataModel.getBestPatientSeriesList() != null) {
             out.println("<h3>Best Patient Series</h3>");

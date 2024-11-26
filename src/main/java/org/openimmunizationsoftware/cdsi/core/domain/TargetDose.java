@@ -1,6 +1,8 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
@@ -10,21 +12,21 @@ public class TargetDose {
   private SeriesDose trackedSeriesDose = null;
   private VaccineDoseAdministered satisfiedByVaccineDoseAdministered = null;
   private String statusCause = "";
-  private Map<VaccineDoseAdministered, Evaluation> evaluationToVaccineDoseAdministeredMap = new HashMap<VaccineDoseAdministered, Evaluation>();
+  List<Evaluation> evaluationList = new ArrayList<>();
 
   public Evaluation getEvaluation() {
-    if(satisfiedByVaccineDoseAdministered != null) {
-      return evaluationToVaccineDoseAdministeredMap.get(satisfiedByVaccineDoseAdministered);
+    if (evaluationList.size() > 0) {
+      return evaluationList.get(evaluationList.size() - 1);
     }
     return null;
   }
 
-  public Map<VaccineDoseAdministered, Evaluation> getEvaluationToVaccineDoseAdministeredMap() {
-    return evaluationToVaccineDoseAdministeredMap;
+  public List<Evaluation> getEvaluationList() {
+    return evaluationList;
   }
 
-  public void setEvaluation(VaccineDoseAdministered vda, Evaluation evaluation) {
-    evaluationToVaccineDoseAdministeredMap.put(vda,evaluation);
+  public void setEvaluation(Evaluation evaluation) {
+    evaluationList.add(evaluation);
   }
 
   public TargetDose() {

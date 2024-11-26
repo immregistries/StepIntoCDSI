@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
+import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
@@ -24,30 +25,24 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
 public class EvaluatePreferableInterval extends LogicStep {
 
-
-
   public EvaluatePreferableInterval(DataModel dataModel) {
     super(LogicStepType.EVALUATE_PREFERABLE_INTERVAL, dataModel);
     setConditionTableName("Table ");
 
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
 
-
-
     int intervalCount = 0;
     for (Interval interval : seriesDose.getIntervalList()) {
       intervalCount++;
       LT logicTable = new LT();
 
-      logicTable.caDateAdministered =
-          new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
-      logicTable.caPreferableIntervalElements =
-          new ConditionAttribute<Interval>("Supporting Data", "Preferable Interval Elements");
-      logicTable.caAbsoluteMinimumIntervalDate =
-          new ConditionAttribute<Date>("Calculated Date", "Absolute Minimum Interval Date");
-      logicTable.caMinimumIntervalDate =
-          new ConditionAttribute<Date>("Calculated Date", "Mimium Interval Date");
-      
+      logicTable.caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
+      logicTable.caPreferableIntervalElements = new ConditionAttribute<Interval>("Supporting Data",
+          "Preferable Interval Elements");
+      logicTable.caAbsoluteMinimumIntervalDate = new ConditionAttribute<Date>("Calculated Date",
+          "Absolute Minimum Interval Date");
+      logicTable.caMinimumIntervalDate = new ConditionAttribute<Date>("Calculated Date", "Mimium Interval Date");
+
       logicTable.caAbsoluteMinimumIntervalDate.setAssumedValue(PAST);
       logicTable.caMinimumIntervalDate.setAssumedValue(PAST);
 
@@ -171,7 +166,6 @@ public class EvaluatePreferableInterval extends LogicStep {
     private ConditionAttribute<Date> caAbsoluteMinimumIntervalDate = null;
     private ConditionAttribute<Date> caMinimumIntervalDate = null;
 
-
     private YesNo result = null;
 
     public YesNo getResult() {
@@ -227,6 +221,9 @@ public class EvaluatePreferableInterval extends LogicStep {
         @Override
         public void perform() {
           log("No. The vaccine dose administered did not satisfy the preferable interval for the target dose. Evaluation reason is 'Grace Period'.");
+          Evaluation evaluation = dataModel.getTargetDose().getEvaluation();
+          evaluation.setEvaluationStatus(EvaluationStatus.NOT_VALID);
+          evaluation.setEvaluationReason(EvaluationReason.GRACE_PERIOD);
           result = YesNo.NO;
         }
       });
@@ -235,6 +232,9 @@ public class EvaluatePreferableInterval extends LogicStep {
         @Override
         public void perform() {
           log("No. The vaccine dose administered did not satisfy the preferable interval for the target dose. Evaluation reason is 'Too soon'.");
+          Evaluation evaluation = dataModel.getTargetDose().getEvaluation();
+          evaluation.setEvaluationStatus(EvaluationStatus.NOT_VALID);
+          evaluation.setEvaluationReason(EvaluationReason.TOO_SOON);
           result = YesNo.NO;
         }
       });

@@ -290,7 +290,7 @@ public class DataModel {
       evaluation.setEvaluationReason(evaluationReason);
     }
     evaluation.setVaccineDoseAdministered(antigenAdministeredRecord.getVaccineDoseAdministered());
-    targetDose.setEvaluation(antigenAdministeredRecord.getVaccineDoseAdministered(),evaluation);
+    targetDose.setEvaluation(evaluation);
   }
 
   public AntigenAdministeredRecord getPreviousAntigenAdministeredRecord() {

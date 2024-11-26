@@ -8,7 +8,11 @@ import java.util.Date;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AllowableInterval;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
+import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
+import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
@@ -28,12 +32,10 @@ public class EvaluateAllowableInterval extends LogicStep {
     super(LogicStepType.EVALUATE_ALLOWABLE_INTERVAL, dataModel);
     setConditionTableName("Table ");
 
-    caDateAdministered =
-        new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
+    caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
     caAllowableIntervalElements = new ConditionAttribute<AllowableInterval>("Supporting Data",
         "Allowable Interval Elements");
-    caAbsoluteMinimumIntervalDate =
-        new ConditionAttribute<Date>("Calculated Date", "Absolute Minimum Interval Date");
+    caAbsoluteMinimumIntervalDate = new ConditionAttribute<Date>("Calculated Date", "Absolute Minimum Interval Date");
 
     caAbsoluteMinimumIntervalDate.setAssumedValue(PAST);
 
@@ -55,7 +57,6 @@ public class EvaluateAllowableInterval extends LogicStep {
         logicTableList.add(logicTable);
       }
     }
-
 
   }
 
@@ -133,9 +134,9 @@ public class EvaluateAllowableInterval extends LogicStep {
         @Override
         public void perform() {
           log("No. The vaccine dose administered did not satisfy the defined allowable interval for the target dose. Evaluation Reason is ' too soon. '");
-          dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
-          dataModel.getTargetDose()
-              .setStatusCause(dataModel.getTargetDose().getStatusCause() + "Interval");
+          Evaluation evaluation = dataModel.getTargetDose().getEvaluation();
+          evaluation.setEvaluationStatus(EvaluationStatus.NOT_VALID);
+          evaluation.setEvaluationReason(EvaluationReason.TOO_SOON);
           result = YesNo.NO;
         }
       });

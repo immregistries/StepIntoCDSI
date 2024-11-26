@@ -68,14 +68,19 @@ public class SatisfyTargetDose extends LogicStep {
         @Override
         public LogicResult evaluateInternal() {
           TargetDose targetDose = dataModel.getTargetDose();
-          if(targetDose.getEvaluation() == null) {
+          log("Evaluating if the vaccine dose administered at a valid age for the target dose");
+          if (targetDose.getEvaluation() == null) {
+            log(" - NO, evaluation was null");
             return NO;
           }
           if (targetDose.getEvaluation().getEvaluationStatus() == EvaluationStatus.VALID) {
+            log(" - Yes, evaluation was valid");
             return YES;
           } else if (targetDose.getEvaluation().getEvaluationStatus() == EvaluationStatus.EXTRANEOUS) {
+            log(" - No, evaluation was extraneous");
             return EXTRANEOUS;
           }
+          log(" - No, evaluation was " + targetDose.getEvaluation().getEvaluationStatus());
           return NO;
         }
       });
