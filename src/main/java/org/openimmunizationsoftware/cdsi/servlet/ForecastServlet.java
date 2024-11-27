@@ -19,11 +19,14 @@ import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.data.DataModelLoader;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
+import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepFactory;
@@ -120,6 +123,34 @@ public class ForecastServlet extends HttpServlet {
     if (dataModel.getAntigenAdministeredRecordList().size() > 0) {
       out.println("IMMUNIZATION EVALUATION");
       int count = 0;
+
+      for (PatientSeries patientSeries : dataModel.getBestPatientSeriesList()) {
+        for (TargetDose targetDose : patientSeries.getTargetDoseList()) {
+          if (targetDose.getEvaluationList() != null) {
+            for (Evaluation evaluation : targetDose.getEvaluationList()) {
+              VaccineDoseAdministered vda = evaluation.getVaccineDoseAdministered();
+              if (evaluation.getEvaluationStatus() != null) {
+                count++;
+                out.print("Vaccination #" + vda.getId() + ": ");
+                out.print(vda.getVaccine().getVaccineType().getShortDescription());
+                out.print(" given ");
+                out.print(sdf.format(vda.getDateAdministered()));
+                out.print(" is a ");
+                if (evaluation.getEvaluationStatus() != null
+                    && evaluation.getEvaluationStatus() == EvaluationStatus.VALID) {
+                  out.print("valid ");
+                } else {
+                  out.print("not valid ");
+                }
+                out.print(targetDose.getTrackedSeriesDose().getAntigenSeries().getTargetDisease());
+                out.print(" dose ");
+                out.print(targetDose.getTrackedSeriesDose().getDoseNumber());
+                out.println();
+              }
+            }
+          }
+        }
+      }
 
       for (VaccineDoseAdministered vda : dataModel.getImmunizationHistory()
           .getVaccineDoseAdministeredList()) {

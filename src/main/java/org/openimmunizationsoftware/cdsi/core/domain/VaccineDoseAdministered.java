@@ -8,6 +8,7 @@ import java.util.Map;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.DoseCondition;
 
 public class VaccineDoseAdministered {
+  private int id = 0;
   private Date dateAdministered = null;
   private DoseCondition doseCondition = null;
   private Patient patient = null;
@@ -15,6 +16,14 @@ public class VaccineDoseAdministered {
   private ImmunizationHistory immunizationHistory = null;
   private TargetDose targetDose = null;
   private Antigen antigenAssigned = null;
+
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
 
   public Antigen getAntigenAssigned() {
     return antigenAssigned;

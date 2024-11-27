@@ -1,5 +1,7 @@
 package org.openimmunizationsoftware.cdsi.servlet;
 
+import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.fromString;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
@@ -13,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
@@ -39,18 +42,6 @@ public class StepServlet extends ForecastServlet {
       StepExample stepExample = new StepExample(
           "Original Complete Record",
           "evalDate=20140515&scheduleName=default&resultFormat=text&patientDob=20051215&patientSex=M&vaccineDate1=20060213&vaccineCvx1=10&vaccineMvx1=&vaccineDate2=20060214&vaccineCvx2=100&vaccineMvx2=&vaccineDate3=20060420&vaccineCvx3=10&vaccineMvx3=&vaccineDate4=20060420&vaccineCvx4=20&vaccineMvx4=&vaccineDate5=20060420&vaccineCvx5=17&vaccineMvx5=&vaccineDate6=20060616&vaccineCvx6=17&vaccineMvx6=&vaccineDate7=20060616&vaccineCvx7=10&vaccineMvx7=&vaccineDate8=20060616&vaccineCvx8=08&vaccineMvx8=&vaccineDate9=20060616&vaccineCvx9=20&vaccineMvx9=&vaccineDate10=20060616&vaccineCvx10=100&vaccineMvx10=&vaccineDate11=20060929&vaccineCvx11=08&vaccineMvx11=&vaccineDate12=20060929&vaccineCvx12=100&vaccineMvx12=&vaccineDate13=20061213&vaccineCvx13=20&vaccineMvx13=&vaccineDate14=20061215&vaccineCvx14=08&vaccineMvx14=&vaccineDate15=20061215&vaccineCvx15=85&vaccineMvx15=&vaccineDate16=20061215&vaccineCvx16=03&vaccineMvx16=&vaccineDate17=20061215&vaccineCvx17=21&vaccineMvx17=&vaccineDate18=20071105&vaccineCvx18=17&vaccineMvx18=&vaccineDate19=20071105&vaccineCvx19=20&vaccineMvx19=&vaccineDate20=20071105&vaccineCvx20=10&vaccineMvx20=&vaccineDate21=20080110&vaccineCvx21=85&vaccineMvx21=&vaccineDate22=20080110&vaccineCvx22=100&vaccineMvx22=&vaccineDate23=20140515&vaccineCvx23=21&vaccineMvx23=&vaccineDate24=20140515&vaccineCvx24=139&vaccineMvx24=&vaccineDate25=20140515&vaccineCvx25=10&vaccineMvx25=&vaccineDate26=20140515&vaccineCvx26=03&vaccineMvx26=");
-      stepExamples.add(stepExample);
-    }
-    {
-      StepExample stepExample = new StepExample(
-          "#2022-0001 Dose #1 Tdap at 9 years, Dose #2 Td at 4 weeks, Dose #3 Td at 10 years",
-          "evalDate=20241112&scheduleName=&resultFormat=text&patientDob=20141112&patientSex=m&vaccineDate1=20240312&vaccineCvx1=115&vaccineMvx1=SKB&vaccineDate2=20240409&vaccineCvx2=113&vaccineMvx2=PMC&vaccineDate3=20241112&vaccineCvx3=113&vaccineMvx3=PMC");
-      stepExamples.add(stepExample);
-    }
-    {
-      StepExample stepExample = new StepExample(
-          "#2022-0002 Dose #1 Tdap at 9 years, Dose #2 Td at 4 weeks, Dose #3 Tdap at 10 years",
-          "evalDate=20241112&scheduleName=&resultFormat=text&patientDob=20141112&patientSex=m&vaccineDate1=20240312&vaccineCvx1=115&vaccineMvx1=SKB&vaccineDate2=20240409&vaccineCvx2=113&vaccineMvx2=PMC&vaccineDate3=20241112&vaccineCvx3=115&vaccineMvx3=SKB");
       stepExamples.add(stepExample);
     }
     stepExampleStartCount = stepExamples.size();
@@ -134,171 +125,55 @@ public class StepServlet extends ForecastServlet {
     out.println("<html>");
     out.println("  <head>");
     out.println("    <title>CDSi - " + dataModel.getLogicStep().getTitle() + "</title>");
-    out.println("    <link rel=\"stylesheet\" type=\"text/css\" href=\"index.css\">");
+    out.println("    <link rel=\"stylesheet\" type=\"text/css\" href=\"indexStep.css\">");
     out.println("  </head>");
     out.println("  <body>");
-    out.println("  <form action=\"step\" method=\"POST\" id=\"stepForm\">");
-    out.println("  <table border=\"0\" width=\"1710\" class=\"mainTable\">");
-    out.println("    <tr class=\"mainTable\">");
-    out.println("      <td width=\"700\" valign=\"top\" class=\"mainTable\">");
+
+    out.println("      <form action=\"step\" method=\"POST\" id=\"stepForm\">");
+    out.println("    <div class=\"cell\">");
     if (exception != null) {
       out.println("<pre>");
       exception.printStackTrace(out);
       out.println("</pre>");
     } else {
-      try {
-        out.println(
-            "  <a href=\"step\"><img src=\"Logo Large.png\" height=\"120\" align=\"left\"/></a>");
-        out.println("  <a href=\"dataModelView\" target=\"dataModelView\">View Data Model</a>");
-        out.println("<br clear=\"all\"/>");
-        if (dataModel.getLogicStepPrevious() == null) {
-          out.println("<h1>CDSi Demonstration System</h1> ");
-          if (req.getParameter(LogicStep.PARAM_EVAL_DATE) == null) {
-            // make a table with two columns one with the step link and label and the other
-            // with forecast
-            out.println("<h2>Step Examples</h2>");
-            out.println("<table>");
-            out.println("  <tr>");
-            out.println("    <th>Step</th>");
-            out.println("    <th>Forecast</th>");
-            out.println("  </tr>");
-            List<StepExample> stepExamplesCopy = new ArrayList<StepExample>();
-            synchronized (stepExamples) {
-              stepExamplesCopy.addAll(stepExamples);
-            }
-            for (StepExample stepExample : stepExamples) {
-              out.println("  <tr>");
-              String stepLink = "step?" + stepExample.getRequestString();
-              String forecastLink = "forecast?" + stepExample.getRequestString();
-              out.println("      <td><a href=\"" + stepLink + "\">" + stepExample.getLabel() + "</a></td><td><a href=\""
-                  + forecastLink + "\">Forecast</a></td>");
-              out.println("  </tr>");
-            }
-            out.println("</table>");
-          }
-        } else {
-
-          // print out antigen
-          if (dataModel.getAntigen() != null) {
-            out.println("<p>Antigen: " + dataModel.getAntigen().getName() + "</p>");
-          }
-          if (dataModel.getPatientSeries() != null) {
-            out.println("<p>Antigen Series: "
-                + dataModel.getPatientSeries().getTrackedAntigenSeries().getSeriesName() + "</p>");
-          }
-          if (dataModel.getTargetDoseList() != null) {
-            out.println("<table>");
-            out.println("  <tr>");
-            out.println("    <th>Selected</th>");
-            out.println("    <th>Dose</th>");
-            out.println("    <th>Status</th>");
-            out.println("    <th>VDA</th>");
-            out.println("  </tr>");
-            for (TargetDose targetDose : dataModel.getTargetDoseList()) {
-              TargetDose targetDoseSelected = dataModel.getTargetDose();
-              Evaluation evaluation = targetDose.getEvaluation();
-              String doseNumber = targetDose.getTrackedSeriesDose().getDoseNumber();
-              out.println("  <tr>");
-              if (targetDoseSelected != null && targetDoseSelected == targetDose) {
-                out.println("    <td>X</td>");
-              } else {
-                out.println("    <td></td>");
-              }
-              out.println("    <td>" + doseNumber + "</td>");
-              if (evaluation == null) {
-                out.println("    <td></td>");
-              } else {
-                out.println("    <td>" + evaluation.getEvaluationStatus() + "</td>");
-              }
-              VaccineDoseAdministered vda = targetDose.getSatisfiedByVaccineDoseAdministered();
-              if (vda == null) {
-                out.println("    <td></td>");
-              } else {
-                VaccineType vaccineType = vda.getVaccine().getVaccineType();
-                String vaccineLabel = vaccineType.getShortDescription() + " (" + vaccineType.getCvxCode() + ") given "
-                    + n(vda.getDateAdministered());
-                out.println("    <td>" + vaccineLabel + "</td>");
-              }
-              out.println("  </tr>");
-            }
-            out.println("</table>");
-          }
-
-          if (dataModel.getForecastList().size() > 0) {
-            out.println("<p>Forecasts:</p>");
-            out.println("<table>");
-            out.println("  <tr>");
-            out.println("    <th>Antigen</th>");
-            out.println("    <th>VGF Status</th>");
-            out.println("    <th>Earliest</th>");
-            out.println("    <th>Recommended</th>");
-            out.println("  </tr>");
-            for (Forecast forecast : dataModel.getForecastList()) {
-              out.println("  <tr>");
-              out.println("    <td>" + forecast.getAntigen().getName() + "</td>");
-              out.println("    <td>" + (forecast.getVaccineGroupForecast() == null ? "null"
-                  : forecast.getVaccineGroupForecast().getVaccineGroupStatus()) + "</td>");
-              out.println("    <td>" + n(forecast.getEarliestDate()) + "</td>");
-              out.println("    <td>" + n(forecast.getAdjustedRecommendedDate()) + "</td>");
-              out.println("  </tr>");
-            }
-            out.println("</table>");
-          }
-
-          if (dataModel.getBestPatientSeriesList() != null) {
-            out.println("<h3>Best Patient Series</h3>");
-            out.println("<table>");
-            out.println("  <tr>");
-            out.println("    <th>Antigen</th>");
-            out.println("    <th>Antigen Series</th>");
-            out.println("    <th>Status</th>");
-            out.println("    <th>Earliest</th>");
-            out.println("    <th>Recommended</th>");
-            out.println("  </tr>");
-            for (PatientSeries patientSeries : dataModel.getBestPatientSeriesList()) {
-              AntigenSeries antigenSeries = patientSeries.getTrackedAntigenSeries();
-              out.println("  <tr>");
-              out.println("    <td>" + antigenSeries.getTargetDisease().getName() + "</td>");
-              out.println("    <td>" + antigenSeries.getSeriesName() + "</td>");
-              out.println("    <td>" + patientSeries.getPatientSeriesStatus() + "</td>");
-              if (patientSeries.getForecast() == null) {
-                out.println("    <td>null</td>");
-                out.println("    <td>null</td>");
-              } else {
-                out.println("    <td>" + n(patientSeries.getForecast().getEarliestDate()) + "</td>");
-                out.println("    <td>" + n(patientSeries.getForecast().getAdjustedRecommendedDate()) + "</td>");
-              }
-              out.println("  </tr>");
-            }
-            out.println("</table>");
-          }
-
-          dataModel.getLogicStepPrevious().printPost(out);
-          dataModel.getLogicStepPrevious().printLog(out);
+      out.println(
+          "  <a href=\"step\"><img src=\"Logo Large.png\" height=\"120\" align=\"left\"/></a>");
+      out.println("  <a href=\"dataModelView\" target=\"dataModelView\">View Data Model</a><br/>");
+      out.println("  <a href=\"fits\">FITS Test Cases</a>");
+      out.println("<br clear=\"all\"/>");
+      if (dataModel.getLogicStepPrevious() == null) {
+        out.println("<h1>CDSi Demonstration System</h1> ");
+        // make a table with two columns one with the step link and label and the other
+        // with forecast
+        out.println("<h2>Step Examples</h2>");
+        out.println("<table>");
+        out.println("  <tr>");
+        out.println("    <th>Step</th>");
+        out.println("    <th>Forecast</th>");
+        out.println("  </tr>");
+        List<StepExample> stepExamplesCopy = new ArrayList<StepExample>();
+        synchronized (stepExamples) {
+          stepExamplesCopy.addAll(stepExamples);
         }
-      } catch (Exception e) {
-        e.printStackTrace();
-        out.println("<pre>");
-        e.printStackTrace(out);
-        out.println("</pre>");
+        for (StepExample stepExample : stepExamples) {
+          out.println("  <tr>");
+          String stepLink = "step?" + stepExample.getRequestString();
+          String forecastLink = "forecast?" + stepExample.getRequestString();
+          out.println("      <td><a href=\"" + stepLink + "\">" + stepExample.getLabel() + "</a></td><td><a href=\""
+              + forecastLink + "\">Forecast</a></td>");
+          out.println("  </tr>");
+        }
+        out.println("</table>");
+      } else {
+        printStableView(dataModel, out);
       }
+
     }
-    out.println("      </td>");
-    out.println("      <td width=\"1010\" valign=\"top\" class=\"mainTable\">");
-    if (dataModel.getLogicStepPrevious() == null || dataModel.getLogicStep() == null) {
-      out.println(
-          "        <img src=\"pm.png\" width=\"1000\" onclick=\"document.getElementById('stepForm').submit();\">");
-    } else {
-      out.println(
-          "        <img src=\"pm-" + dataModel.getLogicStepPrevious().getLogicStepType().getChapter()
-              + "-" + dataModel.getLogicStep().getLogicStepType().getChapter()
-              + ".png\" width=\"1000\" onclick=\"document.getElementById('stepForm').submit();\">");
-      out.println("<br/>" + dataModel.getLogicStepPrevious().getLogicStepType().getChapter()
-          + "-" + dataModel.getLogicStep().getLogicStepType().getChapter());
-    }
-    if (dataModel.getLogicStepPrevious() != null
-        || req.getParameter(LogicStep.PARAM_EVAL_DATE) != null) {
-      out.println("        <br/><input type=\"submit\" name=\"submit\" value=\"Next Step\"/>");
+    out.println("    </div>");
+
+    out.println("    <div class=\"cell\">");
+    if (dataModel.getLogicStepPrevious() != null || req.getParameter(LogicStep.PARAM_EVAL_DATE) != null) {
+      out.println("        <input type=\"submit\" name=\"submit\" value=\"Next Step\"/>");
       out.println("        <select name=\"jumpTo\">");
       for (LogicStepType logicStepType : LogicStep.STEPS) {
         String display = logicStepType.getName();
@@ -320,25 +195,206 @@ public class StepServlet extends ForecastServlet {
       out.println("        <input type=\"submit\" name=\"submit\" value=\"Jump4.6\"/>");
       out.println("        <input type=\"submit\" name=\"submit\" value=\"End\"/>");
       out.println("        <input type=\"hidden\" name=\"action\" value=\"next\"/>");
-
-      try {
-        if (dataModel.getLogicStep() != null) {
-          dataModel.getLogicStep().printPre(out);
-        }
-      } catch (Exception e) {
-        e.printStackTrace();
-        out.println("<pre>");
-        e.printStackTrace(out);
-        out.println("</pre>");
-      }
+      out.println("        <br/>");
     }
-    out.println("      </td>");
-    out.println("    </tr>");
-    out.println("  </table>");
-    out.println("  </form>");
+    if (dataModel.getLogicStepPrevious() == null || dataModel.getLogicStep() == null) {
+      out.println(
+          "        <img src=\"pm.png\" width=\"800\" onclick=\"document.getElementById('stepForm').submit();\">");
+    } else {
+      out.println(
+          "        <img src=\"pm-" + dataModel.getLogicStepPrevious().getLogicStepType().getChapter()
+              + "-" + dataModel.getLogicStep().getLogicStepType().getChapter()
+              + ".png\" width=\"800\" onclick=\"document.getElementById('stepForm').submit();\">");
+    }
+    out.println("    </div>");
+
+    out.println("    <div class=\"cell\">");
+    try {
+      LogicStep logicStep = dataModel.getLogicStepPrevious();
+      if (logicStep != null) {
+        LogicStepType logicStepType = logicStep.getLogicStepType();
+        out.println("<h1>" + logicStepType.getChapter() + " " + logicStepType.getDisplay() + "</h2>");
+        dataModel.getLogicStep().printPre(out);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      out.println("<pre>");
+      e.printStackTrace(out);
+      out.println("</pre>");
+    }
+    out.println("    </div>");
+    out.println("    <div class=\"cell\">");
+    try {
+      LogicStep logicStep = dataModel.getLogicStep();
+      if (logicStep != null) {
+        LogicStepType logicStepType = logicStep.getLogicStepType();
+        out.println("<h1>" + logicStepType.getChapter() + " " + logicStepType.getDisplay() + "</h2>");
+        dataModel.getLogicStep().printPre(out);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      out.println("<pre>");
+      e.printStackTrace(out);
+      out.println("</pre>");
+    }
+    out.println("    </div>");
+    out.println("      </form>");
+
     out.println("  </body>");
     out.println("</html>");
     out.close();
+  }
+
+  private void printStableView(DataModel dataModel, PrintWriter out) {
+    // print out antigen
+
+    if (dataModel.getPatientSeries() != null) {
+      out.println("<h2>" + dataModel.getPatientSeries() + "</h2>");
+    } else if (dataModel.getAntigen() != null) {
+      out.println("<h2>" + dataModel.getAntigen() + "</h2>");
+    }
+    if (dataModel.getTargetDoseList() != null) {
+
+      List<VaccineDoseAdministered> vaccineDoseAdministeredList = new ArrayList<VaccineDoseAdministered>();
+      for (AntigenAdministeredRecord aar : dataModel.getAntigenAdministeredRecordList()) {
+        vaccineDoseAdministeredList.add(aar.getVaccineDoseAdministered());
+      }
+      out.println("<table>");
+      out.println("  <tr>");
+      out.println("    <th colspan=\"2\">Series</th>");
+      out.println("    <th colspan=\"2\">Dose Administered</th>");
+      out.println("  </tr>");
+      out.println("  <tr>");
+      out.println("    <th>Selected</th>");
+      out.println("    <th>Dose</th>");
+      out.println("    <th>Status</th>");
+      out.println("    <th>Vaccine Dose Admin</th>");
+      out.println("  </tr>");
+      for (TargetDose targetDose : dataModel.getTargetDoseList()) {
+        TargetDose targetDoseSelected = dataModel.getTargetDose();
+        List<Evaluation> evaluationList = targetDose.getEvaluationList();
+        int rowSpan = evaluationList.size();
+        // need to check if a new vaccination record is being evaluated
+        AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
+        boolean aarSelectedButNotYetEvaluated = false;
+        if (aar != null && targetDoseSelected != null && targetDoseSelected == targetDose) {
+          aarSelectedButNotYetEvaluated = true;
+          for (Evaluation evaluation : evaluationList) {
+            if (evaluation.getVaccineDoseAdministered() != null
+                && evaluation.getVaccineDoseAdministered() == aar.getVaccineDoseAdministered()) {
+              aarSelectedButNotYetEvaluated = false;
+            }
+          }
+          if (aarSelectedButNotYetEvaluated) {
+            rowSpan++;
+          }
+        }
+        if (rowSpan == 0) {
+          rowSpan = 1;
+        }
+
+        String doseNumber = targetDose.getTrackedSeriesDose().getDoseNumber();
+        out.println("  <tr>");
+        if (targetDoseSelected != null && targetDoseSelected == targetDose) {
+          out.println("    <td rowspan=\"" + rowSpan + "\">--&gt;</td>");
+        } else {
+          out.println("    <td rowspan=\"" + rowSpan + "\"></td>");
+        }
+        out.println("    <td rowspan=\"" + rowSpan + "\">" + doseNumber + "</td>");
+        if (evaluationList.size() == 0 && !aarSelectedButNotYetEvaluated) {
+          out.println("    <td></td>");
+          out.println("    <td></td>");
+        }
+        boolean first = true;
+        for (Evaluation evaluation : evaluationList) {
+          if (!first) {
+            out.println("</tr><tr>");
+          }
+          out.println("    <td>" + evaluation.getEvaluationStatus() + "</td>");
+          VaccineDoseAdministered vda = evaluation.getVaccineDoseAdministered();
+          printVda(out, vda);
+          vaccineDoseAdministeredList.remove(vda);
+          first = false;
+        }
+        if (aarSelectedButNotYetEvaluated) {
+          if (!first) {
+            out.println("</tr><tr>");
+          }
+          out.println("    <td>--&gt;</td>");
+          VaccineDoseAdministered vda = aar.getVaccineDoseAdministered();
+          printVda(out, vda);
+          vaccineDoseAdministeredList.remove(vda);
+        }
+        out.println("  </tr>");
+      }
+      for (VaccineDoseAdministered vda : vaccineDoseAdministeredList) {
+        out.println("  <tr>");
+        out.println("    <td colspan=\"3\"></td>");
+        printVda(out, vda);
+        out.println("  </tr>");
+      }
+      out.println("</table>");
+    }
+
+    if (dataModel.getForecastList().size() > 0) {
+      out.println("<p>Forecasts:</p>");
+      out.println("<table>");
+      out.println("  <tr>");
+      out.println("    <th>Antigen</th>");
+      out.println("    <th>VGF Status</th>");
+      out.println("    <th>Earliest</th>");
+      out.println("    <th>Recommended</th>");
+      out.println("  </tr>");
+      for (Forecast forecast : dataModel.getForecastList()) {
+        out.println("  <tr>");
+        out.println("    <td>" + forecast.getAntigen().getName() + "</td>");
+        out.println("    <td>" + (forecast.getVaccineGroupForecast() == null ? "null"
+            : forecast.getVaccineGroupForecast().getVaccineGroupStatus()) + "</td>");
+        out.println("    <td>" + n(forecast.getEarliestDate()) + "</td>");
+        out.println("    <td>" + n(forecast.getAdjustedRecommendedDate()) + "</td>");
+        out.println("  </tr>");
+      }
+      out.println("</table>");
+    }
+
+    if (dataModel.getBestPatientSeriesList() != null) {
+      out.println("<h3>Best Patient Series</h3>");
+      out.println("<table>");
+      out.println("  <tr>");
+      out.println("    <th>Antigen</th>");
+      out.println("    <th>Antigen Series</th>");
+      out.println("    <th>Status</th>");
+      out.println("    <th>Earliest</th>");
+      out.println("    <th>Recommended</th>");
+      out.println("  </tr>");
+      for (PatientSeries patientSeries : dataModel.getBestPatientSeriesList()) {
+        AntigenSeries antigenSeries = patientSeries.getTrackedAntigenSeries();
+        out.println("  <tr>");
+        out.println("    <td>" + antigenSeries.getTargetDisease().getName() + "</td>");
+        out.println("    <td>" + antigenSeries.getSeriesName() + "</td>");
+        out.println("    <td>" + patientSeries.getPatientSeriesStatus() + "</td>");
+        if (patientSeries.getForecast() == null) {
+          out.println("    <td>null</td>");
+          out.println("    <td>null</td>");
+        } else {
+          out.println("    <td>" + n(patientSeries.getForecast().getEarliestDate()) + "</td>");
+          out.println("    <td>" + n(patientSeries.getForecast().getAdjustedRecommendedDate()) + "</td>");
+        }
+        out.println("  </tr>");
+      }
+      out.println("</table>");
+    }
+  }
+
+  private void printVda(PrintWriter out, VaccineDoseAdministered vda) {
+    if (vda == null) {
+      out.println("    <td></td>");
+    } else {
+      VaccineType vaccineType = vda.getVaccine().getVaccineType();
+      String vaccineLabel = vaccineType.getShortDescription() + " (" + vaccineType.getCvxCode() + ") given "
+          + n(vda.getDateAdministered());
+      out.println("    <td>" + vaccineLabel + "</td>");
+    }
   }
 
   private void jump(DataModel dataModel, String jumpTo) throws Exception {

@@ -43,16 +43,17 @@ public class GatherNecessaryData extends LogicStep {
       dataModel.setImmunizationHistory(immunizationHistory);
       int i = 1;
       while (req.getParameter(PARAM_VACCINE_CVX + i) != null) {
-        VaccineDoseAdministered vaccineDoseAdministered = new VaccineDoseAdministered();
-        vaccineDoseAdministered.setPatient(patient);
-        vaccineDoseAdministered.setImmunizationHistory(immunizationHistory);
-        immunizationHistory.getVaccineDoseAdministeredList().add(vaccineDoseAdministered);
-        patient.getReceivesList().add(vaccineDoseAdministered);
-        vaccineDoseAdministered
+        VaccineDoseAdministered vda = new VaccineDoseAdministered();
+        vda.setId(i);
+        vda.setPatient(patient);
+        vda.setImmunizationHistory(immunizationHistory);
+        immunizationHistory.getVaccineDoseAdministeredList().add(vda);
+        patient.getReceivesList().add(vda);
+        vda
             .setDateAdministered(sdf.parse(req.getParameter(PARAM_VACCINE_DATE + i)));
         if (req.getParameter(PARAM_VACCINE_CONDITION_CODE + i) != null
             && !req.getParameter(PARAM_VACCINE_CONDITION_CODE + i).equals("")) {
-          vaccineDoseAdministered.setDoseCondition(
+          vda.setDoseCondition(
               req.getParameter(PARAM_VACCINE_CONDITION_CODE + i).equalsIgnoreCase("yes")
                   ? DoseCondition.YES
                   : DoseCondition.NO);
@@ -66,7 +67,7 @@ public class GatherNecessaryData extends LogicStep {
         }
         vaccine.setVaccineType(cvx);
         vaccine.setManufacturer(mvxCode);
-        vaccineDoseAdministered.setVaccine(vaccine);
+        vda.setVaccine(vaccine);
         i++;
       }
     } else if (dataModel.getTestCaseRegistered() != null) {
@@ -141,6 +142,7 @@ public class GatherNecessaryData extends LogicStep {
     out.println("  </tr>");
     int i = 1;
     while (req.getParameter(PARAM_VACCINE_CVX + i) != null) {
+      // i needs to e in a hidden field called id
       out.println("  <tr>");
       out.println("    <th>" + i + "</th>");
       out.println("    <td><input type=\"text\" name=\"" + PARAM_VACCINE_CVX + i + "\" value=\""

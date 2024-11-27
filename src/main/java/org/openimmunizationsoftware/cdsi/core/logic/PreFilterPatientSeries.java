@@ -134,7 +134,7 @@ public class PreFilterPatientSeries extends LogicStep {
         // log size of relevant patient series list
         log("Final number of relevant patient series: " + scorablePatientSeriesList.size());
 
-        setNextLogicStepType(LogicStepType.ONE_BEST_PATIENT_SERIES);
+        setNextLogicStepType(LogicStepType.IDENTIFY_ONE_PRIORITIZED_PATIENT_SERIES);
         return next();
     }
 

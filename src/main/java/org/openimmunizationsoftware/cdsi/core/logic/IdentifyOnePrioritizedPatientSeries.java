@@ -30,7 +30,7 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
   // private ConditionAttribute<Date> caDateAdministered = null;
 
   public IdentifyOnePrioritizedPatientSeries(DataModel dataModel) {
-    super(LogicStepType.ONE_BEST_PATIENT_SERIES, dataModel);
+    super(LogicStepType.IDENTIFY_ONE_PRIORITIZED_PATIENT_SERIES, dataModel);
     // setConditionTableName("Table ");
 
     // caDateAdministered = new ConditionAttribute<Date>("Vaccine dose

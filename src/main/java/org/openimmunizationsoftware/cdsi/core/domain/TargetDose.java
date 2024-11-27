@@ -1,9 +1,7 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 
