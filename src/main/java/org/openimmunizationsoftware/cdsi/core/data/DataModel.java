@@ -414,14 +414,6 @@ public class DataModel {
     this.targetDose = targetDose;
   }
 
-  public EvaluationStatus getEvaluationStatus() {
-    return evaluationStatus;
-  }
-
-  public void setEvaluationStatus(EvaluationStatus evaluationStatus) {
-    this.evaluationStatus = evaluationStatus;
-  }
-
   public Map<String, Antigen> getAntigenMap() {
     return antigenMap;
   }

@@ -166,7 +166,7 @@ public class EvaluateAge extends LogicStep {
       setLogicOutcome(1, new LogicOutcome() {
         @Override
         public void perform() {
-          dataModel.setEvaluationForCurrentTargetDose(EvaluationStatus.NOT_VALID, EvaluationReason.GRACE_PERIOD);
+          dataModel.setEvaluationForCurrentTargetDose(EvaluationStatus.VALID, EvaluationReason.GRACE_PERIOD);
           log("Yes. The vaccine dose was administered at a valid age for the target dose.");
           log("Evaluation reason is \"Grace period.\"");
         }
@@ -181,7 +181,7 @@ public class EvaluateAge extends LogicStep {
       setLogicOutcome(3, new LogicOutcome() {
         @Override
         public void perform() {
-          dataModel.setEvaluationForCurrentTargetDose(EvaluationStatus.NOT_VALID, EvaluationReason.TOO_OLD);
+          dataModel.setEvaluationForCurrentTargetDose(EvaluationStatus.EXTRANEOUS, EvaluationReason.TOO_OLD);
           log("No. The vaccine dose was not administered at a valid age for the target dose.");
           log("It is extraneous.");
           log("Evaluation reason is 'Too old'.");

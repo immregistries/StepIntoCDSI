@@ -8,6 +8,7 @@ import java.util.List;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.PreferrableVaccine;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 // import org.openimmunizationsoftware.cdsi.core.logic.EvaluateAllowableInterval.LT;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
@@ -232,6 +233,7 @@ public class EvaluateForPreferableVaccine extends LogicStep {
         public void perform() {
           result = YesNo.YES;
           log("Yes. The vaccine dose administered was a preferable vaccine for the target dose. Evaluation Reason is 'Volume administered is less than recommended volume'.");
+          dataModel.getTargetDose().getEvaluation().setEvaluationReason(EvaluationReason.LESS_THAN_RECOMMENDED_VOLUME);
         }
       });
       setLogicOutcome(2, new LogicOutcome() {

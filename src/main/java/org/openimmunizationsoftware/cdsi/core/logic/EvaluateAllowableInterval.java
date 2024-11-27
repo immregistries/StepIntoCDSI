@@ -119,9 +119,8 @@ public class EvaluateAllowableInterval extends LogicStep {
           new LogicCondition("Is the date administered < absolute minimum interval date?") {
             @Override
             public LogicResult evaluateInternal() {
-
-              if (caAbsoluteMinimumIntervalDate.getFinalValue()
-                  .after(caDateAdministered.getFinalValue())) {
+              if (caDateAdministered.getFinalValue()
+                  .before(caAbsoluteMinimumIntervalDate.getFinalValue())) {
                 return LogicResult.YES;
               }
               return LogicResult.NO;
@@ -133,9 +132,8 @@ public class EvaluateAllowableInterval extends LogicStep {
       setLogicOutcome(0, new LogicOutcome() {
         @Override
         public void perform() {
-          log("No. The vaccine dose administered did not satisfy the defined allowable interval for the target dose. Evaluation Reason is ' too soon. '");
+          log("No. The vaccine dose administered did not satisfy the defined allowable interval for the target dose. Evaluation Reason is 'Too soon'.");
           Evaluation evaluation = dataModel.getTargetDose().getEvaluation();
-          evaluation.setEvaluationStatus(EvaluationStatus.NOT_VALID);
           evaluation.setEvaluationReason(EvaluationReason.TOO_SOON);
           result = YesNo.NO;
         }

@@ -94,9 +94,6 @@ public class MainServlet extends ForecastServlet {
     out.println("   <table>");
     out.println("     <tr>");
     out.println("       <caption>Data Model</caption>");
-
-    out.println("       <th>Evaluation Status</th>");
-    out.println("       <td>" + n(dataModel.getEvaluationStatus()) + "</td>");
     out.println("     </tr>");
     out.println("     <tr>");
     out.println("       <th>Patient</th>");

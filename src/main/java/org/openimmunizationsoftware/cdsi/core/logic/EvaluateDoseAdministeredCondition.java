@@ -95,8 +95,8 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
           log("Setting target dose to \"not satisfied\"");
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
           log("Setting evaluation status to \"sub-standard\"");
-          log("Setting next step: 6 Evaluate Vaccine Dose Administered");
-          dataModel.setEvaluationStatus(EvaluationStatus.SUB_STANDARD);
+          log("Setting next step: 4.4 Evaluate And Forecast All Patient Series");
+          dataModel.getTargetDose().getEvaluation().setEvaluationStatus(EvaluationStatus.SUB_STANDARD);
           setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
         }
       });
@@ -105,10 +105,10 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
         public void perform() {
           log("No. The vaccine dose administered cannot be evaluated.");
           log("Setting target dose to \"not satisfied\"");
-          // dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
+          dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
           log("Setting evaluation status to \"sub-standard\"");
-          log("Setting next step: 6 Evaluate Vaccine Dose Administered");
-          dataModel.setEvaluationStatus(EvaluationStatus.SUB_STANDARD);
+          log("Setting next step: 4.4 Evaluate And Forecast All Patient Series");
+          dataModel.getTargetDose().getEvaluation().setEvaluationStatus(EvaluationStatus.SUB_STANDARD);
           setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
         }
       });

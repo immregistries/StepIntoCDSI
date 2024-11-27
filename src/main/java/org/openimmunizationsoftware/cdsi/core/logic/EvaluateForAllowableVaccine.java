@@ -20,7 +20,7 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 public class EvaluateForAllowableVaccine extends LogicStep {
   public EvaluateForAllowableVaccine(DataModel dataModel) {
     super(LogicStepType.EVALUATE_FOR_ALLOWABLE_VACCINE, dataModel);
-    setConditionTableName("Table 6.9");
+    setConditionTableName("TABLE 6-28 ALLOWABLE VACCINE ATTRIBUTES");
 
     for (AllowableVaccine pi : dataModel.getTargetDose().getTrackedSeriesDose()
         .getAllowableVaccineList()) {
@@ -160,7 +160,7 @@ public class EvaluateForAllowableVaccine extends LogicStep {
         public void perform() {
           result = YesNo.YES;
           log("Yes. The vaccine dose administered was an allowable vaccine for the target dose.");
-          log("Setting next step: 6.9 EvaluateForAllowableVaccines");
+          log("Setting next step: 6.10 SatisfyTargetDose");
         }
       });
       setLogicOutcome(1, new LogicOutcome() {

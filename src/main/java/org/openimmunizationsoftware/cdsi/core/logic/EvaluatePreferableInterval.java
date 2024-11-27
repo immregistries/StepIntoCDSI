@@ -220,9 +220,8 @@ public class EvaluatePreferableInterval extends LogicStep {
       setLogicOutcome(0, new LogicOutcome() {
         @Override
         public void perform() {
-          log("No. The vaccine dose administered did not satisfy the preferable interval for the target dose. Evaluation reason is 'Grace Period'.");
+          log("No. The vaccine dose administered did not satisfy the preferable interval for the target dose. Evaluation reason is 'Too Soon'.");
           Evaluation evaluation = dataModel.getTargetDose().getEvaluation();
-          evaluation.setEvaluationStatus(EvaluationStatus.NOT_VALID);
           evaluation.setEvaluationReason(EvaluationReason.GRACE_PERIOD);
           result = YesNo.NO;
         }
@@ -231,11 +230,10 @@ public class EvaluatePreferableInterval extends LogicStep {
       setLogicOutcome(1, new LogicOutcome() {
         @Override
         public void perform() {
-          log("No. The vaccine dose administered did not satisfy the preferable interval for the target dose. Evaluation reason is 'Too soon'.");
+          log("Yes. The vaccine dose administered satisfied the preferable interval for the target dose. Evaluation reason is 'Grace Period'.");
           Evaluation evaluation = dataModel.getTargetDose().getEvaluation();
-          evaluation.setEvaluationStatus(EvaluationStatus.NOT_VALID);
-          evaluation.setEvaluationReason(EvaluationReason.TOO_SOON);
-          result = YesNo.NO;
+          evaluation.setEvaluationReason(EvaluationReason.GRACE_PERIOD);
+          result = YesNo.YES;
         }
       });
 

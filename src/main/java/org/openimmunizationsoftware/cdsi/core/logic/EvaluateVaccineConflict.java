@@ -33,6 +33,7 @@ public class EvaluateVaccineConflict extends LogicStep {
   public EvaluateVaccineConflict(DataModel dataModel) {
     super(LogicStepType.EVALUATE_VACCINE_CONFLICT, dataModel);
     setConditionTableName("Table ");
+    //TODO change chapter to be more Business rule based to match the 4.5 document
 
     caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
     // caConflictBeginIntervalDate = new ConditionAttribute<Date>("Calculated date
@@ -213,7 +214,7 @@ public class EvaluateVaccineConflict extends LogicStep {
 
     public LT421() {
 
-      super(1, 2, "Table 4-21 Could the two vaccine dosesadministrated be in conflict ?");
+      super(1, 2, "Table 4-21 Could the two vaccine doses administrated be in conflict?");
 
       setLogicCondition(0, new LogicCondition(
           "Is the vaccine type of the previous vaccine dose administered the same as one of the supporting data defined live virus conflict previous vaccine types when the current vaccine dose administered type is same as the live virus conflict current vaccine type ?") {
