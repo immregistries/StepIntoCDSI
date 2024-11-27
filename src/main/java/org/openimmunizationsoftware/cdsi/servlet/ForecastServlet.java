@@ -172,46 +172,6 @@ public class ForecastServlet extends HttpServlet {
     out.println("Forecast generated " + sdf.format(new Date()) + " using software version "
         + SoftwareVersion.VERSION + ".");
 
-    // extra junk
-
-    PatientSeries p = dataModel.getBestPatientSeriesList().size() == 0 ? null
-        : dataModel.getBestPatientSeriesList().get(0);
-    if (dataModel.getBestPatientSeriesList() == null) {
-      out.println("Best Patient Series List is null!");
-    } else {
-      out.println("Best Patient Series List size = " + dataModel.getBestPatientSeriesList().size());
-    }
-    out.println("Forecast List size = " + dataModel.getForecastList().size() + " for list "
-        + dataModel.getForecastList());
-
-    for (Forecast forecast : dataModel.getForecastList()) {
-      for (Antigen antigen : dataModel.getAntigenSelectedList()) {
-        if (forecast.getAntigen().equals(antigen)) {
-          out.println("  - " + forecast.getAntigen().getName());
-          out.println("    + " + (p == null ? null : p.getForecast().getTargetDose()));
-          out.println("    + " + (p == null ? null : p.getPatientSeriesStatus()));
-          out.println("    + " + forecast.getEarliestDate());
-          out.println("    + " + forecast.getAdjustedRecommendedDate());
-          out.println("    + " + forecast.getAdjustedPastDueDate());
-          out.println("    + " + forecast.getLatestDate());
-          out.println("    + " + forecast.getUnadjustedRecommendedDate());
-          out.println("    + " + forecast.getUnadjustedPastDueDate());
-          out.println("    + " + forecast.getForecastReason());
-        }
-      }
-    }
-
-    out.println("Vaccine Group Forecast List size = " + dataModel.getVaccineGroupForecastList().size());
-    for (VaccineGroupForecast vgf : dataModel.getVaccineGroupForecastList()) {
-      out.println("  - " + (vgf.getAntigen() == null ? "null" : vgf.getAntigen().getName()));
-      out.println("    + pss  = " + vgf.getPatientSeriesStatus());
-      out.println("    + vgs  = " + vgf.getVaccineGroupStatus());
-      out.println("    + ard  = " + vgf.getAdjustedRecommendedDate());
-      out.println("    + apdd = " + vgf.getAdjustedPastDueDate());
-      out.println("    + ed   = " + vgf.getEarliestDate());
-      out.println("    + ld   = " + vgf.getLatestDate());
-      out.println("    + fl   = " + vgf.getForecastList().size());
-    }
   }
 
   // Measles Mumps Rubella

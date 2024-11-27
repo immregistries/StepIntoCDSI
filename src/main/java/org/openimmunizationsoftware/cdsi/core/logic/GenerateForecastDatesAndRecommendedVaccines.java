@@ -166,39 +166,44 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     }
   }
 
-   private void findLatestConflictEndIntervalDate() {
+  private void findLatestConflictEndIntervalDate() {
     Date latestDate = null;
     List<Date> conflictEndIntervalDatesList = new ArrayList<>();
 
-    //CALCDTCONFLICT-2, create list of conflict end interval dates
+    // CALCDTCONFLICT-2, create list of conflict end interval dates
     for (LiveVirusConflict lvc : dataModel.getLiveVirusConflictList()) {
       boolean isImpactedVaccineDoseAdministered = false;
       boolean isPreviousVdaConflicting = false;
-      
-      if(dataModel.getAntigenAdministeredRecord().getVaccineType().equals(lvc.getCurrentVaccineType())) {
+
+      if (dataModel.getAntigenAdministeredRecord().getVaccineType().equals(lvc.getCurrentVaccineType())) {
         isImpactedVaccineDoseAdministered = true;
-        if(dataModel.getPreviousAntigenAdministeredRecord().getVaccineType().equals(lvc.getPreviousVaccineType())) {
-          //if aar was administered before the conflict end date
-          if (dataModel.getAntigenAdministeredRecord().getDateAdministered().before(lvc.getConflictBeginInterval().getDateFrom(dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered()))) {
+        if (dataModel.getPreviousAntigenAdministeredRecord().getVaccineType().equals(lvc.getPreviousVaccineType())) {
+          // if aar was administered before the conflict end date
+          if (dataModel.getAntigenAdministeredRecord().getDateAdministered().before(lvc.getConflictBeginInterval()
+              .getDateFrom(dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered()))) {
             isPreviousVdaConflicting = true;
           }
         }
       }
-      
-      if(isImpactedVaccineDoseAdministered && isPreviousVdaConflicting) {
-        EvaluationStatus previousVdaStatus = dataModel.getPreviousAntigenAdministeredRecord().getVaccineDoseAdministered().getTargetDose().getEvaluation().getEvaluationStatus();
-        if(previousVdaStatus == EvaluationStatus.VALID || previousVdaStatus == null) {
-          conflictEndIntervalDatesList.add(lvc.getMinimalConflictEndInterval().getDateFrom(dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered()));
+
+      if (isImpactedVaccineDoseAdministered && isPreviousVdaConflicting) {
+        EvaluationStatus previousVdaStatus = dataModel.getPreviousAntigenAdministeredRecord()
+            .getVaccineDoseAdministered().getTargetDose().getEvaluation().getEvaluationStatus();
+        if (previousVdaStatus == EvaluationStatus.VALID || previousVdaStatus == null) {
+          conflictEndIntervalDatesList.add(lvc.getMinimalConflictEndInterval()
+              .getDateFrom(dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered()));
         }
-        if(previousVdaStatus != null && previousVdaStatus != EvaluationStatus.VALID) {
-          conflictEndIntervalDatesList.add(lvc.getConflictEndInterval().getDateFrom(dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered()));
+        if (previousVdaStatus != null && previousVdaStatus != EvaluationStatus.VALID) {
+          conflictEndIntervalDatesList.add(lvc.getConflictEndInterval()
+              .getDateFrom(dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered()));
         }
       }
     }
 
-    //CALCDTLIVE-4, which does not have logic defined in the 4.5 document, picks latest date from list.
-    for(Date d : conflictEndIntervalDatesList) {
-      if(latestDate == null || d.after(latestDate)) {
+    // CALCDTLIVE-4, which does not have logic defined in the 4.5 document, picks
+    // latest date from list.
+    for (Date d : conflictEndIntervalDatesList) {
+      if (latestDate == null || d.after(latestDate)) {
         latestDate = d;
       }
     }
@@ -372,7 +377,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
   }
 
   private Date computeEarliestDate() {
-    //FORECASTDTCAN-1
+    // FORECASTDTCAN-1
     List<Date> list = new ArrayList<Date>();
 
     list.add(caMinimumAgeDate.getFinalValue());
@@ -381,7 +386,8 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
 
     Date latestMinimumIntervalDate = getLatestDate(caMinimumIntervalDates.getFinalValue());
     list.add(latestMinimumIntervalDate);
-    log("CONS Item for consideration for Earliest date is: " + caMinimumIntervalDates.getAttributeName() + " with value of "
+    log("CONS Item for consideration for Earliest date is: " + caMinimumIntervalDates.getAttributeName()
+        + " with value of "
         + caMinimumIntervalDates.getFinalValue());
 
     list.add(caLatestConflictEndIntervalDate.getFinalValue());
@@ -393,15 +399,16 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
         + " with value of " + caSeasonalRecommendationStartDate.getFinalValue());
 
     List<Date> allDatesAdministered = new ArrayList<Date>();
-    for(AntigenAdministeredRecord aar : dataModel.getAntigenAdministeredRecordList()) {
+    for (AntigenAdministeredRecord aar : dataModel.getSelectedAntigenAdministeredRecordList()) {
       VaccineDoseAdministered vda = aar.getVaccineDoseAdministered();
-      if(vda.getTargetDose() != null) {
-        if(vda.getTargetDose().getEvaluation().getEvaluationReason().equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
+      if (vda.getTargetDose() != null) {
+        if (vda.getTargetDose().getEvaluation().getEvaluationReason()
+            .equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
           allDatesAdministered.add(vda.getDateAdministered());
         }
       }
     }
-    //list.add(getLatestDate(allDatesAdministered));
+    // list.add(getLatestDate(allDatesAdministered));
 
     Date earliestDate = getLatestDate(list);
     return earliestDate;

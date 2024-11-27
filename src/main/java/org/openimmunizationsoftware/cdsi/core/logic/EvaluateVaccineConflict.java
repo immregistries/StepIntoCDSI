@@ -61,9 +61,9 @@ public class EvaluateVaccineConflict extends LogicStep {
     logicTable.evaluate();
     y = YesNo.NO;
     if (logicTable.getY420() == YesNo.YES) {
-      for (int i = dataModel.getAntigenAdministeredRecordPos() + 1; i < dataModel
-          .getAntigenAdministeredRecordList().size(); i++) {
-        AntigenAdministeredRecord vaccineAdministered = dataModel.getAntigenAdministeredRecordList().get(i);
+      for (int i = dataModel.getSelectedAntigenAdministeredRecordPos() + 1; i < dataModel
+          .getSelectedAntigenAdministeredRecordList().size(); i++) {
+        AntigenAdministeredRecord vaccineAdministered = dataModel.getSelectedAntigenAdministeredRecordList().get(i);
         LT421 logicTab = new LT421();
         logicTab.caPreviousVaccineType = new ConditionAttribute<VaccineType>(
             "Supporting Data (Live Virus Conflict)", "Previous Vaccine Type");

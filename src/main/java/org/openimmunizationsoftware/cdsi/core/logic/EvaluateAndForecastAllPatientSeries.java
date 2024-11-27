@@ -2,6 +2,7 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
@@ -32,7 +33,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
         log("Setting patient series, as it has not yet been set.");
       } else {
         // We may need to stay on this patient series, need to check if we are done
-        if (dataModel.getAntigenAdministeredRecordPos() < dataModel.getAntigenAdministeredRecordList()
+        if (dataModel.getSelectedAntigenAdministeredRecordPos() < dataModel.getSelectedAntigenAdministeredRecordList()
             .size()) {
           patientSeriesSelected = dataModel.getPatientSeries();
           patientSeriesNeedsSetup = false;
@@ -65,6 +66,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
       dataModel.setTargetDoseListPos(-1);
       dataModel.setAntigen(null);
       dataModel.setAntigenAdministeredRecord(null);
+      dataModel.setSelectedAntigenAdministeredRecordList(null);
       return LogicStepFactory.createLogicStep(LogicStepType.SELECT_BEST_PATIENT_SERIES, dataModel);
     } else if (patientSeriesNeedsSetup) {
       dataModel.setPatientSeries(patientSeriesSelected);
@@ -78,21 +80,26 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
       }
       dataModel.setTargetDose(null);
       dataModel.setTargetDoseListPos(-1);
-      dataModel.setAntigenAdministeredRecordPos(-1);
+      setupSelectedAntigenAdministeredRecordList();
     }
 
     LogicStepType nextLogicStep;
 
-    dataModel.incAntigenAdministeredRecordPos();
+    if (dataModel.getSelectedAntigenAdministeredRecordList() == null) {
+      setupSelectedAntigenAdministeredRecordList();
+    }
+
+    dataModel.incSelectedAntigenAdministeredRecordPos();
 
     // choose whether chapter 6 or chapter 7 is next
-    if (dataModel.getAntigenAdministeredRecordPos() < dataModel.getAntigenAdministeredRecordList()
-        .size()) {
-      if (dataModel.getAntigenAdministeredRecordPos() == 0) {
+
+    List<AntigenAdministeredRecord> selectedAarList = dataModel.getSelectedAntigenAdministeredRecordList();
+
+    if (dataModel.getSelectedAntigenAdministeredRecordPos() < selectedAarList.size()) {
+      if (dataModel.getSelectedAntigenAdministeredRecordPos() == 0) {
         log("   Looking at first dose administered");
       }
-      dataModel.setAntigenAdministeredRecord(dataModel.getAntigenAdministeredRecordList()
-          .get(dataModel.getAntigenAdministeredRecordPos()));
+      dataModel.setAntigenAdministeredRecord(selectedAarList.get(dataModel.getSelectedAntigenAdministeredRecordPos()));
       if (gotoNextTargetDose()) {
         nextLogicStep = LogicStepType.EVALUATE_DOSE_ADMINISTERED_CONDITION;
       } else {
@@ -105,6 +112,17 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
 
     return LogicStepFactory.createLogicStep(nextLogicStep, dataModel);
 
+  }
+
+  private void setupSelectedAntigenAdministeredRecordList() {
+    List<AntigenAdministeredRecord> selectedAntigenAdministeredRecordList = new ArrayList<AntigenAdministeredRecord>();
+    dataModel.setSelectedAntigenAdministeredRecordList(selectedAntigenAdministeredRecordList);
+    for (AntigenAdministeredRecord aar : dataModel.getAntigenAdministeredRecordList()) {
+      if (aar.getAntigen() == dataModel.getAntigen()) {
+        selectedAntigenAdministeredRecordList.add(aar);
+      }
+    }
+    dataModel.setSelectedAntigenAdministeredRecordPos(-1);
   }
 
   private boolean gotoNextTargetDose() {
@@ -139,32 +157,17 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
     }
   }
 
-  private AntigenAdministeredRecord findNextAntigenAdministeredRecord(
-      AntigenAdministeredRecord aar) {
-    AntigenAdministeredRecord aarNext = null;
-    boolean found = false;
-    for (AntigenAdministeredRecord antigenAdministeredRecord : dataModel
-        .getAntigenAdministeredRecordList()) {
-      if (found) {
-        aarNext = antigenAdministeredRecord;
-        break;
-      } else if (antigenAdministeredRecord == aar) {
-        found = true;
-      }
-    }
-    return aarNext;
-  }
-
   private void markRestAsExtraneous() {
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-    for (int i = dataModel.getAntigenAdministeredRecordPos() + 1; i < dataModel.getAntigenAdministeredRecordList()
+    for (int i = dataModel.getSelectedAntigenAdministeredRecordPos() + 1; i < dataModel
+        .getSelectedAntigenAdministeredRecordList()
         .size(); i++) {
-      dataModel.setAntigenAdministeredRecord(dataModel.getAntigenAdministeredRecordList().get(i));
+      dataModel.setAntigenAdministeredRecord(dataModel.getSelectedAntigenAdministeredRecordList().get(i));
       TargetDose targetDose = new TargetDose(seriesDose);
       dataModel.getTargetDoseList().add(targetDose);
       dataModel.setTargetDose(targetDose);
       dataModel.setEvaluationForCurrentTargetDose(EvaluationStatus.EXTRANEOUS, null);
-      dataModel.incAntigenAdministeredRecordPos();
+      dataModel.incSelectedAntigenAdministeredRecordPos();
     }
   }
 

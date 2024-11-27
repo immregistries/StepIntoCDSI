@@ -59,6 +59,8 @@ public class DataModel {
   private Date assessmentDate = new Date();
   private HttpServletRequest request = null;
   private List<AntigenAdministeredRecord> antigenAdministeredRecordList = new ArrayList<AntigenAdministeredRecord>();
+  private List<AntigenAdministeredRecord> selectedAntigenAdministeredRecordList = null;
+  private int selectedAntigenAdministeredRecordPos = -1;
   private int targetDoseListPos = -1;
   private int antigenAdministeredRecordPos = -1;
   private AntigenAdministeredRecord antigenAdministeredRecord = null;
@@ -74,6 +76,15 @@ public class DataModel {
   private int vaccineGroupPos = -1;
   private Forecast forecast = null;
   private TestCaseRegistered testCaseRegistered = null;
+
+  public List<AntigenAdministeredRecord> getSelectedAntigenAdministeredRecordList() {
+    return selectedAntigenAdministeredRecordList;
+  }
+
+  public void setSelectedAntigenAdministeredRecordList(
+      List<AntigenAdministeredRecord> selectedAntigenAdministeredRecordList) {
+    this.selectedAntigenAdministeredRecordList = selectedAntigenAdministeredRecordList;
+  }
 
   public List<PatientSeries> getScorablePatientSeriesList() {
     return scorablePatientSeriesList;
@@ -233,6 +244,18 @@ public class DataModel {
 
   public void incAntigenAdministeredRecordPos() {
     this.antigenAdministeredRecordPos++;
+  }
+
+  public int getSelectedAntigenAdministeredRecordPos() {
+    return selectedAntigenAdministeredRecordPos;
+  }
+
+  public void setSelectedAntigenAdministeredRecordPos(int selectedAntigenAdministeredRecordPos) {
+    this.selectedAntigenAdministeredRecordPos = selectedAntigenAdministeredRecordPos;
+  }
+
+  public void incSelectedAntigenAdministeredRecordPos() {
+    this.selectedAntigenAdministeredRecordPos++;
   }
 
   public int getTargetDoseListPos() {

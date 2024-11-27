@@ -77,7 +77,7 @@ public class EvaluateConditionalSkip extends LogicStep {
             caDateAdministered.setInitialValue(aar == null ? null : aar.getDateAdministered());
         }
         caAssessmentDate.setInitialValue(dataModel.getAssessmentDate());
-        caAdministeredDoseCount.setInitialValue(dataModel.getAntigenAdministeredRecordList().size());
+        caAdministeredDoseCount.setInitialValue(dataModel.getSelectedAntigenAdministeredRecordList().size());
 
         // This appears to be the core logic of the function?
         /*

@@ -213,8 +213,9 @@ public class StepServlet extends ForecastServlet {
       LogicStep logicStep = dataModel.getLogicStepPrevious();
       if (logicStep != null) {
         LogicStepType logicStepType = logicStep.getLogicStepType();
-        out.println("<h1>" + logicStepType.getChapter() + " " + logicStepType.getDisplay() + "</h2>");
-        dataModel.getLogicStep().printPre(out);
+        out.println("<h1>" + logicStepType.getChapter() + " " + logicStepType.getName() + "</h1>");
+        logicStep.printPost(out);
+        logicStep.printLog(out);
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -228,8 +229,8 @@ public class StepServlet extends ForecastServlet {
       LogicStep logicStep = dataModel.getLogicStep();
       if (logicStep != null) {
         LogicStepType logicStepType = logicStep.getLogicStepType();
-        out.println("<h1>" + logicStepType.getChapter() + " " + logicStepType.getDisplay() + "</h2>");
-        dataModel.getLogicStep().printPre(out);
+        out.println("<h1>" + logicStepType.getChapter() + " " + logicStepType.getName() + "</h1>");
+        logicStep.printPre(out);
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -256,8 +257,10 @@ public class StepServlet extends ForecastServlet {
     if (dataModel.getTargetDoseList() != null) {
 
       List<VaccineDoseAdministered> vaccineDoseAdministeredList = new ArrayList<VaccineDoseAdministered>();
-      for (AntigenAdministeredRecord aar : dataModel.getAntigenAdministeredRecordList()) {
-        vaccineDoseAdministeredList.add(aar.getVaccineDoseAdministered());
+      if (dataModel.getSelectedAntigenAdministeredRecordList() != null) {
+        for (AntigenAdministeredRecord aar : dataModel.getSelectedAntigenAdministeredRecordList()) {
+          vaccineDoseAdministeredList.add(aar.getVaccineDoseAdministered());
+        }
       }
       out.println("<table>");
       out.println("  <tr>");
