@@ -284,7 +284,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
      * ByPassing "For Each Patient Series"
      */
     Forecast forecast = dataModel.getForecast();
-    GenerateForecastDatesAndRecommendedVaccines(forecast);
+    computeDates(forecast);
 
     Antigen newAntigenForeCast = forecast.getAntigen();
     List<Antigen> antigenFromForecastList = new ArrayList<Antigen>();
@@ -559,13 +559,12 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     return vaccineList;
   }
 
-  private Forecast GenerateForecastDatesAndRecommendedVaccines(Forecast forecast) {
+  private void computeDates(Forecast forecast) {
     forecast.setAdjustedPastDueDate(computeAdjustedPastDueDate());
     Date d = computeAdjustedRecommendedDate();
     forecast.setAdjustedRecommendedDate(d);
     forecast.setEarliestDate(computeEarliestDate());
     forecast.setLatestDate(computeLatestDate());
-    return forecast;
   }
 
   private void TablePre(PrintWriter out) {

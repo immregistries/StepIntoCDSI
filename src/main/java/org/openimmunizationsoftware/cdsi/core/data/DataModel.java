@@ -28,6 +28,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.Stepper;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 import org.openimmunizationsoftware.cdsi.servlet.fits.TestCaseRegistered;
 
@@ -76,6 +77,17 @@ public class DataModel {
   private int vaccineGroupPos = -1;
   private Forecast forecast = null;
   private TestCaseRegistered testCaseRegistered = null;
+
+  private Stepper<AntigenAdministeredRecord> selectedAntigenAdministeredRecord = null;
+
+  public Stepper<AntigenAdministeredRecord> getSelectedAntigenAdministeredRecord() {
+    return selectedAntigenAdministeredRecord;
+  }
+
+  public void setSelectedAntigenAdministeredRecord(
+      Stepper<AntigenAdministeredRecord> selectedAntigenAdministeredRecord) {
+    this.selectedAntigenAdministeredRecord = selectedAntigenAdministeredRecord;
+  }
 
   public List<AntigenAdministeredRecord> getSelectedAntigenAdministeredRecordList() {
     return selectedAntigenAdministeredRecordList;

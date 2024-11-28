@@ -40,15 +40,15 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
         } else {
           log("Looking in patient series list for the next patient series to work on (list size = "
               + dataModel.getPatientSeriesList().size() + ")");
-          boolean found = false;
+          boolean foundCurrent = false;
           for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {
-            if (found) {
+            if (foundCurrent) {
+              log("Found the next patient series to work on");
               patientSeriesSelected = patientSeries;
               break;
             }
             if (dataModel.getPatientSeries() == patientSeries) {
-              log("Found the next patient series to work on");
-              found = true;
+              foundCurrent = true;
             }
           }
         }
@@ -67,6 +67,11 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
       dataModel.setAntigen(null);
       dataModel.setAntigenAdministeredRecord(null);
       dataModel.setSelectedAntigenAdministeredRecordList(null);
+      if (dataModel.getPatientSeriesList() == null) {
+        log("Patient series list is null");
+      } else {
+        log("Patient series list size = " + dataModel.getPatientSeriesList().size());
+      }
       return LogicStepFactory.createLogicStep(LogicStepType.SELECT_BEST_PATIENT_SERIES, dataModel);
     } else if (patientSeriesNeedsSetup) {
       dataModel.setPatientSeries(patientSeriesSelected);
