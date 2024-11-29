@@ -116,6 +116,7 @@ public class StepServlet extends ForecastServlet {
       } catch (Exception e) {
         e.printStackTrace();
         exception = e;
+        dataModel.setLogicStepPrevious(dataModel.getLogicStep());
       }
     }
 
@@ -339,43 +340,35 @@ public class StepServlet extends ForecastServlet {
         out.println("  </tr>");
       }
       out.println("</table>");
+    }
 
-      if (dataModel.getPatientSeriesList() != null && dataModel.getPatientSeriesList().size() > 0) {
-
-        out.println("psl hashcode " + dataModel.getPatientSeriesList().hashCode() + "<br/>");
-        out.println("<h2>Forecasts</h2>");
-        out.println("<table>");
+    if (dataModel.getPatientSeriesList() != null && dataModel.getPatientSeriesList().size() > 0) {
+      out.println("psl hashcode " + dataModel.getPatientSeriesList().hashCode() + "<br/>");
+      out.println("<h2>Forecasts</h2>");
+      out.println("<table>");
+      out.println("  <tr>");
+      out.println("    <th>Antigen</th>");
+      out.println("    <th>Antigen Series</th>");
+      out.println("    <th>Status</th>");
+      out.println("    <th>Earliest</th>");
+      out.println("    <th>Recommended</th>");
+      out.println("  </tr>");
+      for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {
+        AntigenSeries antigenSeries = patientSeries.getTrackedAntigenSeries();
         out.println("  <tr>");
-        out.println("    <th>Antigen</th>");
-        out.println("    <th>Antigen Series</th>");
-        out.println("    <th>Status</th>");
-        out.println("    <th>Earliest</th>");
-        out.println("    <th>Recommended</th>");
-        out.println("  </tr>");
-        for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {
-          AntigenSeries antigenSeries = patientSeries.getTrackedAntigenSeries();
-          out.println("  <tr>");
-          out.println("    <td>" + antigenSeries.getTargetDisease().getName() + "</td>");
-          out.println("    <td>" + antigenSeries.getSeriesName() + "</td>");
-          out.println("    <td>" + patientSeries.getPatientSeriesStatus() + "</td>");
-          if (patientSeries.getForecast() == null) {
-            out.println("    <td></td>");
-            out.println("    <td></td>");
-          } else {
-            out.println("    <td>" + n(patientSeries.getForecast().getEarliestDate()) + "</td>");
-            out.println("    <td>" + n(patientSeries.getForecast().getAdjustedRecommendedDate()) + "</td>");
-          }
-          out.println("  </tr>");
+        out.println("    <td>" + antigenSeries.getTargetDisease().getName() + "</td>");
+        out.println("    <td>" + antigenSeries.getSeriesName() + "</td>");
+        out.println("    <td>" + patientSeries.getPatientSeriesStatus() + "</td>");
+        if (patientSeries.getForecast() == null) {
+          out.println("    <td></td>");
+          out.println("    <td></td>");
+        } else {
+          out.println("    <td>" + n(patientSeries.getForecast().getEarliestDate()) + "</td>");
+          out.println("    <td>" + n(patientSeries.getForecast().getAdjustedRecommendedDate()) + "</td>");
         }
-        out.println("</table>");
+        out.println("  </tr>");
       }
-    } else {
-      if (dataModel.getPatientSeriesList() == null) {
-        out.println("<h2>No Patient Series List</h2>");
-      } else {
-        out.println("<h2>Nothing in Patient Series List, it's empty!</h2>");
-        out.println("psl hashcode " + dataModel.getPatientSeriesList().hashCode() + "<br/>");
-      }
+      out.println("</table>");
     }
 
     if (dataModel.getForecastList().size() > 0) {

@@ -10,6 +10,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.RecurringDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.Stepper;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 
@@ -178,8 +179,6 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
 
   @Override
   public void printPre(PrintWriter out) throws Exception {
-    out.println("<h1>4.4 Evaluate and Forecast all Patient Series</h1>");
-
     out.println(
         "<p>This step is the core of the business logic and decision points many people think of when describing evaluation and forecasting. In the Logic Specification, this step contains all of the clinical business rules and decision logic in the form of business rules and decision tables.</p>");
     out.println(
@@ -189,12 +188,20 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
 
   @Override
   public void printPost(PrintWriter out) {
-    out.println("<h1>4.4 Evaluate and Forecast all Patient Series</h1>");
-
     out.println(
         "<p>This step is the core of the business logic and decision points many people think of when describing evaluation and forecasting. In the Logic Specification, this step contains all of the clinical business rules and decision logic in the form of business rules and decision tables.</p>");
     out.println(
         "<p>At the end of this step, each patient series will have an evaluated history and a forecast.</p>");
+
+    out.println("<h2>Selected Patient Series</h2>");
+    if (dataModel.getPatientSeriesList() == null) {
+      out.println("<p>No patient series to process</p>");
+    } else {
+      out.println("<p>Patient series count: " + dataModel.getPatientSeriesList().size() + "</p>");
+      for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {
+        out.println("<p>" + patientSeries.getTrackedAntigenSeries().getSeriesName() + "</p>");
+      }
+    }
 
   }
 

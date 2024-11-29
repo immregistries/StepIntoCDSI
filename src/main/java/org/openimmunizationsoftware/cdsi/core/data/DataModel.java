@@ -33,6 +33,11 @@ import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 import org.openimmunizationsoftware.cdsi.servlet.fits.TestCaseRegistered;
 
 public class DataModel {
+
+  // Input mechanisms
+  private HttpServletRequest request = null;
+  private TestCaseRegistered testCaseRegistered = null;
+
   private List<LiveVirusConflict> liveVirusConflictList = new ArrayList<LiveVirusConflict>();
   private Map<String, VaccineType> cvxMap = new HashMap<String, VaccineType>();
   private Map<String, Antigen> antigenMap = new HashMap<String, Antigen>();
@@ -58,13 +63,17 @@ public class DataModel {
   private Patient patient = null;
   private ImmunizationHistory immunizationHistory = null;
   private Date assessmentDate = new Date();
-  private HttpServletRequest request = null;
+
+  private Stepper<AntigenAdministeredRecord> antigenAdministeredRecordStepper = null;
   private List<AntigenAdministeredRecord> antigenAdministeredRecordList = new ArrayList<AntigenAdministeredRecord>();
+  private AntigenAdministeredRecord antigenAdministeredRecord = null;
+  private int antigenAdministeredRecordPos = -1;
+
+  private Stepper<AntigenAdministeredRecord> selectedAntigenAdministeredRecordStepper = null;
   private List<AntigenAdministeredRecord> selectedAntigenAdministeredRecordList = null;
   private int selectedAntigenAdministeredRecordPos = -1;
   private int targetDoseListPos = -1;
-  private int antigenAdministeredRecordPos = -1;
-  private AntigenAdministeredRecord antigenAdministeredRecord = null;
+
   private AntigenAdministeredRecord previousAntigenAdministeredRecord = null;
   private List<AntigenSeries> antigenSeriesList = new ArrayList<AntigenSeries>();
   private List<PatientSeries> patientSeriesList = new ArrayList<PatientSeries>();
@@ -76,7 +85,23 @@ public class DataModel {
   private List<VaccineGroup> vaccineGroupList;
   private int vaccineGroupPos = -1;
   private Forecast forecast = null;
-  private TestCaseRegistered testCaseRegistered = null;
+
+  public Stepper<AntigenAdministeredRecord> getAntigenAdministeredRecordStepper() {
+    return antigenAdministeredRecordStepper;
+  }
+
+  public void setAntigenAdministeredRecordStepper(Stepper<AntigenAdministeredRecord> antigenAdministeredRecordStepper) {
+    this.antigenAdministeredRecordStepper = antigenAdministeredRecordStepper;
+  }
+
+  public Stepper<AntigenAdministeredRecord> getSelectedAntigenAdministeredRecordStepper() {
+    return selectedAntigenAdministeredRecordStepper;
+  }
+
+  public void setSelectedAntigenAdministeredRecordStepper(
+      Stepper<AntigenAdministeredRecord> selectedAntigenAdministeredRecordStepper) {
+    this.selectedAntigenAdministeredRecordStepper = selectedAntigenAdministeredRecordStepper;
+  }
 
   private Stepper<AntigenAdministeredRecord> selectedAntigenAdministeredRecord = null;
 

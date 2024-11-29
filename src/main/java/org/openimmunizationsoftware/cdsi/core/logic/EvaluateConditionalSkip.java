@@ -356,7 +356,7 @@ public class EvaluateConditionalSkip extends LogicStep {
     // A positive result now requires both conditions to be true.
     protected class LT68 extends LTInnerSet {
         public LT68() {
-            super(2, 4, "Table 6 - 8 CONDITIONAL Type of Interval - Is the Condition Met?");
+            super(2, 3, "Table 6 - 8 CONDITIONAL Type of Interval - Is the Condition Met?");
 
             setLogicCondition(0, new LogicCondition(
                     "Has at least one dose been administered to the patient?") {
@@ -376,8 +376,15 @@ public class EvaluateConditionalSkip extends LogicStep {
                     "Is the Conditional Skip Reference Date ≥ Conditional Skip Interval Date?") {
                 @Override
                 public LogicResult evaluateInternal() {
-                    if (caConditionalSkipIntervalDate.getFinalValue()
-                            .before(caConditionalSkipReferenceDate.getFinalValue())) {
+                    Date referenceDate = caConditionalSkipReferenceDate.getFinalValue();
+                    if (referenceDate == null) {
+                        return LogicResult.NO;
+                    }
+                    Date intervalDate = caConditionalSkipIntervalDate.getFinalValue();
+                    if (intervalDate == null) {
+                        return LogicResult.NO;
+                    }
+                    if (intervalDate.before(referenceDate)) {
                         return LogicResult.YES;
                     }
                     return LogicResult.NO;
@@ -578,12 +585,18 @@ public class EvaluateConditionalSkip extends LogicStep {
                 @Override
                 public void perform() {
                     log("Yes. The target dose can be skipped.");
-                    dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.SKIPPED);
-                    log("The target dose status is 'skipped'");
-                    log("Setting next step: " + skip.getName());
                     TargetDose targetDoseNext = dataModel.findNextTargetDose(dataModel.getTargetDose());
-                    dataModel.setTargetDose(targetDoseNext);
-                    setNextLogicStepType(skip);
+                    if (targetDoseNext == null) {
+                        log("But unable to transition, there is no next target dose");
+                        log("Setting next step: " + noSkip.getName());
+                        setNextLogicStepType(noSkip);
+                    } else {
+                        log("The target dose status is 'skipped'");
+                        dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.SKIPPED);
+                        dataModel.setTargetDose(targetDoseNext);
+                        log("Setting next step: " + skip.getName());
+                        setNextLogicStepType(skip);
+                    }
                 }
             });
 

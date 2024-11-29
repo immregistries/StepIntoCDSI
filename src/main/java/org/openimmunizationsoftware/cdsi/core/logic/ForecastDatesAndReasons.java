@@ -80,7 +80,6 @@ public class ForecastDatesAndReasons extends LogicStep {
   }
 
   private void printStandard(PrintWriter out) {
-    out.println("<h1> " + getTitle() + "</h1>");
     out.println(
         "<p>The CDS engine uses a patient's medical and vaccine history to forecast immunization due dates. This chapter identifies specific business rules that are used by a CDS engine to forecast the next  target dose.  The major steps involved in this process are listed in the table below.</p>");
     printTableAndFigure(out);

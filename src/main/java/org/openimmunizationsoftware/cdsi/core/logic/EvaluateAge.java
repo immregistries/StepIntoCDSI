@@ -74,6 +74,12 @@ public class EvaluateAge extends LogicStep {
   public LogicStep process() throws Exception {
     setNextLogicStepType(LogicStepType.EVALUATE_PREFERABLE_INTERVAL);
     evaluateLogicTables();
+
+    // evaluation should now be set
+
+    if (dataModel.getTargetDose().getEvaluation() == null) {
+      throw new NullPointerException("Evaluation should not be null at this point");
+    }
     return next();
   }
 
@@ -120,8 +126,10 @@ public class EvaluateAge extends LogicStep {
           new LogicCondition("Is the absolute minimum age date <= date administered < minimum age date?") {
             @Override
             public LogicResult evaluateInternal() {
-              if (caAbsoluteMinimumAgeDate.getFinalValue().before(caDateAdministered.getFinalValue())
-                  && caDateAdministered.getFinalValue().before(caMinimumAgeDate.getFinalValue())) {
+              Date absoluteMinimumDate = caAbsoluteMinimumAgeDate.getFinalValue();
+              Date dateAdministered = caDateAdministered.getFinalValue();
+              Date minimumDate = caMinimumAgeDate.getFinalValue();
+              if (!absoluteMinimumDate.after(dateAdministered) && dateAdministered.before(minimumDate)) {
                 return YES;
               }
               return NO;
@@ -132,8 +140,10 @@ public class EvaluateAge extends LogicStep {
           new LogicCondition("Is the minimum age date <= date administered < maximum age date?") {
             @Override
             public LogicResult evaluateInternal() {
-              if (caMinimumAgeDate.getFinalValue().before(caDateAdministered.getFinalValue())
-                  && caDateAdministered.getFinalValue().before(caMaximumAgeDate.getFinalValue())) {
+              Date minimumDate = caMinimumAgeDate.getFinalValue();
+              Date administeredDate = caDateAdministered.getFinalValue();
+              Date maximumDate = caMaximumAgeDate.getFinalValue();
+              if (!minimumDate.after(administeredDate) && administeredDate.before(maximumDate)) {
                 return YES;
               }
               return NO;
@@ -143,10 +153,12 @@ public class EvaluateAge extends LogicStep {
       setLogicCondition(3, new LogicCondition("Is the date administered >= maximum age date?") {
         @Override
         public LogicResult evaluateInternal() {
-          if (caDateAdministered.getFinalValue().before(caMaximumAgeDate.getFinalValue())) {
-            return NO;
+          Date administeredDate = caDateAdministered.getFinalValue();
+          Date maximumDate = caMaximumAgeDate.getFinalValue();
+          if (!administeredDate.before(maximumDate)) {
+            return YES;
           }
-          return YES;
+          return NO;
         }
       });
 
