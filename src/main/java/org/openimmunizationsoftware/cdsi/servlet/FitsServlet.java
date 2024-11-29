@@ -3,7 +3,6 @@ package org.openimmunizationsoftware.cdsi.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +16,6 @@ import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.data.DataModelLoader;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupStatus;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepFactory;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepType;
@@ -36,6 +34,31 @@ public class FitsServlet extends ForecastServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         doGet(req, resp);
+    }
+
+    private static String[][] equivalentCvx = new String[][] { { "85", "52" }, { "107", "112" },
+            { "45", "08", "189", "43" }, { "163", "164", "162" }, { "137", "165" }, { "48", "17" }, { "07", "03" },
+            { "109", "152", "133" }, { "188", "187" }, { "108", "147" } };
+
+    private static boolean isSameVaccineCvx(String cvx1, String cvx2) {
+        if (cvx1 == null || cvx2 == null) {
+            return false;
+        }
+        if (cvx1.equals(cvx2)) {
+            return true;
+        }
+        for (String[] cvxs : equivalentCvx) {
+            for (String cvx : cvxs) {
+                if (cvx.equals(cvx1)) {
+                    for (String cvx3 : cvxs) {
+                        if (cvx3.equals(cvx2)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     @Override
@@ -86,9 +109,17 @@ public class FitsServlet extends ForecastServlet {
                             if (vaccineGroupForecastList != null) {
                                 for (TestCaseRegistered.Forecast forecast : testCaseRegistered.getForecastList()) {
                                     for (VaccineGroupForecast vgf : vaccineGroupForecastList) {
-                                        if (forecast.getVaccineCvxExp().equals(vgf.getAntigen().getCvxForForecast())) {
-                                            forecast.setSerieStatusAct(SerieStatus
-                                                    .getSerieStatus(vgf.getPatientSeriesStatus().toString()));
+                                        String expCvx = forecast.getVaccineCvxExp();
+                                        String actCvx = vgf.getAntigen().getCvxForForecast();
+                                        logToOut("     - Forecasing for: " + vgf.getAntigen().getName() + " (" + actCvx
+                                                + ") " + vgf.getVaccineGroupStatus());
+                                        if (isSameVaccineCvx(expCvx, actCvx)) {
+                                            VaccineGroupStatus vaccineGroupStatus = vgf.getVaccineGroupStatus();
+                                            SerieStatus serieStatus = vaccineGroupStatus.getSerieStatus();
+                                            forecast.setSerieStatusAct(serieStatus);
+                                            logToOut(
+                                                    "       - This is the one we are looking for, setting series status to "
+                                                            + serieStatus);
                                             if (vgf.getVaccineGroupStatus() == VaccineGroupStatus.NOT_COMPLETE) {
                                                 forecast.setEarliestAct(vgf.getEarliestDate());
                                                 forecast.setRecommendedAct(vgf.getAdjustedRecommendedDate());
@@ -285,9 +316,13 @@ public class FitsServlet extends ForecastServlet {
         out.close();
     }
 
+    private boolean enableLoggingToOut = false;
+
     private void logToOut(String log) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        System.out.println(sdf.format(new Date()) + " " + log);
+        if (enableLoggingToOut) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            System.out.println(sdf.format(new Date()) + " " + log);
+        }
     }
 
     private void process(DataModel dataModel) throws Exception {

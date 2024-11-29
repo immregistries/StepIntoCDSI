@@ -40,16 +40,6 @@ public class SingleAntigenVaccineGroup extends LogicStep {
     for (PatientSeries p : dataModel.getBestPatientSeriesList()) {
       Forecast forecast = p.getForecast();
       if (forecast.getAntigen().equals(vaccineGroup.getAntigenList().get(0))) {
-        // System.out.println("--> antigen = " + forecast.getAntigen());
-        // dataModel.getVaccineGroupForecastList().size()
-        // System.out.println("--> getBestPatientSeriesList.size() = " +
-        // dataModel.getBestPatientSeriesList().size());
-        // for (PatientSeries ps : dataModel.getBestPatientSeriesList()) {
-        // System.out.println("--> getPatientSeriesStatus = " +
-        // ps.getPatientSeriesStatus() + " for "
-        // + ps.getTrackedAntigenSeries().getSeriesName() + " for "
-        // + ps.getTrackedAntigenSeries().getTargetDisease());
-        // }
         log("<p>    forecast antigen equals first antigen in vaccine group, creating VGF</p>");
         // Règle en plus
         vgf.setAntigen(forecast.getAntigen());

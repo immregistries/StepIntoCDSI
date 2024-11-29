@@ -19,8 +19,6 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.DoseCondition;
 import org.openimmunizationsoftware.cdsi.servlet.dataModelView.AntigenServlet;
 import org.openimmunizationsoftware.cdsi.servlet.fits.TestCaseRegistered;
 
-import gov.nist.healthcare.cds.domain.TestCase;
-
 public class GatherNecessaryData extends LogicStep {
 
   public GatherNecessaryData(DataModel dataModel) {

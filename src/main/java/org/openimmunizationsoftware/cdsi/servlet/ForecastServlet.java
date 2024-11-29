@@ -122,7 +122,6 @@ public class ForecastServlet extends HttpServlet {
 
     if (dataModel.getAntigenAdministeredRecordList().size() > 0) {
       out.println("IMMUNIZATION EVALUATION");
-      int count = 0;
 
       for (PatientSeries patientSeries : dataModel.getBestPatientSeriesList()) {
         for (TargetDose targetDose : patientSeries.getTargetDoseList()) {
@@ -130,7 +129,6 @@ public class ForecastServlet extends HttpServlet {
             for (Evaluation evaluation : targetDose.getEvaluationList()) {
               VaccineDoseAdministered vda = evaluation.getVaccineDoseAdministered();
               if (evaluation.getEvaluationStatus() != null) {
-                count++;
                 out.print("Vaccination #" + vda.getId() + ": ");
                 out.print(vda.getVaccine().getVaccineType().getShortDescription());
                 out.print(" given ");
@@ -148,21 +146,6 @@ public class ForecastServlet extends HttpServlet {
                 out.println();
               }
             }
-          }
-        }
-      }
-
-      for (VaccineDoseAdministered vda : dataModel.getImmunizationHistory()
-          .getVaccineDoseAdministeredList()) {
-        count++;
-        for (AntigenAdministeredRecord aar : dataModel.getAntigenAdministeredRecordList()) {
-          if (aar.getVaccineType().equals(vda.getVaccine().getVaccineType())
-              && aar.getDateAdministered().equals(vda.getDateAdministered())) {
-            out.print("Vaccination #" + count + ": " + aar.getVaccineType().getShortDescription()
-                + " given " + sdf.format(aar.getDateAdministered()));
-            // is a valid Hib dose 1. Dose 1 valid at 6 weeks of age,
-            // 10/14/2012.
-            out.println();
           }
         }
       }

@@ -218,7 +218,6 @@ public class DataModelLoader {
           if (childNode.getNodeName().equals("seriesName")) {
             String seriesName = DomUtils.getInternalValue(childNode);
             antigenSeries.setSeriesName(seriesName);
-            System.out.println("--> reading antigenSeries = " + seriesName);
           } else if (childNode.getNodeName().equals("targetDisease")) {
             targetDisease = dataModel.getOrCreateAntigen(DomUtils.getInternalValue(childNode));
             antigenSeries.setTargetDisease(targetDisease);
@@ -231,18 +230,14 @@ public class DataModelLoader {
             SeriesType seriesType = SeriesType.getSeriestType(nameValue);
             antigenSeries.setSeriesType(seriesType);
           } else if (childNode.getNodeName().equals("selectSeries")) {
-            System.out.println("--> reading selectSeries");
             SelectPatientSeries selectPatientSeries = new SelectPatientSeries();
             antigenSeries.setSelectPatientSeries(selectPatientSeries);
             NodeList grandchildList = childNode.getChildNodes();
             for (int k = 0; k < grandchildList.getLength(); k++) {
               Node grandchildNode = grandchildList.item(k);
               if (grandchildNode.getNodeType() == Node.ELEMENT_NODE) {
-                System.out.println("--> looking at node " + grandchildNode.getNodeName());
                 if (grandchildNode.getNodeName().equals("defaultSeries")) {
                   selectPatientSeries.setDefaultSeries(DomUtils.getInternalValueYesNo(grandchildNode));
-                  System.out.println("-->  - defaultSeries = " + DomUtils.getInternalValue(grandchildNode) + " ("
-                      + selectPatientSeries.getDefaultSeries() + ")");
                 } else if (grandchildNode.getNodeName().equals("productPath")) {
                   selectPatientSeries.setProductPath(DomUtils.getInternalValueYesNo(grandchildNode));
                 } else if (grandchildNode.getNodeName().equals("seriesGroupName")) {
