@@ -20,6 +20,10 @@
         <servlet-name>step</servlet-name>
         <servlet-class>org.openimmunizationsoftware.cdsi.servlet.StepServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>fhir</servlet-name>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.FhirServlet</servlet-class>
+    </servlet>
 	<servlet>
         <servlet-name>forecast</servlet-name>
         <servlet-class>org.openimmunizationsoftware.cdsi.servlet.ForecastServlet</servlet-class>
@@ -66,6 +70,10 @@
     <servlet-mapping>
         <servlet-name>step</servlet-name>
         <url-pattern>/step</url-pattern>
+    </servlet-mapping>	 
+    <servlet-mapping>
+        <servlet-name>fhir</servlet-name>
+        <url-pattern>/fhir/*</url-pattern>
     </servlet-mapping>	 
     <servlet-mapping>
         <servlet-name>step</servlet-name>
