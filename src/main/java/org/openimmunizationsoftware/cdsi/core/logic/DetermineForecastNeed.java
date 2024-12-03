@@ -200,6 +200,9 @@ public class DetermineForecastNeed extends LogicStep {
         @Override
         protected LogicResult evaluateInternal() {
           // TODO add logic for this logic condition
+          //if(dataModel.getPatientSeries().getPatientSeriesStatus().equals(PatientSeriesStatus.IMMUNE)) {
+          //  return LogicResult.YES;  
+          //}
           return LogicResult.NO;
         }
       });
@@ -261,6 +264,7 @@ public class DetermineForecastNeed extends LogicStep {
         public void perform() {
           log("Yes. The patient should receive another dose.");
           dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.NOT_COMPLETE);
+          log("Patient Series Status is 'Not Complete'");
         }
       });
 
@@ -270,6 +274,7 @@ public class DetermineForecastNeed extends LogicStep {
           log("No. The patient should not receive another dose.");
           setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
           dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.COMPLETE);
+          log("Patient Series Status is 'Complete'");
           Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
           List<Forecast> forecastList = dataModel.getForecastList();
           for (Forecast forecast : forecastList) {
@@ -288,6 +293,7 @@ public class DetermineForecastNeed extends LogicStep {
           log("No. The patient should not receive another dose.");
           setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
           dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.NOT_RECOMMENDED);
+          log("Patient Series Status is 'Not Recommended'");
           Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
           List<Forecast> forecastList = dataModel.getForecastList();
           for (Forecast forecast : forecastList) {
@@ -306,6 +312,7 @@ public class DetermineForecastNeed extends LogicStep {
           log("No. The patient should not receive another dose.");
           setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
           dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.IMMUNE);
+          log("Patient Series Status is 'Immune'");
           Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
           List<Forecast> forecastList = dataModel.getForecastList();
           for (Forecast forecast : forecastList) {
@@ -323,6 +330,7 @@ public class DetermineForecastNeed extends LogicStep {
           log("No. The patient should not receive another dose.");
           setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
           dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.CONTRAINDICATED);
+          log("Patient Series Status is 'Contraindicated'");
           Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
           List<Forecast> forecastList = dataModel.getForecastList();
           for (Forecast forecast : forecastList) {
@@ -340,6 +348,7 @@ public class DetermineForecastNeed extends LogicStep {
           log("No. The patient should not receive another doses.");
           setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
           dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.NOT_RECOMMENDED);
+          log("Patient Series Status is 'Not Recommended'");
           Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
           List<Forecast> forecastList = dataModel.getForecastList();
           for (Forecast forecast : forecastList) {
@@ -357,6 +366,7 @@ public class DetermineForecastNeed extends LogicStep {
           log("No. The patient should not receive another dose.");
           setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
           dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.AGED_OUT);
+          log("Patient Series Status is 'Aged Out'");
           Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
           List<Forecast> forecastList = dataModel.getForecastList();
           for (Forecast forecast : forecastList) {
@@ -374,6 +384,7 @@ public class DetermineForecastNeed extends LogicStep {
           log("No. The patient should not receive another dose.");
           setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
           dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.AGED_OUT);
+          log("Patient Series Status is 'Aged Out'");
           Antigen tmpAntigen = dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease();
           List<Forecast> forecastList = dataModel.getForecastList();
           for (Forecast forecast : forecastList) {

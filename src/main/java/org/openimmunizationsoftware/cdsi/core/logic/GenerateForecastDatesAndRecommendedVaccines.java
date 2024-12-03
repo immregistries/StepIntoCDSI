@@ -13,6 +13,7 @@ import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
@@ -49,7 +50,6 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
 
   private Date dob = dataModel.getPatient().getDateOfBirth();
   private SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-  private Date patientReferenceDoseDate = computePatientReferenceDoseDate();
 
   private void findMinimumAgeDate() {
     TimePeriod timePeriod = referenceSeriesDose.getAgeList().get(0).getMinimumAge();
@@ -78,10 +78,50 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
   }
 
   private Date computePatientReferenceDoseDate() {
+    Interval tmpInterval = new Interval();
+    //TODO update logic to intake interval and use correct Vaccine Dose Administered
     Date tmpPatientReferenceDoseDate = new Date();
+
+    if(dataModel.getAntigenAdministeredRecord() == null) {
+      return tmpPatientReferenceDoseDate;
+    }
+
+    VaccineDoseAdministered vda = dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered();
+    
+    if(vda.getTargetDose() == null) {
+      return tmpPatientReferenceDoseDate;
+    }
+    Evaluation vdaEvaluation = vda.getTargetDose().getEvaluation();
     try {
-      AntigenAdministeredRecord previousAAR = dataModel.getPreviousAntigenAdministeredRecord();
-      tmpPatientReferenceDoseDate = previousAAR.getDateAdministered();
+      //CALCDTINT-1
+      if(tmpInterval.getFromImmediatePreviousDoseAdministered().equals(YesNo.YES)) {
+        if(vdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.VALID)
+        || vdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.NOT_VALID)) {
+          if(!vdaEvaluation.getEvaluationReason().equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
+            AntigenAdministeredRecord previousAAR = dataModel.getPreviousAntigenAdministeredRecord();
+            tmpPatientReferenceDoseDate = previousAAR.getDateAdministered();
+          }
+        }
+      }
+      //CALCDTINT-2
+      if(tmpInterval.getFromImmediatePreviousDoseAdministered().equals(YesNo.NO)) {
+        if(!tmpInterval.getFromTargetDoseNumberInSeries().equals("")) {
+          //TODO set tmpPatientReferenceDoseDate to 'the date administered of the vaccine dose administered that satisfies the target dose with the same target dose number as the from target dose number in series'
+        }
+      }
+      //CALCDTINT-8
+      if(tmpInterval.getFromImmediatePreviousDoseAdministered().equals(YesNo.NO)) {
+        //'from most recent vaccine type' does not exist. There should be an 'if' check here
+        if(!vdaEvaluation.getEvaluationReason().equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
+          //TODO set tmpPatientReferenceDoseDate to 'the date administered of the most recent vaccine dose administered that is the same vaccine type as the from most recent vaccine type'
+        }
+      }
+      //CALCDTINT-9
+      if(tmpInterval.getFromImmediatePreviousDoseAdministered().equals(YesNo.NO)) {
+        if(!tmpInterval.getFromRelevantObservation().getCode().equals("")) {
+          //TODO set tmpPatientReferenceDoseDate to 'the observation date of the most recent active patient observation'
+        }
+      }
     } catch (NullPointerException np) {
       np.getCause();
     }
@@ -142,6 +182,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     }
     latestRecommendedInterval = referenceSeriesDose.getAgeList().get(0).getSeriesDose()
         .getIntervalList().get(0).getLatestRecommendedInterval();
+    Date patientReferenceDoseDate = computePatientReferenceDoseDate();
     Date latestRecommendedIntervalDate = latestRecommendedInterval.getDateFrom(patientReferenceDoseDate);
     caLatestRecommendedIntervalDate.setInitialValue(latestRecommendedIntervalDate);
   }
@@ -150,6 +191,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     List<Date> minimumIntervalList = new ArrayList<Date>();
     if (referenceSeriesDose.getIntervalList() != null) {
       for (Interval minIn : referenceSeriesDose.getIntervalList()) {
+        Date patientReferenceDoseDate = computePatientReferenceDoseDate();
         TimePeriod minimalIntervalFromReferenceSeriesDose = minIn.getMinimumInterval();
         if (minimalIntervalFromReferenceSeriesDose == null) {
           continue;
