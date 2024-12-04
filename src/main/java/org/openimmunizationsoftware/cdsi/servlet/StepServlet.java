@@ -140,6 +140,7 @@ public class StepServlet extends ForecastServlet {
     } else {
       out.println(
           "  <a href=\"step\"><img src=\"Logo Large.png\" height=\"120\" align=\"left\"/></a>");
+      out.println("Version " + SoftwareVersion.VERSION + "<br/>");
       out.println("  <a href=\"dataModelView\" target=\"dataModelView\">View Data Model</a><br/>");
       out.println("  <a href=\"fits\">FITS Test Cases</a>");
       out.println("<br clear=\"all\"/>");

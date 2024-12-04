@@ -33,6 +33,14 @@ public class TestCaseRegistered {
   private Date birthDate = null;
   private Exception exception = null;
 
+  public void setBirthDate(Date birthDate) {
+    this.birthDate = birthDate;
+  }
+
+  public void setEvalDate(Date evalDate) {
+    this.evalDate = evalDate;
+  }
+
   public Exception getException() {
     return exception;
   }
@@ -50,6 +58,18 @@ public class TestCaseRegistered {
     private String vaccineCvx = "";
     private String vaccineMvx = "";
 
+    public void setVaccineDate(Date vaccineDate) {
+      this.vaccineDate = vaccineDate;
+    }
+
+    public void setVaccineCvx(String vaccineCvx) {
+      this.vaccineCvx = vaccineCvx;
+    }
+
+    public void setVaccineMvx(String vaccineMvx) {
+      this.vaccineMvx = vaccineMvx;
+    }
+
     public Date getVaccineDate() {
       return vaccineDate;
     }
@@ -61,6 +81,12 @@ public class TestCaseRegistered {
     public String getVaccineMvx() {
       return vaccineMvx;
     }
+  }
+
+  public Vaccination addVaccination() {
+    Vaccination vaccination = new Vaccination();
+    vaccinationList.add(vaccination);
+    return vaccination;
   }
 
   private List<Vaccination> vaccinationList = new ArrayList<>();
@@ -95,6 +121,10 @@ public class TestCaseRegistered {
 
   public int getAge() {
     return age;
+  }
+
+  public TestCaseRegistered() {
+    // dfeault constructor
   }
 
   public TestCaseRegistered(TestCase testCase, TestCaseGroup testCaseGroup) {
