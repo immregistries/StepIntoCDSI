@@ -93,13 +93,11 @@ public class SelectBestPatientSeries extends LogicStep {
 
   @Override
   public void printPre(PrintWriter out) throws Exception {
-    // out.println("<h1>8.5 Select Best Patient Series</h1>");
     printStandard(out);
   }
 
   @Override
   public void printPost(PrintWriter out) {
-    // out.println("<h1>8.5 Select Best Patient Series</h1>");
     printStandard(out);
     if (dataModel.getAntigenPos() < dataModel.getAntigenSelectedList().size()) {
       out.println("<p>Now looking at Antigen: " + dataModel.getAntigen() + "</p>");
@@ -116,7 +114,6 @@ public class SelectBestPatientSeries extends LogicStep {
   }
 
   private void printStandard(PrintWriter out) {
-    out.println("<h1> " + getTitle() + "</h1>");
     printTableAndFigures(out);
   }
 

@@ -107,7 +107,6 @@ public class EvaluateForPreferableVaccine extends LogicStep {
   }
 
   private void printStandard(PrintWriter out) {
-    out.println("<h1> " + getTitle() + "</h1>");
     out.println(
         "<p>Evaluate for preferable vaccine validates the vaccine of a vaccine dose administered against the list of preferable vaccines.</p>");
     out.println(

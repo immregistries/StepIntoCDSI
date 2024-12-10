@@ -63,7 +63,6 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
   }
 
   private void printStandard(PrintWriter out) {
-    out.println("<h1> " + getTitle() + "</h1>");
     out.println(
         "<p>Identify one prioritized patient series examines all of the patient "
             + "series for a given Series Group to determine if one of the patient "

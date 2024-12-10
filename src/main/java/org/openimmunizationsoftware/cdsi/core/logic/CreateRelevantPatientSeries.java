@@ -66,7 +66,6 @@ public class CreateRelevantPatientSeries extends LogicStep {
   }
 
   public void printPre(PrintWriter out) throws Exception {
-    out.println("   <h2>4.3 Create Relevant Patient Series</h2>");
     out.println("   <h2>Antigen Series</h2>");
     out.println("   <table>");
     if (dataModel.getAntigenSelectedList() == null) {
@@ -108,7 +107,6 @@ public class CreateRelevantPatientSeries extends LogicStep {
   }
 
   public void printPost(PrintWriter out) throws Exception {
-    out.println("   <h1>4.3 Create Patient Series</h2>");
     out.println(
         "   <p>An antigen series is one way to reach perceived immunity against a disease.  "
             + "An antigen series can be thought of as a \"path to immunity\" and is described in "

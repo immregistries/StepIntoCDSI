@@ -94,7 +94,6 @@ public class EvaluateAge extends LogicStep {
   }
 
   private void printStandard(PrintWriter out) {
-    out.println("<h1> " + logicStepType.getDisplay() + "</h1>");
     out.println(
         "<p>Evaluate age validates the age at administration of a vaccine dose administered against a defined age range of a target dose. In cases where a target dose does not specify age attributes, the age at administration is considered \"valid.\"</p>");
     out.println("<img src=\"Figure 6.5.PNG\"/>");

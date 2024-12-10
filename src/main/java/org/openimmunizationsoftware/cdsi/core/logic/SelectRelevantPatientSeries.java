@@ -94,7 +94,6 @@ public class SelectRelevantPatientSeries extends LogicStep {
   }
 
   public void printPre(PrintWriter out) throws Exception {
-    out.println("   <h2>5.1 Select Relevant Patient Series</h2>");
     out.println("   <h2>Antigen Series</h2>");
     out.println("     <p>Looking at antigen " + (dataModel.getAntigenSelectedPos() + 1)
         + " out of " + dataModel.getAntigenSelectedList().size() + " antigens selected. </p>");
@@ -125,7 +124,6 @@ public class SelectRelevantPatientSeries extends LogicStep {
   }
 
   public void printPost(PrintWriter out) throws Exception {
-    out.println("   <h1>5.1 Select Relevant Patient Series</h2>");
     out.println(
         "   <p>An antigen series is one way to reach perceived immunity against a disease.  "
             + "An antigen series can be thought of as a \"path to immunity\" and is described in "

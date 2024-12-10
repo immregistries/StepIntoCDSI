@@ -99,11 +99,6 @@ public class SingleAntigenVaccineGroup extends LogicStep {
     return next();
   }
 
-  @Override
-  public void printPre(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
   public PatientSeries getBestPatientSeries() {
     if (dataModel.getPatientSeriesList().size() > 0) {
       PatientSeries bestPatientSeries = dataModel.getPatientSeriesList().get(0);
@@ -118,12 +113,16 @@ public class SingleAntigenVaccineGroup extends LogicStep {
   }
 
   @Override
+  public void printPre(PrintWriter out) throws Exception {
+    printStandard(out);
+  }
+
+  @Override
   public void printPost(PrintWriter out) throws Exception {
     printStandard(out);
   }
 
   private void printStandard(PrintWriter out) {
-    out.println("<h1> " + getTitle() + "</h1>");
     out.println(
         "<p>The forecasting rules which need to be applied to a single antigen vaccine group are listed in the table below</p>");
 

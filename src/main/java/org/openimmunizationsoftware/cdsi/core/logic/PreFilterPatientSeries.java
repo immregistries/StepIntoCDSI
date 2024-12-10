@@ -146,7 +146,6 @@ public class PreFilterPatientSeries extends LogicStep {
     }
 
     private void printStandard(PrintWriter out) {
-        out.println("<h1> " + getTitle() + "</h1>");
         printPatientSeriesList(out);
         printBestPatientSeries(out);
     }

@@ -59,6 +59,9 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY)) {
       return new DetermineEvidenceOfImmunity(dataModel);
     }
+    if (stepName.equals(LogicStepType.DETERMINE_CONTRAINDICATIONS)) {
+      return new DetermineContraindications(dataModel);
+    }
     if (stepName.equals(LogicStepType.DETERMINE_FORECAST_NEED)) {
       return new DetermineForecastNeed(dataModel);
     }
@@ -148,7 +151,6 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.EVALUATE_ALLOWABLE_INTERVAL)) {
       return new EvaluateAllowableInterval(dataModel);
     }
-
     if (stepName.equals(LogicStepType.EVALUATE_VACCINE_CONFLICT)) {
       return new EvaluateVaccineConflict(dataModel);
     }
@@ -164,12 +166,14 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.SATISFY_TARGET_DOSE)) {
       return new SatisfyTargetDose(dataModel);
     }
-
     if (stepName.equals(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST)) {
       return new EvaluateConditionalSkipForForecast(dataModel);
     }
     if (stepName.equals(LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY)) {
       return new DetermineEvidenceOfImmunity(dataModel);
+    }
+    if (stepName.equals(LogicStepType.DETERMINE_CONTRAINDICATIONS)) {
+      return new DetermineContraindications(dataModel);
     }
     if (stepName.equals(LogicStepType.DETERMINE_FORECAST_NEED)) {
       return new DetermineForecastNeed(dataModel);
@@ -177,7 +181,6 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMENDED_VACCINES)) {
       return new GenerateForecastDatesAndRecommendedVaccines(dataModel);
     }
-
     if (stepName.equals(LogicStepType.SELECT_BEST_PATIENT_SERIES)) {
       return new SelectBestPatientSeries(dataModel);
     }
@@ -199,7 +202,6 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.SELECT_PRIORITIZED_PATIENT_SERIES)) {
       return new SelectPrioritizedPatientSeries(dataModel);
     }
-
     if (stepName.equals(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP)) {
       return new IdentifyAndEvaluateVaccineGroup(dataModel);
     }

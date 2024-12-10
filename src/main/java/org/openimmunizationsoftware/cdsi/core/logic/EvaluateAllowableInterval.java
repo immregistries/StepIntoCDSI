@@ -85,7 +85,6 @@ public class EvaluateAllowableInterval extends LogicStep {
   }
 
   private void printStandard(PrintWriter out) {
-    out.println("<h1> " + getTitle() + "</h1>");
     out.println(
         "<p>Evaluate allowable interval validates the date administered of a vaccine dose administered against defined allowable interval(s) from previous vaccine dose(s) administered.  In rare cases, intervals can be applied which are either abnormally early – usually specified in ACIP footnotes or subsequent clarifications – or intervals which differ following a not valid administration.</p>");
     out.println(

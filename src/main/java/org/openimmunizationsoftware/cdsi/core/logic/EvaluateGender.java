@@ -59,7 +59,6 @@ public class EvaluateGender extends LogicStep {
   }
 
   private void printStandard(PrintWriter out) {
-    out.println("<h1> " + getTitle() + "</h1>");
     out.println(
         "<p>Evaluate gender  validates the  patient gender  against the  required  gender.  In cases where a  target dose  does not specify gender attributes, the gender is valid.</p>");
 

@@ -34,7 +34,6 @@ public class ValidateRecommendation extends EvaluateConditionalSkip {
     }
 
     private void printStandard(PrintWriter out) {
-        out.println("<h1> " + getTitle() + "</h1>");
     }
 
 }

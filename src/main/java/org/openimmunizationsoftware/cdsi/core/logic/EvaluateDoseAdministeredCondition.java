@@ -130,7 +130,6 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
   }
 
   private void printStandard(PrintWriter out) {
-    out.println("<h1> " + getTitle() + "</h1>");
     out.println(
         "<p>Target dose : " + dataModel.getTargetDose().getTrackedSeriesDose().getDoseNumber() + " "
             + dataModel.getTargetDose().getTrackedSeriesDose().getAntigenSeries().getSeriesName()

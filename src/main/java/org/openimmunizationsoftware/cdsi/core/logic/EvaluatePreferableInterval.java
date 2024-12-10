@@ -97,7 +97,6 @@ public class EvaluatePreferableInterval extends LogicStep {
   }
 
   private void printStandard(PrintWriter out) {
-    out.println("<h1> " + getTitle() + "</h1>");
     out.println(
         "<p>Evaluate interval validates the date administered of a vaccine dose administered against defined interval(s) from previous vaccine dose(s) administered. In cases where a target dose does not specify interval attributes, the interval is considered \"valid.\"</p>");
     out.println("<p>Intervals can be measures in three different ways:</p>");

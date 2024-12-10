@@ -38,7 +38,6 @@ public class EvaluateConditionalSkipForEvaluation extends EvaluateConditionalSki
   }
 
   private void printStandard(PrintWriter out) {
-    out.println("<h1> " + logicStepType.getDisplay() + "</h1>");
     out.println(
         "<p>Evaluate Conditional Skip addresses times when a target dose can be skipped. A dose should be considered necessary unless it is determined that it can be skipped. The most common scenarios for skipping a dose are:</p>");
     out.println("<ul>");

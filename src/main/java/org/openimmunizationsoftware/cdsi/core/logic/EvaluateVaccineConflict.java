@@ -116,8 +116,6 @@ public class EvaluateVaccineConflict extends LogicStep {
   }
 
   private void printStandard(PrintWriter out) {
-    out.println("<h1> " + getTitle() + "</h1>");
-
     out.println(
         "<p>Evaluate live virus conflict validates the date administered of a live virus vaccine dose administered against previous live virus administered vaccines to ensure proper spacing between administrations. For some live virus vaccines and for inactivated virus or recombinant vaccines, this condition does not exist. Therefore, if no live virus supporting data exists for the vaccine dose administered being evaluated, the vaccine dose administered is not in conflict with any other vaccine dose administered.</p>");// <------------------------------------------------------
     out.println("<img src=\"Figure 4.13.PNG\"/>");

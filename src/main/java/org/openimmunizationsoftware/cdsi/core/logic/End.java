@@ -26,7 +26,6 @@ public class End extends LogicStep {
 
   @Override
   public void printPre(PrintWriter out) throws Exception {
-    out.println("<h1> " + getTitle() + "</h1>");
     out.println(
         "<p>End printing forecast stuff</p>");
 
@@ -91,8 +90,6 @@ public class End extends LogicStep {
   }
 
   private void printStandard(PrintWriter out) {
-    out.println("<h1> " + getTitle() + "</h1>");
-
     printConditionAttributesTable(out);
     printLogicTables(out);
   }
