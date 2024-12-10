@@ -33,10 +33,6 @@ import org.springframework.web.client.HttpClientErrorException.Conflict;
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTINT_5;
 
 public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
-
-  // TODO: Add rules FORECASTGUIDANCE-1, FORECASTDN-1
-  // More TODOs below
-
   private ConditionAttribute<Date> caMinimumAgeDate = null;
   private ConditionAttribute<Date> caEarliestRecommendedAgeDate = null;
   private ConditionAttribute<Date> caLatestRecommendedAgeDate = null;
@@ -567,16 +563,15 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
   }
 
   private Date computeAdjustedRecommendedDate() {
-    // TODO: Change the first condition to the earliest date of the patient series
-    // forecast.
-    // TODO: Remove empty field specification (??)
     Date adjustedRecommendedDate = new Date();
     Date earliestDate = computeEarliestDate();
     Date unadjustedRecommendedDate = computeUnadjustedRecommendedDate();
-    if (earliestDate.after(unadjustedRecommendedDate)) {
-      adjustedRecommendedDate = earliestDate;
-    } else {
+    if (unadjustedRecommendedDate.after(earliestDate)) {
       adjustedRecommendedDate = unadjustedRecommendedDate;
+      log("SET adjusted Recommended Date set to Unadjusted Recommended Date");
+    } else {
+      adjustedRecommendedDate = earliestDate;
+      log("SET adjusted Recommended Date set to Earliest Date");
     }
     return adjustedRecommendedDate;
   }
@@ -616,8 +611,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
 
   private void computeDates(Forecast forecast) {
     forecast.setAdjustedPastDueDate(computeAdjustedPastDueDate());
-    Date d = computeAdjustedRecommendedDate();
-    forecast.setAdjustedRecommendedDate(d);
+    forecast.setAdjustedRecommendedDate(computeAdjustedRecommendedDate());
     forecast.setEarliestDate(computeEarliestDate());
     forecast.setLatestDate(computeLatestDate());
   }
