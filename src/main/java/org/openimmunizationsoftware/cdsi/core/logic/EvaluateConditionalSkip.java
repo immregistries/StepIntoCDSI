@@ -450,7 +450,7 @@ public class EvaluateConditionalSkip extends LogicStep {
                         }
                         return LogicResult.NO;
                     }
-                    return LogicResult.ANY;
+                    return LogicResult.NO;
                 }
             });
 
@@ -514,7 +514,7 @@ public class EvaluateConditionalSkip extends LogicStep {
                         }
                         return LogicResult.NO;
                     } else {
-                        return LogicResult.ANY;
+                        return LogicResult.NO;
                     }
                 }
             });
@@ -573,7 +573,12 @@ public class EvaluateConditionalSkip extends LogicStep {
                         }
                         return LogicResult.NO;
                     } else {
-                        return LogicResult.ANY;
+                        //if set logic is n/a, then we assume there is only one innerSet
+                        if (innerSetList.get(0).isMet()) {
+                            return LogicResult.YES;
+                        } else {
+                            return LogicResult.NO;
+                        }
                     }
                 }
             });

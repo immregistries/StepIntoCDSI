@@ -7,7 +7,7 @@ public class Interval {
   private SeriesDose seriesDose = null;
   private YesNo fromImmediatePreviousDoseAdministered = null;
   private String fromTargetDoseNumberInSeries = "";
-  private String fromMostRecentNumberInSeries = "";
+  private VaccineType fromMostRecentVaccineType = null;
   private ObservationCode fromRelevantObservation = null;
   private TimePeriod absoluteMinimumInterval = null;
   private TimePeriod minimumInterval = null;
@@ -50,12 +50,12 @@ public class Interval {
     this.fromTargetDoseNumberInSeries = fromTargetDoseNumberInSeries;
   }
 
-  public String getFromMostRecentNumberInSeries() {
-    return fromMostRecentNumberInSeries;
+  public VaccineType getFromMostRecentVaccineType() {
+    return fromMostRecentVaccineType;
   }
 
-  public void setFromMostRecentNumberInSeries(String fromMostRecentNumberInSeries) {
-    this.fromMostRecentNumberInSeries = fromMostRecentNumberInSeries;
+  public void setFromMostRecentVaccineType(VaccineType fromMostRecentVaccineType) {
+    this.fromMostRecentVaccineType = fromMostRecentVaccineType;
   }
 
   public ObservationCode getFromRelevantObservation() {
