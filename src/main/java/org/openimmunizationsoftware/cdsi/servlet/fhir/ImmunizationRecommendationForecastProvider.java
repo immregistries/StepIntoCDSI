@@ -74,6 +74,25 @@ public class ImmunizationRecommendationForecastProvider {
 			if (vaccineGroupForecastList != null) {
 				for (VaccineGroupForecast vgf : vaccineGroupForecastList) {
 					String actCvx = vgf.getAntigen().getCvxForForecast();
+					String actCvxDisplay = vgf.getAntigen().getName();
+
+					// Tetanus (112)
+					if (actCvx.equals("112")) {
+						Calendar c = Calendar.getInstance();
+						c.setTime(dataModel.getPatient().getDateOfBirth());
+						c.add(Calendar.YEAR, 7);
+						if (assessmentDate.getValue().before(c.getTime())) {
+							actCvxDisplay = "DTaP";
+							actCvx = "107";
+						} else {
+							actCvxDisplay = "Tdap";
+							actCvx = "115";
+						}
+					} else if (actCvx.equals("05") || actCvx.equals("06") || actCvx.equals("07")) {
+						actCvxDisplay = "MMR";
+						actCvx = "03";
+					}
+
 					VaccineGroupStatus vaccineGroupStatus = vgf.getVaccineGroupStatus();
 					ImmunizationRecommendation.ImmunizationRecommendationRecommendationComponent recommendationComponent = recommendation
 							.addRecommendation()
@@ -82,7 +101,7 @@ public class ImmunizationRecommendationForecastProvider {
 									.addCoding(new Coding(IMMUNIZATION_RECOMMENDATION_STATUS_SYSTEM,
 											vaccineGroupStatus.toString(), vaccineGroupStatus.toString())));
 					recommendationComponent.addVaccineCode().addCoding().setSystem(CVX).setCode(actCvx)
-							.setDisplay(vgf.getAntigen().getName());
+							.setDisplay(actCvxDisplay);
 					if (vgf.getVaccineGroupStatus() == VaccineGroupStatus.NOT_COMPLETE) {
 						recommendationComponent.addDateCriterion()
 								.setValue(vgf.getEarliestDate())
