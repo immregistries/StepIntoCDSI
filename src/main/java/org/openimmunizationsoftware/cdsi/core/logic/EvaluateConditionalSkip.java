@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.jena.sparql.function.library.leviathan.log;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkip;
@@ -500,6 +501,7 @@ public class EvaluateConditionalSkip extends LogicStep {
                 @Override
                 public LogicResult evaluateInternal() {
                     if (conditionLogicType.equals(ConditionalSkipSet.CONDITION_LOGIC_AND)) {
+                        log("Condition Logic Type is AND for innerSetList.size() = " + innerSetList.size());
                         for (LTInnerSet innerSet : innerSetList) {
                             if (!innerSet.isMet()) {
                                 return LogicResult.NO;
@@ -507,6 +509,7 @@ public class EvaluateConditionalSkip extends LogicStep {
                         }
                         return LogicResult.YES;
                     } else if (conditionLogicType.equals(ConditionalSkipSet.CONDITION_LOGIC_OR)) {
+                        log("Condition Logic Type is OR for innerSetList.size() = " + innerSetList.size());
                         for (LTInnerSet innerSet : innerSetList) {
                             if (innerSet.isMet()) {
                                 return LogicResult.YES;
@@ -514,7 +517,14 @@ public class EvaluateConditionalSkip extends LogicStep {
                         }
                         return LogicResult.NO;
                     } else {
-                        return LogicResult.NO;
+                        // if condition logic is n/a, then we assume there is only one innerSet
+                        log("Condition Logic Type is N/A for innerSetList.size() = " + innerSetList.size());
+                        for (LTInnerSet innerSet : innerSetList) {
+                            if (!innerSet.isMet()) {
+                                return LogicResult.NO;
+                            }
+                        }
+                        return LogicResult.YES;
                     }
                 }
             });
@@ -573,7 +583,7 @@ public class EvaluateConditionalSkip extends LogicStep {
                         }
                         return LogicResult.NO;
                     } else {
-                        //if set logic is n/a, then we assume there is only one innerSet
+                        // if set logic is n/a, then we assume there is only one innerSet
                         if (innerSetList.get(0).isMet()) {
                             return LogicResult.YES;
                         } else {
