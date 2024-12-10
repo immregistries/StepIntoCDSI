@@ -23,7 +23,7 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 public class DetermineEvidenceOfImmunity extends LogicStep {
 
   //TODO: write all the tables and other stuff for this class
-
+  //logicCondition 2 in DetermineForecastNeed checking for IMMUNE patient status is true every time
 
   // ConditionAttributes to be used
   private ConditionAttribute<Date> caDateofBirth = null;
@@ -111,7 +111,7 @@ public class DetermineEvidenceOfImmunity extends LogicStep {
               
               where to find evidence of immunity/patient history?
             */
-            return YES; // placeholder for now, above logic should determine YES or NO
+            // placeholder for now, above logic should determine YES or NO
           }
           return NO;
         }
@@ -122,27 +122,24 @@ public class DetermineEvidenceOfImmunity extends LogicStep {
         @Override
         protected LogicResult evaluateInternal() {
           Date dob = caDateofBirth.getFinalValue();
-          if (dob != null) {
-            if (dataModel.getImmunityList().size() > 0) {
-              if (dataModel.getImmunityList().get(0).getBirthDateImmunityList().size() > 0) {
-                List<BirthDateImmunity> birthDateImmunityList =
-                    dataModel.getImmunityList().get(0).getBirthDateImmunityList();
-                for (BirthDateImmunity bdi : birthDateImmunityList) {
-                  if (dob.before(bdi.getImmunityBirthDate())) {
-                    return YES;
-                  }
-                }
-                return NO;
-              } else {
-                return NO;
-              }
-            } else {
-              return NO;
-            }
-          } else {
+          if (dob == null) {
+            return NO;
+          }
+          if (dataModel.getImmunityList().size() == 0) {
+            return NO;
+          }
+          if (dataModel.getImmunityList().get(0).getBirthDateImmunityList().size() == 0) {
             return NO;
           }
 
+          List<BirthDateImmunity> birthDateImmunityList = dataModel.getImmunityList().get(0).getBirthDateImmunityList();
+          for (BirthDateImmunity bdi : birthDateImmunityList) {
+            if (dob.before(bdi.getImmunityBirthDate())) {
+              return YES;
+            }
+          }
+
+          return NO;
         }
       });
 
@@ -150,22 +147,22 @@ public class DetermineEvidenceOfImmunity extends LogicStep {
           new LogicCondition("Does the patient have an immunity exclusion condition?") {
             @Override
             protected LogicResult evaluateInternal() {
-              if (dataModel.getImmunityList().size() > 0) {
-                if (dataModel.getImmunityList().get(0).getBirthDateImmunityList().size() > 0) {
-                  List<BirthDateImmunity> birthDateImmunityList =
-                      dataModel.getImmunityList().get(0).getBirthDateImmunityList();
-                  for (BirthDateImmunity bdi : birthDateImmunityList) {
-                    if (bdi.getExclusionList().size() > 0) {
-                      return YES;
-                    }
-                  }
-                  return NO;
-                } else {
-                  return NO;
-                }
-              } else {
+              if (dataModel.getImmunityList().size() == 0) {
                 return NO;
               }
+              
+              if (dataModel.getImmunityList().get(0).getBirthDateImmunityList().size() == 0) {
+                return NO;
+              }
+
+              List<BirthDateImmunity> birthDateImmunityList = dataModel.getImmunityList().get(0).getBirthDateImmunityList();
+              for (BirthDateImmunity bdi : birthDateImmunityList) {
+                if (bdi.getExclusionList().size() > 0) {
+                  return YES;
+                }
+              }
+
+              return NO;
             }
           });
 
@@ -174,26 +171,24 @@ public class DetermineEvidenceOfImmunity extends LogicStep {
         @Override
         protected LogicResult evaluateInternal() {
           String patientCountry = caCountryofBirth.getFinalValue().toString();
-          if (patientCountry != null) {
-            if (dataModel.getImmunityList().size() > 0) {
-              if (dataModel.getImmunityList().get(0).getBirthDateImmunityList().size() > 0) {
-                List<BirthDateImmunity> birthDateImmunityList =
-                    dataModel.getImmunityList().get(0).getBirthDateImmunityList();
-                for (BirthDateImmunity bdi : birthDateImmunityList) {
-                  if (bdi.getCountryOfBirth().equals(patientCountry)) {
-                    return YES;
-                  }
-                }
-                return NO;
-              } else {
-                return NO;
-              }
-            } else {
-              return NO;
-            }
-          } else {
+          if (patientCountry == null) {
             return NO;
           }
+          if (dataModel.getImmunityList().size() == 0) {
+            return NO;
+          }
+          if (dataModel.getImmunityList().get(0).getBirthDateImmunityList().size() == 0) {
+            return NO;
+          }
+          
+          List<BirthDateImmunity> birthDateImmunityList = dataModel.getImmunityList().get(0).getBirthDateImmunityList();
+          for (BirthDateImmunity bdi : birthDateImmunityList) {
+            if (bdi.getCountryOfBirth().equals(patientCountry)) {
+              return YES;
+            }
+          }
+          
+          return NO;
         }
       });
 

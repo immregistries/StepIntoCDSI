@@ -198,10 +198,12 @@ public class DetermineForecastNeed extends LogicStep {
           "Does the patient have evidence of immunity?") {
         @Override
         protected LogicResult evaluateInternal() {
-          // TODO add logic for this logic condition
-          //if(dataModel.getPatientSeries().getPatientSeriesStatus().equals(PatientSeriesStatus.IMMUNE)) {
-          //  return LogicResult.YES;  
-          //}
+          if(dataModel.getPatientSeries() == null || dataModel.getPatientSeries().getPatientSeriesStatus() == null) {
+            return LogicResult.NO;
+          }
+          if(dataModel.getPatientSeries().getPatientSeriesStatus().equals(PatientSeriesStatus.IMMUNE)) {
+            return LogicResult.YES;  
+          }
           return LogicResult.NO;
         }
       });
