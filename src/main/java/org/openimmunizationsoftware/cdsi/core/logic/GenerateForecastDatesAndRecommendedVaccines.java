@@ -19,6 +19,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
 import org.openimmunizationsoftware.cdsi.core.domain.PreferrableVaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
+import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.Vaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
@@ -107,6 +108,12 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
       if(tmpInterval.getFromImmediatePreviousDoseAdministered().equals(YesNo.NO)) {
         if(!tmpInterval.getFromTargetDoseNumberInSeries().equals("")) {
           //TODO set tmpPatientReferenceDoseDate to 'the date administered of the vaccine dose administered that satisfies the target dose with the same target dose number as the from target dose number in series'
+          //Maybe this?
+          for(TargetDose td : dataModel.getTargetDoseList()) {
+            if(tmpInterval.getFromTargetDoseNumberInSeries().equals(td.getTrackedSeriesDose().getDoseNumber())) {
+              tmpPatientReferenceDoseDate = td.getSatisfiedByVaccineDoseAdministered().getDateAdministered();
+            }
+          }
         }
       }
       //CALCDTINT-8

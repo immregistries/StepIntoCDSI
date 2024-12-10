@@ -92,7 +92,7 @@ public class ForecastServlet extends HttpServlet {
     List<VaccineGroupForecast> vgfLater = new ArrayList<VaccineGroupForecast>();
     List<VaccineGroupForecast> vgfDone = new ArrayList<VaccineGroupForecast>();
 
-    Date today = new Date();
+    Date today = dataModel.getAssessmentDate();
     try {
       today = sdf.parse(sdf.format(today));
     } catch (ParseException pe) {
