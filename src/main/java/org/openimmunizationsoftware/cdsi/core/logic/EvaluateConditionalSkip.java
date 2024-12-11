@@ -271,7 +271,7 @@ public class EvaluateConditionalSkip extends LogicStep {
             super(1, 2, "Table 4-6 CONDITIONAL Type of Age - Is the Condition Met?");
 
             setLogicCondition(0, new LogicCondition(
-                    "Is the Conditional Skip End Age Date > Conditional Skip Reference Date ≥ Conditional Skip Begin Age Date?") {
+                    "Is the Conditional Skip End Age Date > Conditional Skip Reference Date >= Conditional Skip Begin Age Date?") {
                 @Override
                 public LogicResult evaluateInternal() {
                     if (caConditionalSkipEndAgeDate.getFinalValue() == null
@@ -373,7 +373,7 @@ public class EvaluateConditionalSkip extends LogicStep {
             });
 
             setLogicCondition(1, new LogicCondition(
-                    "Is the Conditional Skip Reference Date ≥ Conditional Skip Interval Date?") {
+                    "Is the Conditional Skip Reference Date >= Conditional Skip Interval Date?") {
                 @Override
                 public LogicResult evaluateInternal() {
                     Date referenceDate = caConditionalSkipReferenceDate.getFinalValue();

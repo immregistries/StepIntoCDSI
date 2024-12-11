@@ -58,16 +58,19 @@ public class EvaluateForAllowableVaccine extends LogicStep {
   @Override
   public LogicStep process() throws Exception {
     setNextLogicStepType(LogicStepType.SATISFY_TARGET_DOSE);
-    YesNo y = YesNo.NO;
+    YesNo atLeastOnePass = YesNo.NO;
     for (LogicTable logicTable : logicTableList) {
       logicTable.evaluate();
       if (((LT) logicTable).getResult() == YesNo.YES) {
-        y = YesNo.YES;
+        setNextLogicStepType(LogicStepType.SATISFY_TARGET_DOSE);
+        atLeastOnePass = YesNo.YES;
       }
     }
-    if (y == YesNo.NO) {
+    if (atLeastOnePass == YesNo.NO) {
+      log("none pass, appending 'vaccine'");
       dataModel.getTargetDose()
           .setStatusCause(dataModel.getTargetDose().getStatusCause() + "Vaccine");
+      setNextLogicStepType(LogicStepType.SATISFY_TARGET_DOSE);
     }
     return next();
   }
@@ -182,7 +185,6 @@ public class EvaluateForAllowableVaccine extends LogicStep {
     }
 
     public YesNo getResult() {
-      // TODO Auto-generated method stub
       return result;
     }
   }

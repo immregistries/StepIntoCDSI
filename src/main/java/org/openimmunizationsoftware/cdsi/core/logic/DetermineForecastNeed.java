@@ -168,6 +168,7 @@ public class DetermineForecastNeed extends LogicStep {
           for (TargetDose targetDose : targetDoseList) {
             if (targetDose.getTargetDoseStatus() != null) {
               if (targetDose.getTargetDoseStatus().equals(TargetDoseStatus.NOT_SATISFIED)) {
+                log("TD #" + targetDose.getTrackedSeriesDose().getDoseNumber() + " is not satisfied");
                 return LogicResult.YES;
               }
             }

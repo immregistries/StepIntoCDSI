@@ -86,12 +86,16 @@ public class EvaluateForPreferableVaccine extends LogicStep {
   @Override
   public LogicStep process() throws Exception {
     setNextLogicStepType(LogicStepType.EVALUATE_FOR_ALLOWABLE_VACCINE);
+    YesNo atLeastOnePass = YesNo.NO;
     for (LogicTable logicTable : logicTableList) {
       logicTable.evaluate();
       if (((LT) logicTable).getResult() == YesNo.YES) {
-        setNextLogicStepType(LogicStepType.SATISFY_TARGET_DOSE);
-        break;
+        atLeastOnePass = YesNo.YES;
       }
+    }
+    if (atLeastOnePass == YesNo.NO) {
+      log("none pass");
+      setNextLogicStepType(LogicStepType.SATISFY_TARGET_DOSE);
     }
     return next();
   }
@@ -192,7 +196,7 @@ public class EvaluateForPreferableVaccine extends LogicStep {
         }
       });
       setLogicCondition(3, new LogicCondition(
-          "Is the volume of the vaccine dose administered ≥ the volume of the preferable vaccine for the target dose?") {
+          "Is the volume of the vaccine dose administered >= the volume of the preferable vaccine for the target dose?") {
         @Override
         public LogicResult evaluateInternal() {
           if (caVolume.equals("")

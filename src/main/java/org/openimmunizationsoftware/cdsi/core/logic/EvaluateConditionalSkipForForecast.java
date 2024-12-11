@@ -31,7 +31,7 @@ public class EvaluateConditionalSkipForForecast extends EvaluateConditionalSkip 
     out.println(
         "    <li>Catch-up doses where the patient is current with their administrations and does not need to catch-up</li>");
     out.println(
-        "    <li>The patient is behind schedule and the total number of doses needed to satisfy the patient series can be reuced</li>");
+        "    <li>The patient is behind schedule and the total number of doses needed to satisfy the patient series can be reudced</li>");
     out.println(
         "    <li>The previously administered dose(s) negates the need for the current target dose</li>");
     out.println("</ul>");
