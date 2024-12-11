@@ -62,15 +62,19 @@ public class EvaluateAllowableInterval extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
-    YesNo y = YesNo.YES;
+    YesNo satisfiedAll = YesNo.YES;
     for (LogicTable logicTable : logicTableList) {
       logicTable.evaluate();
       if (((LT) logicTable).getResult() == YesNo.NO) {
-        y = YesNo.NO;
+        satisfiedAll = YesNo.NO;
       }
     }
-    setNextLogicStepType(LogicStepType.EVALUATE_VACCINE_CONFLICT);
+    if (satisfiedAll == YesNo.NO) {
+      dataModel.getTargetDose()
+          .setStatusCause(dataModel.getTargetDose().getStatusCause() + "Interval");
+    }
 
+    setNextLogicStepType(LogicStepType.EVALUATE_VACCINE_CONFLICT);
     return next();
   }
 
