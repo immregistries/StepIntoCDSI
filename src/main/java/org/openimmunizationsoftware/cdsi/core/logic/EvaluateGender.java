@@ -86,9 +86,10 @@ public class EvaluateGender extends LogicStep {
               if (caRequiredGender.getFinalValue().size() == 0) {
                 return LogicResult.YES;
               }
-              for(RequiredGender requiredGender : caRequiredGender.getFinalValue())
-              if (requiredGender.getValue().contains(caGender.getFinalValue())) {
-                return LogicResult.YES;
+              for(RequiredGender requiredGender : caRequiredGender.getFinalValue()) {
+                if (requiredGender.getValue().contains(caGender.getFinalValue())) {
+                  return LogicResult.YES;
+                }
               }
               return LogicResult.YES;
             }

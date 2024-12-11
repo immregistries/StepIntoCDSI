@@ -270,7 +270,7 @@ public class SelectRelevantPatientSeries extends LogicStep {
 
               LogicResult result = LogicResult.NO;
               for (String requiredGender : caRequiredGender.getFinalValue()) {
-                if (caGender.equals(requiredGender)) {
+                if (caGender.getFinalValue().equals(requiredGender)) {
                   result = LogicResult.YES;
                 }
               }
