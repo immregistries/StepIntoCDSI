@@ -85,7 +85,7 @@ public class EvaluateForPreferableVaccine extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.EVALUATE_FOR_ALLOWABLE_VACCINE);
+    setNextLogicStepType(LogicStepType.SATISFY_TARGET_DOSE);
     YesNo atLeastOnePass = YesNo.NO;
     for (LogicTable logicTable : logicTableList) {
       logicTable.evaluate();
@@ -95,7 +95,7 @@ public class EvaluateForPreferableVaccine extends LogicStep {
     }
     if (atLeastOnePass == YesNo.NO) {
       log("none pass");
-      setNextLogicStepType(LogicStepType.SATISFY_TARGET_DOSE);
+      setNextLogicStepType(LogicStepType.EVALUATE_FOR_ALLOWABLE_VACCINE);
     }
     return next();
   }

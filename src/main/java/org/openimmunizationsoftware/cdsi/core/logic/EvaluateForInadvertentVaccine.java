@@ -66,7 +66,7 @@ public class EvaluateForInadvertentVaccine extends LogicStep {
     }
 
     private void printStandard(PrintWriter out) {
-        
+        printLogicTables(out);
     }
 
 

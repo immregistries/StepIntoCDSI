@@ -216,34 +216,10 @@ public class DateRules {
       @Override
       protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep, Interval interval) {
         if (interval != null) {
-          if (interval.getAbsoluteMinimumInterval() != null) {
-            SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-            Date dob = dataModel.getAntigenAdministeredRecord().getDateAdministered();
-            int absMinIntAmount = interval.getAbsoluteMinimumInterval().getAmount();
-            Date absMinIntDate = new Date();
-            switch (interval.getAbsoluteMinimumInterval().getType()) {
-              case DAY:
-                absMinIntDate = DateUtils.addDays(dob, absMinIntAmount);
-                break;
-              case WEEK:
-                absMinIntDate = DateUtils.addWeeks(dob, absMinIntAmount);
-                break;
-              case MONTH:
-                absMinIntDate = DateUtils.addMonths(dob, absMinIntAmount);
-                break;
-              case YEAR:
-                absMinIntDate = DateUtils.addYears(dob, absMinIntAmount);
-                break;
-              default:
-                break;
-            }
-            return absMinIntDate;
-          } else {
-            return null;
-          }
-        } else {
-          return null;
+          Date patientReferenceDoseDate = interval.getPatientReferenceDoseDate(dataModel);
+          return interval.getEarliestRecommendedInterval().getDateFrom(patientReferenceDoseDate);
         }
+        return null;
       }
     };
     CALCDTINT_3.setBusinessRuleId("CALCDTINT-3");

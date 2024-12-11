@@ -59,8 +59,8 @@ public class EvaluatePreferableInterval extends LogicStep {
       logicTable.caPreferableIntervalElements
           .setInitialValue(interval);
       logicTable.caAbsoluteMinimumIntervalDate
-          .setInitialValue(CALCDTINT_3.evaluate(dataModel, this, null));
-      logicTable.caMinimumIntervalDate.setInitialValue(CALCDTINT_4.evaluate(dataModel, this, null));
+          .setInitialValue(CALCDTINT_3.evaluate(dataModel, this, interval));
+      logicTable.caMinimumIntervalDate.setInitialValue(CALCDTINT_4.evaluate(dataModel, this, interval));
 
       logicTableList.add(logicTable);
 
