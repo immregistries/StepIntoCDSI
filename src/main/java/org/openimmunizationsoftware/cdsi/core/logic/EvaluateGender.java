@@ -121,8 +121,6 @@ public class EvaluateGender extends LogicStep {
           setNextLogicStepType(LogicStepType.SATISFY_TARGET_DOSE);
         }
       });
-
     }
   }
-
 }

@@ -58,7 +58,6 @@ public class EvaluateForAllowableVaccine extends LogicStep {
     for (LogicTable logicTable : logicTableList) {
       logicTable.evaluate();
       if (((LT) logicTable).getResult() == YesNo.YES) {
-        setNextLogicStepType(LogicStepType.SATISFY_TARGET_DOSE);
         atLeastOnePass = YesNo.YES;
       }
     }
@@ -66,7 +65,6 @@ public class EvaluateForAllowableVaccine extends LogicStep {
       log("none pass, appending 'vaccine'");
       dataModel.getTargetDose()
           .setStatusCause(dataModel.getTargetDose().getStatusCause() + "Vaccine");
-      setNextLogicStepType(LogicStepType.SATISFY_TARGET_DOSE);
     }
     return next();
   }

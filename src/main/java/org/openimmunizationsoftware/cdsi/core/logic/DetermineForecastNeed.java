@@ -92,7 +92,7 @@ public class DetermineForecastNeed extends LogicStep {
 
     caTargetDoseStatuses.setInitialValue(dataModel.getTargetDose());
     // TODO move DateRule calculations to DateRules file
-    caMaximumAgeDate.setInitialValue(CALCDTAGE_1.evaluate(dataModel, this, null));
+    caMaximumAgeDate.setInitialValue(CALCDTAGE_1.evaluate(dataModel, this, null));//TODO: null value must be an Age for business rule CALCDTAGE-1 to work
     caCandidateEarliestDate.setInitialValue(computeEarliestDate());
     findMaximumAgeDate();
     findSeasonalRecommendationEndDate();

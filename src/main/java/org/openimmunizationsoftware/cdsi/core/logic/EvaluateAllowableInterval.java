@@ -10,6 +10,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.AllowableInterval;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
+import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
@@ -44,10 +45,10 @@ public class EvaluateAllowableInterval extends LogicStep {
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
 
     if (seriesDose.getAllowableintervalList().size() > 0) {
-      for (AllowableInterval ainterval : seriesDose.getAllowableintervalList()) {
-        caAllowableIntervalElements
-            .setInitialValue(ainterval);
-        caAbsoluteMinimumIntervalDate.setInitialValue(CALCDTINT_3.evaluate(dataModel, this, null));
+      for (AllowableInterval aInterval : seriesDose.getAllowableintervalList()) {
+        caAllowableIntervalElements.setInitialValue(aInterval);
+        Interval intervalFromAllowableInterval = aInterval.getInterval();
+        caAbsoluteMinimumIntervalDate.setInitialValue(CALCDTINT_3.evaluate(dataModel, this, intervalFromAllowableInterval));
 
         LT logicTable = new LT();
         logicTableList.add(logicTable);
@@ -104,6 +105,9 @@ public class EvaluateAllowableInterval extends LogicStep {
     out.println("<p>FIGURE 6 - 14 EVALUATE ALLOWABLE INTERVAL PROCESS MODEL</p>");
     printConditionAttributesTable(out);
     printLogicTables(out);
+    if(logicTableList.size() == 0) {
+      out.println("<p>No allowable intervals define. Interval defaulting to 'Not Valid'</p>");
+    }
   }
 
   private class LT extends LogicTable {

@@ -2,6 +2,7 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
+import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 
 public class AllowableInterval {
   private SeriesDose seriesDose = null;
@@ -58,5 +59,16 @@ public class AllowableInterval {
 
   public void setCessationDate(TimePeriod cessationDate) {
     this.cessationDate = cessationDate;
+  }
+
+  public Interval getInterval() {
+    Interval in = new Interval();
+    in.setSeriesDose(seriesDose);
+    in.setFromImmediatePreviousDoseAdministered(fromImmediatePreviousDoseAdministered);
+    in.setFromTargetDoseNumberInSeries(fromTargetDoseNumberInSeries);
+    in.setAbsoluteMinimumInterval(absoluteMinimumInterval);
+    in.setEffectiveDate(effectiveDate);
+    in.setCessationDate(cessationDate);
+    return in;
   }
 }
