@@ -217,7 +217,7 @@ public class DateRules {
       protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep, Interval interval) {
         if (interval != null) {
           Date patientReferenceDoseDate = interval.getPatientReferenceDoseDate(dataModel);
-          return interval.getEarliestRecommendedInterval().getDateFrom(patientReferenceDoseDate);
+          return interval.getAbsoluteMinimumInterval().getDateFrom(patientReferenceDoseDate);
         }
         return null;
       }
@@ -232,34 +232,10 @@ public class DateRules {
       @Override
       protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep, Interval interval) {
         if (interval != null) {
-          if (interval.getMinimumInterval() != null) {
-            SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-            Date dob = dataModel.getAntigenAdministeredRecord().getDateAdministered();
-            int minIntAmount = interval.getMinimumInterval().getAmount();
-            Date minIntDate = new Date();
-            switch (interval.getMinimumInterval().getType()) {
-              case DAY:
-                minIntDate = DateUtils.addDays(dob, minIntAmount);
-                break;
-              case WEEK:
-                minIntDate = DateUtils.addWeeks(dob, minIntAmount);
-                break;
-              case MONTH:
-                minIntDate = DateUtils.addMonths(dob, minIntAmount);
-                break;
-              case YEAR:
-                minIntDate = DateUtils.addYears(dob, minIntAmount);
-                break;
-              default:
-                break;
-            }
-            return minIntDate;
-          } else {
-            return null;
-          }
-        } else {
-          return null;
+          Date patientReferenceDoseDate = interval.getPatientReferenceDoseDate(dataModel);
+          return interval.getMinimumInterval().getDateFrom(patientReferenceDoseDate);
         }
+        return null;
       }
     };
     CALCDTINT_4.setBusinessRuleId("CALCDTINT-4");

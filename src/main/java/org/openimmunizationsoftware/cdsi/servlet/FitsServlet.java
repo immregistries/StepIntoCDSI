@@ -264,8 +264,6 @@ public class FitsServlet extends ForecastServlet {
                                     out.println("        </td>");
                                 } else {
                                     String ts = "";
-                                    // if forecast.getSerieStatusExp is not null and forecast.getSerieStatusAct is
-                                    // not null and they are not equal we need to color the td red
                                     if (f.getSerieStatusExp() != null && f.getSerieStatusAct() != null) {
                                         numberOfTestChecksRun += 1;
                                         if (f.getSerieStatusExp().equals(f.getSerieStatusAct())) {
@@ -314,6 +312,7 @@ public class FitsServlet extends ForecastServlet {
 
             int percentageOfPasses = (numberOfTestChecksRun != 0 && numberOfPasses != 0) ?Math.round( ((float)numberOfPasses/(float)numberOfTestChecksRun)*100) : -1;
             if(numberOfTestChecksRun > 0) {
+                out.println("</br>");
                 out.println("<table>");
                 out.println("<tr>");
                 out.println("    <th> test checks run </th>");
