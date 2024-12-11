@@ -185,6 +185,10 @@ public class FitsServlet extends ForecastServlet {
             out.println("    <input type=\"Submit\" name=\"action\" value=\"Run\">");
             out.println("  </form>");
 
+            int numberOfFails = 0;
+            int numberOfPasses = 0;
+            int numberOfTestChecksRun = 0;
+
             for (TestPlan testPlan : fitsManager.getTestPlanList()) {
                 if (testPlanIdSelected == null || !testPlan.getId().equals(testPlanIdSelected)) {
                     continue;
@@ -263,28 +267,37 @@ public class FitsServlet extends ForecastServlet {
                                     // if forecast.getSerieStatusExp is not null and forecast.getSerieStatusAct is
                                     // not null and they are not equal we need to color the td red
                                     if (f.getSerieStatusExp() != null && f.getSerieStatusAct() != null) {
+                                        numberOfTestChecksRun += 1;
                                         if (f.getSerieStatusExp().equals(f.getSerieStatusAct())) {
                                             ts = " class=\"pass\"";
+                                            numberOfPasses += 1;
                                         } else {
                                             ts = " class=\"fail\"";
+                                            numberOfFails += 1;
                                         }
                                     }
                                     out.println("        <td" + ts + ">" + f.getSerieStatusAct() + "</td>");
                                     ts = "";
                                     if (f.getEarliestExp() != null && f.getEarliestAct() != null) {
+                                        numberOfTestChecksRun += 1;
                                         if (format(f.getEarliestExp()).equals(format(f.getEarliestAct()))) {
                                             ts = " class=\"pass\"";
+                                            numberOfPasses += 1;
                                         } else {
                                             ts = " class=\"fail\"";
+                                            numberOfFails += 1;
                                         }
                                     }
                                     out.println("        <td" + ts + ">" + format(f.getEarliestAct()) + "</td>");
                                     ts = "";
                                     if (f.getRecommendedExp() != null && f.getRecommendedAct() != null) {
+                                        numberOfTestChecksRun += 1;
                                         if (format(f.getRecommendedExp()).equals(format(f.getRecommendedAct()))) {
                                             ts = " class=\"pass\"";
+                                            numberOfPasses += 1;
                                         } else {
                                             ts = " class=\"fail\"";
+                                            numberOfFails += 1;
                                         }
                                     }
                                     out.println("        <td" + ts + ">" + format(f.getRecommendedAct()) + "</td>");
@@ -298,7 +311,29 @@ public class FitsServlet extends ForecastServlet {
                 }
             }
             out.println("</ol>");
+
+            int percentageOfPasses = (numberOfTestChecksRun != 0 && numberOfPasses != 0) ?Math.round( ((float)numberOfPasses/(float)numberOfTestChecksRun)*100) : -1;
+            if(numberOfTestChecksRun > 0) {
+                out.println("<table>");
+                out.println("<tr>");
+                out.println("    <th> test checks run </th>");
+                out.println("    <th> passes </th>");
+                out.println("    <th> fails </th>");
+                out.println("    <th> percentage </th>");
+                out.println("</tr>");
+                out.println("<tr>");
+                out.println("    <td> " + numberOfTestChecksRun + " </td>");
+                out.println("    <td class=\"pass\" > " + numberOfPasses + " </td>");
+                out.println("    <td class=\"fail\" > " + numberOfFails + " </td>");
+                out.println("    <td> ~" + percentageOfPasses + "% </td>");
+                out.println("</tr>");
+                out.println("</table>");
+            }
+
         }
+
+        
+
         out.println("  <form action=\"fits\" method=\"GET\" id=\"fitsForm\">");
         out.println("    <h3>Enter FITS Credentials</h3>");
         out.println("    <label for=\"username\">Username:</label>");
