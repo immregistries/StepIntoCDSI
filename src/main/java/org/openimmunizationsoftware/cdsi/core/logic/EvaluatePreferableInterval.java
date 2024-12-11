@@ -14,8 +14,6 @@ import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
@@ -63,7 +61,6 @@ public class EvaluatePreferableInterval extends LogicStep {
       logicTable.caMinimumIntervalDate.setInitialValue(CALCDTINT_4.evaluate(dataModel, this, interval));
 
       logicTableList.add(logicTable);
-
     }
   }
 
@@ -157,7 +154,6 @@ public class EvaluatePreferableInterval extends LogicStep {
   }
 
   private class LT extends LogicTable {
-
     private ConditionAttribute<Date> caDateAdministered = null;
     private ConditionAttribute<Interval> caPreferableIntervalElements = null;
     private ConditionAttribute<Date> caAbsoluteMinimumIntervalDate = null;
@@ -170,7 +166,6 @@ public class EvaluatePreferableInterval extends LogicStep {
     }
 
     public LT() {
-
       super(3, 3, "Table 6 - 18 Did the vaccine dose administered satisfy the defined interval?");
 
       setLogicCondition(0,
@@ -241,8 +236,6 @@ public class EvaluatePreferableInterval extends LogicStep {
           result = YesNo.YES;
         }
       });
-
     }
   }
-
 }

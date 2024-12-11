@@ -3,7 +3,6 @@ package org.openimmunizationsoftware.cdsi.servlet.fhir;
 import ca.uhn.fhir.model.api.annotation.Description;
 import ca.uhn.fhir.rest.annotation.Operation;
 import ca.uhn.fhir.rest.annotation.OperationParam;
-import gov.nist.healthcare.cds.enumeration.SerieStatus;
 
 import org.hl7.fhir.instance.model.api.IPrimitiveType;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
@@ -17,7 +16,6 @@ import org.openimmunizationsoftware.cdsi.servlet.fits.TestCaseRegistered;
 import org.openimmunizationsoftware.cdsi.servlet.fits.TestCaseRegistered.Vaccination;
 import org.hl7.fhir.r4.model.*;
 
-import java.io.InputStream;
 import java.util.*;
 
 public class ImmunizationRecommendationForecastProvider {
@@ -38,7 +36,6 @@ public class ImmunizationRecommendationForecastProvider {
 	public static final String IMMUNIZATION = "immunization";
 
 	public ImmunizationRecommendationForecastProvider() {
-
 	}
 
 	@Operation(name = $_IMMDS_FORECAST)

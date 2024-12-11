@@ -1,13 +1,10 @@
 package org.openimmunizationsoftware.cdsi.servlet;
 
-import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.fromString;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -170,7 +167,6 @@ public class StepServlet extends ForecastServlet {
       } else {
         printStableView(dataModel, out);
       }
-
     }
     out.println("    </div>");
 
@@ -252,14 +248,12 @@ public class StepServlet extends ForecastServlet {
 
   private void printStableView(DataModel dataModel, PrintWriter out) {
     // print out antigen
-
     if (dataModel.getPatientSeries() != null) {
       out.println("<h2>" + dataModel.getPatientSeries() + "</h2>");
     } else if (dataModel.getAntigen() != null) {
       out.println("<h2>" + dataModel.getAntigen() + "</h2>");
     }
     if (dataModel.getTargetDoseList() != null) {
-
       List<VaccineDoseAdministered> vaccineDoseAdministeredList = new ArrayList<VaccineDoseAdministered>();
       if (dataModel.getSelectedAntigenAdministeredRecordList() != null) {
         for (AntigenAdministeredRecord aar : dataModel.getSelectedAntigenAdministeredRecordList()) {
@@ -443,5 +437,4 @@ public class StepServlet extends ForecastServlet {
       }
     }
   }
-
 }

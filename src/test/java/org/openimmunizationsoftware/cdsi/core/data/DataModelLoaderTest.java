@@ -2,13 +2,9 @@ package org.openimmunizationsoftware.cdsi.core.data;
 
 import static org.junit.Assert.*;
 
-import java.text.DateFormat;
-import java.util.List;
-import java.util.Map;
 
 import org.junit.Test;
 import org.openimmunizationsoftware.cdsi.core.domain.Age;
-import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
 import org.openimmunizationsoftware.cdsi.core.domain.Schedule;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;

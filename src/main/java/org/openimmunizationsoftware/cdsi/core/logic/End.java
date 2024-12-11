@@ -1,15 +1,12 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
-import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.servlet.ForecastServlet;
 
 public class End extends LogicStep {
@@ -20,7 +17,6 @@ public class End extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -80,18 +76,15 @@ public class End extends LogicStep {
     out.println("</pre>");
     out.println("<h2>Printing Standard</h2>");
     printStandard(out);
-
   }
 
   @Override
   public void printPost(PrintWriter out) throws Exception {
     printStandard(out);
-
   }
 
   private void printStandard(PrintWriter out) {
     printConditionAttributesTable(out);
     printLogicTables(out);
   }
-
 }

@@ -86,7 +86,8 @@ public class EvaluateGender extends LogicStep {
               if (caRequiredGender.getFinalValue().size() == 0) {
                 return LogicResult.YES;
               }
-              if (caRequiredGender.getFinalValue().contains(caGender.getFinalValue())) {
+              for(RequiredGender requiredGender : caRequiredGender.getFinalValue())
+              if (requiredGender.getValue().contains(caGender.getFinalValue())) {
                 return LogicResult.YES;
               }
               return LogicResult.YES;
@@ -94,7 +95,6 @@ public class EvaluateGender extends LogicStep {
           });
 
       setLogicResults(0, YES, NO);
-      // setLogicResults(0, new LogicResult[] { LogicResult.YES, LogicResult.NO });
 
       setLogicOutcome(0, new LogicOutcome() {
         @Override

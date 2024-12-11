@@ -6,10 +6,7 @@ import java.util.Date;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AllowableVaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
-import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
@@ -52,7 +49,6 @@ public class EvaluateForAllowableVaccine extends LogicStep {
 
       logicTableList.add(logicTable);
     }
-
   }
 
   @Override
@@ -181,12 +177,10 @@ public class EvaluateForAllowableVaccine extends LogicStep {
           log("Setting next step: 6.10 SatisfyTargetDose");
         }
       });
-
     }
 
     public YesNo getResult() {
       return result;
     }
   }
-
 }

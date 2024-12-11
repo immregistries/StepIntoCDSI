@@ -11,7 +11,6 @@ import java.util.List;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.BirthDateImmunity;
 import org.openimmunizationsoftware.cdsi.core.domain.MedicalHistory;
-import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.Immunity;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
@@ -21,9 +20,6 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
 public class DetermineEvidenceOfImmunity extends LogicStep {
-
-  //TODO: write all the tables and other stuff for this class
-  //logicCondition 2 in DetermineForecastNeed checking for IMMUNE patient status is true every time
 
   // ConditionAttributes to be used
   private ConditionAttribute<Date> caDateofBirth = null;
@@ -52,11 +48,9 @@ public class DetermineEvidenceOfImmunity extends LogicStep {
     conditionAttributesList.add(caCountryofBirth);
     conditionAttributesList.add(caEvidenceOfImmunity);
 
-
     // Adds logic table 7-2 to logicTableList
     LT logicTable = new LT();
     logicTableList.add(logicTable);
-
   }
 
   @Override
@@ -240,5 +234,4 @@ public class DetermineEvidenceOfImmunity extends LogicStep {
       });
     }
   }
-
 }

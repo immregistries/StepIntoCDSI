@@ -1,9 +1,6 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
@@ -126,11 +123,8 @@ public class SingleAntigenVaccineGroup extends LogicStep {
     out.println(
         "<p>The forecasting rules which need to be applied to a single antigen vaccine group are listed in the table below</p>");
 
-    List<VaccineGroupForecast> vaccineGroupForecastList = new ArrayList<VaccineGroupForecast>();
     VaccineGroup vaccineGroup = dataModel.getVaccineGroup();
     out.println("<h2>" + vaccineGroup.getName() + "</h2>");
-    VaccineGroupForecast vgf = new VaccineGroupForecast();
-
     PatientSeries p = dataModel.getBestPatientSeriesList().size() == 0 ? null
         : dataModel.getBestPatientSeriesList().get(0);
     if (dataModel.getBestPatientSeriesList() == null) {
@@ -171,7 +165,6 @@ public class SingleAntigenVaccineGroup extends LogicStep {
     out.println("</table>");
 
     setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
-
   }
 
   private class LT extends LogicTable {
@@ -210,5 +203,4 @@ public class SingleAntigenVaccineGroup extends LogicStep {
       //
     }
   }
-
 }

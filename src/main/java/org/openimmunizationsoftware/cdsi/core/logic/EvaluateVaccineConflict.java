@@ -10,12 +10,8 @@ import java.util.Date;
 import org.apache.commons.lang.time.DateUtils;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
-import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
-import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
@@ -47,7 +43,6 @@ public class EvaluateVaccineConflict extends LogicStep {
         "Supporting Data (Live Virus Conflict)", "Current Vaccine Type");
 
     conditionAttributesList.add(caDateAdministered);
-
     conditionAttributesList.add(caCurrentVaccineType);
     // conditionAttributesList.add(caPreviousVaccineType);
 
@@ -100,7 +95,6 @@ public class EvaluateVaccineConflict extends LogicStep {
     if (y == YesNo.YES) {
       dataModel.getTargetDose()
           .setStatusCause(dataModel.getTargetDose().getStatusCause() + "VirusConflict");
-
     }
     return next();
   }
@@ -126,14 +120,12 @@ public class EvaluateVaccineConflict extends LogicStep {
     out.println("<p>FIGURE 4 - 14 EVALUATE LIVE VIRUS CONFLICT PROCESS MODEL</p>");
     printConditionAttributesTable(out);
     printLogicTables(out);
-
   }
 
   private class LT420 extends LogicTable {
     private YesNo y420 = YesNo.NO;
 
     public LT420() {
-
       super(2, 3,
           "Table 4-20 Should the current vaccine dose administrated be evaluted for a live virus conflict ? ");
 
@@ -152,8 +144,7 @@ public class EvaluateVaccineConflict extends LogicStep {
       });
 
       setLogicCondition(1, new LogicCondition(
-          "Is there at least one vaccine dose administered on or before the current vaccine dose administered date?") {// CHeck
-
+          "Is there at least one vaccine dose administered on or before the current vaccine dose administered date?") {
         @Override
         protected LogicResult evaluateInternal() {
           for (AntigenAdministeredRecord aar : dataModel.getAntigenAdministeredRecordList()) {
@@ -186,7 +177,6 @@ public class EvaluateVaccineConflict extends LogicStep {
       });
 
       setLogicOutcome(2, new LogicOutcome() {
-
         @Override
         public void perform() {
           log("No. The vaccine dose administered should not be evaluated for a live virus conflict.");
@@ -194,7 +184,6 @@ public class EvaluateVaccineConflict extends LogicStep {
               .setStatusCause(dataModel.getTargetDose().getStatusCause() + "VirusConflict");
         }
       });
-
     }
 
     public YesNo getY420() {
@@ -211,7 +200,6 @@ public class EvaluateVaccineConflict extends LogicStep {
     private YesNo y421 = null;
 
     public LT421() {
-
       super(1, 2, "Table 4-21 Could the two vaccine doses administrated be in conflict?");
 
       setLogicCondition(0, new LogicCondition(
@@ -232,7 +220,6 @@ public class EvaluateVaccineConflict extends LogicStep {
       setLogicResults(0, YES, NO);
 
       setLogicOutcome(0, new LogicOutcome() {
-
         @Override
         public void perform() {
           log("Yes. The two doses must be checked for a live virus conflict");
@@ -241,7 +228,6 @@ public class EvaluateVaccineConflict extends LogicStep {
       });
 
       setLogicOutcome(1, new LogicOutcome() {
-
         @Override
         public void perform() {
           log("No. The two doses need not be checked for a live virus conflict");
@@ -262,7 +248,6 @@ public class EvaluateVaccineConflict extends LogicStep {
       for (LiveVirusConflict liveVirusConflict : dataModel.getLiveVirusConflictList()) {
         if (liveVirusConflict.getCurrentVaccineType()
             .equals(caCurrentVaccineType.getFinalValue())) {
-          SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
           Date dob = vaccineAdministered.getDateAdministered();
           int beginAgeAmount = liveVirusConflict.getConflictBeginInterval().getAmount();
           int endAgeAmount = liveVirusConflict.getConflictBeginInterval().getAmount();
@@ -303,13 +288,11 @@ public class EvaluateVaccineConflict extends LogicStep {
 
         @Override
         protected LogicResult evaluateInternal() {
-          for (LiveVirusConflict lvc : dataModel.getLiveVirusConflictList()) {
-            if (caDateAdministered.getFinalValue()
-                .after(caConflictBeginIntervalDate.getFinalValue())
-                && caDateAdministered.getFinalValue()
-                    .before(caConflictEndIntervalDate.getFinalValue())) {
-              return YES;
-            }
+          if (caDateAdministered.getFinalValue()
+              .after(caConflictBeginIntervalDate.getFinalValue())
+              && caDateAdministered.getFinalValue()
+                  .before(caConflictEndIntervalDate.getFinalValue())) {
+            return YES;
           }
 
           return NO;
@@ -319,7 +302,6 @@ public class EvaluateVaccineConflict extends LogicStep {
       setLogicResults(0, YES, NO);
 
       setLogicOutcome(0, new LogicOutcome() {
-
         @Override
         public void perform() {
           log("Yes. The vaccine dose administered is in conflict with a previous vaccine dose administered");
@@ -328,7 +310,6 @@ public class EvaluateVaccineConflict extends LogicStep {
       });
 
       setLogicOutcome(1, new LogicOutcome() {
-
         @Override
         public void perform() {
           log("No. The vaccine dose administered is not in conflict with a previous vaccine dose administered.");
@@ -336,7 +317,5 @@ public class EvaluateVaccineConflict extends LogicStep {
         }
       });
     }
-
   }
-
 }

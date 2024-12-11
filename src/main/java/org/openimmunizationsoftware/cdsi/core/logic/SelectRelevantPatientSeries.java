@@ -88,7 +88,6 @@ public class SelectRelevantPatientSeries extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
-
     evaluateLogicTables();
     return LogicStepFactory.createLogicStep(LogicStepType.CREATE_RELEVANT_PATIENT_SERIES, dataModel);
   }
@@ -181,14 +180,14 @@ public class SelectRelevantPatientSeries extends LogicStep {
   }
 
   private class LT54 extends LTInnerSet {
-
     public LT54() {
       super(2, 4, "TABLE 5-4 DOES THE INDICATION APPLY TO THE PATIENT?");
+      
       setLogicCondition(0, new LogicCondition(
           "Does the indication describe any active patient observations?") {
         @Override
         public LogicResult evaluateInternal() {
-          // TODO not yet implemented
+          // TODO logic condition not yet implemented
           return LogicResult.NO;
         }
       });
@@ -211,8 +210,6 @@ public class SelectRelevantPatientSeries extends LogicStep {
         }
       });
 
-      // TODO logic result 0, 2 asks for an 'UNKNOWN' value, should this be added to
-      // the LogicResult ENUM?
       setLogicResults(0, new LogicResult[] { LogicResult.YES, LogicResult.NO, LogicResult.ANY, LogicResult.ANY });
       setLogicResults(1, new LogicResult[] { LogicResult.YES, LogicResult.YES, LogicResult.YES, LogicResult.NO });
 
@@ -244,7 +241,6 @@ public class SelectRelevantPatientSeries extends LogicStep {
           log("No. The Indication does not apply to the patient.");
         }
       });
-
     }
   }
 
@@ -257,7 +253,6 @@ public class SelectRelevantPatientSeries extends LogicStep {
     }
 
     public LT55(AntigenSeries antigenSeries) {
-
       super(3, 4,
           "TABLE 5-5 IS AN ANTIGEN SERIES '" + antigenSeries.getSeriesName()
               + "' A RELEVANT PATIENT SERIES FOR A PATIENT?");
@@ -309,7 +304,6 @@ public class SelectRelevantPatientSeries extends LogicStep {
           }
           return LogicResult.NO;
         }
-
       });
 
       setLogicResults(0, new LogicResult[] { LogicResult.YES, LogicResult.NO, LogicResult.YES, LogicResult.YES, });
@@ -346,8 +340,6 @@ public class SelectRelevantPatientSeries extends LogicStep {
           log("No. The antigen series is not a relevant patient series for the patient.");
         }
       });
-
     }
   }
-
 }

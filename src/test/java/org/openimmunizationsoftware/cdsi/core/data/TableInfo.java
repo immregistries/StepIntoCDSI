@@ -1,6 +1,5 @@
 package org.openimmunizationsoftware.cdsi.core.data;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;

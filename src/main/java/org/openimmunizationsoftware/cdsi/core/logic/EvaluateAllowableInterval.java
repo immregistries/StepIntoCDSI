@@ -10,12 +10,8 @@ import org.openimmunizationsoftware.cdsi.core.domain.AllowableInterval;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
-import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
-import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
@@ -57,7 +53,6 @@ public class EvaluateAllowableInterval extends LogicStep {
         logicTableList.add(logicTable);
       }
     }
-
   }
 
   @Override
@@ -153,9 +148,7 @@ public class EvaluateAllowableInterval extends LogicStep {
     }
 
     public YesNo getResult() {
-      // TODO Auto-generated method stub
       return result;
     }
   }
-
 }

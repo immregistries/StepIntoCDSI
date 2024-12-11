@@ -1,7 +1,5 @@
 package org.openimmunizationsoftware.cdsi.core.domain.datatypes;
 
-import gov.nist.healthcare.cds.enumeration.SerieStatus;
-
 public enum PatientSeriesStatus {
   COMPLETE, CONTRAINDICATED, IMMUNE, NOT_COMPLETE, NOT_RECOMMENDED, AGED_OUT;
 

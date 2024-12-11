@@ -1,7 +1,5 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
-import java.sql.Time;
-
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 
 public class Indication {
@@ -50,5 +48,4 @@ public class Indication {
     public void setGuidance(String guidance) {
         this.guidance = guidance;
     }
-    
 }

@@ -2,7 +2,6 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,22 +12,18 @@ import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
-import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
 import org.openimmunizationsoftware.cdsi.core.domain.PreferrableVaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
-import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.Vaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
-import org.springframework.web.client.HttpClientErrorException.Conflict;
 
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTINT_5;
 
@@ -74,8 +69,6 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     caLatestRecommendedAgeDate.setInitialValue(latestRecommendedAgeDate);
   }
 
-  
-
   private void findEarliestRecommendedIntervalDates() {
     List<Date> tmpEarliestRecommendedIntervalList = new ArrayList<Date>();
     try {
@@ -90,7 +83,6 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     } catch (NullPointerException np) {
       log("earliestRecommendedInterval is null");
     }
-
   }
 
   private void findLatestRecommendedIntervalDate() {
@@ -140,7 +132,6 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     List<Date> minimumIntervalList = new ArrayList<Date>();
     if (referenceSeriesDose.getIntervalList() != null) {
       for (Interval minIn : referenceSeriesDose.getIntervalList()) {
-        
         TimePeriod minimalIntervalFromReferenceSeriesDose = minIn.getMinimumInterval();
         Date patientReferenceDoseDate = minIn.getPatientReferenceDoseDate(dataModel);
         if (minimalIntervalFromReferenceSeriesDose == null) {
@@ -216,7 +207,6 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     } else {
       // log("Couldn't find seasonalRecommendation start date");
     }
-
   }
 
   int size = dataModel.getVaccineGroupForecastList().size();
@@ -270,7 +260,6 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     conditionAttributesList.add(caSeasonalRecommendationStartDate);
     conditionAttributesList.add(caVaccineType);
     conditionAttributesList.add(caForecastVaccineType);
-
   }
 
   @Override
@@ -334,7 +323,6 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
 
   private void insertTableRow(PrintWriter out, String BusinessRuleID, String Term,
       String BusinessRule) {
-
     out.println("  <tr>");
     out.println("    <td>" + BusinessRuleID + "</td>");
     out.println("    <td>" + Term + "</td> ");
@@ -367,7 +355,6 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
       }
     }
     return tmp;
-
   }
 
   private Date computeEarliestDate() {
@@ -527,7 +514,6 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
       adjustedPastDueDate = unadjustedPastDueDate;
     }
     return adjustedPastDueDate;
-
   }
 
   private List<Vaccine> recommendedVaccines() {
@@ -585,5 +571,4 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     insertTableRow(out, "FORECASTRECVACT-1", "Recommended Vaccine", "recommendedVaccine");
     out.println("</table>");
   }
-
 }

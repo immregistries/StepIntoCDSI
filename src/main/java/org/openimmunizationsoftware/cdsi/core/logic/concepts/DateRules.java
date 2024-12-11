@@ -1,32 +1,19 @@
 package org.openimmunizationsoftware.cdsi.core.logic.concepts;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Age;
 import org.openimmunizationsoftware.cdsi.core.domain.AllowableVaccine;
-import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipCondition;
 import org.openimmunizationsoftware.cdsi.core.domain.Contraindication;
 import org.openimmunizationsoftware.cdsi.core.domain.Indication;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
 import org.openimmunizationsoftware.cdsi.core.domain.PreferrableVaccine;
-import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 
 public class DateRules {
-  // public static DateRule CALCDT_1 = null;
-  // public static DateRule CALCDT_2 = null;
-  // public static DateRule CALCDT_3 = null;
-  // public static DateRule CALCDT_4 = null;
-  // public static DateRule CALCDT_5 = null;
-  // public static DateRule CALCDT_6 = null;
-
-  // public static DateRule<?> CALCDTSKIP_1 = null;
-  // public static DateRule<?> CALCDTSKIP_2 = null;
   public static DateRule<ConditionalSkipCondition> CALCDTSKIP_3 = null;
   public static DateRule<ConditionalSkipCondition> CALCDTSKIP_4 = null;
   public static DateRule<ConditionalSkipCondition> CALCDTSKIP_5 = null;
@@ -250,9 +237,7 @@ public class DateRules {
         if (interval == null || interval.getEarliestRecommendedInterval() == null) {
           return null;
         }
-        Date patientReferenceDoseDate = new Date();
-        AntigenAdministeredRecord previousAAR = dataModel.getPreviousAntigenAdministeredRecord();
-        patientReferenceDoseDate = previousAAR.getDateAdministered();
+        Date patientReferenceDoseDate = interval.getPatientReferenceDoseDate(dataModel);
 
         return interval.getEarliestRecommendedInterval().getDateFrom(patientReferenceDoseDate);
       }
@@ -297,7 +282,6 @@ public class DateRules {
     CALCDTINT_8.setBusinessRule(
         "A patient's reference dose date must be calculated as the most recent vaccine dose administered which is of the same vaccine type as the supporting data defined from most recent vaccine type if from immediate previous dose administered is \"N\" and from most recent is not \"n/a\".");
     CALCDTINT_8.setLogicalComponent("Interval");
-    // CALCDTINT_8.setFieldName("patient's latest minimum interval date");
 
     CALCDTLIVE_1 = new DateRule<LiveVirusConflict>() {
       @Override
@@ -474,38 +458,5 @@ public class DateRules {
     CALCDTIND_2.setBusinessRule(
         "A patient's indication end age date must be calculated as the patient's date of birth plus the indication end age of an indication.");
     CALCDTIND_2.setLogicalComponent("Indication");
-
-    // CALCDTCOND_1 = new DateRule() {
-    // @Override
-    // protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep)
-    // {
-    // return null;
-    // }
-    // };
-    // CALCDTCOND_1.setBusinessRuleId("CALCDTCOND-1");
-    // CALCDTCOND_1
-    // .setBusinessRule("Retired in version 2.1 - No Longer Used.\n" +
-    // "The patient's conditional begin age date must be calculated as the
-    // patient's date of birth plus the conditional begin age.");
-    // CALCDTCOND_1.setLogicalComponent("n/a");
-    //// CALCDTCOND_1.setFieldName("patient's allowable vaccine type end age
-    // date");
-    //
-    // CALCDTCOND_2 = new DateRule() {
-    // @Override
-    // protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep)
-    // {
-    // return null;
-    // }
-    // };
-    // CALCDTCOND_2.setBusinessRuleId("CALCDTCOND-2");
-    // CALCDTCOND_2
-    // .setBusinessRule("Retired in version 2.1 - No Longer Used.\n" +
-    // "The patient's conditional end age date must be calculated as the
-    // patient's date of birth plus the conditional end age.");
-    // CALCDTCOND_2.setLogicalComponent("n/a");
-    //// CALCDTCOND_2.setFieldName("patient's allowable vaccine type end age
-    // date");
   }
-
 }

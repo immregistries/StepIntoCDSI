@@ -77,7 +77,6 @@ public class TargetDose {
     if (trackedSeriesDose != null) {
       return trackedSeriesDose.toString();
     }
-    // TODO Auto-generated method stub
     return super.toString();
   }
 

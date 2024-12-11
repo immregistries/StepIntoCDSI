@@ -26,13 +26,10 @@ public class ClassifyScorablePatientSeries extends LogicStep {
   public ClassifyScorablePatientSeries(DataModel dataModel) {
     super(LogicStepType.CLASSIFY_SCORABLE_PATIENT_SERIES, dataModel);
     // setConditionTableName("Table ");
-
     // caDateAdministered = new ConditionAttribute<Date>("Vaccine dose
     // administered", "Date
     // Administered");
-
     // caTriggerAgeDate.setAssumedValue(FUTURE);
-
     // conditionAttributesList.add(caDateAdministered);
 
     LT logicTable = new LT();
@@ -42,7 +39,6 @@ public class ClassifyScorablePatientSeries extends LogicStep {
   @Override
   public LogicStep process() throws Exception {
     setNextLogicStepType(LogicStepType.NO_VALID_DOSES);
-
     evaluateLogicTables();
     return next();
   }
@@ -71,10 +67,8 @@ public class ClassifyScorablePatientSeries extends LogicStep {
       super(3, 3, "Table 8-5 Which scorable patient series should be scored? ");
 
       setLogicCondition(0, new LogicCondition("Are there 2 or more complete patient series in the series group?") {
-
         @Override
         protected LogicResult evaluateInternal() {
-          // TODO Auto-generated method stub
           int completePatientSeries = 0;
           List<PatientSeries> relevantPatientSeriesList = dataModel.getScorablePatientSeriesList();
           for (PatientSeries patientSeries : relevantPatientSeriesList) {
@@ -94,10 +88,8 @@ public class ClassifyScorablePatientSeries extends LogicStep {
 
       setLogicCondition(1, new LogicCondition(
           "Are there 2 or more in-process patient series and no complete patient series in the series group?") {
-
         @Override
         protected LogicResult evaluateInternal() {
-          // TODO Auto-generated method stub
           int completePatientSeries = 0;
           int inProcessPatientSeries = 0;
           List<PatientSeries> patientSeriesList = dataModel.getScorablePatientSeriesList();
@@ -138,7 +130,6 @@ public class ClassifyScorablePatientSeries extends LogicStep {
                 antigenSerieNameWithANotCompletePatientSerieStatus.add(antigenSeriesName2);
               }
             }
-
           }
 
           antigenSerieNameWithANotCompletePatientSerieStatus
@@ -156,7 +147,6 @@ public class ClassifyScorablePatientSeries extends LogicStep {
 
       setLogicCondition(2,
           new LogicCondition("Is the number of valid doses = 0 for all scorable patient series in the series group?") {
-
             @Override
             protected LogicResult evaluateInternal() {
               // A valid dose is a dose with a satisfied target dose
@@ -176,7 +166,6 @@ public class ClassifyScorablePatientSeries extends LogicStep {
               } else {
                 return LogicResult.NO;
               }
-
             }
           });
 
@@ -185,34 +174,28 @@ public class ClassifyScorablePatientSeries extends LogicStep {
       setLogicResults(2, ANY, NO, YES);
 
       setLogicOutcome(0, new LogicOutcome() {
-
         @Override
         public void perform() {
           log("Apply complete patient series scoring business rules to all complete patient series. "
               + "Inprocess patient series and patient series with 0 valid doses are not scored and dropped from consideration");
           setNextLogicStepType(LogicStepType.COMPLETE_PATIENT_SERIES);
-
         }
       });
 
       setLogicOutcome(1, new LogicOutcome() {
-
         @Override
         public void perform() {
           log("Apply in-process patient series scoring business rules to all in-process patient series. "
               + "Patient Series with 0 valid doses are not scored and dropped from consideration.");
           setNextLogicStepType(LogicStepType.IN_PROCESS_PATIENT_SERIES);
-
         }
       });
 
       setLogicOutcome(2, new LogicOutcome() {
-
         @Override
         public void perform() {
           log("Apply no valid doses scoring business rules to all patient series.");
           setNextLogicStepType(LogicStepType.NO_VALID_DOSES);
-
         }
       });
 

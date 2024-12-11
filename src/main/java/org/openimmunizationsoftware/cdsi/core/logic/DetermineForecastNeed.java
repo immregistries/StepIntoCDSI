@@ -425,9 +425,10 @@ public class DetermineForecastNeed extends LogicStep {
   private List<Date> findMinimumIntervalDates() {
     List<Date> minimumIntervalList = new ArrayList<Date>();
     SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-    Date patientReferenceDoseDate = computePatientReferenceDoseDate();
+   
     if (referenceSeriesDose.getIntervalList() != null) {
       for (Interval minIn : referenceSeriesDose.getIntervalList()) {
+        Date patientReferenceDoseDate = minIn.getPatientReferenceDoseDate(dataModel);
         TimePeriod minimalIntervalFromReferenceSeriesDose = minIn.getMinimumInterval();
         if (minimalIntervalFromReferenceSeriesDose == null) {
           continue;
@@ -436,18 +437,6 @@ public class DetermineForecastNeed extends LogicStep {
       }
     }
     return minimumIntervalList;
-  }
-
-  private Date computePatientReferenceDoseDate() {
-    Date tmpPatientReferenceDoseDate = new Date();
-    try {
-      AntigenAdministeredRecord previousAAR = dataModel.getPreviousAntigenAdministeredRecord();
-      tmpPatientReferenceDoseDate = previousAAR.getDateAdministered();
-    } catch (NullPointerException np) {
-      np.getCause();
-    }
-    return tmpPatientReferenceDoseDate;
-
   }
 
 }

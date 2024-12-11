@@ -10,7 +10,6 @@ import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.PreferrableVaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
-// import org.openimmunizationsoftware.cdsi.core.logic.EvaluateAllowableInterval.LT;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
@@ -23,10 +22,8 @@ public class EvaluateForPreferableVaccine extends LogicStep {
     setConditionTableName("Table 6.8");
 
     Date birthDate = dataModel.getPatient().getDateOfBirth();
-
-    int i = 0, j = 0, k = 0;
-    boolean allTrue = true;
     int count = 0;
+
     for (PreferrableVaccine pi : dataModel.getTargetDose().getTrackedSeriesDose()
         .getPreferrableVaccineList()) {
       count++;
@@ -80,7 +77,6 @@ public class EvaluateForPreferableVaccine extends LogicStep {
 
       logicTableList.add(logicTable);
     }
-
   }
 
   @Override
@@ -168,7 +164,6 @@ public class EvaluateForPreferableVaccine extends LogicStep {
           } else {
             return LogicResult.NO;
           }
-
         }
       });
       setLogicCondition(1, new LogicCondition(
@@ -199,7 +194,7 @@ public class EvaluateForPreferableVaccine extends LogicStep {
           "Is the volume of the vaccine dose administered >= the volume of the preferable vaccine for the target dose?") {
         @Override
         public LogicResult evaluateInternal() {
-          if (caVolume.equals("")
+          if (caVolume.getFinalValue().equals("")
               || caVolume.getFinalValue().equalsIgnoreCase(caPreferableVaccineElements.getFinalValue().getVolume())) {
             return LogicResult.YES;
           }
@@ -266,5 +261,4 @@ public class EvaluateForPreferableVaccine extends LogicStep {
       return result;
     }
   }
-
 }

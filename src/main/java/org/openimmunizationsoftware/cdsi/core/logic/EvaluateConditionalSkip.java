@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.jena.sparql.function.library.leviathan.log;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkip;
@@ -99,7 +98,6 @@ public class EvaluateConditionalSkip extends LogicStep {
                 logicTable610.setConditionLogicType(conditionalSkipSet.getConditionLogic());
                 // 3. Second for loop box; For Each Condition in a Set
                 for (ConditionalSkipCondition condition : conditionalSkipSet.getConditionList()) {
-
                     // 4. Evaluate condition; uses Business Rule Table 4-5 and Decision Tables 4-6,
                     // 4-7, and 4-8
                     // Defining the condition as a class that corresponds to each Decision Table
@@ -184,7 +182,6 @@ public class EvaluateConditionalSkip extends LogicStep {
                             lt.caNumberofConditionalDosesAdministered
                                     .setInitialValue(CONDSKIP_1.evaluate(dataModel, condition));
                         }
-
                     }
                     logicTable610.addInnerSet(lt);
                 }
@@ -192,7 +189,6 @@ public class EvaluateConditionalSkip extends LogicStep {
                 logicTable611.addInnerSet(logicTable610);
             }
             logicTableList.add(logicTable611);
-
         } else {
             log("No conditional skips are defined. ");
         }
@@ -306,7 +302,6 @@ public class EvaluateConditionalSkip extends LogicStep {
                     met = false;
                 }
             });
-
         }
     }
 
@@ -319,12 +314,6 @@ public class EvaluateConditionalSkip extends LogicStep {
                     "Does the Conditional Skip Series Group identify a Series Group with at least one relevant patient series with a patient series status of 'Complete'?") {
                 @Override
                 public LogicResult evaluateInternal() {
-                    if (false) {
-                        return LogicResult.NO;
-                    }
-                    if (true) {
-                        return LogicResult.YES;
-                    }
                     return LogicResult.NO;
                 }
             });
@@ -472,7 +461,6 @@ public class EvaluateConditionalSkip extends LogicStep {
                     met = false;
                 }
             });
-
         }
     }
 
@@ -546,7 +534,6 @@ public class EvaluateConditionalSkip extends LogicStep {
                     met = false;
                 }
             });
-
         }
     }
 
@@ -622,7 +609,6 @@ public class EvaluateConditionalSkip extends LogicStep {
                     setNextLogicStepType(noSkip);
                 }
             });
-
         }
     }
 }

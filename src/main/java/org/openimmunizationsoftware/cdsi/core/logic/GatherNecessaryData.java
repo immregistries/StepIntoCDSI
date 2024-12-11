@@ -78,7 +78,6 @@ public class GatherNecessaryData extends LogicStep {
 
       ImmunizationHistory immunizationHistory = new ImmunizationHistory();
       dataModel.setImmunizationHistory(immunizationHistory);
-      int i = 1;
       for (TestCaseRegistered.Vaccination v : tcr.getVaccinationList()) {
         VaccineDoseAdministered vaccineDoseAdministered = new VaccineDoseAdministered();
         vaccineDoseAdministered.setPatient(patient);
@@ -97,7 +96,6 @@ public class GatherNecessaryData extends LogicStep {
         vaccine.setVaccineType(cvx);
         vaccine.setManufacturer(mvxCode);
         vaccineDoseAdministered.setVaccine(vaccine);
-        i++;
       }
     }
     return LogicStepFactory.createLogicStep(LogicStepType.ORGANIZE_IMMUNIZATION_HISTORY, dataModel);

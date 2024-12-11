@@ -7,11 +7,7 @@ import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.EXT
 import java.io.PrintWriter;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
-import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
-import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
-import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
@@ -31,7 +27,7 @@ public class SatisfyTargetDose extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(logicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
+    setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
     evaluateLogicTables();
     dataModel.getTargetDose().setStatusCause("");
     return next(true);
@@ -184,5 +180,4 @@ public class SatisfyTargetDose extends LogicStep {
       });
     }
   }
-
 }

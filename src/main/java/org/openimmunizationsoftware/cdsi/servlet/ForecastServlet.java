@@ -17,8 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.openimmunizationsoftware.cdsi.SoftwareVersion;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.data.DataModelLoader;
-import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
-import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
@@ -85,7 +83,6 @@ public class ForecastServlet extends HttpServlet {
     out.println();
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 
-    List<Forecast> fl = dataModel.getForecastList();
     List<VaccineGroupForecast> vgfl = dataModel.getVaccineGroupForecastList();
 
     List<VaccineGroupForecast> vgfNow = new ArrayList<VaccineGroupForecast>();

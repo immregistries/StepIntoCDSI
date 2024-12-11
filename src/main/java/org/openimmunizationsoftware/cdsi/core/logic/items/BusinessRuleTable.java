@@ -3,7 +3,6 @@ package org.openimmunizationsoftware.cdsi.core.logic.items;
 import java.util.Date;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
-import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipCondition;
 import org.openimmunizationsoftware.cdsi.core.domain.DoseType;
 import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
@@ -49,8 +48,6 @@ public class BusinessRuleTable {
               }
             }
             if (inRange) {
-              Antigen antigen =
-                  conditionalSkipCondition.getSeriesDose().getAntigenSeries().getTargetDisease();
               Evaluation evaluation = vaccineDoseAdministered.getTargetDose().getEvaluation();
               if (evaluation != null && evaluation.getEvaluationStatus() != null) {
                 if (conditionalSkipCondition.getDoseType() == DoseType.VALID
@@ -59,7 +56,6 @@ public class BusinessRuleTable {
                   count++;
                 }
               }
-
             }
           }
         }

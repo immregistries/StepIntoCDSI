@@ -8,7 +8,6 @@ import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.DoseCondition;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
@@ -80,7 +79,7 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
           if (caDoseCondition.getFinalValue() == null) {
             return LogicResult.NO;
           }
-          if (caDoseCondition.getFinalValue().equals(YesNo.YES)) {
+          if (caDoseCondition.getFinalValue().equals(DoseCondition.YES)) {
             return LogicResult.YES;
           }
           return LogicResult.NO;
@@ -120,7 +119,6 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
           setNextLogicStepType(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION);
         }
       });
-
     }
   }
 
@@ -153,6 +151,5 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
   @Override
   public void printPost(PrintWriter out) {
     printStandard(out);
-
   }
 }
