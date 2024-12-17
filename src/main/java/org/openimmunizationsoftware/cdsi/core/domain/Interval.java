@@ -121,53 +121,58 @@ public class Interval {
   }
 
   public Date getPatientReferenceDoseDate(DataModel dataModel) {
-    Date tmpPatientReferenceDoseDate = new Date();
+    Date tmpPatientReferenceDoseDate = null;
 
-    if(dataModel.getAntigenAdministeredRecord() == null) {
+    if (dataModel.getAntigenAdministeredRecord() == null) {
       return tmpPatientReferenceDoseDate;
     }
 
     VaccineDoseAdministered vda = dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered();
-    
-    if(vda.getTargetDose() == null) {
+
+    if (vda.getTargetDose() == null) {
       return tmpPatientReferenceDoseDate;
     }
     Evaluation vdaEvaluation = vda.getTargetDose().getEvaluation();
     try {
-      //CALCDTINT-1
-      if(this.getFromImmediatePreviousDoseAdministered().equals(YesNo.YES)) {
-        if(vdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.VALID)
-        || vdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.NOT_VALID)) {
-          if(!vdaEvaluation.getEvaluationReason().equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
+      // CALCDTINT-1
+      if (this.getFromImmediatePreviousDoseAdministered().equals(YesNo.YES)) {
+        if (vdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.VALID)
+            || vdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.NOT_VALID)) {
+          if (!vdaEvaluation.getEvaluationReason().equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
             AntigenAdministeredRecord previousAAR = dataModel.getPreviousAntigenAdministeredRecord();
             tmpPatientReferenceDoseDate = previousAAR.getDateAdministered();
           }
         }
       }
-      //CALCDTINT-2
-      if(this.getFromImmediatePreviousDoseAdministered().equals(YesNo.NO)) {
-        if(!this.getFromTargetDoseNumberInSeries().equals("")) {
-          //TODO set tmpPatientReferenceDoseDate to 'the date administered of the vaccine dose administered that satisfies the target dose with the same target dose number as the from target dose number in series'
-          //Maybe this?
-          for(TargetDose td : dataModel.getTargetDoseList()) {
-            if(this.getFromTargetDoseNumberInSeries().equals(td.getTrackedSeriesDose().getDoseNumber())) {
+      // CALCDTINT-2
+      if (this.getFromImmediatePreviousDoseAdministered().equals(YesNo.NO)) {
+        if (!this.getFromTargetDoseNumberInSeries().equals("")) {
+          // TODO set tmpPatientReferenceDoseDate to 'the date administered of the vaccine
+          // dose administered that satisfies the target dose with the same target dose
+          // number as the from target dose number in series'
+          // Maybe this?
+          for (TargetDose td : dataModel.getTargetDoseList()) {
+            if (this.getFromTargetDoseNumberInSeries().equals(td.getTrackedSeriesDose().getDoseNumber())) {
               tmpPatientReferenceDoseDate = td.getSatisfiedByVaccineDoseAdministered().getDateAdministered();
             }
           }
         }
       }
-      //CALCDTINT-8
-      if(this.getFromImmediatePreviousDoseAdministered().equals(YesNo.NO)) {
-        if(this.getFromMostRecentVaccineType() != null) {
-          if(!vdaEvaluation.getEvaluationReason().equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
-            //TODO set tmpPatientReferenceDoseDate to 'the date administered of the most recent vaccine dose administered that is the same vaccine type as the from most recent vaccine type'
+      // CALCDTINT-8
+      if (this.getFromImmediatePreviousDoseAdministered().equals(YesNo.NO)) {
+        if (this.getFromMostRecentVaccineType() != null) {
+          if (!vdaEvaluation.getEvaluationReason().equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
+            // TODO set tmpPatientReferenceDoseDate to 'the date administered of the most
+            // recent vaccine dose administered that is the same vaccine type as the from
+            // most recent vaccine type'
           }
         }
       }
-      //CALCDTINT-9
-      if(this.getFromImmediatePreviousDoseAdministered().equals(YesNo.NO)) {
-        if(!this.getFromRelevantObservation().getCode().equals("")) {
-          //TODO set tmpPatientReferenceDoseDate to 'the observation date of the most recent active patient observation'
+      // CALCDTINT-9
+      if (this.getFromImmediatePreviousDoseAdministered().equals(YesNo.NO)) {
+        if (!this.getFromRelevantObservation().getCode().equals("")) {
+          // TODO set tmpPatientReferenceDoseDate to 'the observation date of the most
+          // recent active patient observation'
         }
       }
     } catch (NullPointerException np) {

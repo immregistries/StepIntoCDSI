@@ -204,6 +204,9 @@ public class DateRules {
       protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep, Interval interval) {
         if (interval != null) {
           Date patientReferenceDoseDate = interval.getPatientReferenceDoseDate(dataModel);
+          if (patientReferenceDoseDate == null) {
+            return null;
+          }
           return interval.getAbsoluteMinimumInterval().getDateFrom(patientReferenceDoseDate);
         }
         return null;
@@ -220,6 +223,9 @@ public class DateRules {
       protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep, Interval interval) {
         if (interval != null) {
           Date patientReferenceDoseDate = interval.getPatientReferenceDoseDate(dataModel);
+          if (patientReferenceDoseDate == null) {
+            return null;
+          }
           return interval.getMinimumInterval().getDateFrom(patientReferenceDoseDate);
         }
         return null;
@@ -238,7 +244,9 @@ public class DateRules {
           return null;
         }
         Date patientReferenceDoseDate = interval.getPatientReferenceDoseDate(dataModel);
-
+        if (patientReferenceDoseDate == null) {
+          return null;
+        }
         return interval.getEarliestRecommendedInterval().getDateFrom(patientReferenceDoseDate);
       }
     };
@@ -426,7 +434,8 @@ public class DateRules {
       }
     };
     FORECASTDTCAN_1.setBusinessRuleId("FORECASTDTCAN_1");
-    FORECASTDTCAN_1.setBusinessRule("The candidate earliest date of a patient series forecast must be the latest of the following dates:\n  - Minimum age date\n  - Latest of all minimum interval dates\n  - Latest of all forecast conflict end dates\n  - Seasonal recommendation start date\n  - Latest of all dates administered of any inadvertent administration being evaluated against a target dose that is part of a patient series that is the basis of the patient series forecast\n  - Date administered of the most recent vaccine dose administered being evaluated against a target dose that is part of a patient series that is the basis of the patient series forecast.");
+    FORECASTDTCAN_1.setBusinessRule(
+        "The candidate earliest date of a patient series forecast must be the latest of the following dates:\n  - Minimum age date\n  - Latest of all minimum interval dates\n  - Latest of all forecast conflict end dates\n  - Seasonal recommendation start date\n  - Latest of all dates administered of any inadvertent administration being evaluated against a target dose that is part of a patient series that is the basis of the patient series forecast\n  - Date administered of the most recent vaccine dose administered being evaluated against a target dose that is part of a patient series that is the basis of the patient series forecast.");
     FORECASTDTCAN_1.setLogicalComponent("Contraindication");
 
     CALCDTIND_1 = new DateRule<Indication>() {

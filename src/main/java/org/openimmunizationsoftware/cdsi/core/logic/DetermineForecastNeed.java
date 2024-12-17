@@ -92,7 +92,8 @@ public class DetermineForecastNeed extends LogicStep {
 
     caTargetDoseStatuses.setInitialValue(dataModel.getTargetDose());
     // TODO move DateRule calculations to DateRules file
-    caMaximumAgeDate.setInitialValue(CALCDTAGE_1.evaluate(dataModel, this, null));//TODO: null value must be an Age for business rule CALCDTAGE-1 to work
+    caMaximumAgeDate.setInitialValue(CALCDTAGE_1.evaluate(dataModel, this, null));// TODO: null value must be an Age for
+                                                                                  // business rule CALCDTAGE-1 to work
     caCandidateEarliestDate.setInitialValue(computeEarliestDate());
     findMaximumAgeDate();
     findSeasonalRecommendationEndDate();
@@ -199,11 +200,11 @@ public class DetermineForecastNeed extends LogicStep {
           "Does the patient have evidence of immunity?") {
         @Override
         protected LogicResult evaluateInternal() {
-          if(dataModel.getPatientSeries() == null || dataModel.getPatientSeries().getPatientSeriesStatus() == null) {
+          if (dataModel.getPatientSeries() == null || dataModel.getPatientSeries().getPatientSeriesStatus() == null) {
             return LogicResult.NO;
           }
-          if(dataModel.getPatientSeries().getPatientSeriesStatus().equals(PatientSeriesStatus.IMMUNE)) {
-            return LogicResult.YES;  
+          if (dataModel.getPatientSeries().getPatientSeriesStatus().equals(PatientSeriesStatus.IMMUNE)) {
+            return LogicResult.YES;
           }
           return LogicResult.NO;
         }
@@ -425,15 +426,17 @@ public class DetermineForecastNeed extends LogicStep {
   private List<Date> findMinimumIntervalDates() {
     List<Date> minimumIntervalList = new ArrayList<Date>();
     SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-   
+
     if (referenceSeriesDose.getIntervalList() != null) {
       for (Interval minIn : referenceSeriesDose.getIntervalList()) {
         Date patientReferenceDoseDate = minIn.getPatientReferenceDoseDate(dataModel);
-        TimePeriod minimalIntervalFromReferenceSeriesDose = minIn.getMinimumInterval();
-        if (minimalIntervalFromReferenceSeriesDose == null) {
-          continue;
+        if (patientReferenceDoseDate != null) {
+          TimePeriod minimalIntervalFromReferenceSeriesDose = minIn.getMinimumInterval();
+          if (minimalIntervalFromReferenceSeriesDose == null) {
+            continue;
+          }
+          minimumIntervalList.add(minimalIntervalFromReferenceSeriesDose.getDateFrom(patientReferenceDoseDate));
         }
-        minimumIntervalList.add(minimalIntervalFromReferenceSeriesDose.getDateFrom(patientReferenceDoseDate));
       }
     }
     return minimumIntervalList;

@@ -122,10 +122,12 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     latestRecommendedTimePeriod = referenceSeriesDose.getAgeList().get(0).getSeriesDose()
         .getIntervalList().get(0).getLatestRecommendedInterval();
     Interval latestRecommendedInterval = referenceSeriesDose.getAgeList().get(0).getSeriesDose()
-    .getIntervalList().get(0);
+        .getIntervalList().get(0);
     Date patientReferenceDoseDate = latestRecommendedInterval.getPatientReferenceDoseDate(dataModel);
-    Date latestRecommendedIntervalDate = latestRecommendedTimePeriod.getDateFrom(patientReferenceDoseDate);
-    caLatestRecommendedIntervalDate.setInitialValue(latestRecommendedIntervalDate);
+    if (patientReferenceDoseDate != null) {
+      Date latestRecommendedIntervalDate = latestRecommendedTimePeriod.getDateFrom(patientReferenceDoseDate);
+      caLatestRecommendedIntervalDate.setInitialValue(latestRecommendedIntervalDate);
+    }
   }
 
   private void findMinimumIntervalDates() {
@@ -134,7 +136,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
       for (Interval minIn : referenceSeriesDose.getIntervalList()) {
         TimePeriod minimalIntervalFromReferenceSeriesDose = minIn.getMinimumInterval();
         Date patientReferenceDoseDate = minIn.getPatientReferenceDoseDate(dataModel);
-        if (minimalIntervalFromReferenceSeriesDose == null) {
+        if (minimalIntervalFromReferenceSeriesDose == null || patientReferenceDoseDate == null) {
           continue;
         }
         log("ADD adding to minimumIntervalList "
@@ -157,7 +159,8 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     for (LiveVirusConflict lvc : dataModel.getLiveVirusConflictList()) {
       boolean isImpactedVaccineDoseAdministered = false;
       boolean isPreviousVdaConflicting = false;
-      if(dataModel.getAntigenAdministeredRecord() == null || dataModel.getPreviousAntigenAdministeredRecord() == null) {
+      if (dataModel.getAntigenAdministeredRecord() == null
+          || dataModel.getPreviousAntigenAdministeredRecord() == null) {
         continue;
       }
 
@@ -387,7 +390,8 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
       }
     }
     list.add(getLatestDate(allDatesAdministered));
-    log("CONS Item for consideration for Earliest date is: all dates administered with value of " + allDatesAdministered);
+    log("CONS Item for consideration for Earliest date is: all dates administered with value of "
+        + allDatesAdministered);
 
     Date earliestDate = getLatestDate(list);
     return earliestDate;
