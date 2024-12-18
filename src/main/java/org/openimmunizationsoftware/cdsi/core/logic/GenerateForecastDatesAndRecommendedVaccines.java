@@ -141,6 +141,8 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
         }
         log("ADD adding to minimumIntervalList "
             + minimalIntervalFromReferenceSeriesDose.getDateFrom(patientReferenceDoseDate) + ",");
+        
+        //CALCDTINT-4
         minimumIntervalList.add(minimalIntervalFromReferenceSeriesDose.getDateFrom(patientReferenceDoseDate));
       }
       if (minimumIntervalList.size() > 0) {

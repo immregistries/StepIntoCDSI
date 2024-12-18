@@ -131,6 +131,8 @@ public class SatisfyTargetDose extends LogicStep {
           dataModel.getTargetDose().setSatisfiedByVaccineDoseAdministered(
               dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered());
           dataModel.getTargetDose().getEvaluation().setEvaluationStatus(EvaluationStatus.VALID);
+          //setting the target dose of the VDA to this target dose, so that the target dose can be accessed through the VDA
+          dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered().setTargetDose(dataModel.getTargetDose());
         }
       });
 
