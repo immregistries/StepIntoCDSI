@@ -147,10 +147,6 @@ public class Interval {
       // CALCDTINT-2
       if (this.getFromImmediatePreviousDoseAdministered().equals(YesNo.NO)) {
         if (!this.getFromTargetDoseNumberInSeries().equals("")) {
-          // TODO set tmpPatientReferenceDoseDate to 'the date administered of the vaccine
-          // dose administered that satisfies the target dose with the same target dose
-          // number as the from target dose number in series'
-          // Maybe this?
           for (TargetDose td : dataModel.getTargetDoseList()) {
             if (this.getFromTargetDoseNumberInSeries().equals(td.getTrackedSeriesDose().getDoseNumber())) {
               tmpPatientReferenceDoseDate = td.getSatisfiedByVaccineDoseAdministered().getDateAdministered();
@@ -159,12 +155,16 @@ public class Interval {
         }
       }
       // CALCDTINT-8
-      if (this.getFromImmediatePreviousDoseAdministered().equals(YesNo.NO)) {
-        if (this.getFromMostRecentVaccineType() != null) {
+      if (this.fromImmediatePreviousDoseAdministered.equals(YesNo.NO)) {
+        if (this.fromMostRecentVaccineType != null) {
           if (!vdaEvaluation.getEvaluationReason().equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
-            // TODO set tmpPatientReferenceDoseDate to 'the date administered of the most
-            // recent vaccine dose administered that is the same vaccine type as the from
-            // most recent vaccine type'
+            Date mostRecentDate = null;
+            for(AntigenAdministeredRecord aar : dataModel.getAntigenAdministeredRecordList()) {
+              if(aar.getVaccineType().equals(this.fromMostRecentVaccineType)) {
+                mostRecentDate = aar.getDateAdministered();
+              }
+            }
+            tmpPatientReferenceDoseDate = mostRecentDate;
           }
         }
       }
