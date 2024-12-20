@@ -423,7 +423,7 @@ public class DataModelLoader {
           conditionalNeed.setSeriesDose(seriesDose);
           seriesDose.getConditionalNeedList().add(conditionalNeed);
           // TODO
-        } else if (parentNode.getNodeName().equals("seasonalRecommednation")) {
+        } else if (parentNode.getNodeName().equals("seasonalRecommendation")) {
           SeasonalRecommendation seasonalRecommendation = new SeasonalRecommendation();
           seasonalRecommendation.setSeriesDose(seriesDose);
           seriesDose.getSeasonalRecommendationList().add(seasonalRecommendation);
