@@ -123,7 +123,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
         .getIntervalList().get(0).getLatestRecommendedInterval();
     Interval latestRecommendedInterval = referenceSeriesDose.getAgeList().get(0).getSeriesDose()
         .getIntervalList().get(0);
-    Date patientReferenceDoseDate = latestRecommendedInterval.getPatientReferenceDoseDate(dataModel);
+    Date patientReferenceDoseDate = latestRecommendedInterval.getPatientReferenceDoseDate(dataModel, this);
     if (patientReferenceDoseDate != null) {
       Date latestRecommendedIntervalDate = latestRecommendedTimePeriod.getDateFrom(patientReferenceDoseDate);
       caLatestRecommendedIntervalDate.setInitialValue(latestRecommendedIntervalDate);
@@ -135,14 +135,14 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     if (referenceSeriesDose.getIntervalList() != null) {
       for (Interval minIn : referenceSeriesDose.getIntervalList()) {
         TimePeriod minimalIntervalFromReferenceSeriesDose = minIn.getMinimumInterval();
-        Date patientReferenceDoseDate = minIn.getPatientReferenceDoseDate(dataModel);
+        Date patientReferenceDoseDate = minIn.getPatientReferenceDoseDate(dataModel, this);
         if (minimalIntervalFromReferenceSeriesDose == null || patientReferenceDoseDate == null) {
           continue;
         }
         log("ADD adding to minimumIntervalList "
             + minimalIntervalFromReferenceSeriesDose.getDateFrom(patientReferenceDoseDate) + ",");
-        
-        //CALCDTINT-4
+
+        // CALCDTINT-4
         minimumIntervalList.add(minimalIntervalFromReferenceSeriesDose.getDateFrom(patientReferenceDoseDate));
       }
       if (minimumIntervalList.size() > 0) {

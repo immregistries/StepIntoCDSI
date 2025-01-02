@@ -203,7 +203,7 @@ public class DateRules {
       @Override
       protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep, Interval interval) {
         if (interval != null) {
-          Date patientReferenceDoseDate = interval.getPatientReferenceDoseDate(dataModel);
+          Date patientReferenceDoseDate = interval.getPatientReferenceDoseDate(dataModel, logicStep);
           if (patientReferenceDoseDate == null) {
             return null;
           }
@@ -221,14 +221,16 @@ public class DateRules {
     CALCDTINT_4 = new DateRule<Interval>() {
       @Override
       protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep, Interval interval) {
-        if (interval != null) {
-          Date patientReferenceDoseDate = interval.getPatientReferenceDoseDate(dataModel);
-          if (patientReferenceDoseDate == null) {
-            return null;
-          }
-          return interval.getMinimumInterval().getDateFrom(patientReferenceDoseDate);
+        if (interval == null) {
+          logicStep.log("LogicStep is null");
+          return null;
         }
-        return null;
+        Date patientReferenceDoseDate = interval.getPatientReferenceDoseDate(dataModel, logicStep);
+        if (patientReferenceDoseDate == null) {
+          logicStep.log("patientReferenceDoseDate is null");
+          return null;
+        }
+        return interval.getMinimumInterval().getDateFrom(patientReferenceDoseDate);
       }
     };
     CALCDTINT_4.setBusinessRuleId("CALCDTINT-4");
@@ -243,7 +245,7 @@ public class DateRules {
         if (interval == null || interval.getEarliestRecommendedInterval() == null) {
           return null;
         }
-        Date patientReferenceDoseDate = interval.getPatientReferenceDoseDate(dataModel);
+        Date patientReferenceDoseDate = interval.getPatientReferenceDoseDate(dataModel, logicStep);
         if (patientReferenceDoseDate == null) {
           return null;
         }

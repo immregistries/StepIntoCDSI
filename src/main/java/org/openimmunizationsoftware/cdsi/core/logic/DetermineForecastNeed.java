@@ -429,7 +429,7 @@ public class DetermineForecastNeed extends LogicStep {
 
     if (referenceSeriesDose.getIntervalList() != null) {
       for (Interval minIn : referenceSeriesDose.getIntervalList()) {
-        Date patientReferenceDoseDate = minIn.getPatientReferenceDoseDate(dataModel);
+        Date patientReferenceDoseDate = minIn.getPatientReferenceDoseDate(dataModel, this);
         if (patientReferenceDoseDate != null) {
           TimePeriod minimalIntervalFromReferenceSeriesDose = minIn.getMinimumInterval();
           if (minimalIntervalFromReferenceSeriesDose == null) {

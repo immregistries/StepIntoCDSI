@@ -6,7 +6,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
-
+import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 
 public class Interval {
@@ -120,22 +120,27 @@ public class Interval {
     this.cessationDate = cessationDate;
   }
 
-  public Date getPatientReferenceDoseDate(DataModel dataModel) {
-    Date tmpPatientReferenceDoseDate = null;
+  public Date getPatientReferenceDoseDate(DataModel dataModel, LogicStep logicStep) {
 
     if (dataModel.getAntigenAdministeredRecord() == null) {
-      return tmpPatientReferenceDoseDate;
+      logicStep.log("dataModel.getAntigenAdministeredRecord() is null");
+      return null;
     }
 
     VaccineDoseAdministered vda = dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered();
-
     if (vda.getTargetDose() == null) {
-      return tmpPatientReferenceDoseDate;
+      logicStep.log("vda.getTargetDose() is null");
+      return null;
     }
+
+    Date tmpPatientReferenceDoseDate = null;
     Evaluation vdaEvaluation = vda.getTargetDose().getEvaluation();
     try {
+      YesNo fromImmedicatePreviousDoseAdministered = this.getFromImmediatePreviousDoseAdministered();
+      logicStep.log("fromImmedicatePreviousDoseAdministered = " + fromImmedicatePreviousDoseAdministered);
       // CALCDTINT-1
-      if (this.getFromImmediatePreviousDoseAdministered().equals(YesNo.YES)) {
+      if (fromImmedicatePreviousDoseAdministered == YesNo.YES) {
+        logicStep.log("Using CALCDTINT-1");
         if (vdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.VALID)
             || vdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.NOT_VALID)) {
           if (!vdaEvaluation.getEvaluationReason().equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
@@ -145,7 +150,8 @@ public class Interval {
         }
       }
       // CALCDTINT-2
-      if (this.getFromImmediatePreviousDoseAdministered().equals(YesNo.NO)) {
+      if (fromImmedicatePreviousDoseAdministered == YesNo.NO) {
+        logicStep.log("Using CALCDTINT-2");
         if (!this.getFromTargetDoseNumberInSeries().equals("")) {
           for (TargetDose td : dataModel.getTargetDoseList()) {
             if (this.getFromTargetDoseNumberInSeries().equals(td.getTrackedSeriesDose().getDoseNumber())) {
@@ -155,12 +161,13 @@ public class Interval {
         }
       }
       // CALCDTINT-8
-      if (this.fromImmediatePreviousDoseAdministered.equals(YesNo.NO)) {
+      if (fromImmedicatePreviousDoseAdministered == YesNo.NO) {
+        logicStep.log("Using CALCDTINT-8");
         if (this.fromMostRecentVaccineType != null) {
           if (!vdaEvaluation.getEvaluationReason().equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
             Date mostRecentDate = null;
-            for(AntigenAdministeredRecord aar : dataModel.getAntigenAdministeredRecordList()) {
-              if(aar.getVaccineType().equals(this.fromMostRecentVaccineType)) {
+            for (AntigenAdministeredRecord aar : dataModel.getAntigenAdministeredRecordList()) {
+              if (aar.getVaccineType().equals(this.fromMostRecentVaccineType)) {
                 mostRecentDate = aar.getDateAdministered();
               }
             }
@@ -169,7 +176,8 @@ public class Interval {
         }
       }
       // CALCDTINT-9
-      if (this.getFromImmediatePreviousDoseAdministered().equals(YesNo.NO)) {
+      if (fromImmedicatePreviousDoseAdministered == YesNo.NO) {
+        logicStep.log("Using CALCDTINT-9");
         if (!this.getFromRelevantObservation().getCode().equals("")) {
           // TODO set tmpPatientReferenceDoseDate to 'the observation date of the most
           // recent active patient observation'
