@@ -65,7 +65,7 @@ public class EvaluateAllowableInterval extends LogicStep {
         satisfiedAll = YesNo.NO;
       }
     }
-    if (satisfiedAll == YesNo.NO) {
+    if (satisfiedAll == YesNo.NO || logicTableList.size() == 0) {
       dataModel.getTargetDose()
           .setStatusCause(dataModel.getTargetDose().getStatusCause() + "Interval");
     }
@@ -106,7 +106,7 @@ public class EvaluateAllowableInterval extends LogicStep {
     printConditionAttributesTable(out);
     printLogicTables(out);
     if(logicTableList.size() == 0) {
-      out.println("<p>No allowable intervals define. Interval defaulting to 'Not Valid'</p>");
+      out.println("<p>No allowable intervals defined. Interval defaulting to 'Not Valid'</p>");
     }
   }
 

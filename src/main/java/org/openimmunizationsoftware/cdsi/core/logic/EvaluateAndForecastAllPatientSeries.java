@@ -100,8 +100,11 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
     if (dataModel.getSelectedAntigenAdministeredRecordPos() < selectedAarList.size()) {
       if (dataModel.getSelectedAntigenAdministeredRecordPos() == 0) {
         log("   Looking at first dose administered");
+      } else {
+        dataModel.setPreviousAntigenAdministeredRecord(dataModel.getAntigenAdministeredRecordList().get(dataModel.getSelectedAntigenAdministeredRecordPos()-1));
       }
       dataModel.setAntigenAdministeredRecord(selectedAarList.get(dataModel.getSelectedAntigenAdministeredRecordPos()));
+      
       // choose whether chapter 6 or chapter 7 is next
       if (gotoNextTargetDose()) {
         nextLogicStep = LogicStepType.EVALUATE_DOSE_ADMINISTERED_CONDITION;
@@ -125,6 +128,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
       }
     }
     dataModel.setSelectedAntigenAdministeredRecordPos(-1);
+    dataModel.setPreviousAntigenAdministeredRecord(null);
   }
 
   private boolean gotoNextTargetDose() {

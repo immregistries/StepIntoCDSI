@@ -222,7 +222,7 @@ public class DateRules {
       @Override
       protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep, Interval interval) {
         if (interval == null) {
-          logicStep.log("LogicStep is null");
+          logicStep.log("interval is null");
           return null;
         }
         Date patientReferenceDoseDate = interval.getPatientReferenceDoseDate(dataModel, logicStep);

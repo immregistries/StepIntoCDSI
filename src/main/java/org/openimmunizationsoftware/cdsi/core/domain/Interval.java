@@ -128,30 +128,37 @@ public class Interval {
     }
 
     VaccineDoseAdministered vda = dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered();
-    if (vda.getTargetDose() == null) {
-      logicStep.log("vda.getTargetDose() is null");
-      return null;
-    }
+
 
     Date tmpPatientReferenceDoseDate = null;
-    Evaluation vdaEvaluation = vda.getTargetDose().getEvaluation();
+    Evaluation vdaEvaluation = dataModel.getTargetDose().getEvaluation();
     try {
-      YesNo fromImmedicatePreviousDoseAdministered = this.getFromImmediatePreviousDoseAdministered();
-      logicStep.log("fromImmedicatePreviousDoseAdministered = " + fromImmedicatePreviousDoseAdministered);
+      logicStep.log("PRDD fromImmediatePreviousDoseAdministered = " + fromImmediatePreviousDoseAdministered);
       // CALCDTINT-1
-      if (fromImmedicatePreviousDoseAdministered == YesNo.YES) {
-        logicStep.log("Using CALCDTINT-1");
+      if (fromImmediatePreviousDoseAdministered == YesNo.YES) {
+        logicStep.log("PRDD Using CALCDTINT-1");
         if (vdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.VALID)
             || vdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.NOT_VALID)) {
-          if (!vdaEvaluation.getEvaluationReason().equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
+              logicStep.log("PRDD evaluationStatus is " + vdaEvaluation.getEvaluationStatus().toString());
+              if(vdaEvaluation.getEvaluationReason() == null) {
+                logicStep.log("PRDD evaluationReason is null!");
+              } else {
+                logicStep.log("PRDD evaluationReason is " + vdaEvaluation.getEvaluationReason().toString());
+              }
+          if (vdaEvaluation.getEvaluationReason() == null || !vdaEvaluation.getEvaluationReason().equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
             AntigenAdministeredRecord previousAAR = dataModel.getPreviousAntigenAdministeredRecord();
+            if(previousAAR == null) {
+              logicStep.log("PRDD previousAAR is null!");
+            } else {
+              logicStep.log("PRDD previousAAR is " + previousAAR.toString());
+            }
             tmpPatientReferenceDoseDate = previousAAR.getDateAdministered();
           }
         }
       }
       // CALCDTINT-2
-      if (fromImmedicatePreviousDoseAdministered == YesNo.NO) {
-        logicStep.log("Using CALCDTINT-2");
+      if (fromImmediatePreviousDoseAdministered == YesNo.NO) {
+        logicStep.log("PRDD Using CALCDTINT-2");
         if (!this.getFromTargetDoseNumberInSeries().equals("")) {
           for (TargetDose td : dataModel.getTargetDoseList()) {
             if (this.getFromTargetDoseNumberInSeries().equals(td.getTrackedSeriesDose().getDoseNumber())) {
@@ -161,8 +168,8 @@ public class Interval {
         }
       }
       // CALCDTINT-8
-      if (fromImmedicatePreviousDoseAdministered == YesNo.NO) {
-        logicStep.log("Using CALCDTINT-8");
+      if (fromImmediatePreviousDoseAdministered == YesNo.NO) {
+        logicStep.log("PRDD Using CALCDTINT-8");
         if (this.fromMostRecentVaccineType != null) {
           if (!vdaEvaluation.getEvaluationReason().equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
             Date mostRecentDate = null;
@@ -176,8 +183,8 @@ public class Interval {
         }
       }
       // CALCDTINT-9
-      if (fromImmedicatePreviousDoseAdministered == YesNo.NO) {
-        logicStep.log("Using CALCDTINT-9");
+      if (fromImmediatePreviousDoseAdministered == YesNo.NO) {
+        logicStep.log("PRDD Using CALCDTINT-9");
         if (!this.getFromRelevantObservation().getCode().equals("")) {
           // TODO set tmpPatientReferenceDoseDate to 'the observation date of the most
           // recent active patient observation'
