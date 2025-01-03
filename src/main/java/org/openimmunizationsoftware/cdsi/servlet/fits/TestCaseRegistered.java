@@ -379,10 +379,10 @@ public class TestCaseRegistered {
     calendar.setTime(birthDate);
     for (RelativeDateRule relativeDateRule : dobRelative.getRules()) {
       if (relativeDateRule.getRelativeTo() instanceof StaticDateReference) {
-        calendar.add(Calendar.DAY_OF_MONTH, relativeDateRule.getDay());
+        calendar.add(Calendar.YEAR, relativeDateRule.getYear());
         calendar.add(Calendar.MONTH, relativeDateRule.getMonth());
         calendar.add(Calendar.DAY_OF_MONTH, relativeDateRule.getWeek() * 7);
-        calendar.add(Calendar.YEAR, relativeDateRule.getYear());
+        calendar.add(Calendar.DAY_OF_MONTH, relativeDateRule.getDay());
       } else if (relativeDateRule.getRelativeTo() instanceof VaccineDateReference) {
         VaccineDateReference vaccineDateReference = (VaccineDateReference) relativeDateRule.getRelativeTo();
         int vaccineIndex = vaccineDateReference.getId();
@@ -394,10 +394,10 @@ public class TestCaseRegistered {
             recordProblem("Vaccine date is not defined (vaccineDate == null)");
           } else {
             calendar.setTime(vaccineDate);
-            calendar.add(Calendar.DAY_OF_MONTH, relativeDateRule.getDay());
+            calendar.add(Calendar.YEAR, relativeDateRule.getYear());
             calendar.add(Calendar.MONTH, relativeDateRule.getMonth());
             calendar.add(Calendar.DAY_OF_MONTH, relativeDateRule.getWeek() * 7);
-            calendar.add(Calendar.YEAR, relativeDateRule.getYear());
+            calendar.add(Calendar.DAY_OF_MONTH, relativeDateRule.getDay());
           }
         }
       } else {
