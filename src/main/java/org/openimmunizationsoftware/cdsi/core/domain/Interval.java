@@ -123,7 +123,7 @@ public class Interval {
   public Date getPatientReferenceDoseDate(DataModel dataModel, LogicStep logicStep) {
 
     if (dataModel.getAntigenAdministeredRecord() == null) {
-      logicStep.log("dataModel.getAntigenAdministeredRecord() is null");
+      logicStep.log("PRDD dataModel.getAntigenAdministeredRecord() is null");
       return null;
     }
 
@@ -133,26 +133,17 @@ public class Interval {
     Date tmpPatientReferenceDoseDate = null;
     Evaluation vdaEvaluation = dataModel.getTargetDose().getEvaluation();
     try {
-      logicStep.log("PRDD fromImmediatePreviousDoseAdministered = " + fromImmediatePreviousDoseAdministered);
       // CALCDTINT-1
       if (fromImmediatePreviousDoseAdministered == YesNo.YES) {
         logicStep.log("PRDD Using CALCDTINT-1");
         if (vdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.VALID)
             || vdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.NOT_VALID)) {
-              logicStep.log("PRDD evaluationStatus is " + vdaEvaluation.getEvaluationStatus().toString());
               if(vdaEvaluation.getEvaluationReason() == null) {
                 logicStep.log("PRDD evaluationReason is null!");
-              } else {
-                logicStep.log("PRDD evaluationReason is " + vdaEvaluation.getEvaluationReason().toString());
               }
           if (vdaEvaluation.getEvaluationReason() == null || !vdaEvaluation.getEvaluationReason().equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
             AntigenAdministeredRecord previousAAR = dataModel.getPreviousAntigenAdministeredRecord();
-            if(previousAAR == null) {
-              logicStep.log("PRDD previousAAR is null!");
-            } else {
-              logicStep.log("PRDD previousAAR is " + previousAAR.toString());
-            }
-            tmpPatientReferenceDoseDate = previousAAR.getDateAdministered();
+            tmpPatientReferenceDoseDate = previousAAR.getVaccineDoseAdministered().getDateAdministered();
           }
         }
       }
@@ -193,6 +184,12 @@ public class Interval {
     } catch (NullPointerException np) {
       np.getCause();
     }
+    if(tmpPatientReferenceDoseDate != null) {
+      logicStep.log("PRDD returning " + tmpPatientReferenceDoseDate.toString());
+    } else {
+      logicStep.log("PRDD returning null");
+    }
+
     return tmpPatientReferenceDoseDate;
 
   }

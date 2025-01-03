@@ -101,7 +101,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
       if (dataModel.getSelectedAntigenAdministeredRecordPos() == 0) {
         log("   Looking at first dose administered");
       } else {
-        dataModel.setPreviousAntigenAdministeredRecord(dataModel.getAntigenAdministeredRecordList().get(dataModel.getSelectedAntigenAdministeredRecordPos()-1));
+        dataModel.setPreviousAntigenAdministeredRecord(selectedAarList.get(dataModel.getSelectedAntigenAdministeredRecordPos()-1));
       }
       dataModel.setAntigenAdministeredRecord(selectedAarList.get(dataModel.getSelectedAntigenAdministeredRecordPos()));
       
