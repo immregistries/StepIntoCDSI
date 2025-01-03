@@ -112,6 +112,11 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
         nextLogicStep = LogicStepType.FORECAST_DATES_AND_REASONS;
       }
     } else {
+      log("AAR selected pos = " + dataModel.getSelectedAntigenAdministeredRecordPos());
+      log("AAR list length = " + selectedAarList.size());
+      if(dataModel.getSelectedAntigenAdministeredRecordPos() > 0) {
+        dataModel.setPreviousAntigenAdministeredRecord(selectedAarList.get(dataModel.getSelectedAntigenAdministeredRecordPos()-1));
+      }
       gotoNextTargetDose();
       nextLogicStep = LogicStepType.FORECAST_DATES_AND_REASONS;
     }

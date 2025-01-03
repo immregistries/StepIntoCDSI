@@ -260,6 +260,8 @@ public class StepServlet extends ForecastServlet {
           vaccineDoseAdministeredList.add(aar.getVaccineDoseAdministered());
         }
       }
+      out.println("<p> AAR = " + dataModel.getAntigenAdministeredRecord() + "</p>");
+      out.println("<p> Previous AAR = " + dataModel.getPreviousAntigenAdministeredRecord() + "</p>");
       out.println("<table>");
       out.println("  <tr>");
       out.println("    <th colspan=\"2\">Series</th>");
