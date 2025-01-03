@@ -11,6 +11,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.openimmunizationsoftware.cdsi.core.domain.Age;
+import org.openimmunizationsoftware.cdsi.core.domain.AllowableInterval;
 import org.openimmunizationsoftware.cdsi.core.domain.AllowableVaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
@@ -353,6 +354,42 @@ public class DataModelLoader {
           }
           if (populated) {
             seriesDose.getIntervalList().add(interval);
+          }
+        } else if (parentNode.getNodeName().equals("allowableInterval")) {
+          AllowableInterval allowableInterval = new AllowableInterval();
+
+          allowableInterval.setSeriesDose(seriesDose);
+          boolean populated = false;
+          NodeList childNodeList = parentNode.getChildNodes();
+
+          for (int j = 0; j < childNodeList.getLength(); j++) {
+            Node childNode = childNodeList.item(j);
+            if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+              if (childNode.getNodeName().equals("fromPrevious")) {
+                YesNo fromPrevious = DomUtils.getInternalValueYesNo(childNode);
+                if (fromPrevious != null) {
+                  populated = true;
+                }
+                allowableInterval.setFromImmediatePreviousDoseAdministered(fromPrevious);
+              } else if (childNode.getNodeName().equals("fromTargetDose")) {
+                String fromTargetDose = DomUtils.getInternalValue(childNode);
+                if (!fromTargetDose.equalsIgnoreCase("n/a")
+                    && !fromTargetDose.equalsIgnoreCase("")) {
+                  allowableInterval.setFromTargetDoseNumberInSeries(fromTargetDose);
+                  populated = true;
+                }
+              } else if (childNode.getNodeName().equals("absMinInt")) {
+                TimePeriod timePeriod = new TimePeriod(DomUtils.getInternalValue(childNode));
+                allowableInterval.setAbsoluteMinimumInterval(timePeriod);
+              } else if (childNode.getNodeName().equals("effectiveDate")) {
+                allowableInterval.setEffectiveDate(parseDate(DomUtils.getInternalValue(childNode)));
+              } else if (childNode.getNodeName().equals("cessationDate")) {
+                allowableInterval.setCessationDate(parseDate(DomUtils.getInternalValue(childNode)));
+              }
+            }
+          }
+          if (populated) {
+            seriesDose.getAllowableintervalList().add(allowableInterval);
           }
         } else if (parentNode.getNodeName().equals("preferableVaccine")) {
           PreferrableVaccine preferableVaccine = new PreferrableVaccine();

@@ -20,8 +20,8 @@ public class Interval {
   private TimePeriod earliestRecommendedInterval = null;
   private TimePeriod latestRecommendedInterval = null;
   private IntervalPriority intervalPriority = null;
-  private TimePeriod effectiveDate = null;
-  private TimePeriod cessationDate = null;
+  private Date effectiveDate = null;
+  private Date cessationDate = null;
 
   public IntervalPriority getIntervalPriority() {
     return intervalPriority;
@@ -104,19 +104,19 @@ public class Interval {
     this.latestRecommendedInterval = latestRecommendedInterval;
   }
 
-  public TimePeriod getEffectiveDate() {
+  public Date getEffectiveDate() {
     return effectiveDate;
   }
 
-  public void setEffectiveDate(TimePeriod effectiveDate) {
+  public void setEffectiveDate(Date effectiveDate) {
     this.effectiveDate = effectiveDate;
   }
 
-  public TimePeriod getCessationDate() {
+  public Date getCessationDate() {
     return cessationDate;
   }
 
-  public void setCessationDate(TimePeriod cessationDate) {
+  public void setCessationDate(Date cessationDate) {
     this.cessationDate = cessationDate;
   }
 
@@ -129,7 +129,6 @@ public class Interval {
 
     VaccineDoseAdministered vda = dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered();
 
-
     Date tmpPatientReferenceDoseDate = null;
     Evaluation vdaEvaluation = dataModel.getTargetDose().getEvaluation();
     try {
@@ -138,10 +137,11 @@ public class Interval {
         logicStep.log("PRDD Using CALCDTINT-1");
         if (vdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.VALID)
             || vdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.NOT_VALID)) {
-              if(vdaEvaluation.getEvaluationReason() == null) {
-                logicStep.log("PRDD evaluationReason is null!");
-              }
-          if (vdaEvaluation.getEvaluationReason() == null || !vdaEvaluation.getEvaluationReason().equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
+          if (vdaEvaluation.getEvaluationReason() == null) {
+            logicStep.log("PRDD evaluationReason is null!");
+          }
+          if (vdaEvaluation.getEvaluationReason() == null
+              || !vdaEvaluation.getEvaluationReason().equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
             AntigenAdministeredRecord previousAAR = dataModel.getPreviousAntigenAdministeredRecord();
             tmpPatientReferenceDoseDate = previousAAR.getVaccineDoseAdministered().getDateAdministered();
           }
@@ -184,7 +184,7 @@ public class Interval {
     } catch (NullPointerException np) {
       np.getCause();
     }
-    if(tmpPatientReferenceDoseDate != null) {
+    if (tmpPatientReferenceDoseDate != null) {
       logicStep.log("PRDD returning " + tmpPatientReferenceDoseDate.toString());
     } else {
       logicStep.log("PRDD returning null");
