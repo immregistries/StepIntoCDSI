@@ -7,6 +7,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
+import org.apache.jena.sparql.function.library.leviathan.log;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 
 public class Interval {
@@ -127,21 +128,33 @@ public class Interval {
       return null;
     }
 
-    VaccineDoseAdministered vda = dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered();
+    Evaluation previousVdaEvaluation;
+    {
+      TargetDose previousTargetDose = dataModel.getPreviousTargetDose();
+      if (previousTargetDose == null) {
+        logicStep.log("Previous target dose is null");
+        return null;
+      } else {
+        logicStep.log("Previous targetDose #" + previousTargetDose.getTrackedSeriesDose().getDoseNumber());
+        previousVdaEvaluation = previousTargetDose.getEvaluation();
+      }
+    }
 
     Date tmpPatientReferenceDoseDate = null;
-    Evaluation vdaEvaluation = dataModel.getTargetDose().getEvaluation();
+    if (previousVdaEvaluation == null) {
+      logicStep.log("PRDD vdaEvaluation is null");
+      return null;
+    }
     try {
       // CALCDTINT-1
       if (fromImmediatePreviousDoseAdministered == YesNo.YES) {
-        logicStep.log("PRDD Using CALCDTINT-1");
-        if (vdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.VALID)
-            || vdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.NOT_VALID)) {
-          if (vdaEvaluation.getEvaluationReason() == null) {
-            logicStep.log("PRDD evaluationReason is null!");
-          }
-          if (vdaEvaluation.getEvaluationReason() == null
-              || !vdaEvaluation.getEvaluationReason().equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
+        logicStep
+            .log("PRDD Using CALCDTINT-1 where evaluation status = " + previousVdaEvaluation.getEvaluationStatus());
+        if (previousVdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.VALID)
+            || previousVdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.NOT_VALID)) {
+          logicStep.log("PRDD evaluationReason is " + previousVdaEvaluation.getEvaluationReason());
+          if (previousVdaEvaluation.getEvaluationReason() == null
+              || !previousVdaEvaluation.getEvaluationReason().equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
             AntigenAdministeredRecord previousAAR = dataModel.getPreviousAntigenAdministeredRecord();
             tmpPatientReferenceDoseDate = previousAAR.getVaccineDoseAdministered().getDateAdministered();
           }
@@ -162,7 +175,7 @@ public class Interval {
       if (fromImmediatePreviousDoseAdministered == YesNo.NO) {
         logicStep.log("PRDD Using CALCDTINT-8");
         if (this.fromMostRecentVaccineType != null) {
-          if (!vdaEvaluation.getEvaluationReason().equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
+          if (!previousVdaEvaluation.getEvaluationReason().equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
             Date mostRecentDate = null;
             for (AntigenAdministeredRecord aar : dataModel.getAntigenAdministeredRecordList()) {
               if (aar.getVaccineType().equals(this.fromMostRecentVaccineType)) {
@@ -183,6 +196,7 @@ public class Interval {
       }
     } catch (NullPointerException np) {
       np.getCause();
+      logicStep.log("NullPointerException " + np.getMessage());
     }
     if (tmpPatientReferenceDoseDate != null) {
       logicStep.log("PRDD returning " + tmpPatientReferenceDoseDate.toString());

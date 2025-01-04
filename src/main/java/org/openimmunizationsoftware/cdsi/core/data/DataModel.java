@@ -57,6 +57,7 @@ public class DataModel {
   private List<Schedule> scheduleList = new ArrayList<Schedule>();
 
   private TargetDose targetDose = null;
+  private TargetDose previousTargetDose = null;
   private List<TargetDose> targetDoseList = null;
   private AntigenAdministeredRecord antigenAdministeredRecordThatSatisfiedPreviousTargetDose = null;
   private EvaluationStatus evaluationStatus = null;
@@ -85,6 +86,14 @@ public class DataModel {
   private List<VaccineGroup> vaccineGroupList;
   private int vaccineGroupPos = -1;
   private Forecast forecast = null;
+
+  public TargetDose getPreviousTargetDose() {
+    return previousTargetDose;
+  }
+
+  public void setPreviousTargetDose(TargetDose previousTargetDose) {
+    this.previousTargetDose = previousTargetDose;
+  }
 
   public Stepper<AntigenAdministeredRecord> getAntigenAdministeredRecordStepper() {
     return antigenAdministeredRecordStepper;
