@@ -112,6 +112,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
       if (gotoNextTargetDose()) {
         nextLogicStep = LogicStepType.EVALUATE_DOSE_ADMINISTERED_CONDITION;
       } else {
+        log("Cannot go to next target dose, now forecasting");
         nextLogicStep = LogicStepType.FORECAST_DATES_AND_REASONS;
       }
     } else {
@@ -148,6 +149,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
       dataModel.setTargetDose(dataModel.getTargetDoseList().get(dataModel.getTargetDoseListPos()));
       return true;
     } else {
+      log("  + Target dose is not null");
       if (dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered() != null) {
         log(" + Previous target dose was satisifed, getting next target dose");
         RecurringDose recurringdose = dataModel.getTargetDose().getTrackedSeriesDose().getRecurringDose();
@@ -158,11 +160,15 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
         }
         dataModel.incTargetDoseListPos();
         dataModel.setPreviousTargetDose(dataModel.getTargetDose());
+        log("  + Target dose list pos = " + dataModel.getTargetDoseListPos());
+        log("  + Target dose list size = " + dataModel.getTargetDoseList().size());
         if (dataModel.getTargetDoseListPos() < dataModel.getTargetDoseList().size()) {
+          log(" + Getting next target dose");
           dataModel
               .setTargetDose(dataModel.getTargetDoseList().get(dataModel.getTargetDoseListPos()));
           return true;
         } else {
+          log(" + No more target doses, marking rest as extraneous");
           markRestAsExtraneous();
           return false;
         }
