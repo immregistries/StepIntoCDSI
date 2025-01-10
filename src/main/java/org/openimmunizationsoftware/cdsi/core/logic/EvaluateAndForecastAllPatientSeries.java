@@ -119,7 +119,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
         nextLogicStep = LogicStepType.EVALUATE_DOSE_ADMINISTERED_CONDITION;
       } else {
         log("Cannot go to next target dose, now forecasting");
-        nextLogicStep = LogicStepType.FORECAST_DATES_AND_REASONS;
+        nextLogicStep = LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST;
       }
     } else {
       log("AAR selected pos = " + dataModel.getSelectedAntigenAdministeredRecordPos());
@@ -129,7 +129,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
             selectedAarList.get(dataModel.getSelectedAntigenAdministeredRecordPos() - 1));
       }
       gotoNextTargetDose();
-      nextLogicStep = LogicStepType.FORECAST_DATES_AND_REASONS;
+      nextLogicStep = LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST;
     }
 
     return LogicStepFactory.createLogicStep(nextLogicStep, dataModel);

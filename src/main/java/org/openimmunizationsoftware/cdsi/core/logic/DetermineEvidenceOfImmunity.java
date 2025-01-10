@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.BirthDateImmunity;
+import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.MedicalHistory;
 import org.openimmunizationsoftware.cdsi.core.domain.Immunity;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
@@ -33,7 +34,7 @@ public class DetermineEvidenceOfImmunity extends LogicStep {
     // Table 7-2
     setConditionTableName("Table 7-2 Immunity attributes");
     caDateofBirth = new ConditionAttribute<Date>("Patient", "Date of Birth");
-    caCountryofBirth = new ConditionAttribute<String>("Patient", "Country of Birth");     
+    caCountryofBirth = new ConditionAttribute<String>("Patient", "Country of Birth");
     caEvidenceOfImmunity = new ConditionAttribute<MedicalHistory>("Patient", "Evidence of Immunity");
     caImmunityElements = new ConditionAttribute<List<Immunity>>("Supporting Data", "Immunity Elements");
 
@@ -55,6 +56,13 @@ public class DetermineEvidenceOfImmunity extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
+
+    Forecast forecast = new Forecast();
+    forecast.setAntigen(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
+    forecast.setTargetDose(dataModel.getTargetDose());
+    dataModel.setForecast(forecast);
+    dataModel.getPatientSeries().setForecast(forecast);
+
     setNextLogicStepType(LogicStepType.DETERMINE_CONTRAINDICATIONS);
     evaluateLogicTables();
     return next();
@@ -82,7 +90,8 @@ public class DetermineEvidenceOfImmunity extends LogicStep {
     printLogicTables(out);
   }
 
-  // Table 7-3, no actual changes to functional logic but it has to work with the new 7-2 attributes
+  // Table 7-3, no actual changes to functional logic but it has to work with the
+  // new 7-2 attributes
   private class LT extends LogicTable {
     public LT() {
       super(4, 5, "Table 7-3 Does the patient have evidence of immunity?");
@@ -93,18 +102,22 @@ public class DetermineEvidenceOfImmunity extends LogicStep {
         protected LogicResult evaluateInternal() {
           if (caEvidenceOfImmunity != null) {
             /*
-              TODO add logic condition
-              for(int i = 0; i <= caEvidenceOfImmunity.get; )
-              OR
-              for (VaccineDoseAdministered vda : caEvidenceOfImmunity.getFinalValue().getImmunizationHistory().getVaccineDoseAdministeredList()) {
-                  
-              YES if the immunity guideline is somewhere in evidence of immunity
-              where to find immunity guidelines?
-              dataModel -> immunityList -> Immunity -> clinicalHistoryList -> clinicalHistory -> immunityGuidelineCode
-              OR dataModel -> forecast -> antigen -> immunityList -> Immunity -> clinicalHistoryList -> clinicalHistory -> immunityGuidelineCode
-              
-              where to find evidence of immunity/patient history?
-            */
+             * TODO add logic condition
+             * for(int i = 0; i <= caEvidenceOfImmunity.get; )
+             * OR
+             * for (VaccineDoseAdministered vda :
+             * caEvidenceOfImmunity.getFinalValue().getImmunizationHistory().
+             * getVaccineDoseAdministeredList()) {
+             * 
+             * YES if the immunity guideline is somewhere in evidence of immunity
+             * where to find immunity guidelines?
+             * dataModel -> immunityList -> Immunity -> clinicalHistoryList ->
+             * clinicalHistory -> immunityGuidelineCode
+             * OR dataModel -> forecast -> antigen -> immunityList -> Immunity ->
+             * clinicalHistoryList -> clinicalHistory -> immunityGuidelineCode
+             * 
+             * where to find evidence of immunity/patient history?
+             */
             // placeholder for now, above logic should determine YES or NO
           }
           return NO;
@@ -144,12 +157,13 @@ public class DetermineEvidenceOfImmunity extends LogicStep {
               if (dataModel.getImmunityList().size() == 0) {
                 return NO;
               }
-              
+
               if (dataModel.getImmunityList().get(0).getBirthDateImmunityList().size() == 0) {
                 return NO;
               }
 
-              List<BirthDateImmunity> birthDateImmunityList = dataModel.getImmunityList().get(0).getBirthDateImmunityList();
+              List<BirthDateImmunity> birthDateImmunityList = dataModel.getImmunityList().get(0)
+                  .getBirthDateImmunityList();
               for (BirthDateImmunity bdi : birthDateImmunityList) {
                 if (bdi.getExclusionList().size() > 0) {
                   return YES;
@@ -174,14 +188,14 @@ public class DetermineEvidenceOfImmunity extends LogicStep {
           if (dataModel.getImmunityList().get(0).getBirthDateImmunityList().size() == 0) {
             return NO;
           }
-          
+
           List<BirthDateImmunity> birthDateImmunityList = dataModel.getImmunityList().get(0).getBirthDateImmunityList();
           for (BirthDateImmunity bdi : birthDateImmunityList) {
             if (bdi.getCountryOfBirth().equals(patientCountry)) {
               return YES;
             }
           }
-          
+
           return NO;
         }
       });
