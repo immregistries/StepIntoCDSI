@@ -586,19 +586,8 @@ public class EvaluateConditionalSkip extends LogicStep {
                 @Override
                 public void perform() {
                     log("Yes. The target dose can be skipped.");
-                    TargetDose targetDoseNext = dataModel.findNextTargetDose(dataModel.getTargetDose());
-                    if (targetDoseNext == null) {
-                        log("But unable to transition, there is no next target dose");
-                        log("Setting next step: " + noSkip.getName());
-                        setNextLogicStepType(noSkip);
-                    } else {
-                        log("The target dose status is 'skipped'");
-                        dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.SKIPPED);
-                        dataModel.setPreviousTargetDose(dataModel.getTargetDose());
-                        dataModel.setTargetDose(targetDoseNext);
-                        log("Setting next step: " + skip.getName());
-                        setNextLogicStepType(skip);
-                    }
+                    dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.SKIPPED);
+                    setNextLogicStepType(skip);
                 }
             });
 

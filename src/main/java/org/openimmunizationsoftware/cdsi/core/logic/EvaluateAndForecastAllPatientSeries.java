@@ -4,7 +4,9 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.jena.sparql.function.library.leviathan.log;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.RecurringDose;
@@ -98,11 +100,8 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
       setupSelectedAntigenAdministeredRecordList();
     }
 
-    if(dataModel.getTargetDose() != null) {
-      if(dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered() != null) {
-        dataModel.incSelectedAntigenAdministeredRecordPos();
-      }
-    } else {
+    if (dataModel.getTargetDose() == null
+        || dataModel.getTargetDose().getTargetDoseStatus() != TargetDoseStatus.SKIPPED) {
       dataModel.incSelectedAntigenAdministeredRecordPos();
     }
 
@@ -160,7 +159,20 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
       log("  + Target dose list pos = " + dataModel.getTargetDoseListPos());
       log("  + Target dose list size = " + dataModel.getTargetDoseList().size());
       dataModel.incTargetDoseListPos();
-      if (dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered() != null) {
+      if (dataModel.getTargetDose().getTargetDoseStatus() == TargetDoseStatus.SKIPPED) {
+        log(" + Target dose was skipped, getting next target dose");
+        dataModel.setPreviousTargetDose(dataModel.getTargetDose());
+        if (dataModel.getTargetDoseListPos() < dataModel.getTargetDoseList().size()) {
+          log(" + Setting next target dose");
+          dataModel
+              .setTargetDose(dataModel.getTargetDoseList().get(dataModel.getTargetDoseListPos()));
+          return true;
+        } else {
+          log(" + No more target doses, marking rest as extraneous");
+          markRestAsExtraneous();
+          return false;
+        }
+      } else if (dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered() != null) {
         log(" + Previous target dose was satisfied, getting next target dose");
         RecurringDose recurringDose = dataModel.getTargetDose().getTrackedSeriesDose().getRecurringDose();
         if (recurringDose != null && recurringDose.getValue() == YesNo.YES) {
@@ -170,9 +182,9 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
         }
         log("  + New target dose list pos = " + dataModel.getTargetDoseListPos());
         dataModel.setPreviousTargetDose(dataModel.getTargetDose());
-        
+
         if (dataModel.getTargetDoseListPos() < dataModel.getTargetDoseList().size()) {
-          log(" + Getting next target dose");
+          log(" + Setting next target dose");
           dataModel
               .setTargetDose(dataModel.getTargetDoseList().get(dataModel.getTargetDoseListPos()));
           return true;
