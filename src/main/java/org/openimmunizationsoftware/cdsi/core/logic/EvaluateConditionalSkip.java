@@ -594,6 +594,7 @@ public class EvaluateConditionalSkip extends LogicStep {
                     } else {
                         log("The target dose status is 'skipped'");
                         dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.SKIPPED);
+                        dataModel.setPreviousTargetDose(dataModel.getTargetDose());
                         dataModel.setTargetDose(targetDoseNext);
                         log("Setting next step: " + skip.getName());
                         setNextLogicStepType(skip);

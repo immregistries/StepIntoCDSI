@@ -10,6 +10,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.RecurringDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 
@@ -92,12 +93,18 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
 
     LogicStepType nextLogicStep;
 
+    List<AntigenAdministeredRecord> selectedAarList = dataModel.getSelectedAntigenAdministeredRecordList();
     if (dataModel.getSelectedAntigenAdministeredRecordList() == null) {
       setupSelectedAntigenAdministeredRecordList();
     }
-    dataModel.incSelectedAntigenAdministeredRecordPos();
 
-    List<AntigenAdministeredRecord> selectedAarList = dataModel.getSelectedAntigenAdministeredRecordList();
+    if(dataModel.getTargetDose() != null) {
+      if(dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered() != null) {
+        dataModel.incSelectedAntigenAdministeredRecordPos();
+      }
+    } else {
+      dataModel.incSelectedAntigenAdministeredRecordPos();
+    }
 
     if (dataModel.getSelectedAntigenAdministeredRecordPos() < selectedAarList.size()) {
       if (dataModel.getSelectedAntigenAdministeredRecordPos() == 0) {
@@ -150,18 +157,20 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
       return true;
     } else {
       log("  + Target dose is not null");
+      log("  + Target dose list pos = " + dataModel.getTargetDoseListPos());
+      log("  + Target dose list size = " + dataModel.getTargetDoseList().size());
+      dataModel.incTargetDoseListPos();
       if (dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered() != null) {
-        log(" + Previous target dose was satisifed, getting next target dose");
-        RecurringDose recurringdose = dataModel.getTargetDose().getTrackedSeriesDose().getRecurringDose();
-        if (recurringdose != null && recurringdose.getValue() == YesNo.YES) {
+        log(" + Previous target dose was satisfied, getting next target dose");
+        RecurringDose recurringDose = dataModel.getTargetDose().getTrackedSeriesDose().getRecurringDose();
+        if (recurringDose != null && recurringDose.getValue() == YesNo.YES) {
           // Create another target dose
           TargetDose targetDoseNext = new TargetDose(dataModel.getTargetDose());
           dataModel.getTargetDoseList().add(targetDoseNext);
         }
-        dataModel.incTargetDoseListPos();
+        log("  + New target dose list pos = " + dataModel.getTargetDoseListPos());
         dataModel.setPreviousTargetDose(dataModel.getTargetDose());
-        log("  + Target dose list pos = " + dataModel.getTargetDoseListPos());
-        log("  + Target dose list size = " + dataModel.getTargetDoseList().size());
+        
         if (dataModel.getTargetDoseListPos() < dataModel.getTargetDoseList().size()) {
           log(" + Getting next target dose");
           dataModel
@@ -173,7 +182,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
           return false;
         }
       } else {
-        log(" + Previous target dose was NOT satisifed, staying on this target dose");
+        log(" + Target dose was NOT satisfied, staying on this target dose");
         return true;
       }
     }
