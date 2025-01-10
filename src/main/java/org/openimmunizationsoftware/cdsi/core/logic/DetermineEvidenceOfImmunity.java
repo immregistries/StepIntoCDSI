@@ -31,6 +31,12 @@ public class DetermineEvidenceOfImmunity extends LogicStep {
   public DetermineEvidenceOfImmunity(DataModel dataModel) {
     super(LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY, dataModel);
 
+    Forecast forecast = new Forecast();
+    forecast.setAntigen(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
+    forecast.setTargetDose(dataModel.getTargetDose());
+    dataModel.setForecast(forecast);
+    dataModel.getPatientSeries().setForecast(forecast);
+
     // Table 7-2
     setConditionTableName("Table 7-2 Immunity attributes");
     caDateofBirth = new ConditionAttribute<Date>("Patient", "Date of Birth");
@@ -56,13 +62,6 @@ public class DetermineEvidenceOfImmunity extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
-
-    Forecast forecast = new Forecast();
-    forecast.setAntigen(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
-    forecast.setTargetDose(dataModel.getTargetDose());
-    dataModel.setForecast(forecast);
-    dataModel.getPatientSeries().setForecast(forecast);
-
     setNextLogicStepType(LogicStepType.DETERMINE_CONTRAINDICATIONS);
     evaluateLogicTables();
     return next();

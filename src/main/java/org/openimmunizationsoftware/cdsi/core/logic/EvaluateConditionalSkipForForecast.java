@@ -10,7 +10,7 @@ public class EvaluateConditionalSkipForForecast extends EvaluateConditionalSkip 
     super(dataModel, ConditionalSkipType.FORECAST,
         LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST,
         LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY,
-        LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
+        LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY);
     setConditionTableName("Table 6.4 Conditional Skip Attributes");
   }
 
