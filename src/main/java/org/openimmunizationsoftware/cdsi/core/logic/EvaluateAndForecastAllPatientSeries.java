@@ -12,6 +12,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.RecurringDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
@@ -37,7 +38,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
       } else {
         // We may need to stay on this patient series, need to check if we are done
         if (dataModel.getSelectedAntigenAdministeredRecordPos() < dataModel.getSelectedAntigenAdministeredRecordList()
-            .size()) {
+            .size() && dataModel.getPatientSeries().getPatientSeriesStatus() != PatientSeriesStatus.COMPLETE) {
           patientSeriesSelected = dataModel.getPatientSeries();
           patientSeriesNeedsSetup = false;
         } else {
