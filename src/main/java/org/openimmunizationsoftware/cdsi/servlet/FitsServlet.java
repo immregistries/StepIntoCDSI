@@ -310,8 +310,10 @@ public class FitsServlet extends ForecastServlet {
             }
             out.println("</ol>");
 
-            int percentageOfPasses = (numberOfTestChecksRun != 0 && numberOfPasses != 0) ?Math.round( ((float)numberOfPasses/(float)numberOfTestChecksRun)*100) : -1;
-            if(numberOfTestChecksRun > 0) {
+            int percentageOfPasses = (numberOfTestChecksRun != 0 && numberOfPasses != 0)
+                    ? Math.round(((float) numberOfPasses / (float) numberOfTestChecksRun) * 100)
+                    : -1;
+            if (numberOfTestChecksRun > 0) {
                 out.println("</br>");
                 out.println("<table>");
                 out.println("<tr>");
@@ -323,15 +325,17 @@ public class FitsServlet extends ForecastServlet {
                 out.println("<tr>");
                 out.println("    <td> " + numberOfTestChecksRun + " </td>");
                 out.println("    <td class=\"pass\" > " + numberOfPasses + " </td>");
-                out.println("    <td class=\"fail\" > " + numberOfFails + " </td>");
+                if (numberOfFails == 0) {
+                    out.println("    <td> " + numberOfFails + " </td>");
+                } else {
+                    out.println("    <td class=\"fail\" > " + numberOfFails + " </td>");
+                }
                 out.println("    <td> ~" + percentageOfPasses + "% </td>");
                 out.println("</tr>");
                 out.println("</table>");
             }
 
         }
-
-        
 
         out.println("  <form action=\"fits\" method=\"GET\" id=\"fitsForm\">");
         out.println("    <h3>Enter FITS Credentials</h3>");

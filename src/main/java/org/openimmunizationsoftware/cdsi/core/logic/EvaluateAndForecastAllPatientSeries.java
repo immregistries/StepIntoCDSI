@@ -38,7 +38,8 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
       } else {
         // We may need to stay on this patient series, need to check if we are done
         if (dataModel.getSelectedAntigenAdministeredRecordPos() < dataModel.getSelectedAntigenAdministeredRecordList()
-            .size() && dataModel.getPatientSeries().getPatientSeriesStatus() != PatientSeriesStatus.COMPLETE) {
+            .size() && stillEvaluating()) {
+          log("Current patient series is not yet set, staying on this patient series");
           patientSeriesSelected = dataModel.getPatientSeries();
           patientSeriesNeedsSetup = false;
         } else {
@@ -134,6 +135,10 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
     }
 
     return LogicStepFactory.createLogicStep(nextLogicStep, dataModel);
+  }
+
+  private boolean stillEvaluating() {
+    return dataModel.getPatientSeries().getPatientSeriesStatus() == null;
   }
 
   private void setupSelectedAntigenAdministeredRecordList() {

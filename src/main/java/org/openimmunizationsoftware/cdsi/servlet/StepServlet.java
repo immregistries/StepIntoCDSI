@@ -260,15 +260,6 @@ public class StepServlet extends ForecastServlet {
           vaccineDoseAdministeredList.add(aar.getVaccineDoseAdministered());
         }
       }
-      
-      out.println("<p> Previous AAR = " + dataModel.getPreviousAntigenAdministeredRecord() + "</p>");
-      out.println("<p> AAR = " + dataModel.getAntigenAdministeredRecord() + "</p>");
-      if(dataModel.getPreviousTargetDose() != null) {
-        out.println("<p> Previous TD = " + dataModel.getPreviousTargetDose().toString() + "</p>");
-      }
-      if(dataModel.getTargetDose() != null) {
-        out.println("<p> TD = " + dataModel.getTargetDose().toString() + "</p>");
-      }
 
       out.println("<table>");
       out.println("  <tr>");
@@ -345,6 +336,17 @@ public class StepServlet extends ForecastServlet {
         out.println("  </tr>");
       }
       out.println("</table>");
+
+      out.println("<ul>");
+      out.println("<li> Previous AAR = " + dataModel.getPreviousAntigenAdministeredRecord() + "</li>");
+      out.println("<li> AAR = " + dataModel.getAntigenAdministeredRecord() + "</li>");
+      if (dataModel.getPreviousTargetDose() != null) {
+        out.println("<li> Previous TD = " + dataModel.getPreviousTargetDose().toString() + "</li>");
+      }
+      if (dataModel.getTargetDose() != null) {
+        out.println("<li> TD = " + dataModel.getTargetDose().toString() + "</li>");
+      }
+      out.println("</ul>");
     }
 
     if (dataModel.getPatientSeriesList() != null && dataModel.getPatientSeriesList().size() > 0) {
