@@ -2,6 +2,7 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -70,63 +71,49 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
   }
 
   private void findEarliestRecommendedIntervalDates() {
+    if (referenceSeriesDose.getIntervalList() == null) {
+      log("Unable to find earliest recommended interval dates, no intervals to check");
+      return;
+    }
     List<Date> tmpEarliestRecommendedIntervalList = new ArrayList<Date>();
-    try {
-      for (Interval in : referenceSeriesDose.getAgeList().get(0).getSeriesDose()
-          .getIntervalList()) {
-        Date earliestRecommendedIntervalDate = CALCDTINT_5.evaluate(dataModel, this, in);
-        tmpEarliestRecommendedIntervalList.add(earliestRecommendedIntervalDate);
-      }
-      if (tmpEarliestRecommendedIntervalList.size() > 0) {
-        caEarliestRecommendedIntervalDates.setInitialValue(tmpEarliestRecommendedIntervalList);
-      }
-    } catch (NullPointerException np) {
-      log("earliestRecommendedInterval is null");
+    for (Interval in : referenceSeriesDose.getIntervalList()) {
+      Date earliestRecommendedIntervalDate = CALCDTINT_5.evaluate(dataModel, this, in);
+      tmpEarliestRecommendedIntervalList.add(earliestRecommendedIntervalDate);
+    }
+    if (tmpEarliestRecommendedIntervalList.size() > 0) {
+      caEarliestRecommendedIntervalDates.setInitialValue(tmpEarliestRecommendedIntervalList);
     }
   }
 
   private void findLatestRecommendedIntervalDate() {
-    TimePeriod latestRecommendedTimePeriod;
-    if (referenceSeriesDose == null) {
-      log("referenceSeriesDose is null");
+    if (referenceSeriesDose.getIntervalList() == null) {
+      log("No intervals to check, unable to find latest recommended interval date");
       return;
     }
-    if (referenceSeriesDose.getAgeList() == null) {
-      log("referenceSeriesDose.getAgeList() is null");
-      return;
+    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+    Date latestDate = null;
+    for (Interval interval : referenceSeriesDose.getIntervalList()) {
+      TimePeriod timePeriod = interval.getLatestRecommendedInterval();
+      Date patientReferenceDoseDate = interval.getPatientReferenceDoseDate(dataModel, this);
+      if (timePeriod == null || patientReferenceDoseDate == null) {
+        continue;
+      }
+      Date date = timePeriod.getDateFrom(patientReferenceDoseDate);
+      if (date == null) {
+        log("Date is null where timePeriod = " + timePeriod + " and patientReferenceDoseDate = "
+            + sdf.format(patientReferenceDoseDate));
+        continue;
+      }
+      if (latestDate == null) {
+        latestDate = date;
+        log("  + Initial latest recommended date: " + sdf.format(date) + ",");
+      } else if (date.after(latestDate)) {
+        log("  + Later latest recommended date: " + sdf.format(date) + ",");
+        latestDate = date;
+      }
     }
-    if (referenceSeriesDose.getAgeList().size() == 0) {
-      log("referenceSeriesDose.getAgeList().size() is 0");
-      return;
-    }
-    if (referenceSeriesDose.getAgeList().get(0) == null) {
-      log("referenceSeriesDose.getAgeList().get(0) is null");
-      return;
-    }
-    if (referenceSeriesDose.getAgeList().get(0).getSeriesDose() == null) {
-      log("referenceSeriesDose.getAgeList().get(0).getSeriesDose() is null");
-      return;
-    }
-    if (referenceSeriesDose.getAgeList().get(0).getSeriesDose().getIntervalList() == null) {
-      log("referenceSeriesDose.getAgeList().get(0).getSeriesDose():getIntervalList() is null");
-      return;
-    }
-    if (referenceSeriesDose.getAgeList().get(0).getSeriesDose().getIntervalList().size() == 0) {
-      log("referenceSeriesDose.getAgeList().get(0).getSeriesDose().getIntervalList().size() is 0");
-      return;
-    }
-    if (referenceSeriesDose.getAgeList().get(0).getSeriesDose().getIntervalList().get(0) == null) {
-      log("referenceSeriesDose.getAgeList().get(0).getSeriesDose().getIntervalList().get(0) is null");
-      return;
-    }
-    latestRecommendedTimePeriod = referenceSeriesDose.getAgeList().get(0).getSeriesDose()
-        .getIntervalList().get(0).getLatestRecommendedInterval();
-    Interval latestRecommendedInterval = referenceSeriesDose.getAgeList().get(0).getSeriesDose()
-        .getIntervalList().get(0);
-    Date patientReferenceDoseDate = latestRecommendedInterval.getPatientReferenceDoseDate(dataModel, this);
-    if (patientReferenceDoseDate != null) {
-      Date latestRecommendedIntervalDate = latestRecommendedTimePeriod.getDateFrom(patientReferenceDoseDate);
-      caLatestRecommendedIntervalDate.setInitialValue(latestRecommendedIntervalDate);
+    if (latestDate != null) {
+      caLatestRecommendedIntervalDate.setInitialValue(latestDate);
     }
   }
 
@@ -283,9 +270,9 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
       antigenFromForecastList.add(foreCast.getAntigen());
     }
 
-    if (!antigenFromForecastList.contains(newAntigenForeCast)) {
-      forecastList.add(forecast);
-    }
+    // if (!antigenFromForecastList.contains(newAntigenForeCast)) {
+    forecastList.add(forecast);
+    // }
     dataModel.getPatientSeries().setForecast(forecast);
     List<Interval> intervalList = dataModel.getTargetDose().getTrackedSeriesDose().getIntervalList();
     if (intervalList.size() > 0) {
