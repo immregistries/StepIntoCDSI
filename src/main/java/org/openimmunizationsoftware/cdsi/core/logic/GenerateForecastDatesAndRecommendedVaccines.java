@@ -387,59 +387,29 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
   }
 
   private Date computeUnadjustedRecommendedDate() {
-    Date unadjustedRecommendedDate = new Date();
+    Date unadjustedRecommendedDate = null;
     Date earliestRecommendedAgeDate = caEarliestRecommendedAgeDate.getFinalValue();
-    List<Interval> intervalList = dataModel.getTargetDose().getTrackedSeriesDose().getIntervalList();
-
+    
     if (earliestRecommendedAgeDate != null) {
       unadjustedRecommendedDate = earliestRecommendedAgeDate;
-      log("SET unadjusted recommended age date set to earliest recommended age date");
+      log("+ unadjusted recommended age date set to earliest recommended age date");
       return unadjustedRecommendedDate;
+    } else if(caEarliestRecommendedIntervalDates.getFinalValue() != null && caEarliestRecommendedIntervalDates.getFinalValue().size() != 0) {
+      log("+ unadjusted recommended age date set to the latest of all earliest recommended interval dates");
+      unadjustedRecommendedDate = getLatestDate(caEarliestRecommendedIntervalDates.getFinalValue());
     } else {
-
-      int biggestAmount = 0;
-      for (Interval interval : intervalList) {
-        int tmp = 0;
-        switch (interval.getEarliestRecommendedInterval().getType()) {
-          case DAY:
-            tmp = interval.getEarliestRecommendedInterval().getAmount();
-            break;
-          case WEEK:
-            tmp = 7 * interval.getEarliestRecommendedInterval().getAmount();
-            break;
-          case MONTH:
-            tmp = 30 * interval.getEarliestRecommendedInterval().getAmount();
-            break;
-          case YEAR:
-            tmp = 365 * interval.getEarliestRecommendedInterval().getAmount();
-            break;
-          default:
-            break;
-        }
-        if (tmp > biggestAmount) {
-          biggestAmount = tmp;
-        }
-      }
-      Date patientReferenceDoseDate;
-      try {
-        /***
-         * TO DO
-         */
-        patientReferenceDoseDate = dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered();
-        unadjustedRecommendedDate = DateUtils.addDays(patientReferenceDoseDate, biggestAmount);
-        if (biggestAmount != 0 || patientReferenceDoseDate != null) {
-          unadjustedRecommendedDate = DateUtils.addDays(patientReferenceDoseDate, biggestAmount);
-        } else {
-          if (dataModel.getVaccineGroupForecastList().size() > 0) {
-            Forecast forecast = dataModel.getVaccineGroupForecastList()
-                .get(dataModel.getVaccineGroupForecastList().size() - 1);
-            unadjustedRecommendedDate = forecast.getEarliestDate();
-          }
-        }
-      } catch (NullPointerException np) {
+      log("+ unadjusted recommended age date set to the earliest date of the patient series forecast");
+      if (dataModel.getVaccineGroupForecastList().size() > 0) {
+        Forecast forecast = dataModel.getVaccineGroupForecastList()
+            .get(dataModel.getVaccineGroupForecastList().size() - 1);
+          unadjustedRecommendedDate = forecast.getEarliestDate();
       }
     }
-    return unadjustedRecommendedDate;
+
+    if(unadjustedRecommendedDate != null) {
+      return unadjustedRecommendedDate;
+    }
+    return new Date();
   }
 
   private Date computeLatestDate() {
