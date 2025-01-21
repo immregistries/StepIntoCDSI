@@ -34,7 +34,58 @@ public class ClearServlet extends HttpServlet {
     private static Map<String, Integer> populationMap = new HashMap<String, Integer>();
 
     static {
-        populationMap.put("AL", 50);
+        populationMap.put("AL", 5025369);
+        populationMap.put("AK", 733395);
+        populationMap.put("AZ", 7158110);
+        populationMap.put("AR", 3011553);
+        populationMap.put("CA", 39555674);
+        populationMap.put("CO", 5775324);
+        populationMap.put("CT", 3607701);
+        populationMap.put("DE", 989955);
+        populationMap.put("DC", 689545);
+        populationMap.put("FL", 21538192);
+        populationMap.put("GA", 10713755);
+        populationMap.put("HI", 1455252);
+        populationMap.put("ID", 1839140);
+        populationMap.put("IL", 12821814);
+        populationMap.put("IN", 6786587);
+        populationMap.put("IA", 3190546);
+        populationMap.put("KS", 2937745);
+        populationMap.put("KY", 4506302);
+        populationMap.put("LA", 4657874);
+        populationMap.put("ME", 1363196);
+        populationMap.put("MD", 6181629);
+        populationMap.put("MA", 7033132);
+        populationMap.put("MI", 10079338);
+        populationMap.put("MN", 5706692);
+        populationMap.put("MS", 2961278);
+        populationMap.put("MO", 6154854);
+        populationMap.put("MT", 1084216);
+        populationMap.put("NE", 1961996);
+        populationMap.put("NV", 3105595);
+        populationMap.put("NH", 1377546);
+        populationMap.put("NJ", 9289014);
+        populationMap.put("NM", 2117555);
+        populationMap.put("NY", 20203772);
+        populationMap.put("NC", 10441499);
+        populationMap.put("ND", 779046);
+        populationMap.put("OH", 11799453);
+        populationMap.put("OK", 3959405);
+        populationMap.put("OR", 4237224);
+        populationMap.put("PA", 13002909);
+        populationMap.put("RI", 1097354);
+        populationMap.put("SC", 5118252);
+        populationMap.put("SD", 886729);
+        populationMap.put("TN", 6912347);
+        populationMap.put("TX", 29149458);
+        populationMap.put("UT", 3271608);
+        populationMap.put("VT", 643082);
+        populationMap.put("VA", 8631388);
+        populationMap.put("WA", 7707586);
+        populationMap.put("WV", 1793736);
+        populationMap.put("WI", 5894170);
+        populationMap.put("WY", 576844);
+        populationMap.put("PR", 3285874);
     }
 
     @Override
