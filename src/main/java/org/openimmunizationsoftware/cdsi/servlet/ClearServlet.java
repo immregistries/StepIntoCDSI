@@ -15,6 +15,9 @@ import javax.servlet.http.HttpSession;
 
 import org.openimmunizationsoftware.cdsi.SoftwareVersion;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.servlet.maps.Color;
+import org.openimmunizationsoftware.cdsi.servlet.maps.MapEntityMaker;
+import org.openimmunizationsoftware.cdsi.servlet.maps.MapPlace;
 
 public class ClearServlet extends HttpServlet {
 
@@ -91,23 +94,36 @@ public class ClearServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        HttpSession session = req.getSession(true);
-        DataModel dataModel = (DataModel) session.getAttribute("dataModel");
-        if (dataModel == null) {
-            return;
-        }
 
         resp.setContentType("text/html");
+        System.out.println("--> calling doGet");
 
         PrintWriter out = new PrintWriter(resp.getOutputStream());
         try {
+            System.out.println("--> printing header");
             printHeader(out, "Patient");
-
+            try {
+                MapEntityMaker mapEntityMaker = new MapEntityMaker();
+                for (String testParticipant : populationMap.keySet()) {
+                    int population = populationMap.get(testParticipant);
+                    MapPlace mapPlace = new MapPlace(testParticipant);
+                    mapPlace.setFillerColor(Color.MAP_SELECTED);
+                    mapEntityMaker.addMapPlace(mapPlace);
+                }
+                mapEntityMaker.setMapTitle("Hello World");
+                mapEntityMaker.setStatusTitle("Population");
+                mapEntityMaker.printMapWithKey(out);
+            } catch (Exception e) {
+                e.printStackTrace(out);
+            }
+            System.out.println("--> printing footer");
             printFooter(out);
         } catch (Exception e) {
+            System.out.println("--> exception!");
             e.printStackTrace();
         } finally {
             out.close();
+            System.out.println("--> finished doGet");
         }
     }
 
