@@ -3,6 +3,7 @@ package org.openimmunizationsoftware.cdsi.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -94,7 +95,8 @@ public class ClearServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-
+                
+            SimpleDateFormat sdfMonthYear = new SimpleDateFormat("MMMM YYYY");
         resp.setContentType("text/html");
         System.out.println("--> calling doGet");
 
@@ -102,20 +104,83 @@ public class ClearServlet extends HttpServlet {
         try {
             System.out.println("--> printing header");
             printHeader(out, "Patient");
+            
+            out.println("<h1>ACME IIS</h3>");
+            out.println("<form>");
+            out.println("   <table>");
+            out.println("      <tr>");
+            out.println("          <th>Month</th>");
+            out.println("          <th>Updates</th>");
+            out.println("          <th>Queries</th>");
+            out.println("      </tr>");
+            {
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.YEAR, -2);
+                for(int i = 0; i < 25; i++) {
+                    out.println("      <tr>");
+                    out.println("           <td>" + sdfMonthYear.format(calendar.getTime()) + "</td>");
+                    out.println("           <td><input type=\"number\"></td>");
+                    out.println("           <td><input type=\"number\"></td>");
+                    out.println("      </tr>");
+                    calendar.add(Calendar.MONTH, 1);
+                }
+            }
+            out.println("   </table>");
+            out.println("   <input class=\"w3-button\" type=\"submit\" value=\"Submit\">");
+            out.println("</form>");
+
+            //get highest and lowest test participant numbers
+            int highestPopulation = -1;
+            int lowestPopulation = -1;
+            for (String testParticipant : populationMap.keySet()) {
+                int population = populationMap.get(testParticipant);
+                if(population > highestPopulation || highestPopulation == -1) {
+                    highestPopulation = population;
+                }
+                if(population < lowestPopulation || highestPopulation == -1) {
+                    lowestPopulation = population;
+                }
+            }
+
+            int lowerBorder = (highestPopulation - lowestPopulation)/3;
+            int upperBorder = lowerBorder*2;
+
             try {
                 MapEntityMaker mapEntityMaker = new MapEntityMaker();
                 for (String testParticipant : populationMap.keySet()) {
                     int population = populationMap.get(testParticipant);
                     MapPlace mapPlace = new MapPlace(testParticipant);
-                    mapPlace.setFillerColor(Color.MAP_SELECTED);
+
+                    mapPlace.setFillerColor(Color.DEFAULT);
+                    if(population < lowerBorder) {
+                        mapPlace.setFillerColor(Color.MAP_LOWER);
+                    } else if(population > upperBorder) {
+                        mapPlace.setFillerColor(Color.MAP_UPPER);
+                    } else {
+                        mapPlace.setFillerColor(Color.MAP_CENTER);
+                    }
+                    
                     mapEntityMaker.addMapPlace(mapPlace);
                 }
-                mapEntityMaker.setMapTitle("Hello World");
+                mapEntityMaker.setMapTitle("Map");
                 mapEntityMaker.setStatusTitle("Population");
                 mapEntityMaker.printMapWithKey(out);
             } catch (Exception e) {
                 e.printStackTrace(out);
             }
+
+            Calendar viewMonth = Calendar.getInstance();
+            out.println("<input id=\"updatesRadio\" class=\"w3-button\" type=\"radio\" name=\"display_type\">");
+            out.println("<label for=\"updatesRadio\">Updates</label>");
+            out.println("<input id=\"queriesRadio\" class=\"w3-button\" type=\"radio\" name=\"display_type\">");
+            out.println("<label for=\"queriesRadio\">Queries</label>");
+
+            out.println("<div>");
+            out.println("<input class=\"w3-button\" type=\"button\" value=\"<-\">");
+            out.println("<p>" + sdfMonthYear.format(viewMonth.getTime()) + "</p>");
+            out.println("<input class=\"w3-button\" type=\"button\" value=\"->\">");
+            out.println("</div>");
+
             System.out.println("--> printing footer");
             printFooter(out);
         } catch (Exception e) {
@@ -125,36 +190,6 @@ public class ClearServlet extends HttpServlet {
             out.close();
             System.out.println("--> finished doGet");
         }
-    }
-
-    private void printViewPatient(DataModel dataModel, PrintWriter out) {
-        // class="w3-table w3-bordered w3-striped w3-border test w3-hoverable"
-        out.println("  <div class=\"w3-card w3-cell w3-margin\">");
-        out.println("    <header class=\"w3-container w3-khaki\">");
-        out.println("      <h2>Patient</h2>");
-        out.println("    </header>");
-        out.println("    <div class=\"w3-container\">");
-        out.println("      <table class=\"w3-table w3-bordered w3-striped w3-border test w3-hoverable w3-margin\">");
-        out.println("        <caption>Demographics</caption>");
-        out.println("        <tr>");
-        out.println("          <th>Patient DOB</th>");
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-        out.println("          <td>" + sdf.format(dataModel.getPatient().getDateOfBirth()) + "</td>");
-        out.println("        </tr>");
-
-        out.println("        <tr>");
-        out.println("          <th>Gender</th>");
-        out.println("          <td>" + dataModel.getPatient().getGender() + "</td>");
-        out.println("        </tr>");
-
-        out.println("        <tr>");
-        out.println("          <th>Country of Birth</th>");
-        out.println("          <td>" + dataModel.getPatient().getCountryOfBirth() + "</td>");
-        out.println("        </tr>");
-        out.println("      </table>");
-        out.println("    </div>");
-        out.println("  </div>");
-
     }
 
     protected void printHeader(PrintWriter out, String section) {
@@ -168,14 +203,9 @@ public class ClearServlet extends HttpServlet {
 
         out.println("    <header class=\"w3-container w3-light-grey\">");
         out.println("      <div class=\"w3-bar w3-light-grey\">");
-        out.println("        <a href=\"dataModelView\" class=\"w3-bar-item w3-button\">Main</a> ");
-        out.println("        <a href=\"dataModelViewAntigen\" class=\"w3-bar-item w3-button\">Antigen</a> ");
-        out.println("        <a href=\"dataModelViewCvx\" class=\"w3-bar-item w3-button\">CVX</a> ");
-        out.println(
-                "        <a href=\"dataModelViewLiveVirusConflict\" class=\"w3-bar-item w3-button\">Live Virus Conflict</a> ");
-        out.println("        <a href=\"dataModelViewPatient\" class=\"w3-bar-item w3-button\">Patient</a> ");
-        out.println("        <a href=\"dataModelViewSchedule\" class=\"w3-bar-item w3-button\">Schedule</a> ");
-        out.println("        <a href=\"dataModelViewVaccineGroup\" class=\"w3-bar-item w3-button\">Vaccine Group</a> ");
+        out.println("        <h1>CLEAR - Community Led Exchange and Aggregate Reporting</h1> ");
+        out.println("        <a href=\"\" class=\"w3-bar-item w3-button\">Main</a> ");
+        out.println("        <a href=\"map\" class=\"w3-bar-item w3-button\">Map</a> ");
         out.println("      </div>");
         out.println("    </header>");
         out.println("    <div class=\"w3-container\">");
