@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,20 +17,16 @@ import javax.servlet.http.HttpSession;
 
 import org.openimmunizationsoftware.cdsi.SoftwareVersion;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.servlet.maps.ClearEntry;
 import org.openimmunizationsoftware.cdsi.servlet.maps.Color;
 import org.openimmunizationsoftware.cdsi.servlet.maps.MapEntityMaker;
 import org.openimmunizationsoftware.cdsi.servlet.maps.MapPlace;
 
 public class ClearServlet extends HttpServlet {
 
-    private class ClearEntry {
-        Date month;
-        String iisName;
-        int countUpdate;
-        int countQuery;
-    }
-
-    private static Map<String, Map<Date, ClearEntry>> clearIisMap = new HashMap<String, Map<Date, ClearEntry>>();
+    String userIisName = "AZ";
+    Calendar viewMonth = Calendar.getInstance();
+    private static Map<String, Map<String, ClearEntry>> clearIisMap = new HashMap<String, Map<String, ClearEntry>>();
 
     static {
 
@@ -90,20 +87,76 @@ public class ClearServlet extends HttpServlet {
         populationMap.put("WI", 5894170);
         populationMap.put("WY", 576844);
         populationMap.put("PR", 3285874);
+        populationMap.put("NYC", 8804190);
+        populationMap.put("Phil", 1526006);
+        populationMap.put("American Samoa", 49710);
+        populationMap.put("Guam", 168801);
+        populationMap.put("Marshall Islands", 42418);
+        populationMap.put("Micronesia", 113373);
+        populationMap.put("N. Mariana Islands (CNMI)", 43854);
+        populationMap.put("Palau", 21779);
+        populationMap.put("Puerto Rico", 3238164);
+        populationMap.put("Virgin Islands", 87146);
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
                 
-            SimpleDateFormat sdfMonthYear = new SimpleDateFormat("MMMM YYYY");
+        SimpleDateFormat sdfMonthYear = new SimpleDateFormat("MMMM YYYY");
         resp.setContentType("text/html");
         System.out.println("--> calling doGet");
 
         PrintWriter out = new PrintWriter(resp.getOutputStream());
         try {
             System.out.println("--> printing header");
-            printHeader(out, "Patient");
+            printHeader(out);
+
+            for(String user : populationMap.keySet()) {
+                ClearEntry newEntry = new ClearEntry();
+                Random rand = new Random();
+                int userPopulation = populationMap.get(user);
+                newEntry.setCountUpdate((int)Math.round(rand.nextFloat()*(userPopulation/2.0)+(userPopulation/2.0)));
+                newEntry.setCountQuery((int)Math.round(rand.nextFloat()*(userPopulation/2.0)+(userPopulation/2.0)));
+                Map<String, ClearEntry> clearEntryDateMap = clearIisMap.get(user) == null ? new HashMap<String, ClearEntry>() : clearIisMap.get(user);
+                clearIisMap.put(user,clearEntryDateMap);
+                clearEntryDateMap.put(sdfMonthYear.format(viewMonth.getTime()),newEntry);
+            }
+
+            {
+                Calendar tmpCalendar = Calendar.getInstance();
+                tmpCalendar.add(Calendar.YEAR, -2);
+                for(int i = 0; i < 25; i++) {
+                    SimpleDateFormat sdfRowName = new SimpleDateFormat("MMMMYYYY");
+                    tmpCalendar.add(Calendar.MONTH, 1);
+
+                    String rowName = sdfRowName.format(tmpCalendar.getTime());
+                    String updateCountString = req.getParameter(rowName + "-Updates");
+                    String queryCountString = req.getParameter(rowName + "-Queries");
+
+                    if(updateCountString == null || updateCountString == "") {
+                        continue;
+                    }
+                    if(queryCountString == null || queryCountString == "") {
+                        continue;
+                    }
+                    int updateCount = Integer.parseInt(updateCountString);
+                    int queryCount = Integer.parseInt(queryCountString);
+
+                    out.println("<p>" + rowName + " Updates > " + updateCountString + "</p>");
+                    out.println("<p>" + rowName + " Queries > " + queryCountString + "</p>");
+
+                    ClearEntry newEntry = new ClearEntry();
+                    newEntry.setCountUpdate(updateCount);
+                    newEntry.setCountQuery(queryCount);
+                    Map<String, ClearEntry> clearEntryDateMap = clearIisMap.get(userIisName) == null ? new HashMap<String, ClearEntry>() : clearIisMap.get(userIisName);
+                    clearIisMap.put(userIisName,clearEntryDateMap);
+                    clearEntryDateMap.put(sdfMonthYear.format(tmpCalendar.getTime()),newEntry);
+
+                    //out.println("<p>adding " + userIisName + " with date of " + sdfMonthYear.format(tmpCalendar.getTime()) + " </p>");
+                    
+                }
+            }
             
             out.println("<h1>ACME IIS</h3>");
             out.println("<form>");
@@ -114,15 +167,17 @@ public class ClearServlet extends HttpServlet {
             out.println("          <th>Queries</th>");
             out.println("      </tr>");
             {
-                Calendar calendar = Calendar.getInstance();
-                calendar.add(Calendar.YEAR, -2);
+                Calendar tmpCalendar = Calendar.getInstance();
+                tmpCalendar.add(Calendar.YEAR, -2);
                 for(int i = 0; i < 25; i++) {
+                    SimpleDateFormat sdfRowName = new SimpleDateFormat("MMMMYYYY");
+                    String rowName = sdfRowName.format(tmpCalendar.getTime());
                     out.println("      <tr>");
-                    out.println("           <td>" + sdfMonthYear.format(calendar.getTime()) + "</td>");
-                    out.println("           <td><input type=\"number\"></td>");
-                    out.println("           <td><input type=\"number\"></td>");
+                    out.println("           <td>" + sdfMonthYear.format(tmpCalendar.getTime()) + "</td>");
+                    out.println("           <td><input type=\"number\" name=\"" + rowName + "-Updates" + "\"></td>");
+                    out.println("           <td><input type=\"number\" name=\"" + rowName + "-Queries" + "\"></td>");
                     out.println("      </tr>");
-                    calendar.add(Calendar.MONTH, 1);
+                    tmpCalendar.add(Calendar.MONTH, 1);
                 }
             }
             out.println("   </table>");
@@ -130,31 +185,53 @@ public class ClearServlet extends HttpServlet {
             out.println("</form>");
 
             //get highest and lowest test participant numbers
-            int highestPopulation = -1;
-            int lowestPopulation = -1;
-            for (String testParticipant : populationMap.keySet()) {
-                int population = populationMap.get(testParticipant);
-                if(population > highestPopulation || highestPopulation == -1) {
-                    highestPopulation = population;
+            int highestUpdateCount = -1;
+            int lowestUpdateCount = -1;
+            
+            for(String user : clearIisMap.keySet()) {
+                if(clearIisMap.get(user) == null) {
+                    continue;
                 }
-                if(population < lowestPopulation || highestPopulation == -1) {
-                    lowestPopulation = population;
+                for (ClearEntry clearEntry : clearIisMap.get(user).values()) {
+                    if(clearEntry == null) {
+                        continue;
+                    }
+                    int updateCount = clearEntry.getCountUpdate();
+                    if(updateCount > highestUpdateCount || highestUpdateCount == -1) {
+                        highestUpdateCount = updateCount;
+                    }
+                    if(updateCount < lowestUpdateCount || lowestUpdateCount == -1) {
+                        lowestUpdateCount = updateCount;
+                    }
                 }
             }
 
-            int lowerBorder = (highestPopulation - lowestPopulation)/3;
+            int lowerBorder = (highestUpdateCount - lowestUpdateCount)/3;
             int upperBorder = lowerBorder*2;
+
+            if(highestUpdateCount == -1 || lowestUpdateCount == -1) {
+                upperBorder = 0;
+                lowerBorder = 0;
+            }
+            out.println("<p> highest update count: " + highestUpdateCount + "</p>");
+            out.println("<p> lowest update count: " + lowestUpdateCount + "</p>");
 
             try {
                 MapEntityMaker mapEntityMaker = new MapEntityMaker();
-                for (String testParticipant : populationMap.keySet()) {
-                    int population = populationMap.get(testParticipant);
+                for (String testParticipant : clearIisMap.keySet()) {
+                    ClearEntry ce = clearIisMap.get(testParticipant).get(sdfMonthYear.format(viewMonth.getTime()));
+                    if(ce == null) {
+                        out.println("<p>ce is null!</p>");
+                        continue;
+                    }
+                    int displayCount = ce.getCountUpdate();
+                    
                     MapPlace mapPlace = new MapPlace(testParticipant);
 
                     mapPlace.setFillerColor(Color.DEFAULT);
-                    if(population < lowerBorder) {
+                    if(displayCount < lowerBorder) {
                         mapPlace.setFillerColor(Color.MAP_LOWER);
-                    } else if(population > upperBorder) {
+                    } else if(displayCount > upperBorder) {
                         mapPlace.setFillerColor(Color.MAP_UPPER);
                     } else {
                         mapPlace.setFillerColor(Color.MAP_CENTER);
@@ -169,7 +246,7 @@ public class ClearServlet extends HttpServlet {
                 e.printStackTrace(out);
             }
 
-            Calendar viewMonth = Calendar.getInstance();
+            
             out.println("<input id=\"updatesRadio\" class=\"w3-button\" type=\"radio\" name=\"display_type\">");
             out.println("<label for=\"updatesRadio\">Updates</label>");
             out.println("<input id=\"queriesRadio\" class=\"w3-button\" type=\"radio\" name=\"display_type\">");
@@ -192,7 +269,7 @@ public class ClearServlet extends HttpServlet {
         }
     }
 
-    protected void printHeader(PrintWriter out, String section) {
+    protected void printHeader(PrintWriter out) {
         out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\">");
         out.println("<html>");
         out.println("  <head>");
