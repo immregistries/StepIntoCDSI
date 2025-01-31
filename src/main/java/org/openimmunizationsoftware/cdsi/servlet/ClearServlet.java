@@ -143,24 +143,18 @@ public class ClearServlet extends HttpServlet {
                     int updateCount = Integer.parseInt(updateCountString);
                     int queryCount = Integer.parseInt(queryCountString);
 
-                    out.println("<p>" + rowName + " Updates > " + updateCountString + "</p>");
-                    out.println("<p>" + rowName + " Queries > " + queryCountString + "</p>");
-
                     ClearEntry newEntry = new ClearEntry();
                     newEntry.setCountUpdate(updateCount);
                     newEntry.setCountQuery(queryCount);
                     Map<String, ClearEntry> clearEntryDateMap = clearIisMap.get(userIisName) == null ? new HashMap<String, ClearEntry>() : clearIisMap.get(userIisName);
                     clearIisMap.put(userIisName,clearEntryDateMap);
                     clearEntryDateMap.put(sdfMonthYear.format(tmpCalendar.getTime()),newEntry);
-
-                    //out.println("<p>adding " + userIisName + " with date of " + sdfMonthYear.format(tmpCalendar.getTime()) + " </p>");
-                    
                 }
             }
             
-            out.println("<h1>ACME IIS</h3>");
+            out.println("<h1> " + userIisName + " IIS</h3>");
             out.println("<form>");
-            out.println("   <table>");
+            out.println("   <table class=\"w3-table w3-striped\">");
             out.println("      <tr>");
             out.println("          <th>Month</th>");
             out.println("          <th>Updates</th>");
@@ -257,6 +251,32 @@ public class ClearServlet extends HttpServlet {
             out.println("<p>" + sdfMonthYear.format(viewMonth.getTime()) + "</p>");
             out.println("<input class=\"w3-button\" type=\"button\" value=\"->\">");
             out.println("</div>");
+
+            out.println("   <table class=\"w3-table w3-striped\">");
+            out.println("      <tr>");
+            out.println("          <th>User</th>");
+            out.println("          <th>Updates</th>");
+            out.println("          <th>Queries</th>");
+            out.println("      </tr>");
+            for (String testParticipant : populationMap.keySet()) {
+                int updateCount = 0;
+                int queryCount = 0;
+                
+                Map<String, ClearEntry> userEntry = clearIisMap.get(testParticipant);
+                if(userEntry != null) {
+                    ClearEntry monthEntry = userEntry.get(sdfMonthYear.format(viewMonth.getTime()));
+                    if(monthEntry != null) {
+                        updateCount = monthEntry.getCountUpdate();
+                        queryCount = monthEntry.getCountQuery();
+                    }
+                }
+                out.println("      <tr>");
+                out.println("           <td>" + testParticipant + "</td>");
+                out.println("           <td style=\"width:20%\"><p>" + updateCount + "</p></td>");
+                out.println("           <td style=\"width:20%\"><p>" + queryCount + "</p></td>");
+                out.println("      </tr>");
+            }
+            out.println("   </table>");
 
             System.out.println("--> printing footer");
             printFooter(out);
