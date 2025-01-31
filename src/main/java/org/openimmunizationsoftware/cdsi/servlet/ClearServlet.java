@@ -246,10 +246,16 @@ public class ClearServlet extends HttpServlet {
             out.println("<input id=\"queriesRadio\" class=\"w3-button\" type=\"radio\" name=\"display_type\">");
             out.println("<label for=\"queriesRadio\">Queries</label>");
 
-            out.println("<div>");
-            out.println("<input class=\"w3-button\" type=\"button\" value=\"<-\">");
-            out.println("<p>" + sdfMonthYear.format(viewMonth.getTime()) + "</p>");
-            out.println("<input class=\"w3-button\" type=\"button\" value=\"->\">");
+            out.println("<div class=\"w3-cell-row\">");
+            out.println("   <div class=\"w3-cell\">");
+            out.println("       <input class=\"w3-button\" type=\"button\" value=\"<-\">");
+            out.println("   </div>");
+            out.println("   <div class=\"w3-cell\">");
+            out.println("       <p>" + sdfMonthYear.format(viewMonth.getTime()) + "</p>");
+            out.println("   </div>");
+            out.println("   <div class=\"w3-cell\">");
+            out.println("       <input class=\"w3-button\" type=\"button\" value=\"->\">");
+            out.println("   </div>");
             out.println("</div>");
 
             out.println("   <table class=\"w3-table w3-striped\">");
@@ -272,8 +278,8 @@ public class ClearServlet extends HttpServlet {
                 }
                 out.println("      <tr>");
                 out.println("           <td>" + testParticipant + "</td>");
-                out.println("           <td style=\"width:20%\"><p>" + updateCount + "</p></td>");
-                out.println("           <td style=\"width:20%\"><p>" + queryCount + "</p></td>");
+                out.println("           <td><p>" + updateCount + "</p></td>");
+                out.println("           <td><p>" + queryCount + "</p></td>");
                 out.println("      </tr>");
             }
             out.println("   </table>");
@@ -302,7 +308,7 @@ public class ClearServlet extends HttpServlet {
         out.println("      <div class=\"w3-bar w3-light-grey\">");
         out.println("        <h1>CLEAR - Community Led Exchange and Aggregate Reporting</h1> ");
         out.println("        <a href=\"\" class=\"w3-bar-item w3-button\">Main</a> ");
-        out.println("        <a href=\"map\" class=\"w3-bar-item w3-button\">Map</a> ");
+        out.println("        <a href=\"clear/map\" class=\"w3-bar-item w3-button\">Map</a> ");
         out.println("      </div>");
         out.println("    </header>");
         out.println("    <div class=\"w3-container\">");
