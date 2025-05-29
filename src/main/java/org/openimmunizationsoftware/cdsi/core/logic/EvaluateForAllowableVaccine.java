@@ -140,8 +140,8 @@ public class EvaluateForAllowableVaccine extends LogicStep {
           }
           if (caDateAdministered.getFinalValue()
               .before(caAllowableVaccineTypeEndAgeDate.getFinalValue())
-              && caDateAdministered.getFinalValue()
-                  .after(caAllowableVaccineTypeBeginAgeDate.getFinalValue())) {
+              && !caDateAdministered.getFinalValue()
+                  .before(caAllowableVaccineTypeBeginAgeDate.getFinalValue())) {
             return LogicResult.YES;
           }
           return LogicResult.NO;

@@ -72,7 +72,6 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
 
   private void findEarliestRecommendedIntervalDates() {
     if (referenceSeriesDose.getIntervalList() == null) {
-      log("Unable to find earliest recommended interval dates, no intervals to check");
       return;
     }
     List<Date> tmpEarliestRecommendedIntervalList = new ArrayList<Date>();
@@ -86,8 +85,9 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
   }
 
   private void findLatestRecommendedIntervalDate() {
+    log("---< finding Latest Recommended Interval Date");
     if (referenceSeriesDose.getIntervalList() == null) {
-      log("No intervals to check, unable to find latest recommended interval date");
+      log("---> No intervals to check, unable to find latest recommended interval date, returning");
       return;
     }
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
@@ -113,6 +113,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
       }
     }
     if (latestDate != null) {
+      log("---> Setting Latest Recommended Interval Date to " + sdf.format(latestDate.getTime()));
       caLatestRecommendedIntervalDate.setInitialValue(latestDate);
     }
   }
