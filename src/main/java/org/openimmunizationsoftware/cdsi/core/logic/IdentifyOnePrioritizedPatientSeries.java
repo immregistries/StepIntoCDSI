@@ -166,7 +166,7 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
               + "More than one scorable patient series has potential. "
               + "All scorable patient series are examined to see which should "
               + "be scored and selected as the prioritized patient series for the series group.");
-          setNextLogicStepType(LogicStepType.DETERMINE_BEST_PATIENT_SERIES);
+          setNextLogicStepType(LogicStepType.CLASSIFY_SCORABLE_PATIENT_SERIES);
         }
       });
 
@@ -174,7 +174,7 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
         @Override
         public void perform() {
           log("Yes. The single default patient series is the prioritized patient series for the series group.");
-          setNextLogicStepType(LogicStepType.CLASSIFY_SCORABLE_PATIENT_SERIES);
+          setNextLogicStepType(LogicStepType.DETERMINE_BEST_PATIENT_SERIES);
         }
       });
 
@@ -182,15 +182,15 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
         @Override
         public void perform() {
           log("Yes. The single scorable patient series is the prioritized patient series for the series group.");
-          setNextLogicStepType(LogicStepType.CLASSIFY_SCORABLE_PATIENT_SERIES);
+          setNextLogicStepType(LogicStepType.DETERMINE_BEST_PATIENT_SERIES);
         }
       });
 
       setLogicOutcome(2, new LogicOutcome() {
         @Override
         public void perform() {
-          log("Yes. The single scorable patient series is the prioritized patient series for the series group.");
-          setNextLogicStepType(LogicStepType.CLASSIFY_SCORABLE_PATIENT_SERIES);
+          log("Yes. The single complete patient series is the prioritized patient series for the series group.");
+          setNextLogicStepType(LogicStepType.DETERMINE_BEST_PATIENT_SERIES);
         }
       });
 
@@ -198,7 +198,7 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
         @Override
         public void perform() {
           log("Yes. The single in-process patient series is the prioritized patient series for the series group.");
-          setNextLogicStepType(LogicStepType.CLASSIFY_SCORABLE_PATIENT_SERIES);
+          setNextLogicStepType(LogicStepType.DETERMINE_BEST_PATIENT_SERIES);
         }
       });
 
@@ -206,7 +206,7 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
         @Override
         public void perform() {
           log("Yes. The default patient series is the prioritized patient series for the series group.");
-          setNextLogicStepType(LogicStepType.CLASSIFY_SCORABLE_PATIENT_SERIES);
+          setNextLogicStepType(LogicStepType.DETERMINE_BEST_PATIENT_SERIES);
         }
       });
     }

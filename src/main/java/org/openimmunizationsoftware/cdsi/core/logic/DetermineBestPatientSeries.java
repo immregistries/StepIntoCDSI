@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 
 import org.apache.jena.sparql.function.library.leviathan.log;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesType;
@@ -29,25 +30,22 @@ public class DetermineBestPatientSeries extends LogicStep {
         super(LogicStepType.DETERMINE_BEST_PATIENT_SERIES, dataModel);
 
         for(PatientSeries ps : patientSeriesList) {
-            LT logicTable = new LT();
-            logicTable.pps = ps;
-            logicTableList.add(logicTable);
+            for (Antigen a : dataModel.getAntigenSelectedList()) {
+                if (ps.getTrackedAntigenSeries().getTargetDisease().equals(a)) {
+                    LT logicTable = new LT();
+                    logicTable.pps = ps;
+                    logicTableList.add(logicTable);
+                }
+            }
         }
     }
 
     private LinkedHashMap<PatientSeries, Integer> patientSeriesMap = new LinkedHashMap<PatientSeries, Integer>();
-    private PatientSeries bestPatientSeries = null;
 
 
     @Override
     public LogicStep process() throws Exception {
         evaluateLogicTables();
-        if(patientSeriesList != null && patientSeriesList.size() > 0) {
-            bestPatientSeries = patientSeriesList.get(0);
-        }
-        if (bestPatientSeries != null) {
-            dataModel.getBestPatientSeriesList().add(bestPatientSeries);
-        }
         setNextLogicStepType(LogicStepType.SELECT_BEST_PATIENT_SERIES);
         return next();
     }
@@ -60,17 +58,12 @@ public class DetermineBestPatientSeries extends LogicStep {
     @Override
     public void printPost(PrintWriter out) throws Exception {
         printStandard(out);
-        out.println("<p>Best Patient Series: " + bestPatientSeries + "</p>");
-        for (Entry<PatientSeries, Integer> entry : patientSeriesMap.entrySet()) {
-            out.println(
-                    "<p> PatientSeries : " + entry.getKey() + " Value : " + entry.getValue() + " </p>");
-        }
-
     }
 
     private void printStandard(PrintWriter out) {
         out.print("<h4> " + dataModel.getAntigen().getName() + " </h4>");
         printBestPatientSeries(out);
+        printLogicTables(out);
     }
 
     private class LT extends LogicTable {
@@ -81,10 +74,10 @@ public class DetermineBestPatientSeries extends LogicStep {
             setLogicCondition(0, new LogicCondition("Is the prioritized patient series a complete patient series?") {
                 @Override
                 protected LogicResult evaluateInternal() {
-                    if(pps.getPatientSeriesStatus() == null || pps.getPatientSeriesStatus() != PatientSeriesStatus.NOT_COMPLETE) {
-                        return LogicResult.NO;
+                    if(pps.getPatientSeriesStatus() == PatientSeriesStatus.COMPLETE) {
+                        return LogicResult.YES;
                     }
-                    return LogicResult.YES;
+                    return LogicResult.NO;
                 }
             });
 
@@ -92,7 +85,7 @@ public class DetermineBestPatientSeries extends LogicStep {
                 @Override
                 protected LogicResult evaluateInternal() {
                     for(PatientSeries ps : patientSeriesList) {
-                        if(ps.getPatientSeriesStatus() != PatientSeriesStatus.COMPLETE) {
+                        if(ps.getPatientSeriesStatus() == PatientSeriesStatus.COMPLETE) {
                             return LogicResult.YES;
                         }
                     }
@@ -149,6 +142,7 @@ public class DetermineBestPatientSeries extends LogicStep {
                 @Override
                 public void perform() {
                     log("Yes. The prioritized patient series is the best patient series for the series group.");
+                    dataModel.getBestPatientSeriesList().add(pps);
                 }
             });
 
@@ -156,6 +150,7 @@ public class DetermineBestPatientSeries extends LogicStep {
                 @Override
                 public void perform() {
                     log("Yes. The prioritized patient series is the best patient series for the series group.");
+                    dataModel.getBestPatientSeriesList().add(pps);
                 }
             });
 
@@ -163,6 +158,7 @@ public class DetermineBestPatientSeries extends LogicStep {
                 @Override
                 public void perform() {
                     log("Yes. The prioritized patient series is the best patient series for the series group.");
+                    dataModel.getBestPatientSeriesList().add(pps);
                 }
             });
         }

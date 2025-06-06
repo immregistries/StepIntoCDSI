@@ -2,6 +2,7 @@ package org.openimmunizationsoftware.cdsi.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import org.openimmunizationsoftware.cdsi.SoftwareVersion;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
@@ -20,6 +22,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepType;
@@ -131,8 +134,12 @@ public class StepServlet extends ForecastServlet {
     out.println("      <form action=\"step\" method=\"POST\" id=\"stepForm\">");
     out.println("    <div class=\"cell\">");
     if (exception != null) {
+      StringWriter sw = new StringWriter();
+      PrintWriter pw = new PrintWriter(sw);
+      exception.printStackTrace(pw);
+
       out.println("<pre>");
-      exception.printStackTrace(out);
+      out.println(sw.toString());
       out.println("</pre>");
     } else {
       out.println(
@@ -351,7 +358,7 @@ public class StepServlet extends ForecastServlet {
 
     if (dataModel.getPatientSeriesList() != null && dataModel.getPatientSeriesList().size() > 0) {
       out.println("psl hashcode " + dataModel.getPatientSeriesList().hashCode() + "<br/>");
-      out.println("<h2>Forecasts</h2>");
+      out.println("<h2>Patient Series</h2>");
       out.println("<table>");
       out.println("  <tr>");
       out.println("    <th>Antigen</th>");
@@ -379,7 +386,7 @@ public class StepServlet extends ForecastServlet {
     }
 
     if (dataModel.getForecastList().size() > 0) {
-      out.println("<p>Forecasts:</p>");
+      out.println("<h2>Forecasts</h2>");
       out.println("<table>");
       out.println("  <tr>");
       out.println("    <th>Antigen</th>");
@@ -426,6 +433,24 @@ public class StepServlet extends ForecastServlet {
       }
       out.println("</table>");
     }
+
+    if (dataModel.getForecastList().size() > 0) {
+      out.println("<h2>Vaccine Group Forecasts</h2>");
+      out.println("<table>");
+      out.println("  <tr>");
+      out.println("    <th>Forecast Antigen</th>");
+      out.println("    <th>Vaccine Group Status</th>");
+      out.println("  </tr>");
+      for (VaccineGroupForecast vgf : dataModel.getVaccineGroupForecastList()) {
+        out.println("  <tr>");
+        out.println("    <td>" + (vgf.getAntigen() == null ? "null"
+            : vgf.getAntigen()) + "</td>");
+        out.println("    <td>" + vgf.getVaccineGroupStatus().toString() + "</td>");
+        out.println("  </tr>");
+      }
+      out.println("</table>");
+    }
+
   }
 
   private void printVda(PrintWriter out, VaccineDoseAdministered vda) {

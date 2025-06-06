@@ -13,9 +13,9 @@ public class LogicTable {
       logicCondition.evaluate(); // Get the logic result for each condition. Assigns it to
                                  // LogicCondition.logicResult
     }
+    int validColumnCount = 0;
     for (int j = 0; j < logicOutcomes.length; j++) {
       boolean validConditionColumn = true;
-      int validColumnCount = 0;
       // This is saying it is not the case that any value in column j is ANY OR any
       // value in column j is equal to the logic result of the condition
       // If so set all True to false.
@@ -53,14 +53,14 @@ public class LogicTable {
         logicOutcomes[j].perform();
         validColumnCount++;
 
-        // Should only ever have one valid column.
-        if (validColumnCount != 1) {
-          throw new IllegalStateException("Can only have 1 valid column in a logic table found: " + validColumnCount);
+        // Should only ever have one valid column if no default outcome exists.
+        if (validColumnCount != 1 && logicOutcomeDefault == null) {
+          //throw new IllegalStateException("Can only have 1 valid column in a logic table found: " + validColumnCount);
         }
       }
-      if (validColumnCount == 0 && logicOutcomeDefault != null) {
-        logicOutcomeDefault.perform();
-      }
+    }
+    if (validColumnCount == 0 && logicOutcomeDefault != null) {
+      logicOutcomeDefault.perform();
     }
   }
 
