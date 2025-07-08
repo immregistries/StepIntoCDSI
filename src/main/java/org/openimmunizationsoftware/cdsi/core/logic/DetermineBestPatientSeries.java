@@ -1,23 +1,14 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
 
-import org.apache.jena.sparql.function.library.leviathan.log;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
-import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesType;
-import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
-import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
@@ -29,7 +20,7 @@ public class DetermineBestPatientSeries extends LogicStep {
     public DetermineBestPatientSeries(DataModel dataModel) {
         super(LogicStepType.DETERMINE_BEST_PATIENT_SERIES, dataModel);
 
-        for(PatientSeries ps : patientSeriesList) {
+        for (PatientSeries ps : patientSeriesList) {
             for (Antigen a : dataModel.getAntigenSelectedList()) {
                 if (ps.getTrackedAntigenSeries().getTargetDisease().equals(a)) {
                     LT logicTable = new LT();
@@ -41,7 +32,6 @@ public class DetermineBestPatientSeries extends LogicStep {
     }
 
     private LinkedHashMap<PatientSeries, Integer> patientSeriesMap = new LinkedHashMap<PatientSeries, Integer>();
-
 
     @Override
     public LogicStep process() throws Exception {
@@ -68,24 +58,26 @@ public class DetermineBestPatientSeries extends LogicStep {
 
     private class LT extends LogicTable {
         PatientSeries pps;
+
         public LT() {
-            super(5,3, "TABLE 8-14 IS THE PRIORITIZED PATIENT SERIES THE BEST PATIENT SERIES FOR THE SERIES GROUP?");
+            super(5, 3, "TABLE 8-14 IS THE PRIORITIZED PATIENT SERIES THE BEST PATIENT SERIES FOR THE SERIES GROUP?");
 
             setLogicCondition(0, new LogicCondition("Is the prioritized patient series a complete patient series?") {
                 @Override
                 protected LogicResult evaluateInternal() {
-                    if(pps.getPatientSeriesStatus() == PatientSeriesStatus.COMPLETE) {
+                    if (pps.getPatientSeriesStatus() == PatientSeriesStatus.COMPLETE) {
                         return LogicResult.YES;
                     }
                     return LogicResult.NO;
                 }
             });
 
-            setLogicCondition(1, new LogicCondition("Is there a prioritized patient series that is a complete patient series in an equivalent series group?") {
+            setLogicCondition(1, new LogicCondition(
+                    "Is there a prioritized patient series that is a complete patient series in an equivalent series group?") {
                 @Override
                 protected LogicResult evaluateInternal() {
-                    for(PatientSeries ps : patientSeriesList) {
-                        if(ps.getPatientSeriesStatus() == PatientSeriesStatus.COMPLETE) {
+                    for (PatientSeries ps : patientSeriesList) {
+                        if (ps.getPatientSeriesStatus() == PatientSeriesStatus.COMPLETE) {
                             return LogicResult.YES;
                         }
                     }
@@ -93,31 +85,33 @@ public class DetermineBestPatientSeries extends LogicStep {
                 }
             });
 
-            setLogicCondition(2, new LogicCondition("Is the series type of the prioritized patient series 'Evaluation Only'?") {
-                @Override
-                protected LogicResult evaluateInternal() {
-                    if(pps.getTrackedAntigenSeries().getSeriesType().equals(SeriesType.EVALUATION_ONLY)) {
-                        return LogicResult.YES;
-                    }
-                    return LogicResult.NO;
-                }
-            });
+            setLogicCondition(2,
+                    new LogicCondition("Is the series type of the prioritized patient series 'Evaluation Only'?") {
+                        @Override
+                        protected LogicResult evaluateInternal() {
+                            if (pps.getTrackedAntigenSeries().getSeriesType().equals(SeriesType.EVALUATION_ONLY)) {
+                                return LogicResult.YES;
+                            }
+                            return LogicResult.NO;
+                        }
+                    });
 
             setLogicCondition(3, new LogicCondition("Is the series type of the prioritized patient series 'Risk'?") {
                 @Override
                 protected LogicResult evaluateInternal() {
-                    if(pps.getTrackedAntigenSeries().getSeriesType().equals(SeriesType.RISK)) {
+                    if (pps.getTrackedAntigenSeries().getSeriesType().equals(SeriesType.RISK)) {
                         return LogicResult.YES;
                     }
                     return LogicResult.NO;
                 }
             });
 
-            setLogicCondition(4, new LogicCondition("Is there a prioritized patient series with a series type of 'Risk' in an equivalent series group?") {
+            setLogicCondition(4, new LogicCondition(
+                    "Is there a prioritized patient series with a series type of 'Risk' in an equivalent series group?") {
                 @Override
                 protected LogicResult evaluateInternal() {
-                    for(PatientSeries ps : patientSeriesList) {
-                        if(ps.getTrackedAntigenSeries().getSeriesType().equals(SeriesType.RISK)) {
+                    for (PatientSeries ps : patientSeriesList) {
+                        if (ps.getTrackedAntigenSeries().getSeriesType().equals(SeriesType.RISK)) {
                             return LogicResult.YES;
                         }
                     }
