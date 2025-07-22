@@ -36,7 +36,6 @@ public class SelectBestPatientSeries extends LogicStep {
       for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {
         if (patientSeries.getTrackedAntigenSeries().getTargetDisease().equals(antigen)) {
           patientSeriesSelectedList.add(patientSeries);
-          break;
         }
       }
       dataModel.setSelectedPatientSeriesList(patientSeriesSelectedList);

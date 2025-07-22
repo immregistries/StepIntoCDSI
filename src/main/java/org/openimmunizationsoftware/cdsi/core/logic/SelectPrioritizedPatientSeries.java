@@ -48,7 +48,7 @@ public class SelectPrioritizedPatientSeries extends LogicStep {
   }
 
   private LinkedHashMap<PatientSeries, Integer> patientSeriesMap = new LinkedHashMap<PatientSeries, Integer>();
-  private PatientSeries bestPatientSeries = null;
+  private PatientSeries prioritizedPatientSeries = null;
 
   private void selectBestPatientSeries() {
     for (PatientSeries patientSeries : patientSeriesList) {
@@ -56,15 +56,15 @@ public class SelectPrioritizedPatientSeries extends LogicStep {
     }
     patientSeriesMap = (LinkedHashMap<PatientSeries, Integer>) sortByComparator(patientSeriesMap);
     if (patientSeriesMap.size() > 0) {
-      bestPatientSeries = (PatientSeries) patientSeriesMap.keySet().toArray()[0];
+      prioritizedPatientSeries = (PatientSeries) patientSeriesMap.keySet().toArray()[0];
     }
   }
 
   @Override
   public LogicStep process() throws Exception {
     selectBestPatientSeries();
-    if (bestPatientSeries != null) {
-      dataModel.getBestPatientSeriesList().add(bestPatientSeries);
+    if (prioritizedPatientSeries != null) {
+      dataModel.getPrioritizedPatientSeriesList().add(prioritizedPatientSeries);
     }
     setNextLogicStepType(LogicStepType.DETERMINE_BEST_PATIENT_SERIES);
     return next();
@@ -78,20 +78,18 @@ public class SelectPrioritizedPatientSeries extends LogicStep {
   @Override
   public void printPost(PrintWriter out) throws Exception {
     printStandard(out);
-    out.println("<p>Best Patient Series: " + bestPatientSeries + "</p>");
+    out.println("<p>Prioritized Patient Series: " + prioritizedPatientSeries + "</p>");
     for (Entry<PatientSeries, Integer> entry : patientSeriesMap.entrySet()) {
       out.println(
           "<p> PatientSeries : " + entry.getKey() + " Value : " + entry.getValue() + " </p>");
     }
-
   }
 
   private void printStandard(PrintWriter out) {
     out.println(
-        "<p>Select best candidate patient series  provides the business rules to  be applied to  the scored candidate patient series which will result in the best patient series for the patient.</p>");
+        "<p>Select prioritized patient series provides the business rules to be applied to the scored patient series which will result in the prioritized patient series for the series group.</p>");
 
     out.print("<h4> " + dataModel.getAntigen().getName() + " </h4>");
-    printBestPatientSeries(out);
   }
 
 }

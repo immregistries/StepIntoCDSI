@@ -79,8 +79,8 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
       for (PatientSeries p : selectedList) {
         vgf.setAntigen(p.getForecast().getAntigen());
         vgf.getAntigenList().add(p.getForecast().getAntigen());
+        dataModel.getVaccineGroupForecastList().add(vgf);
       }
-      dataModel.getVaccineGroupForecastList().add(vgf);
     }
 
     return next();
@@ -283,6 +283,8 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
       out.println("  </tr>");
     }
     out.println("</table>");
+
+    printLog(out);
   }
 
   private class LT extends LogicTable {

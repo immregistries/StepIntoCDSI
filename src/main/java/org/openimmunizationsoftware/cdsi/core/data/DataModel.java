@@ -50,6 +50,7 @@ public class DataModel {
   private List<AntigenSeries> antigenSeriesSelectedList = null;
   private List<PatientSeries> selectedPatientSeriesList = new ArrayList<PatientSeries>();
   private List<PatientSeries> bestPatientSeriesList = null;
+  private List<PatientSeries> prioritizedPatientSeriesList = new ArrayList<PatientSeries>();
 
   private Map<String, VaccineGroup> vaccineGroupMap = new HashMap<String, VaccineGroup>();
   private List<Immunity> immunityList = new ArrayList<Immunity>();
@@ -176,6 +177,14 @@ public class DataModel {
 
   public void setBestPatientSeriesList(List<PatientSeries> bestPatientSeriesList) {
     this.bestPatientSeriesList = bestPatientSeriesList;
+  }
+
+  public List<PatientSeries> getPrioritizedPatientSeriesList() {
+    return prioritizedPatientSeriesList;
+  }
+
+  public void setPrioritizedPatientSeriesList(List<PatientSeries> prioritizedPatientSeriesList) {
+    this.prioritizedPatientSeriesList = prioritizedPatientSeriesList;
   }
 
   public void incVaccineGroupPos() {

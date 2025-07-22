@@ -115,6 +115,8 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     if (latestDate != null) {
       log("---> Setting Latest Recommended Interval Date to " + sdf.format(latestDate.getTime()));
       caLatestRecommendedIntervalDate.setInitialValue(latestDate);
+    } else {
+      log("---> Latest Recommended Interval Date is null");
     }
   }
 
@@ -423,6 +425,8 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
 
   private Date computeUnadjustedPastDueDate() {
     // TODO: Add instructions for what to do if no max age
+    log("---< Computing Unadjusted Past Due Date");
+    // "The unadjusted past due date of a patient series forecast must be one of the following:"
     Date patientReferenceDoseDate = null;
     if (dataModel.getPreviousAntigenAdministeredRecord() != null) {
       patientReferenceDoseDate = dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered();
@@ -430,27 +434,29 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
 
     Date unadjustedPastDueDate = null;
     if (caLatestRecommendedAgeDate.getFinalValue() != null) {
+      // "The latest recommended age date minus 1 day."
       unadjustedPastDueDate = DateUtils.addDays(caLatestRecommendedAgeDate.getFinalValue(), -1);
+      log("---> Unadjusted Past Due Date set to the latest recommended age date minus 1 day.");
     } else {
-      // String log = "no patientReferenceDoseDate";
+      // "The latest of all latest recommended interval dates minus 1 day if there is no latest recommended age date."
       if (patientReferenceDoseDate != null) {
-        // log = "patientReferenceDoseDate: " + new
-        // SimpleDateFormat("MM/dd/yyyy").format(patientReferenceDoseDate);
         List<Interval> intervalList = dataModel.getTargetDose().getTrackedSeriesDose().getIntervalList();
-        // log += ", intervalList.size() = " + intervalList.size();
         for (Interval interval : intervalList) {
           Date d = interval.getLatestRecommendedInterval().getDateFrom(patientReferenceDoseDate);
-          // log += ", d = " + new SimpleDateFormat("MM/dd/yyyy").format(d);
           if (unadjustedPastDueDate == null || d.after(unadjustedPastDueDate)) {
-            unadjustedPastDueDate = d;
+            if(d != null) {
+              unadjustedPastDueDate = DateUtils.addDays(d, -1);
+            }
           }
         }
       }
-      // if (unadjustedPastDueDate == null) {
-      // throw new NullPointerException(
-      // "Unadjusted Past Due Date was not set " + log);
-      // }
+      if(unadjustedPastDueDate != null) {
+        log("---> Unadjusted Past Due Date set to the latest of all latest recommended interval dates minus 1 day.");
+      } else {
+        log("---> Unadjusted Past Due Date set to null");
+      }
     }
+
     return unadjustedPastDueDate;
   }
 

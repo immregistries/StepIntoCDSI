@@ -96,19 +96,6 @@ public class SingleAntigenVaccineGroup extends LogicStep {
     return next();
   }
 
-  public PatientSeries getBestPatientSeries() {
-    if (dataModel.getPatientSeriesList().size() > 0) {
-      PatientSeries bestPatientSeries = dataModel.getPatientSeriesList().get(0);
-      for (PatientSeries ps : dataModel.getPatientSeriesList()) {
-        if (ps.getScorePatientSeries() > bestPatientSeries.getScorePatientSeries())
-          bestPatientSeries = ps;
-      }
-      return bestPatientSeries;
-    } else {
-      return null;
-    }
-  }
-
   @Override
   public void printPre(PrintWriter out) throws Exception {
     printStandard(out);

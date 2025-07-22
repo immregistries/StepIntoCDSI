@@ -76,7 +76,7 @@ public class InProcessPatientSeries extends LogicStep {
     for (PatientSeries patientSeries : patientSeriesList) {
       Date finishDate = patientSeries.getForecast().getAdjustedPastDueDate();
       Date maximumAgeDate = findMaximumAgeDate(patientSeries);
-      if (finishDate.before(maximumAgeDate)) {
+      if (finishDate != null && finishDate.before(maximumAgeDate)) {
         patientSeries.incPatientScoreSeries();
         patientSeries.incPatientScoreSeries();
         patientSeries.incPatientScoreSeries();
@@ -294,14 +294,16 @@ public class InProcessPatientSeries extends LogicStep {
     int j = 0;
     if (patientSeriesList.get(0).getForecast() != null) {
       Date tmpDate = patientSeriesList.get(0).getForecast().getLatestDate();
-      for (int i = 0; i < patientSeriesList.size(); i++) {
-        PatientSeries patientSeries = patientSeriesList.get(i);
-        if (tmpDate == patientSeries.getForecast().getLatestDate()) {
-          j++;
-        } else {
-          if (tmpDate.after(patientSeries.getForecast().getLatestDate())) {
-            tmpDate = patientSeries.getForecast().getLatestDate();
-            j = 0;
+      if(tmpDate != null) {
+        for (int i = 0; i < patientSeriesList.size(); i++) {
+          PatientSeries patientSeries = patientSeriesList.get(i);
+          if (tmpDate == patientSeries.getForecast().getLatestDate()) {
+            j++;
+          } else {
+            if (tmpDate.after(patientSeries.getForecast().getLatestDate())) {
+              tmpDate = patientSeries.getForecast().getLatestDate();
+              j = 0;
+            }
           }
         }
       }
@@ -316,38 +318,12 @@ public class InProcessPatientSeries extends LogicStep {
     }
   }
 
-  /**
-   * Cond6 A candidate patient series exceeded maximum age to start
-   */
-
-  private void evaluate_ACandidatePatientSeriesExceededMaximumAgeToStart() {
-    Date evalDate = dataModel.getAssessmentDate();
-    for (PatientSeries patientSeries : patientSeriesList) {
-      Date maximumAgeDate = findMaximumAgeDate(patientSeries);
-      if (evalDate.after(maximumAgeDate)) {
-        patientSeries.descPatientScoreSeries();
-        patientSeries.descPatientScoreSeries();
-        patientSeries.descPatientScoreSeries();
-        patientSeries.descPatientScoreSeries();
-        patientSeries.descPatientScoreSeries();
-        patientSeries.descPatientScoreSeries();
-        patientSeries.descPatientScoreSeries();
-        patientSeries.descPatientScoreSeries();
-        patientSeries.descPatientScoreSeries();
-        patientSeries.descPatientScoreSeries();
-      } else {
-
-      }
-    }
-  }
-
   private void evaluateTable() {
     evaluate_ACandidatePatientSeriesIsAProductPatientSeriesAndHasAllValidDoses();
     evaluate_ACandidatePatientSeriesIsCompletable();
     evaluate_ACandidatePatientSeriesHasTheMostValidDoses();
     evaluate_ACandidatePatientSeriesIsClosestToCompletion();
     evaluate_ACandidatePatientSeriesCanFinishEarliest();
-    evaluate_ACandidatePatientSeriesExceededMaximumAgeToStart();
   }
 
   public InProcessPatientSeries(DataModel dataModel) {

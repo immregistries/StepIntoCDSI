@@ -15,12 +15,12 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
 public class DetermineBestPatientSeries extends LogicStep {
-    private List<PatientSeries> patientSeriesList = dataModel.getSelectedPatientSeriesList();
+    private List<PatientSeries> patientSeriesList = dataModel.getPatientSeriesList();
 
     public DetermineBestPatientSeries(DataModel dataModel) {
         super(LogicStepType.DETERMINE_BEST_PATIENT_SERIES, dataModel);
 
-        for (PatientSeries ps : patientSeriesList) {
+        for (PatientSeries ps : dataModel.getPrioritizedPatientSeriesList()) {
             for (Antigen a : dataModel.getAntigenSelectedList()) {
                 if (ps.getTrackedAntigenSeries().getTargetDisease().equals(a)) {
                     LT logicTable = new LT();
