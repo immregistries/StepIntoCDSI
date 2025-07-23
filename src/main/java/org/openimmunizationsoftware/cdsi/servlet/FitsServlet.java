@@ -111,12 +111,14 @@ public class FitsServlet extends ForecastServlet {
                                     for (VaccineGroupForecast vgf : vaccineGroupForecastList) {
                                         String expCvx = forecast.getVaccineCvxExp();
                                         String actCvx = vgf.getAntigen().getCvxForForecast();
-                                        logToOut("     - Forecasing for: " + vgf.getAntigen().getName() + " (" + actCvx
+                                        logToOut("     - Forecasing for: " + vgf.getAntigen().getName() + " (" + expCvx
+                                                + ") " + " (" + actCvx
                                                 + ") " + vgf.getVaccineGroupStatus());
                                         if (isSameVaccineCvx(expCvx, actCvx)) {
                                             VaccineGroupStatus vaccineGroupStatus = vgf.getVaccineGroupStatus();
                                             SerieStatus serieStatus = vaccineGroupStatus.getSerieStatus();
                                             forecast.setSerieStatusAct(serieStatus);
+                                            forecast.setVaccineCvxAct(actCvx);
                                             logToOut(
                                                     "       - This is the one we are looking for, setting series status to "
                                                             + serieStatus);
@@ -209,10 +211,12 @@ public class FitsServlet extends ForecastServlet {
                     out.println("        <th>Vaccine</th>");
                     out.println("        <th>Exp<br/>Status</th>");
                     out.println("        <th>Exp<br/>Earliest</th>");
-                    out.println("        <th>Exp<br/>Recomend</th>");
+                    out.println("        <th>Exp<br/>Recommend</th>");
                     out.println("        <th>Act<br/>Status</th>");
                     out.println("        <th>Act<br/>Earliest</th>");
-                    out.println("        <th>Act<br/>Recomend</th>");
+                    out.println("        <th>Act<br/>Recommend</th>");
+                    out.println("        <th>Exp<br/>CVX</th>");
+                    out.println("        <th>Act<br/>CVX</th>");
                     out.println("      </tr>");
                     for (TestCaseRegistered testCaseRegistered : groupTestCaseMap.get(groupName).values()) {
                         String link = createLink(testCaseRegistered);
@@ -300,6 +304,8 @@ public class FitsServlet extends ForecastServlet {
                                     }
                                     out.println("        <td" + ts + ">" + format(f.getRecommendedAct()) + "</td>");
                                 }
+                                out.println("        <td>" + f.getVaccineCvxExp() + "</td>");
+                                out.println("        <td>" + f.getVaccineCvxAct() + "</td>");
                                 out.println("      </tr>");
                             }
                         }
