@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.apache.jena.sparql.function.library.leviathan.log;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
@@ -21,8 +22,11 @@ public class DetermineBestPatientSeries extends LogicStep {
         super(LogicStepType.DETERMINE_BEST_PATIENT_SERIES, dataModel);
 
         for (PatientSeries ps : dataModel.getPrioritizedPatientSeriesList()) {
+            log("Evaluating patient series: " + ps.getTrackedAntigenSeries().getTargetDisease().getName());
             for (Antigen a : dataModel.getAntigenSelectedList()) {
                 if (ps.getTrackedAntigenSeries().getTargetDisease().equals(a)) {
+                    log("Patient series " + ps.getTrackedAntigenSeries().getTargetDisease().getName()
+                            + " matches antigen " + a.getName());
                     LT logicTable = new LT();
                     logicTable.pps = ps;
                     logicTableList.add(logicTable);

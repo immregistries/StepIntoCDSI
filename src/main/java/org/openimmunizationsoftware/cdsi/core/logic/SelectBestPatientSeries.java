@@ -44,6 +44,7 @@ public class SelectBestPatientSeries extends LogicStep {
       dataModel.setAntigenSeriesSelectedList(null);
       setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
     }
+    dataModel.getPrioritizedPatientSeriesList().clear();
 
     return next();
   }

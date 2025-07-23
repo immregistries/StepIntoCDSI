@@ -107,6 +107,9 @@ public class FitsServlet extends ForecastServlet {
                             List<VaccineGroupForecast> vaccineGroupForecastList = dataModel
                                     .getVaccineGroupForecastList();
                             if (vaccineGroupForecastList != null) {
+                                logToOut("     - Found " + vaccineGroupForecastList.size()
+                                        + " vaccine group forecasts and " + testCaseRegistered.getForecastList().size()
+                                        + " forecasts");
                                 for (TestCaseRegistered.Forecast forecast : testCaseRegistered.getForecastList()) {
                                     for (VaccineGroupForecast vgf : vaccineGroupForecastList) {
                                         String expCvx = forecast.getVaccineCvxExp();
@@ -130,6 +133,8 @@ public class FitsServlet extends ForecastServlet {
                                         }
                                     }
                                 }
+                            } else {
+                                logToOut("     - No vaccine group forecast list found for test case registered: ");
                             }
                         } catch (Exception e) {
                             testCaseRegistered.setException(e);
@@ -360,12 +365,13 @@ public class FitsServlet extends ForecastServlet {
         out.close();
     }
 
-    private boolean enableLoggingToOut = false;
+    private boolean enableLoggingToOut = true;
 
     private void logToOut(String log) {
         if (enableLoggingToOut) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             System.out.println(sdf.format(new Date()) + " " + log);
+            System.err.println(sdf.format(new Date()) + " " + log);
         }
     }
 

@@ -1,12 +1,14 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.servlet.ForecastServlet;
 
 public class End extends LogicStep {
@@ -35,8 +37,7 @@ public class End extends LogicStep {
     } else {
       out.println("<p>Best Patient Series List size = " + dataModel.getBestPatientSeriesList().size() + "</p>");
     }
-    out.println("<p>Forecast List size = " + dataModel.getForecastList().size() + " for list "
-        + dataModel.getForecastList() + "</p>");
+    out.println("<p>Forecast List size = " + dataModel.getForecastList().size() + "</p>");
     out.println("<table>");
     out.println("  <tr>");
     out.println("    <th>Antigen</th>");
@@ -71,6 +72,24 @@ public class End extends LogicStep {
     }
     out.println("</table>");
 
+    List<VaccineGroupForecast> vgfl = dataModel.getVaccineGroupForecastList();
+    out.println("<p>Vaccine Group Forecast List size = " + vgfl.size() + "</p>");
+    if (vgfl.size() > 0) {
+      out.println("<table>");
+      out.println("  <tr>");
+      out.println("    <th>Antigen</th>");
+      out.println("    <th>Target Dose</th>");
+      out.println("    <th>Patient Series Status</th>");
+      out.println("  </tr>");
+      for (VaccineGroupForecast vgf : vgfl) {
+        out.println("  <tr>");
+        out.println("    <td>" + vgf.getAntigen().getName() + "</td>");
+        out.println("    <td>" + vgf.getTargetDose() + "</td>");
+        out.println("    <td>" + vgf.getPatientSeriesStatus() + "</td>");
+        out.println("  </tr>");
+      }
+      out.println("</table>");
+    }
     out.println("<pre>");
     ForecastServlet.printText(dataModel, out);
     out.println("</pre>");

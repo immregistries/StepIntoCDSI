@@ -95,18 +95,17 @@ public class ForecastServlet extends HttpServlet {
     } catch (ParseException pe) {
       pe.printStackTrace();
     }
-    {
-      for (VaccineGroupForecast vgf : vgfl) {
-        if (!vgf.getVaccineGroupStatus().equals(VaccineGroupStatus.COMPLETE)) {
-          if (vgf.getAdjustedRecommendedDate() != null
-              && vgf.getAdjustedRecommendedDate().after(today)) {
-            vgfLater.add(vgf);
-          } else {
-            vgfNow.add(vgf);
-          }
+
+    for (VaccineGroupForecast vgf : vgfl) {
+      if (vgf.getVaccineGroupStatus().equals(VaccineGroupStatus.NOT_COMPLETE)) {
+        if (vgf.getAdjustedRecommendedDate() != null
+            && vgf.getAdjustedRecommendedDate().after(today)) {
+          vgfLater.add(vgf);
         } else {
-          vgfDone.add(vgf);
+          vgfNow.add(vgf);
         }
+      } else {
+        vgfDone.add(vgf);
       }
     }
 

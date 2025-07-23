@@ -1,6 +1,7 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
@@ -34,10 +35,11 @@ public class SingleAntigenVaccineGroup extends LogicStep {
     VaccineGroup vaccineGroup = dataModel.getVaccineGroup();
     VaccineGroupForecast vgf = new VaccineGroupForecast();
     vgf.setVaccineGroup(vaccineGroup);
+
     for (PatientSeries p : dataModel.getBestPatientSeriesList()) {
       Forecast forecast = p.getForecast();
       if (forecast.getAntigen().equals(vaccineGroup.getAntigenList().get(0))) {
-        log("<p>    forecast antigen equals first antigen in vaccine group, creating VGF</p>");
+        log("Forecast antigen matches vaccine group antigen: " + forecast.getAntigen().getName());
         // Règle en plus
         vgf.setAntigen(forecast.getAntigen());
         vgf.setTargetDose(p.getForecast().getTargetDose());
@@ -90,6 +92,7 @@ public class SingleAntigenVaccineGroup extends LogicStep {
         //
         dataModel.getVaccineGroupForecastList().add(vgf);
       }
+      log("Vaccine group forecast list size: " + dataModel.getVaccineGroupForecastList().size() + " ");
     }
 
     setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
@@ -119,8 +122,7 @@ public class SingleAntigenVaccineGroup extends LogicStep {
     } else {
       out.println("<p>Best Patient Series List size = " + dataModel.getBestPatientSeriesList().size() + "</p>");
     }
-    out.println("<p>Forecast List size = " + dataModel.getForecastList().size() + " for list "
-        + dataModel.getForecastList() + "</p>");
+    out.println("<p>Forecast List size = " + dataModel.getForecastList().size() + "</p>");
     out.println("<table>");
     out.println("  <tr>");
     out.println("    <th>Antigen</th>");
@@ -150,6 +152,25 @@ public class SingleAntigenVaccineGroup extends LogicStep {
       out.println("  </tr>");
     }
     out.println("</table>");
+
+    List<VaccineGroupForecast> vgfl = dataModel.getVaccineGroupForecastList();
+    out.println("<p>Vaccine Group Forecast List size = " + vgfl.size() + "</p>");
+    if (vgfl.size() > 0) {
+      out.println("<table>");
+      out.println("  <tr>");
+      out.println("    <th>Antigen</th>");
+      out.println("    <th>Target Dose</th>");
+      out.println("    <th>Patient Series Status</th>");
+      out.println("  </tr>");
+      for (VaccineGroupForecast vgf : vgfl) {
+        out.println("  <tr>");
+        out.println("    <td>" + vgf.getAntigen().getName() + "</td>");
+        out.println("    <td>" + vgf.getTargetDose() + "</td>");
+        out.println("    <td>" + vgf.getPatientSeriesStatus() + "</td>");
+        out.println("  </tr>");
+      }
+      out.println("</table>");
+    }
 
     setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
   }

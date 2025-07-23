@@ -81,6 +81,8 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
         vgf.getAntigenList().add(p.getForecast().getAntigen());
         dataModel.getVaccineGroupForecastList().add(vgf);
       }
+      log("Selected List size: " + selectedList.size() + " ");
+      log("Vaccine group forecast list size: " + dataModel.getVaccineGroupForecastList().size() + " ");
     }
 
     return next();
@@ -176,7 +178,8 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
         }
       }
     }
-    if (vgf.getEarliestDate() != null && earliestRecommendedDate != null && vgf.getEarliestDate().after(earliestRecommendedDate)) {
+    if (vgf.getEarliestDate() != null && earliestRecommendedDate != null
+        && vgf.getEarliestDate().after(earliestRecommendedDate)) {
       earliestRecommendedDate = vgf.getEarliestDate();
     }
     if (vgf.getTargetDose() == null && td != null) {
@@ -343,7 +346,8 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
         }
       });
 
-      setLogicCondition(4, new LogicCondition("Do all patient series forecasts contained in the vaccine group forecast have a patient series status of 'Immune'?") {
+      setLogicCondition(4, new LogicCondition(
+          "Do all patient series forecasts contained in the vaccine group forecast have a patient series status of 'Immune'?") {
         @Override
         public LogicResult evaluateInternal() {
           if (selectedList.size() == 0) {
@@ -358,14 +362,16 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
         }
       });
 
-      setLogicCondition(5, new LogicCondition("Do all patient series forecasts contained in the vaccine group forecast have a patient series status of 'Complete' or 'Immune'?") {
+      setLogicCondition(5, new LogicCondition(
+          "Do all patient series forecasts contained in the vaccine group forecast have a patient series status of 'Complete' or 'Immune'?") {
         @Override
         public LogicResult evaluateInternal() {
           if (selectedList.size() == 0) {
             return LogicResult.NO;
           }
           for (PatientSeries p : selectedList) {
-            if (!p.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE) && !p.getPatientSeriesStatus().equals(PatientSeriesStatus.IMMUNE)) {
+            if (!p.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)
+                && !p.getPatientSeriesStatus().equals(PatientSeriesStatus.IMMUNE)) {
               return LogicResult.NO;
             }
           }
@@ -373,12 +379,18 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
         }
       });
 
-      setLogicResults(0, LogicResult.YES, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.NO);
-      setLogicResults(1, LogicResult.ANY, LogicResult.YES, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.NO);
-      setLogicResults(2, LogicResult.ANY, LogicResult.ANY, LogicResult.YES, LogicResult.NO, LogicResult.NO, LogicResult.NO);
-      setLogicResults(3, LogicResult.ANY, LogicResult.ANY, LogicResult.ANY, LogicResult.YES, LogicResult.NO, LogicResult.NO);
-      setLogicResults(4, LogicResult.ANY, LogicResult.ANY, LogicResult.ANY, LogicResult.ANY, LogicResult.YES, LogicResult.NO);
-      setLogicResults(5, LogicResult.ANY, LogicResult.ANY, LogicResult.ANY, LogicResult.ANY, LogicResult.ANY, LogicResult.YES);
+      setLogicResults(0, LogicResult.YES, LogicResult.NO, LogicResult.NO, LogicResult.NO, LogicResult.NO,
+          LogicResult.NO);
+      setLogicResults(1, LogicResult.ANY, LogicResult.YES, LogicResult.NO, LogicResult.NO, LogicResult.NO,
+          LogicResult.NO);
+      setLogicResults(2, LogicResult.ANY, LogicResult.ANY, LogicResult.YES, LogicResult.NO, LogicResult.NO,
+          LogicResult.NO);
+      setLogicResults(3, LogicResult.ANY, LogicResult.ANY, LogicResult.ANY, LogicResult.YES, LogicResult.NO,
+          LogicResult.NO);
+      setLogicResults(4, LogicResult.ANY, LogicResult.ANY, LogicResult.ANY, LogicResult.ANY, LogicResult.YES,
+          LogicResult.NO);
+      setLogicResults(5, LogicResult.ANY, LogicResult.ANY, LogicResult.ANY, LogicResult.ANY, LogicResult.ANY,
+          LogicResult.YES);
 
       setLogicOutcome(0, new LogicOutcome() {
         @Override
