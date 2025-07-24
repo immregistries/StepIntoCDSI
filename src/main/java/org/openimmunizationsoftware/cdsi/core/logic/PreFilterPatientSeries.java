@@ -124,7 +124,6 @@ public class PreFilterPatientSeries extends LogicStep {
                     String seriesName = antigenSeries.getSeriesName();
                     String logString = "[" + seriesType + "] " + seriesName + " validDoseCount = " + validDoseCount;
                     log(" + " + logString);
-                    break;
                 }
             }
         }

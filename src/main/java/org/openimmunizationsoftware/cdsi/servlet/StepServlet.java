@@ -451,6 +451,34 @@ public class StepServlet extends ForecastServlet {
       out.println("</table>");
     }
 
+    if (dataModel.getScorablePatientSeriesList() != null && dataModel.getScorablePatientSeriesList().size() > 0) {
+      out.println("<h2>Scorable Patient Series</h2>");
+      out.println("<table>");
+      out.println("  <tr>");
+      out.println("    <th>Antigen</th>");
+      out.println("    <th>Antigen Series</th>");
+      out.println("    <th>Status</th>");
+      out.println("    <th>Earliest</th>");
+      out.println("    <th>Recommended</th>");
+      out.println("  </tr>");
+      for (PatientSeries patientSeries : dataModel.getScorablePatientSeriesList()) {
+        AntigenSeries antigenSeries = patientSeries.getTrackedAntigenSeries();
+        out.println("  <tr>");
+        out.println("    <td>" + antigenSeries.getTargetDisease().getName() + "</td>");
+        out.println("    <td>" + antigenSeries.getSeriesName() + "</td>");
+        out.println("    <td>" + patientSeries.getPatientSeriesStatus() + "</td>");
+        if (patientSeries.getForecast() == null) {
+          out.println("    <td>null</td>");
+          out.println("    <td>null</td>");
+        } else {
+          out.println("    <td>" + n(patientSeries.getForecast().getEarliestDate()) + "</td>");
+          out.println("    <td>" + n(patientSeries.getForecast().getAdjustedRecommendedDate()) + "</td>");
+        }
+        out.println("  </tr>");
+      }
+      out.println("</table>");
+    }
+
   }
 
   private void printVda(PrintWriter out, VaccineDoseAdministered vda) {
