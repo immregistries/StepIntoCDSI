@@ -42,7 +42,7 @@ public class End extends LogicStep {
     out.println("  <tr>");
     out.println("    <th>Antigen</th>");
     out.println("    <th>Target Dose</th>");
-    out.println("    <th>Patient Series Status</th>");
+    out.println("    <th>VGF Status</th>");
     out.println("    <th>Earliest Date</th>");
     out.println("    <th>Adjusted Recommended Date</th>");
     out.println("    <th>Adjusted Past Due Date</th>");
@@ -57,8 +57,9 @@ public class End extends LogicStep {
         if (forecast.getAntigen().equals(antigen)) {
           out.println("  <tr>");
           out.println("    <td>" + forecast.getAntigen().getName() + "</td>");
-          out.println("    <td>" + (p == null ? null : p.getForecast().getTargetDose()) + "</td>");
-          out.println("    <td>" + (p == null ? null : p.getPatientSeriesStatus()) + "</td>");
+          out.println("    <td>" + forecast.getTargetDose() + "</td>");
+          out.println("    <td>" + (forecast.getVaccineGroupForecast() == null ? "null"
+            : forecast.getVaccineGroupForecast().getVaccineGroupStatus()) + "</td>");
           out.println("    <td>" + n(forecast.getEarliestDate()) + "</td>");
           out.println("    <td>" + n(forecast.getAdjustedRecommendedDate()) + "</td>");
           out.println("    <td>" + n(forecast.getAdjustedPastDueDate()) + "</td>");

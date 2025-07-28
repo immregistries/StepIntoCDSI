@@ -10,6 +10,8 @@ import java.util.Map.Entry;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 
 public class SelectPrioritizedPatientSeries extends LogicStep {
 
@@ -21,48 +23,33 @@ public class SelectPrioritizedPatientSeries extends LogicStep {
 
   }
 
-  private LinkedHashMap<PatientSeries, Integer> sortByComparator(
-      LinkedHashMap<PatientSeries, Integer> unsortMap) {
-
-    List<Entry<PatientSeries, Integer>> list = new LinkedList<Entry<PatientSeries, Integer>>(unsortMap.entrySet());
-
-    // Sorting the list based on values
-    Collections.sort(list, new Comparator<Entry<PatientSeries, Integer>>() {
-
-      @Override
-      public int compare(Entry<PatientSeries, Integer> o1, Entry<PatientSeries, Integer> o2) {
-        // Sort Desc
-        return o2.getValue().compareTo(o1.getValue());
-      }
-    });
-
-    // Maintaining insertion order with the help of LinkedList
-    LinkedHashMap<PatientSeries, Integer> sortedMap = new LinkedHashMap<PatientSeries, Integer>();
-    for (Entry<PatientSeries, Integer> entry : list) {
-
-      sortedMap.put(entry.getKey(), entry.getValue());
-
-    }
-
-    return sortedMap;
-  }
-
-  private LinkedHashMap<PatientSeries, Integer> patientSeriesMap = new LinkedHashMap<PatientSeries, Integer>();
   private PatientSeries prioritizedPatientSeries = null;
 
-  private void selectBestPatientSeries() {
+  private void selectPrioritizedPatientSeries() {
+    if(patientSeriesList.size() > 0) {
+      prioritizedPatientSeries = patientSeriesList.get(0);
+    }
     for (PatientSeries patientSeries : patientSeriesList) {
-      patientSeriesMap.put(patientSeries, patientSeries.getScorePatientSeries());
+      if(patientSeries.getScorePatientSeries() == prioritizedPatientSeries.getScorePatientSeries()) {
+        String currentSeriesPreference = patientSeries.getTrackedAntigenSeries().getSelectPatientSeries().getSeriesPreference();
+        String newSeriesPreference = prioritizedPatientSeries.getTrackedAntigenSeries().getSelectPatientSeries().getSeriesPreference();
+        if(currentSeriesPreference != "" && newSeriesPreference != "") {
+          if(Integer.parseInt(currentSeriesPreference) < Integer.parseInt(newSeriesPreference)) {
+            prioritizedPatientSeries = patientSeries;
+          }
+        }
+      }
+
+      if(patientSeries.getScorePatientSeries() > prioritizedPatientSeries.getScorePatientSeries()) {
+        prioritizedPatientSeries = patientSeries;
+      }
     }
-    patientSeriesMap = (LinkedHashMap<PatientSeries, Integer>) sortByComparator(patientSeriesMap);
-    if (patientSeriesMap.size() > 0) {
-      prioritizedPatientSeries = (PatientSeries) patientSeriesMap.keySet().toArray()[0];
-    }
+
   }
 
   @Override
   public LogicStep process() throws Exception {
-    selectBestPatientSeries();
+    selectPrioritizedPatientSeries();
     if (prioritizedPatientSeries != null) {
       dataModel.getPrioritizedPatientSeriesList().add(prioritizedPatientSeries);
     }
@@ -75,13 +62,26 @@ public class SelectPrioritizedPatientSeries extends LogicStep {
     printStandard(out);
   }
 
+  private int numberOfValidDoses(PatientSeries patientSeries) {
+    int nbOfValidDoses = 0;
+    for (TargetDose target : patientSeries.getTargetDoseList()) {
+      if(target.getTargetDoseStatus() != null) {
+        if(target.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
+          nbOfValidDoses++;
+        }
+      }
+
+    }
+    return nbOfValidDoses;
+  }
+
   @Override
   public void printPost(PrintWriter out) throws Exception {
     printStandard(out);
     out.println("<p>Prioritized Patient Series: " + prioritizedPatientSeries + "</p>");
-    for (Entry<PatientSeries, Integer> entry : patientSeriesMap.entrySet()) {
+    for (PatientSeries patientSeries : patientSeriesList) {
       out.println(
-          "<p> PatientSeries : " + entry.getKey() + " Value : " + entry.getValue() + " </p>");
+          "<p> PatientSeries : " +patientSeries.getTrackedAntigenSeries().getSeriesName() + " Value : " + patientSeries.getScorePatientSeries() + " valid doses : " + numberOfValidDoses(patientSeries) + " </p>");
     }
   }
 

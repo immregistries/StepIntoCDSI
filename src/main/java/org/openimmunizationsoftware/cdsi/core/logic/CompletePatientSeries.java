@@ -14,48 +14,24 @@ import java.util.Map.Entry;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 
 public class CompletePatientSeries extends LogicStep {
 
-  private List<PatientSeries> patientSeriesList = dataModel.getPatientSeriesList();
+  private List<PatientSeries> patientSeriesList = dataModel.getSelectedPatientSeriesList();
 
   private int numberOfValidDoses(PatientSeries patientSeries) {
     int nbOfValidDoses = 0;
     for (TargetDose target : patientSeries.getTargetDoseList()) {
-      if (target.getTargetDoseStatus() != null) {
-        if (target.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
+      if(target.getTargetDoseStatus() != null) {
+        if(target.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
           nbOfValidDoses++;
         }
       }
 
     }
     return nbOfValidDoses;
-  }
-
-  private Map<Integer, Integer> sortByComparator(Map<Integer, Integer> unsortMap) {
-
-    List<Entry<Integer, Integer>> list = new LinkedList<Entry<Integer, Integer>>(unsortMap.entrySet());
-
-    // Sorting the list based on values
-    Collections.sort(list, new Comparator<Entry<Integer, Integer>>() {
-
-      @Override
-      public int compare(Entry<Integer, Integer> o1, Entry<Integer, Integer> o2) {
-        // Sort Desc
-        return o2.getValue().compareTo(o1.getValue());
-      }
-    });
-
-    // Maintaining insertion order with the help of LinkedList
-    Map<Integer, Integer> sortedMap = new LinkedHashMap<Integer, Integer>();
-    for (Entry<Integer, Integer> entry : list) {
-
-      sortedMap.put(entry.getKey(), entry.getValue());
-
-    }
-
-    return sortedMap;
   }
 
   public CompletePatientSeries(DataModel dataModel) {
@@ -68,62 +44,43 @@ public class CompletePatientSeries extends LogicStep {
    */
 
   private void evaluate_ACandidatePatientSeriesHasTheMostValidDoses() {
-    HashMap<Integer, Integer> condMap = new HashMap<Integer, Integer>();
-    for (int i = 0; i < patientSeriesList.size(); i++) {
-      condMap.put(i, numberOfValidDoses(patientSeriesList.get(i)));
-    }
-    condMap = (HashMap<Integer, Integer>) sortByComparator(condMap);
-    int j = 0;
-    int tmp = 0;
-    int greatestElementPos = 0;
-    ArrayList<Integer> pos = new ArrayList<Integer>();
-    boolean twoOrMore = false;
-    for (Entry<Integer, Integer> entry : condMap.entrySet()) {
-      if (j == 0) {
-        tmp = entry.getValue();
-        greatestElementPos = entry.getKey();
-        j++;
-      }
-      if (j > 0) {
-        if (tmp == entry.getValue()) {
-          twoOrMore = true;
-          pos.add(entry.getKey());
+    int mostValidDoses = 0;
+    int numPatientSeriesWithMostValidDoses = 0;
+    PatientSeries patientSeriesWithMostValidDoses = null;
 
-        }
+    //set mostValidDoses to the greatest number of valid doses found in one patient series
+    for (PatientSeries patientSeries : patientSeriesList) {
+      if(!patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)) {
+        continue;
       }
-
-    }
-    if (twoOrMore) {
-      pos.add(greatestElementPos);
+      
+      int newValidDoses = numberOfValidDoses(patientSeries);
+      if(newValidDoses > mostValidDoses) {
+        mostValidDoses = newValidDoses;
+      }
     }
 
-    if (!twoOrMore) {
-      patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
-      if (patientSeriesList.size() > 1) {
-        patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
-        for (PatientSeries patientSeries : patientSeriesList) {
-          patientSeries.descPatientScoreSeries();
-        }
-      }
-    } else {
-      for (PatientSeries patientSeries : patientSeriesList) {
+    //get number of patientSeries with the most valid dose
+    for (PatientSeries patientSeries : patientSeriesList) {
+      if(!patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)) {
         patientSeries.descPatientScoreSeries();
+        continue;
       }
-      for (int i : pos) {
-        patientSeriesList.get(i).incPatientScoreSeries();
+
+      if(numberOfValidDoses(patientSeries) < mostValidDoses) {
+        patientSeries.descPatientScoreSeries();
+        continue;
       }
+      patientSeries.incPatientScoreSeries();
+      break;
     }
 
-  }
-
-  private void evaluateTable() {
-    evaluate_ACandidatePatientSeriesHasTheMostValidDoses();
   }
 
   @Override
   public LogicStep process() throws Exception {
     setNextLogicStepType(LogicStepType.SELECT_PRIORITIZED_PATIENT_SERIES);
-    evaluateTable();
+    evaluate_ACandidatePatientSeriesHasTheMostValidDoses();
     return next();
   }
 
@@ -160,20 +117,6 @@ public class CompletePatientSeries extends LogicStep {
     out.println(" <td align=\"center\"> 0</td> ");
     out.println(" <td align=\"center\"> -1 </td> ");
     out.println("  </tr> ");
-    out.println("<tr> ");
-    out.println(
-        " <td>A candidate patient series is a product patient series and has all valid doses.</th> ");
-    out.println(" <td align=\"center\"> +1</td> ");
-    out.println(" <td align=\"center\"> n/a</td> ");
-    out.println(" <td align=\"center\"> -1 </td> ");
-    out.println("  </tr> ");
-    out.println("<tr> ");
-    out.println(" <td>A candidate patient series is the earliest completing.</th> ");
-    out.println(" <td align=\"center\"> +2</td> ");
-    out.println(" <td align=\"center\"> +1</td> ");
-    out.println(" <td align=\"center\"> -1</td> ");
-    out.println("  </tr> ");
-    out.println("<tr> ");
     out.println("</table>");
 
   }

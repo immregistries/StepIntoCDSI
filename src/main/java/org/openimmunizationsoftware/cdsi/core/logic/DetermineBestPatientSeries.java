@@ -81,8 +81,10 @@ public class DetermineBestPatientSeries extends LogicStep {
                 @Override
                 protected LogicResult evaluateInternal() {
                     for (PatientSeries ps : patientSeriesList) {
-                        if (ps.getPatientSeriesStatus() == PatientSeriesStatus.COMPLETE) {
-                            return LogicResult.YES;
+                        if (ps.getTrackedAntigenSeries().getTargetDisease().equals(dataModel.getAntigen())) {
+                            if (ps.getPatientSeriesStatus() == PatientSeriesStatus.COMPLETE) {
+                                return LogicResult.YES;
+                            }
                         }
                     }
                     return LogicResult.NO;
