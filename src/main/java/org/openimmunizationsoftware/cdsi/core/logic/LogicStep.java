@@ -301,7 +301,19 @@ public abstract class LogicStep {
         out.println("  </tr>");
       }
       out.println("  <tr>");
-      out.println("    <th>Outcomes</th>");
+
+      LogicOutcome logicOutcomeDefault = logicTable.getLogicOutcomeDefault();
+      if (logicOutcomeDefault != null && logicOutcomeDefault.getLogList() != null
+          && logicOutcomeDefault.getLogList().size() > 0) {
+        out.println("<th class=\"pass\"><ul>");
+        for (String log : logicOutcomeDefault.getLogList()) {
+          out.println("<li>" + log + "</li>");
+        }
+        out.println("</ul></th>");
+      } else {
+        out.println("<th>Outcomes</th>");
+      }
+
       for (int j = 0; j < logicTable.getLogicOutcomes().length; j++) {
         LogicOutcome logicOutcome = logicTable.getLogicOutcomes()[j];
         if (logicOutcome != null && logicOutcome.getLogList() != null

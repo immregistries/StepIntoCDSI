@@ -109,6 +109,10 @@ public class LogicTable {
     this.logicOutcomeDefault = logicOutcomeDefault;
   }
 
+  public LogicOutcome getLogicOutcomeDefault() {
+    return logicOutcomeDefault;
+  }
+
   public void setLogicResults(int pos, LogicResult... lrs) {
     for (int j = 0; j < lrs.length; j++) {
       logicResultTable[pos][j] = lrs[j];
