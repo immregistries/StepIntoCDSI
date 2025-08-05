@@ -195,6 +195,8 @@ public class FitsServlet extends ForecastServlet {
             int numberOfFails = 0;
             int numberOfPasses = 0;
             int numberOfTestChecksRun = 0;
+            int numberOfTestCasesRun = 0;
+            int numberOfTestCasesPassed = 0;
 
             for (TestPlan testPlan : fitsManager.getTestPlanList()) {
                 if (testPlanIdSelected == null || !testPlan.getId().equals(testPlanIdSelected)) {
@@ -257,6 +259,8 @@ public class FitsServlet extends ForecastServlet {
                         } else {
 
                             for (TestCaseRegistered.Forecast f : testCaseRegistered.getForecastList()) {
+                                numberOfTestCasesRun += 1;
+                                boolean isTestCasePassing = true;
                                 if (f != testCaseRegistered.getForecastList().get(0)) {
                                     out.println("      <tr>");
                                 }
@@ -281,6 +285,7 @@ public class FitsServlet extends ForecastServlet {
                                         } else {
                                             ts = " class=\"fail\"";
                                             numberOfFails += 1;
+                                            isTestCasePassing = false;
                                         }
                                     }
                                     out.println("        <td" + ts + ">" + f.getSerieStatusAct() + "</td>");
@@ -293,6 +298,7 @@ public class FitsServlet extends ForecastServlet {
                                         } else {
                                             ts = " class=\"fail\"";
                                             numberOfFails += 1;
+                                            isTestCasePassing = false;
                                         }
                                     }
                                     out.println("        <td" + ts + ">" + format(f.getEarliestAct()) + "</td>");
@@ -305,9 +311,14 @@ public class FitsServlet extends ForecastServlet {
                                         } else {
                                             ts = " class=\"fail\"";
                                             numberOfFails += 1;
+                                            isTestCasePassing = false;
                                         }
                                     }
                                     out.println("        <td" + ts + ">" + format(f.getRecommendedAct()) + "</td>");
+
+                                    if(isTestCasePassing) {
+                                        numberOfTestCasesPassed += 1;
+                                    }
                                 }
                                 out.println("        <td>" + f.getVaccineCvxExp() + "</td>");
                                 out.println("        <td>" + f.getVaccineCvxAct() + "</td>");
@@ -332,6 +343,8 @@ public class FitsServlet extends ForecastServlet {
                 out.println("    <th> passes </th>");
                 out.println("    <th> fails </th>");
                 out.println("    <th> percentage </th>");
+                out.println("    <th> test cases run</th>");
+                out.println("    <th> test cases passed</th>");
                 out.println("</tr>");
                 out.println("<tr>");
                 out.println("    <td> " + numberOfTestChecksRun + " </td>");
@@ -342,6 +355,8 @@ public class FitsServlet extends ForecastServlet {
                     out.println("    <td class=\"fail\" > " + numberOfFails + " </td>");
                 }
                 out.println("    <td> ~" + percentageOfPasses + "% </td>");
+                out.println("    <td> " + numberOfTestCasesRun + " </td>");
+                out.println("    <td class=\"pass\" > " + numberOfTestCasesPassed + " </td>");
                 out.println("</tr>");
                 out.println("</table>");
             }

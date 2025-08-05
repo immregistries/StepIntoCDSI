@@ -443,8 +443,8 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
         List<Interval> intervalList = dataModel.getTargetDose().getTrackedSeriesDose().getIntervalList();
         for (Interval interval : intervalList) {
           Date d = interval.getLatestRecommendedInterval().getDateFrom(patientReferenceDoseDate);
-          if (unadjustedPastDueDate == null || d.after(unadjustedPastDueDate)) {
-            if(d != null) {
+          if(d != null) {
+            if (unadjustedPastDueDate == null || d.after(unadjustedPastDueDate)) {
               unadjustedPastDueDate = DateUtils.addDays(d, -1);
             }
           }
