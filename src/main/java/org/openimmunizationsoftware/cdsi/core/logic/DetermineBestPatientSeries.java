@@ -23,15 +23,14 @@ public class DetermineBestPatientSeries extends LogicStep {
 
         for (PatientSeries ps : dataModel.getPrioritizedPatientSeriesList()) {
             log("Evaluating patient series: " + ps.getTrackedAntigenSeries().getTargetDisease().getName());
-            for (Antigen a : dataModel.getAntigenSelectedList()) {
-                if (ps.getTrackedAntigenSeries().getTargetDisease().equals(a)) {
-                    log("Patient series " + ps.getTrackedAntigenSeries().getTargetDisease().getName()
-                            + " matches antigen " + a.getName());
-                    LT logicTable = new LT();
-                    logicTable.pps = ps;
-                    logicTableList.add(logicTable);
-                }
+            if (!ps.getTrackedAntigenSeries().getTargetDisease().equals(dataModel.getAntigen())) {
+              continue;
             }
+            log("Patient series " + ps.getTrackedAntigenSeries().getTargetDisease().getName()
+                    + " matches antigen " + dataModel.getAntigen());
+            LT logicTable = new LT();
+            logicTable.pps = ps;
+            logicTableList.add(logicTable);
         }
     }
 

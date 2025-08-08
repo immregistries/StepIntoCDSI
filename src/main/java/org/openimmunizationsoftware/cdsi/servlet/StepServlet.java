@@ -254,12 +254,19 @@ public class StepServlet extends ForecastServlet {
   }
 
   private void printStableView(DataModel dataModel, PrintWriter out) {
+    //print out patient date of birth
+    if (dataModel.getPatient().getDateOfBirth() != null) {
+      SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+      out.println("<h2>Patient DOB: " + sdf.format(dataModel.getPatient().getDateOfBirth()) + "</h2>");
+    }
+
     // print out antigen
     if (dataModel.getPatientSeries() != null) {
       out.println("<h2>" + dataModel.getPatientSeries() + "</h2>");
     } else if (dataModel.getAntigen() != null) {
       out.println("<h2>" + dataModel.getAntigen() + "</h2>");
     }
+
     if (dataModel.getTargetDoseList() != null) {
       List<VaccineDoseAdministered> vaccineDoseAdministeredList = new ArrayList<VaccineDoseAdministered>();
       if (dataModel.getSelectedAntigenAdministeredRecordList() != null) {
@@ -446,6 +453,34 @@ public class StepServlet extends ForecastServlet {
         out.println("    <td>" + (vgf.getAntigen() == null ? "null"
             : vgf.getAntigen()) + "</td>");
         out.println("    <td>" + vgf.getVaccineGroupStatus().toString() + "</td>");
+        out.println("  </tr>");
+      }
+      out.println("</table>");
+    }
+
+     if (dataModel.getPrioritizedPatientSeriesList() != null) {
+      out.println("<h3>Prioritized Patient Series</h3>");
+      out.println("<table>");
+      out.println("  <tr>");
+      out.println("    <th>Antigen</th>");
+      out.println("    <th>Antigen Series</th>");
+      out.println("    <th>Status</th>");
+      out.println("    <th>Earliest</th>");
+      out.println("    <th>Recommended</th>");
+      out.println("  </tr>");
+      for (PatientSeries patientSeries : dataModel.getPrioritizedPatientSeriesList()) {
+        AntigenSeries antigenSeries = patientSeries.getTrackedAntigenSeries();
+        out.println("  <tr>");
+        out.println("    <td>" + antigenSeries.getTargetDisease().getName() + "</td>");
+        out.println("    <td>" + antigenSeries.getSeriesName() + "</td>");
+        out.println("    <td>" + patientSeries.getPatientSeriesStatus() + "</td>");
+        if (patientSeries.getForecast() == null) {
+          out.println("    <td>null</td>");
+          out.println("    <td>null</td>");
+        } else {
+          out.println("    <td>" + n(patientSeries.getForecast().getEarliestDate()) + "</td>");
+          out.println("    <td>" + n(patientSeries.getForecast().getAdjustedRecommendedDate()) + "</td>");
+        }
         out.println("  </tr>");
       }
       out.println("</table>");

@@ -92,6 +92,10 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
           int defaultPatientSeries = 0;
           log("Looking for default series");
           for (PatientSeries patientSeries : dataModel.getScorablePatientSeriesList()) {
+            if (!patientSeries.getTrackedAntigenSeries().getTargetDisease().equals(dataModel.getAntigen())) {
+              continue;
+            }
+            
             AntigenSeries antigenSeries = patientSeries.getTrackedAntigenSeries();
             boolean isDefaultSeries = antigenSeries.getSelectPatientSeries().getDefaultSeries() == YesNo.YES;
             log(" - " + antigenSeries.getSeriesName() + " is default series: "
@@ -116,6 +120,10 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
         protected LogicResult evaluateInternal() {
           int completePatientSeries = 0;
           for (PatientSeries patientSeries : dataModel.getScorablePatientSeriesList()) {
+            if (!patientSeries.getTrackedAntigenSeries().getTargetDisease().equals(dataModel.getAntigen())) {
+              continue;
+            }
+
             if (patientSeries.getPatientSeriesStatus() == PatientSeriesStatus.COMPLETE) {
               completePatientSeries++;
             }
@@ -135,6 +143,10 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
         protected LogicResult evaluateInternal() {
           int inProcessPatientSeries = 0;
           for (PatientSeries patientSeries : dataModel.getScorablePatientSeriesList()) {
+            if (!patientSeries.getTrackedAntigenSeries().getTargetDisease().equals(dataModel.getAntigen())) {
+              continue;
+            }
+
             if (patientSeries.getPatientSeriesStatus() == PatientSeriesStatus.NOT_COMPLETE) {
               for (TargetDose targetDose : patientSeries.getTargetDoseList()) {
                 VaccineDoseAdministered vda = targetDose.getSatisfiedByVaccineDoseAdministered();
@@ -190,7 +202,13 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
         @Override
         public void perform() {
           log("Yes. The single scorable patient series is the prioritized patient series for the series group.");
-          dataModel.getPrioritizedPatientSeriesList().add(dataModel.getScorablePatientSeriesList().get(0));
+          for (PatientSeries patientSeries : dataModel.getScorablePatientSeriesList()) {
+            if (!patientSeries.getTrackedAntigenSeries().getTargetDisease().equals(dataModel.getAntigen())) {
+              continue;
+            }
+
+            dataModel.getPrioritizedPatientSeriesList().add(patientSeries);
+          }
           setNextLogicStepType(LogicStepType.DETERMINE_BEST_PATIENT_SERIES);
         }
       });
@@ -200,6 +218,10 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
         public void perform() {
           log("Yes. The single complete patient series is the prioritized patient series for the series group.");
           for (PatientSeries patientSeries : dataModel.getScorablePatientSeriesList()) {
+            if (!patientSeries.getTrackedAntigenSeries().getTargetDisease().equals(dataModel.getAntigen())) {
+              continue;
+            }
+
             boolean isCompleteSeries = patientSeries.getPatientSeriesStatus() == PatientSeriesStatus.COMPLETE;
             if(isCompleteSeries) {
               dataModel.getPrioritizedPatientSeriesList().add(patientSeries);
@@ -215,6 +237,10 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
         public void perform() {
           log("Yes. The single in-process patient series is the prioritized patient series for the series group.");
           for (PatientSeries patientSeries : dataModel.getScorablePatientSeriesList()) {
+            if (!patientSeries.getTrackedAntigenSeries().getTargetDisease().equals(dataModel.getAntigen())) {
+              continue;
+            }
+
             if (patientSeries.getPatientSeriesStatus() == PatientSeriesStatus.NOT_COMPLETE) {
               for (TargetDose targetDose : patientSeries.getTargetDoseList()) {
                 VaccineDoseAdministered vda = targetDose.getSatisfiedByVaccineDoseAdministered();
@@ -234,6 +260,10 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
         public void perform() {
           log("Yes. The default patient series is the prioritized patient series for the series group.");
           for (PatientSeries patientSeries : dataModel.getScorablePatientSeriesList()) {
+            if (!patientSeries.getTrackedAntigenSeries().getTargetDisease().equals(dataModel.getAntigen())) {
+              continue;
+            }
+            
             AntigenSeries antigenSeries = patientSeries.getTrackedAntigenSeries();
             boolean isDefaultSeries = antigenSeries.getSelectPatientSeries().getDefaultSeries() == YesNo.YES;
             if(isDefaultSeries) {
