@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Schedule {
   private String scheduleName = "";
-  private List<Contraindication_TO_BE_REMOVED> contraindicationList = new ArrayList<Contraindication_TO_BE_REMOVED>();
+  private List<Contraindication> contraindicationList = new ArrayList<Contraindication>();
   private List<LiveVirusConflict> liveVirusConflictList = new ArrayList<LiveVirusConflict>();
   private List<AntigenSeries> antigenSeriesList = new ArrayList<AntigenSeries>();
   private Immunity immunity = null;
@@ -26,11 +26,11 @@ public class Schedule {
     this.scheduleName = scheduleName;
   }
 
-  public List<Contraindication_TO_BE_REMOVED> getContraindicationList() {
+  public List<Contraindication> getContraindicationList() {
     return contraindicationList;
   }
 
-  public void setContraindicationList(List<Contraindication_TO_BE_REMOVED> contraindicationList) {
+  public void setContraindicationList(List<Contraindication> contraindicationList) {
     this.contraindicationList = contraindicationList;
   }
 
