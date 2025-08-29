@@ -4,6 +4,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +18,7 @@ import javax.servlet.http.HttpSession;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.ClinicalHistory;
+import org.openimmunizationsoftware.cdsi.core.domain.Observation;
 import org.openimmunizationsoftware.cdsi.core.domain.Schedule;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 
@@ -67,6 +73,7 @@ public class ScheduleServlet extends MainServlet {
         }
       } else {
         printSchedule(dataModel, out);
+        printObservations(dataModel, out);
       }
       printFooter(out);
     } catch (Exception e) {
@@ -133,6 +140,32 @@ public class ScheduleServlet extends MainServlet {
       out.println("        </td>");
       out.println("      </tr>");
     }
+  }
+
+  private void printObservations(DataModel dataModel, PrintWriter out) {
+    out.println("    <table>");
+    out.println("      <tr>");
+    out.println("        <caption>Observations</caption>");
+    out.println("        <th>Code</th>");
+    out.println("        <th>Title</th>");
+    out.println("      </tr>");
+
+    List<String> codes = new ArrayList<String>();
+    for (Observation o : dataModel.getObservationMap().values()) {
+      String code = o.getObservationCode();
+      codes.add(code);
+    }
+
+    codes.sort((o1, o2) -> Integer.parseInt(o2) - Integer.parseInt(o1));
+
+    for (String c : codes) {
+      Observation o = dataModel.getObservationMap().get(c);
+      out.println("      <tr>");
+      out.println("        <td>" + o.getObservationCode() + "</td>");
+      out.println("        <td>" + o.getObservationTitle() + "</td>");
+      out.println("      </tr>");
+    }
+    out.println("    </table>");
   }
 
   private void printAntigenSeries(AntigenSeries antigenSeries, PrintWriter out) {

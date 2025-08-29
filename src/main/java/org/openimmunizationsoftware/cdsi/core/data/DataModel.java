@@ -12,6 +12,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.ClinicalGuidelineObservation;
+import org.openimmunizationsoftware.cdsi.core.domain.Observation;
 import org.openimmunizationsoftware.cdsi.core.domain.CodedValue;
 import org.openimmunizationsoftware.cdsi.core.domain.Contraindication_TO_BE_REMOVED;
 import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
@@ -87,6 +88,12 @@ public class DataModel {
   private List<VaccineGroup> vaccineGroupList;
   private int vaccineGroupPos = -1;
   private Forecast forecast = null;
+
+  private Map<String, Observation> ObservationMap = new HashMap<String, Observation>();
+
+  public Map<String, Observation> getObservationMap() {
+    return ObservationMap;
+  }
 
   public TargetDose getPreviousTargetDose() {
     return previousTargetDose;

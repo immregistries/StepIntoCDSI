@@ -32,6 +32,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.Indication;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.domain.IntervalPriority;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
+import org.openimmunizationsoftware.cdsi.core.domain.Observation;
 import org.openimmunizationsoftware.cdsi.core.domain.ObservationCode;
 import org.openimmunizationsoftware.cdsi.core.domain.PreferrableVaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.RecurringDose;
@@ -74,7 +75,7 @@ public class DataModelLoader {
       readVaccineGroups(dataModel, doc);
       readVaccineGroupToAntigenMap(dataModel, doc);
       readLiveVirusConflicts(dataModel, doc);
-      // TODO add readObservations(dataModel, doc);
+      readObservations(dataModel, doc);
     }
 
     for (String scheduleName : scheduleNames) {
@@ -797,6 +798,33 @@ public class DataModelLoader {
       }
     }
 
+  }
+
+  private static void readObservations(DataModel dataModel, Document doc) {
+    NodeList parentList = doc.getElementsByTagName("observations");
+    for (int i = 0; i < parentList.getLength(); i++) {
+      Node parentNode = parentList.item(i);
+      NodeList childList = parentNode.getChildNodes();
+      for (int j = 0; j < childList.getLength(); j++) {
+        Node childNode = childList.item(j);
+        if (childNode.getNodeName().equals("observation")) {
+          Observation o = new Observation();
+          for (int v = 0; v < childNode.getChildNodes().getLength(); v++) {
+            Node grandchildNode = childNode.getChildNodes().item(v);
+            if(grandchildNode.getNodeType() == Node.ELEMENT_NODE) {
+              if(grandchildNode.getNodeName().equals("observationCode")) {
+                o.setObservationCode(DomUtils.getInternalValue(grandchildNode));
+              }
+              if(grandchildNode.getNodeName().equals("observationTitle")) {
+                o.setObservationTitle(DomUtils.getInternalValue(grandchildNode));
+              }
+            }
+          }
+          
+          dataModel.getObservationMap().put(o.getObservationCode(),o);
+        }
+      }
+    }
   }
 
   private static VaccineType readVaccine(DataModel dataModel, Node childNode) {
