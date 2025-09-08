@@ -151,7 +151,7 @@ public class Interval {
       // CALCDTINT-1
       if (fromImmediatePreviousDoseAdministered == YesNo.YES) {
         logicStep
-            .log("Using CALCDTINT-1 where evaluation status = " + previousVdaEvaluation.getEvaluationStatus());
+            .log("Attempting to use CALCDTINT-1 where previous evaluation status = " + previousVdaEvaluation.getEvaluationStatus());
         if (previousVdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.VALID)
             || previousVdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.NOT_VALID)) {
           logicStep.log("evaluationReason is " + previousVdaEvaluation.getEvaluationReason());
@@ -159,6 +159,7 @@ public class Interval {
               || !previousVdaEvaluation.getEvaluationReason().equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
             AntigenAdministeredRecord previousAAR = dataModel.getPreviousAntigenAdministeredRecord();
             tmpPatientReferenceDoseDate = previousAAR.getVaccineDoseAdministered().getDateAdministered();
+            logicStep.log("Success using CALCDTINT-1");
           }
         }
       }
@@ -166,9 +167,12 @@ public class Interval {
       if (fromImmediatePreviousDoseAdministered == YesNo.NO) {
         if (!this.getFromTargetDoseNumberInSeries().equals("")) {
           for (TargetDose td : dataModel.getTargetDoseList()) {
+            if(td.getSatisfiedByVaccineDoseAdministered() == null || td.getSatisfiedByVaccineDoseAdministered().getDateAdministered() == null) {
+              continue;
+            }
             if (this.getFromTargetDoseNumberInSeries().equals(td.getTrackedSeriesDose().getDoseNumber())) {
-              logicStep.log("Using CALCDTINT-2");
               tmpPatientReferenceDoseDate = td.getSatisfiedByVaccineDoseAdministered().getDateAdministered();
+              logicStep.log("Success using CALCDTINT-2");
             }
           }
         }
@@ -183,14 +187,14 @@ public class Interval {
                 mostRecentDate = aar.getDateAdministered();
               }
             }
-            logicStep.log("Using CALCDTINT-8");
             tmpPatientReferenceDoseDate = mostRecentDate;
+            logicStep.log("Using CALCDTINT-8");
           }
         }
       }
       // CALCDTINT-9
       if (fromImmediatePreviousDoseAdministered == YesNo.NO) {
-        if (!this.getFromRelevantObservation().getCode().equals("")) {
+        if (this.getFromRelevantObservation() != null && !this.getFromRelevantObservation().getCode().equals("")) {
           // TODO set tmpPatientReferenceDoseDate to 'the observation date of the most
           // recent active patient observation'
           logicStep.log("Using CALCDTINT-9");

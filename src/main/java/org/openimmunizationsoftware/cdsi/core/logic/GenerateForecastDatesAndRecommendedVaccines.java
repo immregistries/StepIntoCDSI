@@ -424,13 +424,8 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
   }
 
   private Date computeUnadjustedPastDueDate() {
-    // TODO: Add instructions for what to do if no max age
     log("---< Computing Unadjusted Past Due Date");
     // "The unadjusted past due date of a patient series forecast must be one of the following:"
-    Date patientReferenceDoseDate = null;
-    if (dataModel.getPreviousAntigenAdministeredRecord() != null) {
-      patientReferenceDoseDate = dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered();
-    }
 
     Date unadjustedPastDueDate = null;
     if (caLatestRecommendedAgeDate.getFinalValue() != null) {
@@ -439,14 +434,13 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
       log("---> Unadjusted Past Due Date set to the latest recommended age date minus 1 day.");
     } else {
       // "The latest of all latest recommended interval dates minus 1 day if there is no latest recommended age date."
-      if (patientReferenceDoseDate != null) {
-        List<Interval> intervalList = dataModel.getTargetDose().getTrackedSeriesDose().getIntervalList();
-        for (Interval interval : intervalList) {
-          Date d = interval.getLatestRecommendedInterval().getDateFrom(patientReferenceDoseDate);
-          if(d != null) {
-            if (unadjustedPastDueDate == null || d.after(unadjustedPastDueDate)) {
-              unadjustedPastDueDate = DateUtils.addDays(d, -1);
-            }
+      List<Interval> intervalList = dataModel.getTargetDose().getTrackedSeriesDose().getIntervalList();
+      for (Interval interval : intervalList) {
+        Date patientReferenceDoseDate = interval.getPatientReferenceDoseDate(dataModel, this);
+        Date d = interval.getLatestRecommendedInterval().getDateFrom(patientReferenceDoseDate);
+        if(d != null && patientReferenceDoseDate != null) {
+          if (unadjustedPastDueDate == null || d.after(unadjustedPastDueDate)) {
+            unadjustedPastDueDate = DateUtils.addDays(d, -1);
           }
         }
       }
