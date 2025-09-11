@@ -59,7 +59,6 @@ public class EvaluateGender extends LogicStep {
   }
 
   private void printStandard(PrintWriter out) {
-    out.println("<h1> " + getTitle() + "</h1>");
     out.println(
         "<p>Evaluate gender  validates the  patient gender  against the  required  gender.  In cases where a  target dose  does not specify gender attributes, the gender is valid.</p>");
 
@@ -87,15 +86,16 @@ public class EvaluateGender extends LogicStep {
               if (caRequiredGender.getFinalValue().size() == 0) {
                 return LogicResult.YES;
               }
-              if (caRequiredGender.getFinalValue().contains(caGender.getFinalValue())) {
-                return LogicResult.YES;
+              for(RequiredGender requiredGender : caRequiredGender.getFinalValue()) {
+                if (requiredGender.getValue().contains(caGender.getFinalValue())) {
+                  return LogicResult.YES;
+                }
               }
               return LogicResult.YES;
             }
           });
 
       setLogicResults(0, YES, NO);
-      // setLogicResults(0, new LogicResult[] { LogicResult.YES, LogicResult.NO });
 
       setLogicOutcome(0, new LogicOutcome() {
         @Override
@@ -121,8 +121,6 @@ public class EvaluateGender extends LogicStep {
           setNextLogicStepType(LogicStepType.SATISFY_TARGET_DOSE);
         }
       });
-
     }
   }
-
 }

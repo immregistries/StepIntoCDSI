@@ -1,5 +1,5 @@
 package org.openimmunizationsoftware.cdsi.core.domain.datatypes;
 
 public enum EvaluationReason {
-  TOO_YOUNG, GRACE_PERIOD, TOO_OLD
+  TOO_YOUNG, GRACE_PERIOD, TOO_OLD, TOO_SOON, INADVERTENT_ADMINISTRATION, LESS_THAN_RECOMMENDED_VOLUME,
 }

@@ -58,8 +58,6 @@ public class VaccineGroupForecast extends Forecast {
   }
 
   public void setVaccineGroupStatus(PatientSeriesStatus patientSeriesStatus) {
-    // TODO Auto-generated method stub
-
     switch (patientSeriesStatus) {
       case COMPLETE:
         setVaccineGroupStatus(VaccineGroupStatus.COMPLETE);

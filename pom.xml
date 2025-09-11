@@ -21,6 +21,19 @@
 	<name>quickstart</name>
 	<description></description>
 	<!-- <organization> <name>company name</name> <url>company url</url> </organization> -->
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>6.2.0</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
@@ -34,7 +47,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- allowed values: R7, 1.0, 1.5, 2.0 or none -->
 		<wtp.version>none</wtp.version>
+		<hapifhir_version>6.8.3</hapifhir_version>
 	</properties>
+
 	<dependencies>
 		<!-- WICKET DEPENDENCIES -->
 		<dependency>
@@ -84,12 +99,218 @@
 			<artifactId>commons-lang</artifactId>
 			<version>2.2</version>
 		</dependency>
+
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
 			<version>2.9.7</version>
 		</dependency>
+		
+		<!-- fasterxml DEPENDENCIES FOR TESTING -->
+        <!-- Jackson Core -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.18.1</version>
+        </dependency>
+        
+        <!-- Jackson Databind -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.18.1</version>
+        </dependency>
+        
+        <!-- Jackson Annotations -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.18.1</version>
+        </dependency>
+
+		<dependency>
+			<groupId>gov.nist.healthcare.cds</groupId>
+			<artifactId>cds-base-domain</artifactId>
+			<version>1.0.1</version>
+			<exclusions>
+			  <exclusion>
+			    <groupId>*</groupId>
+			    <artifactId>*</artifactId>
+			  </exclusion>
+			</exclusions>
+		</dependency>
+
+    	<dependency>
+      		<groupId>gov.nist.healthcare.cds</groupId>
+      		<artifactId>cds-base-repo</artifactId>
+      		<version>1.0.1</version>
+				<exclusions>
+				  <exclusion>
+				    <groupId>*</groupId>
+				    <artifactId>*</artifactId>
+				  </exclusion>
+				</exclusions>
+	    </dependency>
+
+		<dependency>
+			<groupId>gov.nist.healthcare.cds</groupId>
+			<artifactId>cds-base-auth</artifactId>
+			<version>1.0.1</version>
+			<exclusions>
+			  <exclusion>
+			    <groupId>*</groupId>
+			    <artifactId>*</artifactId>
+			  </exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>gov.nist.healthcare.cds</groupId>
+			<artifactId>cds-base-utils</artifactId>
+			<version>1.0.1</version>
+			<exclusions>
+			  <exclusion>
+			    <groupId>*</groupId>
+			    <artifactId>*</artifactId>
+			  </exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>gov.nist.healthcare.cds.client</groupId>
+			<artifactId>fits-client</artifactId>
+			<version>1.2.1-AIRA-1.1</version>
+			<exclusions>
+			  <exclusion>
+			    <groupId>*</groupId>
+			    <artifactId>*</artifactId>
+			  </exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>3.17.0</version>
+        </dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+		</dependency>		
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+        </dependency>
+
+		<dependency>
+	      	<groupId>org.apache.httpcomponents.client5</groupId>
+      		<artifactId>httpclient5</artifactId>
+      		<version>5.4.1</version>
+    	</dependency>
+
+
+<!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
+<dependency>
+    <groupId>commons-codec</groupId>
+    <artifactId>commons-codec</artifactId>
+    <version>1.17.1</version>
+</dependency>
+
+
+
+
+
+
+
+
+      <!-- This dependency includes the core HAPI-FHIR classes -->
+		<dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>hapi-fhir-base</artifactId>
+			<version>${hapifhir_version}</version>
+		</dependency>
+
+      <dependency>
+         <groupId>ca.uhn.hapi.fhir</groupId>
+         <artifactId>hapi-fhir-server</artifactId>
+         <version>${hapifhir_version}</version>
+      </dependency>
+      <dependency>
+         <groupId>ca.uhn.hapi.fhir</groupId>
+         <artifactId>hapi-fhir-validation</artifactId>
+         <version>${hapifhir_version}</version>
+      </dependency>
+
+      <!-- At least one "structures" JAR must also be included -->
+		<dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>hapi-fhir-structures-r4</artifactId>
+			<version>${hapifhir_version}</version>
+		</dependency>
+      <dependency>
+         <groupId>ca.uhn.hapi.fhir</groupId>
+         <artifactId>hapi-fhir-validation-resources-r4</artifactId>
+         <version>${hapifhir_version}</version>
+      </dependency>
+
+		<!-- This dependency is used for the "FHIR Tester" web app overlay -->
+		<dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>hapi-fhir-testpage-overlay</artifactId>
+			<version>${hapifhir_version}</version>
+			<type>war</type>
+			<scope>provided</scope>		
+		</dependency>
+		<dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>hapi-fhir-testpage-overlay</artifactId>
+			<version>${hapifhir_version}</version>
+			<classifier>classes</classifier>
+		</dependency>
+
+		<!-- 
+		HAPI-FHIR uses Logback for logging support. The logback library is included 
+		automatically by Maven as a part of the hapi-fhir-base dependency, but you 
+		also need to include a logging library. Logback is used here, but log4j
+		would also be fine. 
+		-->
+      <dependency>
+         <groupId>ch.qos.logback</groupId>
+         <artifactId>logback-classic</artifactId>
+         <version>1.4.4</version>
+      </dependency>
+      <dependency>
+         <groupId>ch.qos.logback</groupId>
+         <artifactId>logback-core</artifactId>
+         <version>1.4.4</version>
+      </dependency>
+
+
+		<!-- 
+		If you are using HAPI narrative generation, you will need to include Thymeleaf
+		as well. Otherwise the following can be omitted.
+		 -->
+		<dependency>
+			<groupId>org.thymeleaf</groupId>
+			<artifactId>thymeleaf</artifactId>
+			<version>3.1.2.RELEASE</version>
+		</dependency>
+
+      <dependency>
+         <groupId>org.fhir</groupId>
+         <artifactId>ucum</artifactId>
+         <version>1.0.3</version>
+      </dependency>
+      <dependency>
+         <groupId>com.github.ben-manes.caffeine</groupId>
+         <artifactId>caffeine</artifactId>
+         <version>3.1.1</version>
+      </dependency>
+
 	</dependencies>
+
 	<build>
 		<resources>
 			<resource>
@@ -125,13 +346,25 @@
 		</testResources>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.2</version>
+				<configuration>
+					<printSummary>true</printSummary>
+					<reportFormat>plain</reportFormat>
+					<redirectTestOutputToFile>true</redirectTestOutputToFile>
+					<details>stream</details>
+					<showSuccessfulTests>true</showSuccessfulTests> <!-- Show successful tests -->
+				</configuration>
+			</plugin>
+			<plugin>
 				<inherited>true</inherited>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.5.1</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.8</source>
+					<target>1.8</target>
 					<encoding>UTF-8</encoding>
 					<showWarnings>true</showWarnings>
 					<showDeprecation>true</showDeprecation>
@@ -180,5 +413,12 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
+
+		<repository>
+			<id>data-local</id>
+			<name>data</name>
+			<url>file://${project.basedir}/repo</url>
+		</repository>
+
 	</repositories>
 </project>

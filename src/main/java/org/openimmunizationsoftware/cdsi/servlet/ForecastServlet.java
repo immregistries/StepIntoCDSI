@@ -17,11 +17,16 @@ import javax.servlet.http.HttpServletResponse;
 import org.openimmunizationsoftware.cdsi.SoftwareVersion;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.data.DataModelLoader;
-import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
+import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
+import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
+import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepFactory;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepType;
 
@@ -39,9 +44,15 @@ public class ForecastServlet extends HttpServlet {
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
     try {
-      DataModel dataModel = readRequest(req);
-      process(dataModel);
+      StepServlet.registerRequest(req);
       PrintWriter out = new PrintWriter(resp.getOutputStream());
+      DataModel dataModel = readRequest(req);
+      String logStep = req.getParameter("logStep");
+      LogicStepType logStepType = null;
+      if (logStep != null) {
+        logStepType = LogicStepType.valueOf(logStep);
+      }
+      process(dataModel, out, logStepType);
       String resultFormat = req.getParameter(PARAM_RESULT_FORMAT);
       if (resultFormat == null) {
         resultFormat = RESULT_FORMAT_TEXT;
@@ -62,39 +73,39 @@ public class ForecastServlet extends HttpServlet {
     }
   }
 
-  private void printText(HttpServletResponse resp, DataModel dataModel, PrintWriter out) {
+  private static void printText(HttpServletResponse resp, DataModel dataModel, PrintWriter out) {
     resp.setContentType("text/plain");
+    printText(dataModel, out);
+  }
+
+  public static void printText(DataModel dataModel, PrintWriter out) {
     out.println("Step Into Clinical Decision Support for Immunizations - Demonstration //System");
     out.println();
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 
-
-    List<Forecast> fl = dataModel.getForecastList();
-    List<VaccineGroupForecast> vgfl = dataModel.getVaccineGroupForcastList();
+    List<VaccineGroupForecast> vgfl = dataModel.getVaccineGroupForecastList();
 
     List<VaccineGroupForecast> vgfNow = new ArrayList<VaccineGroupForecast>();
     List<VaccineGroupForecast> vgfLater = new ArrayList<VaccineGroupForecast>();
     List<VaccineGroupForecast> vgfDone = new ArrayList<VaccineGroupForecast>();
 
-
-    Date today = new Date();
+    Date today = dataModel.getAssessmentDate();
     try {
       today = sdf.parse(sdf.format(today));
     } catch (ParseException pe) {
       pe.printStackTrace();
     }
-    {
-      for (VaccineGroupForecast vgf : vgfl) {
-        if (vgf.getForecastReason().equals("")) {
-          if (vgf.getAdjustedRecommendedDate() != null
-              && vgf.getAdjustedRecommendedDate().after(today)) {
-            vgfLater.add(vgf);
-          } else {
-            vgfNow.add(vgf);
-          }
+
+    for (VaccineGroupForecast vgf : vgfl) {
+      if (vgf.getVaccineGroupStatus().equals(VaccineGroupStatus.NOT_COMPLETE)) {
+        if (vgf.getAdjustedRecommendedDate() != null
+            && vgf.getAdjustedRecommendedDate().after(today)) {
+          vgfLater.add(vgf);
         } else {
-          vgfDone.add(vgf);
+          vgfNow.add(vgf);
         }
+      } else {
+        vgfDone.add(vgf);
       }
     }
 
@@ -102,23 +113,35 @@ public class ForecastServlet extends HttpServlet {
     printList(dataModel, out, sdf, today, vgfLater, "VACCINATIONS RECOMMENDED AFTER");
     printList(dataModel, out, sdf, today, vgfDone, "VACCINATIONS COMPLETE OR NOT RECOMMENDED");
 
-    // printListRaw(dataModel, out, sdf, today, dataModel.getForecastList(), "RAW LIST FOR DEBUG");
+    // printListRaw(dataModel, out, sdf, today, dataModel.getForecastList(), "RAW
+    // LIST FOR DEBUG");
 
     if (dataModel.getAntigenAdministeredRecordList().size() > 0) {
       out.println("IMMUNIZATION EVALUATION");
-      int count = 0;
 
-      for (VaccineDoseAdministered vda : dataModel.getImmunizationHistory()
-          .getVaccineDoseAdministeredList()) {
-        count++;
-        for (AntigenAdministeredRecord aar : dataModel.getAntigenAdministeredRecordList()) {
-          if (aar.getVaccineType().equals(vda.getVaccine().getVaccineType())
-              && aar.getDateAdministered().equals(vda.getDateAdministered())) {
-            out.print("Vaccination #" + count + ": " + aar.getVaccineType().getShortDescription()
-                + " given " + sdf.format(aar.getDateAdministered()));
-            // is a valid Hib dose 1. Dose 1 valid at 6 weeks of age,
-            // 10/14/2012.
-            out.println();
+      for (PatientSeries patientSeries : dataModel.getBestPatientSeriesList()) {
+        for (TargetDose targetDose : patientSeries.getTargetDoseList()) {
+          if (targetDose.getEvaluationList() != null) {
+            for (Evaluation evaluation : targetDose.getEvaluationList()) {
+              VaccineDoseAdministered vda = evaluation.getVaccineDoseAdministered();
+              if (evaluation.getEvaluationStatus() != null) {
+                out.print("Vaccination #" + vda.getId() + ": ");
+                out.print(vda.getVaccine().getVaccineType().getShortDescription());
+                out.print(" given ");
+                out.print(sdf.format(vda.getDateAdministered()));
+                out.print(" is a ");
+                if (evaluation.getEvaluationStatus() != null
+                    && evaluation.getEvaluationStatus() == EvaluationStatus.VALID) {
+                  out.print("valid ");
+                } else {
+                  out.print("not valid ");
+                }
+                out.print(targetDose.getTrackedSeriesDose().getAntigenSeries().getTargetDisease());
+                out.print(" dose ");
+                out.print(targetDose.getTrackedSeriesDose().getDoseNumber());
+                out.println();
+              }
+            }
           }
         }
       }
@@ -127,19 +150,19 @@ public class ForecastServlet extends HttpServlet {
 
     out.println("Forecast generated " + sdf.format(new Date()) + " using software version "
         + SoftwareVersion.VERSION + ".");
+
   }
 
   // Measles Mumps Rubella
   // combined into MMR
 
-  private void printList(DataModel dataModel, PrintWriter out, SimpleDateFormat sdf, Date today,
+  private static void printList(DataModel dataModel, PrintWriter out, SimpleDateFormat sdf, Date today,
       List<VaccineGroupForecast> vaccineGroupForecastList, String title) {
     if (vaccineGroupForecastList.size() > 0) {
       out.println(title + " " + sdf.format(dataModel.getAssessmentDate()));
       for (VaccineGroupForecast vgf : vaccineGroupForecastList) {
         if (vgf.getAntigen() != null) {
-          String name = vgf.getAntigen().getName();
-          // down to here
+          String name = vgf.getAntigen() == null ? "No Antigen" : vgf.getAntigen().getName();
           if (name.equals("Tetanus")) {
             Calendar c = Calendar.getInstance();
             c.setTime(dataModel.getPatient().getDateOfBirth());
@@ -154,7 +177,7 @@ public class ForecastServlet extends HttpServlet {
           }
           out.print("Forecasting " + name + " status ");
           if (vgf.getPatientSeriesStatus() == PatientSeriesStatus.NOT_COMPLETE) {
-            if (vgf.getAdjustedRecommendedDate().after(today)) {
+            if (vgf.getAdjustedRecommendedDate() != null && vgf.getAdjustedRecommendedDate().after(today)) {
               out.print("due later ");
             } else {
               out.print("due ");
@@ -195,7 +218,6 @@ public class ForecastServlet extends HttpServlet {
       out.println();
     }
   }
-
 
   private void printListRaw(DataModel dataModel, PrintWriter out, SimpleDateFormat sdf, Date today,
       List<Forecast> forecastList, String title) {
@@ -251,11 +273,24 @@ public class ForecastServlet extends HttpServlet {
     }
   }
 
-
-  private void process(DataModel dataModel) throws Exception {
+  private void process(DataModel dataModel, PrintWriter out, LogicStepType logLogicStepType) throws Exception {
     int count = 0;
     while (dataModel.getLogicStep().getLogicStepType() != LogicStepType.END) {
-      dataModel.setNextLogicStep(dataModel.getLogicStep().process());
+      LogicStep currentStep = dataModel.getLogicStep();
+      LogicStep nextLogicStep = dataModel.getLogicStep().process();
+      dataModel.setNextLogicStep(nextLogicStep);
+      if (logLogicStepType != null) {
+        if (logLogicStepType == currentStep.getLogicStepType()) {
+          out.println("========================================================================================");
+          out.println(
+              "Step " + count + ": " + currentStep.getLogicStepType().getName() + " -> "
+                  + nextLogicStep.getLogicStepType().getName());
+          currentStep.printPost(out);
+          currentStep.printLog(out);
+          out.println("========================================================================================");
+        }
+      }
+
       count++;
       if (count > 100000) {
         System.err.println(
@@ -276,4 +311,14 @@ public class ForecastServlet extends HttpServlet {
         LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel));
     return dataModel;
   }
+
+  public static String n(Date date) {
+    if (date == null) {
+      return "<center>-</center>";
+    } else {
+      SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+      return sdf.format(date);
+    }
+  }
+
 }

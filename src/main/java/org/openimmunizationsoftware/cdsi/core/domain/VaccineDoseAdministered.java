@@ -2,12 +2,11 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.DoseCondition;
 
 public class VaccineDoseAdministered {
+  private int id = 0;
   private Date dateAdministered = null;
   private DoseCondition doseCondition = null;
   private Patient patient = null;
@@ -15,10 +14,13 @@ public class VaccineDoseAdministered {
   private ImmunizationHistory immunizationHistory = null;
   private TargetDose targetDose = null;
   private Antigen antigenAssigned = null;
-  private Map<Antigen, Evaluation> evaluationMap = new HashMap<Antigen, Evaluation>();
 
-  public Map<Antigen, Evaluation> getEvaluationMap() {
-    return evaluationMap;
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
   }
 
   public Antigen getAntigenAssigned() {

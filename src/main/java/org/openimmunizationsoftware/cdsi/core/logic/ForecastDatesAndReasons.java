@@ -7,10 +7,8 @@ import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 
 public class ForecastDatesAndReasons extends LogicStep {
-
   public ForecastDatesAndReasons(DataModel dataModel) {
     super(LogicStepType.FORECAST_DATES_AND_REASONS, dataModel);
-    // TODO Auto-generated constructor stub
   }
 
   @Override
@@ -27,15 +25,12 @@ public class ForecastDatesAndReasons extends LogicStep {
 
   @Override
   public void printPre(PrintWriter out) throws Exception {
-    // TODO Auto-generated method stub
     printStandard(out);
   }
 
   @Override
   public void printPost(PrintWriter out) throws Exception {
-    // TODO Auto-generated method stub
     printStandard(out);
-
   }
 
   private void printTableAndFigure(PrintWriter out) {
@@ -73,14 +68,12 @@ public class ForecastDatesAndReasons extends LogicStep {
     out.println("</table>");
     out.println("");
     out.println(
-        "<p>The figure below provides an illustration of the forecast dates and reasonsprocess.</p>");
+        "<p>The figure below provides an illustration of the forecast dates and reasons process.</p>");
     out.println("");
     out.println("<img src=\"Figure 5.1.png\"/>");
-
   }
 
   private void printStandard(PrintWriter out) {
-    out.println("<h1> " + getTitle() + "</h1>");
     out.println(
         "<p>The CDS engine uses a patient's medical and vaccine history to forecast immunization due dates. This chapter identifies specific business rules that are used by a CDS engine to forecast the next  target dose.  The major steps involved in this process are listed in the table below.</p>");
     printTableAndFigure(out);

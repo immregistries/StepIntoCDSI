@@ -20,9 +20,17 @@
         <servlet-name>step</servlet-name>
         <servlet-class>org.openimmunizationsoftware.cdsi.servlet.StepServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>fhir</servlet-name>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.FhirServlet</servlet-class>
+    </servlet>
 	<servlet>
         <servlet-name>forecast</servlet-name>
         <servlet-class>org.openimmunizationsoftware.cdsi.servlet.ForecastServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>fits</servlet-name>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.FitsServlet</servlet-class>
     </servlet>
 	<servlet>
         <servlet-name>dataModelView</servlet-name>
@@ -52,8 +60,7 @@
         <servlet-name>dataModelViewLiveVirusConflict</servlet-name>
         <servlet-class>org.openimmunizationsoftware.cdsi.servlet.dataModelView.LiveVirusConflictServlet</servlet-class>
     </servlet>
-    
-    
+   
     
     <servlet-mapping>
         <servlet-name>forecast</servlet-name>
@@ -64,8 +71,16 @@
         <url-pattern>/step</url-pattern>
     </servlet-mapping>	 
     <servlet-mapping>
+        <servlet-name>fhir</servlet-name>
+        <url-pattern>/fhir/*</url-pattern>
+    </servlet-mapping>	 
+    <servlet-mapping>
         <servlet-name>step</servlet-name>
         <url-pattern>/fv/step</url-pattern>
+    </servlet-mapping>	 
+    <servlet-mapping>
+        <servlet-name>fits</servlet-name>
+        <url-pattern>/fits</url-pattern>
     </servlet-mapping>	 
     <servlet-mapping>
         <servlet-name>dataModelView</servlet-name>

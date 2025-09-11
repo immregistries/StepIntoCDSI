@@ -3,7 +3,6 @@ package org.openimmunizationsoftware.cdsi.servlet.dataModelView;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +14,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
 import org.openimmunizationsoftware.cdsi.core.domain.Patient;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
+import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 
 public class PatientServlet extends MainServlet {
 
@@ -64,6 +64,7 @@ public class PatientServlet extends MainServlet {
         int pos = Integer.parseInt(req.getParameter(PARAM_POS));
         printViewVaccine(dataModel, pos, out);
       }
+      printViewForecast(dataModel, out);
       printFooter(out);
     } catch (Exception e) {
       e.printStackTrace();
@@ -73,44 +74,54 @@ public class PatientServlet extends MainServlet {
   }
 
   private void printViewPatient(DataModel dataModel, PrintWriter out) {
-    out.println("   <table>");
-
-    out.println("     <tr>");
-    out.println("       <caption>Patient</caption>");
-    out.println("       <th>Patient DOB</th>");
+    // class="w3-table w3-bordered w3-striped w3-border test w3-hoverable"
+    out.println("  <div class=\"w3-card w3-cell w3-margin\">");
+    out.println("    <header class=\"w3-container w3-khaki\">");
+    out.println("      <h2>Patient</h2>");
+    out.println("    </header>");
+    out.println("    <div class=\"w3-container\">");
+    out.println("      <table class=\"w3-table w3-bordered w3-striped w3-border test w3-hoverable w3-margin\">");
+    out.println("        <caption>Demographics</caption>");
+    out.println("        <tr>");
+    out.println("          <th>Patient DOB</th>");
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-    out.println("       <td>" + sdf.format(dataModel.getPatient().getDateOfBirth()) + "</td>");
-    out.println("     </tr>");
+    out.println("          <td>" + sdf.format(dataModel.getPatient().getDateOfBirth()) + "</td>");
+    out.println("        </tr>");
 
-    out.println("     <tr>");
-    out.println("       <th>Gender</th>");
-    out.println("       <td>" + dataModel.getPatient().getGender() + "</td>");
-    out.println("     </tr>");
+    out.println("        <tr>");
+    out.println("          <th>Gender</th>");
+    out.println("          <td>" + dataModel.getPatient().getGender() + "</td>");
+    out.println("        </tr>");
 
-    out.println("     <tr>");
-    out.println("       <th>Country of Birth</th>");
-    out.println("       <td>" + dataModel.getPatient().getCountryOfBirth() + "</td>");
-    out.println("     </tr>");
-    out.println("   </table>");
+    out.println("        <tr>");
+    out.println("          <th>Country of Birth</th>");
+    out.println("          <td>" + dataModel.getPatient().getCountryOfBirth() + "</td>");
+    out.println("        </tr>");
+    out.println("      </table>");
+    out.println("    </div>");
+    out.println("  </div>");
 
-    out.println("   <table>");
-    out.println("     <caption>Vaccine Dose Administered</caption>");
-    out.println("     <tr>");
-    out.println("       <th>Date Administered</th>");
-    out.println("       <th>Vaccine</th>");
-    out.println("       <th>Dose Condition</th>");
-    // out.println(" <th>Target Dose</th>");
-    // out.println(" <th>Antigen</th>");
-    out.println("     </tr>");
-
+    out.println("  <div class=\"w3-card w3-cell w3-margin\">");
+    out.println("    <header class=\"w3-container w3-khaki\">");
+    out.println("      <h2>Vaccinations</h2>");
+    out.println("    </header>");
+    out.println("    <div class=\"w3-container\">");
+    out.println("      <table class=\"w3-table w3-bordered w3-striped w3-border test w3-hoverable\">");
+    out.println("        <caption>Vaccine Dose Administered</caption>");
+    out.println("        <tr>");
+    out.println("          <th>Date Administered</th>");
+    out.println("          <th>Vaccine</th>");
+    out.println("          <th>Dose Condition</th>");
+    out.println("        </tr>");
     int pos = 0;
     for (VaccineDoseAdministered vaccineDoseAdministered : dataModel.getPatient()
         .getReceivesList()) {
       printRowVaccineDoseAdmistered(vaccineDoseAdministered, pos, out);
       pos++;
     }
-
-    out.println("   </table>");
+    out.println("      </table>");
+    out.println("    </div>");
+    out.println("  </div>");
   }
 
   private void printViewVaccine(DataModel dataModel, int i, PrintWriter out) {
@@ -191,14 +202,51 @@ public class PatientServlet extends MainServlet {
     out.println("     </tr>");
   }
 
-
-  private String n(Date d) {
-    if (d == null) {
-      return "<center>-</center>";
-    } else {
-      SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-      return sdf.format(d);
+  private void printViewForecast(DataModel dataModel, PrintWriter out) {
+    out.println("  <div class=\"w3-card w3-cell w3-margin\">");
+    out.println("    <header class=\"w3-container w3-khaki\">");
+    out.println("      <h2>Forecast</h2>");
+    out.println("    </header>");
+    out.println("    <div class=\"w3-container\">");
+    out.println("      <table class=\"w3-table w3-bordered w3-striped w3-border test w3-hoverable\">");
+    out.println("        <caption>Forecast Doses</caption>");
+    out.println("        <tr>");
+    out.println("          <th>Antigen</th>");
+    out.println("          <th>Adjusted Recommended Date</th>");
+    out.println("          <th>Adjusted Past Due Date</th>");
+    out.println("          <th>Earliest Date</th>");
+    out.println("          <th>Forecast Reason</th>");
+    out.println("          <th>Latest Date</th>");
+    out.println("          <th>Unadjusted Recommended Date</th>");
+    out.println("          <th>Unadjusted Past Due Date</th>");
+    out.println("          <th>Vaccine Assessment Date</th>");
+    out.println("          <th>Target Dose</th>");
+    out.println("          <th>Best Patient Series</th>");
+    out.println("        </tr>");
+    int pos = 0;
+    for (Forecast forecast : dataModel.getForecastList()) {
+      printRowForecast(forecast, pos, out);
+      pos++;
     }
+    out.println("      </table>");
+    out.println("    </div>");
+    out.println("  </div>");
+  }
+
+  private void printRowForecast(Forecast forecast, int pos, PrintWriter out) {
+    out.println("     <tr>");
+    out.println("       <td>" + forecast.getAntigen().toString() + "</td>");
+    out.println("       <td>" + n(forecast.getAdjustedRecommendedDate()) + "</td>");
+    out.println("       <td>" + n(forecast.getAdjustedPastDueDate()) + "</td>");
+    out.println("       <td>" + n(forecast.getEarliestDate()) + "</td>");
+    out.println("       <td>" + forecast.getForecastReason() + "</td>");
+    out.println("       <td>" + n(forecast.getLatestDate()) + "</td>");
+    out.println("       <td>" + n(forecast.getUnadjustedRecommendedDate()) + "</td>");
+    out.println("       <td>" + n(forecast.getUnadjustedPastDueDate()) + "</td>");
+    out.println("       <td>" + n(forecast.getAssessmentDate()) + "</td>");
+    out.println("       <td>" + forecast.getTargetDose().getTargetDoseStatus() + "</td>");
+    out.println("       <td>" + forecast.getBestPatientSeries() + "</td>");
+    out.println("     </tr>");
   }
 
   private void printAntigenAdministeredRecordTable(
@@ -241,10 +289,6 @@ public class PatientServlet extends MainServlet {
       out.println("     </tr>");
       out.println("       <th>Dose Condition</th>");
       out.println("       <td>" + antigenAdministeredRecord.getDoseCondition() + "</td>");
-      out.println("     </tr>");
-      out.println("     </tr>");
-      out.println("       <th>Evaluation</th>");
-      out.println("       <td>" + antigenAdministeredRecord.getEvaluation() + "</td>");
       out.println("     </tr>");
       out.println("   </table>");
     }

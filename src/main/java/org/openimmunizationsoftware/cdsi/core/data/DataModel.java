@@ -11,7 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
-import org.openimmunizationsoftware.cdsi.core.domain.Contraindication;
+import org.openimmunizationsoftware.cdsi.core.domain.ClinicalGuidelineObservation;
+import org.openimmunizationsoftware.cdsi.core.domain.Observation;
+import org.openimmunizationsoftware.cdsi.core.domain.CodedValue;
+import org.openimmunizationsoftware.cdsi.core.domain.Contraindication_TO_BE_REMOVED;
+import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.Immunity;
 import org.openimmunizationsoftware.cdsi.core.domain.ImmunizationHistory;
@@ -23,49 +27,140 @@ import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.Stepper;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
+import org.openimmunizationsoftware.cdsi.servlet.fits.TestCaseRegistered;
 
 public class DataModel {
+
+  // Input mechanisms
+  private HttpServletRequest request = null;
+  private TestCaseRegistered testCaseRegistered = null;
+
   private List<LiveVirusConflict> liveVirusConflictList = new ArrayList<LiveVirusConflict>();
   private Map<String, VaccineType> cvxMap = new HashMap<String, VaccineType>();
   private Map<String, Antigen> antigenMap = new HashMap<String, Antigen>();
+  private Map<String, CodedValue> codedValueMap = new HashMap<String, CodedValue>();
   private List<Antigen> antigenList = null;
+  private List<Antigen> antigenSelectedList = null;
   private int antigenPos = -1;
+  private int antigenSelectedPos = -1;
   private Antigen antigen = null;
   private List<AntigenSeries> antigenSeriesSelectedList = null;
   private List<PatientSeries> selectedPatientSeriesList = new ArrayList<PatientSeries>();
-  private List<PatientSeries> bestPatientSeriesList = new ArrayList<PatientSeries>();
+  private List<PatientSeries> bestPatientSeriesList = null;
+  private List<PatientSeries> prioritizedPatientSeriesList = new ArrayList<PatientSeries>();
 
   private Map<String, VaccineGroup> vaccineGroupMap = new HashMap<String, VaccineGroup>();
   private List<Immunity> immunityList = new ArrayList<Immunity>();
-  private List<Contraindication> contraindicationList = new ArrayList<Contraindication>();
+  private List<Contraindication_TO_BE_REMOVED> contraindicationList = new ArrayList<Contraindication_TO_BE_REMOVED>();
   private List<Schedule> scheduleList = new ArrayList<Schedule>();
 
   private TargetDose targetDose = null;
+  private TargetDose previousTargetDose = null;
   private List<TargetDose> targetDoseList = null;
   private AntigenAdministeredRecord antigenAdministeredRecordThatSatisfiedPreviousTargetDose = null;
   private EvaluationStatus evaluationStatus = null;
   private Patient patient = null;
   private ImmunizationHistory immunizationHistory = null;
   private Date assessmentDate = new Date();
-  private HttpServletRequest request = null;
-  private List<AntigenAdministeredRecord> antigenAdministeredRecordList =
-      new ArrayList<AntigenAdministeredRecord>();
-  private int targetDoseListPos = -1;
-  private int antigenAdministeredRecordPos = -1;
+
+  private Stepper<AntigenAdministeredRecord> antigenAdministeredRecordStepper = null;
+  private List<AntigenAdministeredRecord> antigenAdministeredRecordList = new ArrayList<AntigenAdministeredRecord>();
   private AntigenAdministeredRecord antigenAdministeredRecord = null;
+  private int antigenAdministeredRecordPos = -1;
+
+  private Stepper<AntigenAdministeredRecord> selectedAntigenAdministeredRecordStepper = null;
+  private List<AntigenAdministeredRecord> selectedAntigenAdministeredRecordList = null;
+  private int selectedAntigenAdministeredRecordPos = -1;
+  private int targetDoseListPos = -1;
+
   private AntigenAdministeredRecord previousAntigenAdministeredRecord = null;
   private List<AntigenSeries> antigenSeriesList = new ArrayList<AntigenSeries>();
   private List<PatientSeries> patientSeriesList = new ArrayList<PatientSeries>();
+  private List<PatientSeries> scorablePatientSeriesList = null;
   private PatientSeries patientSeries = null;
   private List<Forecast> forecastList = new ArrayList<Forecast>();
-  private List<VaccineGroupForecast> vaccineGroupForcastList =
-      new ArrayList<VaccineGroupForecast>();
+  private List<VaccineGroupForecast> vaccineGroupForecastList = new ArrayList<VaccineGroupForecast>();
   private VaccineGroup vaccineGroup;
   private List<VaccineGroup> vaccineGroupList;
   private int vaccineGroupPos = -1;
   private Forecast forecast = null;
+
+  private Map<String, Observation> ObservationMap = new HashMap<String, Observation>();
+
+  public Map<String, Observation> getObservationMap() {
+    return ObservationMap;
+  }
+
+  public TargetDose getPreviousTargetDose() {
+    return previousTargetDose;
+  }
+
+  public void setPreviousTargetDose(TargetDose previousTargetDose) {
+    this.previousTargetDose = previousTargetDose;
+  }
+
+  public Stepper<AntigenAdministeredRecord> getAntigenAdministeredRecordStepper() {
+    return antigenAdministeredRecordStepper;
+  }
+
+  public void setAntigenAdministeredRecordStepper(Stepper<AntigenAdministeredRecord> antigenAdministeredRecordStepper) {
+    this.antigenAdministeredRecordStepper = antigenAdministeredRecordStepper;
+  }
+
+  public Stepper<AntigenAdministeredRecord> getSelectedAntigenAdministeredRecordStepper() {
+    return selectedAntigenAdministeredRecordStepper;
+  }
+
+  public void setSelectedAntigenAdministeredRecordStepper(
+      Stepper<AntigenAdministeredRecord> selectedAntigenAdministeredRecordStepper) {
+    this.selectedAntigenAdministeredRecordStepper = selectedAntigenAdministeredRecordStepper;
+  }
+
+  private Stepper<AntigenAdministeredRecord> selectedAntigenAdministeredRecord = null;
+
+  public Stepper<AntigenAdministeredRecord> getSelectedAntigenAdministeredRecord() {
+    return selectedAntigenAdministeredRecord;
+  }
+
+  public void setSelectedAntigenAdministeredRecord(
+      Stepper<AntigenAdministeredRecord> selectedAntigenAdministeredRecord) {
+    this.selectedAntigenAdministeredRecord = selectedAntigenAdministeredRecord;
+  }
+
+  public List<AntigenAdministeredRecord> getSelectedAntigenAdministeredRecordList() {
+    return selectedAntigenAdministeredRecordList;
+  }
+
+  public void setSelectedAntigenAdministeredRecordList(
+      List<AntigenAdministeredRecord> selectedAntigenAdministeredRecordList) {
+    this.selectedAntigenAdministeredRecordList = selectedAntigenAdministeredRecordList;
+  }
+
+  public List<PatientSeries> getScorablePatientSeriesList() {
+    return scorablePatientSeriesList;
+  }
+
+  public void setScorablePatientSeriesList(List<PatientSeries> relevantPatientSeriesList) {
+    this.scorablePatientSeriesList = relevantPatientSeriesList;
+  }
+
+  public void setTestCaseRegistered(TestCaseRegistered testCaseRegistered) {
+    this.testCaseRegistered = testCaseRegistered;
+  }
+
+  public TestCaseRegistered getTestCaseRegistered() {
+    return testCaseRegistered;
+  }
+
+  private Map<String, ClinicalGuidelineObservation> clinicalGuidelineObservationMap = new HashMap<String, ClinicalGuidelineObservation>();
+
+  public Map<String, ClinicalGuidelineObservation> getClinicalGuidelineObservationMap() {
+    return clinicalGuidelineObservationMap;
+  }
 
   public Forecast getForecast() {
     return forecast;
@@ -89,6 +184,14 @@ public class DataModel {
 
   public void setBestPatientSeriesList(List<PatientSeries> bestPatientSeriesList) {
     this.bestPatientSeriesList = bestPatientSeriesList;
+  }
+
+  public List<PatientSeries> getPrioritizedPatientSeriesList() {
+    return prioritizedPatientSeriesList;
+  }
+
+  public void setPrioritizedPatientSeriesList(List<PatientSeries> prioritizedPatientSeriesList) {
+    this.prioritizedPatientSeriesList = prioritizedPatientSeriesList;
   }
 
   public void incVaccineGroupPos() {
@@ -130,12 +233,12 @@ public class DataModel {
     this.forecastList = forecastList;
   }
 
-  public List<VaccineGroupForecast> getVaccineGroupForcastList() {
-    return vaccineGroupForcastList;
+  public List<VaccineGroupForecast> getVaccineGroupForecastList() {
+    return vaccineGroupForecastList;
   }
 
-  public void setVaccineGroupForcastList(List<VaccineGroupForecast> vaccienGroupForcastList) {
-    this.vaccineGroupForcastList = vaccienGroupForcastList;
+  public void setVaccineGroupForecastList(List<VaccineGroupForecast> vaccineGroupForecastList) {
+    this.vaccineGroupForecastList = vaccineGroupForecastList;
   }
 
   public Antigen getAntigen() {
@@ -161,11 +264,17 @@ public class DataModel {
     return antigenList;
   }
 
+  public List<Antigen> getAntigenSelectedList() {
+    return antigenSelectedList;
+  }
+
+  public void setAntigenSelectedList(List<Antigen> antigenSelectedList) {
+    this.antigenSelectedList = antigenSelectedList;
+  }
+
   public int getAntigenPos() {
     return antigenPos;
   }
-
-
 
   public void setAntigenPos(int antigenPos) {
     this.antigenPos = antigenPos;
@@ -175,7 +284,17 @@ public class DataModel {
     this.antigenPos++;
   }
 
+  public int getAntigenSelectedPos() {
+    return antigenSelectedPos;
+  }
 
+  public void setAntigenSelectedPos(int antigenSelectedPos) {
+    this.antigenSelectedPos = antigenSelectedPos;
+  }
+
+  public void incAntigenSelectedPos() {
+    this.antigenSelectedPos++;
+  }
 
   public int getAntigenAdministeredRecordPos() {
     return antigenAdministeredRecordPos;
@@ -187,6 +306,18 @@ public class DataModel {
 
   public void incAntigenAdministeredRecordPos() {
     this.antigenAdministeredRecordPos++;
+  }
+
+  public int getSelectedAntigenAdministeredRecordPos() {
+    return selectedAntigenAdministeredRecordPos;
+  }
+
+  public void setSelectedAntigenAdministeredRecordPos(int selectedAntigenAdministeredRecordPos) {
+    this.selectedAntigenAdministeredRecordPos = selectedAntigenAdministeredRecordPos;
+  }
+
+  public void incSelectedAntigenAdministeredRecordPos() {
+    this.selectedAntigenAdministeredRecordPos++;
   }
 
   public int getTargetDoseListPos() {
@@ -207,8 +338,7 @@ public class DataModel {
 
   public void setAntigenAdministeredRecordThatSatisfiedPreviousTargetDose(
       AntigenAdministeredRecord antigenAdministeredRecordThatSatisfiedPreviousTargetDose) {
-    this.antigenAdministeredRecordThatSatisfiedPreviousTargetDose =
-        antigenAdministeredRecordThatSatisfiedPreviousTargetDose;
+    this.antigenAdministeredRecordThatSatisfiedPreviousTargetDose = antigenAdministeredRecordThatSatisfiedPreviousTargetDose;
   }
 
   public List<TargetDose> getTargetDoseList() {
@@ -235,6 +365,17 @@ public class DataModel {
 
   public AntigenAdministeredRecord getAntigenAdministeredRecord() {
     return antigenAdministeredRecord;
+  }
+
+  public void setEvaluationForCurrentTargetDose(EvaluationStatus evaluationStatus, EvaluationReason evaluationReason) {
+    Evaluation evaluation = new Evaluation();
+    evaluation.setAntigen(antigen);
+    evaluation.setEvaluationStatus(evaluationStatus);
+    if (evaluationReason != null) {
+      evaluation.setEvaluationReason(evaluationReason);
+    }
+    evaluation.setVaccineDoseAdministered(antigenAdministeredRecord.getVaccineDoseAdministered());
+    targetDose.setEvaluation(evaluation);
   }
 
   public AntigenAdministeredRecord getPreviousAntigenAdministeredRecord() {
@@ -335,19 +476,9 @@ public class DataModel {
     this.targetDose = targetDose;
   }
 
-  public EvaluationStatus getEvaluationStatus() {
-    return evaluationStatus;
-  }
-
-  public void setEvaluationStatus(EvaluationStatus evaluationStatus) {
-    this.evaluationStatus = evaluationStatus;
-  }
-
   public Map<String, Antigen> getAntigenMap() {
     return antigenMap;
   }
-
-
 
   public Map<String, VaccineGroup> getVaccineGroupMap() {
     return vaccineGroupMap;
@@ -405,11 +536,11 @@ public class DataModel {
     this.immunityList = immunityList;
   }
 
-  public List<Contraindication> getContraindicationList() {
+  public List<Contraindication_TO_BE_REMOVED> getContraindicationList() {
     return contraindicationList;
   }
 
-  public void setContraindicationList(List<Contraindication> contraindicationList) {
+  public void setContraindicationList(List<Contraindication_TO_BE_REMOVED> contraindicationList) {
     this.contraindicationList = contraindicationList;
   }
 

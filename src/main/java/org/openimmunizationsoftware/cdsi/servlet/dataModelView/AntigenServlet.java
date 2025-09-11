@@ -10,7 +10,14 @@ import javax.servlet.http.HttpSession;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
+import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.BirthDateImmunity;
+import org.openimmunizationsoftware.cdsi.core.domain.ClinicalHistory;
+import org.openimmunizationsoftware.cdsi.core.domain.Exclusion;
+import org.openimmunizationsoftware.cdsi.core.domain.Indication;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
+import org.openimmunizationsoftware.cdsi.core.domain.Schedule;
+import org.openimmunizationsoftware.cdsi.core.domain.Contraindication;
 
 public class AntigenServlet extends MainServlet {
 
@@ -65,28 +72,31 @@ public class AntigenServlet extends MainServlet {
     out.println("        <th>Vaccine Group</th>");
     out.println("        <th>Cvx List</th>");
     out.println("        <th>Immunity List</th>");
+    out.println("        <th>Contraindication List</th>");
+    out.println("        <th>Indication List</th>");
 
     out.println("      </tr>");
     if (searchParam.equals("")) {
       for (Antigen antigen : dataModel.getAntigenMap().values()) {
-        printRowAntigen(antigen, out);
+        printRowAntigen(dataModel, antigen, out);
       }
 
     } else {
-      printRowAntigen(dataModel.getAntigenMap().get(searchParam), out);
+      printRowAntigen(dataModel, dataModel.getAntigenMap().get(searchParam), out);
     }
     out.println("    </table>");
 
   }
 
-  private void printRowAntigen(Antigen antigen, PrintWriter out) {
+  private void printRowAntigen(DataModel dataModel, Antigen antigen, PrintWriter out) {
     out.println("      <tr>");
     out.println("        <td>" + makeLink(antigen) + "</td>");
     out.println("        <td><a href=\"dataModelViewVaccineGroup?search_term="
         + antigen.getVaccineGroup() + "\">" + antigen.getVaccineGroup() + "</td>");
     printCvxList(antigen, out);
-    out.println("        <td>" + antigen.getImmunityList() + "</td>");
-
+    printImmunityList(dataModel, antigen, out);
+    printContraindicationList(dataModel, antigen, out);
+    printIndicationList(dataModel, antigen, out);
     out.println("      </tr>");
 
   }
@@ -98,6 +108,63 @@ public class AntigenServlet extends MainServlet {
       out.println("         <li>" + CvxServlet.makeLink(cvx) + "</li>");
     }
     out.println("         </ul>");
+    out.println("        </td>");
+  }
+
+  private void printImmunityList(DataModel dataModel, Antigen antigen, PrintWriter out) {
+    out.println("        <td>");
+    out.println("         <table>");
+    for (Schedule s : dataModel.getScheduleList()) {
+      if(s.getScheduleName().equals(antigen.getName())) {
+        for (ClinicalHistory ch : s.getImmunity().getClinicalHistoryList()) {
+          out.println("      <tr>");
+          out.println("        <td>Code: '" + ch.getImmunityGuidelineCode() + "' Title: '" + ch.getImmunityGuidelineTitle() + "'</td>");
+          out.println("      </tr>");
+        }
+        for (BirthDateImmunity b : s.getImmunity().getBirthDateImmunityList()) {
+          for (Exclusion e : b.getExclusionList()) {
+            out.println("      <tr>");
+            out.println("        <td>ExCode: '" + e.getExclusionCode() + "' ExTitle: '" + e.getExclusionTitle() + "'</td>");
+            out.println("      </tr>");
+          }
+        }
+      }
+    }
+    out.println("         </table>");
+    out.println("        </td>");
+  }
+
+  private void printContraindicationList(DataModel dataModel, Antigen antigen, PrintWriter out) {
+    out.println("        <td>");
+    out.println("         <table>");
+    for (Schedule s : dataModel.getScheduleList()) {
+      if(s.getScheduleName().equals(antigen.getName())) {
+        for (Contraindication ci : s.getContraindicationList()) {
+          out.println("      <tr>");
+          out.println("        <td>Code: '" + ci.getObservationCode() + "' Title: '" + ci.getObservationTitle() + "'</td>");
+          out.println("      </tr>");
+        }
+      }
+    }
+    out.println("         </table>");
+    out.println("        </td>");
+  }
+
+  private void printIndicationList(DataModel dataModel, Antigen antigen, PrintWriter out) {
+    out.println("        <td>");
+    out.println("         <table>");
+    for (Schedule s : dataModel.getScheduleList()) {
+      if(s.getScheduleName().equals(antigen.getName())) {
+        for (AntigenSeries as : s.getAntigenSeriesList()) {
+          for(Indication in : as.getIndicationList()) {
+            out.println("      <tr>");
+            out.println("        <td>Code: '" + in.getObservationCode().getCode() + "' Text: '" + in.getObservationCode().getText() + "'</td>");
+            out.println("      </tr>");
+          }
+        }
+      }
+    }
+    out.println("         </table>");
     out.println("        </td>");
   }
 

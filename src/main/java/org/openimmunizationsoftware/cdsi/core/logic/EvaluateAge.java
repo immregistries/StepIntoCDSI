@@ -1,6 +1,5 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
-import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.ANY;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
 
@@ -11,7 +10,6 @@ import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Age;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
-import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
@@ -26,22 +24,23 @@ public class EvaluateAge extends LogicStep {
   private ConditionAttribute<Date> caMinimumAgeDate = null;
   private ConditionAttribute<Date> caMaximumAgeDate = null;
   private ConditionAttribute<Date> caAbsoluteMinimumAgeDate = null;
+  private ConditionAttribute<Date> caDateOfBirth = null;
 
   public EvaluateAge(DataModel dataModel) {
     super(LogicStepType.EVALUATE_AGE, dataModel);
-    setConditionTableName("Table 4-8 Age Attributes");
+    setConditionTableName("Table 6-14 Age Attributes");
 
-    caDateAdministered =
-        new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
+    caDateOfBirth = new ConditionAttribute<Date>("Patient", "Date of birth");
+    caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
     caMinimumAgeDate = new ConditionAttribute<Date>("Calculated Date", "Minimum Age Date");
     caMaximumAgeDate = new ConditionAttribute<Date>("Calculated Date", "Maximum Age Date");
-    caAbsoluteMinimumAgeDate =
-        new ConditionAttribute<Date>("Calculated Date", "Absolute Minimum Age Date");
+    caAbsoluteMinimumAgeDate = new ConditionAttribute<Date>("Calculated Date", "Absolute Minimum Age Date");
 
     caMaximumAgeDate.setAssumedValue(FUTURE);
     caMinimumAgeDate.setAssumedValue(PAST);
     caAbsoluteMinimumAgeDate.setAssumedValue(PAST);
 
+    conditionAttributesList.add(caDateOfBirth);
     conditionAttributesList.add(caDateAdministered);
     conditionAttributesList.add(caMinimumAgeDate);
     conditionAttributesList.add(caMaximumAgeDate);
@@ -53,6 +52,7 @@ public class EvaluateAge extends LogicStep {
     AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
     caDateAdministered.setInitialValue(aar.getDateAdministered());
     Date dateOfBirth = dataModel.getPatient().getDateOfBirth();
+    caDateOfBirth.setInitialValue(dateOfBirth);
     log("Date of Birth = " + sdf.format(dateOfBirth));
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
     if (seriesDose.getAgeList().size() > 0) {
@@ -72,8 +72,14 @@ public class EvaluateAge extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.EVALUATE_INTERVAL);
+    setNextLogicStepType(LogicStepType.EVALUATE_PREFERABLE_INTERVAL);
     evaluateLogicTables();
+
+    // evaluation should now be set
+
+    if (dataModel.getTargetDose().getEvaluation() == null) {
+      throw new NullPointerException("Evaluation should not be null at this point");
+    }
     return next();
   }
 
@@ -88,13 +94,12 @@ public class EvaluateAge extends LogicStep {
   }
 
   private void printStandard(PrintWriter out) {
-    out.println("<h1> " + logicStepType.getDisplay() + "</h1>");
     out.println(
-        "<p>Evaluate age validates the age at administration of a vaccine dose administered against a defined age range of a target dose. In cases where a target dose does not specify age attributes, the age at administration is considered �valid.�</p>");
-    out.println("<img src=\"Figure 4.4.PNG\"/>");
-    out.println("<p>FIGURE 4 - 4 EVALUATE AGE TIMELINE</p>");
-    out.println("<img src=\"Figure 4.5.PNG\"/>");
-    out.println("<p>FIGURE 4 - 5 EVALUATE AGE PROCESS MODEL</p>");
+        "<p>Evaluate age validates the age at administration of a vaccine dose administered against a defined age range of a target dose. In cases where a target dose does not specify age attributes, the age at administration is considered \"valid.\"</p>");
+    out.println("<img src=\"Figure 6.5.PNG\"/>");
+    out.println("<p>FIGURE 6 - 5 EVALUATE AGE TIMELINE</p>");
+    out.println("<img src=\"Figure 6.6.PNG\"/>");
+    out.println("<p>FIGURE 6 - 6 EVALUATE AGE PROCESS MODEL</p>");
 
     printConditionAttributesTable(out);
     printLogicTables(out);
@@ -104,9 +109,9 @@ public class EvaluateAge extends LogicStep {
 
   private class LT extends LogicTable {
     public LT() {
-      super(6, 6, "Table 4-12 Was the Vaccine Dose Administered at a Valid Age?");
+      super(4, 4, "Table 6-15 Was the Vaccine Dose Administered at a Valid Age?");
 
-      setLogicCondition(0, new LogicCondition("Date administered < absolute minimum age date?") {
+      setLogicCondition(0, new LogicCondition("Is the date administered < absolute minimum age date?") {
         @Override
         public LogicResult evaluateInternal() {
           if (caDateAdministered.getFinalValue().before(caAbsoluteMinimumAgeDate.getFinalValue())) {
@@ -117,14 +122,13 @@ public class EvaluateAge extends LogicStep {
       });
 
       setLogicCondition(1,
-          new LogicCondition("Absolute minimum age date <= date administered < minimum age date?") {
+          new LogicCondition("Is the absolute minimum age date <= date administered < minimum age date?") {
             @Override
             public LogicResult evaluateInternal() {
-              if (caDateAdministered.getFinalValue()
-                  .before(caAbsoluteMinimumAgeDate.getFinalValue())) {
-                return NO;
-              }
-              if (caDateAdministered.getFinalValue().before(caMinimumAgeDate.getFinalValue())) {
+              Date absoluteMinimumDate = caAbsoluteMinimumAgeDate.getFinalValue();
+              Date dateAdministered = caDateAdministered.getFinalValue();
+              Date minimumDate = caMinimumAgeDate.getFinalValue();
+              if (!absoluteMinimumDate.after(dateAdministered) && dateAdministered.before(minimumDate)) {
                 return YES;
               }
               return NO;
@@ -132,127 +136,68 @@ public class EvaluateAge extends LogicStep {
           });
 
       setLogicCondition(2,
-          new LogicCondition("Minimum age date <= date administered < maximum age date?") {
+          new LogicCondition("Is the minimum age date <= date administered < maximum age date?") {
             @Override
             public LogicResult evaluateInternal() {
-              if (caDateAdministered.getFinalValue().before(caMinimumAgeDate.getFinalValue())) {
-                return NO;
-              }
-              if (caDateAdministered.getFinalValue().before(caMaximumAgeDate.getFinalValue())) {
+              Date minimumDate = caMinimumAgeDate.getFinalValue();
+              Date administeredDate = caDateAdministered.getFinalValue();
+              Date maximumDate = caMaximumAgeDate.getFinalValue();
+              if (!minimumDate.after(administeredDate) && administeredDate.before(maximumDate)) {
                 return YES;
               }
               return NO;
             }
           });
 
-      setLogicCondition(3, new LogicCondition("Date administered >= maximum age date?") {
+      setLogicCondition(3, new LogicCondition("Is the date administered >= maximum age date?") {
         @Override
         public LogicResult evaluateInternal() {
-          if (caMaximumAgeDate.getFinalValue().after(caDateAdministered.getFinalValue())) {
-            return NO;
-          }
-          return YES;
-        }
-      });
-
-      setLogicCondition(4, new LogicCondition("Is this the first target dose?") {
-        @Override
-        public LogicResult evaluateInternal() {
-          TargetDose targetDose = dataModel.getTargetDose();
-          if (targetDose == dataModel.getTargetDoseList().get(0)) {
+          Date administeredDate = caDateAdministered.getFinalValue();
+          Date maximumDate = caMaximumAgeDate.getFinalValue();
+          if (!administeredDate.before(maximumDate)) {
             return YES;
           }
           return NO;
         }
       });
 
-      setLogicCondition(5, new LogicCondition(
-          "Is the previous vaccine dose administered \"not valid\" due to age or interval requirements?") {
-        @Override
-        public LogicResult evaluateInternal() {
-          AntigenAdministeredRecord previousAar = dataModel.getPreviousAntigenAdministeredRecord();
-          if (previousAar == null
-              || previousAar.getEvaluation().getEvaluationStatus() != EvaluationStatus.NOT_VALID) {
-            return NO;
-          }
-          if (previousAar.getEvaluation().getEvaluationReason() == EvaluationReason.TOO_OLD) {
-            return YES;
-          }
-          if (previousAar.getEvaluation().getEvaluationReason() == EvaluationReason.TOO_YOUNG) {
-            return YES;
-          }
-          return NO;
-        }
-      });
-
-      setLogicResults(0, YES, NO, NO, NO, NO, NO);
-      setLogicResults(1, NO, YES, YES, YES, NO, NO);
-      setLogicResults(2, NO, NO, NO, NO, YES, NO);
-      setLogicResults(3, NO, NO, NO, NO, NO, YES);
-      setLogicResults(4, ANY, NO, NO, YES, ANY, ANY);
-      setLogicResults(5, ANY, YES, NO, ANY, ANY, ANY);
-
+      setLogicResults(0, new LogicResult[] { YES, NO, NO, NO });
+      setLogicResults(1, new LogicResult[] { NO, YES, NO, NO });
+      setLogicResults(2, new LogicResult[] { NO, NO, YES, NO });
+      setLogicResults(3, new LogicResult[] { NO, NO, NO, YES });
 
       setLogicOutcome(0, new LogicOutcome() {
         @Override
         public void perform() {
-          AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
-          aar.getEvaluation().setEvaluationStatus(EvaluationStatus.NOT_VALID);
-          log("No. The vaccine dose was not administered at a valid age. ");
-          aar.getEvaluation().setEvaluationReason(EvaluationReason.TOO_YOUNG);
-          log("Evaluation reason is \"too young.\"");
+          dataModel.setEvaluationForCurrentTargetDose(EvaluationStatus.NOT_VALID, EvaluationReason.TOO_YOUNG);
+          log("No. The vaccine dose was not administered at a valid age for the target dose.");
+          log("Evaluation reason is \'too young.\'");
         }
       });
       setLogicOutcome(1, new LogicOutcome() {
         @Override
         public void perform() {
-          AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
-          aar.getEvaluation().setEvaluationStatus(EvaluationStatus.NOT_VALID);
-          log("No. The vaccine dose was not administered at a valid age. ");
-          aar.getEvaluation().setEvaluationReason(EvaluationReason.TOO_YOUNG);
-          log("Evaluation reason is \"too young.\"");
+          dataModel.setEvaluationForCurrentTargetDose(EvaluationStatus.VALID, EvaluationReason.GRACE_PERIOD);
+          log("Yes. The vaccine dose was administered at a valid age for the target dose.");
+          log("Evaluation reason is \"Grace period.\"");
         }
       });
       setLogicOutcome(2, new LogicOutcome() {
         @Override
         public void perform() {
-          AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
-          aar.getEvaluation().setEvaluationStatus(EvaluationStatus.VALID);
-          log("Yes. The vaccine dose was administered at a valid age.  ");
-          log("Evaluation reason is \"grace period.\"");
-          aar.getEvaluation().setEvaluationReason(EvaluationReason.GRACE_PERIOD);
+          dataModel.setEvaluationForCurrentTargetDose(EvaluationStatus.VALID, null);
+          log("Yes. The vaccine dose was administered at a valid age for the target dose.");
         }
       });
       setLogicOutcome(3, new LogicOutcome() {
         @Override
         public void perform() {
-          AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
-          aar.getEvaluation().setEvaluationStatus(EvaluationStatus.VALID);
-          log("Yes. The vaccine dose was administered at a valid age.  ");
-          log("Evaluation reason is \"grace period.\"");
-          aar.getEvaluation().setEvaluationReason(EvaluationReason.GRACE_PERIOD);
+          dataModel.setEvaluationForCurrentTargetDose(EvaluationStatus.EXTRANEOUS, EvaluationReason.TOO_OLD);
+          log("No. The vaccine dose was not administered at a valid age for the target dose.");
+          log("It is extraneous.");
+          log("Evaluation reason is 'Too old'.");
         }
       });
-      setLogicOutcome(4, new LogicOutcome() {
-        @Override
-        public void perform() {
-          AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
-          aar.getEvaluation().setEvaluationStatus(EvaluationStatus.VALID);
-          log("Yes. The vaccine dose was administered at a valid age.  ");
-        }
-      });
-      setLogicOutcome(5, new LogicOutcome() {
-        @Override
-        public void perform() {
-          AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
-          aar.getEvaluation().setEvaluationStatus(EvaluationStatus.NOT_VALID);
-          log("No. The vaccine dose was administered after the maximum age and is extraneous.  ");
-          aar.getEvaluation().setEvaluationReason(EvaluationReason.TOO_OLD);
-          log("Evaluation reason is \"too old.\"");
-        }
-      });
-
     }
   }
-
 }

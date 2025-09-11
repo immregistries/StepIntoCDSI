@@ -4,19 +4,14 @@ import java.io.PrintWriter;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 
-public class EvaluateConditionalSkipForForecast extends EvaluateConditionalSkipForEvaluation {
+public class EvaluateConditionalSkipForForecast extends EvaluateConditionalSkip {
 
   public EvaluateConditionalSkipForForecast(DataModel dataModel) {
-
-    super(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST, dataModel);
-
-  }
-
-  @Override
-  public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY);
-
-    return next();
+    super(dataModel, ConditionalSkipType.FORECAST,
+        LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST,
+        LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY,
+        LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY);
+    setConditionTableName("Table 6.4 Conditional Skip Attributes");
   }
 
   @Override
@@ -30,14 +25,13 @@ public class EvaluateConditionalSkipForForecast extends EvaluateConditionalSkipF
   }
 
   private void printStandard(PrintWriter out) {
-    out.println("<h1> " + logicStepType.getDisplay() + "</h1>");
     out.println(
         "<p>Evaluate Conditional Skip addresses times when a target dose can be skipped. A dose should be considered necessary unless it is determined that it can be skipped. The most common scenarios for skipping a dose are:</p>");
     out.println("<ul>");
     out.println(
         "    <li>Catch-up doses where the patient is current with their administrations and does not need to catch-up</li>");
     out.println(
-        "    <li>The patient is behind schedule and the total number of doses needed to satisfy the patient series can be reuced</li>");
+        "    <li>The patient is behind schedule and the total number of doses needed to satisfy the patient series can be reudced</li>");
     out.println(
         "    <li>The previously administered dose(s) negates the need for the current target dose</li>");
     out.println("</ul>");
@@ -46,6 +40,5 @@ public class EvaluateConditionalSkipForForecast extends EvaluateConditionalSkipF
     out.println(
         "<p>The process model, attribute table, and decision table are used to determine if the target dose can be skipped is the same as described in Chapter 4.2.</p>");
   }
-
 
 }

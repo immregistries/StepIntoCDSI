@@ -2,88 +2,49 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 
 public enum LogicStepType {
 
-  GATHER_NECESSARY_DATA("Gather Necessary Data", "8.1 Gather Necessary Data",
-      false), CREATE_PATIENT_SERIES("Create Patient Series", "8.2 Create Patient Series",
-          false), ORGANIZE_IMMUNIZATION_HISTORY("Organize Immunization History",
-              "8.3 Organize Immunization History", false), EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES(
-                  "Evaluate and Forecast all Patient Series",
-                  "8.4 Evaluate and Forecast all Patient Series",
-                  false), SELECT_BEST_PATIENT_SERIES("Select Best Patient Series",
-                      "8.5 Select Best Patient Series", false), IDENTIFY_AND_EVALUATE_VACCINE_GROUP(
-                          "Identify and Evaluate Vaccine Group",
-                          "8.6 Identify and Evaluate Vaccine Group", false),
+  GATHER_NECESSARY_DATA("4.1", "Gather Necessary Data", false),
+  ORGANIZE_IMMUNIZATION_HISTORY("4.2", "Organize Immunization History", false),
+  CREATE_RELEVANT_PATIENT_SERIES("4.3", "Create Relevant Patient Series", false),
+  SELECT_RELEVANT_PATIENT_SERIES("5.1", "Select Relevant Patient Series", false),
+  EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES("4.4", "Evaluate and Forecast all Patient Series", false),
+  SELECT_BEST_PATIENT_SERIES("4.5", "Select Best Patient Series", false),
+  IDENTIFY_AND_EVALUATE_VACCINE_GROUP("4.6", "Identify and Evaluate Vaccine Group", false),
+  EVALUATE_DOSE_ADMINISTERED_CONDITION("6.1", "Evaluate Dose Administered Condition", true),
+  EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION("6.2", "Evaluate Conditional Skip", true),
+  EVALUATE_FOR_INADVERTENT_VACCINE("6.3", "Evaluate for Inadvertent Vaccine", true),
+  EVALUATE_AGE("6.4", "Evaluate Age", true),
+  EVALUATE_PREFERABLE_INTERVAL("6.5", "Evaluate Preferable Interval", true),
+  EVALUATE_ALLOWABLE_INTERVAL("6.6", "Evaluate Allowable Interval", true),
+  EVALUATE_VACCINE_CONFLICT("6.7", "Evaluate Vaccine Conflict", true),
+  EVALUATE_FOR_PREFERABLE_VACCINE("6.8", "Evaluate for Preferable Vaccine", true),
+  EVALUATE_FOR_ALLOWABLE_VACCINE("6.9", "Evaluate Allowable Vaccine", true),
+  EVALUATE_GENDER("xx", "Evaluate Gender", true),
+  SATISFY_TARGET_DOSE("6.10", "Satisfy Target Dose", true),
+  FORECAST_DATES_AND_REASONS("7", "Forecast Dates and Reasons", true),
+  EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST("7.1", "Evaluate Conditional Skip", true),
+  DETERMINE_EVIDENCE_OF_IMMUNITY("7.2", "Determine Evidence of Immunity", true),
+  DETERMINE_CONTRAINDICATIONS("7.3", "Determine Contraindications", true),
+  DETERMINE_FORECAST_NEED("7.4", "Determine Forecast Need", true),
+  GENERATE_FORECAST_DATES_AND_RECOMMENDED_VACCINES("7.5", "Generate Forecast Dates and Recommended Vaccines", true),
+  VALIDATE_RECOMMENDATION("7.6", "Validate Recommendation", true),
+  PRE_FILTER_PATIENT_SERIES("8.1", "Pre-Filter Patient Series", true),
+  IDENTIFY_ONE_PRIORITIZED_PATIENT_SERIES("8.2", "Identify One Prioritized Patient Series", true),
+  CLASSIFY_SCORABLE_PATIENT_SERIES("8.3", "Classify Scorable Patient Series", true),
+  COMPLETE_PATIENT_SERIES("8.4", "Complete Patient Series", true),
+  IN_PROCESS_PATIENT_SERIES("8.5", "In-Process Patient Series", true),
+  NO_VALID_DOSES("8.6", "No Valid Doses", true),
+  SELECT_PRIORITIZED_PATIENT_SERIES("8.7", "Select Prioritized Patient Series", true),
+  DETERMINE_BEST_PATIENT_SERIES("8.8", "Determine Best Patient Series", true),
+  APPLY_GENERAL_VACCINE_GROUP_RULES("9.1", "Apply General Vaccine Group Rules", true),
+  SINGLE_ANTIGEN_VACCINE_GROUP("9.2", "Single Antigen Vaccine Group", true),
+  MULTIPLE_ANTIGEN_VACCINE_GROUP("9.3", "Multiple Antigen Vaccine Group", true),
+  END("End", "End", false),
+  ;
 
-  FOR_EACH_PATIENT_SERIES("for each Patient Series", "for each Patient Series",
-      true), EVALUATE_VACCINE_DOSE_ADMINISTERED("Evaluate Vaccine Dose Administered",
-          "4 Evaluate Vaccine Dose Administered", true), EVALUATE_DOSE_ADMININISTERED_CONDITION(
-              "Evaluate Dose Administered Condition", "4.1 Evaluate Dose Administered Condition",
-              true), EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION("Evaluate Conditional Skip",
-                  "4.2 Evaluate Conditional Skip",
-                  true), EVALUATE_AGE("Evaluate Age", "4.3 Evaluate Age", true), EVALUATE_INTERVAL(
-                      "Evaluate Interval", "4.4 Evaluate Interval",
-                      true), EVALUATE_ALLOWABLE_INTERVAL("Evaluate Allowable Interval",
-                          "4.5 Evaluate Allowable Interval",
-                          true), EVALUATE_FOR_LIVE_VIRUS_CONFLICT(
-                              "Evaluate for Live Virus Conflict",
-                              "4.6 Evaluate for Live Virus Conflict",
-                              true), EVALUATE_PREFERABLE_VACCINE_ADMINISTERED(
-                                  "Evaluate Preferable Vaccine Administered",
-                                  "4.7 Evaluate Preferable Vaccine Administered",
-                                  true), EVALUATE_ALLOWABLE_VACCINE_ADMINISTERED(
-                                      "Evaluate Allowable Vaccine Administered",
-                                      "4.8 Evaluate Allowable Vaccine Administered",
-                                      true), EVALUATE_GENDER("Evaluate Gender",
-                                          "4.9 Evaluate Gender", true), SATISFY_TARGET_DOSE(
-                                              "Satisfy Target Dose", "4.10 Satisfy Target Dose",
-                                              true), FORECAST_DATES_AND_REASONS(
-                                                  "Forecast Dates and Reasons",
-                                                  "5 Forecast Dates and Reasons",
-                                                  true), EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST(
-                                                      "Evaluate Conditional Skip",
-                                                      "5.1 Evaluate Conditional Skip",
-                                                      true), DETERMINE_EVIDENCE_OF_IMMUNITY(
-                                                          "Determine Evidence of Immunity",
-                                                          "5.2 Determine Evidence of Immunity",
-                                                          true), DETERMINE_FORECAST_NEED(
-                                                              "Determine Forecast Need",
-                                                              "5.3 Determine Forecast Need",
-                                                              true), GENERATE_FORECAST_DATES_AND_RECOMMEND_VACCINES(
-                                                                  "Generate Forecast Dates and Recommend Vaccines",
-                                                                  "5.5 Generate Forecast Dates and Recommend Vaccines",
-                                                                  true), ONE_BEST_PATIENT_SERIES(
-                                                                      "One Best Patient Series",
-                                                                      "6.2 One Best Patient Series",
-                                                                      true), CLASSIFY_PATIENT_SERIES(
-                                                                          "Classify Patient Series",
-                                                                          "6.3 Classify Patient Series",
-                                                                          true), COMPLETE_PATIENT_SERIES(
-                                                                              "Complete Patient Series",
-                                                                              "6.4 Complete Patient Series",
-                                                                              true), IN_PROCESS_PATIENT_SERIES(
-                                                                                  "In-Process Patient Series",
-                                                                                  "6.5 In-Process Patient Series",
-                                                                                  true), NO_VALID_DOSES(
-                                                                                      "No Valid Doses",
-                                                                                      "6.6 No Valid Doses",
-                                                                                      true), SELECT_BEST_CANDIDATE_PATIENT_SERIES(
-                                                                                          "Select Best Candidate Patient Series",
-                                                                                          "6.7 Select Best Candidate Patient Series",
-                                                                                          true), CLASSIFY_VACCINE_GROUP(
-                                                                                              "Classify Vaccine Group",
-                                                                                              "7.1 Classify Vaccine Group",
-                                                                                              true), SINGLE_ANTIGEN_VACCINE_GROUP(
-                                                                                                  "Single Antigen Vaccine Group",
-                                                                                                  "7.2 Single Antigen Vaccine Group",
-                                                                                                  true), MULTIPLE_ANTIGEN_VACCINE_GROUP(
-                                                                                                      "Multiple Antigen Vaccine Group",
-                                                                                                      "7.3 Multiple Antigen Vaccine Group",
-                                                                                                      true), END(
-                                                                                                          "End",
-                                                                                                          "End",
-                                                                                                          false),;
   private String name = "";
   private String display = "";
   private boolean indent = false;
+  private String chapter = "";
 
   public String getName() {
     return name;
@@ -97,9 +58,14 @@ public enum LogicStepType {
     return indent;
   }
 
-  private LogicStepType(String name, String display, boolean indent) {
+  public String getChapter() {
+    return chapter;
+  }
+
+  private LogicStepType(String chapter, String name, boolean indent) {
+    this.chapter = chapter;
     this.name = name;
-    this.display = display;
+    this.display = chapter + " " + display;
     this.indent = indent;
   }
 }

@@ -1,0 +1,195 @@
+package org.openimmunizationsoftware.cdsi.core.logic;
+
+import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.ANY;
+import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
+import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
+
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
+import org.apache.jena.sparql.function.library.leviathan.log;
+import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
+
+public class ClassifyScorablePatientSeries extends LogicStep {
+
+  // private ConditionAttribute<Date> caDateAdministered = null;
+
+  public ClassifyScorablePatientSeries(DataModel dataModel) {
+    super(LogicStepType.CLASSIFY_SCORABLE_PATIENT_SERIES, dataModel);
+    // setConditionTableName("Table ");
+    // caDateAdministered = new ConditionAttribute<Date>("Vaccine dose
+    // administered", "Date
+    // Administered");
+    // caTriggerAgeDate.setAssumedValue(FUTURE);
+    // conditionAttributesList.add(caDateAdministered);
+
+    LT logicTable = new LT();
+    logicTableList.add(logicTable);
+  }
+
+  @Override
+  public LogicStep process() throws Exception {
+    setNextLogicStepType(LogicStepType.NO_VALID_DOSES);
+    evaluateLogicTables();
+    return next();
+  }
+
+  @Override
+  public void printPre(PrintWriter out) throws Exception {
+    printStandard(out);
+  }
+
+  @Override
+  public void printPost(PrintWriter out) throws Exception {
+    printStandard(out);
+  }
+
+  private void printStandard(PrintWriter out) {
+    out.println(
+        "<p>Classify  patient series  is an attempt to reduce  the total number of  patient series  to only those  which have  a chance to be selected as the best patient series.</p>");
+
+    // printConditionAttributesTable(out);
+    printLogicTables(out);
+    printBestPatientSeries(out);
+  }
+
+  private int calculateCompletePatientSeriesCount() {
+    int completePatientSeries = 0;
+    List<PatientSeries> relevantPatientSeriesList = dataModel.getScorablePatientSeriesList();
+    for (PatientSeries patientSeries : relevantPatientSeriesList) {
+      if (patientSeries != null) {
+        if (patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)) {
+          completePatientSeries++;
+        }
+      }
+    }
+    return completePatientSeries;
+  }
+
+  private int calculateCountOfPatientSeriesWithValidDoses(List<PatientSeries> patientSeriesList) {
+    int countOfPatientSeriesWithValidDoses = 0;
+
+    for (PatientSeries patientSeries : patientSeriesList) {
+      if (patientSeries != null) {
+        log("Checking patient series: " + patientSeries.getTrackedAntigenSeries().getSeriesName());
+        // If the patient series is not complete, then it has no valid doses
+        List<TargetDose> targetDoseList = patientSeries.getTargetDoseList();
+        boolean isThereAValidDose = false;
+        if (targetDoseList != null) {
+          for (TargetDose targetDose : targetDoseList) {
+            if (targetDose.getTargetDoseStatus() != null) {
+              if (targetDose.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
+                isThereAValidDose = true;
+                log("  + found valid dose: "
+                    + targetDose.getTrackedSeriesDose().getAntigenSeries().getSeriesName() + " - "
+                    + targetDose.getTrackedSeriesDose().getDoseNumber());
+                break;
+              }
+            }
+          }
+        }
+        if (isThereAValidDose) {
+          countOfPatientSeriesWithValidDoses++;
+        }
+      }
+    }
+    return countOfPatientSeriesWithValidDoses;
+  }
+
+  private class LT extends LogicTable {
+    public LT() {
+      super(3, 3, "Table 8-5 Which scorable patient series should be scored? ");
+
+      setLogicCondition(0, new LogicCondition("Are there 2 or more complete patient series in the series group?") {
+        @Override
+        protected LogicResult evaluateInternal() {
+          int completePatientSeries = calculateCompletePatientSeriesCount();
+          log("Complete patient series count: " + completePatientSeries);
+          if (completePatientSeries > 1) {
+            return LogicResult.YES;
+          } else {
+            return LogicResult.NO;
+          }
+        }
+
+      });
+
+      setLogicCondition(1, new LogicCondition(
+          "Are there 2 or more in-process patient series and no complete patient series in the series group?") {
+        @Override
+        protected LogicResult evaluateInternal() {
+          List<PatientSeries> patientSeriesList = dataModel.getScorablePatientSeriesList();
+          int completePatientSeriesCount = calculateCompletePatientSeriesCount();
+          int patientSeriesWithValidDosesCount = calculateCountOfPatientSeriesWithValidDoses(patientSeriesList);
+
+          log("In-process patient series count: " + patientSeriesWithValidDosesCount);
+          log("Complete patient series count: " + completePatientSeriesCount);
+
+          if (patientSeriesWithValidDosesCount > 1 && completePatientSeriesCount == 0) {
+            return LogicResult.YES;
+          } else {
+            return LogicResult.NO;
+          }
+        }
+      });
+
+      setLogicCondition(2,
+          new LogicCondition("Is the number of valid doses = 0 for all scorable patient series in the series group?") {
+            @Override
+            protected LogicResult evaluateInternal() {
+
+              List<PatientSeries> patientSeriesList = dataModel.getScorablePatientSeriesList();
+              int countOfPatientSeriesWithValidDoses = calculateCountOfPatientSeriesWithValidDoses(patientSeriesList);
+              log("Count of patient series with valid doses: " + countOfPatientSeriesWithValidDoses);
+              if (countOfPatientSeriesWithValidDoses == 0) {
+                return LogicResult.YES;
+              } else {
+                return LogicResult.NO;
+              }
+            }
+
+          });
+
+      setLogicResults(0, YES, NO, NO);
+      setLogicResults(1, ANY, YES, NO);
+      setLogicResults(2, ANY, NO, YES);
+
+      setLogicOutcome(0, new LogicOutcome() {
+        @Override
+        public void perform() {
+          log("Apply complete patient series scoring business rules to all complete patient series. "
+              + "Inprocess patient series and patient series with 0 valid doses are not scored and dropped from consideration");
+          setNextLogicStepType(LogicStepType.COMPLETE_PATIENT_SERIES);
+        }
+      });
+
+      setLogicOutcome(1, new LogicOutcome() {
+        @Override
+        public void perform() {
+          log("Apply in-process patient series scoring business rules to all in-process patient series. "
+              + "Patient Series with 0 valid doses are not scored and dropped from consideration.");
+          setNextLogicStepType(LogicStepType.IN_PROCESS_PATIENT_SERIES);
+        }
+      });
+
+      setLogicOutcome(2, new LogicOutcome() {
+        @Override
+        public void perform() {
+          log("Apply no valid doses scoring business rules to all patient series.");
+          setNextLogicStepType(LogicStepType.NO_VALID_DOSES);
+        }
+      });
+
+    }
+  }
+}

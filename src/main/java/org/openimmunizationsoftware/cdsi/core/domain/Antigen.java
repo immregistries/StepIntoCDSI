@@ -6,7 +6,7 @@ import java.util.List;
 public class Antigen {
   private String name = "";
   private VaccineGroup vaccineGroup = null;
-  private List<VaccineType> cvxList = new ArrayList<VaccineType>();
+  private List<VaccineType> vaccineTypeList = new ArrayList<VaccineType>();
   private List<Immunity> immunityList = new ArrayList<Immunity>();
 
   public List<Immunity> getImmunityList() {
@@ -18,11 +18,11 @@ public class Antigen {
   }
 
   public List<VaccineType> getCvxList() {
-    return cvxList;
+    return vaccineTypeList;
   }
 
-  public void setCvxList(List<VaccineType> cvxList) {
-    this.cvxList = cvxList;
+  public void setCvxList(List<VaccineType> vaccineTypeList) {
+    this.vaccineTypeList = vaccineTypeList;
   }
 
   public VaccineGroup getVaccineGroup() {
@@ -53,6 +53,80 @@ public class Antigen {
       return other.getName().equals(this.getName());
     }
     return super.equals(obj);
+  }
+
+  // TODO get rid of this method
+  public String getCvxForForecast() {
+    if (name.equals("Cholera")) {
+      return "26";
+    }
+    if (name.equals("Diphtheria")) {
+      return "20";
+    }
+    if (name.equals("HepA")) {
+      return "85";
+    }
+    if (name.equals("HepB")) {
+      return "45";
+    }
+    if (name.equals("Hib")) {
+      return "17";
+    }
+    if (name.equals("HPV")) {
+      return "137";
+    }
+    if (name.equals("Influenza")) {
+      return "88";
+    }
+    if (name.equals("Japanese Encephalitis")) {
+      return "129";
+    }
+    if (name.equals("Measles")) {
+      return "05";
+    }
+    if (name.equals("Meningococcal")) {
+      return "108";
+    }
+    if (name.equals("Meningococcal B")) {
+      return "164";
+    }
+    if (name.equals("Mumps")) {
+      return "07";
+    }
+    if (name.equals("Pertussis")) {
+      return "11";
+    }
+    if (name.equals("Pneumococcal")) {
+      return "109";
+    }
+    if (name.equals("Polio")) {
+      return "89";
+    }
+    if (name.equals("Rabies")) {
+      return "90";
+    }
+    if (name.equals("Rotavirus")) {
+      return "122";
+    }
+    if (name.equals("Rubella")) {
+      return "06";
+    }
+    if (name.equals("Tetanus")) {
+      return "112";
+    }
+    if (name.equals("Typhoid")) {
+      return "91";
+    }
+    if (name.equals("Varicella")) {
+      return "21";
+    }
+    if (name.equals("Yellow Fever")) {
+      return "37";
+    }
+    if (name.equals("Zoster")) {
+      return "188";
+    }
+    return "XX";
   }
 
 }

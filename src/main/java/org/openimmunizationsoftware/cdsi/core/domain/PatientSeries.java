@@ -63,7 +63,6 @@ public class PatientSeries {
     scorePatientSeries--;
   }
 
-
   public int getScorePatientSeries() {
     return scorePatientSeries;
   }
@@ -75,7 +74,7 @@ public class PatientSeries {
 
   @Override
   public String toString() {
-    return this.getTrackedAntigenSeries().getSeriesName();
+    return this.getTrackedAntigenSeries().getTargetDisease() + ": " + this.getTrackedAntigenSeries().getSeriesName();
   }
 
 }

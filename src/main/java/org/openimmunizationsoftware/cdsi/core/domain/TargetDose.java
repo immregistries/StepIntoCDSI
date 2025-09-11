@@ -1,5 +1,8 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 
 public class TargetDose {
@@ -7,6 +10,22 @@ public class TargetDose {
   private SeriesDose trackedSeriesDose = null;
   private VaccineDoseAdministered satisfiedByVaccineDoseAdministered = null;
   private String statusCause = "";
+  List<Evaluation> evaluationList = new ArrayList<>();
+
+  public Evaluation getEvaluation() {
+    if (evaluationList.size() > 0) {
+      return evaluationList.get(evaluationList.size() - 1);
+    }
+    return null;
+  }
+
+  public List<Evaluation> getEvaluationList() {
+    return evaluationList;
+  }
+
+  public void setEvaluation(Evaluation evaluation) {
+    evaluationList.add(evaluation);
+  }
 
   public TargetDose() {
     // default
@@ -28,7 +47,6 @@ public class TargetDose {
       VaccineDoseAdministered satisfiedByVaccineDoseAdministered) {
     this.satisfiedByVaccineDoseAdministered = satisfiedByVaccineDoseAdministered;
   }
-
 
   public TargetDoseStatus getTargetDoseStatus() {
     return targetDoseStatus;
@@ -59,7 +77,6 @@ public class TargetDose {
     if (trackedSeriesDose != null) {
       return trackedSeriesDose.toString();
     }
-    // TODO Auto-generated method stub
     return super.toString();
   }
 

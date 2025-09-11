@@ -1,51 +1,54 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 
 public class Contraindication {
-  private Antigen antigen = null;
-  private String contraindicationLanguage = "";
-  private Concept concept = new Concept();
+  
+    private String observationCode = null;
+    private String observationTitle = null;
 
-  @Override
-  public String toString() {
-    return antigen.getName() + ": " + contraindicationLanguage;
-  }
+    private String contraindicationTextDescription = "";
+    private TimePeriod contraindicationBeginAge = null;
+    private TimePeriod contraindicationEndAge = null;
+    private ClinicalGuidelineObservation clinicalGuidelineObservation = null;
 
-  private List<VaccineType> cvxList = new ArrayList<VaccineType>();
+    public String getObservationCode() {
+        return observationCode;
+    }
 
-  public Antigen getAntigen() {
-    return antigen;
-  }
+    public String getObservationTitle() {
+        return observationTitle;
+    }
 
-  public void setAntigen(Antigen antigen) {
-    this.antigen = antigen;
-  }
+    public void setObservationCode(String observationCode) {
+        this.observationCode = observationCode;
+    }
 
-  public String getContraindicationLanguage() {
-    return contraindicationLanguage;
-  }
+    public void setObservationTitle(String observationTitle) {
+        this.observationTitle = observationTitle;
+    }
 
-  public void setContraindicationLanguage(String contraindicationLanguage) {
-    this.contraindicationLanguage = contraindicationLanguage;
-  }
+    public TimePeriod getContraindicationBeginAge() {
+        return contraindicationBeginAge;
+    }
 
-  public List<VaccineType> getCvxList() {
-    return cvxList;
-  }
+    public TimePeriod getContraindicationEndAge() {
+        return contraindicationEndAge;
+    }
 
-  public void setCvxList(List<VaccineType> cvxList) {
-    this.cvxList = cvxList;
-  }
+    public String getContraindicationTextDescription() {
+        return contraindicationTextDescription;
+    }
 
-  public Concept getConcept() {
-    return concept;
-  }
+    public void setContraindicationBeginAge(TimePeriod contraindicationBeginAge) {
+        this.contraindicationBeginAge = contraindicationBeginAge;
+    }
 
-  public void setConcept(Concept concept) {
-    this.concept = concept;
-  }
+    public void setContraindicationEndAge(TimePeriod contraindicationEndAge) {
+        this.contraindicationEndAge = contraindicationEndAge;
+    }
 
+    public void setContraindicationTextDescription(String contraindicationTextDescription) {
+        this.contraindicationTextDescription = contraindicationTextDescription;
+    }
 }

@@ -29,7 +29,8 @@ public class InProcessPatientSeries extends LogicStep {
   private List<PatientSeries> patientSeriesList = dataModel.getPatientSeriesList();
 
   /***
-   * cond1 A candidate patient series is a product patient series and has all valid doses.
+   * cond1 A candidate patient series is a product patient series and has all
+   * valid doses.
    * 
    */
 
@@ -38,9 +39,9 @@ public class InProcessPatientSeries extends LogicStep {
     boolean hasAllValidDoses = true;
 
     for (PatientSeries patientSeries : patientSeriesList) {
-      if (patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries()
+      if (patientSeries.getTrackedAntigenSeries().getSelectPatientSeries()
           .getProductPath() != null) {
-        if (patientSeries.getTrackedAntigenSeries().getSelectBestPatientSeries().getProductPath()
+        if (patientSeries.getTrackedAntigenSeries().getSelectPatientSeries().getProductPath()
             .equals(YesNo.YES)) {
           productPatientSeries = true;
         }
@@ -75,7 +76,7 @@ public class InProcessPatientSeries extends LogicStep {
     for (PatientSeries patientSeries : patientSeriesList) {
       Date finishDate = patientSeries.getForecast().getAdjustedPastDueDate();
       Date maximumAgeDate = findMaximumAgeDate(patientSeries);
-      if (finishDate.before(maximumAgeDate)) {
+      if (finishDate != null && finishDate.before(maximumAgeDate)) {
         patientSeries.incPatientScoreSeries();
         patientSeries.incPatientScoreSeries();
         patientSeries.incPatientScoreSeries();
@@ -89,8 +90,8 @@ public class InProcessPatientSeries extends LogicStep {
 
   private Date findMaximumAgeDate(PatientSeries patientSeries) {
     Date dob = dataModel.getPatient().getDateOfBirth();
-    SeriesDose referenceSeriesDose =
-        patientSeries.getForecast().getTargetDose().getTrackedSeriesDose();;
+    SeriesDose referenceSeriesDose = patientSeries.getForecast().getTargetDose().getTrackedSeriesDose();
+    ;
     TimePeriod timePeriod = referenceSeriesDose.getAgeList().get(0).getMaximumAge();
     Date maximumAgeDate = addTimePeriodtotoDate(dob, timePeriod);
     return maximumAgeDate;
@@ -137,8 +138,7 @@ public class InProcessPatientSeries extends LogicStep {
 
   private Map<Integer, Integer> sortByComparator(Map<Integer, Integer> unsortMap) {
 
-    List<Entry<Integer, Integer>> list =
-        new LinkedList<Entry<Integer, Integer>>(unsortMap.entrySet());
+    List<Entry<Integer, Integer>> list = new LinkedList<Entry<Integer, Integer>>(unsortMap.entrySet());
 
     // Sorting the list based on values
     Collections.sort(list, new Comparator<Entry<Integer, Integer>>() {
@@ -293,16 +293,17 @@ public class InProcessPatientSeries extends LogicStep {
   private void evaluate_ACandidatePatientSeriesCanFinishEarliest() {
     int j = 0;
     if (patientSeriesList.get(0).getForecast() != null) {
-      System.err.println("Forecast is set");
       Date tmpDate = patientSeriesList.get(0).getForecast().getLatestDate();
-      for (int i = 0; i < patientSeriesList.size(); i++) {
-        PatientSeries patientSeries = patientSeriesList.get(i);
-        if (tmpDate == patientSeries.getForecast().getLatestDate()) {
-          j++;
-        } else {
-          if (tmpDate.after(patientSeries.getForecast().getLatestDate())) {
-            tmpDate = patientSeries.getForecast().getLatestDate();
-            j = 0;
+      if(tmpDate != null) {
+        for (int i = 0; i < patientSeriesList.size(); i++) {
+          PatientSeries patientSeries = patientSeriesList.get(i);
+          if (tmpDate == patientSeries.getForecast().getLatestDate()) {
+            j++;
+          } else {
+            if (tmpDate.after(patientSeries.getForecast().getLatestDate())) {
+              tmpDate = patientSeries.getForecast().getLatestDate();
+              j = 0;
+            }
           }
         }
       }
@@ -314,36 +315,8 @@ public class InProcessPatientSeries extends LogicStep {
             patientSeries.incPatientScoreSeries();
         }
       }
-    } else {
-      System.err.println("Forecast is not set");
     }
   }
-
-  /**
-   * Cond6 A candidate patient series exceeded maximum age to start
-   */
-
-  private void evaluate_ACandidatePatientSeriesExceededMaximumAgeToStart() {
-    Date evalDate = dataModel.getAssessmentDate();
-    for (PatientSeries patientSeries : patientSeriesList) {
-      Date maximumAgeDate = findMaximumAgeDate(patientSeries);
-      if (evalDate.after(maximumAgeDate)) {
-        patientSeries.descPatientScoreSeries();
-        patientSeries.descPatientScoreSeries();
-        patientSeries.descPatientScoreSeries();
-        patientSeries.descPatientScoreSeries();
-        patientSeries.descPatientScoreSeries();
-        patientSeries.descPatientScoreSeries();
-        patientSeries.descPatientScoreSeries();
-        patientSeries.descPatientScoreSeries();
-        patientSeries.descPatientScoreSeries();
-        patientSeries.descPatientScoreSeries();
-      } else {
-
-      }
-    }
-  }
-
 
   private void evaluateTable() {
     evaluate_ACandidatePatientSeriesIsAProductPatientSeriesAndHasAllValidDoses();
@@ -351,10 +324,7 @@ public class InProcessPatientSeries extends LogicStep {
     evaluate_ACandidatePatientSeriesHasTheMostValidDoses();
     evaluate_ACandidatePatientSeriesIsClosestToCompletion();
     evaluate_ACandidatePatientSeriesCanFinishEarliest();
-    evaluate_ACandidatePatientSeriesExceededMaximumAgeToStart();
   }
-
-
 
   public InProcessPatientSeries(DataModel dataModel) {
     super(LogicStepType.IN_PROCESS_PATIENT_SERIES, dataModel);
@@ -364,7 +334,7 @@ public class InProcessPatientSeries extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
-    setNextLogicStepType(LogicStepType.SELECT_BEST_CANDIDATE_PATIENT_SERIES);
+    setNextLogicStepType(LogicStepType.SELECT_PRIORITIZED_PATIENT_SERIES);
     evaluateTable();
     return next();
   }
@@ -380,10 +350,10 @@ public class InProcessPatientSeries extends LogicStep {
   }
 
   private void printStandard(PrintWriter out) {
-    out.println("<h1> " + getTitle() + "</h1>");
     out.println(
         "<p>In-process  patient series provides the decision table for determining the number of points to assign to an  inprocess patient series based on a specified condition.</p>");
     printTable(out);
+    printBestPatientSeries(out);
   }
 
   private void printTable(PrintWriter out) {
@@ -433,7 +403,5 @@ public class InProcessPatientSeries extends LogicStep {
     out.println("  </tr> ");
     out.println("</table>");
   }
-
-
 
 }

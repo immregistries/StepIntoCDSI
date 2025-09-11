@@ -5,10 +5,13 @@ import java.util.List;
 
 public class AntigenSeries {
   private String seriesName = "";
-  private List<SeriesDose> seriesDoseList = new ArrayList<SeriesDose>();
-  private SelectBestPatientSeries selectBestPatientSeries = null;
+  private SeriesType seriesType = null;
+  private List<String> requiredGenderList = new ArrayList<String>();
+  private SelectPatientSeries selectPatientSeries = null;
   private Antigen targetDisease = null;
   private VaccineGroup vaccineGroup = null;
+  private List<Indication> indicationList = new ArrayList<Indication>();
+  private List<SeriesDose> seriesDoseList = new ArrayList<SeriesDose>();
 
   @Override
   public boolean equals(Object obj) {
@@ -43,17 +46,40 @@ public class AntigenSeries {
     this.seriesName = seriesName;
   }
 
+  public SeriesType getSeriesType() {
+    return seriesType;
+  }
+
+  public void setSeriesType(SeriesType seriesType) {
+    this.seriesType = seriesType;
+  }
+
+  public List<String> getRequiredGenderList() {
+    return requiredGenderList;
+  }
+
+  public void setRequiredGenderList(List<String> requiredGenderList) {
+    this.requiredGenderList = requiredGenderList;
+  }
+
   public List<SeriesDose> getSeriesDoseList() {
     return seriesDoseList;
   }
 
-  public SelectBestPatientSeries getSelectBestPatientSeries() {
-    return selectBestPatientSeries;
+  public List<Indication> getIndicationList() {
+    return indicationList;
   }
 
-  public void setSelectBestPatientSeries(SelectBestPatientSeries selectBestPatientSeries) {
-    this.selectBestPatientSeries = selectBestPatientSeries;
+  public void setIndicationList(List<Indication> indicationList) {
+    this.indicationList = indicationList;
   }
 
+  public SelectPatientSeries getSelectPatientSeries() {
+    return selectPatientSeries;
+  }
+
+  public void setSelectPatientSeries(SelectPatientSeries selectPatientSeries) {
+    this.selectPatientSeries = selectPatientSeries;
+  }
 
 }

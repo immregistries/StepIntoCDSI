@@ -18,7 +18,7 @@ public class IdentifyAndEvaluateVaccineGroup extends LogicStep {
     if (dataModel.getVaccineGroupPos() < dataModel.getVaccineGroupList().size()) {
       dataModel
           .setVaccineGroup(dataModel.getVaccineGroupList().get(dataModel.getVaccineGroupPos()));
-      setNextLogicStepType(LogicStepType.CLASSIFY_VACCINE_GROUP);
+      setNextLogicStepType(LogicStepType.APPLY_GENERAL_VACCINE_GROUP_RULES);
     } else {
       setNextLogicStepType(LogicStepType.END);
     }
@@ -36,7 +36,6 @@ public class IdentifyAndEvaluateVaccineGroup extends LogicStep {
   }
 
   private void printStandard(PrintWriter out) {
-    out.println("<h1> " + getTitle() + "</h1>");
     out.println(
         "<p>The  goal  of  identify  and  evaluate  vaccine  group  is  to  merge  together  antigen-based  forecasts  into  vaccine group forecasts. This is especially important in MMR and  DTaP/Tdap/Td vaccine groups which each contain more than one antigen in their respective vaccine groups. In these cases, it is important to provide a forecast consistent  with  the  vaccine  group  rather  than  the  individual  antigen.</p>");
 

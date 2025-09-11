@@ -1,0 +1,47 @@
+body {
+    font-family: Tahoma, Geneva, sans-serif; 
+    background:#D5E1DD;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+form {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-auto-rows: auto; /* Adjust height to fit content */
+    box-sizing: border-box;
+    width: 100%;
+    height: 100vh;
+}
+
+.cell {
+    border: 1px solid #ccc; /* Optional: for visual clarity */
+    padding: 10px; /* Optional: spacing inside cells */
+    box-sizing: border-box;
+    overflow: auto;
+    max-height: 100vh;
+}
+
+p {width:650px; color:#2B3E42;}
+.menu {width:720px; padding:5px; background-color:#F7F3E8; margin: 0px; border-color: #2B3E42; border-width: 1px; border-style: solid}
+a:link.menuLink {color:#2B3E42; text-decoration:none}
+a:visited.menuLink {color:#2B3E42; text-decoration:none}
+a:hover.menuLink {color:#2B3E42; text-decoration:none}
+a:active.menuLink {color:#2B3E42; text-decoration:none}
+.submenu {padding:5px; background-color:#F7F3E8; margin: 0px; border-color: #2B3E42; border-width: 1px; border-style: solid}
+input {border-color: #747E80; background-color: #F7F3E8}
+textarea {border-color: #747E80; background-color: #F7F3E8}
+select {border-color: #747E80; background-color: #F7F3E8}
+pre {background:#F7F3E8; padding:4px; margin: 2px; }
+table {border: 1px solid black; border-collapse:collapse;}
+table, th, td {border: 1px solid black}
+.pass {background:#77BED2;}
+.fail {background:#F2583E;}
+.grey {color:#444444;}
+
+table.mainTable {border: 0px; }
+td.mainTable {border: 0px; margin-left: 5px;  margin-right: 5px;}

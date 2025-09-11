@@ -16,10 +16,13 @@ public class SelectBestPatientSeries extends LogicStep {
 
   @Override
   public LogicStep process() {
+    if (dataModel.getBestPatientSeriesList() == null) {
+      dataModel.setBestPatientSeriesList(new ArrayList<>());
+    }
     dataModel.incAntigenPos();
-    if (dataModel.getAntigenPos() < dataModel.getAntigenList().size()) {
-      Antigen antigen = dataModel.getAntigenList().get(dataModel.getAntigenPos());
-      dataModel.setAntigen(dataModel.getAntigenList().get(dataModel.getAntigenPos()));
+    if (dataModel.getAntigenPos() < dataModel.getAntigenSelectedList().size()) {
+      Antigen antigen = dataModel.getAntigenSelectedList().get(dataModel.getAntigenPos());
+      dataModel.setAntigen(dataModel.getAntigenSelectedList().get(dataModel.getAntigenPos()));
       ArrayList<AntigenSeries> antigenSeriesSelectedList = new ArrayList<AntigenSeries>();
       for (AntigenSeries antigenSeries : dataModel.getAntigenSeriesList()) {
         if (antigenSeries.getTargetDisease().equals(antigen)) {
@@ -27,13 +30,12 @@ public class SelectBestPatientSeries extends LogicStep {
         }
       }
       dataModel.setAntigenSeriesSelectedList(antigenSeriesSelectedList);
-      setNextLogicStepType(LogicStepType.ONE_BEST_PATIENT_SERIES);
+      setNextLogicStepType(LogicStepType.PRE_FILTER_PATIENT_SERIES);
 
       List<PatientSeries> patientSeriesSelectedList = new ArrayList<PatientSeries>();
       for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {
         if (patientSeries.getTrackedAntigenSeries().getTargetDisease().equals(antigen)) {
           patientSeriesSelectedList.add(patientSeries);
-          break;
         }
       }
       dataModel.setSelectedPatientSeriesList(patientSeriesSelectedList);
@@ -42,6 +44,7 @@ public class SelectBestPatientSeries extends LogicStep {
       dataModel.setAntigenSeriesSelectedList(null);
       setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
     }
+    dataModel.getPrioritizedPatientSeriesList().clear();
 
     return next();
   }
@@ -90,16 +93,13 @@ public class SelectBestPatientSeries extends LogicStep {
 
   @Override
   public void printPre(PrintWriter out) throws Exception {
-    // out.println("<h1>8.5 Select Best Patient Series</h1>");
     printStandard(out);
-
   }
 
   @Override
   public void printPost(PrintWriter out) {
-    // out.println("<h1>8.5 Select Best Patient Series</h1>");
     printStandard(out);
-    if (dataModel.getAntigenPos() < dataModel.getAntigenList().size()) {
+    if (dataModel.getAntigenPos() < dataModel.getAntigenSelectedList().size()) {
       out.println("<p>Now looking at Antigen: " + dataModel.getAntigen() + "</p>");
     } else {
       out.println("<p>Done checking Antigens, moving onto Identify and Evaluate Vaccine Group</p>");
@@ -110,11 +110,10 @@ public class SelectBestPatientSeries extends LogicStep {
       out.println("<li>" + ps.getTrackedAntigenSeries().getSeriesName() + "</li>");
     }
     out.println("</ul>");
-
+    printBestPatientSeries(out);
   }
 
   private void printStandard(PrintWriter out) {
-    out.println("<h1> " + getTitle() + "</h1>");
     printTableAndFigures(out);
   }
 

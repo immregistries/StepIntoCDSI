@@ -15,12 +15,12 @@ public class SeriesDose {
   private ConditionalSkip conditionalSkip = null;
   private List<RecurringDose> recurringDoseList = new ArrayList<RecurringDose>();
   private List<ConditionalNeed> conditionalNeedList = new ArrayList<ConditionalNeed>();
-  private List<SeasonalRecommendation> seasonalRecommendationList =
-      new ArrayList<SeasonalRecommendation>();
+  private List<SeasonalRecommendation> seasonalRecommendationList = new ArrayList<SeasonalRecommendation>();
   private List<SubstituteDose> substituteDoseList = new ArrayList<SubstituteDose>();
   private List<RequiredGender> requiredGenderList = new ArrayList<RequiredGender>();
   private List<PreferrableVaccine> preferrableVaccineList = new ArrayList<PreferrableVaccine>();
   private List<AllowableVaccine> allowableVaccineList = new ArrayList<AllowableVaccine>();
+  private List<VaccineType> inadvertentVaccineList = new ArrayList<VaccineType>();
 
   @Override
   public String toString() {
@@ -345,5 +345,13 @@ public class SeriesDose {
 
   public void setAllowableintervalList(List<AllowableInterval> allowableintervalList) {
     this.allowableintervalList = allowableintervalList;
+  }
+
+  public List<VaccineType> getInadvertentVaccineList() {
+    return inadvertentVaccineList;
+  }
+
+  public void setInadvertentVaccineList(List<VaccineType> inadvertentVaccineList) {
+    this.inadvertentVaccineList = inadvertentVaccineList;
   }
 }

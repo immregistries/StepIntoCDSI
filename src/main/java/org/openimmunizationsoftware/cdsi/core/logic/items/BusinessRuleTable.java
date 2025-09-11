@@ -3,7 +3,6 @@ package org.openimmunizationsoftware.cdsi.core.logic.items;
 import java.util.Date;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
-import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipCondition;
 import org.openimmunizationsoftware.cdsi.core.domain.DoseType;
 import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
@@ -49,18 +48,14 @@ public class BusinessRuleTable {
               }
             }
             if (inRange) {
-              Antigen antigen =
-                  conditionalSkipCondition.getSeriesDose().getAntigenSeries().getTargetDisease();
-              Evaluation evaluation = vaccineDoseAdministered.getEvaluationMap().get(antigen);
+              Evaluation evaluation = vaccineDoseAdministered.getTargetDose().getEvaluation();
               if (evaluation != null && evaluation.getEvaluationStatus() != null) {
                 if (conditionalSkipCondition.getDoseType() == DoseType.VALID
-                    && evaluation.getEvaluationStatus() == EvaluationStatus.VALID) {
-                  count++;
-                } else if (conditionalSkipCondition.getDoseType() == DoseType.TOTAL) {
+                    && evaluation.getEvaluationStatus() == EvaluationStatus.VALID
+                    && conditionalSkipCondition.getDoseType() == DoseType.TOTAL) {
                   count++;
                 }
               }
-
             }
           }
         }
@@ -77,8 +72,8 @@ public class BusinessRuleTable {
             + "before the conditional skip end age date OR</li>"
             + "<li> on or after the conditional skip start date and before\n"
             + "conditional skip end date</li></ul> <li>c. Evaluation Status is:\n"
-            + "<ul><li> \"Valid\" if the conditional skip dose type is \"Valid\" OR<li>"
-            + "<li> of any status if the conditional skip dose type is \"Total\"</li></ul></li></ul>");
+            + "<ul><li> \"Valid\" if the conditional skip dose type is \"Valid\" and<li>"
+            + "<li> if the conditional skip dose type is \"Total\"</li></ul></li></ul>");
   }
 
   private static boolean onOrAfter(Date date, Date refDate) {
