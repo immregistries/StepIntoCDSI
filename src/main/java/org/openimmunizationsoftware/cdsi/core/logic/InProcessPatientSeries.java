@@ -357,7 +357,7 @@ public class InProcessPatientSeries extends LogicStep {
   }
 
   private void printTable(PrintWriter out) {
-    out.println("<table BORDER=\"1\"> ");
+     out.println("<table BORDER=\"1\"> ");
     out.println("  <tr> ");
     out.println(" <th> Conditions </th> ");
     out.println(" <th> If this condition is true for the candidate patient series </th> ");
@@ -368,7 +368,7 @@ public class InProcessPatientSeries extends LogicStep {
     out.println(
         " <td >A candidate patient series is a product patient series and has all valid doses </th> ");
     out.println(" <td align=\"center\"> +2</td> ");
-    out.println(" <td align=\"center\"> 0</td> ");
+    out.println(" <td align=\"center\"> n/a</td> ");
     out.println(" <td align=\"center\"> -2 </td> ");
     out.println("  </tr> ");
     out.println("<tr> ");
@@ -385,21 +385,15 @@ public class InProcessPatientSeries extends LogicStep {
     out.println("  </tr> ");
     out.println("<tr> ");
     out.println(" <td>A candidate patient series is closest to completion. </th> ");
-    out.println(" <td align=\"center\"> -2</td> ");
-    out.println(" <td align=\"center\"> n/a</td> ");
-    out.println(" <td align=\"center\"> +2 </td> ");
+    out.println(" <td align=\"center\"> +2</td> ");
+    out.println(" <td align=\"center\"> 0</td> ");
+    out.println(" <td align=\"center\"> -2 </td> ");
     out.println("  </tr> ");
     out.println("  <tr> ");
     out.println(" <td>A candidate patient series can finish earliest. </th> ");
-    out.println(" <td align=\"center\"> -1</td> ");
-    out.println(" <td align=\"center\"> n/a</td> ");
-    out.println(" <td align=\"center\"> +1 </td> ");
-    out.println("  </tr> ");
-    out.println("<tr> ");
-    out.println(" <td>A candidate patient series exceeded maximum age to start. </th> ");
-    out.println(" <td align=\"center\"> -1</td> ");
-    out.println(" <td align=\"center\"> n/a</td> ");
-    out.println(" <td align=\"center\"> +1 </td> ");
+    out.println(" <td align=\"center\"> +1</td> ");
+    out.println(" <td align=\"center\"> 0</td> ");
+    out.println(" <td align=\"center\"> -1 </td> ");
     out.println("  </tr> ");
     out.println("</table>");
   }
