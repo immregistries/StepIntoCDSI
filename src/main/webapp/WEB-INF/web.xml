@@ -60,6 +60,10 @@
         <servlet-name>dataModelViewLiveVirusConflict</servlet-name>
         <servlet-class>org.openimmunizationsoftware.cdsi.servlet.dataModelView.LiveVirusConflictServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>dataModelViewCodedObservation</servlet-name>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.dataModelView.CodedObservationServlet</servlet-class>
+    </servlet>
    
     
     <servlet-mapping>
@@ -109,6 +113,10 @@
     <servlet-mapping>
         <servlet-name>dataModelViewLiveVirusConflict</servlet-name>
         <url-pattern>/dataModelViewLiveVirusConflict</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>dataModelViewCodedObservation</servlet-name>
+        <url-pattern>/dataModelViewCodedObservation</url-pattern>
     </servlet-mapping>
 
 

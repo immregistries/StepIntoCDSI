@@ -77,6 +77,7 @@ public class MainServlet extends ForecastServlet {
     out.println("        <a href=\"dataModelViewPatient\" class=\"w3-bar-item w3-button\">Patient</a> ");
     out.println("        <a href=\"dataModelViewSchedule\" class=\"w3-bar-item w3-button\">Schedule</a> ");
     out.println("        <a href=\"dataModelViewVaccineGroup\" class=\"w3-bar-item w3-button\">Vaccine Group</a> ");
+    out.println("        <a href=\"dataModelViewCodedObservation\" class=\"w3-bar-item w3-button\">Coded Observations</a> ");
     out.println("      </div>");
     out.println("    </header>");
     out.println("    <div class=\"w3-container\">");
