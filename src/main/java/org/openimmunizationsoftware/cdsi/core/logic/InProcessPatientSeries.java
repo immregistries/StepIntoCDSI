@@ -168,27 +168,23 @@ public class InProcessPatientSeries extends LogicStep {
     }
     condMap = (HashMap<Integer, Integer>) sortByComparator(condMap);
     int j = 0;
-    int tmp = 0;
+    int greatestElementVal = 0;
     int greatestElementPos = 0;
-    ArrayList<Integer> pos = new ArrayList<Integer>();
+    ArrayList<Integer> greatestElementPosList = new ArrayList<Integer>();
     boolean twoOrMore = false;
     for (Entry<Integer, Integer> entry : condMap.entrySet()) {
-      if (j == 0) {
-        tmp = entry.getValue();
-        greatestElementPos = entry.getKey();
-        j++;
-      }
       if (j > 0) {
-        if (tmp == entry.getValue()) {
+        if (greatestElementVal == entry.getValue()) {
           twoOrMore = true;
-          pos.add(entry.getKey());
-
+          greatestElementPosList.add(entry.getKey());
         }
       }
-
-    }
-    if (twoOrMore) {
-      pos.add(greatestElementPos);
+      if (j == 0) {
+        greatestElementVal = entry.getValue();
+        greatestElementPos = entry.getKey();
+        greatestElementPosList.add(greatestElementPos);
+        j++;
+      }
     }
 
     if (!twoOrMore) {
@@ -207,7 +203,7 @@ public class InProcessPatientSeries extends LogicStep {
         patientSeries.descPatientScoreSeries();
         patientSeries.descPatientScoreSeries();
       }
-      for (int i : pos) {
+      for (int i : greatestElementPosList) {
         patientSeriesList.get(i).incPatientScoreSeries();
         patientSeriesList.get(i).incPatientScoreSeries();
       }
@@ -222,31 +218,28 @@ public class InProcessPatientSeries extends LogicStep {
   private void evaluate_ACandidatePatientSeriesIsClosestToCompletion() {
     HashMap<Integer, Integer> condMap = new HashMap<Integer, Integer>();
     for (int i = 0; i < patientSeriesList.size(); i++) {
-      condMap.put(i, numberOfNotSatisfiedTargetDoses(patientSeriesList.get(i)));
+      condMap.put(i, numberOfValidDoses(patientSeriesList.get(i)));
     }
     condMap = (HashMap<Integer, Integer>) sortByComparator(condMap);
     int j = 0;
-    int tmp = 0;
+    int greatestElementVal = 0;
     int greatestElementPos = 0;
-    ArrayList<Integer> pos = new ArrayList<Integer>();
+    ArrayList<Integer> greatestElementPosList = new ArrayList<Integer>();
     boolean twoOrMore = false;
     for (Entry<Integer, Integer> entry : condMap.entrySet()) {
       if (j == 0) {
-        tmp = entry.getValue();
+        greatestElementVal = entry.getValue();
         greatestElementPos = entry.getKey();
+        greatestElementPosList.add(greatestElementPos);
         j++;
       }
       if (j > 0) {
-        if (tmp == entry.getValue()) {
+        if (greatestElementVal == entry.getValue()) {
           twoOrMore = true;
-          pos.add(entry.getKey());
-
+          greatestElementPosList.add(entry.getKey());
         }
       }
 
-    }
-    if (twoOrMore) {
-      pos.add(greatestElementPos);
     }
 
     if (!twoOrMore) {
@@ -265,7 +258,7 @@ public class InProcessPatientSeries extends LogicStep {
         patientSeries.descPatientScoreSeries();
         patientSeries.descPatientScoreSeries();
       }
-      for (int i : pos) {
+      for (int i : greatestElementPosList) {
         patientSeriesList.get(i).incPatientScoreSeries();
         patientSeriesList.get(i).incPatientScoreSeries();
       }
