@@ -48,9 +48,25 @@
 <endAge/>
 </contraindication>
 <contraindication>
+<observationCode>091</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of Measles</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Measles vaccine.</contraindicationText>
+<contraindicationGuidance/>
+<beginAge/>
+<endAge/>
+</contraindication>
+<contraindication>
 <observationCode>092</observationCode>
 <observationTitle>Severe allergic reaction after previous dose of Mumps</observationTitle>
 <contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Mumps vaccine.</contraindicationText>
+<contraindicationGuidance/>
+<beginAge/>
+<endAge/>
+</contraindication>
+<contraindication>
+<observationCode>093</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of Rubella</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Rubella vaccine.</contraindicationText>
 <contraindicationGuidance/>
 <beginAge/>
 <endAge/>
@@ -257,7 +273,7 @@
 </contraindication>
 <contraindication>
 <observationCode>157</observationCode>
-<observationTitle>Sold organ transplantation</observationTitle>
+<observationTitle>Solid organ transplantation</observationTitle>
 <contraindicationText>Do not vaccinate if the patient received a solid organ transplant.</contraindicationText>
 <contraindicationGuidance>Certain immunosuppressive medications are administered to prevent solid organ transplant rejection. Live vaccines should be withheld for 2 months following discontinuation of anti-rejection therapies in patients with a solid organ transplant.</contraindicationGuidance>
 <beginAge/>
@@ -296,6 +312,44 @@
 <endAge/>
 </contraindication>
 </vaccineGroup>
+<vaccine>
+<contraindication>
+<observationCode>089</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of Varicella</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Varicella vaccine.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>MMRV</vaccineType>
+<cvx>94</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>155</observationCode>
+<observationTitle>HIV/AIDS - not severely immunocompromised</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has HIV/AIDS but are not severely immunocompromised (See the CDC general recommendations for a definition of "severely immunocompromised").</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>MMRV</vaccineType>
+<cvx>94</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>186</observationCode>
+<observationTitle>HIV Infection</observationTitle>
+<contraindicationText>Do not vaccinate with MMRV if the patient has an HIV infection of any severity.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>MMRV</vaccineType>
+<cvx>94</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+</vaccine>
 </contraindications>
 <series>
 <seriesName>Mumps 2-dose series</seriesName>

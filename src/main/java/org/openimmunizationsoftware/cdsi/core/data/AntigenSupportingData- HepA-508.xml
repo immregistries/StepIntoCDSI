@@ -42,6 +42,18 @@
 </vaccineGroup>
 <vaccine>
 <contraindication>
+<observationCode>097</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of Hepatitis B</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Hepatitis B vaccine.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>HepA-HepB</vaccineType>
+<cvx>104</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
 <observationCode>110</observationCode>
 <observationTitle>Hypersensitivity to yeast</observationTitle>
 <contraindicationText>Do not vaccinate if the patient has a hypersensitivity to yeast.</contraindicationText>
@@ -340,6 +352,26 @@ should be administered as soon as adoption is planned, ideally 2 or more weeks b
 </indication>
 <indication>
 <observationCode>
+<text>HIV/AIDS - severely immunocompromised</text>
+<code>154</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>19 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - not severely immunocompromised</text>
+<code>155</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>19 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
 <text>Patient seeks Hepatitis A  protection</text>
 <code>175</code>
 </observationCode>
@@ -611,6 +643,26 @@ should be administered as soon as adoption is planned, ideally 2 or more weeks b
 </indication>
 <indication>
 <observationCode>
+<text>HIV/AIDS - severely immunocompromised</text>
+<code>154</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>19 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - not severely immunocompromised</text>
+<code>155</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>19 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
 <text>Patient seeks Hepatitis A  protection</text>
 <code>175</code>
 </observationCode>
@@ -863,7 +915,7 @@ should be administered as soon as adoption is planned, ideally 2 or more weeks b
 <description>Administer to persons who have chronic liver disease.</description>
 <beginAge>19 years</beginAge>
 <endAge/>
-<guidance>includes, but is not limited to persons with hepatitis B virus (HBV) infection, hepatitis C virus (HCV) infection, cirrhosis, fatty liver disease, alcoholic liver disease, autoimmune hepatitis, or an alanine aminotransferase (ALT) or aspartate aminotransferase (AST) level persistently greater than twice the upper limit of normal </guidance>
+<guidance>Includes, but is not limited to persons with hepatitis B virus (HBV) infection, hepatitis C virus (HCV) infection, cirrhosis, fatty liver disease, alcoholic liver disease, autoimmune hepatitis, or an alanine aminotransferase (ALT) or aspartate aminotransferase (AST) level persistently greater than twice the upper limit of normal </guidance>
 </indication>
 <indication>
 <observationCode>
@@ -937,6 +989,26 @@ should be administered as soon as adoption is planned, ideally 2 or more weeks b
 </indication>
 <indication>
 <observationCode>
+<text>HIV/AIDS - severely immunocompromised</text>
+<code>154</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>19 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - not severely immunocompromised</text>
+<code>155</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>19 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
 <text>Patient seeks Hepatitis A  protection</text>
 <code>175</code>
 </observationCode>
@@ -968,7 +1040,7 @@ should be administered as soon as adoption is planned, ideally 2 or more weeks b
 <seriesDose>
 <doseNumber>Dose 1</doseNumber>
 <age>
-<absMinAge>18 years - 4 days</absMinAge>
+<absMinAge>12 months - 4 days</absMinAge>
 <minAge>19 years</minAge>
 <earliestRecAge>19 years</earliestRecAge>
 <latestRecAge/>
@@ -1436,6 +1508,26 @@ should be administered as soon as adoption is planned, ideally 2 or more weeks b
 <code>142</code>
 </observationCode>
 <description>Administer to persons traveling to or working in countries that have high or intermediate endemicity of Hepatitis A.</description>
+<beginAge>19 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - severely immunocompromised</text>
+<code>154</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>19 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - not severely immunocompromised</text>
+<code>155</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
 <beginAge>19 years</beginAge>
 <endAge/>
 <guidance/>

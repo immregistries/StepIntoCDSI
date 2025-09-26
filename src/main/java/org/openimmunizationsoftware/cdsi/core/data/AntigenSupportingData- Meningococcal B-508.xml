@@ -33,14 +33,28 @@
 <endAge/>
 </contraindicatedVaccine>
 </contraindication>
+<contraindication>
+<observationCode>117</observationCode>
+<observationTitle>Severe allergic reaction to diphtheria toxoid</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction to diphtheria toxoid.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>Meningococcal oligosaccharide (MenACWY), (MenB), PF</vaccineType>
+<cvx>328</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
 </vaccine>
 </contraindications>
 <series>
 <seriesName>Meningococcal B 2-dose series MenB-4C Shared Clinical Decision Making</seriesName>
 <targetDisease>Meningococcal B</targetDisease>
 <vaccineGroup>Meningococcal B</vaccineGroup>
+<seriesAdminGuidance>Delay MenB until after pregnancy due to lack of safety data in pregnant persons. May administer if at increased risk and vaccination benefits outweigh potential risks.</seriesAdminGuidance>
 <seriesAdminGuidance>ACIP recommends a MenB vaccine series for persons aged 16-23 years on the basis of shared clinical decision-making to provide short-term protection against most strains of serogroup B meningococcal disease. The preferred age for MenB vaccination is 16-18 years. More guidance can be found here: https://www.cdc.gov/vaccines/hcp/admin/downloads/ISD-job-aid-SCDM-mening-b-shared-clinical-decision-making.pdf</seriesAdminGuidance>
 <seriesAdminGuidance>People desiring more rapid protection against serogroup B (e.g., students with less than 6 months before college entry) may receive a 3-dose series (0, 1-2, 6 months) to optimize rapid protection.</seriesAdminGuidance>
+<seriesAdminGuidance>Penmenvy (MenACWY/MenB - GSK) may be used when both MenACWY and MenB are indicated at the same visit.</seriesAdminGuidance>
 <seriesType>Standard</seriesType>
 <equivalentSeriesGroups>2</equivalentSeriesGroups>
 <requiredGender/>
@@ -90,11 +104,27 @@
 <volume>0.5</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
+<preferableVaccine>
+<vaccineType>Meningococcal oligosaccharide (MenACWY), (MenB), PF</vaccineType>
+<cvx>328</cvx>
+<beginAge>10 years</beginAge>
+<endAge>26 years</endAge>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
 <allowableVaccine>
 <vaccineType>meningococcal B, OMV</vaccineType>
 <cvx>163</cvx>
 <beginAge>10 years - 4 days</beginAge>
 <endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>Meningococcal oligosaccharide (MenACWY), (MenB), PF</vaccineType>
+<cvx>328</cvx>
+<beginAge>10 years - 4 days</beginAge>
+<endAge>26 years</endAge>
 </allowableVaccine>
 <inadvertentVaccine/>
 <conditionalSkip/>
@@ -187,6 +217,12 @@
 <beginAge>10 years</beginAge>
 <endAge/>
 </allowableVaccine>
+<allowableVaccine>
+<vaccineType>Meningococcal oligosaccharide (MenACWY), (MenB), PF</vaccineType>
+<cvx>328</cvx>
+<beginAge>10 years - 4 days</beginAge>
+<endAge>26 years</endAge>
+</allowableVaccine>
 <inadvertentVaccine/>
 <conditionalSkip/>
 <recurringDose>No</recurringDose>
@@ -197,6 +233,7 @@
 <seriesName>Meningococcal B 2-dose series MenB-FHbp Shared Clinical Decision Making</seriesName>
 <targetDisease>Meningococcal B</targetDisease>
 <vaccineGroup>Meningococcal B</vaccineGroup>
+<seriesAdminGuidance>Delay MenB until after pregnancy due to lack of safety data in pregnant persons. May administer if at increased risk and vaccination benefits outweigh potential risks.</seriesAdminGuidance>
 <seriesAdminGuidance>ACIP recommends a MenB vaccine series for persons aged 16-23 years on the basis of shared clinical decision-making to provide short-term protection against most strains of serogroup B meningococcal disease. The preferred age for MenB vaccination is 16-18 years. More guidance can be found here: https://www.cdc.gov/vaccines/hcp/admin/downloads/ISD-job-aid-SCDM-mening-b-shared-clinical-decision-making.pdf</seriesAdminGuidance>
 <seriesAdminGuidance>People desiring more rapid protection against serogroup B (e.g., students with less than 6 months before college entry) may receive a 3-dose series (0, 1-2, 6 months) to optimize rapid protection.</seriesAdminGuidance>
 <seriesAdminGuidance>Penbraya (MenABCWY - Pfizer) may be used when both MenACWY and MenB are indicated at the same visit.</seriesAdminGuidance>
@@ -352,8 +389,10 @@
 <seriesName>Meningococcal B 3-dose series MenB-4C Shared Clinical Decision Making</seriesName>
 <targetDisease>Meningococcal B</targetDisease>
 <vaccineGroup>Meningococcal B</vaccineGroup>
+<seriesAdminGuidance>Delay MenB until after pregnancy due to lack of safety data in pregnant persons. May administer if at increased risk and vaccination benefits outweigh potential risks.</seriesAdminGuidance>
 <seriesAdminGuidance>ACIP recommends a MenB vaccine series for persons aged 16-23 years on the basis of shared clinical decision-making to provide short-term protection against most strains of serogroup B meningococcal disease. The preferred age for MenB vaccination is 16-18 years. More guidance can be found here: https://www.cdc.gov/vaccines/hcp/admin/downloads/ISD-job-aid-SCDM-mening-b-shared-clinical-decision-making.pdf</seriesAdminGuidance>
 <seriesAdminGuidance>People desiring more rapid protection against serogroup B (e.g., students with less than 6 months before college entry) may receive a 3-dose series (0, 1-2, 6 months) to optimize rapid protection.</seriesAdminGuidance>
+<seriesAdminGuidance>Penmenvy (MenACWY/MenB - GSK) may be used when both MenACWY and MenB are indicated at the same visit.</seriesAdminGuidance>
 <seriesType>Standard</seriesType>
 <equivalentSeriesGroups>2</equivalentSeriesGroups>
 <requiredGender/>
@@ -403,11 +442,27 @@
 <volume>0.5</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
+<preferableVaccine>
+<vaccineType>Meningococcal oligosaccharide (MenACWY), (MenB), PF</vaccineType>
+<cvx>328</cvx>
+<beginAge>10 years</beginAge>
+<endAge>26 years</endAge>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
 <allowableVaccine>
 <vaccineType>meningococcal B, OMV</vaccineType>
 <cvx>163</cvx>
 <beginAge>10 years - 4 days</beginAge>
 <endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>Meningococcal oligosaccharide (MenACWY), (MenB), PF</vaccineType>
+<cvx>328</cvx>
+<beginAge>10 years - 4 days</beginAge>
+<endAge>26 years</endAge>
 </allowableVaccine>
 <inadvertentVaccine/>
 <conditionalSkip/>
@@ -527,6 +582,16 @@
 <volume>0.5</volume>
 <forecastVaccineType>Y</forecastVaccineType>
 </preferableVaccine>
+<preferableVaccine>
+<vaccineType>Meningococcal oligosaccharide (MenACWY), (MenB), PF</vaccineType>
+<cvx>328</cvx>
+<beginAge>10 years</beginAge>
+<endAge>26 years</endAge>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>Y</forecastVaccineType>
+</preferableVaccine>
 <allowableVaccine>
 <vaccineType>meningococcal B, OMV</vaccineType>
 <cvx>163</cvx>
@@ -539,6 +604,12 @@
 <beginAge>10 years</beginAge>
 <endAge/>
 </allowableVaccine>
+<allowableVaccine>
+<vaccineType>Meningococcal oligosaccharide (MenACWY), (MenB), PF</vaccineType>
+<cvx>328</cvx>
+<beginAge>10 years - 4 days</beginAge>
+<endAge>26 years</endAge>
+</allowableVaccine>
 <inadvertentVaccine/>
 <conditionalSkip/>
 <recurringDose>No</recurringDose>
@@ -549,6 +620,7 @@
 <seriesName>Meningococcal B 3-dose series MenB-FHbp Shared Clinical Decision Making</seriesName>
 <targetDisease>Meningococcal B</targetDisease>
 <vaccineGroup>Meningococcal B</vaccineGroup>
+<seriesAdminGuidance>Delay MenB until after pregnancy due to lack of safety data in pregnant persons. May administer if at increased risk and vaccination benefits outweigh potential risks.</seriesAdminGuidance>
 <seriesAdminGuidance>ACIP recommends a MenB vaccine series for persons aged 16-23 years on the basis of shared clinical decision-making to provide short-term protection against most strains of serogroup B meningococcal disease. The preferred age for MenB vaccination is 16-18 years. More guidance can be found here: https://www.cdc.gov/vaccines/hcp/admin/downloads/ISD-job-aid-SCDM-mening-b-shared-clinical-decision-making.pdf</seriesAdminGuidance>
 <seriesAdminGuidance>People desiring more rapid protection against serogroup B (e.g., students with less than 6 months before college entry) may receive a 3-dose series (0, 1-2, 6 months) to optimize rapid protection.</seriesAdminGuidance>
 <seriesAdminGuidance>Penbraya (MenABCWY - Pfizer) may be used when both MenACWY and MenB are indicated at the same visit.</seriesAdminGuidance>
@@ -816,7 +888,8 @@
 <seriesName>Meningococcal B risk 3-dose series MenB-4C increased risk</seriesName>
 <targetDisease>Meningococcal B</targetDisease>
 <vaccineGroup>Meningococcal B</vaccineGroup>
-<seriesAdminGuidance/>
+<seriesAdminGuidance>Delay MenB until after pregnancy due to lack of safety data in pregnant persons. May administer if at increased risk and vaccination benefits outweigh potential risks.</seriesAdminGuidance>
+<seriesAdminGuidance>Penmenvy (MenACWY/MenB - GSK) may be used when both MenACWY and MenB are indicated at the same visit.</seriesAdminGuidance>
 <seriesType>Risk</seriesType>
 <equivalentSeriesGroups/>
 <requiredGender/>
@@ -880,6 +953,16 @@
 <endAge/>
 <guidance/>
 </indication>
+<indication>
+<observationCode>
+<text>Sickle cell disease</text>
+<code>259</code>
+</observationCode>
+<description>Administer to persons with sickle cell disease</description>
+<beginAge>10 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
 <seriesDose>
 <doseNumber>Dose 1</doseNumber>
 <age>
@@ -915,11 +998,27 @@
 <volume>0.5</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
+<preferableVaccine>
+<vaccineType>Meningococcal oligosaccharide (MenACWY), (MenB), PF</vaccineType>
+<cvx>328</cvx>
+<beginAge>10 years</beginAge>
+<endAge>26 years</endAge>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
 <allowableVaccine>
 <vaccineType>meningococcal B, OMV</vaccineType>
 <cvx>163</cvx>
 <beginAge>10 years - 4 days</beginAge>
 <endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>Meningococcal oligosaccharide (MenACWY), (MenB), PF</vaccineType>
+<cvx>328</cvx>
+<beginAge>10 years - 4 days</beginAge>
+<endAge>26 years</endAge>
 </allowableVaccine>
 <inadvertentVaccine/>
 <conditionalSkip/>
@@ -987,7 +1086,31 @@
 <endAge/>
 </allowableVaccine>
 <inadvertentVaccine/>
-<conditionalSkip/>
+<conditionalSkip>
+<context>Evaluation</context>
+<setLogic>n/a</setLogic>
+<set>
+<setID>1</setID>
+<setDescription>Dose is not required once 6 months has passed since the previous dose</setDescription>
+<effectiveDate/>
+<cessationDate/>
+<conditionLogic/>
+<condition>
+<conditionID>1</conditionID>
+<conditionType>Interval</conditionType>
+<startDate/>
+<endDate/>
+<beginAge/>
+<endAge/>
+<interval>6 months</interval>
+<doseCount/>
+<doseType/>
+<doseCountLogic/>
+<vaccineTypes/>
+<seriesGroups/>
+</condition>
+</set>
+</conditionalSkip>
 <recurringDose>No</recurringDose>
 <seasonalRecommendation/>
 </seriesDose>
@@ -1045,6 +1168,16 @@
 <volume>0.5</volume>
 <forecastVaccineType>Y</forecastVaccineType>
 </preferableVaccine>
+<preferableVaccine>
+<vaccineType>Meningococcal oligosaccharide (MenACWY), (MenB), PF</vaccineType>
+<cvx>328</cvx>
+<beginAge>10 years</beginAge>
+<endAge>26 years</endAge>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>Y</forecastVaccineType>
+</preferableVaccine>
 <allowableVaccine>
 <vaccineType>meningococcal B, OMV</vaccineType>
 <cvx>163</cvx>
@@ -1057,8 +1190,38 @@
 <beginAge>10 years</beginAge>
 <endAge/>
 </allowableVaccine>
+<allowableVaccine>
+<vaccineType>Meningococcal oligosaccharide (MenACWY), (MenB), PF</vaccineType>
+<cvx>328</cvx>
+<beginAge>10 years - 4 days</beginAge>
+<endAge>26 years</endAge>
+</allowableVaccine>
 <inadvertentVaccine/>
-<conditionalSkip/>
+<conditionalSkip>
+<context>Both</context>
+<setLogic>n/a</setLogic>
+<set>
+<setID>1</setID>
+<setDescription>Dose is not required if the patient received a valid 2-dose series under previous licensure</setDescription>
+<effectiveDate/>
+<cessationDate/>
+<conditionLogic/>
+<condition>
+<conditionID>1</conditionID>
+<conditionType>Vaccine Count by Date</conditionType>
+<startDate/>
+<endDate>20241025</endDate>
+<beginAge/>
+<endAge/>
+<interval/>
+<doseCount>2</doseCount>
+<doseType>Valid</doseType>
+<doseCountLogic>equal to</doseCountLogic>
+<vaccineTypes>163; 164</vaccineTypes>
+<seriesGroups/>
+</condition>
+</set>
+</conditionalSkip>
 <recurringDose>No</recurringDose>
 <seasonalRecommendation/>
 </seriesDose>
@@ -1097,6 +1260,16 @@
 <volume>0.5</volume>
 <forecastVaccineType>Y</forecastVaccineType>
 </preferableVaccine>
+<preferableVaccine>
+<vaccineType>Meningococcal oligosaccharide (MenACWY), (MenB), PF</vaccineType>
+<cvx>328</cvx>
+<beginAge>10 years</beginAge>
+<endAge>26 years</endAge>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>Y</forecastVaccineType>
+</preferableVaccine>
 <allowableVaccine>
 <vaccineType>meningococcal B, OMV</vaccineType>
 <cvx>163</cvx>
@@ -1108,6 +1281,12 @@
 <cvx>164</cvx>
 <beginAge>10 years</beginAge>
 <endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>Meningococcal oligosaccharide (MenACWY), (MenB), PF</vaccineType>
+<cvx>328</cvx>
+<beginAge>10 years - 4 days</beginAge>
+<endAge>26 years</endAge>
 </allowableVaccine>
 <inadvertentVaccine/>
 <conditionalSkip/>
@@ -1149,6 +1328,16 @@
 <volume>0.5</volume>
 <forecastVaccineType>Y</forecastVaccineType>
 </preferableVaccine>
+<preferableVaccine>
+<vaccineType>Meningococcal oligosaccharide (MenACWY), (MenB), PF</vaccineType>
+<cvx>328</cvx>
+<beginAge>10 years</beginAge>
+<endAge>26 years</endAge>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>Y</forecastVaccineType>
+</preferableVaccine>
 <allowableVaccine>
 <vaccineType>meningococcal B, OMV</vaccineType>
 <cvx>163</cvx>
@@ -1161,6 +1350,12 @@
 <beginAge>10 years</beginAge>
 <endAge/>
 </allowableVaccine>
+<allowableVaccine>
+<vaccineType>Meningococcal oligosaccharide (MenACWY), (MenB), PF</vaccineType>
+<cvx>328</cvx>
+<beginAge>10 years - 4 days</beginAge>
+<endAge>26 years</endAge>
+</allowableVaccine>
 <inadvertentVaccine/>
 <conditionalSkip/>
 <recurringDose>Yes</recurringDose>
@@ -1171,6 +1366,7 @@
 <seriesName>Meningococcal B risk 3-dose series MenB-FHbp Increased Risk</seriesName>
 <targetDisease>Meningococcal B</targetDisease>
 <vaccineGroup>Meningococcal B</vaccineGroup>
+<seriesAdminGuidance>Delay MenB until after pregnancy due to lack of safety data in pregnant persons. May administer if at increased risk and vaccination benefits outweigh potential risks.</seriesAdminGuidance>
 <seriesAdminGuidance>Penbraya (MenABCWY - Pfizer) may be used when both MenACWY and MenB are indicated at the same visit.</seriesAdminGuidance>
 <seriesType>Risk</seriesType>
 <equivalentSeriesGroups/>
@@ -1231,6 +1427,16 @@
 <code>160</code>
 </observationCode>
 <description>Administer to persons with anatomic or functional asplenia, including sickle cell disease.</description>
+<beginAge>10 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>Sickle cell disease</text>
+<code>259</code>
+</observationCode>
+<description>Administer to persons with sickle cell disease</description>
 <beginAge>10 years</beginAge>
 <endAge/>
 <guidance/>

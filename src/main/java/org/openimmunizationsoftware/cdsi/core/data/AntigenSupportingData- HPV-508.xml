@@ -46,7 +46,6 @@
 <seriesType>Standard</seriesType>
 <equivalentSeriesGroups>2</equivalentSeriesGroups>
 <requiredGender>Female</requiredGender>
-<requiredGender>Transgender</requiredGender>
 <requiredGender>Unknown</requiredGender>
 <selectSeries>
 <defaultSeries>Yes</defaultSeries>
@@ -339,7 +338,6 @@
 <seriesType>Standard</seriesType>
 <equivalentSeriesGroups>2</equivalentSeriesGroups>
 <requiredGender>Female</requiredGender>
-<requiredGender>Transgender</requiredGender>
 <requiredGender>Unknown</requiredGender>
 <selectSeries>
 <defaultSeries>No</defaultSeries>
@@ -1109,7 +1107,6 @@
 <seriesType>Risk</seriesType>
 <equivalentSeriesGroups>1</equivalentSeriesGroups>
 <requiredGender>Female</requiredGender>
-<requiredGender>Transgender</requiredGender>
 <requiredGender>Unknown</requiredGender>
 <selectSeries>
 <defaultSeries>No</defaultSeries>
@@ -1697,10 +1694,10 @@
 <targetDisease>HPV</targetDisease>
 <vaccineGroup>HPV</vaccineGroup>
 <seriesAdminGuidance>At the provider's discretion, the recommendation for a 3-dose schedule does not apply to children aged less than 15 years with asplenia, asthma, chronic granulomatous disease, chronic liver disease, chronic lung disease, chronic renal disease, CNS anatomic barrier defines (e.g., cochlear implant), complement deficiency, diabetes, heart disease, or sickle cell disease.</seriesAdminGuidance>
+<seriesAdminGuidance>Shared clinical decision-making (SCDM) is recommended regarding Human papillomavirus (HPV) vaccination for persons 27-45 years of age. Shared clinical decision-making recommendations are intended to be flexible and should be informed by the characteristics, values, and preferences of the individual patient and the clinical discretion of the healthcare provider. More guidance can be found here: https://www.cdc.gov/vaccines/hcp/admin/downloads/ISD-job-aid-SCDM-HPV-shared-clinical-decision-making-HPV.pdf</seriesAdminGuidance>
 <seriesType>Risk</seriesType>
 <equivalentSeriesGroups/>
 <requiredGender>Female</requiredGender>
-<requiredGender>Transgender</requiredGender>
 <requiredGender>Unknown</requiredGender>
 <selectSeries>
 <defaultSeries>No</defaultSeries>
@@ -1710,7 +1707,7 @@
 <seriesPriority>A</seriesPriority>
 <seriesPreference>1</seriesPreference>
 <minAgeToStart>9 years</minAgeToStart>
-<maxAgeToStart>27 years</maxAgeToStart>
+<maxAgeToStart>46 years</maxAgeToStart>
 </selectSeries>
 <indication>
 <observationCode>
@@ -1784,6 +1781,26 @@
 </indication>
 <indication>
 <observationCode>
+<text>HIV/AIDS - severely immunocompromised</text>
+<code>154</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>9 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - not severely immunocompromised</text>
+<code>155</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>9 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
 <text>Generalized malignant neoplasm</text>
 <code>156</code>
 </observationCode>
@@ -1839,7 +1856,7 @@
 <minAge>9 years</minAge>
 <earliestRecAge>11 years</earliestRecAge>
 <latestRecAge>13 years + 4 weeks</latestRecAge>
-<maxAge>27 years</maxAge>
+<maxAge>46 years</maxAge>
 <effectiveDate/>
 <cessationDate/>
 </age>
@@ -2044,6 +2061,7 @@
 <targetDisease>HPV</targetDisease>
 <vaccineGroup>HPV</vaccineGroup>
 <seriesAdminGuidance>At the provider's discretion, the recommendation for a 3-dose schedule does not apply to children aged less than 15 years with asplenia, asthma, chronic granulomatous disease, chronic liver disease, chronic lung disease, chronic renal disease, CNS anatomic barrier defines (e.g., cochlear implant), complement deficiency, diabetes, heart disease, or sickle cell disease.</seriesAdminGuidance>
+<seriesAdminGuidance>Shared clinical decision-making (SCDM) is recommended regarding Human papillomavirus (HPV) vaccination for persons 27-45 years of age. Shared clinical decision-making recommendations are intended to be flexible and should be informed by the characteristics, values, and preferences of the individual patient and the clinical discretion of the healthcare provider. More guidance can be found here: https://www.cdc.gov/vaccines/hcp/admin/downloads/ISD-job-aid-SCDM-HPV-shared-clinical-decision-making-HPV.pdf</seriesAdminGuidance>
 <seriesType>Risk</seriesType>
 <equivalentSeriesGroups/>
 <requiredGender>Male</requiredGender>
@@ -2055,7 +2073,7 @@
 <seriesPriority>A</seriesPriority>
 <seriesPreference>1</seriesPreference>
 <minAgeToStart>9 years</minAgeToStart>
-<maxAgeToStart>27 years</maxAgeToStart>
+<maxAgeToStart>46 years</maxAgeToStart>
 </selectSeries>
 <indication>
 <observationCode>
@@ -2129,6 +2147,26 @@
 </indication>
 <indication>
 <observationCode>
+<text>HIV/AIDS - severely immunocompromised</text>
+<code>154</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>9 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - not severely immunocompromised</text>
+<code>155</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>9 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
 <text>Generalized malignant neoplasm</text>
 <code>156</code>
 </observationCode>
@@ -2184,7 +2222,7 @@
 <minAge>9 years</minAge>
 <earliestRecAge>11 years</earliestRecAge>
 <latestRecAge>13 years + 4 weeks</latestRecAge>
-<maxAge>27 years</maxAge>
+<maxAge>46 years</maxAge>
 <effectiveDate/>
 <cessationDate/>
 </age>

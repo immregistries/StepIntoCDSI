@@ -60,6 +60,24 @@
 established and the condition has stabilized.</contraindicationText>
 <contraindicationGuidance/>
 <contraindicatedVaccine>
+<vaccineType>DTaP-HepB-IPV</vaccineType>
+<cvx>110</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-Hib-IPV</vaccineType>
+<cvx>120</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV</vaccineType>
+<cvx>130</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
 <vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
 <cvx>146</cvx>
 <beginAge/>
@@ -71,6 +89,168 @@ established and the condition has stabilized.</contraindicationText>
 <observationTitle>Encephalopathy not attributable to another identifiable cause within 7 days of administration of a previous dose of Tdap, DTP, or DTaP vaccine</observationTitle>
 <contraindicationText>Do not vaccinate if the patient has had encephalopathy not attributable to another identifiable cause within 7 days of administration of a previous dose of Tdap, DTP, or DTaP vaccine.</contraindicationText>
 <contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>DTaP-HepB-IPV</vaccineType>
+<cvx>110</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-Hib-IPV</vaccineType>
+<cvx>120</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV</vaccineType>
+<cvx>130</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
+<cvx>146</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>086</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of Pertussis</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Pertussis vaccine.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>DTaP-HepB-IPV</vaccineType>
+<cvx>110</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-Hib-IPV</vaccineType>
+<cvx>120</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV</vaccineType>
+<cvx>130</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
+<cvx>146</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>087</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of Diphtheria</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Diphtheria vaccine.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>DTaP-HepB-IPV</vaccineType>
+<cvx>110</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-Hib-IPV</vaccineType>
+<cvx>120</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV</vaccineType>
+<cvx>130</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
+<cvx>146</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>088</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of Tetanus</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Tetanus vaccine.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>DTaP-HepB-IPV</vaccineType>
+<cvx>110</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-Hib-IPV</vaccineType>
+<cvx>120</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV</vaccineType>
+<cvx>130</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
+<cvx>146</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>097</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of Hepatitis B</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Hepatitis B vaccine.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>DTaP-HepB-IPV</vaccineType>
+<cvx>110</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
+<cvx>146</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>098</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of Hib</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Hib vaccine.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>DTaP-Hib-IPV</vaccineType>
+<cvx>120</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
+<cvx>146</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>110</observationCode>
+<observationTitle>Hypersensitivity to yeast</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has a hypersensitivity to yeast.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>DTaP-HepB-IPV</vaccineType>
+<cvx>110</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
 <contraindicatedVaccine>
 <vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
 <cvx>146</cvx>
@@ -1523,6 +1703,12 @@ established and the condition has stabilized.</contraindicationText>
 <allowableVaccine>
 <vaccineType>IPV</vaccineType>
 <cvx>10</cvx>
+<beginAge>6 weeks - 4 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>Polio, Unspecified Formulation</vaccineType>
+<cvx>89</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
 </allowableVaccine>
