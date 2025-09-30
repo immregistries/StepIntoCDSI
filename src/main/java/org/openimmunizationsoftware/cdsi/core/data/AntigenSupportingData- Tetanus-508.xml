@@ -4,6 +4,14 @@
 <contraindications>
 <vaccineGroup>
 <contraindication>
+<observationCode>087</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of Diphtheria</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Diphtheria vaccine.</contraindicationText>
+<contraindicationGuidance/>
+<beginAge/>
+<endAge/>
+</contraindication>
+<contraindication>
 <observationCode>088</observationCode>
 <observationTitle>Severe allergic reaction after previous dose of Tetanus</observationTitle>
 <contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Tetanus vaccine.</contraindicationText>
@@ -19,6 +27,22 @@
 <beginAge/>
 <endAge/>
 </contraindication>
+<contraindication>
+<observationCode>117</observationCode>
+<observationTitle>Severe allergic reaction to diphtheria toxoid</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction to diphtheria toxoid.</contraindicationText>
+<contraindicationGuidance/>
+<beginAge/>
+<endAge/>
+</contraindication>
+<contraindication>
+<observationCode>118</observationCode>
+<observationTitle>Severe allergic reaction to tetanus toxoid</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction to tetanus toxoid.</contraindicationText>
+<contraindicationGuidance/>
+<beginAge/>
+<endAge/>
+</contraindication>
 </vaccineGroup>
 <vaccine>
 <contraindication>
@@ -28,44 +52,14 @@
 established and the condition has stabilized.</contraindicationText>
 <contraindicationGuidance/>
 <contraindicatedVaccine>
-<vaccineType>DTP</vaccineType>
-<cvx>01</cvx>
-<beginAge/>
-<endAge/>
-</contraindicatedVaccine>
-<contraindicatedVaccine>
 <vaccineType>DTaP</vaccineType>
 <cvx>20</cvx>
 <beginAge/>
 <endAge/>
 </contraindicatedVaccine>
 <contraindicatedVaccine>
-<vaccineType>DTP-Hib</vaccineType>
-<cvx>22</cvx>
-<beginAge/>
-<endAge/>
-</contraindicatedVaccine>
-<contraindicatedVaccine>
-<vaccineType>DTaP-Hib</vaccineType>
-<cvx>50</cvx>
-<beginAge/>
-<endAge/>
-</contraindicatedVaccine>
-<contraindicatedVaccine>
-<vaccineType>DTP-Hib-HepB</vaccineType>
-<cvx>102</cvx>
-<beginAge/>
-<endAge/>
-</contraindicatedVaccine>
-<contraindicatedVaccine>
 <vaccineType>DTaP, 5 pertussis antigens</vaccineType>
 <cvx>106</cvx>
-<beginAge/>
-<endAge/>
-</contraindicatedVaccine>
-<contraindicatedVaccine>
-<vaccineType>DTaP, Unspecified Formulation</vaccineType>
-<cvx>107</cvx>
 <beginAge/>
 <endAge/>
 </contraindicatedVaccine>
@@ -94,20 +88,8 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </contraindicatedVaccine>
 <contraindicatedVaccine>
-<vaccineType>DTaP-IPV-Hib-HepB,historical</vaccineType>
-<cvx>132</cvx>
-<beginAge/>
-<endAge/>
-</contraindicatedVaccine>
-<contraindicatedVaccine>
 <vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
 <cvx>146</cvx>
-<beginAge/>
-<endAge/>
-</contraindicatedVaccine>
-<contraindicatedVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
-<cvx>198</cvx>
 <beginAge/>
 <endAge/>
 </contraindicatedVaccine>
@@ -118,44 +100,14 @@ established and the condition has stabilized.</contraindicationText>
 <contraindicationText>Do not vaccinate if the patient has had encephalopathy not attributable to another identifiable cause within 7 days of administration of a previous dose of Tdap, DTP, or DTaP vaccine.</contraindicationText>
 <contraindicationGuidance/>
 <contraindicatedVaccine>
-<vaccineType>DTP</vaccineType>
-<cvx>01</cvx>
-<beginAge/>
-<endAge/>
-</contraindicatedVaccine>
-<contraindicatedVaccine>
 <vaccineType>DTaP</vaccineType>
 <cvx>20</cvx>
 <beginAge/>
 <endAge/>
 </contraindicatedVaccine>
 <contraindicatedVaccine>
-<vaccineType>DTP-Hib</vaccineType>
-<cvx>22</cvx>
-<beginAge/>
-<endAge/>
-</contraindicatedVaccine>
-<contraindicatedVaccine>
-<vaccineType>DTaP-Hib</vaccineType>
-<cvx>50</cvx>
-<beginAge/>
-<endAge/>
-</contraindicatedVaccine>
-<contraindicatedVaccine>
-<vaccineType>DTP-Hib-HepB</vaccineType>
-<cvx>102</cvx>
-<beginAge/>
-<endAge/>
-</contraindicatedVaccine>
-<contraindicatedVaccine>
 <vaccineType>DTaP, 5 pertussis antigens</vaccineType>
 <cvx>106</cvx>
-<beginAge/>
-<endAge/>
-</contraindicatedVaccine>
-<contraindicatedVaccine>
-<vaccineType>DTaP, Unspecified Formulation</vaccineType>
-<cvx>107</cvx>
 <beginAge/>
 <endAge/>
 </contraindicatedVaccine>
@@ -184,8 +136,32 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </contraindicatedVaccine>
 <contraindicatedVaccine>
-<vaccineType>DTaP-IPV-Hib-HepB,historical</vaccineType>
-<cvx>132</cvx>
+<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
+<cvx>146</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>081</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of Polio</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Polio vaccine.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>DTaP-HepB-IPV</vaccineType>
+<cvx>110</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-Hib-IPV</vaccineType>
+<cvx>120</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV</vaccineType>
+<cvx>130</cvx>
 <beginAge/>
 <endAge/>
 </contraindicatedVaccine>
@@ -195,9 +171,225 @@ established and the condition has stabilized.</contraindicationText>
 <beginAge/>
 <endAge/>
 </contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>086</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of Pertussis</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Pertussis vaccine.</contraindicationText>
+<contraindicationGuidance/>
 <contraindicatedVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
-<cvx>198</cvx>
+<vaccineType>DTaP</vaccineType>
+<cvx>20</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP, 5 pertussis antigens</vaccineType>
+<cvx>106</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-HepB-IPV</vaccineType>
+<cvx>110</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>Tdap</vaccineType>
+<cvx>115</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-Hib-IPV</vaccineType>
+<cvx>120</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV</vaccineType>
+<cvx>130</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
+<cvx>146</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>097</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of Hepatitis B</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Hepatitis B vaccine.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>DTaP-HepB-IPV</vaccineType>
+<cvx>110</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
+<cvx>146</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>098</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of Hib</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Hib vaccine.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>DTaP-Hib-IPV</vaccineType>
+<cvx>120</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
+<cvx>146</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>107</observationCode>
+<observationTitle>Severe allergic reaction to neomycin</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction to neomycin.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>DTaP-HepB-IPV</vaccineType>
+<cvx>110</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-Hib-IPV</vaccineType>
+<cvx>120</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV</vaccineType>
+<cvx>130</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
+<cvx>146</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>108</observationCode>
+<observationTitle>Severe allergic reaction to streptomycin</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction to streptomycin.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>DTaP-HepB-IPV</vaccineType>
+<cvx>110</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-Hib-IPV</vaccineType>
+<cvx>120</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV</vaccineType>
+<cvx>130</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
+<cvx>146</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>109</observationCode>
+<observationTitle>Severe allergic reaction to polymyxin B</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction to polymyxin B. </contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>DTaP-HepB-IPV</vaccineType>
+<cvx>110</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-Hib-IPV</vaccineType>
+<cvx>120</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV</vaccineType>
+<cvx>130</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
+<cvx>146</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>110</observationCode>
+<observationTitle>Hypersensitivity to yeast</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has a hypersensitivity to yeast.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>DTaP-HepB-IPV</vaccineType>
+<cvx>110</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
+<cvx>146</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>111</observationCode>
+<observationTitle>Hypersensitivity to the preservative 2-phenoxyethanol</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has a hypersensitivity to the preservative 2-phenoxyethanol.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>DTaP-HepB-IPV</vaccineType>
+<cvx>110</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-Hib-IPV</vaccineType>
+<cvx>120</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV</vaccineType>
+<cvx>130</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
+<cvx>146</cvx>
 <beginAge/>
 <endAge/>
 </contraindicatedVaccine>
@@ -353,7 +545,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTaP-IPV-Hib-HepB,historical</vaccineType>
+<vaccineType>DTaP-IPV-Hib-HepB, historical</vaccineType>
 <cvx>132</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -371,13 +563,13 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DT, IPV adsorved</vaccineType>
+<vaccineType>DT, IPV adsorbed</vaccineType>
 <cvx>195</cvx>
 <beginAge>6 years - 4 days</beginAge>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -622,7 +814,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTaP-IPV-Hib-HepB,historical</vaccineType>
+<vaccineType>DTaP-IPV-Hib-HepB, historical</vaccineType>
 <cvx>132</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -640,13 +832,13 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DT, IPV adsorved</vaccineType>
+<vaccineType>DT, IPV adsorbed</vaccineType>
 <cvx>195</cvx>
 <beginAge>6 years - 4 days</beginAge>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -891,7 +1083,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTaP-IPV-Hib-HepB,historical</vaccineType>
+<vaccineType>DTaP-IPV-Hib-HepB, historical</vaccineType>
 <cvx>132</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -909,13 +1101,13 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DT, IPV adsorved</vaccineType>
+<vaccineType>DT, IPV adsorbed</vaccineType>
 <cvx>195</cvx>
 <beginAge>6 years - 4 days</beginAge>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -1170,7 +1362,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTaP-IPV-Hib-HepB,historical</vaccineType>
+<vaccineType>DTaP-IPV-Hib-HepB, historical</vaccineType>
 <cvx>132</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -1200,7 +1392,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DT, IPV adsorved</vaccineType>
+<vaccineType>DT, IPV adsorbed</vaccineType>
 <cvx>195</cvx>
 <beginAge>6 years - 4 days</beginAge>
 <endAge/>
@@ -1212,7 +1404,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -1438,7 +1630,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTaP-IPV-Hib-HepB,historical</vaccineType>
+<vaccineType>DTaP-IPV-Hib-HepB, historical</vaccineType>
 <cvx>132</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -1468,7 +1660,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DT, IPV adsorved</vaccineType>
+<vaccineType>DT, IPV adsorbed</vaccineType>
 <cvx>195</cvx>
 <beginAge>6 years - 4 days</beginAge>
 <endAge/>
@@ -1480,7 +1672,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -1700,7 +1892,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTaP-IPV-Hib-HepB,historical</vaccineType>
+<vaccineType>DTaP-IPV-Hib-HepB, historical</vaccineType>
 <cvx>132</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -1730,7 +1922,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DT, IPV adsorved</vaccineType>
+<vaccineType>DT, IPV adsorbed</vaccineType>
 <cvx>195</cvx>
 <beginAge>6 years - 4 days</beginAge>
 <endAge/>
@@ -1742,7 +1934,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -1968,7 +2160,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTaP-IPV-Hib-HepB,historical</vaccineType>
+<vaccineType>DTaP-IPV-Hib-HepB, historical</vaccineType>
 <cvx>132</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -1998,7 +2190,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DT, IPV adsorved</vaccineType>
+<vaccineType>DT, IPV adsorbed</vaccineType>
 <cvx>195</cvx>
 <beginAge>6 years - 4 days</beginAge>
 <endAge/>
@@ -2010,7 +2202,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -2267,7 +2459,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTaP-IPV-Hib-HepB,historical</vaccineType>
+<vaccineType>DTaP-IPV-Hib-HepB, historical</vaccineType>
 <cvx>132</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -2297,7 +2489,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DT, IPV adsorved</vaccineType>
+<vaccineType>DT, IPV adsorbed</vaccineType>
 <cvx>195</cvx>
 <beginAge>6 years - 4 days</beginAge>
 <endAge/>
@@ -2309,7 +2501,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -2489,7 +2681,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTaP-IPV-Hib-HepB,historical</vaccineType>
+<vaccineType>DTaP-IPV-Hib-HepB, historical</vaccineType>
 <cvx>132</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -2519,7 +2711,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DT, IPV adsorved</vaccineType>
+<vaccineType>DT, IPV adsorbed</vaccineType>
 <cvx>195</cvx>
 <beginAge>6 years - 4 days</beginAge>
 <endAge/>
@@ -2531,7 +2723,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -2699,7 +2891,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTaP-IPV-Hib-HepB,historical</vaccineType>
+<vaccineType>DTaP-IPV-Hib-HepB, historical</vaccineType>
 <cvx>132</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -2729,7 +2921,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DT, IPV adsorved</vaccineType>
+<vaccineType>DT, IPV adsorbed</vaccineType>
 <cvx>195</cvx>
 <beginAge>6 years - 4 days</beginAge>
 <endAge/>
@@ -2741,7 +2933,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -2921,7 +3113,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTaP-IPV-Hib-HepB,historical</vaccineType>
+<vaccineType>DTaP-IPV-Hib-HepB, historical</vaccineType>
 <cvx>132</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -2963,7 +3155,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -3123,7 +3315,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTaP-IPV-Hib-HepB,historical</vaccineType>
+<vaccineType>DTaP-IPV-Hib-HepB, historical</vaccineType>
 <cvx>132</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -3141,13 +3333,13 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DT, IPV adsorved</vaccineType>
+<vaccineType>DT, IPV adsorbed</vaccineType>
 <cvx>195</cvx>
 <beginAge>6 years - 4 days</beginAge>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -3392,7 +3584,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTaP-IPV-Hib-HepB,historical</vaccineType>
+<vaccineType>DTaP-IPV-Hib-HepB, historical</vaccineType>
 <cvx>132</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -3410,13 +3602,13 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DT, IPV adsorved</vaccineType>
+<vaccineType>DT, IPV adsorbed</vaccineType>
 <cvx>195</cvx>
 <beginAge>6 years - 4 days</beginAge>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -3661,7 +3853,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTaP-IPV-Hib-HepB,historical</vaccineType>
+<vaccineType>DTaP-IPV-Hib-HepB, historical</vaccineType>
 <cvx>132</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -3679,13 +3871,13 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DT, IPV adsorved</vaccineType>
+<vaccineType>DT, IPV adsorbed</vaccineType>
 <cvx>195</cvx>
 <beginAge>6 years - 4 days</beginAge>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -3940,7 +4132,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTaP-IPV-Hib-HepB,historical</vaccineType>
+<vaccineType>DTaP-IPV-Hib-HepB, historical</vaccineType>
 <cvx>132</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -3970,7 +4162,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DT, IPV adsorved</vaccineType>
+<vaccineType>DT, IPV adsorbed</vaccineType>
 <cvx>195</cvx>
 <beginAge>6 years - 4 days</beginAge>
 <endAge/>
@@ -3982,7 +4174,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -4208,7 +4400,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTaP-IPV-Hib-HepB,historical</vaccineType>
+<vaccineType>DTaP-IPV-Hib-HepB, historical</vaccineType>
 <cvx>132</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -4238,7 +4430,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DT, IPV adsorved</vaccineType>
+<vaccineType>DT, IPV adsorbed</vaccineType>
 <cvx>195</cvx>
 <beginAge>6 years - 4 days</beginAge>
 <endAge/>
@@ -4250,7 +4442,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -4470,7 +4662,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTaP-IPV-Hib-HepB,historical</vaccineType>
+<vaccineType>DTaP-IPV-Hib-HepB, historical</vaccineType>
 <cvx>132</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -4500,7 +4692,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DT, IPV adsorved</vaccineType>
+<vaccineType>DT, IPV adsorbed</vaccineType>
 <cvx>195</cvx>
 <beginAge>6 years - 4 days</beginAge>
 <endAge/>
@@ -4512,7 +4704,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -4738,7 +4930,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTaP-IPV-Hib-HepB,historical</vaccineType>
+<vaccineType>DTaP-IPV-Hib-HepB, historical</vaccineType>
 <cvx>132</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -4768,7 +4960,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DT, IPV adsorved</vaccineType>
+<vaccineType>DT, IPV adsorbed</vaccineType>
 <cvx>195</cvx>
 <beginAge>6 years - 4 days</beginAge>
 <endAge/>
@@ -4780,7 +4972,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -4861,7 +5053,7 @@ established and the condition has stabilized.</contraindicationText>
 </set>
 <set>
 <setID>3</setID>
-<setDescription>Dose is not required if the patient has recevied 3 doses with 1 dose of Tdap on or after 7 years and no doses prior to 12 months</setDescription>
+<setDescription>Dose is not required if the patient has received 3 doses with 1 dose of Tdap on or after 7 years and no doses prior to 12 months</setDescription>
 <effectiveDate/>
 <cessationDate/>
 <conditionLogic>AND</conditionLogic>
@@ -5142,7 +5334,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTaP-IPV-Hib-HepB,historical</vaccineType>
+<vaccineType>DTaP-IPV-Hib-HepB, historical</vaccineType>
 <cvx>132</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -5172,7 +5364,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DT, IPV adsorved</vaccineType>
+<vaccineType>DT, IPV adsorbed</vaccineType>
 <cvx>195</cvx>
 <beginAge>6 years - 4 days</beginAge>
 <endAge/>
@@ -5184,7 +5376,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -5364,7 +5556,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTaP-IPV-Hib-HepB,historical</vaccineType>
+<vaccineType>DTaP-IPV-Hib-HepB, historical</vaccineType>
 <cvx>132</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -5394,7 +5586,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DT, IPV adsorved</vaccineType>
+<vaccineType>DT, IPV adsorbed</vaccineType>
 <cvx>195</cvx>
 <beginAge>6 years - 4 days</beginAge>
 <endAge/>
@@ -5406,7 +5598,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -5574,7 +5766,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTaP-IPV-Hib-HepB,historical</vaccineType>
+<vaccineType>DTaP-IPV-Hib-HepB, historical</vaccineType>
 <cvx>132</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -5604,7 +5796,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DT, IPV adsorved</vaccineType>
+<vaccineType>DT, IPV adsorbed</vaccineType>
 <cvx>195</cvx>
 <beginAge>6 years - 4 days</beginAge>
 <endAge/>
@@ -5616,7 +5808,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -5796,7 +5988,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTaP-IPV-Hib-HepB,historical</vaccineType>
+<vaccineType>DTaP-IPV-Hib-HepB, historical</vaccineType>
 <cvx>132</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>
@@ -5838,7 +6030,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>6 weeks - 4 days</beginAge>
 <endAge/>

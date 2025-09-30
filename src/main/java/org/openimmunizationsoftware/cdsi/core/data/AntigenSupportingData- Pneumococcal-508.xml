@@ -3456,6 +3456,26 @@
 </indication>
 <indication>
 <observationCode>
+<text>HIV/AIDS - severely immunocompromised</text>
+<code>154</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>2 years</beginAge>
+<endAge>6 years</endAge>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - not severely immunocompromised</text>
+<code>155</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>2 years</beginAge>
+<endAge>6 years</endAge>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
 <text>Generalized malignant neoplasm</text>
 <code>156</code>
 </observationCode>
@@ -3556,13 +3576,33 @@
 </indication>
 <indication>
 <observationCode>
-<text>Iatrogenic immunosupression</text>
+<text>Iatrogenic immunosuppression</text>
 <code>216</code>
 </observationCode>
-<description>Administer to persons with iatrogenic Immunosupression</description>
+<description>Administer to persons with iatrogenic Immunosuppression</description>
 <beginAge>2 years</beginAge>
 <endAge>6 years</endAge>
 <guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>Sickle cell disease</text>
+<code>259</code>
+</observationCode>
+<description>Administer to persons with sickle cell disease</description>
+<beginAge>2 years</beginAge>
+<endAge>6 years</endAge>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>Hemoglobinopathy disorder</text>
+<code>279</code>
+</observationCode>
+<description>Administer to persons with a hemoglobinopathy disorder</description>
+<beginAge>2 years</beginAge>
+<endAge>6 years</endAge>
+<guidance>Excludes persons with Beta thalassemia minor</guidance>
 </indication>
 <seriesDose>
 <doseNumber>Dose 1</doseNumber>
@@ -4335,6 +4375,16 @@
 </interval>
 <allowableInterval/>
 <preferableVaccine>
+<vaccineType>PCV20</vaccineType>
+<cvx>216</cvx>
+<beginAge>6 weeks</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>Y</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
 <vaccineType>PPSV23</vaccineType>
 <cvx>33</cvx>
 <beginAge>2 years</beginAge>
@@ -4342,7 +4392,7 @@
 <tradeName/>
 <mvx/>
 <volume>0.5</volume>
-<forecastVaccineType>N</forecastVaccineType>
+<forecastVaccineType>Y</forecastVaccineType>
 </preferableVaccine>
 <allowableVaccine>
 <vaccineType>PPSV23</vaccineType>
@@ -4731,6 +4781,26 @@
 </indication>
 <indication>
 <observationCode>
+<text>HIV/AIDS - severely immunocompromised</text>
+<code>154</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>6 years</beginAge>
+<endAge>19 years</endAge>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - not severely immunocompromised</text>
+<code>155</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>6 years</beginAge>
+<endAge>19 years</endAge>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
 <text>Generalized malignant neoplasm</text>
 <code>156</code>
 </observationCode>
@@ -4841,13 +4911,33 @@
 </indication>
 <indication>
 <observationCode>
-<text>Iatrogenic immunosupression</text>
+<text>Iatrogenic immunosuppression</text>
 <code>216</code>
 </observationCode>
-<description>Administer to persons with iatrogenic Immunosupression</description>
+<description>Administer to persons with iatrogenic Immunosuppression</description>
 <beginAge>6 years</beginAge>
 <endAge>19 years</endAge>
 <guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>Sickle cell disease</text>
+<code>259</code>
+</observationCode>
+<description>Administer to persons with sickle cell disease</description>
+<beginAge>6 years</beginAge>
+<endAge>19 years</endAge>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>Hemoglobinopathy disorder</text>
+<code>279</code>
+</observationCode>
+<description>Administer to persons with a hemoglobinopathy disorder</description>
+<beginAge>6 years</beginAge>
+<endAge>19 years</endAge>
+<guidance>Excludes persons with Beta thalassemia minor</guidance>
 </indication>
 <seriesDose>
 <doseNumber>Dose 1</doseNumber>
@@ -4965,6 +5055,16 @@
 </interval>
 <allowableInterval/>
 <preferableVaccine>
+<vaccineType>PCV20</vaccineType>
+<cvx>216</cvx>
+<beginAge>6 weeks</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>Y</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
 <vaccineType>PPSV23</vaccineType>
 <cvx>33</cvx>
 <beginAge>2 years</beginAge>
@@ -4972,7 +5072,7 @@
 <tradeName/>
 <mvx/>
 <volume>0.5</volume>
-<forecastVaccineType>N</forecastVaccineType>
+<forecastVaccineType>Y</forecastVaccineType>
 </preferableVaccine>
 <allowableVaccine>
 <vaccineType>PPSV23</vaccineType>
@@ -5192,6 +5292,26 @@
 </indication>
 <indication>
 <observationCode>
+<text>HIV/AIDS - severely immunocompromised</text>
+<code>154</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>6 years</beginAge>
+<endAge>19 years</endAge>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - not severely immunocompromised</text>
+<code>155</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>6 years</beginAge>
+<endAge>19 years</endAge>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
 <text>Generalized malignant neoplasm</text>
 <code>156</code>
 </observationCode>
@@ -5302,13 +5422,33 @@
 </indication>
 <indication>
 <observationCode>
-<text>Iatrogenic immunosupression</text>
+<text>Iatrogenic immunosuppression</text>
 <code>216</code>
 </observationCode>
-<description>Administer to persons with iatrogenic Immunosupression</description>
+<description>Administer to persons with iatrogenic Immunosuppression</description>
 <beginAge>6 years</beginAge>
 <endAge>19 years</endAge>
 <guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>Sickle cell disease</text>
+<code>259</code>
+</observationCode>
+<description>Administer to persons with sickle cell disease</description>
+<beginAge>6 years</beginAge>
+<endAge>19 years</endAge>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>Hemoglobinopathy disorder</text>
+<code>279</code>
+</observationCode>
+<description>Administer to persons with a hemoglobinopathy disorder</description>
+<beginAge>6 years</beginAge>
+<endAge>19 years</endAge>
+<guidance>Excludes persons with Beta thalassemia minor</guidance>
 </indication>
 <seriesDose>
 <doseNumber>Dose 1</doseNumber>
@@ -5636,6 +5776,26 @@
 </indication>
 <indication>
 <observationCode>
+<text>HIV/AIDS - severely immunocompromised</text>
+<code>154</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>6 years</beginAge>
+<endAge>19 years</endAge>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - not severely immunocompromised</text>
+<code>155</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>6 years</beginAge>
+<endAge>19 years</endAge>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
 <text>Generalized malignant neoplasm</text>
 <code>156</code>
 </observationCode>
@@ -5746,13 +5906,33 @@
 </indication>
 <indication>
 <observationCode>
-<text>Iatrogenic immunosupression</text>
+<text>Iatrogenic immunosuppression</text>
 <code>216</code>
 </observationCode>
-<description>Administer to persons with iatrogenic Immunosupression</description>
+<description>Administer to persons with iatrogenic Immunosuppression</description>
 <beginAge>6 years</beginAge>
 <endAge>19 years</endAge>
 <guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>Sickle cell disease</text>
+<code>259</code>
+</observationCode>
+<description>Administer to persons with sickle cell disease</description>
+<beginAge>6 years</beginAge>
+<endAge>19 years</endAge>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>Hemoglobinopathy disorder</text>
+<code>279</code>
+</observationCode>
+<description>Administer to persons with a hemoglobinopathy disorder</description>
+<beginAge>6 years</beginAge>
+<endAge>19 years</endAge>
+<guidance>Excludes persons with Beta thalassemia minor</guidance>
 </indication>
 <seriesDose>
 <doseNumber>Dose 1</doseNumber>
@@ -5942,6 +6122,7 @@
 <targetDisease>Pneumococcal</targetDisease>
 <vaccineGroup>Pneumococcal</vaccineGroup>
 <seriesAdminGuidance>Adults who have received PCV13 please consult the following for PCV20, PCV21 or PPSV23 options: https://www.cdc.gov/pneumococcal/downloads/Vaccine-Timing-Adults-JobAid.pdf</seriesAdminGuidance>
+<seriesAdminGuidance>Adults who have received PCV15 but have not yet completed PPSV23 series, can complete the series with either 1 dose of PCV20 or 1 dose of PCV21 if they no longer have access to PPSV23.</seriesAdminGuidance>
 <seriesAdminGuidance>Based on shared clinical decision-making, 1 dose of PCV20 or PCV21 may be administered at least 5 years after the last pneumococcal vaccine dose provided the patient previously received both PCV13 and PPSV23 with at least one dose of PPSV23 received on or after 65 years of age.</seriesAdminGuidance>
 <seriesType>Risk</seriesType>
 <equivalentSeriesGroups/>
@@ -6146,7 +6327,7 @@
 <doseNumber>Dose 2</doseNumber>
 <age>
 <absMinAge>2 years - 4 days</absMinAge>
-<minAge>6 years</minAge>
+<minAge>19 years</minAge>
 <earliestRecAge/>
 <latestRecAge/>
 <maxAge/>
@@ -6154,22 +6335,9 @@
 <cessationDate/>
 </age>
 <interval>
-<fromPrevious>N</fromPrevious>
+<fromPrevious>Y</fromPrevious>
 <fromTargetDose/>
-<fromMostRecent>133</fromMostRecent>
-<fromRelevantObs/>
-<absMinInt>0 days</absMinInt>
-<minInt>8 weeks</minInt>
-<earliestRecInt>8 weeks</earliestRecInt>
-<latestRecInt/>
-<intervalPriority/>
-<effectiveDate/>
-<cessationDate/>
-</interval>
-<interval>
-<fromPrevious>N</fromPrevious>
-<fromTargetDose/>
-<fromMostRecent>215</fromMostRecent>
+<fromMostRecent/>
 <fromRelevantObs/>
 <absMinInt>0 days</absMinInt>
 <minInt>1 year</minInt>
@@ -6188,7 +6356,27 @@
 <tradeName/>
 <mvx/>
 <volume>0.5</volume>
-<forecastVaccineType>N</forecastVaccineType>
+<forecastVaccineType>Y</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>PCV20</vaccineType>
+<cvx>216</cvx>
+<beginAge>6 weeks</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>Y</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>PCV21</vaccineType>
+<cvx>327</cvx>
+<beginAge>19 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>Y</forecastVaccineType>
 </preferableVaccine>
 <allowableVaccine>
 <vaccineType>PPSV23</vaccineType>
@@ -6525,7 +6713,7 @@
 </seriesDose>
 </series>
 <series>
-<seriesName>Pneumococcal risk 19+ years Chonic Medical Conditions PPSV-PCV series</seriesName>
+<seriesName>Pneumococcal risk 19+ years Chronic Medical Conditions PPSV-PCV series</seriesName>
 <targetDisease>Pneumococcal</targetDisease>
 <vaccineGroup>Pneumococcal</vaccineGroup>
 <seriesAdminGuidance>Adults who have received PCV13 please consult the following for PCV20, PCV21 or PPSV23 options: https://www.cdc.gov/pneumococcal/downloads/Vaccine-Timing-Adults-JobAid.pdf</seriesAdminGuidance>
@@ -6670,8 +6858,8 @@
 <seriesDose>
 <doseNumber>Dose 2</doseNumber>
 <age>
-<absMinAge/>
-<minAge/>
+<absMinAge>2 years - 4 days</absMinAge>
+<minAge>19 years</minAge>
 <earliestRecAge/>
 <latestRecAge/>
 <maxAge/>
@@ -7047,6 +7235,7 @@
 <vaccineGroup>Pneumococcal</vaccineGroup>
 <seriesAdminGuidance>Adults who have received PCV13 please consult the following for PCV20, PCV21 or PPSV23 options: https://www.cdc.gov/pneumococcal/downloads/Vaccine-Timing-Adults-JobAid.pdf</seriesAdminGuidance>
 <seriesAdminGuidance>When PCV15 is used, the recommended interval between administration of PCV15 and PPSV23 is on or after 1 year. A minimum interval of 8 weeks can be considered for adults with an immunocompromising condition, cochlear implant, or cerebrospinal fluid leak to minimize the risk for IPD caused by serotypes unique to PPSV23 in these vulnerable groups</seriesAdminGuidance>
+<seriesAdminGuidance>Adults who have received PCV15 but have not yet completed PPSV23 series, can complete the series with either 1 dose of PCV20 or 1 dose of PCV21 if they no longer have access to PPSV23.</seriesAdminGuidance>
 <seriesAdminGuidance>Based on shared clinical decision-making, 1 dose of PCV20 or PCV21 may be administered at least 5 years after the last pneumococcal vaccine dose provided the patient previously received both PCV13 and PPSV23 with at least one dose of PPSV23 received on or after 65 years of age.</seriesAdminGuidance>
 <seriesType>Risk</seriesType>
 <equivalentSeriesGroups/>
@@ -7223,7 +7412,27 @@
 <tradeName/>
 <mvx/>
 <volume>0.5</volume>
-<forecastVaccineType>N</forecastVaccineType>
+<forecastVaccineType>Y</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>PCV20</vaccineType>
+<cvx>216</cvx>
+<beginAge>6 weeks</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>Y</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>PCV21</vaccineType>
+<cvx>327</cvx>
+<beginAge>19 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>Y</forecastVaccineType>
 </preferableVaccine>
 <allowableVaccine>
 <vaccineType>PPSV23</vaccineType>
@@ -7656,8 +7865,8 @@
 <seriesDose>
 <doseNumber>Dose 2</doseNumber>
 <age>
-<absMinAge/>
-<minAge/>
+<absMinAge>2 years - 4 days</absMinAge>
+<minAge>19 years</minAge>
 <earliestRecAge/>
 <latestRecAge/>
 <maxAge/>
@@ -8054,6 +8263,7 @@
 <vaccineGroup>Pneumococcal</vaccineGroup>
 <seriesAdminGuidance>Adults who have received PCV13 please consult the following for PCV20, PCV21 or PPSV23 options: https://www.cdc.gov/pneumococcal/downloads/Vaccine-Timing-Adults-JobAid.pdf</seriesAdminGuidance>
 <seriesAdminGuidance>When PCV15 is used, the recommended interval between administration of PCV15 and PPSV23 is on or after 1 year. A minimum interval of 8 weeks can be considered for adults with an immunocompromising condition, cochlear implant, or cerebrospinal fluid leak to minimize the risk for IPD caused by serotypes unique to PPSV23 in these vulnerable groups</seriesAdminGuidance>
+<seriesAdminGuidance>Adults who have received PCV15 but have not yet completed PPSV23 series, can complete the series with either 1 dose of PCV20 or 1 dose of PCV21 if they no longer have access to PPSV23.</seriesAdminGuidance>
 <seriesAdminGuidance>Based on shared clinical decision-making, 1 dose of PCV20 or PCV21 may be administered at least 5 years after the last pneumococcal vaccine dose provided the patient previously received both PCV13 and PPSV23 with at least one dose of PPSV23 received on or after 65 years of age.</seriesAdminGuidance>
 <seriesType>Risk</seriesType>
 <equivalentSeriesGroups/>
@@ -8134,6 +8344,26 @@
 <code>153</code>
 </observationCode>
 <description>Administer to persons who have a phagocytic function defect (e.g. leukocyte adhesion defect and myeloperoxidase deficiency).</description>
+<beginAge>19 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - severely immunocompromised</text>
+<code>154</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>19 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - not severely immunocompromised</text>
+<code>155</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
 <beginAge>19 years</beginAge>
 <endAge/>
 <guidance/>
@@ -8250,13 +8480,33 @@
 </indication>
 <indication>
 <observationCode>
-<text>Iatrogenic immunosupression</text>
+<text>Iatrogenic immunosuppression</text>
 <code>216</code>
 </observationCode>
-<description>Administer to persons with iatrogenic Immunosupression</description>
+<description>Administer to persons with iatrogenic Immunosuppression</description>
 <beginAge>19 years</beginAge>
 <endAge/>
 <guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>Sickle cell disease</text>
+<code>259</code>
+</observationCode>
+<description>Administer to persons with sickle cell disease</description>
+<beginAge>19 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>Hemoglobinopathy disorder</text>
+<code>279</code>
+</observationCode>
+<description>Administer to persons with a hemoglobinopathy disorder</description>
+<beginAge>19 years</beginAge>
+<endAge/>
+<guidance>Excludes persons with Beta thalassemia minor</guidance>
 </indication>
 <seriesDose>
 <doseNumber>Dose 1</doseNumber>
@@ -8357,8 +8607,8 @@
 <seriesDose>
 <doseNumber>Dose 2</doseNumber>
 <age>
-<absMinAge/>
-<minAge/>
+<absMinAge>2 years - 4 days</absMinAge>
+<minAge>19 years</minAge>
 <earliestRecAge/>
 <latestRecAge/>
 <maxAge/>
@@ -8400,7 +8650,27 @@
 <tradeName/>
 <mvx/>
 <volume>0.5</volume>
-<forecastVaccineType>N</forecastVaccineType>
+<forecastVaccineType>Y</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>PCV20</vaccineType>
+<cvx>216</cvx>
+<beginAge>6 weeks</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>Y</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>PCV21</vaccineType>
+<cvx>327</cvx>
+<beginAge>19 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>Y</forecastVaccineType>
 </preferableVaccine>
 <allowableVaccine>
 <vaccineType>PPSV23</vaccineType>
@@ -8473,8 +8743,8 @@
 <seriesDose>
 <doseNumber>Dose 3</doseNumber>
 <age>
-<absMinAge/>
-<minAge/>
+<absMinAge>2 years - 4 days</absMinAge>
+<minAge>19 years</minAge>
 <earliestRecAge/>
 <latestRecAge/>
 <maxAge/>
@@ -8495,16 +8765,6 @@
 <cessationDate/>
 </interval>
 <allowableInterval/>
-<preferableVaccine>
-<vaccineType>PPSV23</vaccineType>
-<cvx>33</cvx>
-<beginAge>2 years</beginAge>
-<endAge/>
-<tradeName/>
-<mvx/>
-<volume>0.5</volume>
-<forecastVaccineType>Y</forecastVaccineType>
-</preferableVaccine>
 <preferableVaccine>
 <vaccineType>PCV20</vaccineType>
 <cvx>216</cvx>
@@ -8906,6 +9166,7 @@
 <targetDisease>Pneumococcal</targetDisease>
 <vaccineGroup>Pneumococcal</vaccineGroup>
 <seriesAdminGuidance>Adults who have received PCV13 please consult the following for PCV20, PCV21 or PPSV23 options: https://www.cdc.gov/pneumococcal/downloads/Vaccine-Timing-Adults-JobAid.pdf</seriesAdminGuidance>
+<seriesAdminGuidance>Adults who have received PCV15 but have not yet completed PPSV23 series, can complete the series with either 1 dose of PCV20 or 1 dose of PCV21 if they no longer have access to PPSV23.</seriesAdminGuidance>
 <seriesAdminGuidance>Based on shared clinical decision-making, 1 dose of PCV20 or PCV21 may be administered at least 5 years after the last pneumococcal vaccine dose provided the patient previously received both PCV13 and PPSV23 with at least one dose of PPSV23 received on or after 65 years of age.</seriesAdminGuidance>
 <seriesType>Risk</seriesType>
 <equivalentSeriesGroups/>
@@ -8986,6 +9247,26 @@
 <code>153</code>
 </observationCode>
 <description>Administer to persons who have a phagocytic function defect (e.g. leukocyte adhesion defect and myeloperoxidase deficiency).</description>
+<beginAge>19 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - severely immunocompromised</text>
+<code>154</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>19 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - not severely immunocompromised</text>
+<code>155</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
 <beginAge>19 years</beginAge>
 <endAge/>
 <guidance/>
@@ -9102,13 +9383,33 @@
 </indication>
 <indication>
 <observationCode>
-<text>Iatrogenic immunosupression</text>
+<text>Iatrogenic immunosuppression</text>
 <code>216</code>
 </observationCode>
-<description>Administer to persons with iatrogenic Immunosupression</description>
+<description>Administer to persons with iatrogenic Immunosuppression</description>
 <beginAge>19 years</beginAge>
 <endAge/>
 <guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>Sickle cell disease</text>
+<code>259</code>
+</observationCode>
+<description>Administer to persons with sickle cell disease</description>
+<beginAge>19 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>Hemoglobinopathy disorder</text>
+<code>279</code>
+</observationCode>
+<description>Administer to persons with a hemoglobinopathy disorder</description>
+<beginAge>19 years</beginAge>
+<endAge/>
+<guidance>Excludes persons with Beta thalassemia minor</guidance>
 </indication>
 <seriesDose>
 <doseNumber>Dose 1</doseNumber>
@@ -9147,8 +9448,8 @@
 <seriesDose>
 <doseNumber>Dose 2</doseNumber>
 <age>
-<absMinAge/>
-<minAge/>
+<absMinAge>2 years - 4 days</absMinAge>
+<minAge>19 years</minAge>
 <earliestRecAge/>
 <latestRecAge/>
 <maxAge/>
@@ -9255,8 +9556,8 @@
 <seriesDose>
 <doseNumber>Dose 3</doseNumber>
 <age>
-<absMinAge/>
-<minAge/>
+<absMinAge>2 years - 4 days</absMinAge>
+<minAge>19 years</minAge>
 <earliestRecAge/>
 <latestRecAge/>
 <maxAge/>
@@ -9291,16 +9592,6 @@
 </interval>
 <allowableInterval/>
 <preferableVaccine>
-<vaccineType>PPSV23</vaccineType>
-<cvx>33</cvx>
-<beginAge>2 years</beginAge>
-<endAge/>
-<tradeName/>
-<mvx/>
-<volume>0.5</volume>
-<forecastVaccineType>N</forecastVaccineType>
-</preferableVaccine>
-<preferableVaccine>
 <vaccineType>PCV20</vaccineType>
 <cvx>216</cvx>
 <beginAge>6 weeks</beginAge>
@@ -9308,7 +9599,7 @@
 <tradeName/>
 <mvx/>
 <volume>0.5</volume>
-<forecastVaccineType>N</forecastVaccineType>
+<forecastVaccineType>Y</forecastVaccineType>
 </preferableVaccine>
 <preferableVaccine>
 <vaccineType>PCV21</vaccineType>
@@ -9787,6 +10078,26 @@
 </indication>
 <indication>
 <observationCode>
+<text>HIV/AIDS - severely immunocompromised</text>
+<code>154</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>19 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - not severely immunocompromised</text>
+<code>155</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>19 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
 <text>Generalized malignant neoplasm</text>
 <code>156</code>
 </observationCode>
@@ -9897,13 +10208,33 @@
 </indication>
 <indication>
 <observationCode>
-<text>Iatrogenic immunosupression</text>
+<text>Iatrogenic immunosuppression</text>
 <code>216</code>
 </observationCode>
-<description>Administer to persons with iatrogenic Immunosupression</description>
+<description>Administer to persons with iatrogenic Immunosuppression</description>
 <beginAge>19 years</beginAge>
 <endAge/>
 <guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>Sickle cell disease</text>
+<code>259</code>
+</observationCode>
+<description>Administer to persons with sickle cell disease</description>
+<beginAge>19 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>Hemoglobinopathy disorder</text>
+<code>279</code>
+</observationCode>
+<description>Administer to persons with a hemoglobinopathy disorder</description>
+<beginAge>19 years</beginAge>
+<endAge/>
+<guidance>Excludes persons with Beta thalassemia minor</guidance>
 </indication>
 <seriesDose>
 <doseNumber>Dose 1</doseNumber>
@@ -9942,8 +10273,8 @@
 <seriesDose>
 <doseNumber>Dose 2</doseNumber>
 <age>
-<absMinAge/>
-<minAge/>
+<absMinAge>2 years - 4 days</absMinAge>
+<minAge>19 years</minAge>
 <earliestRecAge/>
 <latestRecAge/>
 <maxAge/>
@@ -9988,8 +10319,8 @@
 <seriesDose>
 <doseNumber>Dose 3</doseNumber>
 <age>
-<absMinAge/>
-<minAge/>
+<absMinAge>2 years - 4 days</absMinAge>
+<minAge>19 years</minAge>
 <earliestRecAge/>
 <latestRecAge/>
 <maxAge/>
@@ -10384,8 +10715,7 @@
 <seriesName>Pneumococcal 50+ 1-dose PCV series</seriesName>
 <targetDisease>Pneumococcal</targetDisease>
 <vaccineGroup>Pneumococcal</vaccineGroup>
-<seriesAdminGuidance>Adults who have received PCV13 please consult the following for PCV20, PCV21 or PPSV23 options: https://www.cdc.gov/pneumococcal/downloads/Vaccine-Timing-Adults-JobAid.pdf</seriesAdminGuidance>
-<seriesAdminGuidance>Based on shared clinical decision-making, 1 dose of PCV20 or PCV21 may be administered at least 5 years after the last pneumococcal vaccine dose provided the patient previously received both PCV13 and PPSV23 with at least one dose of PPSV23 received on or after 65 years of age.</seriesAdminGuidance>
+<seriesAdminGuidance>Adults who have received PCV15 but have not yet completed PPSV23 series, can complete the series with either 1 dose of PCV20 or 1 dose of PCV21 if they no longer have access to PPSV23.</seriesAdminGuidance>
 <seriesType>Standard</seriesType>
 <equivalentSeriesGroups>2</equivalentSeriesGroups>
 <requiredGender/>
@@ -10455,12 +10785,6 @@
 <volume>0.5</volume>
 <forecastVaccineType>Y</forecastVaccineType>
 </preferableVaccine>
-<allowableVaccine>
-<vaccineType>PCV13</vaccineType>
-<cvx>133</cvx>
-<beginAge>6 weeks - 4 days</beginAge>
-<endAge/>
-</allowableVaccine>
 <allowableVaccine>
 <vaccineType>PCV15</vaccineType>
 <cvx>215</cvx>
@@ -10576,6 +10900,145 @@
 </condition>
 </set>
 </conditionalSkip>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
+</series>
+<series>
+<seriesName>Pneumococcal 50+ 2-dose PCV13 series</seriesName>
+<targetDisease>Pneumococcal</targetDisease>
+<vaccineGroup>Pneumococcal</vaccineGroup>
+<seriesAdminGuidance>Adults who have received PCV13 please consult the following for PCV20, PCV21 or PPSV23 options: https://www.cdc.gov/pneumococcal/downloads/Vaccine-Timing-Adults-JobAid.pdf</seriesAdminGuidance>
+<seriesAdminGuidance>Based on shared clinical decision-making, 1 dose of PCV20 or PCV21 may be administered at least 5 years after the last pneumococcal vaccine dose provided the patient previously received both PCV13 and PPSV23 with at least one dose of PPSV23 received on or after 65 years of age.</seriesAdminGuidance>
+<seriesType>Standard</seriesType>
+<equivalentSeriesGroups>2</equivalentSeriesGroups>
+<requiredGender/>
+<selectSeries>
+<defaultSeries>No</defaultSeries>
+<productPath>No</productPath>
+<seriesGroupName>Standard 50+</seriesGroupName>
+<seriesGroup>3</seriesGroup>
+<seriesPriority>A</seriesPriority>
+<seriesPreference>2</seriesPreference>
+<minAgeToStart>50 years</minAgeToStart>
+<maxAgeToStart/>
+</selectSeries>
+<indication/>
+<seriesDose>
+<doseNumber>Dose 1</doseNumber>
+<age>
+<absMinAge>19 years</absMinAge>
+<minAge>50 years</minAge>
+<earliestRecAge>50 years</earliestRecAge>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>N</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent>33</fromMostRecent>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>1 year</minInt>
+<earliestRecInt>1 year</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<allowableInterval/>
+<preferableVaccine/>
+<allowableVaccine>
+<vaccineType>PCV13</vaccineType>
+<cvx>133</cvx>
+<beginAge>6 weeks - 4 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<inadvertentVaccine/>
+<conditionalSkip/>
+<recurringDose>No</recurringDose>
+<seasonalRecommendation/>
+</seriesDose>
+<seriesDose>
+<doseNumber>Dose 2</doseNumber>
+<age>
+<absMinAge>19 years</absMinAge>
+<minAge>50 years</minAge>
+<earliestRecAge/>
+<latestRecAge/>
+<maxAge/>
+<effectiveDate/>
+<cessationDate/>
+</age>
+<interval>
+<fromPrevious>N</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent>133; 215; 216</fromMostRecent>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>1 year</minInt>
+<earliestRecInt>1 year</earliestRecInt>
+<latestRecInt/>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<interval>
+<fromPrevious>N</fromPrevious>
+<fromTargetDose/>
+<fromMostRecent>33</fromMostRecent>
+<fromRelevantObs/>
+<absMinInt>0 days</absMinInt>
+<minInt>5 years</minInt>
+<earliestRecInt>5 years</earliestRecInt>
+<latestRecInt>5 years</latestRecInt>
+<intervalPriority/>
+<effectiveDate/>
+<cessationDate/>
+</interval>
+<allowableInterval/>
+<preferableVaccine>
+<vaccineType>PCV20</vaccineType>
+<cvx>216</cvx>
+<beginAge>6 weeks</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>Y</forecastVaccineType>
+</preferableVaccine>
+<preferableVaccine>
+<vaccineType>PCV21</vaccineType>
+<cvx>327</cvx>
+<beginAge>19 years</beginAge>
+<endAge/>
+<tradeName/>
+<mvx/>
+<volume>0.5</volume>
+<forecastVaccineType>Y</forecastVaccineType>
+</preferableVaccine>
+<allowableVaccine>
+<vaccineType>PPSV23</vaccineType>
+<cvx>33</cvx>
+<beginAge>2 years - 4 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>PCV20</vaccineType>
+<cvx>216</cvx>
+<beginAge>6 weeks - 4 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>PCV21</vaccineType>
+<cvx>327</cvx>
+<beginAge>19 years - 4 days</beginAge>
+<endAge/>
+</allowableVaccine>
+<inadvertentVaccine/>
+<conditionalSkip/>
 <recurringDose>No</recurringDose>
 <seasonalRecommendation/>
 </seriesDose>
@@ -10839,7 +11302,7 @@
 <seriesGroupName>Standard 50+</seriesGroupName>
 <seriesGroup>3</seriesGroup>
 <seriesPriority>A</seriesPriority>
-<seriesPreference>2</seriesPreference>
+<seriesPreference>3</seriesPreference>
 <minAgeToStart>50 years</minAgeToStart>
 <maxAgeToStart/>
 </selectSeries>
@@ -10847,7 +11310,7 @@
 <seriesDose>
 <doseNumber>Dose 1</doseNumber>
 <age>
-<absMinAge>19 years</absMinAge>
+<absMinAge>2 years - 4 days</absMinAge>
 <minAge>50 years</minAge>
 <earliestRecAge>50 years</earliestRecAge>
 <latestRecAge/>

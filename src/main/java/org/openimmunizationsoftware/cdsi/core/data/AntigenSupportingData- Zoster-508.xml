@@ -11,21 +11,15 @@
 <beginAge/>
 <endAge/>
 </contraindication>
-</vaccineGroup>
-<vaccine>
 <contraindication>
 <observationCode>172</observationCode>
 <observationTitle>Severe allergic reaction after previous dose of recombinant zoster</observationTitle>
 <contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of recombinant zoster vaccine.</contraindicationText>
 <contraindicationGuidance/>
-<contraindicatedVaccine>
-<vaccineType>Zoster recombinant</vaccineType>
-<cvx>187</cvx>
 <beginAge/>
 <endAge/>
-</contraindicatedVaccine>
 </contraindication>
-</vaccine>
+</vaccineGroup>
 </contraindications>
 <series>
 <seriesName>Zoster 2-dose series</seriesName>
@@ -365,6 +359,26 @@
 <code>153</code>
 </observationCode>
 <description>Administer to persons who have a phagocytic function defect (e.g. leukocyte adhesion defect and myeloperoxidase deficiency).</description>
+<beginAge>19 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - severely immunocompromised</text>
+<code>154</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>19 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - not severely immunocompromised</text>
+<code>155</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
 <beginAge>19 years</beginAge>
 <endAge/>
 <guidance/>

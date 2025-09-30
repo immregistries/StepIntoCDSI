@@ -34,38 +34,20 @@
 </vaccineGroup>
 <vaccine>
 <contraindication>
-<observationCode>007</observationCode>
-<observationTitle>Pregnant</observationTitle>
-<contraindicationText>Do not vaccinate if the patient is pregnant.</contraindicationText>
-<contraindicationGuidance/>
-<contraindicatedVaccine>
-<vaccineType>Hep B, adjuvanted</vaccineType>
-<cvx>189</cvx>
-<beginAge/>
-<endAge/>
-</contraindicatedVaccine>
-<contraindicatedVaccine>
-<vaccineType>HepB recombinant, 3-antigen, Al(OH)3</vaccineType>
-<cvx>220</cvx>
-<beginAge/>
-<endAge/>
-</contraindicatedVaccine>
-</contraindication>
-<contraindication>
 <observationCode>076</observationCode>
 <observationTitle>Progressive neurologic disorder</observationTitle>
 <contraindicationText>Do not vaccinate if the patient has progressive neurologic disorder until a treatment regimen has been
 established and the condition has stabilized.</contraindicationText>
 <contraindicationGuidance/>
 <contraindicatedVaccine>
-<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
-<cvx>146</cvx>
+<vaccineType>DTaP-HepB-IPV</vaccineType>
+<cvx>110</cvx>
 <beginAge/>
 <endAge/>
 </contraindicatedVaccine>
 <contraindicatedVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
-<cvx>198</cvx>
+<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
+<cvx>146</cvx>
 <beginAge/>
 <endAge/>
 </contraindicatedVaccine>
@@ -76,14 +58,110 @@ established and the condition has stabilized.</contraindicationText>
 <contraindicationText>Do not vaccinate if the patient has had encephalopathy not attributable to another identifiable cause within 7 days of administration of a previous dose of Tdap, DTP, or DTaP vaccine.</contraindicationText>
 <contraindicationGuidance/>
 <contraindicatedVaccine>
+<vaccineType>DTaP-HepB-IPV</vaccineType>
+<cvx>110</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
 <vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
 <cvx>146</cvx>
 <beginAge/>
 <endAge/>
 </contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>081</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of Polio</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Polio vaccine.</contraindicationText>
+<contraindicationGuidance/>
 <contraindicatedVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
-<cvx>198</cvx>
+<vaccineType>DTaP-HepB-IPV</vaccineType>
+<cvx>110</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
+<cvx>146</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>086</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of Pertussis</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Pertussis vaccine.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>DTaP-HepB-IPV</vaccineType>
+<cvx>110</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
+<cvx>146</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>087</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of Diphtheria</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Diphtheria vaccine.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>DTaP-HepB-IPV</vaccineType>
+<cvx>110</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
+<cvx>146</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>088</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of Tetanus</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Tetanus vaccine.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>DTaP-HepB-IPV</vaccineType>
+<cvx>110</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
+<cvx>146</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>096</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of Hepatitis A</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Hepatitis A vaccine.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>HepA-HepB</vaccineType>
+<cvx>104</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>098</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of Hib</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Hib vaccine.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
+<cvx>146</cvx>
 <beginAge/>
 <endAge/>
 </contraindicatedVaccine>
@@ -105,6 +183,30 @@ established and the condition has stabilized.</contraindicationText>
 <beginAge/>
 <endAge/>
 </contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
+<cvx>146</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>108</observationCode>
+<observationTitle>Severe allergic reaction to streptomycin</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction to streptomycin.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>DTaP-HepB-IPV</vaccineType>
+<cvx>110</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
+<cvx>146</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
 </contraindication>
 <contraindication>
 <observationCode>109</observationCode>
@@ -114,6 +216,42 @@ established and the condition has stabilized.</contraindicationText>
 <contraindicatedVaccine>
 <vaccineType>DTaP-HepB-IPV</vaccineType>
 <cvx>110</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
+<cvx>146</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>111</observationCode>
+<observationTitle>Hypersensitivity to the preservative 2-phenoxyethanol</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has a hypersensitivity to the preservative 2-phenoxyethanol.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>DTaP-HepB-IPV</vaccineType>
+<cvx>110</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+<contraindicatedVaccine>
+<vaccineType>DTaP-IPV-Hib-HepB</vaccineType>
+<cvx>146</cvx>
+<beginAge/>
+<endAge/>
+</contraindicatedVaccine>
+</contraindication>
+<contraindication>
+<observationCode>112</observationCode>
+<observationTitle>Hypersensitivity to alum</observationTitle>
+<contraindicationText>Do not vaccinate if the patient has a hypersensitivity to alum.</contraindicationText>
+<contraindicationGuidance/>
+<contraindicatedVaccine>
+<vaccineType>HepA-HepB</vaccineType>
+<cvx>104</cvx>
 <beginAge/>
 <endAge/>
 </contraindicatedVaccine>
@@ -212,16 +350,6 @@ established and the condition has stabilized.</contraindicationText>
 <volume>0.5</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
-<preferableVaccine>
-<vaccineType>HepB recombinant, 3-antigen, Al(OH)3</vaccineType>
-<cvx>220</cvx>
-<beginAge>18 years</beginAge>
-<endAge/>
-<tradeName/>
-<mvx/>
-<volume>1.0</volume>
-<forecastVaccineType>N</forecastVaccineType>
-</preferableVaccine>
 <allowableVaccine>
 <vaccineType>Hep B, Adol/peds</vaccineType>
 <cvx>08</cvx>
@@ -295,7 +423,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
@@ -396,16 +524,6 @@ established and the condition has stabilized.</contraindicationText>
 <volume>0.5</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
-<preferableVaccine>
-<vaccineType>HepB recombinant, 3-antigen, Al(OH)3</vaccineType>
-<cvx>220</cvx>
-<beginAge>18 years</beginAge>
-<endAge/>
-<tradeName/>
-<mvx/>
-<volume>1.0</volume>
-<forecastVaccineType>N</forecastVaccineType>
-</preferableVaccine>
 <allowableVaccine>
 <vaccineType>Hep B, Adol/peds</vaccineType>
 <cvx>08</cvx>
@@ -479,7 +597,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
@@ -593,16 +711,6 @@ established and the condition has stabilized.</contraindicationText>
 <volume>0.5</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
-<preferableVaccine>
-<vaccineType>HepB recombinant, 3-antigen, Al(OH)3</vaccineType>
-<cvx>220</cvx>
-<beginAge>18 years</beginAge>
-<endAge/>
-<tradeName/>
-<mvx/>
-<volume>1.0</volume>
-<forecastVaccineType>N</forecastVaccineType>
-</preferableVaccine>
 <allowableVaccine>
 <vaccineType>Hep B, Adol/peds</vaccineType>
 <cvx>08</cvx>
@@ -676,7 +784,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
@@ -765,16 +873,6 @@ established and the condition has stabilized.</contraindicationText>
 <volume>0.5</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
-<preferableVaccine>
-<vaccineType>HepB recombinant, 3-antigen, Al(OH)3</vaccineType>
-<cvx>220</cvx>
-<beginAge>18 years</beginAge>
-<endAge/>
-<tradeName/>
-<mvx/>
-<volume>1.0</volume>
-<forecastVaccineType>N</forecastVaccineType>
-</preferableVaccine>
 <allowableVaccine>
 <vaccineType>Hep B, Adol/peds</vaccineType>
 <cvx>08</cvx>
@@ -848,7 +946,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
@@ -869,7 +967,7 @@ established and the condition has stabilized.</contraindicationText>
 <age>
 <absMinAge>4 weeks - 4 days</absMinAge>
 <minAge>4 weeks</minAge>
-<earliestRecAge>2 months</earliestRecAge>
+<earliestRecAge>1 month</earliestRecAge>
 <latestRecAge>3 months + 4 weeks</latestRecAge>
 <maxAge/>
 <effectiveDate/>
@@ -929,16 +1027,6 @@ established and the condition has stabilized.</contraindicationText>
 <volume>0.5</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
-<preferableVaccine>
-<vaccineType>HepB recombinant, 3-antigen, Al(OH)3</vaccineType>
-<cvx>220</cvx>
-<beginAge>18 years</beginAge>
-<endAge/>
-<tradeName/>
-<mvx/>
-<volume>1.0</volume>
-<forecastVaccineType>N</forecastVaccineType>
-</preferableVaccine>
 <allowableVaccine>
 <vaccineType>Hep B, Adol/peds</vaccineType>
 <cvx>08</cvx>
@@ -1012,7 +1100,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
@@ -1093,16 +1181,6 @@ established and the condition has stabilized.</contraindicationText>
 <volume>0.5</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
-<preferableVaccine>
-<vaccineType>HepB recombinant, 3-antigen, Al(OH)3</vaccineType>
-<cvx>220</cvx>
-<beginAge>18 years</beginAge>
-<endAge/>
-<tradeName/>
-<mvx/>
-<volume>1.0</volume>
-<forecastVaccineType>N</forecastVaccineType>
-</preferableVaccine>
 <allowableVaccine>
 <vaccineType>Hep B, Adol/peds</vaccineType>
 <cvx>08</cvx>
@@ -1176,7 +1254,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
@@ -1270,16 +1348,6 @@ established and the condition has stabilized.</contraindicationText>
 <volume>0.5</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
-<preferableVaccine>
-<vaccineType>HepB recombinant, 3-antigen, Al(OH)3</vaccineType>
-<cvx>220</cvx>
-<beginAge>18 years</beginAge>
-<endAge/>
-<tradeName/>
-<mvx/>
-<volume>1.0</volume>
-<forecastVaccineType>N</forecastVaccineType>
-</preferableVaccine>
 <allowableVaccine>
 <vaccineType>Hep B, Adol/peds</vaccineType>
 <cvx>08</cvx>
@@ -1353,7 +1421,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
@@ -1465,6 +1533,7 @@ established and the condition has stabilized.</contraindicationText>
 <targetDisease>HepB</targetDisease>
 <vaccineGroup>HepB</vaccineGroup>
 <seriesAdminGuidance>Anyone age 60 years or older who does not meet risk-based recommendations may still receive Hepatitis B vaccination.</seriesAdminGuidance>
+<seriesAdminGuidance>Providers should vaccinate pregnant persons needing HepB vaccination with Engerix-B, Heplisav-B, Recombivax HB, or Twinrix.</seriesAdminGuidance>
 <seriesType>Standard</seriesType>
 <equivalentSeriesGroups>2</equivalentSeriesGroups>
 <requiredGender/>
@@ -1552,16 +1621,6 @@ established and the condition has stabilized.</contraindicationText>
 <volume>0.5</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
-<preferableVaccine>
-<vaccineType>HepB recombinant, 3-antigen, Al(OH)3</vaccineType>
-<cvx>220</cvx>
-<beginAge>18 years</beginAge>
-<endAge/>
-<tradeName/>
-<mvx/>
-<volume>1.0</volume>
-<forecastVaccineType>N</forecastVaccineType>
-</preferableVaccine>
 <allowableVaccine>
 <vaccineType>Hep B, Adol/peds</vaccineType>
 <cvx>08</cvx>
@@ -1635,7 +1694,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
@@ -1736,16 +1795,6 @@ established and the condition has stabilized.</contraindicationText>
 <volume>0.5</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
-<preferableVaccine>
-<vaccineType>HepB recombinant, 3-antigen, Al(OH)3</vaccineType>
-<cvx>220</cvx>
-<beginAge>18 years</beginAge>
-<endAge/>
-<tradeName/>
-<mvx/>
-<volume>1.0</volume>
-<forecastVaccineType>N</forecastVaccineType>
-</preferableVaccine>
 <allowableVaccine>
 <vaccineType>Hep B, Adol/peds</vaccineType>
 <cvx>08</cvx>
@@ -1819,7 +1868,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
@@ -1933,16 +1982,6 @@ established and the condition has stabilized.</contraindicationText>
 <volume>0.5</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
-<preferableVaccine>
-<vaccineType>HepB recombinant, 3-antigen, Al(OH)3</vaccineType>
-<cvx>220</cvx>
-<beginAge>18 years</beginAge>
-<endAge/>
-<tradeName/>
-<mvx/>
-<volume>1.0</volume>
-<forecastVaccineType>N</forecastVaccineType>
-</preferableVaccine>
 <allowableVaccine>
 <vaccineType>Hep B, Adol/peds</vaccineType>
 <cvx>08</cvx>
@@ -2016,7 +2055,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
@@ -2038,6 +2077,7 @@ established and the condition has stabilized.</contraindicationText>
 <targetDisease>HepB</targetDisease>
 <vaccineGroup>HepB</vaccineGroup>
 <seriesAdminGuidance>Anyone age 60 years or older who does not meet risk-based recommendations may still receive Hepatitis B vaccination.</seriesAdminGuidance>
+<seriesAdminGuidance>Providers should vaccinate pregnant persons needing HepB vaccination with Engerix-B, Heplisav-B, Recombivax HB, or Twinrix.</seriesAdminGuidance>
 <seriesType>Standard</seriesType>
 <equivalentSeriesGroups>2</equivalentSeriesGroups>
 <requiredGender/>
@@ -2156,6 +2196,7 @@ established and the condition has stabilized.</contraindicationText>
 <targetDisease>HepB</targetDisease>
 <vaccineGroup>HepB</vaccineGroup>
 <seriesAdminGuidance>Anyone age 60 years or older who does not meet risk-based recommendations may still receive Hepatitis B vaccination.</seriesAdminGuidance>
+<seriesAdminGuidance>Providers should vaccinate pregnant persons needing HepB vaccination with Engerix-B, Heplisav-B, Recombivax HB, or Twinrix.</seriesAdminGuidance>
 <seriesType>Standard</seriesType>
 <equivalentSeriesGroups>2</equivalentSeriesGroups>
 <requiredGender/>
@@ -2221,16 +2262,6 @@ established and the condition has stabilized.</contraindicationText>
 <tradeName/>
 <mvx/>
 <volume>0.5</volume>
-<forecastVaccineType>N</forecastVaccineType>
-</preferableVaccine>
-<preferableVaccine>
-<vaccineType>HepB recombinant, 3-antigen, Al(OH)3</vaccineType>
-<cvx>220</cvx>
-<beginAge>18 years</beginAge>
-<endAge/>
-<tradeName/>
-<mvx/>
-<volume>1.0</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
 <allowableVaccine>
@@ -2300,7 +2331,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
@@ -2437,16 +2468,6 @@ established and the condition has stabilized.</contraindicationText>
 <volume>0.5</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
-<preferableVaccine>
-<vaccineType>HepB recombinant, 3-antigen, Al(OH)3</vaccineType>
-<cvx>220</cvx>
-<beginAge>18 years</beginAge>
-<endAge/>
-<tradeName/>
-<mvx/>
-<volume>1.0</volume>
-<forecastVaccineType>N</forecastVaccineType>
-</preferableVaccine>
 <allowableVaccine>
 <vaccineType>Hep B, Adol/peds</vaccineType>
 <cvx>08</cvx>
@@ -2520,7 +2541,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
@@ -2631,6 +2652,7 @@ established and the condition has stabilized.</contraindicationText>
 <targetDisease>HepB</targetDisease>
 <vaccineGroup>HepB</vaccineGroup>
 <seriesAdminGuidance>Anyone age 60 years or older who does not meet risk-based recommendations may still receive Hepatitis B vaccination.</seriesAdminGuidance>
+<seriesAdminGuidance>Providers should vaccinate pregnant persons needing HepB vaccination with Engerix-B, Heplisav-B, Recombivax HB, or Twinrix.</seriesAdminGuidance>
 <seriesType>Standard</seriesType>
 <equivalentSeriesGroups>2</equivalentSeriesGroups>
 <requiredGender/>
@@ -2756,16 +2778,6 @@ established and the condition has stabilized.</contraindicationText>
 <volume>0.5</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
-<preferableVaccine>
-<vaccineType>HepB recombinant, 3-antigen, Al(OH)3</vaccineType>
-<cvx>220</cvx>
-<beginAge>18 years</beginAge>
-<endAge/>
-<tradeName/>
-<mvx/>
-<volume>1.0</volume>
-<forecastVaccineType>N</forecastVaccineType>
-</preferableVaccine>
 <allowableVaccine>
 <vaccineType>Hep B, Adol/peds</vaccineType>
 <cvx>08</cvx>
@@ -2833,7 +2845,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
@@ -2924,16 +2936,6 @@ established and the condition has stabilized.</contraindicationText>
 <volume>0.5</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
-<preferableVaccine>
-<vaccineType>HepB recombinant, 3-antigen, Al(OH)3</vaccineType>
-<cvx>220</cvx>
-<beginAge>18 years</beginAge>
-<endAge/>
-<tradeName/>
-<mvx/>
-<volume>1.0</volume>
-<forecastVaccineType>N</forecastVaccineType>
-</preferableVaccine>
 <allowableVaccine>
 <vaccineType>Hep B, Adol/peds</vaccineType>
 <cvx>08</cvx>
@@ -3007,7 +3009,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
@@ -3105,6 +3107,7 @@ established and the condition has stabilized.</contraindicationText>
 <targetDisease>HepB</targetDisease>
 <vaccineGroup>HepB</vaccineGroup>
 <seriesAdminGuidance>Anyone age 60 years or older who does not meet risk-based recommendations may still receive Hepatitis B vaccination.</seriesAdminGuidance>
+<seriesAdminGuidance>Providers should vaccinate pregnant persons needing HepB vaccination with Engerix-B, Heplisav-B, Recombivax HB, or Twinrix.</seriesAdminGuidance>
 <seriesType>Standard</seriesType>
 <equivalentSeriesGroups>2</equivalentSeriesGroups>
 <requiredGender/>
@@ -3276,6 +3279,7 @@ established and the condition has stabilized.</contraindicationText>
 <targetDisease>HepB</targetDisease>
 <vaccineGroup>HepB</vaccineGroup>
 <seriesAdminGuidance>Anyone age 60 years or older who does not meet risk-based recommendations may still receive Hepatitis B vaccination.</seriesAdminGuidance>
+<seriesAdminGuidance>Providers should vaccinate pregnant persons needing HepB vaccination with Engerix-B, Heplisav-B, Recombivax HB, or Twinrix.</seriesAdminGuidance>
 <seriesType>Standard</seriesType>
 <equivalentSeriesGroups>2</equivalentSeriesGroups>
 <requiredGender/>
@@ -3645,6 +3649,26 @@ established and the condition has stabilized.</contraindicationText>
 </indication>
 <indication>
 <observationCode>
+<text>HIV/AIDS - severely immunocompromised</text>
+<code>154</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>60 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - not severely immunocompromised</text>
+<code>155</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>60 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
 <text>Travel to countries with high or intermediate prevalence of chronic HBV infection</text>
 <code>166</code>
 </observationCode>
@@ -3680,16 +3704,6 @@ established and the condition has stabilized.</contraindicationText>
 <vaccineType>Hep B, Adult</vaccineType>
 <cvx>43</cvx>
 <beginAge>20 years</beginAge>
-<endAge/>
-<tradeName/>
-<mvx/>
-<volume>1.0</volume>
-<forecastVaccineType>N</forecastVaccineType>
-</preferableVaccine>
-<preferableVaccine>
-<vaccineType>HepB recombinant, 3-antigen, Al(OH)3</vaccineType>
-<cvx>220</cvx>
-<beginAge>18 years</beginAge>
 <endAge/>
 <tradeName/>
 <mvx/>
@@ -3769,7 +3783,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
@@ -3820,16 +3834,6 @@ established and the condition has stabilized.</contraindicationText>
 <volume>1.0</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
-<preferableVaccine>
-<vaccineType>HepB recombinant, 3-antigen, Al(OH)3</vaccineType>
-<cvx>220</cvx>
-<beginAge>18 years</beginAge>
-<endAge/>
-<tradeName/>
-<mvx/>
-<volume>1.0</volume>
-<forecastVaccineType>N</forecastVaccineType>
-</preferableVaccine>
 <allowableVaccine>
 <vaccineType>Hep B, Adol/peds</vaccineType>
 <cvx>08</cvx>
@@ -3903,7 +3907,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
@@ -3967,16 +3971,6 @@ established and the condition has stabilized.</contraindicationText>
 <volume>1.0</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
-<preferableVaccine>
-<vaccineType>HepB recombinant, 3-antigen, Al(OH)3</vaccineType>
-<cvx>220</cvx>
-<beginAge>18 years</beginAge>
-<endAge/>
-<tradeName/>
-<mvx/>
-<volume>1.0</volume>
-<forecastVaccineType>N</forecastVaccineType>
-</preferableVaccine>
 <allowableVaccine>
 <vaccineType>Hep B, Adol/peds</vaccineType>
 <cvx>08</cvx>
@@ -4050,7 +4044,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
@@ -4231,6 +4225,26 @@ established and the condition has stabilized.</contraindicationText>
 <code>071</code>
 </observationCode>
 <description>Administer to persons who have household contact with hepatitis B surface antigen-positive persons.</description>
+<beginAge>60 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - severely immunocompromised</text>
+<code>154</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>60 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - not severely immunocompromised</text>
+<code>155</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
 <beginAge>60 years</beginAge>
 <endAge/>
 <guidance/>
@@ -4512,6 +4526,26 @@ established and the condition has stabilized.</contraindicationText>
 </indication>
 <indication>
 <observationCode>
+<text>HIV/AIDS - severely immunocompromised</text>
+<code>154</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>60 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - not severely immunocompromised</text>
+<code>155</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>60 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
 <text>Travel to countries with high or intermediate prevalence of chronic HBV infection</text>
 <code>166</code>
 </observationCode>
@@ -4571,16 +4605,6 @@ established and the condition has stabilized.</contraindicationText>
 <tradeName/>
 <mvx/>
 <volume>0.5</volume>
-<forecastVaccineType>N</forecastVaccineType>
-</preferableVaccine>
-<preferableVaccine>
-<vaccineType>HepB recombinant, 3-antigen, Al(OH)3</vaccineType>
-<cvx>220</cvx>
-<beginAge>18 years</beginAge>
-<endAge/>
-<tradeName/>
-<mvx/>
-<volume>1.0</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
 <allowableVaccine>
@@ -4650,7 +4674,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
@@ -4777,16 +4801,6 @@ established and the condition has stabilized.</contraindicationText>
 <volume>0.5</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
-<preferableVaccine>
-<vaccineType>HepB recombinant, 3-antigen, Al(OH)3</vaccineType>
-<cvx>220</cvx>
-<beginAge>18 years</beginAge>
-<endAge/>
-<tradeName/>
-<mvx/>
-<volume>1.0</volume>
-<forecastVaccineType>N</forecastVaccineType>
-</preferableVaccine>
 <allowableVaccine>
 <vaccineType>Hep B, Adol/peds</vaccineType>
 <cvx>08</cvx>
@@ -4860,7 +4874,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
@@ -5136,6 +5150,26 @@ established and the condition has stabilized.</contraindicationText>
 </indication>
 <indication>
 <observationCode>
+<text>HIV/AIDS - severely immunocompromised</text>
+<code>154</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>60 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - not severely immunocompromised</text>
+<code>155</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>60 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
 <text>Travel to countries with high or intermediate prevalence of chronic HBV infection</text>
 <code>166</code>
 </observationCode>
@@ -5255,16 +5289,6 @@ established and the condition has stabilized.</contraindicationText>
 <volume>0.5</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
-<preferableVaccine>
-<vaccineType>HepB recombinant, 3-antigen, Al(OH)3</vaccineType>
-<cvx>220</cvx>
-<beginAge>18 years</beginAge>
-<endAge/>
-<tradeName/>
-<mvx/>
-<volume>1.0</volume>
-<forecastVaccineType>N</forecastVaccineType>
-</preferableVaccine>
 <allowableVaccine>
 <vaccineType>Hep B, Adol/peds</vaccineType>
 <cvx>08</cvx>
@@ -5332,7 +5356,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
@@ -5413,16 +5437,6 @@ established and the condition has stabilized.</contraindicationText>
 <volume>0.5</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
-<preferableVaccine>
-<vaccineType>HepB recombinant, 3-antigen, Al(OH)3</vaccineType>
-<cvx>220</cvx>
-<beginAge>18 years</beginAge>
-<endAge/>
-<tradeName/>
-<mvx/>
-<volume>1.0</volume>
-<forecastVaccineType>N</forecastVaccineType>
-</preferableVaccine>
 <allowableVaccine>
 <vaccineType>Hep B, Adol/peds</vaccineType>
 <cvx>08</cvx>
@@ -5496,7 +5510,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
@@ -5753,6 +5767,26 @@ established and the condition has stabilized.</contraindicationText>
 <code>071</code>
 </observationCode>
 <description>Administer to persons who have household contact with hepatitis B surface antigen-positive persons.</description>
+<beginAge>60 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - severely immunocompromised</text>
+<code>154</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>60 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - not severely immunocompromised</text>
+<code>155</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
 <beginAge>60 years</beginAge>
 <endAge/>
 <guidance/>
@@ -6105,6 +6139,26 @@ established and the condition has stabilized.</contraindicationText>
 </indication>
 <indication>
 <observationCode>
+<text>HIV/AIDS - severely immunocompromised</text>
+<code>154</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>60 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
+<text>HIV/AIDS - not severely immunocompromised</text>
+<code>155</code>
+</observationCode>
+<description>Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
+<beginAge>60 years</beginAge>
+<endAge/>
+<guidance/>
+</indication>
+<indication>
+<observationCode>
 <text>Travel to countries with high or intermediate prevalence of chronic HBV infection</text>
 <code>166</code>
 </observationCode>
@@ -6434,7 +6488,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
@@ -6582,7 +6636,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
@@ -6730,7 +6784,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>
@@ -6912,7 +6966,7 @@ established and the condition has stabilized.</contraindicationText>
 <endAge/>
 </allowableVaccine>
 <allowableVaccine>
-<vaccineType>DTP-hepB-Hib Pentavalent Non-US</vaccineType>
+<vaccineType>DTP-HepB-Hib Pentavalent Non-US</vaccineType>
 <cvx>198</cvx>
 <beginAge>0 days</beginAge>
 <endAge/>

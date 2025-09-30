@@ -292,6 +292,32 @@
 <cvx>03</cvx>
 </previous>
 <current>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>MMR</vaccineType>
+<cvx>03</cvx>
+</previous>
+<current>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>MMR</vaccineType>
+<cvx>03</cvx>
+</previous>
+<current>
 <vaccineType>COVID-19 LAV Non-US Vaccine  - COVIVAC</vaccineType>
 <cvx>503</cvx>
 </current>
@@ -591,6 +617,32 @@
 <cvx>04</cvx>
 </previous>
 <current>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Measles-Rubella</vaccineType>
+<cvx>04</cvx>
+</previous>
+<current>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Measles-Rubella</vaccineType>
+<cvx>04</cvx>
+</previous>
+<current>
 <vaccineType>COVID-19 LAV Non-US Vaccine  - COVIVAC</vaccineType>
 <cvx>503</cvx>
 </current>
@@ -890,6 +942,32 @@
 <cvx>05</cvx>
 </previous>
 <current>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Measles</vaccineType>
+<cvx>05</cvx>
+</previous>
+<current>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Measles</vaccineType>
+<cvx>05</cvx>
+</previous>
+<current>
 <vaccineType>COVID-19 LAV Non-US Vaccine  - COVIVAC</vaccineType>
 <cvx>503</cvx>
 </current>
@@ -1189,6 +1267,32 @@
 <cvx>06</cvx>
 </previous>
 <current>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Rubella</vaccineType>
+<cvx>06</cvx>
+</previous>
+<current>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Rubella</vaccineType>
+<cvx>06</cvx>
+</previous>
+<current>
 <vaccineType>COVID-19 LAV Non-US Vaccine  - COVIVAC</vaccineType>
 <cvx>503</cvx>
 </current>
@@ -1477,6 +1581,32 @@
 <current>
 <vaccineType>Ebola Zaire Vaccine, Live</vaccineType>
 <cvx>204</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Mumps</vaccineType>
+<cvx>07</cvx>
+</previous>
+<current>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Mumps</vaccineType>
+<cvx>07</cvx>
+</previous>
+<current>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
 </current>
 <conflictBeginInterval>1 day</conflictBeginInterval>
 <minConflictEndInterval>28 days</minConflictEndInterval>
@@ -1787,6 +1917,32 @@
 <cvx>19</cvx>
 </previous>
 <current>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>30 days</minConflictEndInterval>
+<conflictEndInterval>30 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>BCG</vaccineType>
+<cvx>19</cvx>
+</previous>
+<current>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>30 days</minConflictEndInterval>
+<conflictEndInterval>30 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>BCG</vaccineType>
+<cvx>19</cvx>
+</previous>
+<current>
 <vaccineType>COVID-19 LAV Non-US Vaccine  - COVIVAC</vaccineType>
 <cvx>503</cvx>
 </current>
@@ -2086,6 +2242,32 @@
 <cvx>21</cvx>
 </previous>
 <current>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Varicella</vaccineType>
+<cvx>21</cvx>
+</previous>
+<current>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Varicella</vaccineType>
+<cvx>21</cvx>
+</previous>
+<current>
 <vaccineType>COVID-19 LAV Non-US Vaccine  - COVIVAC</vaccineType>
 <cvx>503</cvx>
 </current>
@@ -2385,6 +2567,32 @@
 <cvx>37</cvx>
 </previous>
 <current>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>30 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Yellow Fever</vaccineType>
+<cvx>37</cvx>
+</previous>
+<current>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>30 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Yellow Fever</vaccineType>
+<cvx>37</cvx>
+</previous>
+<current>
 <vaccineType>COVID-19 LAV Non-US Vaccine  - COVIVAC</vaccineType>
 <cvx>503</cvx>
 </current>
@@ -2684,6 +2892,32 @@
 <cvx>38</cvx>
 </previous>
 <current>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Rubella-Mumps</vaccineType>
+<cvx>38</cvx>
+</previous>
+<current>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Rubella-Mumps</vaccineType>
+<cvx>38</cvx>
+</previous>
+<current>
 <vaccineType>COVID-19 LAV Non-US Vaccine  - COVIVAC</vaccineType>
 <cvx>503</cvx>
 </current>
@@ -2983,6 +3217,32 @@
 <cvx>56</cvx>
 </previous>
 <current>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Dengue Fever</vaccineType>
+<cvx>56</cvx>
+</previous>
+<current>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Dengue Fever</vaccineType>
+<cvx>56</cvx>
+</previous>
+<current>
 <vaccineType>COVID-19 LAV Non-US Vaccine  - COVIVAC</vaccineType>
 <cvx>503</cvx>
 </current>
@@ -3282,6 +3542,32 @@
 <cvx>75</cvx>
 </previous>
 <current>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Vaccinia - smallpox</vaccineType>
+<cvx>75</cvx>
+</previous>
+<current>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Vaccinia - smallpox</vaccineType>
+<cvx>75</cvx>
+</previous>
+<current>
 <vaccineType>COVID-19 LAV Non-US Vaccine  - COVIVAC</vaccineType>
 <cvx>503</cvx>
 </current>
@@ -3581,6 +3867,32 @@
 <cvx>94</cvx>
 </previous>
 <current>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>MMRV</vaccineType>
+<cvx>94</cvx>
+</previous>
+<current>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>MMRV</vaccineType>
+<cvx>94</cvx>
+</previous>
+<current>
 <vaccineType>COVID-19 LAV Non-US Vaccine  - COVIVAC</vaccineType>
 <cvx>503</cvx>
 </current>
@@ -3880,6 +4192,32 @@
 <cvx>105</cvx>
 </previous>
 <current>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>MMRV</vaccineType>
+<cvx>94</cvx>
+</previous>
+<current>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Vaccinia - smallpox diluted</vaccineType>
+<cvx>105</cvx>
+</previous>
+<current>
 <vaccineType>COVID-19 LAV Non-US Vaccine  - COVIVAC</vaccineType>
 <cvx>503</cvx>
 </current>
@@ -4179,6 +4517,32 @@
 <cvx>111</cvx>
 </previous>
 <current>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza LAIV</vaccineType>
+<cvx>111</cvx>
+</previous>
+<current>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>24 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza LAIV</vaccineType>
+<cvx>111</cvx>
+</previous>
+<current>
 <vaccineType>COVID-19 LAV Non-US Vaccine  - COVIVAC</vaccineType>
 <cvx>503</cvx>
 </current>
@@ -4478,6 +4842,32 @@
 <cvx>121</cvx>
 </previous>
 <current>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Zoster live</vaccineType>
+<cvx>121</cvx>
+</previous>
+<current>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Zoster live</vaccineType>
+<cvx>121</cvx>
+</previous>
+<current>
 <vaccineType>COVID-19 LAV Non-US Vaccine  - COVIVAC</vaccineType>
 <cvx>503</cvx>
 </current>
@@ -4777,6 +5167,32 @@
 <cvx>125</cvx>
 </previous>
 <current>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>H1N1 LAIV</vaccineType>
+<cvx>125</cvx>
+</previous>
+<current>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>H1N1 LAIV</vaccineType>
+<cvx>125</cvx>
+</previous>
+<current>
 <vaccineType>COVID-19 LAV Non-US Vaccine  - COVIVAC</vaccineType>
 <cvx>503</cvx>
 </current>
@@ -5076,6 +5492,32 @@
 <cvx>149</cvx>
 </previous>
 <current>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza LAIV4</vaccineType>
+<cvx>149</cvx>
+</previous>
+<current>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>24 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza LAIV4</vaccineType>
+<cvx>149</cvx>
+</previous>
+<current>
 <vaccineType>COVID-19 LAV Non-US Vaccine  - COVIVAC</vaccineType>
 <cvx>503</cvx>
 </current>
@@ -5375,6 +5817,32 @@
 <cvx>151</cvx>
 </previous>
 <current>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza LAIV Unspecified</vaccineType>
+<cvx>151</cvx>
+</previous>
+<current>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>24 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza LAIV Unspecified</vaccineType>
+<cvx>151</cvx>
+</previous>
+<current>
 <vaccineType>COVID-19 LAV Non-US Vaccine  - COVIVAC</vaccineType>
 <cvx>503</cvx>
 </current>
@@ -5674,6 +6142,32 @@
 <cvx>169</cvx>
 </previous>
 <current>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Hep A, live attenuated</vaccineType>
+<cvx>169</cvx>
+</previous>
+<current>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Hep A, live attenuated</vaccineType>
+<cvx>169</cvx>
+</previous>
+<current>
 <vaccineType>COVID-19 LAV Non-US Vaccine  - COVIVAC</vaccineType>
 <cvx>503</cvx>
 </current>
@@ -5973,6 +6467,32 @@
 <cvx>183</cvx>
 </previous>
 <current>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>30 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Yellow Fever vaccine - alt</vaccineType>
+<cvx>183</cvx>
+</previous>
+<current>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>30 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Yellow Fever vaccine - alt</vaccineType>
+<cvx>183</cvx>
+</previous>
+<current>
 <vaccineType>COVID-19 LAV Non-US Vaccine  - COVIVAC</vaccineType>
 <cvx>503</cvx>
 </current>
@@ -6272,6 +6792,32 @@
 <cvx>184</cvx>
 </previous>
 <current>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>30 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Yellow Fever, unspecified</vaccineType>
+<cvx>184</cvx>
+</previous>
+<current>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>30 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Yellow Fever, unspecified</vaccineType>
+<cvx>184</cvx>
+</previous>
+<current>
 <vaccineType>COVID-19 LAV Non-US Vaccine  - COVIVAC</vaccineType>
 <cvx>503</cvx>
 </current>
@@ -6571,6 +7117,682 @@
 <cvx>204</cvx>
 </previous>
 <current>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Ebola Zaire Vaccine, Live</vaccineType>
+<cvx>204</cvx>
+</previous>
+<current>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Ebola Zaire Vaccine, Live</vaccineType>
+<cvx>204</cvx>
+</previous>
+<current>
+<vaccineType>COVID-19 LAV Non-US Vaccine  - COVIVAC</vaccineType>
+<cvx>503</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</previous>
+<current>
+<vaccineType>MMR</vaccineType>
+<cvx>03</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</previous>
+<current>
+<vaccineType>Measles- Rubella</vaccineType>
+<cvx>04</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</previous>
+<current>
+<vaccineType>Measles</vaccineType>
+<cvx>05</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</previous>
+<current>
+<vaccineType>Rubella</vaccineType>
+<cvx>06</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</previous>
+<current>
+<vaccineType>Mumps</vaccineType>
+<cvx>07</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</previous>
+<current>
+<vaccineType>BCG</vaccineType>
+<cvx>19</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>30 days</minConflictEndInterval>
+<conflictEndInterval>30 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</previous>
+<current>
+<vaccineType>Varicella</vaccineType>
+<cvx>21</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</previous>
+<current>
+<vaccineType>Yellow Fever</vaccineType>
+<cvx>37</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>30 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</previous>
+<current>
+<vaccineType>Rubella-Mumps</vaccineType>
+<cvx>38</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</previous>
+<current>
+<vaccineType>Dengue Fever</vaccineType>
+<cvx>56</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</previous>
+<current>
+<vaccineType>Vaccinia - smallpox</vaccineType>
+<cvx>75</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</previous>
+<current>
+<vaccineType>MMRV</vaccineType>
+<cvx>94</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</previous>
+<current>
+<vaccineType>Vaccinia - smallpox diluted</vaccineType>
+<cvx>105</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</previous>
+<current>
+<vaccineType>Influenza LAIV</vaccineType>
+<cvx>111</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</previous>
+<current>
+<vaccineType>Zoster live</vaccineType>
+<cvx>121</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</previous>
+<current>
+<vaccineType>H1N1 LAIV</vaccineType>
+<cvx>125</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</previous>
+<current>
+<vaccineType>Influenza LAIV4</vaccineType>
+<cvx>149</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</previous>
+<current>
+<vaccineType>Influenza LAIV Unspecified</vaccineType>
+<cvx>151</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</previous>
+<current>
+<vaccineType>Hep A, live attenuated</vaccineType>
+<cvx>169</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</previous>
+<current>
+<vaccineType>Yellow Fever vaccine - alt</vaccineType>
+<cvx>183</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>30 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</previous>
+<current>
+<vaccineType>Yellow Fever, unspecified</vaccineType>
+<cvx>184</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>30 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</previous>
+<current>
+<vaccineType>Ebola Zaire Vaccine, Live</vaccineType>
+<cvx>204</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</previous>
+<current>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>24 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</previous>
+<current>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</previous>
+<current>
+<vaccineType>COVID-19 LAV Non-US Vaccine  - COVIVAC</vaccineType>
+<cvx>503</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</previous>
+<current>
+<vaccineType>MMR</vaccineType>
+<cvx>03</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</previous>
+<current>
+<vaccineType>Measles- Rubella</vaccineType>
+<cvx>04</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</previous>
+<current>
+<vaccineType>Measles</vaccineType>
+<cvx>05</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</previous>
+<current>
+<vaccineType>Rubella</vaccineType>
+<cvx>06</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</previous>
+<current>
+<vaccineType>Mumps</vaccineType>
+<cvx>07</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</previous>
+<current>
+<vaccineType>BCG</vaccineType>
+<cvx>19</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>30 days</minConflictEndInterval>
+<conflictEndInterval>30 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</previous>
+<current>
+<vaccineType>Varicella</vaccineType>
+<cvx>21</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</previous>
+<current>
+<vaccineType>Yellow Fever</vaccineType>
+<cvx>37</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>30 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</previous>
+<current>
+<vaccineType>Rubella-Mumps</vaccineType>
+<cvx>38</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</previous>
+<current>
+<vaccineType>Dengue Fever</vaccineType>
+<cvx>56</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</previous>
+<current>
+<vaccineType>Vaccinia - smallpox</vaccineType>
+<cvx>75</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</previous>
+<current>
+<vaccineType>MMRV</vaccineType>
+<cvx>94</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</previous>
+<current>
+<vaccineType>Vaccinia - smallpox diluted</vaccineType>
+<cvx>105</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</previous>
+<current>
+<vaccineType>Influenza LAIV</vaccineType>
+<cvx>111</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>24 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</previous>
+<current>
+<vaccineType>Zoster live</vaccineType>
+<cvx>121</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</previous>
+<current>
+<vaccineType>H1N1 LAIV</vaccineType>
+<cvx>125</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</previous>
+<current>
+<vaccineType>Influenza LAIV4</vaccineType>
+<cvx>149</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>24 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</previous>
+<current>
+<vaccineType>Influenza LAIV Unspecified</vaccineType>
+<cvx>151</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>24 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</previous>
+<current>
+<vaccineType>Hep A, live attenuated</vaccineType>
+<cvx>169</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</previous>
+<current>
+<vaccineType>Yellow Fever vaccine - alt</vaccineType>
+<cvx>183</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>30 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</previous>
+<current>
+<vaccineType>Yellow Fever, unspecified</vaccineType>
+<cvx>184</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>30 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</previous>
+<current>
+<vaccineType>Ebola Zaire Vaccine, Live</vaccineType>
+<cvx>204</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</previous>
+<current>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</previous>
+<current>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>24 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
+</previous>
+<current>
 <vaccineType>COVID-19 LAV Non-US Vaccine  - COVIVAC</vaccineType>
 <cvx>503</cvx>
 </current>
@@ -6859,6 +8081,32 @@
 <current>
 <vaccineType>Ebola Zaire Vaccine, Live</vaccineType>
 <cvx>204</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>COVID-19 LAV Non-US Vaccine  - COVIVAC</vaccineType>
+<cvx>503</cvx>
+</previous>
+<current>
+<vaccineType>Chikungunya live attenuated vaccine, 0.5 mL, PF</vaccineType>
+<cvx>317</cvx>
+</current>
+<conflictBeginInterval>1 day</conflictBeginInterval>
+<minConflictEndInterval>28 days</minConflictEndInterval>
+<conflictEndInterval>28 days</conflictEndInterval>
+</liveVirusConflict>
+<liveVirusConflict>
+<previous>
+<vaccineType>COVID-19 LAV Non-US Vaccine  - COVIVAC</vaccineType>
+<cvx>503</cvx>
+</previous>
+<current>
+<vaccineType>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</vaccineType>
+<cvx>333</cvx>
 </current>
 <conflictBeginInterval>1 day</conflictBeginInterval>
 <minConflictEndInterval>28 days</minConflictEndInterval>
@@ -6879,6 +8127,10 @@
 </liveVirusConflict>
 </liveVirusConflicts>
 <vaccineGroups>
+<vaccineGroup>
+<name>Chikungunya</name>
+<administerFullVaccineGroup/>
+</vaccineGroup>
 <vaccineGroup>
 <name>Cholera</name>
 <administerFullVaccineGroup/>
@@ -6981,6 +8233,10 @@
 </vaccineGroup>
 </vaccineGroups>
 <vaccineGroupToAntigenMap>
+<vaccineGroupMap>
+<name>Chikungunya</name>
+<antigen>Chikungunya</antigen>
+</vaccineGroupMap>
 <vaccineGroupMap>
 <name>Cholera</name>
 <antigen>Cholera</antigen>
@@ -8163,7 +9419,7 @@
 </cvxMap>
 <cvxMap>
 <cvx>146</cvx>
-<shortDescription>DTaP,IPV,Hib,HepB</shortDescription>
+<shortDescription>DTaP, IPV, Hib, HepB</shortDescription>
 <association>
 <antigen>Diphtheria</antigen>
 <associationBeginAge/>
@@ -8643,7 +9899,7 @@
 </cvxMap>
 <cvxMap>
 <cvx>198</cvx>
-<shortDescription>DTP-hepB-Hib Pentavalent Non-US</shortDescription>
+<shortDescription>DTP-HepB-Hib Pentavalent Non-US</shortDescription>
 <association>
 <antigen>Diphtheria</antigen>
 <associationBeginAge/>
@@ -9090,6 +10346,15 @@
 </association>
 </cvxMap>
 <cvxMap>
+<cvx>317</cvx>
+<shortDescription>Chikungunya live attenuated vaccine, 0.5 mL, PF</shortDescription>
+<association>
+<antigen>Chikungunya</antigen>
+<associationBeginAge/>
+<associationEndAge/>
+</association>
+</cvxMap>
+<cvxMap>
 <cvx>320</cvx>
 <shortDescription>Influenza, MDCK, trivalent, preservative</shortDescription>
 <association>
@@ -9108,6 +10373,15 @@
 </association>
 </cvxMap>
 <cvxMap>
+<cvx>325</cvx>
+<shortDescription>Vaccinia (smallpox, mpox), unspecified</shortDescription>
+<association>
+<antigen>Orthopoxvirus</antigen>
+<associationBeginAge/>
+<associationEndAge/>
+</association>
+</cvxMap>
+<cvxMap>
 <cvx>326</cvx>
 <shortDescription>RSV, mRNA, injectable, PF</shortDescription>
 <association>
@@ -9121,6 +10395,65 @@
 <shortDescription>Pneumococcal conjugate PCV 21</shortDescription>
 <association>
 <antigen>Pneumococcal</antigen>
+<associationBeginAge/>
+<associationEndAge/>
+</association>
+</cvxMap>
+<cvxMap>
+<cvx>328</cvx>
+<shortDescription>Meningococcal oligosaccharide (MenACWY), (MenB), PF</shortDescription>
+<association>
+<antigen>Meningococcal</antigen>
+<associationBeginAge/>
+<associationEndAge/>
+</association>
+<association>
+<antigen>Meningococcal B</antigen>
+<associationBeginAge/>
+<associationEndAge/>
+</association>
+</cvxMap>
+<cvxMap>
+<cvx>329</cvx>
+<shortDescription>Chikungunya, VLP, recombinant, 0.8 mL, PF</shortDescription>
+<association>
+<antigen>Chikungunya</antigen>
+<associationBeginAge/>
+<associationEndAge/>
+</association>
+</cvxMap>
+<cvxMap>
+<cvx>330</cvx>
+<shortDescription>Dengue Fever, Unspecified</shortDescription>
+<association>
+<antigen>Dengue</antigen>
+<associationBeginAge/>
+<associationEndAge/>
+</association>
+</cvxMap>
+<cvxMap>
+<cvx>331</cvx>
+<shortDescription>Influenza, Southern Hemisphere, trivalent, PF</shortDescription>
+<association>
+<antigen>Influenza</antigen>
+<associationBeginAge/>
+<associationEndAge/>
+</association>
+</cvxMap>
+<cvxMap>
+<cvx>332</cvx>
+<shortDescription>RSV, mAb, clesrovimab-cfor, 0.7 mL, neonate and infant, PF</shortDescription>
+<association>
+<antigen>RSV</antigen>
+<associationBeginAge/>
+<associationEndAge/>
+</association>
+</cvxMap>
+<cvxMap>
+<cvx>333</cvx>
+<shortDescription>Influenza, live, trivalent, intranasal, self/caregiver admin, PF</shortDescription>
+<association>
+<antigen>Influenza</antigen>
 <associationBeginAge/>
 <associationEndAge/>
 </association>
@@ -9461,7 +10794,7 @@
 <observationTitle>Cerebrospinal fluid leaks</observationTitle>
 <group/>
 <indicationText>Administer to persons who have cerebrospinal fluid leaks.</indicationText>
-<contraindicationText/>
+<contraindicationText>Do not vaccinate if the patient has cerebrospinal fluid leaks.</contraindicationText>
 <clarifyingText/>
 <codedValues>
 <codedValue>
@@ -9476,7 +10809,7 @@
 <observationTitle>Cochlear implants</observationTitle>
 <group/>
 <indicationText>Administer to persons who have cochlear implants.</indicationText>
-<contraindicationText/>
+<contraindicationText>Do not vaccinate if the patient has cochlear implants.</contraindicationText>
 <clarifyingText/>
 <codedValues>
 <codedValue>
@@ -11138,7 +12471,7 @@ vaccine</clarifyingText>
 <codedValue>
 <code>132</code>
 <codeSystem>CVX</codeSystem>
-<text>DTaP-IPV-Hib-HepB,historical</text>
+<text>DTaP-IPV-Hib-HepB, historical</text>
 </codedValue>
 <codedValue>
 <code>146</code>
@@ -11238,7 +12571,7 @@ vaccine</clarifyingText>
 <codedValue>
 <code>132</code>
 <codeSystem>CVX</codeSystem>
-<text>DTaP-IPV-Hib-HepB,historical</text>
+<text>DTaP-IPV-Hib-HepB, historical</text>
 </codedValue>
 <codedValue>
 <code>138</code>
@@ -11353,7 +12686,7 @@ vaccine</clarifyingText>
 <codedValue>
 <code>132</code>
 <codeSystem>CVX</codeSystem>
-<text>DTaP-IPV-Hib-HepB,historical</text>
+<text>DTaP-IPV-Hib-HepB, historical</text>
 </codedValue>
 <codedValue>
 <code>138</code>
@@ -11868,7 +13201,7 @@ vaccine</clarifyingText>
 <codedValue>
 <code>132</code>
 <codeSystem>CVX</codeSystem>
-<text>DTaP-IPV-Hib-HepB,historical</text>
+<text>DTaP-IPV-Hib-HepB, historical</text>
 </codedValue>
 <codedValue>
 <code>146</code>
@@ -12865,7 +14198,7 @@ vaccine</clarifyingText>
 <group/>
 <indicationText>Administer to persons with anatomic or functional asplenia, including sickle cell disease.</indicationText>
 <contraindicationText>Do not vaccinate if the patient has anatomical or functional asplenia.</contraindicationText>
-<clarifyingText>e.g. Sickle cell disease and other hemoglobinopathies, congenital or acquired asplenia, splenic dysfunction, and splenectomy</clarifyingText>
+<clarifyingText>e.g. Sickle cell disease, congenital or acquired asplenia, splenic dysfunction, and splenectomy</clarifyingText>
 <codedValues>
 <codedValue>
 <code>707147002</code>
@@ -13184,7 +14517,7 @@ vaccine</clarifyingText>
 <observationTitle>HIV Infection</observationTitle>
 <group/>
 <indicationText>Administer to persons with HIV Infection</indicationText>
-<contraindicationText/>
+<contraindicationText>Do not vaccinate if the patient has an HIV Infection.</contraindicationText>
 <clarifyingText/>
 <codedValues>
 <codedValue>
@@ -13824,34 +15157,34 @@ vaccine</clarifyingText>
 </observation>
 <observation>
 <observationCode>247</observationCode>
-<observationTitle>Gay, bisexual, and other men who have sex with men, transgender or nonbinary people who in the past 6 months have had one of the following: 
+<observationTitle>Gay, bisexual, or other man who has sex with men (MSM), or a person who has sex with gay, bisexual, or other MSM who in the past 6 months have had one of the following: 
 1) A new diagnosis of &#x2265; 1 sexually transmitted disease
 2)  More than one sex partner
 3)  Sex at a commercial sex venue
-4)   Sex in association with a large public event in a geographic area where mpox transmission is occurring</observationTitle>
+4)  Sex in association with a large public event in a geographic area where mpox transmission is occurring</observationTitle>
 <group/>
-<indicationText>Administer to gay, bisexual, and other men who have sex with men, transgender or nonbinary people who in the past 6 months have had one of the following: 
+<indicationText>Administer to gay, bisexual, or other man who has sex with men (MSM), or a person who has sex with gay, bisexual, or other MSM who in the past 6 months have had one of the following: 
 1) A new diagnosis of &#x2265; 1 sexually transmitted disease
 2)  More than one sex partner
 3)  Sex at a commercial sex venue
-4)   Sex in association with a large public event in a geographic area where mpox transmission is occurring</indicationText>
+4)  Sex in association with a large public event in a geographic area where mpox transmission is occurring.</indicationText>
 <contraindicationText/>
 <clarifyingText>Includes persons who anticipate experiencing any of the risk factors.</clarifyingText>
 <codedValues/>
 </observation>
 <observation>
 <observationCode>248</observationCode>
-<observationTitle>Sexual partners of gay, bisexual, and other men who have sex with men, transgender or nonbinary people who in the past 6 months have had one of the following: 
+<observationTitle>Sexual partners of gay, bisexual, or other man who has sex with men (MSM), or a person who has sex with gay, bisexual, or other MSM who in the past 6 months have had one of the following: 
 1) A new diagnosis of &#x2265; 1 sexually transmitted disease
 2)  More than one sex partner
 3)  Sex at a commercial sex venue
-4)   Sex in association with a large public event in a geographic area where mpox transmission is occurring</observationTitle>
+4)  Sex in association with a large public event in a geographic area where mpox transmission is occurring</observationTitle>
 <group/>
-<indicationText>Administer to sexual partners of gay, bisexual, and other men who have sex with men, transgender or nonbinary people who in the past 6 months have had one of the following: 
+<indicationText>Administer to sexual partners of gay, bisexual, or other man who has sex with men (MSM), or a person who has sex with gay, bisexual, or other MSM who in the past 6 months have had one of the following: 
 1) A new diagnosis of &#x2265; 1 sexually transmitted disease
 2)  More than one sex partner
 3)  Sex at a commercial sex venue
-4)   Sex in association with a large public event in a geographic area where mpox transmission is occurring</indicationText>
+4)  Sex in association with a large public event in a geographic area where mpox transmission is occurring.</indicationText>
 <contraindicationText/>
 <clarifyingText>Includes persons who anticipate experiencing any of the risk factors.</clarifyingText>
 <codedValues/>
@@ -13882,8 +15215,7 @@ vaccine</clarifyingText>
 <group/>
 <indicationText>Administer to laboratory workers with a potential for exposure to TBE virus</indicationText>
 <contraindicationText/>
-<clarifyingText>n/a
-</clarifyingText>
+<clarifyingText/>
 <codedValues/>
 </observation>
 <observation>
@@ -13992,7 +15324,7 @@ vaccine</clarifyingText>
 <codedValue>
 <code>65198009</code>
 <codeSystem>SNOMED</codeSystem>
-<text>arterial thrombosis [disorder]</text>
+<text>Arterial thrombosis [disorder]</text>
 </codedValue>
 <codedValue>
 <code>111354009</code>
@@ -14258,7 +15590,7 @@ vaccine</clarifyingText>
 <observationCode>269</observationCode>
 <observationTitle>Transplantation</observationTitle>
 <group/>
-<indicationText>Adminster to persons who received a transplant</indicationText>
+<indicationText>Administer to persons who received a transplant</indicationText>
 <contraindicationText/>
 <clarifyingText/>
 <codedValues>
@@ -14266,6 +15598,114 @@ vaccine</clarifyingText>
 <code>77465005</code>
 <codeSystem>SNOMED</codeSystem>
 <text>Transplantation [procedure]</text>
+</codedValue>
+</codedValues>
+</observation>
+<observation>
+<observationCode>270</observationCode>
+<observationTitle>Severe allergic reaction after previous dose of Chikungunya vaccine</observationTitle>
+<group/>
+<indicationText/>
+<contraindicationText>Do not vaccinate if the patient has had a severe allergic reaction after previous dose of Chikungunya vaccine</contraindicationText>
+<clarifyingText/>
+<codedValues>
+<codedValue>
+<code>317</code>
+<codeSystem>CVX</codeSystem>
+<text>Chikungunya live attenuated vaccine, 0.5 mL, PF</text>
+</codedValue>
+</codedValues>
+</observation>
+<observation>
+<observationCode>271</observationCode>
+<observationTitle>Traveling to a country or territory where there is a chikungunya outbreak</observationTitle>
+<group/>
+<indicationText>Administer to persons traveling to a country or territory where there is a chikungunya outbreak</indicationText>
+<contraindicationText/>
+<clarifyingText/>
+<codedValues/>
+</observation>
+<observation>
+<observationCode>272</observationCode>
+<observationTitle>Traveling or moving to a country or territory without an outbreak but with elevated chikungunya risk for U.S. travelers if planning to stay for an extended period of time [e.g., 6 months or more]</observationTitle>
+<group/>
+<indicationText>Persons traveling or moving to a country or territory without an outbreak but with elevated chikungunya risk for U.S. travelers if planning to stay for an extended period of time [e.g., 6 months or more] may consider vaccination</indicationText>
+<contraindicationText/>
+<clarifyingText/>
+<codedValues/>
+</observation>
+<observation>
+<observationCode>273</observationCode>
+<observationTitle>Immunoglobulin deficiency</observationTitle>
+<group/>
+<indicationText>Administer to persons with an immunoglobulin deficiency</indicationText>
+<contraindicationText/>
+<clarifyingText/>
+<codedValues>
+<codedValue>
+<code>124950009</code>
+<codeSystem>SNOMED</codeSystem>
+<text>Deficiency of immunoglobulin [disorder]</text>
+</codedValue>
+</codedValues>
+</observation>
+<observation>
+<observationCode>274</observationCode>
+<observationTitle>Early component complement inhibitor use</observationTitle>
+<group/>
+<indicationText>Administer to persons using an early component complement inhibitor</indicationText>
+<contraindicationText/>
+<clarifyingText/>
+<codedValues/>
+</observation>
+<observation>
+<observationCode>275</observationCode>
+<observationTitle>Persons at risk during a measles outbreak</observationTitle>
+<group/>
+<indicationText>Administer to persons identified as at increased risk during a community measles outbreak.</indicationText>
+<contraindicationText/>
+<clarifyingText/>
+<codedValues/>
+</observation>
+<observation>
+<observationCode>276</observationCode>
+<observationTitle>Age is 60 years or older</observationTitle>
+<group/>
+<indicationText/>
+<contraindicationText>Do not vaccinate if the patient age is 60 years or older.</contraindicationText>
+<clarifyingText/>
+<codedValues/>
+</observation>
+<observation>
+<observationCode>277</observationCode>
+<observationTitle>Laboratory worker with potential for exposure to chikungunya virus</observationTitle>
+<group/>
+<indicationText>Administer to laboratory workers with potential for exposure to chikungunya virus</indicationText>
+<contraindicationText/>
+<clarifyingText/>
+<codedValues/>
+</observation>
+<observation>
+<observationCode>278</observationCode>
+<observationTitle>Birth mother received RSV vaccine during pregnancy</observationTitle>
+<group/>
+<indicationText/>
+<contraindicationText>Do not vaccinate if the birth mother received RSV vaccine during pregnancy</contraindicationText>
+<clarifyingText>The infant should not receive nirsevimab younger than 8 months unless the pregnant mother received an RSV vaccine and encountered one of the following issues. The dose was administered in the incorrect route/site, was of lower than recommended volume, was administered before 24 weeks gestation, was administered less than 14 days before birth, was not the Pfizer/Abrysvo or Moderna/Mresvia product, had preparation errors prior to administration, or had storage issues.</clarifyingText>
+<codedValues/>
+</observation>
+<observation>
+<observationCode>279</observationCode>
+<observationTitle>Hemoglobinopathy disorder</observationTitle>
+<group/>
+<indicationText>Administer to persons with a hemoglobinopathy disorder</indicationText>
+<contraindicationText>Do not vaccinate if the patient has a hemoglobinopathy disorder.</contraindicationText>
+<clarifyingText/>
+<codedValues>
+<codedValue>
+<code>80141007</code>
+<codeSystem>SNOMED</codeSystem>
+<text>hemoglobinopathy [disorder]</text>
 </codedValue>
 </codedValues>
 </observation>

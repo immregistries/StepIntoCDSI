@@ -19,14 +19,22 @@
 <beginAge/>
 <endAge/>
 </contraindication>
+<contraindication>
+<observationCode>278</observationCode>
+<observationTitle>Birth mother received RSV vaccine during pregnancy</observationTitle>
+<contraindicationText>Do not vaccinate if the birth mother received RSV vaccine during pregnancy.</contraindicationText>
+<contraindicationGuidance>The infant should not receive a monoclonal antibody younger than 8 months unless the pregnant mother received an RSV vaccine and encountered one of the following issues. The dose was administered in the incorrect route/site, was of lower than recommended volume, was administered before 24 weeks gestation, was administered less than 14 days before birth, was not the Pfizer/Abrysvo product, had preparation errors prior to administration, or had storage issues.</contraindicationGuidance>
+<beginAge>0 days</beginAge>
+<endAge>8 months</endAge>
+</contraindication>
 </vaccineGroup>
 </contraindications>
 <series>
 <seriesName>RSV 1-dose series</seriesName>
 <targetDisease>RSV</targetDisease>
 <vaccineGroup>RSV</vaccineGroup>
-<seriesAdminGuidance>Except in rare circumstances, nirsevimab is not needed for most infants younger than age 8 months who are born 14 or more days after their mother received Pfizer/Abrysvo or Moderna/Mresvia RSV vaccine.</seriesAdminGuidance>
-<seriesAdminGuidance>The infant should receive nirsevimab younger than 8 months if the pregnant person received an RSV vaccine, but encountered any one of the following issues. The dose was administered in the incorrect route/site, was of lower than recommended volume, was administered before 24 weeks gestation, was not the Pfizer/Abrysvo or Moderna/Mresvia product, had preparation errors prior to administration, or had storage issues.</seriesAdminGuidance>
+<seriesAdminGuidance>Except in rare circumstances, a monoclonal antibody is not needed for most infants younger than age 8 months who are born 14 or more days after their mother received Pfizer/Abrysvo RSV vaccine.</seriesAdminGuidance>
+<seriesAdminGuidance>The infant should receive a monoclonal antibody younger than 8 months if the pregnant woman received an RSV vaccine, but encountered any one of the following issues. The dose was administered in the incorrect route/site, was of lower than recommended volume, was administered before 24 weeks gestation, was not the Pfizer/Abrysvo product, had preparation errors prior to administration, or had storage issues.</seriesAdminGuidance>
 <seriesAdminGuidance>RSVPreF3 (GSK, Arexvy), RSVpreF (Pfizer, Abrysvo), and mRNA-1345 (Moderna, Mresvia)  vaccines are not licensed for infants and young children.</seriesAdminGuidance>
 <seriesType>Standard</seriesType>
 <equivalentSeriesGroups>2</equivalentSeriesGroups>
@@ -75,6 +83,16 @@
 <volume>1.0</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
+<preferableVaccine>
+<vaccineType>RSV, mAb, clesrovimab-cfor, 0.7 mL, neonate and infant, PF</vaccineType>
+<cvx>332</cvx>
+<beginAge>0 days</beginAge>
+<endAge>8 months</endAge>
+<tradeName/>
+<mvx/>
+<volume>0.7</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
 <allowableVaccine>
 <vaccineType>Respiratory syncytial virus (RSV), unspecified</vaccineType>
 <cvx>304</cvx>
@@ -99,6 +117,12 @@
 <beginAge>0 days</beginAge>
 <endAge>24 months</endAge>
 </allowableVaccine>
+<allowableVaccine>
+<vaccineType>RSV, mAb, clesrovimab-cfor, 0.7 mL, neonate and infant, PF</vaccineType>
+<cvx>332</cvx>
+<beginAge>0 days</beginAge>
+<endAge>8 months</endAge>
+</allowableVaccine>
 <inadvertentVaccine>
 <vaccineType>RSV, recombinant, protein subunit RSVpreF, adjuvant reconstituted, 0.5 mL, PF</vaccineType>
 <cvx>303</cvx>
@@ -118,8 +142,8 @@
 <conditionalSkip/>
 <recurringDose>No</recurringDose>
 <seasonalRecommendation>
-<startDate>20241001</startDate>
-<endDate>20250331</endDate>
+<startDate>20251001</startDate>
+<endDate>20260331</endDate>
 </seasonalRecommendation>
 </seriesDose>
 </series>
@@ -127,8 +151,8 @@
 <seriesName>RSV risk under 20 months series</seriesName>
 <targetDisease>RSV</targetDisease>
 <vaccineGroup>RSV</vaccineGroup>
-<seriesAdminGuidance>Except in rare circumstances, nirsevimab is not needed for most infants younger than age 8 months who are born 14 or more days after their mother received Pfizer/Abrysvo or Moderna/Mresvia RSV vaccine.</seriesAdminGuidance>
-<seriesAdminGuidance>The infant should receive nirsevimab younger than 8 months if the pregnant person received an RSV vaccine, but encountered any one of the following issues. The dose was administered in the incorrect route/site, was of lower than recommended volume, was administered before 24 weeks gestation, was not the Pfizer/Abrysvo or Moderna/Mresvia product, had preparation errors prior to administration, or had storage issues.</seriesAdminGuidance>
+<seriesAdminGuidance>Except in rare circumstances, a monoclonal antibody is not needed for most infants younger than age 8 months who are born 14 or more days after their mother received Pfizer/Abrysvo RSV vaccine.</seriesAdminGuidance>
+<seriesAdminGuidance>The infant should receive a monoclonal antibody younger than 8 months if the pregnant woman received an RSV vaccine, but encountered any one of the following issues. The dose was administered in the incorrect route/site, was of lower than recommended volume, was administered before 24 weeks gestation, was not the Pfizer/Abrysvo product, had preparation errors prior to administration, or had storage issues.</seriesAdminGuidance>
 <seriesAdminGuidance>ACIP recommends 1 dose of nirsevimab (200 mg, administered as two 100 mg injections given at the same time at different injection sites) for infants and children aged 8-19 months who are at increased risk for severe RSV disease and entering their second RSV season</seriesAdminGuidance>
 <seriesAdminGuidance>RSVPreF3 (GSK, Arexvy), RSVpreF (Pfizer, Abrysvo), and mRNA-1345 (Moderna, Mresvia)  vaccines are not licensed for infants and young children.</seriesAdminGuidance>
 <seriesType>Risk</seriesType>
@@ -217,6 +241,16 @@
 <volume>1.0</volume>
 <forecastVaccineType>N</forecastVaccineType>
 </preferableVaccine>
+<preferableVaccine>
+<vaccineType>RSV, mAb, clesrovimab-cfor, 0.7 mL, neonate and infant, PF</vaccineType>
+<cvx>332</cvx>
+<beginAge>0 days</beginAge>
+<endAge>8 months</endAge>
+<tradeName/>
+<mvx/>
+<volume>0.7</volume>
+<forecastVaccineType>N</forecastVaccineType>
+</preferableVaccine>
 <allowableVaccine>
 <vaccineType>Respiratory syncytial virus (RSV), unspecified</vaccineType>
 <cvx>304</cvx>
@@ -240,6 +274,12 @@
 <cvx>315</cvx>
 <beginAge>0 days</beginAge>
 <endAge>24 months</endAge>
+</allowableVaccine>
+<allowableVaccine>
+<vaccineType>RSV, mAb, clesrovimab-cfor, 0.7 mL, neonate and infant, PF</vaccineType>
+<cvx>332</cvx>
+<beginAge>0 days</beginAge>
+<endAge>8 months</endAge>
 </allowableVaccine>
 <inadvertentVaccine>
 <vaccineType>RSV, recombinant, protein subunit RSVpreF, adjuvant reconstituted, 0.5 mL, PF</vaccineType>
@@ -284,8 +324,8 @@
 </conditionalSkip>
 <recurringDose>No</recurringDose>
 <seasonalRecommendation>
-<startDate>20241001</startDate>
-<endDate>20250331</endDate>
+<startDate>20251001</startDate>
+<endDate>20260331</endDate>
 </seasonalRecommendation>
 </seriesDose>
 <seriesDose>
@@ -349,6 +389,10 @@
 <vaccineType>RSV, mRNA, injectable, PF</vaccineType>
 <cvx>326</cvx>
 </inadvertentVaccine>
+<inadvertentVaccine>
+<vaccineType>RSV, mAb, clesrovimab-cfor, 0.7 mL, neonate and infant, PF</vaccineType>
+<cvx>332</cvx>
+</inadvertentVaccine>
 <conditionalSkip>
 <context>Both</context>
 <setLogic>n/a</setLogic>
@@ -361,23 +405,23 @@
 <condition>
 <conditionID>1</conditionID>
 <conditionType>Vaccine Count by Date</conditionType>
-<startDate>20240701</startDate>
-<endDate>20250630</endDate>
+<startDate>20250701</startDate>
+<endDate>20260630</endDate>
 <beginAge/>
 <endAge/>
 <interval/>
 <doseCount>1</doseCount>
 <doseType>Valid</doseType>
 <doseCountLogic>equal to</doseCountLogic>
-<vaccineTypes>304; 306; 307; 315</vaccineTypes>
+<vaccineTypes>304; 306; 307; 315; 332</vaccineTypes>
 <seriesGroups/>
 </condition>
 </set>
 </conditionalSkip>
 <recurringDose>No</recurringDose>
 <seasonalRecommendation>
-<startDate>20241001</startDate>
-<endDate>20250331</endDate>
+<startDate>20251001</startDate>
+<endDate>20260331</endDate>
 </seasonalRecommendation>
 </seriesDose>
 <seriesDose>
@@ -453,6 +497,10 @@
 <vaccineType>RSV, mRNA, injectable, PF</vaccineType>
 <cvx>326</cvx>
 </inadvertentVaccine>
+<inadvertentVaccine>
+<vaccineType>RSV, mAb, clesrovimab-cfor, 0.7 mL, neonate and infant, PF</vaccineType>
+<cvx>332</cvx>
+</inadvertentVaccine>
 <conditionalSkip>
 <context>Evaluation</context>
 <setLogic>OR</setLogic>
@@ -500,15 +548,15 @@
 <condition>
 <conditionID>2</conditionID>
 <conditionType>Vaccine Count by Date and Age</conditionType>
-<startDate>20240701</startDate>
-<endDate>20250630</endDate>
+<startDate>20250701</startDate>
+<endDate>20260630</endDate>
 <beginAge/>
 <endAge>8 months</endAge>
 <interval/>
 <doseCount>1</doseCount>
 <doseType>Valid</doseType>
 <doseCountLogic>equal to</doseCountLogic>
-<vaccineTypes>304; 306; 307; 315</vaccineTypes>
+<vaccineTypes>304; 306; 307; 315; 332</vaccineTypes>
 <seriesGroups/>
 </condition>
 </set>
@@ -575,8 +623,8 @@
 </conditionalSkip>
 <recurringDose>No</recurringDose>
 <seasonalRecommendation>
-<startDate>20241001</startDate>
-<endDate>20250331</endDate>
+<startDate>20251001</startDate>
+<endDate>20260331</endDate>
 </seasonalRecommendation>
 </seriesDose>
 </series>
@@ -584,9 +632,9 @@
 <seriesName>RSV risk pregnant 1-dose series</seriesName>
 <targetDisease>RSV</targetDisease>
 <vaccineGroup>RSV</vaccineGroup>
-<seriesAdminGuidance>Either maternal RSV vaccination with Pfizer/Abrysvo or use of nirsevimab in the infant is recommended to prevent RSV lower respiratory tract infection, but administration of both products is not needed for most infants. At this time, a pregnant person who receives Abrysvo during one pregnancy is not recommended to receive Abrysvo during a subsequent pregnancy. ACIP will make decisions concerning revaccination as more data become available.</seriesAdminGuidance>
-<seriesAdminGuidance>RSVPreF3 (GSK, Arexvy) is licensed for adults 50 years and older. mRNA-1345 (Moderna, Mresvia) is licensed for adults 60 years and older. These vaccines are not licensed for pregnant people.</seriesAdminGuidance>
-<seriesAdminGuidance>The infant should receive nirsevimab younger than 8 months if the pregnant person received an RSV vaccine, but encountered any one of the following issues. The dose was administered in the incorrect route/site, was of lower than recommended volume, was administered before 24 weeks gestation, was not the Pfizer/Abrysvo or Moderna/Mresvia product, had preparation errors prior to administration, or had storage issues.</seriesAdminGuidance>
+<seriesAdminGuidance>Either maternal RSV vaccination with Pfizer/Abrysvo or use of a monoclonal antibody in the infant is recommended to prevent RSV lower respiratory tract infection, but administration of both products is not needed for most infants. At this time, a pregnant woman who receives Abrysvo during one pregnancy is not recommended to receive Abrysvo during a subsequent pregnancy. ACIP will make decisions concerning revaccination as more data become available.</seriesAdminGuidance>
+<seriesAdminGuidance>RSVPreF3 (GSK, Arexvy) is licensed for adults 50 years and older. mRNA-1345 (Moderna, Mresvia) is licensed for adults 60 years and older. These vaccines are not licensed for pregnant women.</seriesAdminGuidance>
+<seriesAdminGuidance>The infant should receive a monoclonal antibody younger than 8 months if the pregnant woman received an RSV vaccine, but encountered any one of the following issues. The dose was administered in the incorrect route/site, was of lower than recommended volume, was administered before 24 weeks gestation, was not the Pfizer/Abrysvo product, had preparation errors prior to administration, or had storage issues.</seriesAdminGuidance>
 <seriesType>Risk</seriesType>
 <equivalentSeriesGroups>3</equivalentSeriesGroups>
 <requiredGender/>
@@ -608,7 +656,7 @@
 <description>Administer to persons who are pregnant.</description>
 <beginAge/>
 <endAge/>
-<guidance>Pregnant persons should receive 1 dose of RSVpreF (Pfizer, Abrysvo) vaccine during 32 through 36 weeks gestation starting 1-2 months prior to the anticipated beginning of the RSV season and ending 1-2 months prior to the anticipated end of the season. RSVpreF vaccine (Abrysvo, Pfizer) is currently approved and recommended for administration as a single dose. Sufficient evidence does not exist at this time to determine the need for additional doses in subsequent pregnancies.</guidance>
+<guidance>Pregnant women should receive 1 dose of RSVpreF (Pfizer, Abrysvo) vaccine during 32 through 36 weeks gestation starting 1-2 months prior to the anticipated beginning of the RSV season and ending 1-2 months prior to the anticipated end of the season. RSVpreF vaccine (Abrysvo, Pfizer) is currently approved and recommended for administration as a single dose. Sufficient evidence does not exist at this time to determine the need for additional doses in subsequent pregnancies.</guidance>
 </indication>
 <seriesDose>
 <doseNumber>Dose 1</doseNumber>
@@ -686,6 +734,10 @@
 <vaccineType>RSV, mRNA, injectable, PF</vaccineType>
 <cvx>326</cvx>
 </inadvertentVaccine>
+<inadvertentVaccine>
+<vaccineType>RSV, mAb, clesrovimab-cfor, 0.7 mL, neonate and infant, PF</vaccineType>
+<cvx>332</cvx>
+</inadvertentVaccine>
 <conditionalSkip>
 <context>Both</context>
 <setLogic>n/a</setLogic>
@@ -698,8 +750,8 @@
 <condition>
 <conditionID>1</conditionID>
 <conditionType>Vaccine Count By Date</conditionType>
-<startDate>20240701</startDate>
-<endDate>20250630</endDate>
+<startDate>20250701</startDate>
+<endDate>20260630</endDate>
 <beginAge/>
 <endAge/>
 <interval/>
@@ -713,13 +765,13 @@
 </conditionalSkip>
 <recurringDose>No</recurringDose>
 <seasonalRecommendation>
-<startDate>20240901</startDate>
-<endDate>20250131</endDate>
+<startDate>20250901</startDate>
+<endDate>20260131</endDate>
 </seasonalRecommendation>
 </seriesDose>
 </series>
 <series>
-<seriesName>RSV risk 60-74 years 1-dose series</seriesName>
+<seriesName>RSV risk 50-74 years 1-dose series</seriesName>
 <targetDisease>RSV</targetDisease>
 <vaccineGroup>RSV</vaccineGroup>
 <seriesAdminGuidance>CDC recommends a single dose of RSV vaccine for persons with other chronic medical conditions or risk factors that a healthcare provider determines would increase the risk of severe disease due to respiratory infection, including from respiratory syncytial virus (e.g., frailty, situations in which healthcare providers have concern for presence of undiagnosed chronic medical conditions, residence in a remote or rural community where transportation of patients with severe RSV disease for escalation of medical care is challenging)</seriesAdminGuidance>
@@ -742,7 +794,7 @@
 <code>004</code>
 </observationCode>
 <description>Administer to recipients of a hematopoietic stem cell transplant [HSCT] within 2 years of successful transplantation.</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
@@ -752,7 +804,7 @@
 <code>015</code>
 </observationCode>
 <description>Administer to persons who have chronic liver disease.</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance>Includes cirrhosis</guidance>
 </indication>
@@ -762,7 +814,7 @@
 <code>016</code>
 </observationCode>
 <description>Administer to persons who have chronic heart disease.</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance>Includes congestive heart failure and cardiomyopathies, excluding isolated hypertension</guidance>
 </indication>
@@ -772,7 +824,7 @@
 <code>017</code>
 </observationCode>
 <description>Administer to persons who have chronic lung disease.</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance>Includes chronic obstructive pulmonary disease [COPD], emphysema, asthma, interstitial lung disease, cystic fibrosis</guidance>
 </indication>
@@ -782,7 +834,7 @@
 <code>027</code>
 </observationCode>
 <description>Administer to persons who have asthma.</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
@@ -792,7 +844,7 @@
 <code>114</code>
 </observationCode>
 <description>Administer to persons with end stage renal disease.</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance>Includes dependence on hemodialysis or other renal replacement therapy</guidance>
 </indication>
@@ -802,7 +854,7 @@
 <code>145</code>
 </observationCode>
 <description>Administer to persons who have severe B-lymphocyte (humoral) - antibody deficiencies (e.g., X-linked agammaglobulinemia and common variable immunodeficiency).</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
@@ -812,7 +864,7 @@
 <code>147</code>
 </observationCode>
 <description>Administer to persons who have complete cell-mediated or humoral T-lymphocyte defects (e.g., severe combined immunodeficiency [SCID] disease, complete DiGeorge syndrome).</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
@@ -822,7 +874,7 @@
 <code>148</code>
 </observationCode>
 <description>Administer to persons who have partial cell-mediated or humoral T-lymphocyte defects (e.g., most patients with DiGeorge syndrome, Wiskott-Aldrich syndrome, ataxia- telangiectasia).</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
@@ -832,7 +884,7 @@
 <code>153</code>
 </observationCode>
 <description>Administer to persons who have a phagocytic function defect (e.g. leukocyte adhesion defect and myeloperoxidase deficiency).</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
@@ -842,7 +894,7 @@
 <code>154</code>
 </observationCode>
 <description>Administer to persons who have HIV/AIDS and are severely immunocompromised [See the CDC general recommendations for a definition of "severely immunocompromised"].</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
@@ -852,7 +904,7 @@
 <code>157</code>
 </observationCode>
 <description>Administer to persons who have received a solid organ transplant.</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
@@ -862,7 +914,7 @@
 <code>158</code>
 </observationCode>
 <description>Administer to persons who are undergoing immunosuppressive therapy. Immunosuppressive medications include those given to prevent solid organ transplant rejection, human immune mediators like interleukins and colony-stimulating factors, immune modulators like levamisole and BCG bladder-tumor therapy, and medicines like tumor necrosis factor alpha inhibitors and anti-B cell antibodies. </description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance>When immunocompromising therapy is being planned, vaccination should be completed at least 2 weeks before initiation or resumption of therapy.</guidance>
 </indication>
@@ -872,7 +924,7 @@
 <code>159</code>
 </observationCode>
 <description>Administer to persons who are undergoing radiation therapy.</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance>When immunocompromising therapy is being planned, vaccination should be completed at least 2 weeks before initiation or resumption of therapy.</guidance>
 </indication>
@@ -882,7 +934,7 @@
 <code>189</code>
 </observationCode>
 <description>Administer to persons receiving active treatment for solid tumors</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
@@ -892,7 +944,7 @@
 <code>190</code>
 </observationCode>
 <description>Administer to persons receiving active treatment for hematologic malignancies</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
@@ -902,7 +954,7 @@
 <code>191</code>
 </observationCode>
 <description>Administer to persons receiving CAR-T-cell therapy</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
@@ -912,7 +964,7 @@
 <code>199</code>
 </observationCode>
 <description>Administer to persons with interstitial lung disease</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance>Having damaged or scarred lung tissue such as interstitial lung disease</guidance>
 </indication>
@@ -922,7 +974,7 @@
 <code>200</code>
 </observationCode>
 <description>Administer to persons with cystic fibrosis</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
@@ -932,7 +984,7 @@
 <code>205</code>
 </observationCode>
 <description>Administer to persons with thalassemia</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
@@ -942,7 +994,7 @@
 <code>214</code>
 </observationCode>
 <description>Administer to persons with chronic obstructive pulmonary disease</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
@@ -952,7 +1004,7 @@
 <code>215</code>
 </observationCode>
 <description>Administer to persons with emphysema</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
@@ -962,7 +1014,7 @@
 <code>254</code>
 </observationCode>
 <description>Administer to persons with chronic cardiovascular disease.</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance>Includes heart failure, coronary artery disease, congenital heart disease, excluding isolated hypertension</guidance>
 </indication>
@@ -972,7 +1024,7 @@
 <code>256</code>
 </observationCode>
 <description>Administer to persons diabetes mellitus complicated by chronic kidney disease</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
@@ -982,7 +1034,7 @@
 <code>257</code>
 </observationCode>
 <description>Administer to persons with severe obesity</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
@@ -992,7 +1044,7 @@
 <code>258</code>
 </observationCode>
 <description>Administer to persons with chronic hematologic disorders.</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance>Includes sickle cell disease and thalassemia.</guidance>
 </indication>
@@ -1002,7 +1054,7 @@
 <code>259</code>
 </observationCode>
 <description>Administer to persons with sickle cell disease.</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
@@ -1012,7 +1064,7 @@
 <code>260</code>
 </observationCode>
 <description>Administer to persons with neurologic or neuromuscular conditions causing impaired airway clearance or respiratory muscle weakness</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance>Includes poststroke dysphagia, amyotrophic lateral sclerosis, muscular dystrophy; excluding history of stroke without impaired airway clearance</guidance>
 </indication>
@@ -1022,7 +1074,7 @@
 <code>261</code>
 </observationCode>
 <description>Administer to persons who reside in a nursing home</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
@@ -1032,7 +1084,7 @@
 <code>262</code>
 </observationCode>
 <description>Administer to persons who are frail</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
@@ -1042,7 +1094,7 @@
 <code>263</code>
 </observationCode>
 <description>Administer to persons with diabetes mellitus complicated by neuropathy</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
@@ -1052,7 +1104,7 @@
 <code>264</code>
 </observationCode>
 <description>Administer to persons with diabetes mellitus complicated by retinopathy</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
@@ -1062,7 +1114,7 @@
 <code>265</code>
 </observationCode>
 <description>Administer to persons with diabetes mellitus complicated by end-organ damage</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
@@ -1072,7 +1124,7 @@
 <code>266</code>
 </observationCode>
 <description>Administer to persons with diabetes requiring treatment with insulin</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
@@ -1082,7 +1134,7 @@
 <code>267</code>
 </observationCode>
 <description>Administer to persons with diabetes requiring treatment with sodium-glucose cotransporter-2 (SGLT2) inhibitor</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
@@ -1092,16 +1144,16 @@
 <code>268</code>
 </observationCode>
 <description>Administer to persons who have received a islet transplant.</description>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge>75 years</endAge>
 <guidance/>
 </indication>
 <seriesDose>
 <doseNumber>Dose 1</doseNumber>
 <age>
-<absMinAge/>
-<minAge>60 years</minAge>
-<earliestRecAge>60 years</earliestRecAge>
+<absMinAge>10 years</absMinAge>
+<minAge>50 years</minAge>
+<earliestRecAge>50 years</earliestRecAge>
 <latestRecAge/>
 <maxAge/>
 <effectiveDate/>
@@ -1112,7 +1164,7 @@
 <preferableVaccine>
 <vaccineType>RSV, recombinant, protein subunit RSVpreF, adjuvant reconstituted, 0.5 mL, PF</vaccineType>
 <cvx>303</cvx>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge/>
 <tradeName/>
 <mvx/>
@@ -1122,7 +1174,7 @@
 <preferableVaccine>
 <vaccineType>RSV, bivalent, protein subunit RSVpreF, diluent reconstituted, 0.5 mL, PF</vaccineType>
 <cvx>305</cvx>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge/>
 <tradeName/>
 <mvx/>
@@ -1132,7 +1184,7 @@
 <preferableVaccine>
 <vaccineType>RSV, mRNA, injectable, PF</vaccineType>
 <cvx>326</cvx>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge/>
 <tradeName/>
 <mvx/>
@@ -1180,6 +1232,10 @@
 <inadvertentVaccine>
 <vaccineType>Respiratory syncytial virus (RSV) monoclonal antibody (MAB), unspecified</vaccineType>
 <cvx>315</cvx>
+</inadvertentVaccine>
+<inadvertentVaccine>
+<vaccineType>RSV, mAb, clesrovimab-cfor, 0.7 mL, neonate and infant, PF</vaccineType>
+<cvx>332</cvx>
 </inadvertentVaccine>
 <conditionalSkip/>
 <recurringDose>No</recurringDose>
@@ -1208,7 +1264,7 @@
 <seriesDose>
 <doseNumber>Dose 1</doseNumber>
 <age>
-<absMinAge/>
+<absMinAge>10 years</absMinAge>
 <minAge>75 years</minAge>
 <earliestRecAge>75 years</earliestRecAge>
 <latestRecAge/>
@@ -1221,7 +1277,7 @@
 <preferableVaccine>
 <vaccineType>RSV, recombinant, protein subunit RSVpreF, adjuvant reconstituted, 0.5 mL, PF</vaccineType>
 <cvx>303</cvx>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge/>
 <tradeName/>
 <mvx/>
@@ -1231,7 +1287,7 @@
 <preferableVaccine>
 <vaccineType>RSV, bivalent, protein subunit RSVpreF, diluent reconstituted, 0.5 mL, PF</vaccineType>
 <cvx>305</cvx>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge/>
 <tradeName/>
 <mvx/>
@@ -1241,7 +1297,7 @@
 <preferableVaccine>
 <vaccineType>RSV, mRNA, injectable, PF</vaccineType>
 <cvx>326</cvx>
-<beginAge>60 years</beginAge>
+<beginAge>50 years</beginAge>
 <endAge/>
 <tradeName/>
 <mvx/>
@@ -1289,6 +1345,10 @@
 <inadvertentVaccine>
 <vaccineType>Respiratory syncytial virus (RSV) monoclonal antibody (MAB), unspecified</vaccineType>
 <cvx>315</cvx>
+</inadvertentVaccine>
+<inadvertentVaccine>
+<vaccineType>RSV, mAb, clesrovimab-cfor, 0.7 mL, neonate and infant, PF</vaccineType>
+<cvx>332</cvx>
 </inadvertentVaccine>
 <conditionalSkip/>
 <recurringDose>No</recurringDose>

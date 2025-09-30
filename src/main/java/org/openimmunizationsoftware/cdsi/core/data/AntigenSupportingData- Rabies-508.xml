@@ -280,7 +280,7 @@
 <setLogic>n/a</setLogic>
 <set>
 <setID>1</setID>
-<setDescription>Target dose can be skipped if 1 or more previous doses have been adminisetered on or after May 6, 2022</setDescription>
+<setDescription>Target dose can be skipped if 1 or more previous doses have been administered on or after May 6, 2022</setDescription>
 <effectiveDate>20220506</effectiveDate>
 <cessationDate/>
 <conditionLogic/>
@@ -292,7 +292,7 @@
 <beginAge/>
 <endAge/>
 <interval/>
-<doseCount>1</doseCount>
+<doseCount>0</doseCount>
 <doseType>valid</doseType>
 <doseCountLogic>greater than</doseCountLogic>
 <vaccineTypes>18; 90; 175; 176</vaccineTypes>
@@ -672,7 +672,7 @@
 <setLogic>n/a</setLogic>
 <set>
 <setID>1</setID>
-<setDescription>Target dose can be skipped if 1 or more previous doses have been adminisetered on or after May 6, 2022</setDescription>
+<setDescription>Target dose can be skipped if 1 or more previous doses have been administered on or after May 6, 2022</setDescription>
 <effectiveDate>20220506</effectiveDate>
 <cessationDate/>
 <conditionLogic/>
@@ -684,7 +684,7 @@
 <beginAge/>
 <endAge/>
 <interval/>
-<doseCount>1</doseCount>
+<doseCount>0</doseCount>
 <doseType>valid</doseType>
 <doseCountLogic>greater than</doseCountLogic>
 <vaccineTypes>18; 90; 175; 176</vaccineTypes>
@@ -802,7 +802,7 @@
 <seriesAdminGuidance>For persons who risk for rabies exposure is greater than 3 years, two options are available within the 3 years after primary series.
 1) a one-time a titer check at 1-3 years after the primary series. A single booster should be administered if the titer is below 0.5 IU/mL.
 2) preemptively receive a one-time booster on or after day 21 to year 3 after completion of the 2-dose primary series.</seriesAdminGuidance>
-<seriesAdminGuidance>For persons who risk for rabies exposure is greater than 3 years, but who have not had a titer or booster within three years can be realinged with ACIP recommendations through a one-time titer and booster if titer is below 0.5 IU/mL. Once boosted, titers should be checked no sooner than 1 week (preferable 2-4 weeks) later to ensure a titer of at least 0.5 UI/mL.</seriesAdminGuidance>
+<seriesAdminGuidance>For persons who risk for rabies exposure is greater than 3 years, but who have not had a titer or booster within three years can be realigned with ACIP recommendations through a one-time titer and booster if titer is below 0.5 IU/mL. Once boosted, titers should be checked no sooner than 1 week (preferable 2-4 weeks) later to ensure a titer of at least 0.5 UI/mL.</seriesAdminGuidance>
 <seriesAdminGuidance>For persons who risk for rabies exposure is less than 3 years (e.g., short-term volunteer providing hands-on animal care or infrequent traveler with no high-risk travel past 3 years), no boosting is recommended.</seriesAdminGuidance>
 <seriesType>Risk</seriesType>
 <equivalentSeriesGroups/>
@@ -1048,7 +1048,7 @@
 <setLogic>n/a</setLogic>
 <set>
 <setID>1</setID>
-<setDescription>Target dose can be skipped if 1 or more previous doses have been adminisetered on or after May 6, 2022</setDescription>
+<setDescription>Target dose can be skipped if 1 or more previous doses have been administered on or after May 6, 2022</setDescription>
 <effectiveDate>20220506</effectiveDate>
 <cessationDate/>
 <conditionLogic/>
@@ -1060,7 +1060,7 @@
 <beginAge/>
 <endAge/>
 <interval/>
-<doseCount>1</doseCount>
+<doseCount>0</doseCount>
 <doseType>valid</doseType>
 <doseCountLogic>greater than</doseCountLogic>
 <vaccineTypes>18; 90; 175; 176</vaccineTypes>
