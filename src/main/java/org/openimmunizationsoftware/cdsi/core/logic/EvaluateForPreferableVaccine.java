@@ -183,11 +183,8 @@ public class EvaluateForPreferableVaccine extends LogicStep {
           "Is the trade name of the vaccine dose administered the same as the trade name of the preferable vaccine for the target dose?") {
         @Override
         public LogicResult evaluateInternal() {
-          if (caTradeName.getFinalValue().equals(caPreferableVaccineElements.getFinalValue().getTradeName())) {
-            return LogicResult.YES;
-          } else {
-            return LogicResult.NO;
-          }
+          //default to returning YES as caTradeName is not set to the correct value, and trade name is not passed into the forecaster
+          return LogicResult.YES;
         }
       });
       setLogicCondition(3, new LogicCondition(
