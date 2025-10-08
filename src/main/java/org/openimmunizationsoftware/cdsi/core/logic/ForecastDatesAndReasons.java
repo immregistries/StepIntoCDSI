@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 
 public class ForecastDatesAndReasons extends LogicStep {
   public ForecastDatesAndReasons(DataModel dataModel) {
@@ -14,6 +15,18 @@ public class ForecastDatesAndReasons extends LogicStep {
   @Override
   public LogicStep process() throws Exception {
     Forecast forecast = new Forecast();
+
+    //if the target dose has been skipped
+    if (dataModel.getTargetDose().getTargetDoseStatus() == TargetDoseStatus.SKIPPED) {
+      log(" + Target dose was skipped, getting next target dose");
+      dataModel.setPreviousTargetDose(dataModel.getTargetDose());
+      dataModel.incTargetDoseListPos();
+      if (dataModel.getTargetDoseListPos() < dataModel.getTargetDoseList().size()) {
+        log(" + Setting next target dose");
+        dataModel.setTargetDose(dataModel.getTargetDoseList().get(dataModel.getTargetDoseListPos()));
+      }
+    }
+    
     forecast.setAntigen(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
     forecast.setTargetDose(dataModel.getTargetDose());
     dataModel.setForecast(forecast);

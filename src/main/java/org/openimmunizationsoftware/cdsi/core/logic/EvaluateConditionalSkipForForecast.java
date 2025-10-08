@@ -3,6 +3,7 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 import java.io.PrintWriter;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkip.ConditionalSkipType;
 
 public class EvaluateConditionalSkipForForecast extends EvaluateConditionalSkip {
 
@@ -10,7 +11,7 @@ public class EvaluateConditionalSkipForForecast extends EvaluateConditionalSkip 
     super(dataModel, ConditionalSkipType.FORECAST,
         LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST,
         LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY,
-        LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY);
+        LogicStepType.FORECAST_DATES_AND_REASONS);
     setConditionTableName("Table 6.4 Conditional Skip Attributes");
   }
 
