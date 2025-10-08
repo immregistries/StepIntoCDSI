@@ -50,9 +50,9 @@ public class BusinessRuleTable {
             if (inRange) {
               Evaluation evaluation = vaccineDoseAdministered.getTargetDose().getEvaluation();
               if (evaluation != null && evaluation.getEvaluationStatus() != null) {
-                if (conditionalSkipCondition.getDoseType() == DoseType.VALID
-                    && evaluation.getEvaluationStatus() == EvaluationStatus.VALID
-                    && conditionalSkipCondition.getDoseType() == DoseType.TOTAL) {
+                if ((conditionalSkipCondition.getDoseType() == DoseType.VALID
+                    && evaluation.getEvaluationStatus() == EvaluationStatus.VALID)
+                    || conditionalSkipCondition.getDoseType() == DoseType.TOTAL) {
                   count++;
                 }
               }
