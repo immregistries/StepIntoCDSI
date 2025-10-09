@@ -83,10 +83,4 @@ public class EvaluateDoseAdministeredConditionTest extends SectionTest {
             {model3, Arrays.asList(Arrays.asList(LogicResult.NO, LogicResult.NO)), LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION}, 
         });
     }
-
-    //Not Sure this provides any value atm 
-    @Test
-    public void testSectionTitle(){
-        assertEquals(stepName.getDisplay(), LogicStepType.EVALUATE_DOSE_ADMINISTERED_CONDITION.getDisplay());
-    }
 }

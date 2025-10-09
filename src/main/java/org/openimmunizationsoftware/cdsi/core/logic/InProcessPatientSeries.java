@@ -61,9 +61,11 @@ public class InProcessPatientSeries extends LogicStep {
       if (productPatientSeries && hasAllValidDoses) {
         patientSeries.incPatientScoreSeries();
         patientSeries.incPatientScoreSeries();
+        log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " is a product patient series and has all valid doses");
       } else {
         patientSeries.descPatientScoreSeries();
         patientSeries.descPatientScoreSeries();
+        log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " is not a product patient series or does not have all valid doses");
       }
     }
   }
@@ -80,10 +82,12 @@ public class InProcessPatientSeries extends LogicStep {
         patientSeries.incPatientScoreSeries();
         patientSeries.incPatientScoreSeries();
         patientSeries.incPatientScoreSeries();
+        log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " is completable");
       } else {
         patientSeries.descPatientScoreSeries();
         patientSeries.descPatientScoreSeries();
         patientSeries.descPatientScoreSeries();
+        log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " is not completable");
       }
     }
   }
@@ -190,22 +194,27 @@ public class InProcessPatientSeries extends LogicStep {
     if (!twoOrMore) {
       patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
       patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
+      log(patientSeriesList.get(greatestElementPos).getTrackedAntigenSeries().getSeriesName() + " has the most valid doses");
       if (patientSeriesList.size() > 1) {
         patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
         patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
+        log(patientSeriesList.get(greatestElementPos).getTrackedAntigenSeries().getSeriesName() + " has the most valid doses");
         for (PatientSeries patientSeries : patientSeriesList) {
           patientSeries.descPatientScoreSeries();
           patientSeries.descPatientScoreSeries();
+          log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " does not have the most valid doses");
         }
       }
     } else {
       for (PatientSeries patientSeries : patientSeriesList) {
         patientSeries.descPatientScoreSeries();
         patientSeries.descPatientScoreSeries();
+        log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " does not have the most valid doses");
       }
       for (int i : greatestElementPosList) {
         patientSeriesList.get(i).incPatientScoreSeries();
         patientSeriesList.get(i).incPatientScoreSeries();
+        log(patientSeriesList.get(i).getTrackedAntigenSeries().getSeriesName() + " has the most valid doses");
       }
     }
 
@@ -245,22 +254,27 @@ public class InProcessPatientSeries extends LogicStep {
     if (!twoOrMore) {
       patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
       patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
+      log(patientSeriesList.get(greatestElementPos).getTrackedAntigenSeries().getSeriesName() + " can finish earliest");
       if (patientSeriesList.size() > 1) {
         patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
         patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
+        log(patientSeriesList.get(greatestElementPos).getTrackedAntigenSeries().getSeriesName() + " can finish earliest");
         for (PatientSeries patientSeries : patientSeriesList) {
           patientSeries.descPatientScoreSeries();
           patientSeries.descPatientScoreSeries();
+          log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " cannot finish earliest");
         }
       }
     } else {
       for (PatientSeries patientSeries : patientSeriesList) {
         patientSeries.descPatientScoreSeries();
         patientSeries.descPatientScoreSeries();
+        log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " cannot finish earliest");
       }
       for (int i : greatestElementPosList) {
         patientSeriesList.get(i).incPatientScoreSeries();
         patientSeriesList.get(i).incPatientScoreSeries();
+        log(patientSeriesList.get(i).getTrackedAntigenSeries().getSeriesName() + " can finish earliest");
       }
     }
 
@@ -306,6 +320,7 @@ public class InProcessPatientSeries extends LogicStep {
         } else {
           if (j == 1)
             patientSeries.incPatientScoreSeries();
+            log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " can finish earliest");
         }
       }
     }
