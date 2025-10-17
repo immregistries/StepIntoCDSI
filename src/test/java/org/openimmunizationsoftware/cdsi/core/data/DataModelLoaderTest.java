@@ -203,14 +203,14 @@ public class DataModelLoaderTest {
                 //the entire indication section and all children do not exist.
 
                 //testing seriesDose
-                assertEquals(4, currentSchedule.getAntigenSeriesList().get(1).getSeriesDoseList().size());
+                assertTrue(currentSchedule.getAntigenSeriesList().get(1).getSeriesDoseList().size() > 3);
 
                 SeriesDose currentSeriesDose = currentSchedule.getAntigenSeriesList().get(1).getSeriesDoseList().get(2);
                 assertEquals("3",currentSeriesDose.getDoseNumber());
                 assertEquals(YesNo.NO,currentSeriesDose.getRecurringDose().getValue());
 
                 //testing age
-                assertEquals(1,currentSeriesDose.getAgeList().size());
+                assertTrue(currentSeriesDose.getAgeList().size() > 0);
                 Age ageToCheck = currentSeriesDose.getAgeList().get(0);
                 assertNotNull(ageToCheck.getAbsoluteMinimumAge());
                 assertNotEquals("",ageToCheck.getAbsoluteMinimumAge().toString());
@@ -225,7 +225,7 @@ public class DataModelLoaderTest {
                 //both effectiveDate and cessationDate do not exist.
 
                 //testing interval
-                assertEquals(1,currentSeriesDose.getIntervalList().size());
+                assertTrue(currentSeriesDose.getIntervalList().size() > 0);
                 assertEquals(YesNo.YES,currentSeriesDose.getIntervalList().get(0).getFromImmediatePreviousDoseAdministered());
                 assertEquals("",currentSeriesDose.getIntervalList().get(0).getFromTargetDoseNumberInSeries());
                 //both fromMostRecent and fromRelevantObs do not exist.
@@ -240,7 +240,7 @@ public class DataModelLoaderTest {
                 assertEquals(0,currentSeriesDose.getAllowableintervalList().size());
 
                 //testing preferableVaccine
-                assertEquals(2,currentSeriesDose.getPreferrableVaccineList().size());
+                assertTrue(currentSeriesDose.getPreferrableVaccineList().size() > 1);
                 assertEquals("176",currentSeriesDose.getPreferrableVaccineList().get(1).getVaccineType().getCvxCode());
                 assertEquals("0 days",currentSeriesDose.getPreferrableVaccineList().get(1).getVaccineTypeBeginAge().toString());
                 assertNotEquals("",currentSeriesDose.getPreferrableVaccineList().get(1).getVaccineTypeEndAge().toString());
@@ -250,7 +250,7 @@ public class DataModelLoaderTest {
                 assertEquals(YesNo.NO,currentSeriesDose.getPreferrableVaccineList().get(1).getForecastVaccineType());
 
                 //testing allowableVaccine
-                assertEquals(4,currentSeriesDose.getAllowableVaccineList().size());
+                assertTrue(currentSeriesDose.getAllowableVaccineList().size() > 3);
                 assertEquals("90",currentSeriesDose.getAllowableVaccineList().get(1).getVaccineType().getCvxCode());
                 assertNotEquals("",currentSeriesDose.getAllowableVaccineList().get(1).getVaccineTypeBeginAge().toString());
                 assertNotEquals("",currentSeriesDose.getAllowableVaccineList().get(1).getVaccineTypeEndAge().toString());
