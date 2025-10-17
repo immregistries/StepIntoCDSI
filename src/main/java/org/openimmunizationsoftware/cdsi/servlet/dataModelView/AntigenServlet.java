@@ -65,17 +65,23 @@ public class AntigenServlet extends MainServlet {
   }
 
   private void printAntigen(DataModel dataModel, String searchParam, PrintWriter out) {
-    out.println("    <table>");
-    out.println("      <caption>Antigen</caption>");
-    out.println("      <tr>");
+
+
+    out.println("  <div class=\"w3-card w3-cell w3-margin\">");
+    out.println("    <header class=\"w3-container w3-khaki\">");
+    out.println("      <h2>Antigen</h2>");
+    out.println("    </header>");
+    out.println("    <div class=\"w3-container\">");
+    out.println("      <table class=\"w3-table w3-bordered w3-striped w3-border test w3-hoverable\">");
+    out.println("        <caption>Vaccine Dose Administered</caption>");
+    out.println("        <tr>");
     out.println("        <th>Name</th>");
     out.println("        <th>Vaccine Group</th>");
     out.println("        <th>Cvx List</th>");
     out.println("        <th>Immunity List</th>");
     out.println("        <th>Contraindication List</th>");
     out.println("        <th>Indication List</th>");
-
-    out.println("      </tr>");
+    out.println("        </tr>");
     if (searchParam.equals("")) {
       for (Antigen antigen : dataModel.getAntigenMap().values()) {
         printRowAntigen(dataModel, antigen, out);
@@ -84,7 +90,9 @@ public class AntigenServlet extends MainServlet {
     } else {
       printRowAntigen(dataModel, dataModel.getAntigenMap().get(searchParam), out);
     }
-    out.println("    </table>");
+    out.println("      </table>");
+    out.println("    </div>");
+    out.println("  </div>");
 
   }
 
