@@ -111,11 +111,13 @@ public class AntigenServlet extends MainServlet {
 
   private void printCvxList(Antigen antigen, PrintWriter out) {
     out.println("        <td>");
-    out.println("         <ul>");
+    out.println("         <table>");
     for (VaccineType cvx : antigen.getCvxList()) {
-      out.println("         <li>" + CvxServlet.makeLink(cvx) + "</li>");
+      out.println("      <tr>");
+      out.println("         <td>" + CvxServlet.makeLink(cvx) + "</td>");
+      out.println("      </tr>");
     }
-    out.println("         </ul>");
+    out.println("         </table>");
     out.println("        </td>");
   }
 

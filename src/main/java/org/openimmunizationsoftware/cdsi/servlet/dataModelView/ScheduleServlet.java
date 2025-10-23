@@ -18,6 +18,7 @@ import javax.servlet.http.HttpSession;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.ClinicalHistory;
+import org.openimmunizationsoftware.cdsi.core.domain.Contraindication;
 import org.openimmunizationsoftware.cdsi.core.domain.Observation;
 import org.openimmunizationsoftware.cdsi.core.domain.Schedule;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
@@ -111,36 +112,41 @@ public class ScheduleServlet extends MainServlet {
     out.println("      <tr>");
     out.println("        <td><a href=\"dataModelViewAntigen?search_term="
         + schedule.getScheduleName() + "\" >" + schedule.getScheduleName() + "</td>");
-    out.println("        <td>" + schedule.getContraindicationList() + "</td>");
+    out.println("        <td>Length of " + schedule.getContraindicationList().size() + "</td>");
     out.println("        <td>" + schedule.getLiveVirusConflictList() + "</td>");
+    
     out.println("        <td>");
-    out.println("          <ul>");
-
+    out.println("         <table>");
     for (AntigenSeries antigenSeries : schedule.getAntigenSeriesList()) {
       try {
         String link = SERVLET_NAME + "?" + PARAM_VIEW + "=" + VIEW_ANTIGEN + "&" + PARAM_SCHED_NAME
             + "=" + URLEncoder.encode(schedule.getScheduleName(), "UTF-8") + "&"
             + PARAM_ANTIGEN_SERIES + "="
             + URLEncoder.encode(antigenSeries.getSeriesName(), "UTF-8");
-        out.println("          <li><a href=\"" + link + "\" target=\"dataModelView\">"
-            + antigenSeries.getSeriesName() + "</a></li>");
+        
+        out.println("      <tr>");
+        out.println("          <td><a href=\"" + link + "\" target=\"dataModelView\">"
+            + antigenSeries.getSeriesName() + "</a></td>");
+         out.println("      </tr>");
       } catch (UnsupportedEncodingException uee) {
         uee.printStackTrace();
       }
     }
-    out.println("          </ul>");
-
+    out.println("         </table>");
     out.println("        </td>");
+
     out.println("        <td>");
     if (schedule.getImmunity() != null) {
       if (schedule.getImmunity().getClinicalHistoryList().size() > 0) {
-        out.println("          <ul>");
+        out.println("         <table>");
 
         for (ClinicalHistory clinicalHistory : schedule.getImmunity().getClinicalHistoryList()) {
-          out.println("          <li>" + clinicalHistory.getImmunityGuidelineCode() + ": "
-              + clinicalHistory.getImmunityGuidelineTitle() + "</li>");
+          out.println("      <tr>");
+          out.println("          <td>" + clinicalHistory.getImmunityGuidelineCode() + ": "
+              + clinicalHistory.getImmunityGuidelineTitle() + "</td>");
+          out.println("      </tr>");
         }
-        out.println("          </ul>");
+        out.println("         </table>");
       }
       out.println("        </td>");
       out.println("      </tr>");
