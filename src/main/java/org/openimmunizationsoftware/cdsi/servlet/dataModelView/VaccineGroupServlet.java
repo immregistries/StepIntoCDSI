@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
+import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
 
 /**
@@ -49,14 +50,19 @@ public class VaccineGroupServlet extends MainServlet {
 
       out.println("    </form>");
 
-      out.println("  <table>");
-      out.println("   <tr>");
+      out.println("  <div class=\"w3-card w3-cell w3-margin\">");
+      out.println("    <header class=\"w3-container w3-khaki\">");
+      out.println("      <h2>Vaccine Group</h2>");
+      out.println("    </header>");
+      out.println("    <div class=\"w3-container\">");
+      out.println("      <table class=\"w3-table w3-bordered w3-striped w3-border test w3-hoverable\">");
+      out.println("        <tr>");
       out.println("      <th>Name</td>");
       out.println("      <th>Vaccine List</td>");
       out.println("      <th>Vaccine Group Forecast</td>");
       out.println("      <th>Administer Full Vaccine Group</td>");
       out.println("      <th>Antigen List</td>");
-      out.println("   </tr>");
+      out.println("        </tr>");
 
       if (search_term.length() >= 1) {
         VaccineGroup vaccineGroup = dataModel.getVaccineGroupMap().get(search_term);
@@ -66,7 +72,6 @@ public class VaccineGroupServlet extends MainServlet {
         out.println("      <td>" + vaccineGroup.getVaccineGroupForecast() + "</td>");
         out.println("      <td>" + vaccineGroup.getAdministerFullVaccineGroup() + "</td>");
         out.println("      <td>" + vaccineGroup.getAntigenList() + "</td>");
-
         out.println("   </tr>");
       } else {
         for (VaccineGroup vaccineGroup : dataModel.getVaccineGroupMap().values()) {
@@ -89,8 +94,10 @@ public class VaccineGroupServlet extends MainServlet {
           out.println("   </tr>");
         }
       }
-      // Do stuff here .....
-      out.println("  </table>");
+
+      out.println("      </table>");
+      out.println("    </div>");
+      out.println("  </div>");
 
       printFooter(out);
     } catch (Exception e) {
