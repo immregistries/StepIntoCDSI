@@ -167,6 +167,9 @@ public class AntigenServlet extends MainServlet {
       if(s.getScheduleName().equals(antigen.getName())) {
         for (AntigenSeries as : s.getAntigenSeriesList()) {
           for(Indication in : as.getIndicationList()) {
+            if(in.getObservationCode() == null) {
+              continue;
+            }
             out.println("      <tr>");
             out.println("        <td>Code: '" + in.getObservationCode().getCode() + "' Text: '" + in.getObservationCode().getText() + "'</td>");
             out.println("      </tr>");
