@@ -299,7 +299,8 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
         @Override
         public LogicResult evaluateInternal() {
           for (PatientSeries p : selectedList) {
-            if (p.getPatientSeriesStatus().equals(PatientSeriesStatus.CONTRAINDICATED)) {
+            if (p.getPatientSeriesStatus() != null
+                && p.getPatientSeriesStatus().equals(PatientSeriesStatus.CONTRAINDICATED)) {
               return LogicResult.YES;
             }
           }
@@ -312,7 +313,8 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
         @Override
         public LogicResult evaluateInternal() {
           for (PatientSeries p : selectedList) {
-            if (p.getPatientSeriesStatus().equals(PatientSeriesStatus.AGED_OUT)) {
+            if (p.getPatientSeriesStatus() != null
+                && p.getPatientSeriesStatus().equals(PatientSeriesStatus.AGED_OUT)) {
               return LogicResult.YES;
             }
           }
@@ -325,7 +327,8 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
         @Override
         public LogicResult evaluateInternal() {
           for (PatientSeries p : selectedList) {
-            if (p.getPatientSeriesStatus().equals(PatientSeriesStatus.NOT_RECOMMENDED)) {
+            if (p.getPatientSeriesStatus() != null
+                && p.getPatientSeriesStatus().equals(PatientSeriesStatus.NOT_RECOMMENDED)) {
               return LogicResult.YES;
             }
           }
@@ -354,7 +357,8 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
             return LogicResult.NO;
           }
           for (PatientSeries p : selectedList) {
-            if (!p.getPatientSeriesStatus().equals(PatientSeriesStatus.IMMUNE)) {
+            if (p.getPatientSeriesStatus() != null
+                && !p.getPatientSeriesStatus().equals(PatientSeriesStatus.IMMUNE)) {
               return LogicResult.NO;
             }
           }
@@ -370,7 +374,8 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
             return LogicResult.NO;
           }
           for (PatientSeries p : selectedList) {
-            if (!p.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)
+            if (p.getPatientSeriesStatus() != null
+                && !p.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)
                 && !p.getPatientSeriesStatus().equals(PatientSeriesStatus.IMMUNE)) {
               return LogicResult.NO;
             }

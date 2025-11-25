@@ -29,7 +29,8 @@ public class PreFilterPatientSeries extends LogicStep {
         List<PatientSeries> candidatePatientSeriesList = new ArrayList<>();
         log("Adding all non-contraindicated schedules");
         for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {
-            if (!patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.CONTRAINDICATED)) {
+            if (patientSeries.getPatientSeriesStatus() != null
+                    && !patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.CONTRAINDICATED)) {
                 log(" - Adding " + patientSeries.getTrackedAntigenSeries().getSeriesName());
                 candidatePatientSeriesList.add(patientSeries);
             }
