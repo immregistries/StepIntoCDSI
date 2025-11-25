@@ -135,7 +135,8 @@ public class ImmunizationRecommendationForecastProvider {
 				// too many steps!
 				if (count > 100100) {
 					throw new RuntimeException(
-							"Logic steps seem to be caught in a loop, unable to get results");
+							"Logic steps seem to be caught in a loop, " + dataModel.getLogicStep().getTitle()
+									+ ", unable to get results");
 				}
 			}
 		}

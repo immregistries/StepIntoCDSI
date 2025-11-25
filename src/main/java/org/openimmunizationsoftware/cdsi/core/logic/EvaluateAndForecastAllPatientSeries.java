@@ -141,24 +141,11 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
     return dataModel.getPatientSeries().getPatientSeriesStatus() == null;
   }
 
-  private boolean doAntigenShareVaccineGroup(Antigen a, Antigen b) {
-    if(a.equals(b)) {
-      return true;
-    }
-    for(Antigen c : a.getVaccineGroup().getAntigenList()) {
-      if(c.equals(b)) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
   private void setupSelectedAntigenAdministeredRecordList() {
     List<AntigenAdministeredRecord> selectedAntigenAdministeredRecordList = new ArrayList<AntigenAdministeredRecord>();
     dataModel.setSelectedAntigenAdministeredRecordList(selectedAntigenAdministeredRecordList);
     for (AntigenAdministeredRecord aar : dataModel.getAntigenAdministeredRecordList()) {
-      if (aar.getAntigen() == dataModel.getAntigen() || doAntigenShareVaccineGroup(aar.getAntigen(), dataModel.getAntigen())) {
+      if (aar.getAntigen() == dataModel.getAntigen()) {
         selectedAntigenAdministeredRecordList.add(aar);
       }
     }

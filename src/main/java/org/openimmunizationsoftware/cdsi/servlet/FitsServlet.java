@@ -316,7 +316,7 @@ public class FitsServlet extends ForecastServlet {
                                     }
                                     out.println("        <td" + ts + ">" + format(f.getRecommendedAct()) + "</td>");
 
-                                    if(isTestCasePassing) {
+                                    if (isTestCasePassing) {
                                         numberOfTestCasesPassed += 1;
                                     }
                                 }
@@ -402,7 +402,8 @@ public class FitsServlet extends ForecastServlet {
                 // too many steps!
                 if (count > 100100) {
                     throw new RuntimeException(
-                            "Logic steps seem to be caught in a loop, unable to get results");
+                            "Logic steps seem to be caught in a loop at " + dataModel.getLogicStep().getTitle()
+                                    + ", unable to get results");
                 }
             }
         }
