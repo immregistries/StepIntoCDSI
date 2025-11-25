@@ -50,7 +50,8 @@ public class CompletePatientSeries extends LogicStep {
 
     //set mostValidDoses to the greatest number of valid doses found in one patient series
     for (PatientSeries patientSeries : patientSeriesList) {
-      if(!patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)) {
+      if(patientSeries.getPatientSeriesStatus() != null
+          && !patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)) {
         continue;
       }
       
@@ -62,7 +63,8 @@ public class CompletePatientSeries extends LogicStep {
 
     //get number of patientSeries with the most valid dose
     for (PatientSeries patientSeries : patientSeriesList) {
-      if(!patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)) {
+      if(patientSeries.getPatientSeriesStatus() != null
+          && !patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)) {
         patientSeries.descPatientScoreSeries();
         continue;
       }
