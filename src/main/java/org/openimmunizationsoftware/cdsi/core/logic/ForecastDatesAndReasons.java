@@ -15,6 +15,7 @@ public class ForecastDatesAndReasons extends LogicStep {
   @Override
   public LogicStep process() throws Exception {
     Forecast forecast = new Forecast();
+    boolean skip_forecast = false;
 
     //if the target dose has been skipped
     if (dataModel.getTargetDose().getTargetDoseStatus() == TargetDoseStatus.SKIPPED) {
@@ -24,15 +25,22 @@ public class ForecastDatesAndReasons extends LogicStep {
       if (dataModel.getTargetDoseListPos() < dataModel.getTargetDoseList().size()) {
         log(" + Setting next target dose");
         dataModel.setTargetDose(dataModel.getTargetDoseList().get(dataModel.getTargetDoseListPos()));
+      } else {
+        skip_forecast = true;
       }
     }
     
-    forecast.setAntigen(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
-    forecast.setTargetDose(dataModel.getTargetDose());
-    dataModel.setForecast(forecast);
-    dataModel.getPatientSeries().setForecast(forecast);
+    if(!skip_forecast) {
+      forecast.setAntigen(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
+      forecast.setTargetDose(dataModel.getTargetDose());
+      dataModel.setForecast(forecast);
+      dataModel.getPatientSeries().setForecast(forecast);
 
-    setNextLogicStepType(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST);
+      setNextLogicStepType(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST);
+    } else {
+      setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
+    }
+
     return next();
   }
 
