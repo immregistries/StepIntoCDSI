@@ -40,6 +40,11 @@ public class EvaluateConditionalSkipForForecast extends EvaluateConditionalSkip 
         "<p>In cases where a target dose does not specify Conditional Skip attributes, the target dose cannot be skipped.</p>");
     out.println(
         "<p>The process model, attribute table, and decision table are used to determine if the target dose can be skipped is the same as described in Chapter 4.2.</p>");
+
+    out.println("<img src=\"Figure 6.3.png\"/>");
+    out.println("<p>FIGURE 6 - 3 CONDITIONAL SKIP PROCESS MODEL</p>");
+    printConditionAttributesTable(out);
+    printLogicTables(out);
   }
 
 }

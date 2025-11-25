@@ -77,10 +77,10 @@ public class BusinessRuleTable {
   }
 
   private static boolean onOrAfter(Date date, Date refDate) {
-    return !date.before(refDate);
+    return date != null && refDate != null && !date.before(refDate);
   }
 
   private static boolean before(Date date, Date refDate) {
-    return date.before(refDate);
+    return date != null && refDate != null && date.before(refDate);
   }
 }
