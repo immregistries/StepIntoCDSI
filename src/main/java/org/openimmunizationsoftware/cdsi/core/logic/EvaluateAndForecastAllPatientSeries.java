@@ -164,9 +164,10 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
       log("  + Target dose is not null");
       log("  + Target dose list pos = " + dataModel.getTargetDoseListPos());
       log("  + Target dose list size = " + dataModel.getTargetDoseList().size());
-      dataModel.incTargetDoseListPos();
+      
       if (dataModel.getTargetDose().getTargetDoseStatus() == TargetDoseStatus.SKIPPED) {
         log(" + Target dose was skipped, getting next target dose");
+        dataModel.incTargetDoseListPos();
         dataModel.setPreviousTargetDose(dataModel.getTargetDose());
         if (dataModel.getTargetDoseListPos() < dataModel.getTargetDoseList().size()) {
           log(" + Setting next target dose");
@@ -180,6 +181,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
         }
       } else if (dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered() != null) {
         log(" + Previous target dose was satisfied, getting next target dose");
+        dataModel.incTargetDoseListPos();
         RecurringDose recurringDose = dataModel.getTargetDose().getTrackedSeriesDose().getRecurringDose();
         if (recurringDose != null && recurringDose.getValue() == YesNo.YES) {
           // Create another target dose
