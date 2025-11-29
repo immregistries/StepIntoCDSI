@@ -19,15 +19,21 @@ public class CONDSKIP_1
     @Override
     public Integer evaluate(DataModel dataModel,
             ConditionalSkipCondition conditionalSkipCondition) {
+        log("Evaluating CONDSKIP_1");
+        log("  + " + dataModel.getImmunizationHistory()
+                .getVaccineDoseAdministeredList().size() + " administered doses to evaluate");
         int count = 0;
         for (VaccineDoseAdministered vaccineDoseAdministered : dataModel.getImmunizationHistory()
                 .getVaccineDoseAdministeredList()) {
             VaccineType vaccineType = vaccineDoseAdministered.getVaccine().getVaccineType();
-            if (conditionalSkipCondition.getVaccineTypeSet().contains(vaccineType)) {
+            log("  + Looking at vaccine type: " + vaccineType);
+            log("    - ConditionalSkipCondition vaccine types: "
+                    + conditionalSkipCondition.getVaccineTypeSet());
+            if (conditionalSkipCondition.getVaccineTypeSet().size() == 0
+                    || conditionalSkipCondition.getVaccineTypeSet().contains(vaccineType)) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 boolean inRangeForAge = false;
                 boolean inRangeForDate = false;
-                boolean inRange = false;
                 Date dateAdministered = vaccineDoseAdministered.getDateAdministered();
                 log("Looking at administered dose: " + vaccineType + " " + sdf.format(dateAdministered));
                 {
