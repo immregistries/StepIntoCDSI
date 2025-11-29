@@ -18,6 +18,7 @@ import javax.servlet.http.HttpSession;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.ClinicalHistory;
+import org.openimmunizationsoftware.cdsi.core.domain.Contraindication;
 import org.openimmunizationsoftware.cdsi.core.domain.Observation;
 import org.openimmunizationsoftware.cdsi.core.domain.Schedule;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
@@ -73,7 +74,6 @@ public class ScheduleServlet extends MainServlet {
         }
       } else {
         printSchedule(dataModel, out);
-        printObservations(dataModel, out);
       }
       printFooter(out);
     } catch (Exception e) {
@@ -85,20 +85,26 @@ public class ScheduleServlet extends MainServlet {
   }
 
   private void printSchedule(DataModel dataModel, PrintWriter out) {
-    out.println("    <table>");
-    out.println("      <tr>");
-    out.println("        <caption>Schedule</caption>");
+
+    out.println("  <div class=\"w3-card w3-cell w3-margin\">");
+    out.println("    <header class=\"w3-container w3-khaki\">");
+    out.println("      <h2>Schedule</h2>");
+    out.println("    </header>");
+    out.println("    <div class=\"w3-container\">");
+    out.println("      <table class=\"w3-table w3-bordered w3-striped w3-border test w3-hoverable\">");
+    out.println("        <tr>");
     out.println("        <th>Schedule Name</th>");
     out.println("        <th>Contraindication List</th>");
     out.println("        <th>Live Virus Conflict List</th>");
     out.println("        <th>Antigen Series List</th>");
     out.println("        <th>Immunity</th>");
-
-    out.println("      </tr>");
+    out.println("        </tr>");
     for (Schedule schedule : dataModel.getScheduleList()) {
       printRowSchedule(schedule, out);
     }
-    out.println("    </table>");
+    out.println("      </table>");
+    out.println("    </div>");
+    out.println("  </div>");
 
   }
 
@@ -106,66 +112,45 @@ public class ScheduleServlet extends MainServlet {
     out.println("      <tr>");
     out.println("        <td><a href=\"dataModelViewAntigen?search_term="
         + schedule.getScheduleName() + "\" >" + schedule.getScheduleName() + "</td>");
-    out.println("        <td>" + schedule.getContraindicationList() + "</td>");
+    out.println("        <td>Length of " + schedule.getContraindicationList().size() + "</td>");
     out.println("        <td>" + schedule.getLiveVirusConflictList() + "</td>");
+    
     out.println("        <td>");
-    out.println("          <ul>");
-
+    out.println("         <table>");
     for (AntigenSeries antigenSeries : schedule.getAntigenSeriesList()) {
       try {
         String link = SERVLET_NAME + "?" + PARAM_VIEW + "=" + VIEW_ANTIGEN + "&" + PARAM_SCHED_NAME
             + "=" + URLEncoder.encode(schedule.getScheduleName(), "UTF-8") + "&"
             + PARAM_ANTIGEN_SERIES + "="
             + URLEncoder.encode(antigenSeries.getSeriesName(), "UTF-8");
-        out.println("          <li><a href=\"" + link + "\" target=\"dataModelView\">"
-            + antigenSeries.getSeriesName() + "</a></li>");
+        
+        out.println("      <tr>");
+        out.println("          <td><a href=\"" + link + "\" target=\"dataModelView\">"
+            + antigenSeries.getSeriesName() + "</a></td>");
+         out.println("      </tr>");
       } catch (UnsupportedEncodingException uee) {
         uee.printStackTrace();
       }
     }
-    out.println("          </ul>");
-
+    out.println("         </table>");
     out.println("        </td>");
+
     out.println("        <td>");
     if (schedule.getImmunity() != null) {
       if (schedule.getImmunity().getClinicalHistoryList().size() > 0) {
-        out.println("          <ul>");
+        out.println("         <table>");
 
         for (ClinicalHistory clinicalHistory : schedule.getImmunity().getClinicalHistoryList()) {
-          out.println("          <li>" + clinicalHistory.getImmunityGuidelineCode() + ": "
-              + clinicalHistory.getImmunityGuidelineTitle() + "</li>");
+          out.println("      <tr>");
+          out.println("          <td>" + clinicalHistory.getImmunityGuidelineCode() + ": "
+              + clinicalHistory.getImmunityGuidelineTitle() + "</td>");
+          out.println("      </tr>");
         }
-        out.println("          </ul>");
+        out.println("         </table>");
       }
       out.println("        </td>");
       out.println("      </tr>");
     }
-  }
-
-  private void printObservations(DataModel dataModel, PrintWriter out) {
-    out.println("    <table>");
-    out.println("      <tr>");
-    out.println("        <caption>Observations</caption>");
-    out.println("        <th>Code</th>");
-    out.println("        <th>Title</th>");
-    out.println("      </tr>");
-
-    List<String> codes = new ArrayList<String>();
-    for (Observation o : dataModel.getObservationMap().values()) {
-      String code = o.getObservationCode();
-      codes.add(code);
-    }
-
-    codes.sort((o1, o2) -> Integer.parseInt(o2) - Integer.parseInt(o1));
-
-    for (String c : codes) {
-      Observation o = dataModel.getObservationMap().get(c);
-      out.println("      <tr>");
-      out.println("        <td>" + o.getObservationCode() + "</td>");
-      out.println("        <td>" + o.getObservationTitle() + "</td>");
-      out.println("      </tr>");
-    }
-    out.println("    </table>");
   }
 
   private void printAntigenSeries(AntigenSeries antigenSeries, PrintWriter out) {

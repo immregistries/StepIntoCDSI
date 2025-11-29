@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 
 public class LiveVirusConflictServlet extends MainServlet {
@@ -43,20 +44,28 @@ public class LiveVirusConflictServlet extends MainServlet {
 
     try {
       printHeader(out, "Live Virus Conflict");
-      out.println("   <table>");
-      out.println("     <tr>");
-      out.println("       <caption>Live Virus Conflict</caption>");
+
+      out.println("  <div class=\"w3-card w3-cell w3-margin\">");
+      out.println("    <header class=\"w3-container w3-khaki\">");
+      out.println("      <h2>Live Virus Conflict</h2>");
+      out.println("    </header>");
+      out.println("    <div class=\"w3-container\">");
+      out.println("      <table class=\"w3-table w3-bordered w3-striped w3-border test w3-hoverable\">");
+      out.println("        <tr>");
       out.println("       <th>Schedule</th>");
       out.println("       <th>Previous Vaccine Type</th>");
       out.println("       <th>Current Vaccine Type</th>");
       out.println("       <th>Conflict Begin Interval</th>");
       out.println("       <th>Minimal Conflict End Interval</th>");
       out.println("       <th>Conflict End Interval</th>");
-      out.println("     </tr>");
+      out.println("        </tr>");
       for (LiveVirusConflict liveVirusConflict : dataModel.getLiveVirusConflictList()) {
         printRowLiveVirusConflict(liveVirusConflict, out);
       }
-      out.println("   </table>");
+      out.println("      </table>");
+      out.println("    </div>");
+      out.println("  </div>");
+
       printFooter(out);
     } catch (Exception e) {
       e.printStackTrace();

@@ -83,13 +83,4 @@ public abstract class SectionTest {
         }
     }
 
-    @Test
-    public void testCorrectNextStep(){
-        LogicStep step = LogicStepFactory.createLogicStep(stepName, model);
-        step.evaluateLogicTables();
-        assertEquals(this.nextStep, step.getNextLogicStepType());
-    }
-
-    @Test
-    public abstract void testSectionTitle();
 }

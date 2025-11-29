@@ -61,9 +61,11 @@ public class InProcessPatientSeries extends LogicStep {
       if (productPatientSeries && hasAllValidDoses) {
         patientSeries.incPatientScoreSeries();
         patientSeries.incPatientScoreSeries();
+        log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " is a product patient series and has all valid doses");
       } else {
         patientSeries.descPatientScoreSeries();
         patientSeries.descPatientScoreSeries();
+        log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " is not a product patient series or does not have all valid doses");
       }
     }
   }
@@ -80,10 +82,12 @@ public class InProcessPatientSeries extends LogicStep {
         patientSeries.incPatientScoreSeries();
         patientSeries.incPatientScoreSeries();
         patientSeries.incPatientScoreSeries();
+        log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " is completable");
       } else {
         patientSeries.descPatientScoreSeries();
         patientSeries.descPatientScoreSeries();
         patientSeries.descPatientScoreSeries();
+        log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " is not completable");
       }
     }
   }
@@ -168,48 +172,49 @@ public class InProcessPatientSeries extends LogicStep {
     }
     condMap = (HashMap<Integer, Integer>) sortByComparator(condMap);
     int j = 0;
-    int tmp = 0;
+    int greatestElementVal = 0;
     int greatestElementPos = 0;
-    ArrayList<Integer> pos = new ArrayList<Integer>();
+    ArrayList<Integer> greatestElementPosList = new ArrayList<Integer>();
     boolean twoOrMore = false;
     for (Entry<Integer, Integer> entry : condMap.entrySet()) {
-      if (j == 0) {
-        tmp = entry.getValue();
-        greatestElementPos = entry.getKey();
-        j++;
-      }
       if (j > 0) {
-        if (tmp == entry.getValue()) {
+        if (greatestElementVal == entry.getValue()) {
           twoOrMore = true;
-          pos.add(entry.getKey());
-
+          greatestElementPosList.add(entry.getKey());
         }
       }
-
-    }
-    if (twoOrMore) {
-      pos.add(greatestElementPos);
+      if (j == 0) {
+        greatestElementVal = entry.getValue();
+        greatestElementPos = entry.getKey();
+        greatestElementPosList.add(greatestElementPos);
+        j++;
+      }
     }
 
     if (!twoOrMore) {
       patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
       patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
+      log(patientSeriesList.get(greatestElementPos).getTrackedAntigenSeries().getSeriesName() + " has the most valid doses");
       if (patientSeriesList.size() > 1) {
         patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
         patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
+        log(patientSeriesList.get(greatestElementPos).getTrackedAntigenSeries().getSeriesName() + " has the most valid doses");
         for (PatientSeries patientSeries : patientSeriesList) {
           patientSeries.descPatientScoreSeries();
           patientSeries.descPatientScoreSeries();
+          log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " does not have the most valid doses");
         }
       }
     } else {
       for (PatientSeries patientSeries : patientSeriesList) {
         patientSeries.descPatientScoreSeries();
         patientSeries.descPatientScoreSeries();
+        log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " does not have the most valid doses");
       }
-      for (int i : pos) {
+      for (int i : greatestElementPosList) {
         patientSeriesList.get(i).incPatientScoreSeries();
         patientSeriesList.get(i).incPatientScoreSeries();
+        log(patientSeriesList.get(i).getTrackedAntigenSeries().getSeriesName() + " has the most valid doses");
       }
     }
 
@@ -222,52 +227,54 @@ public class InProcessPatientSeries extends LogicStep {
   private void evaluate_ACandidatePatientSeriesIsClosestToCompletion() {
     HashMap<Integer, Integer> condMap = new HashMap<Integer, Integer>();
     for (int i = 0; i < patientSeriesList.size(); i++) {
-      condMap.put(i, numberOfNotSatisfiedTargetDoses(patientSeriesList.get(i)));
+      condMap.put(i, numberOfValidDoses(patientSeriesList.get(i)));
     }
     condMap = (HashMap<Integer, Integer>) sortByComparator(condMap);
     int j = 0;
-    int tmp = 0;
+    int greatestElementVal = 0;
     int greatestElementPos = 0;
-    ArrayList<Integer> pos = new ArrayList<Integer>();
+    ArrayList<Integer> greatestElementPosList = new ArrayList<Integer>();
     boolean twoOrMore = false;
     for (Entry<Integer, Integer> entry : condMap.entrySet()) {
       if (j == 0) {
-        tmp = entry.getValue();
+        greatestElementVal = entry.getValue();
         greatestElementPos = entry.getKey();
+        greatestElementPosList.add(greatestElementPos);
         j++;
       }
       if (j > 0) {
-        if (tmp == entry.getValue()) {
+        if (greatestElementVal == entry.getValue()) {
           twoOrMore = true;
-          pos.add(entry.getKey());
-
+          greatestElementPosList.add(entry.getKey());
         }
       }
 
-    }
-    if (twoOrMore) {
-      pos.add(greatestElementPos);
     }
 
     if (!twoOrMore) {
       patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
       patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
+      log(patientSeriesList.get(greatestElementPos).getTrackedAntigenSeries().getSeriesName() + " can finish earliest");
       if (patientSeriesList.size() > 1) {
         patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
         patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
+        log(patientSeriesList.get(greatestElementPos).getTrackedAntigenSeries().getSeriesName() + " can finish earliest");
         for (PatientSeries patientSeries : patientSeriesList) {
           patientSeries.descPatientScoreSeries();
           patientSeries.descPatientScoreSeries();
+          log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " cannot finish earliest");
         }
       }
     } else {
       for (PatientSeries patientSeries : patientSeriesList) {
         patientSeries.descPatientScoreSeries();
         patientSeries.descPatientScoreSeries();
+        log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " cannot finish earliest");
       }
-      for (int i : pos) {
+      for (int i : greatestElementPosList) {
         patientSeriesList.get(i).incPatientScoreSeries();
         patientSeriesList.get(i).incPatientScoreSeries();
+        log(patientSeriesList.get(i).getTrackedAntigenSeries().getSeriesName() + " can finish earliest");
       }
     }
 
@@ -313,6 +320,7 @@ public class InProcessPatientSeries extends LogicStep {
         } else {
           if (j == 1)
             patientSeries.incPatientScoreSeries();
+            log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " can finish earliest");
         }
       }
     }
@@ -357,7 +365,7 @@ public class InProcessPatientSeries extends LogicStep {
   }
 
   private void printTable(PrintWriter out) {
-    out.println("<table BORDER=\"1\"> ");
+     out.println("<table BORDER=\"1\"> ");
     out.println("  <tr> ");
     out.println(" <th> Conditions </th> ");
     out.println(" <th> If this condition is true for the candidate patient series </th> ");
@@ -368,7 +376,7 @@ public class InProcessPatientSeries extends LogicStep {
     out.println(
         " <td >A candidate patient series is a product patient series and has all valid doses </th> ");
     out.println(" <td align=\"center\"> +2</td> ");
-    out.println(" <td align=\"center\"> 0</td> ");
+    out.println(" <td align=\"center\"> n/a</td> ");
     out.println(" <td align=\"center\"> -2 </td> ");
     out.println("  </tr> ");
     out.println("<tr> ");
@@ -385,21 +393,15 @@ public class InProcessPatientSeries extends LogicStep {
     out.println("  </tr> ");
     out.println("<tr> ");
     out.println(" <td>A candidate patient series is closest to completion. </th> ");
-    out.println(" <td align=\"center\"> -2</td> ");
-    out.println(" <td align=\"center\"> n/a</td> ");
-    out.println(" <td align=\"center\"> +2 </td> ");
+    out.println(" <td align=\"center\"> +2</td> ");
+    out.println(" <td align=\"center\"> 0</td> ");
+    out.println(" <td align=\"center\"> -2 </td> ");
     out.println("  </tr> ");
     out.println("  <tr> ");
     out.println(" <td>A candidate patient series can finish earliest. </th> ");
-    out.println(" <td align=\"center\"> -1</td> ");
-    out.println(" <td align=\"center\"> n/a</td> ");
-    out.println(" <td align=\"center\"> +1 </td> ");
-    out.println("  </tr> ");
-    out.println("<tr> ");
-    out.println(" <td>A candidate patient series exceeded maximum age to start. </th> ");
-    out.println(" <td align=\"center\"> -1</td> ");
-    out.println(" <td align=\"center\"> n/a</td> ");
-    out.println(" <td align=\"center\"> +1 </td> ");
+    out.println(" <td align=\"center\"> +1</td> ");
+    out.println(" <td align=\"center\"> 0</td> ");
+    out.println(" <td align=\"center\"> -1 </td> ");
     out.println("  </tr> ");
     out.println("</table>");
   }
