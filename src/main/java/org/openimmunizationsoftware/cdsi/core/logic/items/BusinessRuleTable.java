@@ -31,13 +31,17 @@ public class BusinessRuleTable {
             {
               TimePeriod beginAge = conditionalSkipCondition.getBeginAge();
               TimePeriod endAge = conditionalSkipCondition.getEndAge();
-              if (beginAge != null && beginAge.isValued() && endAge != null && endAge.isValued()) {
-                Date beginAgeDate = beginAge.getDateFrom(dataModel.getPatient().getDateOfBirth());
-                Date endAgeDate = beginAge.getDateFrom(dataModel.getPatient().getDateOfBirth());
-                if (onOrAfter(dateAdministered, beginAgeDate)
-                    && before(dateAdministered, endAgeDate)) {
-                  inRange = true;
-                }
+              Date beginAgeDate = null;
+              Date endAgeDate = null;
+              if (beginAge != null && beginAge.isValued()) {
+                beginAgeDate = beginAge.getDateFrom(dataModel.getPatient().getDateOfBirth());
+              }
+              if (endAge != null && endAge.isValued()) {
+                endAgeDate = endAge.getDateFrom(dataModel.getPatient().getDateOfBirth());
+              }
+              if (onOrAfter(dateAdministered, beginAgeDate)
+                  && before(dateAdministered, endAgeDate)) {
+                inRange = true;
               }
             }
             {
@@ -48,6 +52,9 @@ public class BusinessRuleTable {
               }
             }
             if (inRange) {
+              if (vaccineDoseAdministered.getTargetDose() == null) {
+                continue;
+              }
               Evaluation evaluation = vaccineDoseAdministered.getTargetDose().getEvaluation();
               if (evaluation != null && evaluation.getEvaluationStatus() != null) {
                 if (conditionalSkipCondition.getDoseType() == DoseType.VALID
@@ -77,10 +84,10 @@ public class BusinessRuleTable {
   }
 
   private static boolean onOrAfter(Date date, Date refDate) {
-    return date != null && refDate != null && !date.before(refDate);
+    return refDate == null || (date != null && !date.before(refDate));
   }
 
   private static boolean before(Date date, Date refDate) {
-    return date != null && refDate != null && date.before(refDate);
+    return refDate == null || (date != null && date.before(refDate));
   }
 }

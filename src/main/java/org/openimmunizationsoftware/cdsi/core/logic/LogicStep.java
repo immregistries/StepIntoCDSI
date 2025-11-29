@@ -12,6 +12,7 @@ import java.util.Map;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
+import org.openimmunizationsoftware.cdsi.core.logic.items.BusinessRule;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
@@ -134,6 +135,7 @@ public abstract class LogicStep {
       }
       out.println("</ul>");
     }
+    printBussinessRules(out);
   }
 
   public LogicStep next() {
@@ -167,6 +169,15 @@ public abstract class LogicStep {
   protected Map<String, List<ConditionAttribute<?>>> conditionAttributesAdditionalMap = new HashMap<String, List<ConditionAttribute<?>>>();
 
   protected List<LogicTable> logicTableList = new ArrayList<LogicTable>();
+  protected List<BusinessRule<?, ?>> businessRuleList = new ArrayList<BusinessRule<?, ?>>();
+
+  public List<BusinessRule<?, ?>> getBusinessRuleList() {
+    return businessRuleList;
+  }
+
+  public void setBusinessRuleList(List<BusinessRule<?, ?>> businessRuleList) {
+    this.businessRuleList = businessRuleList;
+  }
 
   public List<LogicTable> getLogicTableList() {
     return logicTableList;
@@ -250,6 +261,13 @@ public abstract class LogicStep {
       out.println("  </tr>");
     }
     out.println("</table>");
+  }
+
+  protected void printBussinessRules(PrintWriter out) {
+    out.println("<p>Business Rules Processing Log</p>");
+    for (BusinessRule<?, ?> businessRule : businessRuleList) {
+      businessRule.printLog(out);
+    }
   }
 
   protected void printLogicTables(PrintWriter out) {

@@ -18,6 +18,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipConditionTyp
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipSet;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
+import org.openimmunizationsoftware.cdsi.core.logic.businessRules.CONDSKIP_1;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
@@ -182,8 +183,11 @@ public class EvaluateConditionalSkip extends LogicStep {
                         }
 
                         lt.caConditionalSkipElements.setInitialValue(condition);
+                        CONDSKIP_1 condskip1 = new CONDSKIP_1();
+                        log("Evaluating Business Rule CONDSKIP_1 for Condition ");
+                        businessRuleList.add(condskip1);
                         lt.caNumberofConditionalDosesAdministered
-                                .setInitialValue(CONDSKIP_1.evaluate(dataModel, condition));
+                                .setInitialValue(condskip1.evaluate(dataModel, condition));
                     }
                     logicTable610.addInnerSet(lt);
                 }
