@@ -49,10 +49,18 @@ public class CONDSKIP_1
                         endAgeDate = endAge.getDateFrom(dataModel.getPatient().getDateOfBirth());
                         log("  + endAgeDate = " + sdf.format(endAgeDate));
                     }
+                    log("   --> On or after: " + onOrAfter(dateAdministered, beginAgeDate));
+                    log("       +  dateAdministered  " + dateAdministered);
+                    log("       +  beginAgeDate      " + beginAgeDate);
+                    log("   --> Before: " + onOrAfter(dateAdministered, endAgeDate));
+                    log("       +  dateAdministered  " + dateAdministered);
+                    log("       +  endAgeDate      " + endAgeDate);
                     if (onOrAfter(dateAdministered, beginAgeDate)
                             && before(dateAdministered, endAgeDate)) {
                         inRangeForAge = true;
-                        log("  + inRange by age");
+                        log("  + in range by age");
+                    } else {
+                        log("  + not in range by age");
                     }
                 }
                 {
@@ -62,7 +70,9 @@ public class CONDSKIP_1
                     log("  + endDate = " + (endDate == null ? "null" : sdf.format(endDate)));
                     if (onOrAfter(dateAdministered, startDate) && before(dateAdministered, endDate)) {
                         inRangeForDate = true;
-                        log("  + inRange by date");
+                        log("  + in range by date");
+                    } else {
+                        log("  + not in range by date");
                     }
                 }
                 if (inRangeForAge && inRangeForDate) {
@@ -72,17 +82,24 @@ public class CONDSKIP_1
                     }
                     Evaluation evaluation = vaccineDoseAdministered.getTargetDose().getEvaluation();
                     if (evaluation != null && evaluation.getEvaluationStatus() != null) {
-                        log("  + dose evaluation status = " + evaluation.getEvaluationStatus());
-                        if (conditionalSkipCondition.getDoseType() == DoseType.VALID
-                                && evaluation.getEvaluationStatus() == EvaluationStatus.VALID
-                                && conditionalSkipCondition.getDoseType() == DoseType.TOTAL) {
+                        log("  + Skip dose type = " + conditionalSkipCondition.getDoseType());
+                        if (conditionalSkipCondition.getDoseType() == DoseType.TOTAL) {
                             count++;
-                            log("  + counts");
+                            log("  + Counting any type of dose, regardless of evaluation status");
+                        } else {
+                            if (conditionalSkipCondition.getDoseType() == DoseType.VALID) {
+                                log("  + dose evaluation status = " + evaluation.getEvaluationStatus());
+                                if (evaluation.getEvaluationStatus() == EvaluationStatus.VALID) {
+                                    count++;
+                                    log("  + Counting because dose is valid");
+                                }
+                            }
                         }
                     }
                 }
             }
         }
+        log("  --> CONDSKIP_1 count = " + count);
         return count;
     }
 
