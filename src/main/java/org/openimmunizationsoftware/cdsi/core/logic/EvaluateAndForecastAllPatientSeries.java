@@ -4,9 +4,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.jena.sparql.function.library.leviathan.log;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
-import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
@@ -121,8 +119,8 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
       if (gotoNextTargetDose()) {
         nextLogicStep = LogicStepType.EVALUATE_DOSE_ADMINISTERED_CONDITION;
       } else {
-        log("Cannot go to next target dose, now forecasting");
-        createNewForecast();
+        log("Cannot go to next target dose in evaluation, now forecasting");
+        run7();
         nextLogicStep = LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST;
       }
     } else {
@@ -133,7 +131,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
             selectedAarList.get(dataModel.getSelectedAntigenAdministeredRecordPos() - 1));
       }
       gotoNextTargetDose();
-      createNewForecast();
+      run7();
       nextLogicStep = LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST;
     }
 
@@ -168,40 +166,53 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
       log("  + Target dose list pos = " + dataModel.getTargetDoseListPos());
       log("  + Target dose list size = " + dataModel.getTargetDoseList().size());
       
-      if (dataModel.getTargetDose().getTargetDoseStatus() == TargetDoseStatus.SKIPPED
-        || dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered() != null) {
-        log(" + Previous target dose was skipped or satisfied, getting next target dose");
+      if (dataModel.getTargetDose().getTargetDoseStatus() == TargetDoseStatus.SKIPPED) {
+        log(" + Target dose was skipped, getting next target dose");
         dataModel.incTargetDoseListPos();
-        log("  + New target dose list pos = " + dataModel.getTargetDoseListPos());
-        dataModel.setPreviousTargetDose(dataModel.getTargetDose());
-        
         //if the current target dose is a recurring dose, add a duplicate of it to the target dose list
         RecurringDose recurringDose = dataModel.getTargetDose().getTrackedSeriesDose().getRecurringDose();
         if (recurringDose != null && recurringDose.getValue() == YesNo.YES) {
           TargetDose targetDoseNext = new TargetDose(dataModel.getTargetDose());
           dataModel.getTargetDoseList().add(targetDoseNext);
         }
+        dataModel.setPreviousTargetDose(dataModel.getTargetDose());
         
+      } else if (dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered() != null) {
+        log(" + Previous target dose was satisfied, getting next target dose");
+        dataModel.incTargetDoseListPos();
+        //if the current target dose is a recurring dose, add a duplicate of it to the target dose list
+        RecurringDose recurringDose = dataModel.getTargetDose().getTrackedSeriesDose().getRecurringDose();
+        if (recurringDose != null && recurringDose.getValue() == YesNo.YES) {
+          TargetDose targetDoseNext = new TargetDose(dataModel.getTargetDose());
+          dataModel.getTargetDoseList().add(targetDoseNext);
+        }
+        log("  + New target dose list pos = " + dataModel.getTargetDoseListPos());
+        dataModel.setPreviousTargetDose(dataModel.getTargetDose());
+      }
+
+      if(dataModel.getTargetDose().getSatisfiedByVaccineDoseAdministered() != null || dataModel.getTargetDose().getTargetDoseStatus() == TargetDoseStatus.SKIPPED) {
+        log(" + target dose was skipped or satisfied");
         if (dataModel.getTargetDoseListPos() < dataModel.getTargetDoseList().size()) {
           log(" + Setting next target dose");
           dataModel
               .setTargetDose(dataModel.getTargetDoseList().get(dataModel.getTargetDoseListPos()));
           return true;
         } else {
-          log(" + No more target doses, marking rest as extraneous");
+          log(" + No more target doses, marking rest as extraneous and setting patient series status to 'NOT COMPLETE'");
+          dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.NOT_COMPLETE);
           markRestAsExtraneous();
           return false;
         }
       } else {
-        log(" + Target dose was NOT satisfied, staying on this target dose");
-        return true;
+        log(" + Target dose was NOT skipped or satisfied, staying on this target dose");
+          return true;
       }
+
     }
   }
 
-  private void createNewForecast() {
+  private void run7() {
     Forecast forecast = new Forecast();
-
     forecast.setAntigen(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
     forecast.setTargetDose(dataModel.getTargetDose());
     dataModel.setForecast(forecast);
