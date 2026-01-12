@@ -14,7 +14,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 
 public class NoValidDoses extends LogicStep {
 
-  private List<PatientSeries> patientSeriesList = dataModel.getPatientSeriesList();
+  private List<PatientSeries> patientSeriesList = dataModel.getPatientSeriesStepper().getList();
 
   public Date addTimePeriodtotoDate(Date date, TimePeriod timePeriod) {
     int amount = timePeriod.getAmount();

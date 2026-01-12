@@ -16,7 +16,7 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
 public class DetermineBestPatientSeries extends LogicStep {
-    private List<PatientSeries> patientSeriesList = dataModel.getPatientSeriesList();
+    private List<PatientSeries> patientSeriesList = dataModel.getPatientSeriesStepper().getList();
 
     public DetermineBestPatientSeries(DataModel dataModel) {
         super(LogicStepType.DETERMINE_BEST_PATIENT_SERIES, dataModel);
@@ -24,7 +24,7 @@ public class DetermineBestPatientSeries extends LogicStep {
         for (PatientSeries ps : dataModel.getPrioritizedPatientSeriesList()) {
             log("Evaluating patient series: " + ps.getTrackedAntigenSeries().getTargetDisease().getName());
             if (!ps.getTrackedAntigenSeries().getTargetDisease().equals(dataModel.getAntigen())) {
-              continue;
+                continue;
             }
             log("Patient series " + ps.getTrackedAntigenSeries().getTargetDisease().getName()
                     + " matches antigen " + dataModel.getAntigen());

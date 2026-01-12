@@ -26,7 +26,7 @@ public class InProcessPatientSeries extends LogicStep {
 
   // private ConditionAttribute<Date> caDateAdministered = null;
 
-  private List<PatientSeries> patientSeriesList = dataModel.getPatientSeriesList();
+  private List<PatientSeries> patientSeriesList = dataModel.getPatientSeriesStepper().getList();
 
   /***
    * cond1 A candidate patient series is a product patient series and has all
@@ -61,11 +61,13 @@ public class InProcessPatientSeries extends LogicStep {
       if (productPatientSeries && hasAllValidDoses) {
         patientSeries.incPatientScoreSeries();
         patientSeries.incPatientScoreSeries();
-        log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " is a product patient series and has all valid doses");
+        log(patientSeries.getTrackedAntigenSeries().getSeriesName()
+            + " is a product patient series and has all valid doses");
       } else {
         patientSeries.descPatientScoreSeries();
         patientSeries.descPatientScoreSeries();
-        log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " is not a product patient series or does not have all valid doses");
+        log(patientSeries.getTrackedAntigenSeries().getSeriesName()
+            + " is not a product patient series or does not have all valid doses");
       }
     }
   }
@@ -194,11 +196,13 @@ public class InProcessPatientSeries extends LogicStep {
     if (!twoOrMore) {
       patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
       patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
-      log(patientSeriesList.get(greatestElementPos).getTrackedAntigenSeries().getSeriesName() + " has the most valid doses");
+      log(patientSeriesList.get(greatestElementPos).getTrackedAntigenSeries().getSeriesName()
+          + " has the most valid doses");
       if (patientSeriesList.size() > 1) {
         patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
         patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
-        log(patientSeriesList.get(greatestElementPos).getTrackedAntigenSeries().getSeriesName() + " has the most valid doses");
+        log(patientSeriesList.get(greatestElementPos).getTrackedAntigenSeries().getSeriesName()
+            + " has the most valid doses");
         for (PatientSeries patientSeries : patientSeriesList) {
           patientSeries.descPatientScoreSeries();
           patientSeries.descPatientScoreSeries();
@@ -258,7 +262,8 @@ public class InProcessPatientSeries extends LogicStep {
       if (patientSeriesList.size() > 1) {
         patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
         patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
-        log(patientSeriesList.get(greatestElementPos).getTrackedAntigenSeries().getSeriesName() + " can finish earliest");
+        log(patientSeriesList.get(greatestElementPos).getTrackedAntigenSeries().getSeriesName()
+            + " can finish earliest");
         for (PatientSeries patientSeries : patientSeriesList) {
           patientSeries.descPatientScoreSeries();
           patientSeries.descPatientScoreSeries();
@@ -301,7 +306,7 @@ public class InProcessPatientSeries extends LogicStep {
     int j = 0;
     if (patientSeriesList.get(0).getForecast() != null) {
       Date tmpDate = patientSeriesList.get(0).getForecast().getLatestDate();
-      if(tmpDate != null) {
+      if (tmpDate != null) {
         for (int i = 0; i < patientSeriesList.size(); i++) {
           PatientSeries patientSeries = patientSeriesList.get(i);
           if (tmpDate == patientSeries.getForecast().getLatestDate()) {
@@ -320,7 +325,7 @@ public class InProcessPatientSeries extends LogicStep {
         } else {
           if (j == 1)
             patientSeries.incPatientScoreSeries();
-            log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " can finish earliest");
+          log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " can finish earliest");
         }
       }
     }
@@ -365,7 +370,7 @@ public class InProcessPatientSeries extends LogicStep {
   }
 
   private void printTable(PrintWriter out) {
-     out.println("<table BORDER=\"1\"> ");
+    out.println("<table BORDER=\"1\"> ");
     out.println("  <tr> ");
     out.println(" <th> Conditions </th> ");
     out.println(" <th> If this condition is true for the candidate patient series </th> ");

@@ -121,7 +121,7 @@ public class CreateRelevantPatientSeries extends LogicStep {
     out.println("       <th>Target Disease</th>");
     out.println("       <th>Vaccine Group</th>");
     out.println("     </tr>");
-    for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {
+    for (PatientSeries patientSeries : dataModel.getPatientSeriesStepper().getList()) {
       AntigenSeries antigenSeries = patientSeries.getTrackedAntigenSeries();
       out.println("     <tr>");
       out.println("       <td>" + antigenSeries.getSeriesName() + "</td>");

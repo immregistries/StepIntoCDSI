@@ -33,7 +33,7 @@ public class SelectBestPatientSeries extends LogicStep {
       setNextLogicStepType(LogicStepType.PRE_FILTER_PATIENT_SERIES);
 
       List<PatientSeries> patientSeriesSelectedList = new ArrayList<PatientSeries>();
-      for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {
+      for (PatientSeries patientSeries : dataModel.getPatientSeriesStepper().getList()) {
         if (patientSeries.getTrackedAntigenSeries().getTargetDisease().equals(antigen)) {
           patientSeriesSelectedList.add(patientSeries);
         }

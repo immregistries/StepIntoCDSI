@@ -139,7 +139,7 @@ public class SelectRelevantPatientSeries extends LogicStep {
     out.println("       <th>Target Disease</th>");
     out.println("       <th>Vaccine Group</th>");
     out.println("     </tr>");
-    for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {
+    for (PatientSeries patientSeries : dataModel.getPatientSeriesStepper().getList()) {
       AntigenSeries antigenSeries = patientSeries.getTrackedAntigenSeries();
       out.println("     <tr>");
       out.println("       <td>" + antigenSeries.getSeriesName() + "</td>");
@@ -182,7 +182,7 @@ public class SelectRelevantPatientSeries extends LogicStep {
   private class LT54 extends LTInnerSet {
     public LT54() {
       super(2, 4, "TABLE 5-4 DOES THE INDICATION APPLY TO THE PATIENT?");
-      
+
       setLogicCondition(0, new LogicCondition(
           "Does the indication describe any active patient observations?") {
         @Override
@@ -315,7 +315,7 @@ public class SelectRelevantPatientSeries extends LogicStep {
         public void perform() {
           log("Yes. The antigen series is a relevant patient series for the patient.");
           PatientSeries patientSeries = new PatientSeries(antigenSeries);
-          dataModel.getPatientSeriesList().add(patientSeries);
+          dataModel.getPatientSeriesStepper().add(patientSeries);
         }
       });
 
@@ -331,7 +331,7 @@ public class SelectRelevantPatientSeries extends LogicStep {
         public void perform() {
           log("Yes. The antigen series is a relevant patient series for the patient.");
           PatientSeries patientSeries = new PatientSeries(antigenSeries);
-          dataModel.getPatientSeriesList().add(patientSeries);
+          dataModel.getPatientSeriesStepper().add(patientSeries);
         }
       });
       setLogicOutcome(3, new LogicOutcome() {

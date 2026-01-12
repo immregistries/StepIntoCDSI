@@ -79,10 +79,8 @@ public class DataModel {
 
   private AntigenAdministeredRecord previousAntigenAdministeredRecord = null;
   private List<AntigenSeries> antigenSeriesList = new ArrayList<AntigenSeries>();
-  private List<PatientSeries> patientSeriesList = new ArrayList<PatientSeries>();
+  private Stepper<PatientSeries> patientSeriesStepper = new Stepper<PatientSeries>();
   private List<PatientSeries> scorablePatientSeriesList = null;
-  private int patientSeriesPos = -1;
-  private PatientSeries patientSeries = null;
   private List<Forecast> forecastList = new ArrayList<Forecast>();
   private List<VaccineGroupForecast> vaccineGroupForecastList = new ArrayList<VaccineGroupForecast>();
   private VaccineGroup vaccineGroup;
@@ -90,6 +88,32 @@ public class DataModel {
   private int vaccineGroupPos = -1;
   private Forecast forecast = null;
   private PatientSeries forecastingForPatientSeries = null;
+
+  private Neighborhood neighborhood = Neighborhood.SETUP;
+
+  public Neighborhood getNeighborhood() {
+    return neighborhood;
+  }
+
+  public void setNeighborhood(Neighborhood neighborhood) {
+    this.neighborhood = neighborhood;
+  }
+
+  public boolean isNeighborhoodSetup() {
+    return neighborhood == Neighborhood.SETUP;
+  }
+
+  public boolean isNeighborhoodEvaluate() {
+    return neighborhood == Neighborhood.EVALUATE;
+  }
+
+  public boolean isNeighborhoodForecast() {
+    return neighborhood == Neighborhood.FORECAST;
+  }
+
+  public Stepper<PatientSeries> getPatientSeriesStepper() {
+    return patientSeriesStepper;
+  }
 
   private Map<String, Observation> ObservationMap = new HashMap<String, Observation>();
 
@@ -171,15 +195,6 @@ public class DataModel {
   public void setForecastingForPatientSeries(PatientSeries patientSeries) {
     this.forecastingForPatientSeries = patientSeries;
   }
-
-  public int getPatientSeriesPos() {
-    return patientSeriesPos;
-  }
-
-  public void incPatientSeriesPos() {
-    this.patientSeriesPos += 1;
-  }
-
 
   public Forecast getForecast() {
     return forecast;
@@ -408,18 +423,6 @@ public class DataModel {
 
   public void setAntigenAdministeredRecord(AntigenAdministeredRecord antigenAdministeredRecord) {
     this.antigenAdministeredRecord = antigenAdministeredRecord;
-  }
-
-  public PatientSeries getPatientSeries() {
-    return patientSeries;
-  }
-
-  public void setPatientSeries(PatientSeries patientSeries) {
-    this.patientSeries = patientSeries;
-  }
-
-  public List<PatientSeries> getPatientSeriesList() {
-    return patientSeriesList;
   }
 
   public List<AntigenSeries> getAntigenSeriesList() {

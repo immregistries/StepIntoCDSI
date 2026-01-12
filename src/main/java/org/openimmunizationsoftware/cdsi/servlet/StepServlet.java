@@ -254,15 +254,15 @@ public class StepServlet extends ForecastServlet {
   }
 
   private void printStableView(DataModel dataModel, PrintWriter out) {
-    //print out patient date of birth
+    // print out patient date of birth
     if (dataModel.getPatient().getDateOfBirth() != null) {
       SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
       out.println("<h2>Patient DOB: " + sdf.format(dataModel.getPatient().getDateOfBirth()) + "</h2>");
     }
 
     // print out antigen
-    if (dataModel.getPatientSeries() != null) {
-      out.println("<h2>" + dataModel.getPatientSeries() + "</h2>");
+    if (dataModel.getPatientSeriesStepper().hasCurrent()) {
+      out.println("<h2>" + dataModel.getPatientSeriesStepper().getCurrent() + "</h2>");
     } else if (dataModel.getAntigen() != null) {
       out.println("<h2>" + dataModel.getAntigen() + "</h2>");
     }
@@ -363,8 +363,8 @@ public class StepServlet extends ForecastServlet {
       out.println("</ul>");
     }
 
-    if (dataModel.getPatientSeriesList() != null && dataModel.getPatientSeriesList().size() > 0) {
-      out.println("psl hashcode " + dataModel.getPatientSeriesList().hashCode() + "<br/>");
+    if (dataModel.getPatientSeriesStepper() != null && dataModel.getPatientSeriesStepper().getList().size() > 0) {
+      out.println("psl hashcode " + dataModel.getPatientSeriesStepper().getList().hashCode() + "<br/>");
       out.println("<h2>Patient Series</h2>");
       out.println("<table>");
       out.println("  <tr>");
@@ -374,7 +374,7 @@ public class StepServlet extends ForecastServlet {
       out.println("    <th>Earliest</th>");
       out.println("    <th>Recommended</th>");
       out.println("  </tr>");
-      for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {
+      for (PatientSeries patientSeries : dataModel.getPatientSeriesStepper().getList()) {
         AntigenSeries antigenSeries = patientSeries.getTrackedAntigenSeries();
         out.println("  <tr>");
         out.println("    <td>" + antigenSeries.getTargetDisease().getName() + "</td>");
@@ -458,7 +458,7 @@ public class StepServlet extends ForecastServlet {
       out.println("</table>");
     }
 
-     if (dataModel.getPrioritizedPatientSeriesList() != null) {
+    if (dataModel.getPrioritizedPatientSeriesList() != null) {
       out.println("<h3>Prioritized Patient Series</h3>");
       out.println("<table>");
       out.println("  <tr>");

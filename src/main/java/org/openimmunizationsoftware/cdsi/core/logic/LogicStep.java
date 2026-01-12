@@ -381,7 +381,7 @@ public abstract class LogicStep {
     out.println("    <th> Patient Series Status </th>");
     out.println("    <th> Target Dose List size </th>");
     out.println("  </tr>");
-    for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {
+    for (PatientSeries patientSeries : dataModel.getPatientSeriesStepper().getList()) {
       out.println("  <tr>");
       out.println("    <td>" + patientSeries.getTrackedAntigenSeries().getTargetDisease().getName() + "</td>");
       out.println("    <td>" + patientSeries.getTrackedAntigenSeries().getSeriesName() + "</td>");

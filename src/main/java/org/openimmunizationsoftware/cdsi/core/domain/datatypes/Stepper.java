@@ -11,6 +11,10 @@ public class Stepper<T> {
         this.list = list;
     }
 
+    public Stepper() {
+        this.list = new java.util.ArrayList<T>();
+    }
+
     public T getCurrent() {
         if (position == -1 || position >= list.size()) {
             return null;
@@ -20,6 +24,10 @@ public class Stepper<T> {
 
     public void reset() {
         position = -1;
+    }
+
+    public boolean isStarted() {
+        return position != -1;
     }
 
     public void increment() {
