@@ -74,7 +74,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
 
     // Very first time
     if (!patientSeriesStepper.isStarted()) {
-
+      patientSeriesStepper.increment();
     }
     // very last time, won't actually run (just in case)
     if (!patientSeriesStepper.hasCurrent()) {
@@ -121,7 +121,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
           break;
       }
 
-      boolean stillHaveAARs = dataModel.getSelectedAntigenAdministeredRecordPos() < dataModel
+      boolean stillHaveAARs = dataModel.getSelectedAntigenAdministeredRecordPos() <= dataModel
           .getSelectedAntigenAdministeredRecordList().size();
 
       if (stillHaveAARs && stillHaveTargetDoses) {
@@ -192,9 +192,9 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
         TargetDose targetDose = new TargetDose(seriesDose);
         dataModel.getTargetDoseList().add(targetDose);
       }
-      dataModel.setTargetDose(null);
+      dataModel.setTargetDose(dataModel.getTargetDoseList().get(0));
       dataModel.setPreviousTargetDose(null);
-      dataModel.setTargetDoseListPos(-1);
+      dataModel.setTargetDoseListPos(0);
       setupSelectedAntigenAdministeredRecordList();
       return true;
     }
@@ -210,8 +210,9 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
         selectedAntigenAdministeredRecordList.add(aar);
       }
     }
-    dataModel.setSelectedAntigenAdministeredRecordPos(-1);
+    dataModel.setSelectedAntigenAdministeredRecordPos(0);
     dataModel.setPreviousAntigenAdministeredRecord(null);
+    dataModel.setAntigenAdministeredRecord(selectedAntigenAdministeredRecordList.get(0));
   }
 
   private void setupForecast() {
