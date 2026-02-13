@@ -1,12 +1,7 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
@@ -26,21 +21,23 @@ public class SelectPrioritizedPatientSeries extends LogicStep {
   private PatientSeries prioritizedPatientSeries = null;
 
   private void selectPrioritizedPatientSeries() {
-    if(patientSeriesList.size() > 0) {
+    if (patientSeriesList.size() > 0) {
       prioritizedPatientSeries = patientSeriesList.get(0);
     }
     for (PatientSeries patientSeries : patientSeriesList) {
-      if(patientSeries.getScorePatientSeries() == prioritizedPatientSeries.getScorePatientSeries()) {
-        String currentSeriesPreference = patientSeries.getTrackedAntigenSeries().getSelectPatientSeries().getSeriesPreference();
-        String newSeriesPreference = prioritizedPatientSeries.getTrackedAntigenSeries().getSelectPatientSeries().getSeriesPreference();
-        if(currentSeriesPreference != "" && newSeriesPreference != "") {
-          if(Integer.parseInt(currentSeriesPreference) < Integer.parseInt(newSeriesPreference)) {
+      if (patientSeries.getScorePatientSeries() == prioritizedPatientSeries.getScorePatientSeries()) {
+        String currentSeriesPreference = patientSeries.getTrackedAntigenSeries().getSelectPatientSeries()
+            .getSeriesPreference();
+        String newSeriesPreference = prioritizedPatientSeries.getTrackedAntigenSeries().getSelectPatientSeries()
+            .getSeriesPreference();
+        if (currentSeriesPreference != "" && newSeriesPreference != "") {
+          if (Integer.parseInt(currentSeriesPreference) < Integer.parseInt(newSeriesPreference)) {
             prioritizedPatientSeries = patientSeries;
           }
         }
       }
 
-      if(patientSeries.getScorePatientSeries() > prioritizedPatientSeries.getScorePatientSeries()) {
+      if (patientSeries.getScorePatientSeries() > prioritizedPatientSeries.getScorePatientSeries()) {
         prioritizedPatientSeries = patientSeries;
       }
     }
@@ -65,8 +62,8 @@ public class SelectPrioritizedPatientSeries extends LogicStep {
   private int numberOfValidDoses(PatientSeries patientSeries) {
     int nbOfValidDoses = 0;
     for (TargetDose target : patientSeries.getTargetDoseList()) {
-      if(target.getTargetDoseStatus() != null) {
-        if(target.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
+      if (target.getTargetDoseStatus() != null) {
+        if (target.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
           nbOfValidDoses++;
         }
       }
@@ -81,7 +78,9 @@ public class SelectPrioritizedPatientSeries extends LogicStep {
     out.println("<p>Prioritized Patient Series: " + prioritizedPatientSeries + "</p>");
     for (PatientSeries patientSeries : patientSeriesList) {
       out.println(
-          "<p> PatientSeries : " +patientSeries.getTrackedAntigenSeries().getSeriesName() + " Value : " + patientSeries.getScorePatientSeries() + " valid doses : " + numberOfValidDoses(patientSeries) + " </p>");
+          "<p> PatientSeries : " + patientSeries.getTrackedAntigenSeries().getSeriesName() + " Value : "
+              + patientSeries.getScorePatientSeries() + " valid doses : " + numberOfValidDoses(patientSeries)
+              + " </p>");
     }
   }
 

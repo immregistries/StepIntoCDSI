@@ -3,14 +3,13 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 
 public class Contraindication {
-  
+
     private String observationCode = null;
     private String observationTitle = null;
 
     private String contraindicationTextDescription = "";
     private TimePeriod contraindicationBeginAge = null;
     private TimePeriod contraindicationEndAge = null;
-    private ClinicalGuidelineObservation clinicalGuidelineObservation = null;
 
     public String getObservationCode() {
         return observationCode;

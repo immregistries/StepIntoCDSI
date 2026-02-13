@@ -3,9 +3,7 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 import java.io.PrintWriter;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
-import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 
 public class ForecastDatesAndReasons extends LogicStep {
   public ForecastDatesAndReasons(DataModel dataModel) {
@@ -14,7 +12,6 @@ public class ForecastDatesAndReasons extends LogicStep {
 
   @Override
   public LogicStep process() throws Exception {
-    
 
     setNextLogicStepType(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST);
 

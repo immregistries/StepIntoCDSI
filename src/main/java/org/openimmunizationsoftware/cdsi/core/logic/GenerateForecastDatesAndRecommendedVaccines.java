@@ -1,5 +1,7 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
+import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTINT_5;
+
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,21 +14,16 @@ import org.joda.time.DateTime;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
-import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
-import org.openimmunizationsoftware.cdsi.core.domain.PreferrableVaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
-import org.openimmunizationsoftware.cdsi.core.domain.Vaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
-
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTINT_5;
 
 public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
   private ConditionAttribute<Date> caMinimumAgeDate = null;
@@ -265,7 +262,6 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     Forecast forecast = dataModel.getForecast();
     computeDates(forecast);
 
-    Antigen newAntigenForeCast = forecast.getAntigen();
     List<Antigen> antigenFromForecastList = new ArrayList<Antigen>();
     List<Forecast> forecastList = dataModel.getForecastList();
 
@@ -484,26 +480,6 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
       adjustedPastDueDate = unadjustedPastDueDate;
     }
     return adjustedPastDueDate;
-  }
-
-  private List<Vaccine> recommendedVaccines() {
-    // TODO: Completely rework
-    List<Vaccine> vaccineList = new ArrayList<Vaccine>();
-    List<AntigenSeries> antigenSeriesList = dataModel.getAntigenSeriesList();
-    for (AntigenSeries antigenSeries : antigenSeriesList) {
-      List<SeriesDose> serieDoseList = antigenSeries.getSeriesDoseList();
-      for (SeriesDose serieDose : serieDoseList) {
-        List<PreferrableVaccine> preferrableVaccinesList = serieDose.getPreferrableVaccineList();
-        for (PreferrableVaccine preferrableVaccine : preferrableVaccinesList) {
-          VaccineType vaccineType = preferrableVaccine.getVaccineType();
-          if (vaccineType.equals(caForecastVaccineType.getAssumedValue())) {
-            vaccineList.add(preferrableVaccine);
-          }
-        }
-      }
-    }
-
-    return vaccineList;
   }
 
   private void computeDates(Forecast forecast) {

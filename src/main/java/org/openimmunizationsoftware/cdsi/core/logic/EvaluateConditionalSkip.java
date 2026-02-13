@@ -3,7 +3,6 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTSKIP_3;
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTSKIP_4;
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTSKIP_5;
-import static org.openimmunizationsoftware.cdsi.core.logic.items.BusinessRuleTable.CONDSKIP_1;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -82,7 +81,6 @@ public class EvaluateConditionalSkip extends LogicStep {
 
         // This appears to be the core logic of the function?
         /*
-         * TODO:
          * I'm sure there is a better place to list this but before the for loop starts,
          * we should eliminate Conditional Skip instances without a context of
          * Evaluation or Both
@@ -311,7 +309,6 @@ public class EvaluateConditionalSkip extends LogicStep {
         }
     }
 
-    // TODO: add logic for 6-7
     protected class LT67 extends LTInnerSet {
         public LT67() {
             super(1, 2, "TABLE 6-7 CONDITIONAL TYPE OF COMPLETED SERIES – IS THE CONDITION MET?");

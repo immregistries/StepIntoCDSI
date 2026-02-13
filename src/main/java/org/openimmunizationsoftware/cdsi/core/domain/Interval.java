@@ -2,13 +2,12 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 
 import java.util.Date;
 
+import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
-import org.apache.jena.sparql.function.library.leviathan.log;
-import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 
 public class Interval {
   private SeriesDose seriesDose = null;
@@ -151,7 +150,8 @@ public class Interval {
       // CALCDTINT-1
       if (fromImmediatePreviousDoseAdministered == YesNo.YES) {
         logicStep
-            .log("Attempting to use CALCDTINT-1 where previous evaluation status = " + previousVdaEvaluation.getEvaluationStatus());
+            .log("Attempting to use CALCDTINT-1 where previous evaluation status = "
+                + previousVdaEvaluation.getEvaluationStatus());
         if (previousVdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.VALID)
             || previousVdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.NOT_VALID)) {
           logicStep.log("evaluationReason is " + previousVdaEvaluation.getEvaluationReason());
@@ -167,7 +167,8 @@ public class Interval {
       if (fromImmediatePreviousDoseAdministered == YesNo.NO) {
         if (!this.getFromTargetDoseNumberInSeries().equals("")) {
           for (TargetDose td : dataModel.getTargetDoseList()) {
-            if(td.getSatisfiedByVaccineDoseAdministered() == null || td.getSatisfiedByVaccineDoseAdministered().getDateAdministered() == null) {
+            if (td.getSatisfiedByVaccineDoseAdministered() == null
+                || td.getSatisfiedByVaccineDoseAdministered().getDateAdministered() == null) {
               continue;
             }
             if (this.getFromTargetDoseNumberInSeries().equals(td.getTrackedSeriesDose().getDoseNumber())) {
@@ -195,8 +196,6 @@ public class Interval {
       // CALCDTINT-9
       if (fromImmediatePreviousDoseAdministered == YesNo.NO) {
         if (this.getFromRelevantObservation() != null && !this.getFromRelevantObservation().getCode().equals("")) {
-          // TODO set tmpPatientReferenceDoseDate to 'the observation date of the most
-          // recent active patient observation'
           logicStep.log("Using CALCDTINT-9");
         }
       }

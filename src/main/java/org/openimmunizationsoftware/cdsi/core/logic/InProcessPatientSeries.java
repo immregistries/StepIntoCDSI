@@ -285,19 +285,6 @@ public class InProcessPatientSeries extends LogicStep {
 
   }
 
-  private int numberOfNotSatisfiedTargetDoses(PatientSeries patientSeries) {
-    int nbOfNotSatisfiedTargetDoses = 0;
-    for (TargetDose target : patientSeries.getTargetDoseList()) {
-      if (target.getTargetDoseStatus() != null) {
-        if (target.getTargetDoseStatus().equals(TargetDoseStatus.NOT_SATISFIED)) {
-          nbOfNotSatisfiedTargetDoses++;
-        }
-      }
-
-    }
-    return nbOfNotSatisfiedTargetDoses;
-  }
-
   /**
    * Cond5 A candidate patient series can finish earliest.
    */

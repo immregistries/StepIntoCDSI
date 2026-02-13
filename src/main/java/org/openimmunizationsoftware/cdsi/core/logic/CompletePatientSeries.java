@@ -1,15 +1,7 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
@@ -24,8 +16,8 @@ public class CompletePatientSeries extends LogicStep {
   private int numberOfValidDoses(PatientSeries patientSeries) {
     int nbOfValidDoses = 0;
     for (TargetDose target : patientSeries.getTargetDoseList()) {
-      if(target.getTargetDoseStatus() != null) {
-        if(target.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
+      if (target.getTargetDoseStatus() != null) {
+        if (target.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
           nbOfValidDoses++;
         }
       }
@@ -45,31 +37,30 @@ public class CompletePatientSeries extends LogicStep {
 
   private void evaluate_ACandidatePatientSeriesHasTheMostValidDoses() {
     int mostValidDoses = 0;
-    int numPatientSeriesWithMostValidDoses = 0;
-    PatientSeries patientSeriesWithMostValidDoses = null;
 
-    //set mostValidDoses to the greatest number of valid doses found in one patient series
+    // set mostValidDoses to the greatest number of valid doses found in one patient
+    // series
     for (PatientSeries patientSeries : patientSeriesList) {
-      if(patientSeries.getPatientSeriesStatus() != null
+      if (patientSeries.getPatientSeriesStatus() != null
           && !patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)) {
         continue;
       }
-      
+
       int newValidDoses = numberOfValidDoses(patientSeries);
-      if(newValidDoses > mostValidDoses) {
+      if (newValidDoses > mostValidDoses) {
         mostValidDoses = newValidDoses;
       }
     }
 
-    //get number of patientSeries with the most valid dose
+    // get number of patientSeries with the most valid dose
     for (PatientSeries patientSeries : patientSeriesList) {
-      if(patientSeries.getPatientSeriesStatus() != null
+      if (patientSeries.getPatientSeriesStatus() != null
           && !patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)) {
         patientSeries.descPatientScoreSeries();
         continue;
       }
 
-      if(numberOfValidDoses(patientSeries) < mostValidDoses) {
+      if (numberOfValidDoses(patientSeries) < mostValidDoses) {
         patientSeries.descPatientScoreSeries();
         continue;
       }

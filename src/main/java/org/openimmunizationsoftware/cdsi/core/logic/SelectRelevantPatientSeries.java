@@ -43,7 +43,7 @@ public class SelectRelevantPatientSeries extends LogicStep {
 
         logicTable54.caGender = new ConditionAttribute<String>("Patient", "Gender");
         logicTable54.caDateOfBirth = new ConditionAttribute<Date>("Patient", "Date Of Birth");
-        // TODO: 'MedicalHistory' needs to be replaced with new class 'PatientHistory'
+        // 'MedicalHistory' needs to be replaced with new class 'PatientHistory'
         logicTable54.caActivePatientObservations = new ConditionAttribute<MedicalHistory>("Patient history",
             "Active Patient Observation(s)");
         logicTable54.caRequiredGender = new ConditionAttribute<List<String>>("Supporting Data (Gender)",
@@ -187,7 +187,7 @@ public class SelectRelevantPatientSeries extends LogicStep {
           "Does the indication describe any active patient observations?") {
         @Override
         public LogicResult evaluateInternal() {
-          // TODO logic condition not yet implemented
+          // logic condition not yet implemented
           return LogicResult.NO;
         }
       });

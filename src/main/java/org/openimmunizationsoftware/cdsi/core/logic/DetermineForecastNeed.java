@@ -1,5 +1,6 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
+import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTAGE_1;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.ANY;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
@@ -11,7 +12,6 @@ import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
-import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.Contraindication_TO_BE_REMOVED;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
@@ -25,8 +25,6 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
-
-import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTAGE_1;
 
 public class DetermineForecastNeed extends LogicStep {
 
@@ -87,13 +85,9 @@ public class DetermineForecastNeed extends LogicStep {
     caAssessmentDate.setAssumedValue(new Date());
     caCandidateEarliestDate.setAssumedValue(FUTURE);
 
-    // TODO: Add assumed values for caEvidenceOfImmunity and
-    // caContraindicatedPatientSeries
-
     caTargetDoseStatuses.setInitialValue(dataModel.getTargetDose());
-    // TODO move DateRule calculations to DateRules file
-    caMaximumAgeDate.setInitialValue(CALCDTAGE_1.evaluate(dataModel, this, null));// TODO: null value must be an Age for
-                                                                                  // business rule CALCDTAGE-1 to work
+    caMaximumAgeDate.setInitialValue(CALCDTAGE_1.evaluate(dataModel, this, null));
+    // business rule CALCDTAGE-1 to work
     caCandidateEarliestDate.setInitialValue(computeEarliestDate());
     findMaximumAgeDate();
     findSeasonalRecommendationEndDate();
@@ -216,7 +210,6 @@ public class DetermineForecastNeed extends LogicStep {
           new LogicCondition("Is the relevant patient series a contraindicated patient series?") {
             @Override
             protected LogicResult evaluateInternal() {
-              // TODO add logic
               if (dataModel.getPatient().getMedicalHistory().getContraindicationSet().isEmpty()) {
                 return LogicResult.NO;
               }

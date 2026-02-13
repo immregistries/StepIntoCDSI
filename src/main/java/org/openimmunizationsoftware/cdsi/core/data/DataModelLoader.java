@@ -24,7 +24,6 @@ import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipCondition;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipConditionType;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipSet;
 import org.openimmunizationsoftware.cdsi.core.domain.Contraindication;
-import org.openimmunizationsoftware.cdsi.core.domain.Contraindication_TO_BE_REMOVED;
 import org.openimmunizationsoftware.cdsi.core.domain.DoseType;
 import org.openimmunizationsoftware.cdsi.core.domain.Exclusion;
 import org.openimmunizationsoftware.cdsi.core.domain.Immunity;
@@ -184,7 +183,7 @@ public class DataModelLoader {
     NodeList parentList = contraindicationsList.item(0).getChildNodes();
     for (int i = 0; i < parentList.getLength(); i++) {
       Node childNode = parentList.item(i);
-      if(childNode.getNodeName().equals("vaccineGroup") || childNode.getNodeName().equals("vaccine")) {
+      if (childNode.getNodeName().equals("vaccineGroup") || childNode.getNodeName().equals("vaccine")) {
         for (int ci = 0; ci < childNode.getChildNodes().getLength(); ci++) {
           Node contraindicationNode = childNode.getChildNodes().item(ci);
           if (contraindicationNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -192,9 +191,9 @@ public class DataModelLoader {
             schedule.getContraindicationList().add(contraindication);
             for (int b = 0; b < contraindicationNode.getChildNodes().getLength(); b++) {
               Node grandChildNode = contraindicationNode.getChildNodes().item(b);
-              if(grandChildNode.getNodeName().equals("observationCode")) {
+              if (grandChildNode.getNodeName().equals("observationCode")) {
                 contraindication.setObservationCode(DomUtils.getInternalValue(grandChildNode));
-              } else if(grandChildNode.getNodeName().equals("observationTitle")) {
+              } else if (grandChildNode.getNodeName().equals("observationTitle")) {
                 contraindication.setObservationTitle(DomUtils.getInternalValue(grandChildNode));
               }
             }
@@ -259,14 +258,14 @@ public class DataModelLoader {
             for (int gc = 0; gc < childNode.getChildNodes().getLength(); gc++) {
               Node grandchildNode = childNode.getChildNodes().item(gc);
               if (grandchildNode.getNodeType() == Node.ELEMENT_NODE) {
-                if(grandchildNode.getNodeName().equals("observationCode")) {
+                if (grandchildNode.getNodeName().equals("observationCode")) {
                   ObservationCode observationCode = new ObservationCode();
                   indication.setObservationCode(observationCode);
                   for (int ggc = 0; ggc < grandchildNode.getChildNodes().getLength(); ggc++) {
                     Node greatGrandchildNode = grandchildNode.getChildNodes().item(ggc);
-                    if(greatGrandchildNode.getNodeName().equals("code")) {
+                    if (greatGrandchildNode.getNodeName().equals("code")) {
                       observationCode.setCode(DomUtils.getInternalValue(greatGrandchildNode));
-                    } else if(greatGrandchildNode.getNodeName().equals("text")) {
+                    } else if (greatGrandchildNode.getNodeName().equals("text")) {
                       observationCode.setText(DomUtils.getInternalValue(greatGrandchildNode));
                     }
                   }
@@ -502,12 +501,10 @@ public class DataModelLoader {
           ConditionalNeed conditionalNeed = new ConditionalNeed();
           conditionalNeed.setSeriesDose(seriesDose);
           seriesDose.getConditionalNeedList().add(conditionalNeed);
-          // TODO
         } else if (parentNode.getNodeName().equals("seasonalRecommendation")) {
           SeasonalRecommendation seasonalRecommendation = new SeasonalRecommendation();
           seasonalRecommendation.setSeriesDose(seriesDose);
           seriesDose.getSeasonalRecommendationList().add(seasonalRecommendation);
-          // TODO
         } else if (parentNode.getNodeName().equals("substituteDose")) {
           SubstituteDose substituteDose = new SubstituteDose();
           substituteDose.setSeriesDose(seriesDose);
@@ -811,17 +808,17 @@ public class DataModelLoader {
           Observation o = new Observation();
           for (int v = 0; v < childNode.getChildNodes().getLength(); v++) {
             Node grandchildNode = childNode.getChildNodes().item(v);
-            if(grandchildNode.getNodeType() == Node.ELEMENT_NODE) {
-              if(grandchildNode.getNodeName().equals("observationCode")) {
+            if (grandchildNode.getNodeType() == Node.ELEMENT_NODE) {
+              if (grandchildNode.getNodeName().equals("observationCode")) {
                 o.setObservationCode(DomUtils.getInternalValue(grandchildNode));
               }
-              if(grandchildNode.getNodeName().equals("observationTitle")) {
+              if (grandchildNode.getNodeName().equals("observationTitle")) {
                 o.setObservationTitle(DomUtils.getInternalValue(grandchildNode));
               }
             }
           }
-          
-          dataModel.getObservationMap().put(o.getObservationCode(),o);
+
+          dataModel.getObservationMap().put(o.getObservationCode(), o);
         }
       }
     }

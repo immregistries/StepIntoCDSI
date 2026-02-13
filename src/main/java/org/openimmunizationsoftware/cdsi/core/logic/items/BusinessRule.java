@@ -6,8 +6,6 @@ import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 
-import oracle.net.aso.b;
-
 /**
  * Created by Eric on 7/1/16.
  */

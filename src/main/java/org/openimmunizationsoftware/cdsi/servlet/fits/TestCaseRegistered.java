@@ -175,7 +175,7 @@ public class TestCaseRegistered {
           VaccinationEvent vaccinationEvent = (VaccinationEvent) event;
           Vaccination vaccination = new Vaccination();
           vaccination.vaccineCvx = vaccinationEvent.getAdministred().getCvx();
-          vaccination.vaccineMvx = ""; // TODO
+          vaccination.vaccineMvx = "";
           if (vaccinationEvent.getDate() instanceof FixedDate) {
             FixedDate vaccineFixed = (FixedDate) vaccinationEvent.getDate();
             if (StringUtils.isNotBlank(vaccineFixed.getDateString())) {

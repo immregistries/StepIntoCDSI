@@ -6,7 +6,6 @@ import java.util.List;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
-import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.servlet.ForecastServlet;
@@ -30,8 +29,6 @@ public class End extends LogicStep {
     VaccineGroup vaccineGroup = dataModel.getVaccineGroup();
     out.println("<h2>" + vaccineGroup.getName() + "</h2>");
 
-    PatientSeries p = dataModel.getBestPatientSeriesList().size() == 0 ? null
-        : dataModel.getBestPatientSeriesList().get(0);
     if (dataModel.getBestPatientSeriesList() == null) {
       out.println("<p>Best Patient Series List is null!</p>");
     } else {
@@ -59,7 +56,7 @@ public class End extends LogicStep {
           out.println("    <td>" + forecast.getAntigen().getName() + "</td>");
           out.println("    <td>" + forecast.getTargetDose() + "</td>");
           out.println("    <td>" + (forecast.getVaccineGroupForecast() == null ? "null"
-            : forecast.getVaccineGroupForecast().getVaccineGroupStatus()) + "</td>");
+              : forecast.getVaccineGroupForecast().getVaccineGroupStatus()) + "</td>");
           out.println("    <td>" + n(forecast.getEarliestDate()) + "</td>");
           out.println("    <td>" + n(forecast.getAdjustedRecommendedDate()) + "</td>");
           out.println("    <td>" + n(forecast.getAdjustedPastDueDate()) + "</td>");

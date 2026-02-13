@@ -29,7 +29,7 @@ public class EvaluateVaccineConflict extends LogicStep {
   public EvaluateVaccineConflict(DataModel dataModel) {
     super(LogicStepType.EVALUATE_VACCINE_CONFLICT, dataModel);
     setConditionTableName("Table ");
-    //TODO change chapter to be more Business rule based to match the 4.5 document
+    // change chapter to be more Business rule based to match the 4.5 document
 
     caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
     // caConflictBeginIntervalDate = new ConditionAttribute<Date>("Calculated date

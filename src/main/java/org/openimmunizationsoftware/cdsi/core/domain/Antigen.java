@@ -55,7 +55,6 @@ public class Antigen {
     return super.equals(obj);
   }
 
-  // TODO get rid of this method
   public String getCvxForForecast() {
     if (name.equals("Cholera")) {
       return "26";

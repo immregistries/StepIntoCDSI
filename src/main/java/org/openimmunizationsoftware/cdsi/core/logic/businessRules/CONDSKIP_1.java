@@ -3,7 +3,6 @@ package org.openimmunizationsoftware.cdsi.core.logic.businessRules;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.apache.jena.sparql.function.library.leviathan.log;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipCondition;
 import org.openimmunizationsoftware.cdsi.core.domain.DoseType;

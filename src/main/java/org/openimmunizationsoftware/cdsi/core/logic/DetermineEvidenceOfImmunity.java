@@ -101,7 +101,7 @@ public class DetermineEvidenceOfImmunity extends LogicStep {
         protected LogicResult evaluateInternal() {
           if (caEvidenceOfImmunity != null) {
             /*
-             * TODO add logic condition
+             * add logic condition
              * for(int i = 0; i <= caEvidenceOfImmunity.get; )
              * OR
              * for (VaccineDoseAdministered vda :

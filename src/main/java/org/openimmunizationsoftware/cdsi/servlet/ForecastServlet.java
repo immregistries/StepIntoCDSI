@@ -18,7 +18,6 @@ import org.openimmunizationsoftware.cdsi.SoftwareVersion;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.data.DataModelLoader;
 import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
-import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
@@ -211,60 +210,6 @@ public class ForecastServlet extends HttpServlet {
             }
           } else {
             out.print(vgf.getPatientSeriesStatus());
-          }
-          out.println();
-        }
-      }
-      out.println();
-    }
-  }
-
-  private void printListRaw(DataModel dataModel, PrintWriter out, SimpleDateFormat sdf, Date today,
-      List<Forecast> forecastList, String title) {
-    if (forecastList.size() > 0) {
-      out.println(title + " " + sdf.format(dataModel.getAssessmentDate()));
-      // for (VaccineGroupForecast vaccineGroupForecast : vaccineGroupForecastList)
-      // {
-      //
-      // }
-      for (Forecast forecast : forecastList) {
-        if (forecast.getAntigen() != null) {
-          String name = forecast.getAntigen().getName();
-          // down to here
-          out.print("Forecasting " + name + " status ");
-          if (forecast.getForecastReason().equals("")) {
-            if (forecast.getAdjustedRecommendedDate().after(today)) {
-              out.print("due later ");
-            } else {
-              out.print("due ");
-            }
-            out.print("dose ");
-            if (forecast.getTargetDose() == null) {
-              out.print("? ");
-            } else {
-              out.print(forecast.getTargetDose().getTrackedSeriesDose().getDoseNumber() + " ");
-            }
-            if (forecast.getAdjustedRecommendedDate() != null) {
-              out.print("due ");
-              out.print(sdf.format(forecast.getAdjustedRecommendedDate()));
-              out.print(" ");
-              if (forecast.getEarliestDate() != null) {
-                out.print("valid ");
-                out.print(sdf.format(forecast.getEarliestDate()));
-                out.print(" ");
-                if (forecast.getAdjustedPastDueDate() != null) {
-                  out.print("overdue ");
-                  out.print(sdf.format(forecast.getAdjustedPastDueDate()));
-                  out.print(" ");
-                  if (forecast.getLatestDate() != null) {
-                    out.print("finished ");
-                    out.print(sdf.format(forecast.getLatestDate()));
-                  }
-                }
-              }
-            }
-          } else {
-            out.print(forecast.getForecastReason());
           }
           out.println();
         }

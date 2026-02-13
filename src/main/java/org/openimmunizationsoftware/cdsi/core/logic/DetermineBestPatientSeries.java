@@ -1,12 +1,9 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
-import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.apache.jena.sparql.function.library.leviathan.log;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
-import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
@@ -33,8 +30,6 @@ public class DetermineBestPatientSeries extends LogicStep {
             logicTableList.add(logicTable);
         }
     }
-
-    private LinkedHashMap<PatientSeries, Integer> patientSeriesMap = new LinkedHashMap<PatientSeries, Integer>();
 
     @Override
     public LogicStep process() throws Exception {

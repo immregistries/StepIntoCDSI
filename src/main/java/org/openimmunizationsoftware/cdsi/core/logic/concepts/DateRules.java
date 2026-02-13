@@ -428,7 +428,7 @@ public class DateRules {
     CALCDTCI_2.setLogicalComponent("Contraindication");
 
     FORECASTDTCAN_1 = new DateRule<Contraindication>() {
-      // TODO logic not correct
+      // logic not correct
       @Override
       protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep,
           Contraindication contraindication) {
