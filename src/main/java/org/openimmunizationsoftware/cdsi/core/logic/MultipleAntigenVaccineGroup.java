@@ -77,9 +77,11 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
         }
       // vgf.setV
       for (PatientSeries p : selectedList) {
-        vgf.setAntigen(p.getForecast().getAntigen());
-        vgf.getAntigenList().add(p.getForecast().getAntigen());
-        dataModel.getVaccineGroupForecastList().add(vgf);
+        if (p.getForecast() != null) {
+          vgf.setAntigen(p.getForecast().getAntigen());
+          vgf.getAntigenList().add(p.getForecast().getAntigen());
+          dataModel.getVaccineGroupForecastList().add(vgf);
+        }
       }
       log("Selected List size: " + selectedList.size() + " ");
       log("Vaccine group forecast list size: " + dataModel.getVaccineGroupForecastList().size() + " ");
@@ -99,21 +101,26 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
 
   private void MULTIANTVG_7() {
     String reasons = "";
-    for (PatientSeries p : selectedList)
-      reasons = reasons + p.getForecast().getForecastReason();
+    for (PatientSeries p : selectedList) {
+      if (p.getForecast() != null) {
+        reasons = reasons + p.getForecast().getForecastReason();
+      }
+    }
     vgf.setForecastReason(reasons);
   }
 
   private void MULTIANTVG_6() {
     Date earliestRecommendedDate = null;
     for (PatientSeries p : selectedList) {
-      Date erd = p.getForecast().getUnadjustedPastDueDate();
-      if (erd != null) {
-        if (earliestRecommendedDate == null) {
-          earliestRecommendedDate = erd;
-        } else {
-          if (erd.before(earliestRecommendedDate)) {
+      if (p.getForecast() != null) {
+        Date erd = p.getForecast().getUnadjustedPastDueDate();
+        if (erd != null) {
+          if (earliestRecommendedDate == null) {
             earliestRecommendedDate = erd;
+          } else {
+            if (erd.before(earliestRecommendedDate)) {
+              earliestRecommendedDate = erd;
+            }
           }
         }
       }
@@ -124,13 +131,15 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
   private void MULTIANTVG_5() {
     Date earliestRecommendedDate = null;
     for (PatientSeries p : selectedList) {
-      Date erd = p.getForecast().getUnadjustedRecommendedDate();
-      if (erd != null) {
-        if (earliestRecommendedDate == null) {
-          earliestRecommendedDate = erd;
-        } else {
-          if (erd.before(earliestRecommendedDate)) {
+      if (p.getForecast() != null) {
+        Date erd = p.getForecast().getUnadjustedRecommendedDate();
+        if (erd != null) {
+          if (earliestRecommendedDate == null) {
             earliestRecommendedDate = erd;
+          } else {
+            if (erd.before(earliestRecommendedDate)) {
+              earliestRecommendedDate = erd;
+            }
           }
         }
       }
@@ -142,15 +151,17 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
     Date latestDate = null;
     TargetDose td = null;
     for (PatientSeries p : selectedList) {
-      if (p.getForecast().getTargetDose() != null)
-        td = p.getForecast().getTargetDose();
-      Date erd = p.getForecast().getLatestDate();
-      if (erd != null) {
-        if (latestDate == null) {
-          latestDate = erd;
-        } else {
-          if (erd.before(latestDate)) {
+      if (p.getForecast() != null) {
+        if (p.getForecast().getTargetDose() != null)
+          td = p.getForecast().getTargetDose();
+        Date erd = p.getForecast().getLatestDate();
+        if (erd != null) {
+          if (latestDate == null) {
             latestDate = erd;
+          } else {
+            if (erd.before(latestDate)) {
+              latestDate = erd;
+            }
           }
         }
       }
@@ -165,15 +176,17 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
     Date earliestRecommendedDate = null;
     TargetDose td = null;
     for (PatientSeries p : selectedList) {
-      Date erd = p.getForecast().getAdjustedPastDueDate();
-      if (p.getForecast().getTargetDose() != null)
-        td = p.getForecast().getTargetDose();
-      if (erd != null) {
-        if (earliestRecommendedDate == null) {
-          earliestRecommendedDate = erd;
-        } else {
-          if (erd.before(earliestRecommendedDate)) {
+      if (p.getForecast() != null) {
+        Date erd = p.getForecast().getAdjustedPastDueDate();
+        if (p.getForecast().getTargetDose() != null)
+          td = p.getForecast().getTargetDose();
+        if (erd != null) {
+          if (earliestRecommendedDate == null) {
             earliestRecommendedDate = erd;
+          } else {
+            if (erd.before(earliestRecommendedDate)) {
+              earliestRecommendedDate = erd;
+            }
           }
         }
       }
@@ -193,17 +206,19 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
     Date earliestRecommendedDate = null;
     TargetDose td = null;
     for (PatientSeries p : selectedList) {
-      Date erd = p.getForecast().getAdjustedRecommendedDate();
-      if (erd != null) {
-        if (earliestRecommendedDate == null) {
-          earliestRecommendedDate = erd;
-          if (p.getForecast().getTargetDose() != null)
-            td = p.getForecast().getTargetDose();
-        } else {
-          if (erd.before(earliestRecommendedDate)) {
+      if (p.getForecast() != null) {
+        Date erd = p.getForecast().getAdjustedRecommendedDate();
+        if (erd != null) {
+          if (earliestRecommendedDate == null) {
             earliestRecommendedDate = erd;
             if (p.getForecast().getTargetDose() != null)
               td = p.getForecast().getTargetDose();
+          } else {
+            if (erd.before(earliestRecommendedDate)) {
+              earliestRecommendedDate = erd;
+              if (p.getForecast().getTargetDose() != null)
+                td = p.getForecast().getTargetDose();
+            }
           }
         }
       }
@@ -225,26 +240,28 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
     Date earliestDate = null;
     TargetDose td = null;
     for (PatientSeries p : selectedList) {
-      Date ed = p.getForecast().getEarliestDate();
-      if (ed != null) {
-        if (earliestDate == null) {
-          earliestDate = ed;
-          if (p.getForecast().getTargetDose() != null)
-            td = p.getForecast().getTargetDose();
-        } else {
-          IntervalPriority intervalPriority = p.getForecast().getInterval() == null ? null
-              : p.getForecast().getInterval().getIntervalPriority();
-          if (intervalPriority == null) {
-            if (ed.after(earliestDate)) {
-              earliestDate = ed;
-              if (p.getForecast().getTargetDose() != null)
-                td = p.getForecast().getTargetDose();
-            }
+      if (p.getForecast() != null) {
+        Date ed = p.getForecast().getEarliestDate();
+        if (ed != null) {
+          if (earliestDate == null) {
+            earliestDate = ed;
+            if (p.getForecast().getTargetDose() != null)
+              td = p.getForecast().getTargetDose();
           } else {
-            if (ed.before(earliestDate)) {
-              earliestDate = ed;
-              if (p.getForecast().getTargetDose() != null)
-                td = p.getForecast().getTargetDose();
+            IntervalPriority intervalPriority = p.getForecast().getInterval() == null ? null
+                : p.getForecast().getInterval().getIntervalPriority();
+            if (intervalPriority == null) {
+              if (ed.after(earliestDate)) {
+                earliestDate = ed;
+                if (p.getForecast().getTargetDose() != null)
+                  td = p.getForecast().getTargetDose();
+              }
+            } else {
+              if (ed.before(earliestDate)) {
+                earliestDate = ed;
+                if (p.getForecast().getTargetDose() != null)
+                  td = p.getForecast().getTargetDose();
+              }
             }
           }
         }
@@ -341,7 +358,8 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
         @Override
         public LogicResult evaluateInternal() {
           for (PatientSeries p : dataModel.getBestPatientSeriesList()) {
-            if (p.getPatientSeriesStatus().equals(PatientSeriesStatus.NOT_COMPLETE)) {
+            if (p.getPatientSeriesStatus() != null
+                && p.getPatientSeriesStatus().equals(PatientSeriesStatus.NOT_COMPLETE)) {
               return LogicResult.YES;
             }
           }

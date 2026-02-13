@@ -96,7 +96,8 @@ public class ForecastServlet extends HttpServlet {
     }
 
     for (VaccineGroupForecast vgf : vgfl) {
-      if (vgf.getVaccineGroupStatus().equals(VaccineGroupStatus.NOT_COMPLETE)) {
+      if (vgf.getVaccineGroupStatus() != null
+          && vgf.getVaccineGroupStatus().equals(VaccineGroupStatus.NOT_COMPLETE)) {
         if (vgf.getAdjustedRecommendedDate() != null
             && vgf.getAdjustedRecommendedDate().after(today)) {
           vgfLater.add(vgf);
@@ -119,26 +120,28 @@ public class ForecastServlet extends HttpServlet {
       out.println("IMMUNIZATION EVALUATION");
 
       for (PatientSeries patientSeries : dataModel.getBestPatientSeriesList()) {
-        for (TargetDose targetDose : patientSeries.getTargetDoseList()) {
-          if (targetDose.getEvaluationList() != null) {
-            for (Evaluation evaluation : targetDose.getEvaluationList()) {
-              VaccineDoseAdministered vda = evaluation.getVaccineDoseAdministered();
-              if (evaluation.getEvaluationStatus() != null) {
-                out.print("Vaccination #" + vda.getId() + ": ");
-                out.print(vda.getVaccine().getVaccineType().getShortDescription());
-                out.print(" given ");
-                out.print(sdf.format(vda.getDateAdministered()));
-                out.print(" is a ");
-                if (evaluation.getEvaluationStatus() != null
-                    && evaluation.getEvaluationStatus() == EvaluationStatus.VALID) {
-                  out.print("valid ");
-                } else {
-                  out.print("not valid ");
+        if (patientSeries.getTargetDoseList() != null) {
+          for (TargetDose targetDose : patientSeries.getTargetDoseList()) {
+            if (targetDose.getEvaluationList() != null) {
+              for (Evaluation evaluation : targetDose.getEvaluationList()) {
+                VaccineDoseAdministered vda = evaluation.getVaccineDoseAdministered();
+                if (evaluation.getEvaluationStatus() != null) {
+                  out.print("Vaccination #" + vda.getId() + ": ");
+                  out.print(vda.getVaccine().getVaccineType().getShortDescription());
+                  out.print(" given ");
+                  out.print(sdf.format(vda.getDateAdministered()));
+                  out.print(" is a ");
+                  if (evaluation.getEvaluationStatus() != null
+                      && evaluation.getEvaluationStatus() == EvaluationStatus.VALID) {
+                    out.print("valid ");
+                  } else {
+                    out.print("not valid ");
+                  }
+                  out.print(targetDose.getTrackedSeriesDose().getAntigenSeries().getTargetDisease());
+                  out.print(" dose ");
+                  out.print(targetDose.getTrackedSeriesDose().getDoseNumber());
+                  out.println();
                 }
-                out.print(targetDose.getTrackedSeriesDose().getAntigenSeries().getTargetDisease());
-                out.print(" dose ");
-                out.print(targetDose.getTrackedSeriesDose().getDoseNumber());
-                out.println();
               }
             }
           }
@@ -175,7 +178,8 @@ public class ForecastServlet extends HttpServlet {
             name = "MMR";
           }
           out.print("Forecasting " + name + " status ");
-          if (vgf.getPatientSeriesStatus() == PatientSeriesStatus.NOT_COMPLETE) {
+          if (vgf.getPatientSeriesStatus() != null
+              && vgf.getPatientSeriesStatus() == PatientSeriesStatus.NOT_COMPLETE) {
             if (vgf.getAdjustedRecommendedDate() != null && vgf.getAdjustedRecommendedDate().after(today)) {
               out.print("due later ");
             } else {

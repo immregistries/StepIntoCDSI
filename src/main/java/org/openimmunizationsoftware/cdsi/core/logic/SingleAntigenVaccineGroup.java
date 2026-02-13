@@ -38,7 +38,7 @@ public class SingleAntigenVaccineGroup extends LogicStep {
 
     for (PatientSeries p : dataModel.getBestPatientSeriesList()) {
       Forecast forecast = p.getForecast();
-      if (forecast.getAntigen().equals(vaccineGroup.getAntigenList().get(0))) {
+      if (forecast != null && forecast.getAntigen().equals(vaccineGroup.getAntigenList().get(0))) {
         log("Forecast antigen matches vaccine group antigen: " + forecast.getAntigen().getName());
         // Règle en plus
         vgf.setAntigen(forecast.getAntigen());

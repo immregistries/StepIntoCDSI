@@ -212,7 +212,9 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
     }
     dataModel.setSelectedAntigenAdministeredRecordPos(0);
     dataModel.setPreviousAntigenAdministeredRecord(null);
-    dataModel.setAntigenAdministeredRecord(selectedAntigenAdministeredRecordList.get(0));
+    if (!selectedAntigenAdministeredRecordList.isEmpty()) {
+      dataModel.setAntigenAdministeredRecord(selectedAntigenAdministeredRecordList.get(0));
+    }
   }
 
   private void setupForecast() {

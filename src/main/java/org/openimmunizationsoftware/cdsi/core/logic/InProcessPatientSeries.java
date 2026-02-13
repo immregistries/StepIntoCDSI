@@ -48,15 +48,17 @@ public class InProcessPatientSeries extends LogicStep {
 
       }
 
-      for (TargetDose target : patientSeries.getTargetDoseList()) {
-        if (target.getTargetDoseStatus() != null) {
-          if (target.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
+      if (patientSeries.getTargetDoseList() != null) {
+        for (TargetDose target : patientSeries.getTargetDoseList()) {
+          if (target.getTargetDoseStatus() != null) {
+            if (target.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
 
-          } else {
-            hasAllValidDoses = false;
+            } else {
+              hasAllValidDoses = false;
+            }
           }
-        }
 
+        }
       }
       if (productPatientSeries && hasAllValidDoses) {
         patientSeries.incPatientScoreSeries();
@@ -78,18 +80,20 @@ public class InProcessPatientSeries extends LogicStep {
 
   private void evaluate_ACandidatePatientSeriesIsCompletable() {
     for (PatientSeries patientSeries : patientSeriesList) {
-      Date finishDate = patientSeries.getForecast().getAdjustedPastDueDate();
-      Date maximumAgeDate = findMaximumAgeDate(patientSeries);
-      if (finishDate != null && finishDate.before(maximumAgeDate)) {
-        patientSeries.incPatientScoreSeries();
-        patientSeries.incPatientScoreSeries();
-        patientSeries.incPatientScoreSeries();
-        log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " is completable");
-      } else {
-        patientSeries.descPatientScoreSeries();
-        patientSeries.descPatientScoreSeries();
-        patientSeries.descPatientScoreSeries();
-        log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " is not completable");
+      if (patientSeries.getForecast() != null) {
+        Date finishDate = patientSeries.getForecast().getAdjustedPastDueDate();
+        Date maximumAgeDate = findMaximumAgeDate(patientSeries);
+        if (finishDate != null && finishDate.before(maximumAgeDate)) {
+          patientSeries.incPatientScoreSeries();
+          patientSeries.incPatientScoreSeries();
+          patientSeries.incPatientScoreSeries();
+          log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " is completable");
+        } else {
+          patientSeries.descPatientScoreSeries();
+          patientSeries.descPatientScoreSeries();
+          patientSeries.descPatientScoreSeries();
+          log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " is not completable");
+        }
       }
     }
   }
@@ -131,13 +135,15 @@ public class InProcessPatientSeries extends LogicStep {
 
   private int numberOfValidDoses(PatientSeries patientSeries) {
     int nbOfValidDoses = 0;
-    for (TargetDose target : patientSeries.getTargetDoseList()) {
-      if (target.getTargetDoseStatus() != null) {
-        if (target.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
-          nbOfValidDoses++;
+    if (patientSeries.getTargetDoseList() != null) {
+      for (TargetDose target : patientSeries.getTargetDoseList()) {
+        if (target.getTargetDoseStatus() != null) {
+          if (target.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
+            nbOfValidDoses++;
+          }
         }
-      }
 
+      }
     }
     return nbOfValidDoses;
   }
