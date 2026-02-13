@@ -336,9 +336,11 @@ public class StepServlet extends ForecastServlet {
             out.println("</tr><tr>");
           }
           out.println("    <td>--&gt;</td>");
-          VaccineDoseAdministered vda = aar.getVaccineDoseAdministered();
-          printVda(out, vda);
-          vaccineDoseAdministeredList.remove(vda);
+          VaccineDoseAdministered vda = aar == null ? null : aar.getVaccineDoseAdministered();
+          if (vda != null) {
+            printVda(out, vda);
+            vaccineDoseAdministeredList.remove(vda);
+          }
         }
         out.println("  </tr>");
       }
