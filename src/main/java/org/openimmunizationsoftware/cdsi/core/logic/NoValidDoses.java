@@ -40,6 +40,9 @@ public class NoValidDoses extends LogicStep {
 
   private Date findMaximumAgeDate(PatientSeries patientSeries) {
     Date dob = dataModel.getPatient().getDateOfBirth();
+    if (patientSeries.getForecast() == null || patientSeries.getForecast().getTargetDose() == null) {
+      return null;
+    }
     SeriesDose referenceSeriesDose = patientSeries.getForecast().getTargetDose().getTrackedSeriesDose();
     ;
     TimePeriod timePeriod = referenceSeriesDose.getAgeList().get(0).getMaximumAge();
@@ -96,12 +99,14 @@ public class NoValidDoses extends LogicStep {
 
   private void evaluate_ACandidatePatientSeriesIsCompletable() {
     for (PatientSeries patientSeries : patientSeriesList) {
-      Date finishDate = patientSeries.getForecast().getAdjustedPastDueDate();
-      Date maximumAgeDate = findMaximumAgeDate(patientSeries);
-      if (finishDate != null && finishDate.before(maximumAgeDate)) {
-        patientSeries.incPatientScoreSeries();
-      } else {
-        patientSeries.incPatientScoreSeries();
+      if (patientSeries.getForecast() != null) {
+        Date finishDate = patientSeries.getForecast().getAdjustedPastDueDate();
+        Date maximumAgeDate = findMaximumAgeDate(patientSeries);
+        if (finishDate != null && maximumAgeDate != null && finishDate.before(maximumAgeDate)) {
+          patientSeries.incPatientScoreSeries();
+        } else {
+          patientSeries.incPatientScoreSeries();
+        }
       }
     }
   }
@@ -114,17 +119,19 @@ public class NoValidDoses extends LogicStep {
 
   private void evaluate_ACandidatePatientSeriesGenderSpecific() {
     for (PatientSeries patientSeries : patientSeriesList) {
-      boolean patientSeriesIsGenderSpecefic = false;
-      SeriesDose referenceSeriesDose = patientSeries.getForecast().getTargetDose().getTrackedSeriesDose();
-      String gender = referenceSeriesDose.getRequiredGenderList().size() == 0 ? null
-          : referenceSeriesDose.getRequiredGenderList().get(0).getValue();
-      if (gender != null && !gender.isEmpty()) {
-        patientSeriesIsGenderSpecefic = true;
-      }
-      if (patientSeriesIsGenderSpecefic) {
-        String targetDoseGender = dataModel.getPatient().getGender();
-        if (gender != null && targetDoseGender.equals(gender)) {
-          patientSeries.incPatientScoreSeries();
+      if (patientSeries.getForecast() != null && patientSeries.getForecast().getTargetDose() != null) {
+        boolean patientSeriesIsGenderSpecefic = false;
+        SeriesDose referenceSeriesDose = patientSeries.getForecast().getTargetDose().getTrackedSeriesDose();
+        String gender = referenceSeriesDose.getRequiredGenderList().size() == 0 ? null
+            : referenceSeriesDose.getRequiredGenderList().get(0).getValue();
+        if (gender != null && !gender.isEmpty()) {
+          patientSeriesIsGenderSpecefic = true;
+        }
+        if (patientSeriesIsGenderSpecefic) {
+          String targetDoseGender = dataModel.getPatient().getGender();
+          if (gender != null && targetDoseGender.equals(gender)) {
+            patientSeries.incPatientScoreSeries();
+          }
         }
       }
 
@@ -163,7 +170,7 @@ public class NoValidDoses extends LogicStep {
     Date evalDate = dataModel.getAssessmentDate();
     for (PatientSeries patientSeries : patientSeriesList) {
       Date maximumAgeDate = findMaximumAgeDate(patientSeries);
-      if (evalDate.after(maximumAgeDate)) {
+      if (maximumAgeDate != null && evalDate.after(maximumAgeDate)) {
         patientSeries.descPatientScoreSeries();
       } else {
         patientSeries.incPatientScoreSeries();

@@ -51,7 +51,12 @@ public class ForecastServlet extends HttpServlet {
       if (logStep != null) {
         logStepType = LogicStepType.valueOf(logStep);
       }
-      process(dataModel, out, logStepType);
+
+      // Check if detailed logging is requested
+      boolean detailedLog = req.getParameter("log") != null;
+      StringBuilder logBuffer = detailedLog ? new StringBuilder() : null;
+
+      process(dataModel, out, logStepType, detailedLog, logBuffer);
       String resultFormat = req.getParameter(PARAM_RESULT_FORMAT);
       if (resultFormat == null) {
         resultFormat = RESULT_FORMAT_TEXT;
@@ -63,7 +68,7 @@ public class ForecastServlet extends HttpServlet {
         resp.setContentType("text/plain");
         out.println("not implemented yet");
       } else {
-        printText(resp, dataModel, out);
+        printText(resp, dataModel, out, logBuffer);
       }
       out.close();
     } catch (Exception e) {
@@ -72,12 +77,13 @@ public class ForecastServlet extends HttpServlet {
     }
   }
 
-  private static void printText(HttpServletResponse resp, DataModel dataModel, PrintWriter out) {
+  private static void printText(HttpServletResponse resp, DataModel dataModel, PrintWriter out,
+      StringBuilder logBuffer) {
     resp.setContentType("text/plain");
-    printText(dataModel, out);
+    printText(dataModel, out, logBuffer);
   }
 
-  public static void printText(DataModel dataModel, PrintWriter out) {
+  public static void printText(DataModel dataModel, PrintWriter out, StringBuilder logBuffer) {
     out.println("Step Into Clinical Decision Support for Immunizations - Demonstration //System");
     out.println();
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
@@ -153,6 +159,16 @@ public class ForecastServlet extends HttpServlet {
     out.println("Forecast generated " + sdf.format(new Date()) + " using software version "
         + SoftwareVersion.VERSION + ".");
 
+    // Print detailed log if requested
+    if (logBuffer != null && logBuffer.length() > 0) {
+      out.println();
+      out.println();
+      out.println("========================================");
+      out.println("DETAILED PROCESSING LOG");
+      out.println("========================================");
+      out.print(logBuffer.toString());
+    }
+
   }
 
   // Measles Mumps Rubella
@@ -222,12 +238,32 @@ public class ForecastServlet extends HttpServlet {
     }
   }
 
-  private void process(DataModel dataModel, PrintWriter out, LogicStepType logLogicStepType) throws Exception {
+  private void process(DataModel dataModel, PrintWriter out, LogicStepType logLogicStepType,
+      boolean detailedLog, StringBuilder logBuffer) throws Exception {
     int count = 0;
     while (dataModel.getLogicStep().getLogicStepType() != LogicStepType.END) {
       LogicStep currentStep = dataModel.getLogicStep();
       LogicStep nextLogicStep = dataModel.getLogicStep().process();
       dataModel.setNextLogicStep(nextLogicStep);
+
+      // Collect detailed logs if requested
+      if (detailedLog && logBuffer != null) {
+        logBuffer.append("\n");
+        logBuffer.append("Step ").append(count).append(": ")
+            .append(currentStep.getLogicStepType().getName())
+            .append(" -> ")
+            .append(nextLogicStep.getLogicStepType().getName())
+            .append("\n");
+        logBuffer.append("----------------------------------------\n");
+
+        // Capture log messages from this step
+        if (currentStep.getLogList() != null && currentStep.getLogList().size() > 0) {
+          for (String logMessage : currentStep.getLogList()) {
+            logBuffer.append("  ").append(logMessage).append("\n");
+          }
+        }
+      }
+
       if (logLogicStepType != null) {
         if (logLogicStepType == currentStep.getLogicStepType()) {
           out.println("========================================================================================");
