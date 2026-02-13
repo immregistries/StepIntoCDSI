@@ -133,12 +133,25 @@
 		<groupId>gov.nist.healthcare.cds.client</groupId>
 		<artifactId>fits-client</artifactId>
 		<version>1.2.1-AIRA-1.1</version>
-		<exclusions>
-		  <exclusion>
-		    <groupId>*</groupId>
-		    <artifactId>*</artifactId>
-		  </exclusion>
-		</exclusions>
+	</dependency>
+
+	<!-- Apache HttpClient 5 - required by fits-client -->
+	<dependency>
+		<groupId>org.apache.httpcomponents.client5</groupId>
+		<artifactId>httpclient5</artifactId>
+		<version>5.2.1</version>
+	</dependency>
+
+	<!-- Spring Framework 6.x - required by NIST fits-client -->
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-web</artifactId>
+		<version>6.0.11</version>
+	</dependency>
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-core</artifactId>
+		<version>6.0.11</version>
 	</dependency>
 
       <!-- This dependency includes the core HAPI-FHIR classes -->
@@ -269,7 +282,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.11.0</version>
 				<configuration>
-					<release>8</release>
+					<release>17</release>
 					<encoding>UTF-8</encoding>
 					<showWarnings>true</showWarnings>
 					<showDeprecation>true</showDeprecation>
