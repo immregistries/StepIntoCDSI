@@ -21,6 +21,58 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
 public abstract class LogicStep {
 
+  /**
+   * Log levels ordered from least verbose (CONTROL) to most verbose (DUMP).
+   * 
+   * For detailed guidance on logging semantics, level usage, and alerting
+   * patterns,
+   * see: docs/Alerting Semantics for Step Into CDSi.md
+   */
+  public enum Level {
+    CONTROL, // Least verbose - control flow decisions
+    STATE, // State changes
+    REASONING, // Reasoning and business logic
+    TRACE, // Detailed trace information
+    DUMP // Most verbose - all details
+  }
+
+  /**
+   * Represents a single log event with level, alert flag, and message.
+   * 
+   * For detailed guidance on logging semantics, level usage, and alerting
+   * patterns,
+   * see: docs/Alerting Semantics for Step Into CDSi.md
+   */
+  public static class LogEvent {
+    private final Level level;
+    private final boolean alert;
+    private final String message;
+    private final long seq;
+
+    public LogEvent(Level level, boolean alert, String message, long seq) {
+      this.level = level;
+      this.alert = alert;
+      this.message = message != null ? message : "null";
+      this.seq = seq;
+    }
+
+    public Level getLevel() {
+      return level;
+    }
+
+    public boolean isAlert() {
+      return alert;
+    }
+
+    public String getMessage() {
+      return message;
+    }
+
+    public long getSeq() {
+      return seq;
+    }
+  }
+
   public static final LogicStepType[] STEPS = { LogicStepType.GATHER_NECESSARY_DATA,
 
       LogicStepType.CREATE_RELEVANT_PATIENT_SERIES,
@@ -100,7 +152,8 @@ public abstract class LogicStep {
   protected LogicStepType logicStepType = null;
   protected LogicStepType nextLogicStepType = null;
   private String conditionTableName = "";
-  private List<String> logList = new ArrayList<String>();
+  private List<LogEvent> logEventList = new ArrayList<LogEvent>();
+  private long nextSeq = 0;
 
   public LogicStepType getLogicStepType() {
     return logicStepType;
@@ -114,23 +167,89 @@ public abstract class LogicStep {
     this.nextLogicStepType = nextLogicStepType;
   }
 
+  /**
+   * Returns the list of log messages as strings, preserving order.
+   * Maintained for backwards compatibility.
+   * 
+   * @return List of log messages
+   */
   public List<String> getLogList() {
-    return logList;
+    List<String> messages = new ArrayList<String>();
+    for (LogEvent event : logEventList) {
+      messages.add(event.getMessage());
+    }
+    return messages;
+  }
+
+  /**
+   * Returns the list of log events with level and alert information.
+   * 
+   * @return Unmodifiable list of log events
+   */
+  public List<LogEvent> getLogEventList() {
+    return Collections.unmodifiableList(logEventList);
   }
 
   public String getTitle() {
     return logicStepType.getDisplay();
   }
 
+  /**
+   * Log a message at DUMP level (most verbose).
+   * Maintained for backwards compatibility.
+   * 
+   * @param s The message to log
+   */
   public void log(String s) {
-    logList.add(s);
+    log(Level.DUMP, s);
+  }
+
+  /**
+   * Log a message at the specified level.
+   * 
+   * For guidance on choosing the appropriate log level,
+   * see: docs/Alerting Semantics for Step Into CDSi.md
+   * 
+   * @param level   The log level
+   * @param message The message to log
+   */
+  protected void log(Level level, String message) {
+    logEventList.add(new LogEvent(level, false, message, nextSeq++));
+  }
+
+  /**
+   * Log an alert message at CONTROL level (least verbose).
+   * 
+   * Alerts are used to flag important conditions that require attention.
+   * For guidance on when to use alerts vs. regular logs,
+   * see: docs/Alerting Semantics for Step Into CDSi.md
+   * 
+   * @param message The alert message to log
+   */
+  protected void alert(String message) {
+    alert(Level.CONTROL, message);
+  }
+
+  /**
+   * Log an alert message at the specified level.
+   * 
+   * Alerts are used to flag important conditions that require attention.
+   * For guidance on when to use alerts vs. regular logs,
+   * see: docs/Alerting Semantics for Step Into CDSi.md
+   * 
+   * @param level   The log level
+   * @param message The alert message to log
+   */
+  protected void alert(Level level, String message) {
+    logEventList.add(new LogEvent(level, true, message, nextSeq++));
   }
 
   public void printLog(PrintWriter out) {
-    if (logList.size() > 0) {
+    List<String> messages = getLogList();
+    if (messages.size() > 0) {
       out.println("<p>Processing log</p>");
       out.println("<ul>");
-      for (String s : logList) {
+      for (String s : messages) {
         out.println("<li>" + s + "</li>");
       }
       out.println("</ul>");

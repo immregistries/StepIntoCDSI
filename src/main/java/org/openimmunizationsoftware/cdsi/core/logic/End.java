@@ -89,7 +89,7 @@ public class End extends LogicStep {
       out.println("</table>");
     }
     out.println("<pre>");
-    ForecastServlet.printText(dataModel, out);
+    ForecastServlet.printText(dataModel, out, null, dataModel.getRequest());
     out.println("</pre>");
     out.println("<h2>Printing Standard</h2>");
     printStandard(out);

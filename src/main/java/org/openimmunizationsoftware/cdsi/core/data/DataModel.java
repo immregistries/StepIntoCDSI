@@ -43,6 +43,7 @@ public class DataModel {
   private Map<String, Antigen> antigenMap = new HashMap<String, Antigen>();
   private List<Antigen> antigenList = null;
   private List<Antigen> antigenSelectedList = null;
+  private List<String> antigenLabelFilterList = null;
   private int antigenPos = -1;
   private int antigenSelectedPos = -1;
   private Antigen antigen = null;
@@ -301,6 +302,14 @@ public class DataModel {
 
   public void setAntigenSelectedList(List<Antigen> antigenSelectedList) {
     this.antigenSelectedList = antigenSelectedList;
+  }
+
+  public List<String> getAntigenLabelFilterList() {
+    return antigenLabelFilterList;
+  }
+
+  public void setAntigenLabelFilterList(List<String> antigenLabelFilterList) {
+    this.antigenLabelFilterList = antigenLabelFilterList;
   }
 
   public int getAntigenPos() {

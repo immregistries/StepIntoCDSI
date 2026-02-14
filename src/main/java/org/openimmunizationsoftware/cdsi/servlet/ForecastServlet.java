@@ -37,6 +37,19 @@ public class ForecastServlet extends HttpServlet {
 
   public static final String PARAM_RESULT_FORMAT = "resultFormat";
 
+  // Test case parameters for displaying test information
+  public static final String PARAM_TEST_CASE = "_test_case";
+  public static final String PARAM_TEST_TITLE = "_test_title";
+  public static final String PARAM_TEST_EXP_STATUS = "_test_exp_status";
+  public static final String PARAM_TEST_EXP_EARLIEST = "_test_exp_earliest";
+  public static final String PARAM_TEST_EXP_RECOMMENDED = "_test_exp_recommended";
+  public static final String PARAM_TEST_ACT_STATUS = "_test_act_status";
+  public static final String PARAM_TEST_ACT_EARLIEST = "_test_act_earliest";
+  public static final String PARAM_TEST_ACT_RECOMMENDED = "_test_act_recommended";
+  public static final String PARAM_TEST_ACT_STATUS_PASS = "_test_act_status_pass";
+  public static final String PARAM_TEST_ACT_EARLIEST_PASS = "_test_act_earliest_pass";
+  public static final String PARAM_TEST_ACT_RECOMMENDED_PASS = "_test_act_recommended_pass";
+
   protected static final String SCHEDULE_NAME_DEFAULT = "default";
 
   @Override
@@ -68,7 +81,7 @@ public class ForecastServlet extends HttpServlet {
         resp.setContentType("text/plain");
         out.println("not implemented yet");
       } else {
-        printText(resp, dataModel, out, logBuffer);
+        printText(resp, dataModel, out, logBuffer, req);
       }
       out.close();
     } catch (Exception e) {
@@ -78,15 +91,122 @@ public class ForecastServlet extends HttpServlet {
   }
 
   private static void printText(HttpServletResponse resp, DataModel dataModel, PrintWriter out,
-      StringBuilder logBuffer) {
+      StringBuilder logBuffer, HttpServletRequest req) {
     resp.setContentType("text/plain");
-    printText(dataModel, out, logBuffer);
+    printText(dataModel, out, logBuffer, req);
   }
 
-  public static void printText(DataModel dataModel, PrintWriter out, StringBuilder logBuffer) {
+  public static void printText(DataModel dataModel, PrintWriter out, StringBuilder logBuffer,
+      HttpServletRequest req) {
     out.println("Step Into Clinical Decision Support for Immunizations - Demonstration //System");
     out.println();
+
+    // Print test case information if provided
+    if (req != null) {
+      String testCase = req.getParameter(PARAM_TEST_CASE);
+      if (testCase != null && !testCase.isEmpty()) {
+        out.println("========================================");
+        out.println("TEST CASE INFORMATION");
+        out.println("========================================");
+        out.println();
+
+        out.println(padLabel("Test Case:", 20) + testCase);
+
+        String testTitle = req.getParameter(PARAM_TEST_TITLE);
+        if (testTitle != null && !testTitle.isEmpty()) {
+          out.println(padLabel("Title:", 20) + testTitle);
+        }
+
+        out.println();
+
+        // Retrieve all parameters
+        String expStatus = req.getParameter(PARAM_TEST_EXP_STATUS);
+        String actStatus = req.getParameter(PARAM_TEST_ACT_STATUS);
+        String statusPass = req.getParameter(PARAM_TEST_ACT_STATUS_PASS);
+
+        String expEarliest = req.getParameter(PARAM_TEST_EXP_EARLIEST);
+        String actEarliest = req.getParameter(PARAM_TEST_ACT_EARLIEST);
+        String earliestPass = req.getParameter(PARAM_TEST_ACT_EARLIEST_PASS);
+
+        String expRecommended = req.getParameter(PARAM_TEST_EXP_RECOMMENDED);
+        String actRecommended = req.getParameter(PARAM_TEST_ACT_RECOMMENDED);
+        String recommendedPass = req.getParameter(PARAM_TEST_ACT_RECOMMENDED_PASS);
+
+        // Print STATUS section
+        if ((expStatus != null && !expStatus.isEmpty()) ||
+            (actStatus != null && !actStatus.isEmpty()) ||
+            (statusPass != null && !statusPass.isEmpty())) {
+          out.println("STATUS:");
+          if (expStatus != null && !expStatus.isEmpty()) {
+            out.println(padLabel("  Expected:", 15) + expStatus);
+          }
+          if (actStatus != null && !actStatus.isEmpty()) {
+            out.println(padLabel("  Actual:", 15) + actStatus);
+          }
+          if (statusPass != null && !statusPass.isEmpty()) {
+            out.println(padLabel("  Pass:", 15) + ("true".equalsIgnoreCase(statusPass) ? "PASS" : "FAIL"));
+          }
+          out.println();
+        }
+
+        // Print EARLIEST DATE section
+        if ((expEarliest != null && !expEarliest.isEmpty()) ||
+            (actEarliest != null && !actEarliest.isEmpty()) ||
+            (earliestPass != null && !earliestPass.isEmpty())) {
+          out.println("EARLIEST DATE:");
+          if (expEarliest != null && !expEarliest.isEmpty()) {
+            out.println(padLabel("  Expected:", 15) + expEarliest);
+          }
+          if (actEarliest != null && !actEarliest.isEmpty()) {
+            out.println(padLabel("  Actual:", 15) + actEarliest);
+          }
+          if (earliestPass != null && !earliestPass.isEmpty()) {
+            out.println(padLabel("  Pass:", 15) + ("true".equalsIgnoreCase(earliestPass) ? "PASS" : "FAIL"));
+          }
+          out.println();
+        }
+
+        // Print RECOMMENDED DATE section
+        if ((expRecommended != null && !expRecommended.isEmpty()) ||
+            (actRecommended != null && !actRecommended.isEmpty()) ||
+            (recommendedPass != null && !recommendedPass.isEmpty())) {
+          out.println("RECOMMENDED DATE:");
+          if (expRecommended != null && !expRecommended.isEmpty()) {
+            out.println(padLabel("  Expected:", 15) + expRecommended);
+          }
+          if (actRecommended != null && !actRecommended.isEmpty()) {
+            out.println(padLabel("  Actual:", 15) + actRecommended);
+          }
+          if (recommendedPass != null && !recommendedPass.isEmpty()) {
+            out.println(padLabel("  Pass:", 15) + ("true".equalsIgnoreCase(recommendedPass) ? "PASS" : "FAIL"));
+          }
+          out.println();
+        }
+
+        out.println("========================================");
+        out.println();
+      }
+    }
+
+    // Print event dates
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+    if (dataModel.getPatient() != null && dataModel.getPatient().getDateOfBirth() != null) {
+      out.println("EVENT DATES:");
+      out.println(padLabel("  Birth:", 20) + sdf.format(dataModel.getPatient().getDateOfBirth()));
+
+      if (dataModel.getPatient().getReceivesList() != null && !dataModel.getPatient().getReceivesList().isEmpty()) {
+        for (VaccineDoseAdministered vda : dataModel.getPatient().getReceivesList()) {
+          String cvxCode = "";
+          if (vda.getVaccine() != null && vda.getVaccine().getVaccineType() != null) {
+            cvxCode = vda.getVaccine().getVaccineType().getCvxCode();
+          }
+          String vaccineLabel = "  Vaccine " + cvxCode + ":";
+          out.println(padLabel(vaccineLabel, 20) + sdf.format(vda.getDateAdministered()));
+        }
+      }
+
+      out.println();
+    }
 
     List<VaccineGroupForecast> vgfl = dataModel.getVaccineGroupForecastList();
 
@@ -290,9 +410,38 @@ public class ForecastServlet extends HttpServlet {
     }
   }
 
+  /**
+   * Helper method to pad a label string to a specified width for alignment.
+   * 
+   * @param label The label text to pad
+   * @param width The total width to pad to
+   * @return The padded string
+   */
+  private static String padLabel(String label, int width) {
+    return String.format("%-" + width + "s", label);
+  }
+
   protected DataModel readRequest(HttpServletRequest req) throws Exception {
     DataModel dataModel = DataModelLoader.createDataModel();
     dataModel.setRequest(req);
+
+    // Parse antigenInclude parameters (antigenInclude1, antigenInclude2, etc.)
+    List<String> antigenLabelFilterList = new ArrayList<String>();
+    int i = 1;
+    while (true) {
+      String antigenLabel = req.getParameter("antigenInclude" + i);
+      if (antigenLabel == null) {
+        break; // No more antigen includes, stop
+      }
+      antigenLabelFilterList.add(antigenLabel);
+      i++;
+    }
+
+    // Set the filter list if any antigens were specified
+    if (!antigenLabelFilterList.isEmpty()) {
+      dataModel.setAntigenLabelFilterList(antigenLabelFilterList);
+    }
+
     dataModel.setNextLogicStep(
         LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel));
     return dataModel;

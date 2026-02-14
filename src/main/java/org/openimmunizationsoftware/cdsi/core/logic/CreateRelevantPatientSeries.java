@@ -27,17 +27,33 @@ public class CreateRelevantPatientSeries extends LogicStep {
       dataModel.setAntigenSelectedList(antigenSelectedList);
       int i = 1;
       boolean foundAtLeastOne = false;
-      for (Antigen antigen : dataModel.getAntigenList()) {
-        if (dataModel.getTestCaseRegistered() != null
-            || dataModel.getRequest().getParameter(PARAM_ANTIGEN_INCLUDE + i) != null) {
-          log("  + antigen indicated " + antigen.getName());
-          foundAtLeastOne = true;
-          antigenSelectedList.add(antigen);
-        } else {
-          log("  - antigen not indicated " + antigen.getName());
+
+      // Check if antigen label filter has been specified by ForecastServlet
+      List<String> antigenLabelFilterList = dataModel.getAntigenLabelFilterList();
+      if (antigenLabelFilterList != null && !antigenLabelFilterList.isEmpty()) {
+        log("Antigen label filter specified, filtering antigens by label");
+        for (Antigen antigen : dataModel.getAntigenList()) {
+          if (antigenLabelFilterList.contains(antigen.getName())) {
+            log("  + antigen matched by label: " + antigen.getName());
+            foundAtLeastOne = true;
+            antigenSelectedList.add(antigen);
+          }
         }
-        i++;
+      } else {
+        // Original logic: check TestCaseRegistered or request parameters
+        for (Antigen antigen : dataModel.getAntigenList()) {
+          if (dataModel.getTestCaseRegistered() != null
+              || dataModel.getRequest().getParameter(PARAM_ANTIGEN_INCLUDE + i) != null) {
+            log("  + antigen indicated " + antigen.getName());
+            foundAtLeastOne = true;
+            antigenSelectedList.add(antigen);
+          } else {
+            log("  - antigen not indicated " + antigen.getName());
+          }
+          i++;
+        }
       }
+
       if (foundAtLeastOne) {
         log("Found at least one antigen selected, only forecasting for selected antigens");
       } else {
