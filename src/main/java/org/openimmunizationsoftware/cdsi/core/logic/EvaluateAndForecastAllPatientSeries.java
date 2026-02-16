@@ -157,6 +157,11 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
               (dataModel.getSelectedAntigenAdministeredRecordPos() + 1) + ")");
           // stay on the same target dose
           dataModel.incSelectedAntigenAdministeredRecordPos();
+          int nextAARPos = dataModel.getSelectedAntigenAdministeredRecordPos();
+          if (nextAARPos < dataModel.getSelectedAntigenAdministeredRecordList().size()) {
+            dataModel
+                .setAntigenAdministeredRecord(dataModel.getSelectedAntigenAdministeredRecordList().get(nextAARPos));
+          }
           break;
         case SATISFIED:
         case SUBSTITUTED:
@@ -164,6 +169,11 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
           log(LogLevel.REASONING, "REASONING: Target dose " + status +
               " - advancing both AAR and target dose");
           dataModel.incSelectedAntigenAdministeredRecordPos();
+          nextAARPos = dataModel.getSelectedAntigenAdministeredRecordPos();
+          if (nextAARPos < dataModel.getSelectedAntigenAdministeredRecordList().size()) {
+            dataModel
+                .setAntigenAdministeredRecord(dataModel.getSelectedAntigenAdministeredRecordList().get(nextAARPos));
+          }
           stillHaveTargetDoses = moveToNextTargetDoseIfAvailable();
           break;
       }
