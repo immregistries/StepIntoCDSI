@@ -400,7 +400,7 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
           "Is there a patient series forecast contained in the vaccine group forecast with a patient series status of 'Not Complete'?") {
         @Override
         public LogicResult evaluateInternal() {
-          for (PatientSeries p : dataModel.getBestPatientSeriesList()) {
+          for (PatientSeries p : selectedList) {
             if (p.getPatientSeriesStatus() != null
                 && p.getPatientSeriesStatus().equals(PatientSeriesStatus.NOT_COMPLETE)) {
               return LogicResult.YES;
