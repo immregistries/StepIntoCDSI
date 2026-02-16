@@ -7,7 +7,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -59,17 +61,17 @@ public class ForecastServlet extends HttpServlet {
       StepServlet.registerRequest(req);
       PrintWriter out = new PrintWriter(resp.getOutputStream());
       DataModel dataModel = readRequest(req);
-      String logStep = req.getParameter("logStep");
-      LogicStepType logStepType = null;
-      if (logStep != null) {
-        logStepType = LogicStepType.valueOf(logStep);
+
+      // Check if logging is requested
+      StringBuilder logBuffer = req.getParameter("log") != null ? new StringBuilder() : null;
+
+      // Build per-step log level map
+      Map<LogicStepType, LogicStep.Level> stepLevelMap = null;
+      if (logBuffer != null) {
+        stepLevelMap = buildStepLevelMap(req);
       }
 
-      // Check if detailed logging is requested
-      boolean detailedLog = req.getParameter("log") != null;
-      StringBuilder logBuffer = detailedLog ? new StringBuilder() : null;
-
-      process(dataModel, out, logStepType, detailedLog, logBuffer);
+      process(dataModel, out, logBuffer, stepLevelMap);
       String resultFormat = req.getParameter(PARAM_RESULT_FORMAT);
       if (resultFormat == null) {
         resultFormat = RESULT_FORMAT_TEXT;
@@ -358,41 +360,38 @@ public class ForecastServlet extends HttpServlet {
     }
   }
 
-  private void process(DataModel dataModel, PrintWriter out, LogicStepType logLogicStepType,
-      boolean detailedLog, StringBuilder logBuffer) throws Exception {
+  private void process(DataModel dataModel, PrintWriter out,
+      StringBuilder logBuffer, Map<LogicStepType, LogicStep.Level> stepLevelMap) throws Exception {
     int count = 0;
     while (dataModel.getLogicStep().getLogicStepType() != LogicStepType.END) {
       LogicStep currentStep = dataModel.getLogicStep();
       LogicStep nextLogicStep = dataModel.getLogicStep().process();
       dataModel.setNextLogicStep(nextLogicStep);
 
-      // Collect detailed logs if requested
-      if (detailedLog && logBuffer != null) {
+      // Collect and filter logs if requested
+      if (logBuffer != null && stepLevelMap != null) {
+        LogicStepType currentStepType = currentStep.getLogicStepType();
+        LogicStep.Level threshold = stepLevelMap.getOrDefault(currentStepType, LogicStep.Level.CONTROL);
+
+        // Print step header
         logBuffer.append("\n");
         logBuffer.append("Step ").append(count).append(": ")
             .append(currentStep.getLogicStepType().getName())
-            .append(" -> ")
+            .append(" --> ")
             .append(nextLogicStep.getLogicStepType().getName())
             .append("\n");
-        logBuffer.append("----------------------------------------\n");
 
-        // Capture log messages from this step
-        if (currentStep.getLogList() != null && currentStep.getLogList().size() > 0) {
-          for (String logMessage : currentStep.getLogList()) {
-            logBuffer.append("  ").append(logMessage).append("\n");
+        // Print filtered log events
+        if (currentStep.getLogEventList() != null) {
+          for (LogicStep.LogEvent event : currentStep.getLogEventList()) {
+            if (meetsThreshold(event.getLevel(), threshold)) {
+              if (event.isAlert()) {
+                logBuffer.append("  + ALERT: ").append(event.getMessage()).append("\n");
+              } else {
+                logBuffer.append("  + ").append(event.getMessage()).append("\n");
+              }
+            }
           }
-        }
-      }
-
-      if (logLogicStepType != null) {
-        if (logLogicStepType == currentStep.getLogicStepType()) {
-          out.println("========================================================================================");
-          out.println(
-              "Step " + count + ": " + currentStep.getLogicStepType().getName() + " -> "
-                  + nextLogicStep.getLogicStepType().getName());
-          currentStep.printPost(out);
-          currentStep.printLog(out);
-          out.println("========================================================================================");
         }
       }
 
@@ -408,6 +407,65 @@ public class ForecastServlet extends HttpServlet {
         }
       }
     }
+  }
+
+  /**
+   * Build a map of per-step log levels from request parameters.
+   * 
+   * @param req The HTTP request
+   * @return Map of LogicStepType to log Level
+   */
+  private Map<LogicStepType, LogicStep.Level> buildStepLevelMap(HttpServletRequest req) {
+    Map<LogicStepType, LogicStep.Level> stepLevelMap = new EnumMap<>(LogicStepType.class);
+
+    // Parse global default level
+    String globalLevelParam = req.getParameter("logLevel");
+    LogicStep.Level defaultLevel = LogicStep.Level.CONTROL;
+    if (globalLevelParam != null) {
+      try {
+        defaultLevel = LogicStep.Level.valueOf(globalLevelParam.toUpperCase());
+      } catch (IllegalArgumentException e) {
+        // Invalid level, use default
+        defaultLevel = LogicStep.Level.CONTROL;
+      }
+    }
+
+    // Initialize all steps with default level
+    for (LogicStepType stepType : LogicStep.STEPS) {
+      stepLevelMap.put(stepType, defaultLevel);
+    }
+
+    // Apply per-step overrides
+    for (LogicStepType stepType : LogicStep.STEPS) {
+      String paramName = "log" + stepType.name();
+      String levelParam = req.getParameter(paramName);
+      if (levelParam != null) {
+        try {
+          LogicStep.Level level = LogicStep.Level.valueOf(levelParam.toUpperCase());
+          stepLevelMap.put(stepType, level);
+        } catch (IllegalArgumentException e) {
+          // Invalid level, keep default
+        }
+      }
+    }
+
+    return stepLevelMap;
+  }
+
+  /**
+   * Check if an event level meets the threshold for printing.
+   * Levels are ordered: CONTROL < STATE < REASONING < TRACE < DUMP
+   * An event meets threshold if its level is at or below (less verbose than or
+   * equal to) the threshold.
+   * 
+   * @param eventLevel The level of the log event
+   * @param threshold  The threshold level for filtering
+   * @return true if the event should be printed
+   */
+  private boolean meetsThreshold(LogicStep.Level eventLevel, LogicStep.Level threshold) {
+    // Lower ordinal = less verbose (CONTROL=0, DUMP=4)
+    // Print if event level is at or below threshold
+    return eventLevel.ordinal() <= threshold.ordinal();
   }
 
   /**
