@@ -124,6 +124,7 @@ public class ForecastServlet extends HttpServlet {
     out.println("Step Into Clinical Decision Support for Immunizations - Demonstration //System");
     out.println();
 
+    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
     // Print test case information if provided
     if (logBuffer != null && req != null) {
       String testCase = req.getParameter(PARAM_TEST_CASE);
@@ -209,26 +210,25 @@ public class ForecastServlet extends HttpServlet {
         out.println("========================================");
         out.println();
       }
-    }
+      // Print event dates
 
-    // Print event dates
-    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-    if (dataModel.getPatient() != null && dataModel.getPatient().getDateOfBirth() != null) {
-      out.println("EVENT DATES:");
-      out.println(padLabel("  Birth:", 20) + sdf.format(dataModel.getPatient().getDateOfBirth()));
+      if (dataModel.getPatient() != null && dataModel.getPatient().getDateOfBirth() != null) {
+        out.println("EVENT DATES:");
+        out.println(padLabel("  Birth:", 20) + sdf.format(dataModel.getPatient().getDateOfBirth()));
 
-      if (dataModel.getPatient().getReceivesList() != null && !dataModel.getPatient().getReceivesList().isEmpty()) {
-        for (VaccineDoseAdministered vda : dataModel.getPatient().getReceivesList()) {
-          String cvxCode = "";
-          if (vda.getVaccine() != null && vda.getVaccine().getVaccineType() != null) {
-            cvxCode = vda.getVaccine().getVaccineType().getCvxCode();
+        if (dataModel.getPatient().getReceivesList() != null && !dataModel.getPatient().getReceivesList().isEmpty()) {
+          for (VaccineDoseAdministered vda : dataModel.getPatient().getReceivesList()) {
+            String cvxCode = "";
+            if (vda.getVaccine() != null && vda.getVaccine().getVaccineType() != null) {
+              cvxCode = vda.getVaccine().getVaccineType().getCvxCode();
+            }
+            String vaccineLabel = "  Vaccine " + cvxCode + ":";
+            out.println(padLabel(vaccineLabel, 20) + sdf.format(vda.getDateAdministered()));
           }
-          String vaccineLabel = "  Vaccine " + cvxCode + ":";
-          out.println(padLabel(vaccineLabel, 20) + sdf.format(vda.getDateAdministered()));
         }
-      }
 
-      out.println();
+        out.println();
+      }
     }
 
     List<VaccineGroupForecast> vgfl = dataModel.getVaccineGroupForecastList();
@@ -358,7 +358,10 @@ public class ForecastServlet extends HttpServlet {
         }
 
         out.println("Vaccination Recommended:");
-        out.println("  + Forecasting: " + name);
+        String cvxCode = vgf.getAntigen() != null && vgf.getAntigen().getCvxForForecast() != null
+            ? vgf.getAntigen().getCvxForForecast()
+            : "XX";
+        out.println("  + Forecasting: " + name + " (" + cvxCode + ")");
 
         // Get series name and dose
         if (vgf.getTargetDose() != null && vgf.getTargetDose().getTrackedSeriesDose() != null) {

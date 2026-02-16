@@ -35,11 +35,11 @@ public class FitsServlet extends ForecastServlet {
         doGet(req, resp);
     }
 
-    private static String[][] equivalentCvx = new String[][] { { "85", "52" }, { "107", "112" },
+    private static String[][] equivalentCvx = new String[][] { { "85", "52" },
             { "45", "08", "189", "43" }, { "163", "164", "162" }, { "137", "165" }, { "48", "17" },
             { "03", "05", "06", "07" }, // MMR (03), Measles (05), Rubella (06), Mumps (07)
-            { "20", "11", "112" }, // DTaP: Diphtheria (20), Pertussis (11), Tetanus (112)
-            { "303", "305", "306", "307" }, // RSV vaccines and monoclonal antibodies
+            { "107", "112", "20", "11", "112" }, // DTaP: Diphtheria (20), Pertussis (11), Tetanus (112)
+            { "304", "122", "303", "305", "306", "307" }, // RSV vaccines and monoclonal antibodies
             { "109", "152", "133" }, { "188", "187" }, { "108", "147" } };
 
     private static boolean isSameVaccineCvx(String cvx1, String cvx2) {
@@ -600,6 +600,8 @@ public class FitsServlet extends ForecastServlet {
             case "ROTA":
             case "ROTAVIRUS":
                 return "Rotavirus";
+            case "RSV":
+                return "RSV";
             case "VAR":
             case "VARICELLA":
                 return "Varicella";
