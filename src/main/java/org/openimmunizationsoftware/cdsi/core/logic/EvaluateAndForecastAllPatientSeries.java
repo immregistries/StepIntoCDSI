@@ -7,6 +7,7 @@ import java.util.List;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.data.Neighborhood;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
+import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.RecurringDose;
@@ -152,15 +153,30 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
           stillHaveTargetDoses = moveToNextTargetDoseIfAvailable();
           break;
         case NOT_SATISFIED:
-          log(LogLevel.CONTROL, "CONTROL: Target dose NOT_SATISFIED - advancing AAR (pos " +
-              dataModel.getSelectedAntigenAdministeredRecordPos() + " -> " +
-              (dataModel.getSelectedAntigenAdministeredRecordPos() + 1) + ")");
-          // stay on the same target dose
-          dataModel.incSelectedAntigenAdministeredRecordPos();
-          int nextAARPos = dataModel.getSelectedAntigenAdministeredRecordPos();
-          if (nextAARPos < dataModel.getSelectedAntigenAdministeredRecordList().size()) {
-            dataModel
-                .setAntigenAdministeredRecord(dataModel.getSelectedAntigenAdministeredRecordList().get(nextAARPos));
+          // Only advance AAR if evaluation has actually been performed and completed
+          // Check if there's a latest evaluation with a status set - if so, it completed
+          boolean shouldAdvanceAAR = false;
+          if (!dataModel.getTargetDose().getEvaluationList().isEmpty()) {
+            Evaluation latestEval = dataModel.getTargetDose().getEvaluation();
+            if (latestEval != null && latestEval.getEvaluationStatus() != null) {
+              shouldAdvanceAAR = true;
+            }
+          }
+
+          if (shouldAdvanceAAR) {
+            log(LogLevel.CONTROL, "CONTROL: Target dose NOT_SATISFIED - advancing AAR (pos " +
+                dataModel.getSelectedAntigenAdministeredRecordPos() + " -> " +
+                (dataModel.getSelectedAntigenAdministeredRecordPos() + 1) + ")");
+            // stay on the same target dose
+            dataModel.incSelectedAntigenAdministeredRecordPos();
+            int nextAARPos = dataModel.getSelectedAntigenAdministeredRecordPos();
+            if (nextAARPos < dataModel.getSelectedAntigenAdministeredRecordList().size()) {
+              dataModel
+                  .setAntigenAdministeredRecord(dataModel.getSelectedAntigenAdministeredRecordList().get(nextAARPos));
+            }
+          } else {
+            log(LogLevel.TRACE,
+                "TRACE: First evaluation for this target dose or evaluation not yet completed - proceeding to evaluation without advancing AAR");
           }
           break;
         case SATISFIED:
@@ -169,7 +185,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
           log(LogLevel.REASONING, "REASONING: Target dose " + status +
               " - advancing both AAR and target dose");
           dataModel.incSelectedAntigenAdministeredRecordPos();
-          nextAARPos = dataModel.getSelectedAntigenAdministeredRecordPos();
+          int nextAARPos = dataModel.getSelectedAntigenAdministeredRecordPos();
           if (nextAARPos < dataModel.getSelectedAntigenAdministeredRecordList().size()) {
             dataModel
                 .setAntigenAdministeredRecord(dataModel.getSelectedAntigenAdministeredRecordList().get(nextAARPos));
@@ -180,7 +196,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
 
       int aarPos = dataModel.getSelectedAntigenAdministeredRecordPos();
       int aarListSize = dataModel.getSelectedAntigenAdministeredRecordList().size();
-      boolean stillHaveAARs = aarPos <= aarListSize;
+      boolean stillHaveAARs = aarPos < aarListSize;
 
       // Alert if aarPos is out of bounds
       if (aarPos > aarListSize) {
