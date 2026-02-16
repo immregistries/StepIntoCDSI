@@ -18,6 +18,7 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
 
 public class MultipleAntigenVaccineGroup extends LogicStep {
 
@@ -30,6 +31,7 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
     setConditionTableName("Table ");
 
     VaccineGroup vaccineGroup = dataModel.getVaccineGroup();
+    log(LogLevel.CONTROL, "CONTROL: Processing multiple antigen vaccine group: " + vaccineGroup.getName());
     vgf = new VaccineGroupForecast();
     vgf.setVaccineGroup(vaccineGroup);
     selectedList = new ArrayList<PatientSeries>();
@@ -37,9 +39,13 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
       for (Antigen a : dataModel.getVaccineGroup().getAntigenList()) {
         if (p.getTrackedAntigenSeries().getTargetDisease().equals(a)) {
           selectedList.add(p);
+          log(LogLevel.TRACE, "TRACE: Added patient series for antigen " + a.getName() +
+              " with status " + p.getPatientSeriesStatus());
         }
       }
     }
+    log(LogLevel.STATE,
+        "STATE: Selected " + selectedList.size() + " patient series for vaccine group " + vaccineGroup.getName());
 
     LT logicTable = new LT(vgf, selectedList);
     logicTable.setLogicStepSink(this.getLogicStepSink());
@@ -52,7 +58,10 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
     setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
     evaluateLogicTables();
 
+    log(LogLevel.STATE, "STATE: Vaccine group status determined as: " + vgf.getVaccineGroupStatus());
+
     if (vgf.getVaccineGroupStatus() == VaccineGroupStatus.NOT_COMPLETE) {
+      log(LogLevel.CONTROL, "CONTROL: Status is NOT_COMPLETE - aggregating dates from patient series forecasts");
       // MULTIANTVG-1
       MULTIANTVG_1();
       // MULTIANTVG-2
@@ -76,19 +85,83 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
             && p.getForecast().getVaccineGroupForecast().getVaccineGroup() != null) {
           recommendedVaccines.add(p.getForecast().getVaccineGroupForecast().getVaccineGroup());
         }
-      // vgf.setV
+      // Build antigen list for the combined forecast
       for (PatientSeries p : selectedList) {
         if (p.getForecast() != null) {
-          vgf.setAntigen(p.getForecast().getAntigen());
           vgf.getAntigenList().add(p.getForecast().getAntigen());
-          dataModel.getVaccineGroupForecastList().add(vgf);
+          log(LogLevel.TRACE,
+              "TRACE: Added antigen " + p.getForecast().getAntigen().getName() + " to vaccine group forecast");
         }
       }
-      log("Selected List size: " + selectedList.size() + " ");
-      log("Vaccine group forecast list size: " + dataModel.getVaccineGroupForecastList().size() + " ");
+      // Add the vaccine group forecast only once with all antigens
+      if (!vgf.getAntigenList().isEmpty()) {
+        vgf.setAntigen(selectPrimaryAntigen(vgf.getAntigenList())); // Set primary antigen intelligently
+        dataModel.getVaccineGroupForecastList().add(vgf);
+        log(LogLevel.STATE,
+            "STATE: Added combined vaccine group forecast with " + vgf.getAntigenList().size() + " antigens (primary: "
+                + vgf.getAntigen().getName() + ")");
+      }
+      log(LogLevel.STATE, "STATE: Selected List size: " + selectedList.size());
+      log(LogLevel.STATE, "STATE: Vaccine group forecast list size: " + dataModel.getVaccineGroupForecastList().size());
+    } else {
+      log(LogLevel.REASONING, "REASONING: Status is " + vgf.getVaccineGroupStatus()
+          + " - skipping date aggregation (dates only aggregated for NOT_COMPLETE)");
+      log(LogLevel.TRACE, "TRACE: Patient series statuses in selectedList:");
+      for (PatientSeries p : selectedList) {
+        log(LogLevel.TRACE,
+            "TRACE:   - " + p.getTrackedAntigenSeries().getTargetDisease().getName() + ": " + p.getPatientSeriesStatus()
+                +
+                " (forecast=" + (p.getForecast() != null ? "present" : "null") + ")");
+      }
+      // Build antigen list even for COMPLETE/IMMUNE status so it appears in output
+      for (PatientSeries p : selectedList) {
+        if (p.getForecast() != null && p.getForecast().getAntigen() != null) {
+          vgf.getAntigenList().add(p.getForecast().getAntigen());
+          log(LogLevel.TRACE,
+              "TRACE: Added antigen " + p.getForecast().getAntigen().getName() + " to vaccine group forecast");
+        }
+      }
+      // Add the vaccine group forecast with COMPLETE/IMMUNE status
+      if (!vgf.getAntigenList().isEmpty()) {
+        vgf.setAntigen(selectPrimaryAntigen(vgf.getAntigenList())); // Set primary antigen intelligently
+        dataModel.getVaccineGroupForecastList().add(vgf);
+        log(LogLevel.STATE,
+            "STATE: Added COMPLETE/IMMUNE vaccine group forecast with " + vgf.getAntigenList().size()
+                + " antigens (primary: " + vgf.getAntigen().getName() + ")");
+      }
+      log(LogLevel.STATE, "STATE: Vaccine group forecast list size: " + dataModel.getVaccineGroupForecastList().size());
     }
 
     return next();
+  }
+
+  /**
+   * Select the primary antigen for a multi-antigen vaccine group.
+   * For MMR, prefer Measles (expected by FitsServlet mapping).
+   * For DTaP/Tdap, prefer Diphtheria.
+   * Otherwise, return the first antigen.
+   */
+  private Antigen selectPrimaryAntigen(List<Antigen> antigens) {
+    if (antigens == null || antigens.isEmpty()) {
+      return null;
+    }
+
+    // For MMR: prefer Measles (FitsServlet expects this)
+    for (Antigen antigen : antigens) {
+      if ("Measles".equalsIgnoreCase(antigen.getName())) {
+        return antigen;
+      }
+    }
+
+    // For DTaP/Tdap: prefer Diphtheria
+    for (Antigen antigen : antigens) {
+      if ("Diphtheria".equalsIgnoreCase(antigen.getName())) {
+        return antigen;
+      }
+    }
+
+    // Default to first antigen
+    return antigens.get(0);
   }
 
   private void MULTIANTVG_8() {
@@ -446,7 +519,7 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
       setLogicOutcome(3, new LogicOutcome() {
         @Override
         public void perform() {
-          log("Not Complete");
+          log(LogLevel.STATE, "STATE: Vaccine group status set to NOT_COMPLETE");
           vgf.setVaccineGroupStatus(PatientSeriesStatus.NOT_COMPLETE);
           vgf.setPatientSeriesStatus(PatientSeriesStatus.NOT_COMPLETE);
           setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
@@ -455,7 +528,7 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
       setLogicOutcome(4, new LogicOutcome() {
         @Override
         public void perform() {
-          log("Immune");
+          log(LogLevel.STATE, "STATE: Vaccine group status set to IMMUNE");
           vgf.setVaccineGroupStatus(PatientSeriesStatus.IMMUNE);
           vgf.setPatientSeriesStatus(PatientSeriesStatus.IMMUNE);
           setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
@@ -464,7 +537,7 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
       setLogicOutcome(5, new LogicOutcome() {
         @Override
         public void perform() {
-          log("Complete");
+          log(LogLevel.STATE, "STATE: Vaccine group status set to COMPLETE");
           vgf.setVaccineGroupStatus(PatientSeriesStatus.COMPLETE);
           vgf.setPatientSeriesStatus(PatientSeriesStatus.COMPLETE);
           setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);

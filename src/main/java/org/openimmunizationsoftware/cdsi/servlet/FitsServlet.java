@@ -177,6 +177,9 @@ public class FitsServlet extends ForecastServlet {
             out.println("    </select>");
             out.println("    <label for=\"groupName\">Group Name:</label>");
             out.println("    <select id=\"groupName\" name=\"groupName\">");
+            out.println("      <option value=\"-- All --\""
+                    + ((groupNameSelected != null && groupNameSelected.equals("-- All --")) ? " selected" : "")
+                    + ">-- All --</option>");
             for (String groupName : fitsManager.getGroupNames()) {
                 out.println("      <option value=\"" + groupName + "\""
                         + ((groupNameSelected != null && groupName.equals(groupNameSelected)) ? " selected" : "")
@@ -194,6 +197,9 @@ public class FitsServlet extends ForecastServlet {
             int numberOfTestCasesRun = 0;
             int numberOfTestCasesPassed = 0;
 
+            // Track if we're running all groups for overall stats display
+            boolean isRunningAllGroups = "-- All --".equals(groupNameSelected);
+
             for (TestPlan testPlan : fitsManager.getTestPlanList()) {
                 if (testPlanIdSelected == null || !testPlan.getId().equals(testPlanIdSelected)) {
                     continue;
@@ -202,9 +208,18 @@ public class FitsServlet extends ForecastServlet {
                 Map<String, Map<String, TestCaseRegistered>> groupTestCaseMap = fitsManager
                         .getGroupTestCaseMap(testPlan.getId());
                 for (String groupName : groupTestCaseMap.keySet()) {
-                    if (groupNameSelected == null || !groupName.equals(groupNameSelected)) {
+                    // Skip if specific group selected and this isn't it
+                    if (groupNameSelected != null && !isRunningAllGroups && !groupName.equals(groupNameSelected)) {
                         continue;
                     }
+
+                    // Track stats per group when running all groups
+                    int groupFails = 0;
+                    int groupPasses = 0;
+                    int groupTestChecksRun = 0;
+                    int groupTestCasesRun = 0;
+                    int groupTestCasesPassed = 0;
+
                     out.println("    <h3>" + groupName + "</h3>");
                     out.println("    <table>");
                     out.println("      <tr>");
@@ -249,6 +264,7 @@ public class FitsServlet extends ForecastServlet {
 
                             for (TestCaseRegistered.Forecast f : testCaseRegistered.getForecastList()) {
                                 numberOfTestCasesRun += 1;
+                                groupTestCasesRun += 1;
                                 boolean isTestCasePassing = true;
                                 boolean statusPass = false;
                                 boolean earliestPass = false;
@@ -341,42 +357,52 @@ public class FitsServlet extends ForecastServlet {
                                     String ts = "";
                                     if (f.getSerieStatusExp() != null && f.getSerieStatusAct() != null) {
                                         numberOfTestChecksRun += 1;
+                                        groupTestChecksRun += 1;
                                         if (statusPass) {
                                             ts = " class=\"pass\"";
                                             numberOfPasses += 1;
+                                            groupPasses += 1;
                                         } else {
                                             ts = " class=\"fail\"";
                                             numberOfFails += 1;
+                                            groupFails += 1;
                                         }
                                     }
                                     out.println("        <td" + ts + ">" + f.getSerieStatusAct() + "</td>");
                                     ts = "";
                                     if (f.getEarliestExp() != null && f.getEarliestAct() != null) {
                                         numberOfTestChecksRun += 1;
+                                        groupTestChecksRun += 1;
                                         if (earliestPass) {
                                             ts = " class=\"pass\"";
                                             numberOfPasses += 1;
+                                            groupPasses += 1;
                                         } else {
                                             ts = " class=\"fail\"";
                                             numberOfFails += 1;
+                                            groupFails += 1;
                                         }
                                     }
                                     out.println("        <td" + ts + ">" + format(f.getEarliestAct()) + "</td>");
                                     ts = "";
                                     if (f.getRecommendedExp() != null && f.getRecommendedAct() != null) {
                                         numberOfTestChecksRun += 1;
+                                        groupTestChecksRun += 1;
                                         if (recommendedPass) {
                                             ts = " class=\"pass\"";
                                             numberOfPasses += 1;
+                                            groupPasses += 1;
                                         } else {
                                             ts = " class=\"fail\"";
                                             numberOfFails += 1;
+                                            groupFails += 1;
                                         }
                                     }
                                     out.println("        <td" + ts + ">" + format(f.getRecommendedAct()) + "</td>");
 
                                     if (isTestCasePassing) {
                                         numberOfTestCasesPassed += 1;
+                                        groupTestCasesPassed += 1;
                                     }
                                 }
                                 out.println("        <td>" + f.getVaccineCvxExp() + "</td>");
@@ -387,6 +413,37 @@ public class FitsServlet extends ForecastServlet {
                         out.println("      </tr>");
                     }
                     out.println("    </table>");
+
+                    // Display group stats when running all groups
+                    if (isRunningAllGroups && groupTestChecksRun > 0) {
+                        int groupPercentageOfPasses = (groupTestChecksRun != 0 && groupPasses != 0)
+                                ? Math.round(((float) groupPasses / (float) groupTestChecksRun) * 100)
+                                : -1;
+                        out.println("</br>");
+                        out.println("<table>");
+                        out.println("<tr>");
+                        out.println("    <th> test checks run </th>");
+                        out.println("    <th> passes </th>");
+                        out.println("    <th> fails </th>");
+                        out.println("    <th> percentage </th>");
+                        out.println("    <th> test cases run</th>");
+                        out.println("    <th> test cases passed</th>");
+                        out.println("</tr>");
+                        out.println("<tr>");
+                        out.println("    <td> " + groupTestChecksRun + " </td>");
+                        out.println("    <td class=\"pass\" > " + groupPasses + " </td>");
+                        if (groupFails == 0) {
+                            out.println("    <td> " + groupFails + " </td>");
+                        } else {
+                            out.println("    <td class=\"fail\" > " + groupFails + " </td>");
+                        }
+                        out.println("    <td> ~" + groupPercentageOfPasses + "% </td>");
+                        out.println("    <td> " + groupTestCasesRun + " </td>");
+                        out.println("    <td class=\"pass\" > " + groupTestCasesPassed + " </td>");
+                        out.println("</tr>");
+                        out.println("</table>");
+                        out.println("</br>");
+                    }
                 }
             }
             out.println("</ol>");
@@ -395,6 +452,10 @@ public class FitsServlet extends ForecastServlet {
                     ? Math.round(((float) numberOfPasses / (float) numberOfTestChecksRun) * 100)
                     : -1;
             if (numberOfTestChecksRun > 0) {
+                // Add header for overall stats when running all groups
+                if (isRunningAllGroups) {
+                    out.println("<h3>Overall Statistics</h3>");
+                }
                 out.println("</br>");
                 out.println("<table>");
                 out.println("<tr>");
