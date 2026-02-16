@@ -107,6 +107,9 @@ public class Antigen {
     if (name.equals("Rotavirus")) {
       return "122";
     }
+    if (name.equals("RSV")) {
+      return "303";
+    }
     if (name.equals("Rubella")) {
       return "06";
     }
