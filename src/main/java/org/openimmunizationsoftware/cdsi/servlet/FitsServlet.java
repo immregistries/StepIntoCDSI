@@ -83,59 +83,27 @@ public class FitsServlet extends ForecastServlet {
                     e.printStackTrace();
                 }
             } else if (action.equals("Run") && fitsManager != null) {
-                // get map of TestCaseRegistered for testPlanIdSelected and groupNameSelected
-                Map<String, TestCaseRegistered> testCaseMap = fitsManager.getGroupTestCaseMap(testPlanIdSelected)
-                        .get(groupNameSelected);
-                if (testCaseMap != null) {
-                    logToOut("Running forecaster for " + testPlanIdSelected + " - " + groupNameSelected);
-                    for (TestCaseRegistered testCaseRegistered : testCaseMap.values()) {
-                        try {
-                            String link = createLink(testCaseRegistered);
-                            String linkStep = "step" + link;
-                            logToOut(" - Running " + testCaseRegistered.getTestCase().getUid());
-                            logToOut("   - " + linkStep);
-                            DataModel dataModel = DataModelLoader.createDataModel();
-                            // setup data model
-                            dataModel.setTestCaseRegistered(testCaseRegistered);
-                            LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel);
-                            dataModel.setNextLogicStep(
-                                    LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel));
-                            process(dataModel);
-                            List<VaccineGroupForecast> vaccineGroupForecastList = dataModel
-                                    .getVaccineGroupForecastList();
-                            if (vaccineGroupForecastList != null) {
-                                logToOut("     - Found " + vaccineGroupForecastList.size()
-                                        + " vaccine group forecasts and " + testCaseRegistered.getForecastList().size()
-                                        + " forecasts");
-                                for (TestCaseRegistered.Forecast forecast : testCaseRegistered.getForecastList()) {
-                                    for (VaccineGroupForecast vgf : vaccineGroupForecastList) {
-                                        String expCvx = forecast.getVaccineCvxExp();
-                                        String actCvx = vgf.getAntigen().getCvxForForecast();
-                                        logToOut("     - Forecasing for: " + vgf.getAntigen().getName() + " (" + expCvx
-                                                + ") " + " (" + actCvx
-                                                + ") " + vgf.getVaccineGroupStatus());
-                                        if (isSameVaccineCvx(expCvx, actCvx)) {
-                                            VaccineGroupStatus vaccineGroupStatus = vgf.getVaccineGroupStatus();
-                                            SerieStatus serieStatus = vaccineGroupStatus.getSerieStatus();
-                                            forecast.setSerieStatusAct(serieStatus);
-                                            forecast.setVaccineCvxAct(actCvx);
-                                            logToOut(
-                                                    "       - This is the one we are looking for, setting series status to "
-                                                            + serieStatus);
-                                            if (vgf.getVaccineGroupStatus() == VaccineGroupStatus.NOT_COMPLETE) {
-                                                forecast.setEarliestAct(vgf.getEarliestDate());
-                                                forecast.setRecommendedAct(vgf.getAdjustedRecommendedDate());
-                                            }
-                                            break;
-                                        }
-                                    }
-                                }
-                            } else {
-                                logToOut("     - No vaccine group forecast list found for test case registered: ");
-                            }
-                        } catch (Exception e) {
-                            testCaseRegistered.setException(e);
+                // Handle "-- All --" by running all groups
+                boolean runAllGroups = "-- All --".equals(groupNameSelected);
+                Map<String, Map<String, TestCaseRegistered>> groupTestCaseMap = fitsManager
+                        .getGroupTestCaseMap(testPlanIdSelected);
+
+                if (runAllGroups) {
+                    // Run tests for all groups
+                    logToOut("Running forecaster for " + testPlanIdSelected + " - ALL GROUPS");
+                    for (String groupName : groupTestCaseMap.keySet()) {
+                        Map<String, TestCaseRegistered> testCaseMap = groupTestCaseMap.get(groupName);
+                        if (testCaseMap != null) {
+                            logToOut("  Processing group: " + groupName);
+                            runTestsForGroup(testCaseMap);
                         }
+                    }
+                } else {
+                    // Run tests for specific group
+                    Map<String, TestCaseRegistered> testCaseMap = groupTestCaseMap.get(groupNameSelected);
+                    if (testCaseMap != null) {
+                        logToOut("Running forecaster for " + testPlanIdSelected + " - " + groupNameSelected);
+                        runTestsForGroup(testCaseMap);
                     }
                 }
             }
@@ -526,6 +494,58 @@ public class FitsServlet extends ForecastServlet {
                             "Logic steps seem to be caught in a loop at " + dataModel.getLogicStep().getTitle()
                                     + ", unable to get results");
                 }
+            }
+        }
+    }
+
+    private void runTestsForGroup(Map<String, TestCaseRegistered> testCaseMap) {
+        for (TestCaseRegistered testCaseRegistered : testCaseMap.values()) {
+            try {
+                String link = createLink(testCaseRegistered);
+                String linkStep = "step" + link;
+                logToOut(" - Running " + testCaseRegistered.getTestCase().getUid());
+                logToOut("   - " + linkStep);
+                DataModel dataModel = DataModelLoader.createDataModel();
+                // setup data model
+                dataModel.setTestCaseRegistered(testCaseRegistered);
+                LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel);
+                dataModel.setNextLogicStep(
+                        LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel));
+                process(dataModel);
+                List<VaccineGroupForecast> vaccineGroupForecastList = dataModel
+                        .getVaccineGroupForecastList();
+                if (vaccineGroupForecastList != null) {
+                    logToOut("     - Found " + vaccineGroupForecastList.size()
+                            + " vaccine group forecasts and " + testCaseRegistered.getForecastList().size()
+                            + " forecasts");
+                    for (TestCaseRegistered.Forecast forecast : testCaseRegistered.getForecastList()) {
+                        for (VaccineGroupForecast vgf : vaccineGroupForecastList) {
+                            String expCvx = forecast.getVaccineCvxExp();
+                            String actCvx = vgf.getAntigen().getCvxForForecast();
+                            logToOut("     - Forecasing for: " + vgf.getAntigen().getName() + " (" + expCvx
+                                    + ") " + " (" + actCvx
+                                    + ") " + vgf.getVaccineGroupStatus());
+                            if (isSameVaccineCvx(expCvx, actCvx)) {
+                                VaccineGroupStatus vaccineGroupStatus = vgf.getVaccineGroupStatus();
+                                SerieStatus serieStatus = vaccineGroupStatus.getSerieStatus();
+                                forecast.setSerieStatusAct(serieStatus);
+                                forecast.setVaccineCvxAct(actCvx);
+                                logToOut(
+                                        "       - This is the one we are looking for, setting series status to "
+                                                + serieStatus);
+                                if (vgf.getVaccineGroupStatus() == VaccineGroupStatus.NOT_COMPLETE) {
+                                    forecast.setEarliestAct(vgf.getEarliestDate());
+                                    forecast.setRecommendedAct(vgf.getAdjustedRecommendedDate());
+                                }
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    logToOut("     - No vaccine group forecast list found for test case registered: ");
+                }
+            } catch (Exception e) {
+                testCaseRegistered.setException(e);
             }
         }
     }
