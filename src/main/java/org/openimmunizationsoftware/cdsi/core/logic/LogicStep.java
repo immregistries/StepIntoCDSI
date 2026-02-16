@@ -151,6 +151,33 @@ public abstract class LogicStep implements LogSink {
     return logicStepType.getDisplay();
   }
 
+  public String formatDate(Date date) {
+    if (date == null) {
+      return "null";
+    }
+    synchronized (sdf) {
+      return sdf.format(date);
+    }
+  }
+
+  public String formatDateList(List<Date> dates) {
+    if (dates == null) {
+      return "null";
+    }
+    if (dates.isEmpty()) {
+      return "[]";
+    }
+    StringBuilder sb = new StringBuilder("[");
+    for (int i = 0; i < dates.size(); i++) {
+      if (i > 0) {
+        sb.append(", ");
+      }
+      sb.append(formatDate(dates.get(i)));
+    }
+    sb.append("]");
+    return sb.toString();
+  }
+
   /**
    * Log a message at DUMP level (most verbose).
    * Maintained for backwards compatibility.
@@ -183,7 +210,7 @@ public abstract class LogicStep implements LogSink {
    * 
    * @param message The alert message to log
    */
-  protected void alert(String message) {
+  public void alert(String message) {
     alert(LogLevel.CONTROL, message);
   }
 
@@ -197,7 +224,7 @@ public abstract class LogicStep implements LogSink {
    * @param level   The log level
    * @param message The alert message to log
    */
-  protected void alert(LogLevel level, String message) {
+  public void alert(LogLevel level, String message) {
     logicStepSink.alert(level, message);
   }
 

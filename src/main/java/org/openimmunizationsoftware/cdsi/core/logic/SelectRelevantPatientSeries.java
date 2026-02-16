@@ -204,8 +204,8 @@ public class SelectRelevantPatientSeries extends LogicStep {
           if (caIndicationBeginAgeDate.getFinalValue().after(caAssessmentDate.getFinalValue())) {
             return LogicResult.NO;
           }
-          if (caAssessmentDate.getFinalValue().after(caIndicationEndAgeDate.getFinalValue())) {
-            log("yes, indication begin age date is <= assesment date is < indication end age date");
+          if (caAssessmentDate.getFinalValue().before(caIndicationEndAgeDate.getFinalValue())) {
+            log("yes, indication begin age date is <= assessment date is < indication end age date");
             return LogicResult.YES;
           }
           return LogicResult.NO;

@@ -439,7 +439,7 @@ public class FitsServlet extends ForecastServlet {
         out.close();
     }
 
-    private boolean enableLoggingToOut = true;
+    private boolean enableLoggingToOut = false;
 
     private void logToOut(String log) {
         if (enableLoggingToOut) {
