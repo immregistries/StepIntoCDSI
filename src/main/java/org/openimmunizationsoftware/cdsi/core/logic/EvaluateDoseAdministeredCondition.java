@@ -53,6 +53,10 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
   public LogicStep process() {
     setNextLogicStepType(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST);
     evaluateLogicTables();
+    TargetDoseStatus status = dataModel.getTargetDose().getTargetDoseStatus();
+    if (status == TargetDoseStatus.NOT_SATISFIED) {
+      log(Level.CONTROL, "✗ DOSE REJECTED: Lot expiration date or dose condition failed");
+    }
     return next();
   }
 

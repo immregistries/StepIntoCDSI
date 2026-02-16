@@ -1,8 +1,8 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
+import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.EXTRANEOUS;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
-import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.EXTRANEOUS;
 
 import java.io.PrintWriter;
 
@@ -29,6 +29,14 @@ public class SatisfyTargetDose extends LogicStep {
   public LogicStep process() throws Exception {
     setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
     evaluateLogicTables();
+    TargetDoseStatus status = dataModel.getTargetDose().getTargetDoseStatus();
+    if (status == TargetDoseStatus.SATISFIED) {
+      log(Level.CONTROL, "✓ TARGET DOSE SATISFIED - All conditions met");
+    } else if (status == TargetDoseStatus.NOT_SATISFIED) {
+      log(Level.CONTROL, "✗ TARGET DOSE NOT SATISFIED - Requirements not met");
+    } else if (status == TargetDoseStatus.SKIPPED) {
+      log(Level.CONTROL, "⊘ TARGET DOSE SKIPPED - Conditional skip applied");
+    }
     dataModel.getTargetDose().setStatusCause("");
     return next(true);
   }
@@ -131,8 +139,10 @@ public class SatisfyTargetDose extends LogicStep {
           dataModel.getTargetDose().setSatisfiedByVaccineDoseAdministered(
               dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered());
           dataModel.getTargetDose().getEvaluation().setEvaluationStatus(EvaluationStatus.VALID);
-          //setting the target dose of the VDA to this target dose, so that the target dose can be accessed through the VDA
-          dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered().setTargetDose(dataModel.getTargetDose());
+          // setting the target dose of the VDA to this target dose, so that the target
+          // dose can be accessed through the VDA
+          dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered()
+              .setTargetDose(dataModel.getTargetDose());
         }
       });
 

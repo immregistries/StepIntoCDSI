@@ -74,8 +74,10 @@ public class EvaluatePreferableInterval extends LogicStep {
       }
     }
     if (satisfiedAll == YesNo.YES) {
+      log(Level.STATE, "Preferable interval satisfied - continuing to vaccine conflict evaluation");
       setNextLogicStepType(LogicStepType.EVALUATE_VACCINE_CONFLICT);
     } else {
+      log(Level.STATE, "Preferable interval NOT satisfied - checking allowable interval");
       setNextLogicStepType(LogicStepType.EVALUATE_ALLOWABLE_INTERVAL);
     }
     return next();

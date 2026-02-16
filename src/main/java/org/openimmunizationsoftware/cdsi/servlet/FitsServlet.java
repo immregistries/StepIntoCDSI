@@ -91,10 +91,8 @@ public class FitsServlet extends ForecastServlet {
                         try {
                             String link = createLink(testCaseRegistered);
                             String linkStep = "step" + link;
-                            String linkForecast = "forecast" + link;
                             logToOut(" - Running " + testCaseRegistered.getTestCase().getUid());
                             logToOut("   - " + linkStep);
-                            logToOut("   - " + linkForecast);
                             DataModel dataModel = DataModelLoader.createDataModel();
                             // setup data model
                             dataModel.setTestCaseRegistered(testCaseRegistered);
@@ -291,7 +289,7 @@ public class FitsServlet extends ForecastServlet {
                                             + "\" target=\"_blank\">Forecast</a> | ");
 
                                     // Build Run link with all test parameters
-                                    String linkRunTest = "forecast" + link;
+                                    String linkRunTest = "run" + link;
                                     linkRunTest += "&log";
 
                                     // Map group name to antigen
@@ -322,7 +320,8 @@ public class FitsServlet extends ForecastServlet {
                                     linkRunTest += "&" + ForecastServlet.PARAM_TEST_ACT_RECOMMENDED_PASS + "="
                                             + recommendedPass;
 
-                                    out.println("          <a href=\"" + linkRunTest + "\" target=\"_blank\">Run</a>");
+                                    out.println(
+                                            "          <a href=\"" + linkRunTest + "\" target=\"_blank\">Run</a>");
                                 } else {
                                     out.println("          " + testCaseRegistered.getProblemReason());
                                 }

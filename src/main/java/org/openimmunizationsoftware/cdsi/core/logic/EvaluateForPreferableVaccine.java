@@ -90,8 +90,10 @@ public class EvaluateForPreferableVaccine extends LogicStep {
       }
     }
     if (atLeastOnePass == YesNo.NO) {
-      log("none pass");
+      log(Level.STATE, "No PREFERABLE vaccines found matching vaccine type and age");
       setNextLogicStepType(LogicStepType.EVALUATE_FOR_ALLOWABLE_VACCINE);
+    } else {
+      log(Level.STATE, "PREFERABLE vaccine match found - evaluating satisfaction");
     }
     return next();
   }
@@ -183,7 +185,8 @@ public class EvaluateForPreferableVaccine extends LogicStep {
           "Is the trade name of the vaccine dose administered the same as the trade name of the preferable vaccine for the target dose?") {
         @Override
         public LogicResult evaluateInternal() {
-          //default to returning YES as caTradeName is not set to the correct value, and trade name is not passed into the forecaster
+          // default to returning YES as caTradeName is not set to the correct value, and
+          // trade name is not passed into the forecaster
           return LogicResult.YES;
         }
       });

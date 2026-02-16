@@ -93,8 +93,11 @@ public class EvaluateVaccineConflict extends LogicStep {
     setNextLogicStepType(LogicStepType.EVALUATE_FOR_PREFERABLE_VACCINE);
     evaluateLogicTables();
     if (y == YesNo.YES) {
+      log(Level.CONTROL, "✗ LIVE VIRUS CONFLICT DETECTED - between current and previous vaccine doses");
       dataModel.getTargetDose()
           .setStatusCause(dataModel.getTargetDose().getStatusCause() + "VirusConflict");
+    } else {
+      log(Level.STATE, "No live virus conflict detected");
     }
     return next();
   }

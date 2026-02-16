@@ -204,6 +204,12 @@ public class EvaluateConditionalSkip extends LogicStep {
     public LogicStep process() throws Exception {
         setNextLogicStepType(noSkipLogicStep);
         evaluateLogicTables();
+        TargetDoseStatus status = dataModel.getTargetDose().getTargetDoseStatus();
+        if (status == TargetDoseStatus.SKIPPED) {
+            log(Level.CONTROL, "⊘ DOSE SKIPPED - Conditional skip conditions met");
+        } else {
+            log(Level.STATE, "Dose NOT skipped - continuing evaluation");
+        }
         return next();
     }
 

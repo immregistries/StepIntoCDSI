@@ -18,6 +18,10 @@
         <servlet-class>org.openimmunizationsoftware.cdsi.servlet.ForecastServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>run</servlet-name>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.RunServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>fits</servlet-name>
         <servlet-class>org.openimmunizationsoftware.cdsi.servlet.FitsServlet</servlet-class>
     </servlet>
@@ -54,6 +58,10 @@
     <servlet-mapping>
         <servlet-name>forecast</servlet-name>
         <url-pattern>/forecast</url-pattern>
+    </servlet-mapping>	 
+    <servlet-mapping>
+        <servlet-name>run</servlet-name>
+        <url-pattern>/run</url-pattern>
     </servlet-mapping>	 
     <servlet-mapping>
         <servlet-name>step</servlet-name>

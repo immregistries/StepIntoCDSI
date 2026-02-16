@@ -20,7 +20,6 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
-
 public class EvaluateForInadvertentVaccine extends LogicStep {
     // Initialization of attributes
     protected ConditionAttribute<VaccineDoseAdministered> caVaccineDoseAdministered = null;
@@ -28,13 +27,15 @@ public class EvaluateForInadvertentVaccine extends LogicStep {
     protected List<VaccineType> caInadvertentVaccineList = new ArrayList<>();
 
     // Constructor
-    public EvaluateForInadvertentVaccine(DataModel dataModel){
+    public EvaluateForInadvertentVaccine(DataModel dataModel) {
         super(LogicStepType.EVALUATE_FOR_INADVERTENT_VACCINE, dataModel);
         setConditionTableName("Table 6-12 Inadvertent Vaccine Attributes");
 
         // Defining values?
-        caVaccineDoseAdministered = new ConditionAttribute<VaccineDoseAdministered>("Vaccine dose administered","Vaccine Type");
-        caInadvertentVaccine = new ConditionAttribute<VaccineDoseAdministered>("Supporting Data (inadvertent vaccine)","Vaccine Type");
+        caVaccineDoseAdministered = new ConditionAttribute<VaccineDoseAdministered>("Vaccine dose administered",
+                "Vaccine Type");
+        caInadvertentVaccine = new ConditionAttribute<VaccineDoseAdministered>("Supporting Data (inadvertent vaccine)",
+                "Vaccine Type");
 
         // Setting initial values
         AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
@@ -42,54 +43,59 @@ public class EvaluateForInadvertentVaccine extends LogicStep {
 
         conditionAttributesList.add(caVaccineDoseAdministered);
         conditionAttributesList.add(caInadvertentVaccine);
-        
+
         LT logicTable = new LT();
         logicTableList.add(logicTable);
     }
 
     @Override
-    public LogicStep process() throws Exception{ 
+    public LogicStep process() throws Exception {
         setNextLogicStepType(LogicStepType.EVALUATE_AGE);
         evaluateLogicTables();
+        TargetDoseStatus status = dataModel.getTargetDose().getTargetDoseStatus();
+        if (status == TargetDoseStatus.NOT_SATISFIED) {
+            log(Level.CONTROL, "✗ DOSE REJECTED: Vaccine dose is an inadvertent administration");
+        }
         return next();
     }
 
-    
     @Override
     public void printPre(PrintWriter out) throws Exception {
-      printStandard(out);
+        printStandard(out);
     }
-  
+
     @Override
     public void printPost(PrintWriter out) throws Exception {
-      printStandard(out);
+        printStandard(out);
     }
 
     private void printStandard(PrintWriter out) {
         printLogicTables(out);
     }
 
-
-    private class LT extends LogicTable{    
-        public LT(){
-            super(1,2,"Table 6-13 Was the Vaccine Dose Administered an Inadvertent Administration for the Target Dose?");
+    private class LT extends LogicTable {
+        public LT() {
+            super(1, 2,
+                    "Table 6-13 Was the Vaccine Dose Administered an Inadvertent Administration for the Target Dose?");
 
             // Logic
-            setLogicCondition(0, new LogicCondition("Is the vaccine type of the vaccine dose administered one of the vaccine types of an inadvertent vaccine for the target dose?") {
+            setLogicCondition(0, new LogicCondition(
+                    "Is the vaccine type of the vaccine dose administered one of the vaccine types of an inadvertent vaccine for the target dose?") {
                 @Override
-                public LogicResult evaluateInternal(){
-                    for (VaccineType iv : dataModel.getTargetDose().getTrackedSeriesDose().getInadvertentVaccineList()) {
-                        if (iv.equals(caVaccineDoseAdministered.getFinalValue().getVaccine().getVaccineType())){
+                public LogicResult evaluateInternal() {
+                    for (VaccineType iv : dataModel.getTargetDose().getTrackedSeriesDose()
+                            .getInadvertentVaccineList()) {
+                        if (iv.equals(caVaccineDoseAdministered.getFinalValue().getVaccine().getVaccineType())) {
                             return LogicResult.YES;
                         }
                     }
 
                     return LogicResult.NO;
-                    
+
                 }
-            });   
-    
-            setLogicResults(0, new LogicResult[] {LogicResult.YES, LogicResult.NO});
+            });
+
+            setLogicResults(0, new LogicResult[] { LogicResult.YES, LogicResult.NO });
             // If yes:
             setLogicOutcome(0, new LogicOutcome() {
                 @Override
@@ -97,7 +103,8 @@ public class EvaluateForInadvertentVaccine extends LogicStep {
                     log("Yes. The vaccine dose administered was an inadvertent administration for the target dose. Target Dose Status is 'Not Satisfied'. Evaluation Status is 'Not Valid'. Evaluation Reason is 'Inadvertent Administration'.");
                     dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
                     dataModel.getTargetDose().getEvaluation().setEvaluationStatus(EvaluationStatus.NOT_VALID);
-                    dataModel.getTargetDose().getEvaluation().setEvaluationReason(EvaluationReason.INADVERTENT_ADMINISTRATION);
+                    dataModel.getTargetDose().getEvaluation()
+                            .setEvaluationReason(EvaluationReason.INADVERTENT_ADMINISTRATION);
                     setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
                 }
             });

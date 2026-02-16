@@ -12,6 +12,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
@@ -74,6 +75,12 @@ public class EvaluateAge extends LogicStep {
   public LogicStep process() throws Exception {
     setNextLogicStepType(LogicStepType.EVALUATE_PREFERABLE_INTERVAL);
     evaluateLogicTables();
+    TargetDoseStatus status = dataModel.getTargetDose().getTargetDoseStatus();
+    if (status == TargetDoseStatus.NOT_SATISFIED) {
+      log(Level.CONTROL, "✗ DOSE REJECTED: Age validation failed (too young or too old)");
+    } else {
+      log(Level.STATE, "Age validation passed");
+    }
 
     // evaluation should now be set
 

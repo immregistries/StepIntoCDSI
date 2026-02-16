@@ -62,9 +62,11 @@ public class EvaluateForAllowableVaccine extends LogicStep {
       }
     }
     if (atLeastOnePass == YesNo.NO) {
-      log("none pass, appending 'vaccine'");
+      log(Level.STATE, "VACCINE INVALID - No allowable vaccines found matching vaccine type and age");
       dataModel.getTargetDose()
           .setStatusCause(dataModel.getTargetDose().getStatusCause() + "Vaccine");
+    } else {
+      log(Level.STATE, "ALLOWABLE vaccine match found - evaluating satisfaction");
     }
     return next();
   }

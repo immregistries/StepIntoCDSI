@@ -11,6 +11,8 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -98,13 +100,30 @@ public class ForecastServlet extends HttpServlet {
     printText(dataModel, out, logBuffer, req);
   }
 
+  /**
+   * Generate forecast text output as a String.
+   * 
+   * @param dataModel The data model
+   * @param logBuffer The log buffer (may be null)
+   * @param req       The HTTP request
+   * @return The forecast text output
+   */
+  protected static String generateTextOutput(DataModel dataModel, StringBuilder logBuffer,
+      HttpServletRequest req) {
+    java.io.StringWriter sw = new java.io.StringWriter();
+    PrintWriter pw = new PrintWriter(sw);
+    printText(dataModel, pw, logBuffer, req);
+    pw.flush();
+    return sw.toString();
+  }
+
   public static void printText(DataModel dataModel, PrintWriter out, StringBuilder logBuffer,
       HttpServletRequest req) {
     out.println("Step Into Clinical Decision Support for Immunizations - Demonstration //System");
     out.println();
 
     // Print test case information if provided
-    if (req != null) {
+    if (logBuffer != null && req != null) {
       String testCase = req.getParameter(PARAM_TEST_CASE);
       if (testCase != null && !testCase.isEmpty()) {
         out.println("========================================");
@@ -237,6 +256,22 @@ public class ForecastServlet extends HttpServlet {
       }
     }
 
+    if (logBuffer != null) {
+      // Print detailed vaccination forecasts
+      out.println("========================================");
+      out.println("VACCINATION FORECASTS");
+      out.println("========================================");
+      out.println();
+
+      List<VaccineGroupForecast> allVaccinations = new ArrayList<VaccineGroupForecast>();
+      allVaccinations.addAll(vgfNow);
+      allVaccinations.addAll(vgfLater);
+      allVaccinations.addAll(vgfDone);
+
+      printDetailedVaccinations(dataModel, out, sdf, today, allVaccinations);
+      out.println();
+    }
+
     printList(dataModel, out, sdf, today, vgfNow, "VACCINATIONS RECOMMENDED");
     printList(dataModel, out, sdf, today, vgfLater, "VACCINATIONS RECOMMENDED AFTER");
     printList(dataModel, out, sdf, today, vgfDone, "VACCINATIONS COMPLETE OR NOT RECOMMENDED");
@@ -291,6 +326,78 @@ public class ForecastServlet extends HttpServlet {
       out.print(logBuffer.toString());
     }
 
+  }
+
+  /**
+   * Print detailed vaccination forecast information.
+   * 
+   * @param dataModel                The data model
+   * @param out                      The print writer
+   * @param sdf                      The date format
+   * @param today                    The current date
+   * @param vaccineGroupForecastList The list of vaccinations to print
+   */
+  private static void printDetailedVaccinations(DataModel dataModel, PrintWriter out, SimpleDateFormat sdf,
+      Date today, List<VaccineGroupForecast> vaccineGroupForecastList) {
+    for (VaccineGroupForecast vgf : vaccineGroupForecastList) {
+      if (vgf.getAntigen() != null) {
+        String name = vgf.getAntigen() == null ? "No Antigen" : vgf.getAntigen().getName();
+        if (name.equals("Tetanus")) {
+          Calendar c = Calendar.getInstance();
+          c.setTime(dataModel.getPatient().getDateOfBirth());
+          c.add(Calendar.YEAR, 7);
+          if (today.before(c.getTime())) {
+            name = "DTaP";
+          } else {
+            name = "Tdap";
+          }
+        } else if (name.equals("Mumps") || name.equals("Measles") || name.equals("Rubella")) {
+          name = "MMR";
+        }
+
+        out.println("Vaccination Recommended:");
+        out.println("  + Forecasting: " + name);
+
+        // Get series name and dose
+        if (vgf.getTargetDose() != null && vgf.getTargetDose().getTrackedSeriesDose() != null) {
+          SeriesDose trackedDose = vgf.getTargetDose().getTrackedSeriesDose();
+          if (trackedDose.getAntigenSeries() != null) {
+            out.println("  + Series Name: " + trackedDose.getAntigenSeries().getSeriesName());
+          }
+          out.println("  + Dose: " + trackedDose.getDoseNumber());
+        }
+
+        // Print status
+        if (vgf.getPatientSeriesStatus() != null
+            && vgf.getPatientSeriesStatus() == PatientSeriesStatus.NOT_COMPLETE) {
+          if (vgf.getAdjustedRecommendedDate() != null && vgf.getAdjustedRecommendedDate().after(today)) {
+            out.println("  + Status: due later");
+          } else {
+            out.println("  + Status: due");
+          }
+        } else {
+          out.println("  + Status: " + vgf.getPatientSeriesStatus());
+        }
+
+        // Print dates
+        if (vgf.getAdjustedRecommendedDate() != null) {
+          out.println("  + Recommended Date: " + sdf.format(vgf.getAdjustedRecommendedDate()));
+        }
+        if (vgf.getEarliestDate() != null) {
+          out.println("  + Earliest Date: " + sdf.format(vgf.getEarliestDate()));
+        }
+        if (vgf.getAdjustedPastDueDate() != null) {
+          out.println("  + Past Due Date: " + sdf.format(vgf.getAdjustedPastDueDate()));
+        }
+        if (vgf.getLatestDate() != null) {
+          out.println("  + Latest Date: " + sdf.format(vgf.getLatestDate()));
+        } else {
+          out.println("  + Latest Date: 01/01/2200");
+        }
+
+        out.println();
+      }
+    }
   }
 
   // Measles Mumps Rubella
@@ -360,7 +467,7 @@ public class ForecastServlet extends HttpServlet {
     }
   }
 
-  private void process(DataModel dataModel, PrintWriter out,
+  protected void process(DataModel dataModel, PrintWriter out,
       StringBuilder logBuffer, Map<LogicStepType, LogicStep.Level> stepLevelMap) throws Exception {
     int count = 0;
     while (dataModel.getLogicStep().getLogicStepType() != LogicStepType.END) {
@@ -415,7 +522,7 @@ public class ForecastServlet extends HttpServlet {
    * @param req The HTTP request
    * @return Map of LogicStepType to log Level
    */
-  private Map<LogicStepType, LogicStep.Level> buildStepLevelMap(HttpServletRequest req) {
+  protected Map<LogicStepType, LogicStep.Level> buildStepLevelMap(HttpServletRequest req) {
     Map<LogicStepType, LogicStep.Level> stepLevelMap = new EnumMap<>(LogicStepType.class);
 
     // Parse global default level
