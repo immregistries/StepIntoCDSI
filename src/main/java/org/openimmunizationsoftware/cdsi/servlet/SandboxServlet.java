@@ -2,6 +2,7 @@ package org.openimmunizationsoftware.cdsi.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -171,6 +172,8 @@ public class SandboxServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private static final int NUM_IMMUNIZATION_ROWS = 20;
+    private static final String DEFAULT_ENDPOINT_BASE = "https://florence.immregistries.org/step/fhir";
+    private static final String SESSION_ENDPOINT_KEY = "sandboxEndpointBase";
 
     /**
      * Static utility: Parse a flexible date (YYYYMMDD or MM/DD/YYYY) to LocalDate.
@@ -249,7 +252,15 @@ public class SandboxServlet extends HttpServlet {
         public Map<Integer, String> vaccineCvxs = new HashMap<>();
 
         public Model(HttpServletRequest req) {
-            this.endpointBase = req.getParameter("endpointBase") != null ? req.getParameter("endpointBase") : "";
+            // Check endpoint base: request parameter > session > default
+            String endpointParam = req.getParameter("endpointBase");
+            if (endpointParam != null && !endpointParam.isEmpty()) {
+                this.endpointBase = endpointParam;
+            } else {
+                // Try session, then default
+                String sessionEndpoint = (String) req.getSession().getAttribute(SESSION_ENDPOINT_KEY);
+                this.endpointBase = sessionEndpoint != null ? sessionEndpoint : DEFAULT_ENDPOINT_BASE;
+            }
 
             // Support both assessmentDate and evalDate parameter names, and format to
             // MM/DD/YYYY
@@ -431,6 +442,9 @@ public class SandboxServlet extends HttpServlet {
             // Call runForecast
             Result result = runForecast(model.endpointBase, model.encoding, assessmentDate, patientDob,
                     model.patientSex, immunizations);
+
+            // Store the endpoint URL in session for future use
+            req.getSession().setAttribute(SESSION_ENDPOINT_KEY, model.endpointBase);
 
             // Populate model with results
             model.requestPretty = result.requestPretty;
@@ -822,10 +836,18 @@ public class SandboxServlet extends HttpServlet {
                     }
                 }
 
-                // Extract forecast status
+                // Extract forecast status - get display text from CodeableConcept
                 String forecastStatus = "";
                 if (rec.getForecastStatus() != null) {
-                    forecastStatus = rec.getForecastStatus().toString();
+                    // Try to get display text from the first coding
+                    if (rec.getForecastStatus().getCoding() != null && !rec.getForecastStatus().getCoding().isEmpty()) {
+                        Coding statusCoding = rec.getForecastStatus().getCoding().get(0);
+                        if (statusCoding.getDisplay() != null && !statusCoding.getDisplay().isEmpty()) {
+                            forecastStatus = statusCoding.getDisplay();
+                        } else if (statusCoding.getCode() != null && !statusCoding.getCode().isEmpty()) {
+                            forecastStatus = statusCoding.getCode();
+                        }
+                    }
                 }
 
                 // Extract date criteria (earliest and recommended dates)
@@ -834,16 +856,32 @@ public class SandboxServlet extends HttpServlet {
                 if (rec.getDateCriterion() != null && !rec.getDateCriterion().isEmpty()) {
                     for (ImmunizationRecommendationRecommendationDateCriterionComponent dateCrit : rec
                             .getDateCriterion()) {
-                        if (dateCrit.getCode() != null) {
-                            String code = dateCrit.getCode().toString();
-                            if ("earliest-date".equals(code) || "elligible".equals(code)) {
-                                if (dateCrit.getValue() != null) {
-                                    earliestDate = dateCrit.getValue().toString();
-                                }
-                            } else if ("recommended".equals(code) || "recommended-date".equals(code)) {
-                                if (dateCrit.getValue() != null) {
-                                    recommendedDate = dateCrit.getValue().toString();
-                                }
+                        if (dateCrit.getCode() != null && dateCrit.getValue() != null) {
+                            // Get the code display text
+                            String codeDisplay = "";
+                            if (dateCrit.getCode().getCoding() != null && !dateCrit.getCode().getCoding().isEmpty()) {
+                                Coding codeCoding = dateCrit.getCode().getCoding().get(0);
+                                codeDisplay = codeCoding.getDisplay() != null ? codeCoding.getDisplay()
+                                        : codeCoding.getCode();
+                            }
+
+                            // Extract and format date value properly
+                            String dateValue = "";
+                            try {
+                                // Get the DateTimeType string representation (gives ISO format)
+                                String dateTimeString = dateCrit.getValue().toString();
+                                // Parse and format to MM/DD/YYYY
+                                dateValue = extractDateValue(dateTimeString);
+                            } catch (Exception e) {
+                                // If all else fails, leave blank
+                                dateValue = "";
+                            }
+
+                            // Match by display text or code
+                            if (codeDisplay != null && codeDisplay.contains("Earliest")) {
+                                earliestDate = dateValue;
+                            } else if (codeDisplay != null && codeDisplay.contains("Recommend")) {
+                                recommendedDate = dateValue;
                             }
                         }
                     }
@@ -854,6 +892,62 @@ public class SandboxServlet extends HttpServlet {
         }
 
         return rows;
+    }
+
+    /**
+     * Extract and format a date from various string representations.
+     * Handles formats like:
+     * - "2039-02-07T00:00:00-07:00" (ISO 8601 with time)
+     * - "2039-02-07" (ISO 8601 date only)
+     * - "Mon Feb 07 00:00:00 MST 2039" (Java Date toString)
+     * Returns formatted as MM/DD/YYYY.
+     */
+    private String extractDateValue(String dateTimeString) {
+        if (dateTimeString == null || dateTimeString.isEmpty()) {
+            return "";
+        }
+
+        dateTimeString = dateTimeString.trim();
+
+        // Try to handle Java Date toString format first: "Mon Feb 07 00:00:00 MST 2039"
+        if (dateTimeString.matches("^[A-Za-z]{3}\\s+[A-Za-z]{3}\\s+.*")) {
+            try {
+                SimpleDateFormat javeDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+                java.util.Date date = javeDateFormat.parse(dateTimeString);
+                SimpleDateFormat outputFormat = new SimpleDateFormat("MM/dd/yyyy");
+                return outputFormat.format(date);
+            } catch (Exception e) {
+                // Fall through to other formats
+            }
+        }
+
+        // Try ISO 8601 with time: "2039-02-07T00:00:00-07:00"
+        if (dateTimeString.contains("T")) {
+            String datePart = dateTimeString.substring(0, dateTimeString.indexOf("T"));
+            try {
+                SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat outputFormat = new SimpleDateFormat("MM/dd/yyyy");
+                java.util.Date date = inputFormat.parse(datePart);
+                return outputFormat.format(date);
+            } catch (Exception e) {
+                // Fall through to next format
+            }
+        }
+
+        // Try ISO 8601 date only: "2039-02-07"
+        if (dateTimeString.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            try {
+                SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat outputFormat = new SimpleDateFormat("MM/dd/yyyy");
+                java.util.Date date = inputFormat.parse(dateTimeString);
+                return outputFormat.format(date);
+            } catch (Exception e) {
+                // Fall through
+            }
+        }
+
+        // If nothing worked, return empty
+        return "";
     }
 
     private void renderPage(HttpServletRequest req, HttpServletResponse resp, Model model)
