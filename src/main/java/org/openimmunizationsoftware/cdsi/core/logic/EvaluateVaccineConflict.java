@@ -14,6 +14,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
@@ -53,6 +54,7 @@ public class EvaluateVaccineConflict extends LogicStep {
 
     LT420 logicTable = new LT420();
     // logicTableList.add(logicTable);
+    logicTable.setLogicStepSink(this.getLogicStepSink());
     logicTableList.add(logicTable);
     logicTable.evaluate();
     y = YesNo.NO;
@@ -65,6 +67,7 @@ public class EvaluateVaccineConflict extends LogicStep {
             "Supporting Data (Live Virus Conflict)", "Previous Vaccine Type");
         logicTab.caPreviousVaccineType.setInitialValue(vaccineAdministered.getVaccineType());
         conditionAttributesList.add(logicTab.caPreviousVaccineType);
+        logicTab.setLogicStepSink(this.getLogicStepSink());
         logicTableList.add(logicTab);
         logicTab.evaluate();
         if (logicTab.y421 == YesNo.YES) {
@@ -78,6 +81,7 @@ public class EvaluateVaccineConflict extends LogicStep {
           conditionAttributesList.add(lt.caConflictEndIntervalDate);
 
           lt.setIntervalDate(vaccineAdministered);
+          lt.setLogicStepSink(this.getLogicStepSink());
           logicTableList.add(lt);
           lt.evaluate();
           if (lt.y422 == YesNo.YES) {
@@ -93,11 +97,11 @@ public class EvaluateVaccineConflict extends LogicStep {
     setNextLogicStepType(LogicStepType.EVALUATE_FOR_PREFERABLE_VACCINE);
     evaluateLogicTables();
     if (y == YesNo.YES) {
-      log(Level.CONTROL, "✗ LIVE VIRUS CONFLICT DETECTED - between current and previous vaccine doses");
+      log(LogLevel.CONTROL, "LIVE VIRUS CONFLICT DETECTED - between current and previous vaccine doses");
       dataModel.getTargetDose()
           .setStatusCause(dataModel.getTargetDose().getStatusCause() + "VirusConflict");
     } else {
-      log(Level.STATE, "No live virus conflict detected");
+      log(LogLevel.STATE, "No live virus conflict detected");
     }
     return next();
   }

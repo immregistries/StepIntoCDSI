@@ -9,6 +9,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.DoseCondition;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
@@ -46,6 +47,8 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
     conditionAttributesList.add(caDoseCondition);
 
     LT logicTable = new LT();
+    // Demonstrate how to pass the LogStep sink into the LogicTable
+    logicTable.setLogicStepSink(this.getLogicStepSink());
     logicTableList.add(logicTable);
   }
 
@@ -53,10 +56,6 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
   public LogicStep process() {
     setNextLogicStepType(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST);
     evaluateLogicTables();
-    TargetDoseStatus status = dataModel.getTargetDose().getTargetDoseStatus();
-    if (status == TargetDoseStatus.NOT_SATISFIED) {
-      log(Level.CONTROL, "✗ DOSE REJECTED: Lot expiration date or dose condition failed");
-    }
     return next();
   }
 
@@ -94,11 +93,11 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
       setLogicOutcome(0, new LogicOutcome() {
         @Override
         public void perform() {
-          log("No. The vaccine dose administered cannot be evaluated. ");
-          log("Setting target dose to \"not satisfied\"");
+          log(LogLevel.CONTROL, "DOSE REJECTED: Dose was administered after lot expiration date. Cannot be evaluated.");
+          log(LogLevel.STATE, "Setting target dose to \"not satisfied\"");
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
-          log("Setting evaluation status to \"sub-standard\"");
-          log("Setting next step: 4.4 Evaluate And Forecast All Patient Series");
+          log(LogLevel.STATE, "Setting evaluation status to \"sub-standard\"");
+          log(LogLevel.CONTROL, "Setting next step: 4.4 Evaluate And Forecast All Patient Series");
           dataModel.getTargetDose().getEvaluation().setEvaluationStatus(EvaluationStatus.SUB_STANDARD);
           setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
         }
@@ -106,11 +105,11 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
       setLogicOutcome(1, new LogicOutcome() {
         @Override
         public void perform() {
-          log("No. The vaccine dose administered cannot be evaluated.");
-          log("Setting target dose to \"not satisfied\"");
+          log(LogLevel.CONTROL, "DOSE REJECTED: Dose has a condition flag that prevents evaluation.");
+          log(LogLevel.STATE, "Setting target dose to \"not satisfied\"");
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
-          log("Setting evaluation status to \"sub-standard\"");
-          log("Setting next step: 4.4 Evaluate And Forecast All Patient Series");
+          log(LogLevel.STATE, "Setting evaluation status to \"sub-standard\"");
+          log(LogLevel.CONTROL, "Setting next step: 4.4 Evaluate And Forecast All Patient Series");
           dataModel.getTargetDose().getEvaluation().setEvaluationStatus(EvaluationStatus.SUB_STANDARD);
           setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
         }
@@ -118,8 +117,8 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
       setLogicOutcome(2, new LogicOutcome() {
         @Override
         public void perform() {
-          log("Yes. The vaccine dose administered can be evaluated.");
-          log("Setting next step: 6.2 Evaluate Conditional Skip For Evaluation");
+          log(LogLevel.CONTROL, "DOSE ACCEPTED: The vaccine dose administered can be evaluated.");
+          log(LogLevel.CONTROL, "Setting next step: 6.2 Evaluate Conditional Skip For Evaluation");
           setNextLogicStepType(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION);
         }
       });

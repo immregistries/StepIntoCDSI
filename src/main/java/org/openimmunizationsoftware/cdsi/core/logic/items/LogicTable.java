@@ -6,6 +6,7 @@ public class LogicTable {
   private LogicCondition[] logicConditions;
   private LogicOutcome[] logicOutcomes;
   private LogicOutcome logicOutcomeDefault = null;
+  private LogSink logicStepSink = null;
 
   // This is so ugly needs some comments and/or refactoring
   public void evaluate() throws IllegalStateException {
@@ -13,6 +14,17 @@ public class LogicTable {
       logicCondition.evaluate(); // Get the logic result for each condition. Assigns it to
                                  // LogicCondition.logicResult
     }
+
+    // Log reasoning steps if logicStepSink is set
+    if (logicStepSink != null) {
+      logicStepSink.log(LogLevel.REASONING, "Conditions:");
+      for (LogicCondition logicCondition : logicConditions) {
+        logicStepSink.log(LogLevel.REASONING,
+            "  - " + logicCondition.getLabel() + ": " + logicCondition.getLogicResult());
+      }
+      logicStepSink.log(LogLevel.REASONING, "Logic Conditions:");
+    }
+
     int validColumnCount = 0;
     for (int j = 0; j < logicOutcomes.length; j++) {
       boolean validConditionColumn = true;
@@ -47,6 +59,12 @@ public class LogicTable {
           validConditionColumn = false;
         }
       }
+
+      // Log valid condition column if logicStepSink is set
+      if (logicStepSink != null) {
+        logicStepSink.log(LogLevel.REASONING, "  - " + j + ": " + validConditionColumn);
+      }
+
       // perform sets the dataModel properties to the appropriate values based on the
       // logic outcome in the table.
       if (validConditionColumn) {
@@ -55,7 +73,8 @@ public class LogicTable {
 
         // Should only ever have one valid column if no default outcome exists.
         if (validColumnCount != 1 && logicOutcomeDefault == null) {
-          //throw new IllegalStateException("Can only have 1 valid column in a logic table found: " + validColumnCount);
+          // throw new IllegalStateException("Can only have 1 valid column in a logic
+          // table found: " + validColumnCount);
         }
       }
     }
@@ -99,10 +118,18 @@ public class LogicTable {
 
   public void setLogicCondition(int pos, LogicCondition logicCondition) {
     logicConditions[pos] = logicCondition;
+    // Propagate the logicStepSink to the condition if one is set
+    if (logicStepSink != null) {
+      logicCondition.setLogicStepSink(logicStepSink);
+    }
   }
 
   public void setLogicOutcome(int pos, LogicOutcome logicOutcome) {
     logicOutcomes[pos] = logicOutcome;
+    // Propagate the logicStepSink to the outcome if one is set
+    if (logicStepSink != null) {
+      logicOutcome.setLogicStepSink(logicStepSink);
+    }
   }
 
   public void setLogicOutcomeDefault(LogicOutcome logicOutcomeDefault) {
@@ -116,6 +143,34 @@ public class LogicTable {
   public void setLogicResults(int pos, LogicResult... lrs) {
     for (int j = 0; j < lrs.length; j++) {
       logicResultTable[pos][j] = lrs[j];
+    }
+  }
+
+  /**
+   * Set the LogicSink for this LogicTable.
+   * This sink will be propagated to all LogicCondition and LogicOutcome objects
+   * added to this table.
+   * 
+   * @param logicStepSink The LogicSink to use for logging
+   */
+  public void setLogicStepSink(LogSink logicStepSink) {
+    this.logicStepSink = logicStepSink;
+    // Propagate to all existing conditions and outcomes
+    if (logicStepSink != null) {
+      if (logicConditions != null) {
+        for (LogicCondition condition : logicConditions) {
+          if (condition != null) {
+            condition.setLogicStepSink(logicStepSink);
+          }
+        }
+      }
+      if (logicOutcomes != null) {
+        for (LogicOutcome outcome : logicOutcomes) {
+          if (outcome != null) {
+            outcome.setLogicStepSink(logicStepSink);
+          }
+        }
+      }
     }
   }
 }

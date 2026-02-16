@@ -27,6 +27,7 @@ public class SingleAntigenVaccineGroup extends LogicStep {
     // conditionAttributesList.add(caDateAdministered);
 
     LT logicTable = new LT();
+    logicTable.setLogicStepSink(this.getLogicStepSink());
     logicTableList.add(logicTable);
   }
 

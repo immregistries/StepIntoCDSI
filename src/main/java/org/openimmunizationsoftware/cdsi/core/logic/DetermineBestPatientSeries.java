@@ -27,6 +27,7 @@ public class DetermineBestPatientSeries extends LogicStep {
                     + " matches antigen " + dataModel.getAntigen());
             LT logicTable = new LT();
             logicTable.pps = ps;
+            logicTable.setLogicStepSink(this.getLogicStepSink());
             logicTableList.add(logicTable);
         }
     }

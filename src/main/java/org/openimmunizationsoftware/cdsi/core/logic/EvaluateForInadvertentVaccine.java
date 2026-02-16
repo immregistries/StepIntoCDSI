@@ -15,6 +15,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
@@ -45,6 +46,7 @@ public class EvaluateForInadvertentVaccine extends LogicStep {
         conditionAttributesList.add(caInadvertentVaccine);
 
         LT logicTable = new LT();
+        logicTable.setLogicStepSink(this.getLogicStepSink());
         logicTableList.add(logicTable);
     }
 
@@ -52,10 +54,6 @@ public class EvaluateForInadvertentVaccine extends LogicStep {
     public LogicStep process() throws Exception {
         setNextLogicStepType(LogicStepType.EVALUATE_AGE);
         evaluateLogicTables();
-        TargetDoseStatus status = dataModel.getTargetDose().getTargetDoseStatus();
-        if (status == TargetDoseStatus.NOT_SATISFIED) {
-            log(Level.CONTROL, "✗ DOSE REJECTED: Vaccine dose is an inadvertent administration");
-        }
         return next();
     }
 
@@ -100,11 +98,15 @@ public class EvaluateForInadvertentVaccine extends LogicStep {
             setLogicOutcome(0, new LogicOutcome() {
                 @Override
                 public void perform() {
-                    log("Yes. The vaccine dose administered was an inadvertent administration for the target dose. Target Dose Status is 'Not Satisfied'. Evaluation Status is 'Not Valid'. Evaluation Reason is 'Inadvertent Administration'.");
+                    log(LogLevel.CONTROL, "DOSE REJECTED: Vaccine dose administered is an inadvertent vaccination");
+                    log(LogLevel.STATE, "Setting target dose to \"not satisfied\"");
                     dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
+                    log(LogLevel.STATE, "Setting evaluation status to \"not valid\"");
+                    log(LogLevel.STATE, "Setting evaluation reason to \"inadvertent administration\"");
                     dataModel.getTargetDose().getEvaluation().setEvaluationStatus(EvaluationStatus.NOT_VALID);
                     dataModel.getTargetDose().getEvaluation()
                             .setEvaluationReason(EvaluationReason.INADVERTENT_ADMINISTRATION);
+                    log(LogLevel.CONTROL, "Setting next step: 4.4 Evaluate And Forecast All Patient Series");
                     setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
                 }
             });
@@ -113,7 +115,8 @@ public class EvaluateForInadvertentVaccine extends LogicStep {
             setLogicOutcome(1, new LogicOutcome() {
                 @Override
                 public void perform() {
-                    log("No. The vaccine dose administered was not an inadvertent administration for the target dose.");
+                    log(LogLevel.STATE,
+                            "Vaccine dose is not an inadvertent administration - continuing to age validation");
                     setNextLogicStepType(LogicStepType.EVALUATE_AGE);
                 }
             });

@@ -14,64 +14,16 @@ import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.logic.items.BusinessRule;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogEvent;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogSink;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogicStepSink;
 
-public abstract class LogicStep {
-
-  /**
-   * Log levels ordered from least verbose (CONTROL) to most verbose (DUMP).
-   * 
-   * For detailed guidance on logging semantics, level usage, and alerting
-   * patterns,
-   * see: docs/Alerting Semantics for Step Into CDSi.md
-   */
-  public enum Level {
-    CONTROL, // Least verbose - control flow decisions
-    STATE, // State changes
-    REASONING, // Reasoning and business logic
-    TRACE, // Detailed trace information
-    DUMP // Most verbose - all details
-  }
-
-  /**
-   * Represents a single log event with level, alert flag, and message.
-   * 
-   * For detailed guidance on logging semantics, level usage, and alerting
-   * patterns,
-   * see: docs/Alerting Semantics for Step Into CDSi.md
-   */
-  public static class LogEvent {
-    private final Level level;
-    private final boolean alert;
-    private final String message;
-    private final long seq;
-
-    public LogEvent(Level level, boolean alert, String message, long seq) {
-      this.level = level;
-      this.alert = alert;
-      this.message = message != null ? message : "null";
-      this.seq = seq;
-    }
-
-    public Level getLevel() {
-      return level;
-    }
-
-    public boolean isAlert() {
-      return alert;
-    }
-
-    public String getMessage() {
-      return message;
-    }
-
-    public long getSeq() {
-      return seq;
-    }
-  }
+public abstract class LogicStep implements LogSink {
 
   public static final LogicStepType[] STEPS = { LogicStepType.GATHER_NECESSARY_DATA,
 
@@ -152,8 +104,7 @@ public abstract class LogicStep {
   protected LogicStepType logicStepType = null;
   protected LogicStepType nextLogicStepType = null;
   private String conditionTableName = "";
-  private List<LogEvent> logEventList = new ArrayList<LogEvent>();
-  private long nextSeq = 0;
+  private LogicStepSink logicStepSink = new LogicStepSink();
 
   public LogicStepType getLogicStepType() {
     return logicStepType;
@@ -168,17 +119,23 @@ public abstract class LogicStep {
   }
 
   /**
+   * Get the LogicSink for this LogicStep.
+   * This is used to propagate logging to child LogicTables and LogicOutcomes.
+   * 
+   * @return The LogicSink instance
+   */
+  protected LogSink getLogicStepSink() {
+    return logicStepSink;
+  }
+
+  /**
    * Returns the list of log messages as strings, preserving order.
    * Maintained for backwards compatibility.
    * 
    * @return List of log messages
    */
   public List<String> getLogList() {
-    List<String> messages = new ArrayList<String>();
-    for (LogEvent event : logEventList) {
-      messages.add(event.getMessage());
-    }
-    return messages;
+    return logicStepSink.getLogList();
   }
 
   /**
@@ -187,7 +144,7 @@ public abstract class LogicStep {
    * @return Unmodifiable list of log events
    */
   public List<LogEvent> getLogEventList() {
-    return Collections.unmodifiableList(logEventList);
+    return logicStepSink.getLogEventList();
   }
 
   public String getTitle() {
@@ -201,7 +158,7 @@ public abstract class LogicStep {
    * @param s The message to log
    */
   public void log(String s) {
-    log(Level.DUMP, s);
+    logicStepSink.log(s);
   }
 
   /**
@@ -213,8 +170,8 @@ public abstract class LogicStep {
    * @param level   The log level
    * @param message The message to log
    */
-  protected void log(Level level, String message) {
-    logEventList.add(new LogEvent(level, false, message, nextSeq++));
+  public void log(LogLevel level, String message) {
+    logicStepSink.log(level, message);
   }
 
   /**
@@ -227,7 +184,7 @@ public abstract class LogicStep {
    * @param message The alert message to log
    */
   protected void alert(String message) {
-    alert(Level.CONTROL, message);
+    alert(LogLevel.CONTROL, message);
   }
 
   /**
@@ -240,8 +197,8 @@ public abstract class LogicStep {
    * @param level   The log level
    * @param message The alert message to log
    */
-  protected void alert(Level level, String message) {
-    logEventList.add(new LogEvent(level, true, message, nextSeq++));
+  protected void alert(LogLevel level, String message) {
+    logicStepSink.alert(level, message);
   }
 
   public void printLog(PrintWriter out) {

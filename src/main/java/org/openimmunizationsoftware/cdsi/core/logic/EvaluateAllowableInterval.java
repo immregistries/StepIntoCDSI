@@ -14,6 +14,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
@@ -52,6 +53,7 @@ public class EvaluateAllowableInterval extends LogicStep {
             .setInitialValue(CALCDTINT_3.evaluate(dataModel, this, intervalFromAllowableInterval));
 
         LT logicTable = new LT();
+        logicTable.setLogicStepSink(this.getLogicStepSink());
         logicTableList.add(logicTable);
       }
     }
@@ -67,11 +69,11 @@ public class EvaluateAllowableInterval extends LogicStep {
       }
     }
     if (satisfiedAll == YesNo.NO || logicTableList.size() == 0) {
-      log(Level.STATE, "Allowable interval NOT satisfied - interval requirement failed");
+      log(LogLevel.STATE, "Allowable interval NOT satisfied - interval requirement failed");
       dataModel.getTargetDose()
           .setStatusCause(dataModel.getTargetDose().getStatusCause() + "Interval");
     } else {
-      log(Level.STATE, "Allowable interval satisfied");
+      log(LogLevel.STATE, "Allowable interval satisfied");
     }
 
     setNextLogicStepType(LogicStepType.EVALUATE_VACCINE_CONFLICT);

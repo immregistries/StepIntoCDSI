@@ -19,6 +19,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.businessRules.CONDSKIP_1;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
@@ -206,9 +207,9 @@ public class EvaluateConditionalSkip extends LogicStep {
         evaluateLogicTables();
         TargetDoseStatus status = dataModel.getTargetDose().getTargetDoseStatus();
         if (status == TargetDoseStatus.SKIPPED) {
-            log(Level.CONTROL, "⊘ DOSE SKIPPED - Conditional skip conditions met");
+            log(LogLevel.CONTROL, "DOSE SKIPPED - Conditional skip conditions met");
         } else {
-            log(Level.STATE, "Dose NOT skipped - continuing evaluation");
+            log(LogLevel.STATE, "Dose NOT skipped - continuing evaluation");
         }
         return next();
     }

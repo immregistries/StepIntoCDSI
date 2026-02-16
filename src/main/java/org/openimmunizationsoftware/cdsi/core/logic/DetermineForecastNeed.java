@@ -103,6 +103,7 @@ public class DetermineForecastNeed extends LogicStep {
     conditionAttributesList.add(caCandidateEarliestDate);
 
     LT logicTable = new LT();
+    logicTable.setLogicStepSink(this.getLogicStepSink());
     logicTableList.add(logicTable);
   }
 

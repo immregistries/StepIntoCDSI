@@ -42,6 +42,7 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
     }
 
     LT logicTable = new LT(vgf, selectedList);
+    logicTable.setLogicStepSink(this.getLogicStepSink());
     logicTableList.add(logicTable);
   }
 

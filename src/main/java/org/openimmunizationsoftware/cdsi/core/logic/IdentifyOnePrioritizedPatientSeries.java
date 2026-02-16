@@ -36,6 +36,7 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
     // conditionAttributesList.add(caDateAdministered);
 
     LT logicTable = new LT();
+    logicTable.setLogicStepSink(this.getLogicStepSink());
     logicTableList.add(logicTable);
   }
 
@@ -95,7 +96,7 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
             if (!patientSeries.getTrackedAntigenSeries().getTargetDisease().equals(dataModel.getAntigen())) {
               continue;
             }
-            
+
             AntigenSeries antigenSeries = patientSeries.getTrackedAntigenSeries();
             boolean isDefaultSeries = antigenSeries.getSelectPatientSeries().getDefaultSeries() == YesNo.YES;
             log(" - " + antigenSeries.getSeriesName() + " is default series: "
@@ -189,7 +190,7 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
           for (PatientSeries patientSeries : dataModel.getScorablePatientSeriesList()) {
             AntigenSeries antigenSeries = patientSeries.getTrackedAntigenSeries();
             boolean isDefaultSeries = antigenSeries.getSelectPatientSeries().getDefaultSeries() == YesNo.YES;
-            if(isDefaultSeries) {
+            if (isDefaultSeries) {
               dataModel.getPrioritizedPatientSeriesList().add(patientSeries);
               break;
             }
@@ -223,7 +224,7 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
             }
 
             boolean isCompleteSeries = patientSeries.getPatientSeriesStatus() == PatientSeriesStatus.COMPLETE;
-            if(isCompleteSeries) {
+            if (isCompleteSeries) {
               dataModel.getPrioritizedPatientSeriesList().add(patientSeries);
               break;
             }
@@ -263,10 +264,10 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
             if (!patientSeries.getTrackedAntigenSeries().getTargetDisease().equals(dataModel.getAntigen())) {
               continue;
             }
-            
+
             AntigenSeries antigenSeries = patientSeries.getTrackedAntigenSeries();
             boolean isDefaultSeries = antigenSeries.getSelectPatientSeries().getDefaultSeries() == YesNo.YES;
-            if(isDefaultSeries) {
+            if (isDefaultSeries) {
               dataModel.getPrioritizedPatientSeriesList().add(patientSeries);
               break;
             }

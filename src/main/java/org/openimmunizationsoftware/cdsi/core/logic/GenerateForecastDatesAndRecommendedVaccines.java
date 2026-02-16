@@ -24,6 +24,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
 
 public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
   private ConditionAttribute<Date> caMinimumAgeDate = null;
@@ -82,9 +83,9 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
   }
 
   private void findLatestRecommendedIntervalDate() {
-    log(Level.TRACE, "---< finding Latest Recommended Interval Date");
+    log(LogLevel.TRACE, "---< finding Latest Recommended Interval Date");
     if (referenceSeriesDose.getIntervalList() == null) {
-      log(Level.TRACE, "---> No intervals to check, unable to find latest recommended interval date, returning");
+      log(LogLevel.TRACE, "---> No intervals to check, unable to find latest recommended interval date, returning");
       return;
     }
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
@@ -97,23 +98,23 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
       }
       Date date = timePeriod.getDateFrom(patientReferenceDoseDate);
       if (date == null) {
-        log(Level.TRACE, "Date is null where timePeriod = " + timePeriod + " and patientReferenceDoseDate = "
+        log(LogLevel.TRACE, "Date is null where timePeriod = " + timePeriod + " and patientReferenceDoseDate = "
             + sdf.format(patientReferenceDoseDate));
         continue;
       }
       if (latestDate == null) {
         latestDate = date;
-        log(Level.TRACE, "  + Initial latest recommended date: " + sdf.format(date) + ",");
+        log(LogLevel.TRACE, "  + Initial latest recommended date: " + sdf.format(date) + ",");
       } else if (date.after(latestDate)) {
-        log(Level.TRACE, "  + Later latest recommended date: " + sdf.format(date) + ",");
+        log(LogLevel.TRACE, "  + Later latest recommended date: " + sdf.format(date) + ",");
         latestDate = date;
       }
     }
     if (latestDate != null) {
-      log(Level.TRACE, "---> Setting Latest Recommended Interval Date to " + sdf.format(latestDate.getTime()));
+      log(LogLevel.TRACE, "---> Setting Latest Recommended Interval Date to " + sdf.format(latestDate.getTime()));
       caLatestRecommendedIntervalDate.setInitialValue(latestDate);
     } else {
-      log(Level.TRACE, "---> Latest Recommended Interval Date is null");
+      log(LogLevel.TRACE, "---> Latest Recommended Interval Date is null");
     }
   }
 
@@ -126,7 +127,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
         if (minimalIntervalFromReferenceSeriesDose == null || patientReferenceDoseDate == null) {
           continue;
         }
-        log(Level.TRACE, "ADD adding to minimumIntervalList "
+        log(LogLevel.TRACE, "ADD adding to minimumIntervalList "
             + minimalIntervalFromReferenceSeriesDose.getDateFrom(patientReferenceDoseDate) + ",");
 
         // CALCDTINT-4
@@ -296,15 +297,15 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
         ? sdf.format(forecast.getLatestDate())
         : "Not determined";
 
-    log(Level.STATE, "Vaccination Recommended: " + forecast.getAntigen().getName());
-    log(Level.STATE, "  Forecasting: " + vaccineName);
-    log(Level.STATE, "  Series Name: " + seriesName);
-    log(Level.STATE, "  Dose: " + doseNumber);
-    log(Level.STATE, "  Status: due");
-    log(Level.STATE, "  Recommended Date: " + recommendedDateStr);
-    log(Level.STATE, "  Earliest Date: " + earliestDateStr);
-    log(Level.STATE, "  Past Due Date: " + pastDueDateStr);
-    log(Level.STATE, "  Latest Date: " + latestDateStr);
+    log(LogLevel.STATE, "Vaccination Recommended: " + forecast.getAntigen().getName());
+    log(LogLevel.STATE, "  Forecasting: " + vaccineName);
+    log(LogLevel.STATE, "  Series Name: " + seriesName);
+    log(LogLevel.STATE, "  Dose: " + doseNumber);
+    log(LogLevel.STATE, "  Status: due");
+    log(LogLevel.STATE, "  Recommended Date: " + recommendedDateStr);
+    log(LogLevel.STATE, "  Earliest Date: " + earliestDateStr);
+    log(LogLevel.STATE, "  Past Due Date: " + pastDueDateStr);
+    log(LogLevel.STATE, "  Latest Date: " + latestDateStr);
 
     setNextLogicStepType(LogicStepType.VALIDATE_RECOMMENDATION);
     return next();
@@ -382,24 +383,24 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     List<Date> list = new ArrayList<Date>();
 
     list.add(caMinimumAgeDate.getFinalValue());
-    log(Level.REASONING,
+    log(LogLevel.REASONING,
         "CONS Item for consideration for Earliest date is: " + caMinimumAgeDate.getAttributeName() + " with value of "
             + caMinimumAgeDate.getFinalValue());
 
     Date latestMinimumIntervalDate = getLatestDate(caMinimumIntervalDates.getFinalValue());
     list.add(latestMinimumIntervalDate);
-    log(Level.REASONING,
+    log(LogLevel.REASONING,
         "CONS Item for consideration for Earliest date is: " + caMinimumIntervalDates.getAttributeName()
             + " with value of "
             + caMinimumIntervalDates.getFinalValue());
 
     list.add(caLatestConflictEndIntervalDate.getFinalValue());
-    log(Level.REASONING,
+    log(LogLevel.REASONING,
         "CONS Item for consideration for Earliest date is: " + caLatestConflictEndIntervalDate.getAttributeName()
             + " with value of " + caLatestConflictEndIntervalDate.getFinalValue());
 
     list.add(caSeasonalRecommendationStartDate.getFinalValue());
-    log(Level.REASONING,
+    log(LogLevel.REASONING,
         "CONS Item for consideration for Earliest date is: " + caSeasonalRecommendationStartDate.getAttributeName()
             + " with value of " + caSeasonalRecommendationStartDate.getFinalValue());
 
@@ -411,7 +412,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
       }
     }
     list.add(getLatestDate(allDatesAdministered));
-    log(Level.REASONING, "CONS Item for consideration for Earliest date is: all dates administered with value of "
+    log(LogLevel.REASONING, "CONS Item for consideration for Earliest date is: all dates administered with value of "
         + allDatesAdministered);
 
     Date earliestDate = getLatestDate(list);
@@ -424,15 +425,16 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
 
     if (earliestRecommendedAgeDate != null) {
       unadjustedRecommendedDate = earliestRecommendedAgeDate;
-      log(Level.REASONING, "+ unadjusted recommended age date set to earliest recommended age date");
+      log(LogLevel.REASONING, "+ unadjusted recommended age date set to earliest recommended age date");
       return unadjustedRecommendedDate;
     } else if (caEarliestRecommendedIntervalDates.getFinalValue() != null
         && caEarliestRecommendedIntervalDates.getFinalValue().size() != 0) {
-      log(Level.REASONING,
+      log(LogLevel.REASONING,
           "+ unadjusted recommended age date set to the latest of all earliest recommended interval dates");
       unadjustedRecommendedDate = getLatestDate(caEarliestRecommendedIntervalDates.getFinalValue());
     } else {
-      log(Level.REASONING, "+ unadjusted recommended age date set to the earliest date of the patient series forecast");
+      log(LogLevel.REASONING,
+          "+ unadjusted recommended age date set to the earliest date of the patient series forecast");
       if (dataModel.getVaccineGroupForecastList().size() > 0) {
         Forecast forecast = dataModel.getVaccineGroupForecastList()
             .get(dataModel.getVaccineGroupForecastList().size() - 1);
@@ -455,7 +457,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
   }
 
   private Date computeUnadjustedPastDueDate() {
-    log(Level.TRACE, "---< Computing Unadjusted Past Due Date");
+    log(LogLevel.TRACE, "---< Computing Unadjusted Past Due Date");
     // "The unadjusted past due date of a patient series forecast must be one of the
     // following:"
 
@@ -463,7 +465,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     if (caLatestRecommendedAgeDate.getFinalValue() != null) {
       // "The latest recommended age date minus 1 day."
       unadjustedPastDueDate = DateUtils.addDays(caLatestRecommendedAgeDate.getFinalValue(), -1);
-      log(Level.TRACE, "---> Unadjusted Past Due Date set to the latest recommended age date minus 1 day.");
+      log(LogLevel.TRACE, "---> Unadjusted Past Due Date set to the latest recommended age date minus 1 day.");
     } else {
       // "The latest of all latest recommended interval dates minus 1 day if there is
       // no latest recommended age date."
@@ -480,10 +482,10 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
         }
       }
       if (unadjustedPastDueDate != null) {
-        log(Level.TRACE,
+        log(LogLevel.TRACE,
             "---> Unadjusted Past Due Date set to the latest of all latest recommended interval dates minus 1 day.");
       } else {
-        log(Level.TRACE, "---> Unadjusted Past Due Date set to null");
+        log(LogLevel.TRACE, "---> Unadjusted Past Due Date set to null");
       }
     }
 
@@ -496,10 +498,10 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     Date unadjustedRecommendedDate = computeUnadjustedRecommendedDate();
     if (unadjustedRecommendedDate.after(earliestDate)) {
       adjustedRecommendedDate = unadjustedRecommendedDate;
-      log(Level.REASONING, "SET adjusted Recommended Date set to Unadjusted Recommended Date");
+      log(LogLevel.REASONING, "SET adjusted Recommended Date set to Unadjusted Recommended Date");
     } else {
       adjustedRecommendedDate = earliestDate;
-      log(Level.REASONING, "SET adjusted Recommended Date set to Earliest Date");
+      log(LogLevel.REASONING, "SET adjusted Recommended Date set to Earliest Date");
     }
     return adjustedRecommendedDate;
   }

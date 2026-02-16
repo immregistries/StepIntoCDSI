@@ -25,8 +25,7 @@ public class EvaluateGender extends LogicStep {
     setConditionTableName("Table ");
 
     caGender = new ConditionAttribute<String>("Patient", "Gender");
-    caRequiredGender =
-        new ConditionAttribute<List<RequiredGender>>("Supporting data (Gender)", "Required Gender");
+    caRequiredGender = new ConditionAttribute<List<RequiredGender>>("Supporting data (Gender)", "Required Gender");
 
     caGender.setAssumedValue("UNKNOWN");
     caGender.setInitialValue(dataModel.getPatient().getGender());
@@ -37,6 +36,7 @@ public class EvaluateGender extends LogicStep {
     conditionAttributesList.add(caRequiredGender);
 
     LT logicTable = new LT();
+    logicTable.setLogicStepSink(this.getLogicStepSink());
     logicTableList.add(logicTable);
   }
 
@@ -86,7 +86,7 @@ public class EvaluateGender extends LogicStep {
               if (caRequiredGender.getFinalValue().size() == 0) {
                 return LogicResult.YES;
               }
-              for(RequiredGender requiredGender : caRequiredGender.getFinalValue()) {
+              for (RequiredGender requiredGender : caRequiredGender.getFinalValue()) {
                 if (requiredGender.getValue().contains(caGender.getFinalValue())) {
                   return LogicResult.YES;
                 }

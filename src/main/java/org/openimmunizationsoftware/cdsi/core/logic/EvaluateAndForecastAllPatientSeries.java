@@ -16,6 +16,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.Stepper;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
 
 public class EvaluateAndForecastAllPatientSeries extends LogicStep {
   public EvaluateAndForecastAllPatientSeries(DataModel dataModel) {
@@ -72,16 +73,16 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
 
     // check to see if Patient Series Stepper is setup
     Stepper<PatientSeries> patientSeriesStepper = dataModel.getPatientSeriesStepper();
-    log(Level.TRACE, "Checking patient series stepper status");
+    log(LogLevel.TRACE, "Checking patient series stepper status");
 
     // Very first time
     if (!patientSeriesStepper.isStarted()) {
-      log(Level.CONTROL, "Patient series stepper not started - initializing first patient series");
+      log(LogLevel.CONTROL, "Patient series stepper not started - initializing first patient series");
       patientSeriesStepper.increment();
     }
     // very last time, won't actually run (just in case)
     if (!patientSeriesStepper.hasCurrent()) {
-      log(Level.CONTROL, "No current patient series available - moving to SELECT_BEST_PATIENT_SERIES");
+      log(LogLevel.CONTROL, "No current patient series available - moving to SELECT_BEST_PATIENT_SERIES");
       nullOutDatafields();
       return LogicStepFactory.createLogicStep(SELECT_BEST, dataModel);
     }
@@ -89,7 +90,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
     PatientSeries currentPatientSeries = patientSeriesStepper.getCurrent();
     // Alert if currentPatientSeries is unexpectedly null
     if (currentPatientSeries == null) {
-      alert(Level.CONTROL, "ALERT.MISSING: currentPatientSeries is null entering EVALUATE neighborhood; " +
+      alert(LogLevel.CONTROL, "ALERT.MISSING: currentPatientSeries is null entering EVALUATE neighborhood; " +
           "step=EvaluateAndForecastAllPatientSeries neighborhood=EVALUATE antigen=" +
           (dataModel.getAntigen() != null ? dataModel.getAntigen().getName() : "null"));
       return LogicStepFactory.createLogicStep(END, dataModel);
@@ -103,7 +104,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
         ? dataModel.getSelectedAntigenAdministeredRecordList().size()
         : 0;
 
-    log(Level.STATE, "CONTROL: Current patient series: " + seriesName +
+    log(LogLevel.STATE, "CONTROL: Current patient series: " + seriesName +
         " (antigen=" + antigenName + ", targetDoses=" + targetDoseCount + ", aars=" + aarCount + ")");
 
     // Three possible outcomes
@@ -112,18 +113,18 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
     // LogicStepType.SELECT_BEST_PATIENT_SERIES;
 
     if (dataModel.isNeighborhoodForecast()) {
-      log(Level.CONTROL, "CONTROL: In FORECAST neighborhood");
+      log(LogLevel.CONTROL, "CONTROL: In FORECAST neighborhood");
       if (dataModel.getTargetDose().getTargetDoseStatus() == TargetDoseStatus.SKIPPED) {
-        log(Level.REASONING, "REASONING: Target dose status is SKIPPED - attempting to move to next target dose");
+        log(LogLevel.REASONING, "REASONING: Target dose status is SKIPPED - attempting to move to next target dose");
         if (moveToNextTargetDoseIfAvailable()) {
-          log(Level.CONTROL, "CONTROL: Moved to next target dose - continuing FORECAST (dose " +
+          log(LogLevel.CONTROL, "CONTROL: Moved to next target dose - continuing FORECAST (dose " +
               dataModel.getTargetDose().getTrackedSeriesDose().getDoseNumber() + ")");
           return LogicStepFactory.createLogicStep(FORECAST, dataModel);
         }
-        log(Level.REASONING,
+        log(LogLevel.REASONING,
             "REASONING: No more target doses available after skipped dose - transitioning to next series");
       } else {
-        log(Level.REASONING, "REASONING: Target dose status is " + dataModel.getTargetDose().getTargetDoseStatus()
+        log(LogLevel.REASONING, "REASONING: Target dose status is " + dataModel.getTargetDose().getTargetDoseStatus()
             + " - completed forecast for series, moving to next patient series");
         setNextPatientSeries();
         dataModel.setNeighborhood(Neighborhood.EVALUATE);
@@ -131,27 +132,27 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
     }
 
     if (dataModel.isNeighborhoodSetup()) {
-      log(Level.CONTROL, "CONTROL: In SETUP neighborhood - initializing next patient series");
+      log(LogLevel.CONTROL, "CONTROL: In SETUP neighborhood - initializing next patient series");
       setNextPatientSeries();
       dataModel.setNeighborhood(Neighborhood.EVALUATE);
     }
 
     if (dataModel.isNeighborhoodEvaluate() && patientSeriesStepper.hasCurrent()) {
-      log(Level.CONTROL, "CONTROL: In EVALUATE neighborhood");
+      log(LogLevel.CONTROL, "CONTROL: In EVALUATE neighborhood");
 
       boolean stillHaveTargetDoses = true;
       TargetDoseStatus status = dataModel.getTargetDose().getTargetDoseStatus();
-      log(Level.TRACE, "TRACE: Current target dose status: " + status + " (pos=" +
+      log(LogLevel.TRACE, "TRACE: Current target dose status: " + status + " (pos=" +
           dataModel.getTargetDoseListPos() + ", dose " +
           dataModel.getTargetDose().getTrackedSeriesDose().getDoseNumber() + ")");
 
       switch (status) {
         case SKIPPED:
-          log(Level.REASONING, "REASONING: Target dose SKIPPED - advancing to next target dose");
+          log(LogLevel.REASONING, "REASONING: Target dose SKIPPED - advancing to next target dose");
           stillHaveTargetDoses = moveToNextTargetDoseIfAvailable();
           break;
         case NOT_SATISFIED:
-          log(Level.CONTROL, "CONTROL: Target dose NOT_SATISFIED - advancing AAR (pos " +
+          log(LogLevel.CONTROL, "CONTROL: Target dose NOT_SATISFIED - advancing AAR (pos " +
               dataModel.getSelectedAntigenAdministeredRecordPos() + " -> " +
               (dataModel.getSelectedAntigenAdministeredRecordPos() + 1) + ")");
           // stay on the same target dose
@@ -160,7 +161,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
         case SATISFIED:
         case SUBSTITUTED:
         case UNNECESSARY:
-          log(Level.REASONING, "REASONING: Target dose " + status +
+          log(LogLevel.REASONING, "REASONING: Target dose " + status +
               " - advancing both AAR and target dose");
           dataModel.incSelectedAntigenAdministeredRecordPos();
           stillHaveTargetDoses = moveToNextTargetDoseIfAvailable();
@@ -173,19 +174,19 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
 
       // Alert if aarPos is out of bounds
       if (aarPos > aarListSize) {
-        alert(Level.CONTROL, "ALERT.INVARIANT: aarIndex out of range (" + aarPos + " > " + aarListSize + "); " +
+        alert(LogLevel.CONTROL, "ALERT.INVARIANT: aarIndex out of range (" + aarPos + " > " + aarListSize + "); " +
             "step=EvaluateAndForecastAllPatientSeries series=" + seriesName + " targetDose=" +
             dataModel.getTargetDoseListPos());
       }
 
-      log(Level.TRACE, "TRACE: stillHaveTargetDoses=" + stillHaveTargetDoses + " stillHaveAARs=" + stillHaveAARs +
+      log(LogLevel.TRACE, "TRACE: stillHaveTargetDoses=" + stillHaveTargetDoses + " stillHaveAARs=" + stillHaveAARs +
           " aarIndex=" + aarPos + "/" + aarListSize + " targetDoseIndex=" + dataModel.getTargetDoseListPos());
 
       if (stillHaveAARs && stillHaveTargetDoses) {
-        log(Level.CONTROL, "CONTROL: Continuing evaluation - selecting AAR #" + aarPos);
+        log(LogLevel.CONTROL, "CONTROL: Continuing evaluation - selecting AAR #" + aarPos);
         return LogicStepFactory.createLogicStep(EVALUATE, dataModel);
       } else {
-        log(Level.CONTROL, "CONTROL: Evaluation complete (targetDoses=" + stillHaveTargetDoses +
+        log(LogLevel.CONTROL, "CONTROL: Evaluation complete (targetDoses=" + stillHaveTargetDoses +
             ", aars=" + stillHaveAARs + ") - setting up forecast");
         setupForecast();
         dataModel.setNeighborhood(Neighborhood.FORECAST);
@@ -194,10 +195,10 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
     }
 
     if (patientSeriesStepper.hasCurrent()) {
-      log(Level.CONTROL, "CONTROL: Patient series available - moving to EVALUATE");
+      log(LogLevel.CONTROL, "CONTROL: Patient series available - moving to EVALUATE");
       return LogicStepFactory.createLogicStep(EVALUATE, dataModel);
     } else {
-      log(Level.CONTROL, "CONTROL: No more patient series - cleaning up and moving to SELECT_BEST_PATIENT_SERIES");
+      log(LogLevel.CONTROL, "CONTROL: No more patient series - cleaning up and moving to SELECT_BEST_PATIENT_SERIES");
       nullOutDatafields();
       dataModel.setNeighborhood(Neighborhood.SELECT_BEST_SERIES);
       return LogicStepFactory.createLogicStep(SELECT_BEST, dataModel);
@@ -206,7 +207,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
   }
 
   private void nullOutDatafields() {
-    log(Level.STATE, "STATE: Nulling out data fields - clearing target dose, antigen, and AAR data");
+    log(LogLevel.STATE, "STATE: Nulling out data fields - clearing target dose, antigen, and AAR data");
     dataModel.setTargetDose(null);
     dataModel.setPreviousTargetDose(null);
     dataModel.setTargetDoseList(null);
@@ -217,15 +218,15 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
   }
 
   private boolean moveToNextTargetDoseIfAvailable() {
-    log(Level.CONTROL, "CONTROL: Advancing to next target dose");
+    log(LogLevel.CONTROL, "CONTROL: Advancing to next target dose");
     int oldPos = dataModel.getTargetDoseListPos();
     dataModel.incTargetDoseListPos();
     int newPos = dataModel.getTargetDoseListPos();
-    log(Level.TRACE, "TRACE: Target dose position: " + oldPos + " -> " + newPos);
+    log(LogLevel.TRACE, "TRACE: Target dose position: " + oldPos + " -> " + newPos);
 
     // if there are no more target doses
     if (newPos >= dataModel.getTargetDoseList().size()) {
-      log(Level.TRACE, "TRACE: Target dose index (" + newPos + ") >= list size (" +
+      log(LogLevel.TRACE, "TRACE: Target dose index (" + newPos + ") >= list size (" +
           dataModel.getTargetDoseList().size() + ") - checking for recurring dose");
 
       // if the current target dose is a recurring dose, add a duplicate of it to the
@@ -233,33 +234,33 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
       RecurringDose recurringDose = dataModel.getTargetDose().getTrackedSeriesDose().getRecurringDose();
       if (recurringDose != null) {
         if (recurringDose.getValue() == YesNo.YES) {
-          log(Level.STATE, "STATE: Target dose is RECURRING - adding duplicate to target dose list");
+          log(LogLevel.STATE, "STATE: Target dose is RECURRING - adding duplicate to target dose list");
           TargetDose targetDoseNext = new TargetDose(dataModel.getTargetDose());
           dataModel.getTargetDoseList().add(targetDoseNext);
-          log(Level.TRACE, "TRACE: Recurring dose added - new list size: " + dataModel.getTargetDoseList().size());
+          log(LogLevel.TRACE, "TRACE: Recurring dose added - new list size: " + dataModel.getTargetDoseList().size());
         } else {
-          log(Level.REASONING,
+          log(LogLevel.REASONING,
               "REASONING: Recurring dose value is NO - no more target doses available, ending evaluation");
           return false;
         }
       } else {
-        log(Level.REASONING, "REASONING: No recurring dose defined - marking remaining AARs as EXTRANEOUS");
+        log(LogLevel.REASONING, "REASONING: No recurring dose defined - marking remaining AARs as EXTRANEOUS");
         markRestAsExtraneous();
         return false;
       }
     } else {
-      log(Level.STATE, "STATE: Transitioning to next target dose in list");
+      log(LogLevel.STATE, "STATE: Transitioning to next target dose in list");
       dataModel.setPreviousTargetDose(dataModel.getTargetDose());
       TargetDose nextDose = dataModel.getTargetDoseList().get(newPos);
       dataModel.setTargetDose(nextDose);
-      log(Level.TRACE, "TRACE: Now on target dose: " + nextDose.getTrackedSeriesDose().getDoseNumber() +
+      log(LogLevel.TRACE, "TRACE: Now on target dose: " + nextDose.getTrackedSeriesDose().getDoseNumber() +
           " (index " + newPos + ")");
     }
     return true;
   }
 
   private boolean setNextPatientSeries() {
-    log(Level.CONTROL, "CONTROL: Transitioning to next patient series");
+    log(LogLevel.CONTROL, "CONTROL: Transitioning to next patient series");
     Stepper<PatientSeries> patientSeriesStepper = dataModel.getPatientSeriesStepper();
     patientSeriesStepper.increment();
 
@@ -268,13 +269,13 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
       String seriesName = patientSeries.getTrackedAntigenSeries().getSeriesName();
       String antigenName = patientSeries.getTrackedAntigenSeries().getTargetDisease().getName();
 
-      log(Level.STATE, "STATE: Selected patient series: " + seriesName + " (antigen=" + antigenName + ")");
+      log(LogLevel.STATE, "STATE: Selected patient series: " + seriesName + " (antigen=" + antigenName + ")");
 
       dataModel.setTargetDoseList(new ArrayList<TargetDose>());
       patientSeries.setTargetDoseList(dataModel.getTargetDoseList());
       dataModel.setAntigen(patientSeries.getTrackedAntigenSeries().getTargetDisease());
 
-      log(Level.TRACE, "TRACE: Building target doses from series doses");
+      log(LogLevel.TRACE, "TRACE: Building target doses from series doses");
       for (SeriesDose seriesDose : patientSeries.getTrackedAntigenSeries().getSeriesDoseList()) {
         TargetDose targetDose = new TargetDose(seriesDose);
         dataModel.getTargetDoseList().add(targetDose);
@@ -283,18 +284,18 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
 
       // Alert if target dose list is empty
       if (targetDoseCount == 0) {
-        alert(Level.CONTROL, "ALERT.MISSING: targetDoseList is empty after building; " +
+        alert(LogLevel.CONTROL, "ALERT.MISSING: targetDoseList is empty after building; " +
             "step=EvaluateAndForecastAllPatientSeries series=" + seriesName +
             " antigen=" + antigenName);
       }
 
-      log(Level.STATE, "STATE: Created " + targetDoseCount + " target doses for this series");
+      log(LogLevel.STATE, "STATE: Created " + targetDoseCount + " target doses for this series");
 
       if (targetDoseCount > 0) {
         dataModel.setTargetDose(dataModel.getTargetDoseList().get(0));
         dataModel.setPreviousTargetDose(null);
         dataModel.setTargetDoseListPos(0);
-        log(Level.STATE, "STATE: Starting with target dose 1 (dose number: " +
+        log(LogLevel.STATE, "STATE: Starting with target dose 1 (dose number: " +
             dataModel.getTargetDose().getTrackedSeriesDose().getDoseNumber() + ")");
       }
 
@@ -302,13 +303,13 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
       return true;
     }
 
-    log(Level.CONTROL, "CONTROL: No more patient series available");
+    log(LogLevel.CONTROL, "CONTROL: No more patient series available");
     return false;
   }
 
   private void setupSelectedAntigenAdministeredRecordList() {
     String antigenName = dataModel.getAntigen().getName();
-    log(Level.CONTROL, "CONTROL: Building selected AAR list for antigen: " + antigenName);
+    log(LogLevel.CONTROL, "CONTROL: Building selected AAR list for antigen: " + antigenName);
 
     List<AntigenAdministeredRecord> selectedAntigenAdministeredRecordList = new ArrayList<AntigenAdministeredRecord>();
     dataModel.setSelectedAntigenAdministeredRecordList(selectedAntigenAdministeredRecordList);
@@ -316,7 +317,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
     int totalAARs = dataModel.getAntigenAdministeredRecordList() != null
         ? dataModel.getAntigenAdministeredRecordList().size()
         : 0;
-    log(Level.TRACE, "TRACE: Filtering AARs from " + totalAARs + " total");
+    log(LogLevel.TRACE, "TRACE: Filtering AARs from " + totalAARs + " total");
 
     if (dataModel.getAntigenAdministeredRecordList() != null) {
       for (AntigenAdministeredRecord aar : dataModel.getAntigenAdministeredRecordList()) {
@@ -327,30 +328,30 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
     }
 
     int selectedCount = selectedAntigenAdministeredRecordList.size();
-    log(Level.STATE, "STATE: Selected " + selectedCount + " AARs matching antigen " + antigenName);
+    log(LogLevel.STATE, "STATE: Selected " + selectedCount + " AARs matching antigen " + antigenName);
 
     dataModel.setSelectedAntigenAdministeredRecordPos(0);
     dataModel.setPreviousAntigenAdministeredRecord(null);
 
     if (!selectedAntigenAdministeredRecordList.isEmpty()) {
       dataModel.setAntigenAdministeredRecord(selectedAntigenAdministeredRecordList.get(0));
-      log(Level.STATE, "STATE: Starting with AAR #1 (dated: " +
+      log(LogLevel.STATE, "STATE: Starting with AAR #1 (dated: " +
           selectedAntigenAdministeredRecordList.get(0).getDateAdministered() + ")");
     } else {
       // Alert if no AARs found - this may be ok (no history) but denotes missed AAR
       // opportunity
-      log(Level.REASONING, "REASONING: No AARs found for antigen - will proceed directly to forecasting");
+      log(LogLevel.REASONING, "REASONING: No AARs found for antigen - will proceed directly to forecasting");
     }
   }
 
   private void setupForecast() {
-    log(Level.CONTROL, "CONTROL: Entering FORECAST phase - initializing forecast object");
+    log(LogLevel.CONTROL, "CONTROL: Entering FORECAST phase - initializing forecast object");
 
     PatientSeries patientSeries = dataModel.getPatientSeriesStepper().getCurrent();
 
     // Alert if patientSeries is null
     if (patientSeries == null) {
-      alert(Level.CONTROL, "ALERT.MISSING: patientSeries is null when trying to setup forecast; " +
+      alert(LogLevel.CONTROL, "ALERT.MISSING: patientSeries is null when trying to setup forecast; " +
           "step=EvaluateAndForecastAllPatientSeries neighborhood=FORECAST->SETUP");
       return;
     }
@@ -369,7 +370,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
     forecast.setAntigen(patientSeries.getTrackedAntigenSeries().getTargetDisease());
     forecast.setTargetDose(dataModel.getTargetDose());
 
-    log(Level.STATE, "STATE: Forecast initialized for antigen=" + antigenName +
+    log(LogLevel.STATE, "STATE: Forecast initialized for antigen=" + antigenName +
         " targetDose=" + targetDoseNumber);
 
     dataModel.setForecast(forecast);
@@ -381,13 +382,13 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
     int aarPos = dataModel.getSelectedAntigenAdministeredRecordPos();
     int remainingAARs = aarListSize - (aarPos + 1);
 
-    log(Level.CONTROL, "CONTROL: Marking remaining " + remainingAARs + " AARs (#" +
+    log(LogLevel.CONTROL, "CONTROL: Marking remaining " + remainingAARs + " AARs (#" +
         (aarPos + 2) + "-" + aarListSize + ") as EXTRANEOUS");
 
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
     for (int i = aarPos + 1; i < aarListSize; i++) {
       dataModel.setAntigenAdministeredRecord(dataModel.getSelectedAntigenAdministeredRecordList().get(i));
-      log(Level.TRACE, "TRACE: AAR #" + (i + 1) + " (dated " +
+      log(LogLevel.TRACE, "TRACE: AAR #" + (i + 1) + " (dated " +
           dataModel.getAntigenAdministeredRecord().getDateAdministered() + ") -> EXTRANEOUS");
 
       TargetDose targetDose = new TargetDose(seriesDose);
@@ -397,7 +398,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
       dataModel.incSelectedAntigenAdministeredRecordPos();
     }
 
-    log(Level.STATE, "STATE: Completed marking " + remainingAARs + " AARs as EXTRANEOUS");
+    log(LogLevel.STATE, "STATE: Completed marking " + remainingAARs + " AARs as EXTRANEOUS");
   }
 
   @Override

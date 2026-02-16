@@ -16,6 +16,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
@@ -60,6 +61,7 @@ public class EvaluatePreferableInterval extends LogicStep {
           .setInitialValue(CALCDTINT_3.evaluate(dataModel, this, interval));
       logicTable.caMinimumIntervalDate.setInitialValue(CALCDTINT_4.evaluate(dataModel, this, interval));
 
+      logicTable.setLogicStepSink(this.getLogicStepSink());
       logicTableList.add(logicTable);
     }
   }
@@ -74,10 +76,10 @@ public class EvaluatePreferableInterval extends LogicStep {
       }
     }
     if (satisfiedAll == YesNo.YES) {
-      log(Level.STATE, "Preferable interval satisfied - continuing to vaccine conflict evaluation");
+      log(LogLevel.STATE, "Preferable interval satisfied - continuing to vaccine conflict evaluation");
       setNextLogicStepType(LogicStepType.EVALUATE_VACCINE_CONFLICT);
     } else {
-      log(Level.STATE, "Preferable interval NOT satisfied - checking allowable interval");
+      log(LogLevel.STATE, "Preferable interval NOT satisfied - checking allowable interval");
       setNextLogicStepType(LogicStepType.EVALUATE_ALLOWABLE_INTERVAL);
     }
     return next();

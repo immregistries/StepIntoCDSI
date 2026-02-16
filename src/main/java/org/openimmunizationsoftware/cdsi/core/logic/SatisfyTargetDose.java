@@ -11,6 +11,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
@@ -22,6 +23,7 @@ public class SatisfyTargetDose extends LogicStep {
     setConditionTableName("Table ");
 
     LT logicTable = new LT();
+    logicTable.setLogicStepSink(this.getLogicStepSink());
     logicTableList.add(logicTable);
   }
 
@@ -31,11 +33,11 @@ public class SatisfyTargetDose extends LogicStep {
     evaluateLogicTables();
     TargetDoseStatus status = dataModel.getTargetDose().getTargetDoseStatus();
     if (status == TargetDoseStatus.SATISFIED) {
-      log(Level.CONTROL, "✓ TARGET DOSE SATISFIED - All conditions met");
+      log(LogLevel.CONTROL, "TARGET DOSE SATISFIED - All conditions met");
     } else if (status == TargetDoseStatus.NOT_SATISFIED) {
-      log(Level.CONTROL, "✗ TARGET DOSE NOT SATISFIED - Requirements not met");
+      log(LogLevel.CONTROL, "TARGET DOSE NOT SATISFIED - Requirements not met");
     } else if (status == TargetDoseStatus.SKIPPED) {
-      log(Level.CONTROL, "⊘ TARGET DOSE SKIPPED - Conditional skip applied");
+      log(LogLevel.CONTROL, "TARGET DOSE SKIPPED - Conditional skip applied");
     }
     dataModel.getTargetDose().setStatusCause("");
     return next(true);

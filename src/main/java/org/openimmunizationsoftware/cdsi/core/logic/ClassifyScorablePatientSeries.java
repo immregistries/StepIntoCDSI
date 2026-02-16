@@ -31,6 +31,7 @@ public class ClassifyScorablePatientSeries extends LogicStep {
     // conditionAttributesList.add(caDateAdministered);
 
     LT logicTable = new LT();
+    logicTable.setLogicStepSink(this.getLogicStepSink());
     logicTableList.add(logicTable);
   }
 

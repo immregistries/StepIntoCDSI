@@ -32,6 +32,8 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStat
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepFactory;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepType;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogEvent;
 
 public class ForecastServlet extends HttpServlet {
 
@@ -68,7 +70,7 @@ public class ForecastServlet extends HttpServlet {
       StringBuilder logBuffer = req.getParameter("log") != null ? new StringBuilder() : null;
 
       // Build per-step log level map
-      Map<LogicStepType, LogicStep.Level> stepLevelMap = null;
+      Map<LogicStepType, LogLevel> stepLevelMap = null;
       if (logBuffer != null) {
         stepLevelMap = buildStepLevelMap(req);
       }
@@ -468,7 +470,7 @@ public class ForecastServlet extends HttpServlet {
   }
 
   protected void process(DataModel dataModel, PrintWriter out,
-      StringBuilder logBuffer, Map<LogicStepType, LogicStep.Level> stepLevelMap) throws Exception {
+      StringBuilder logBuffer, Map<LogicStepType, LogLevel> stepLevelMap) throws Exception {
     int count = 0;
     while (dataModel.getLogicStep().getLogicStepType() != LogicStepType.END) {
       LogicStep currentStep = dataModel.getLogicStep();
@@ -478,7 +480,7 @@ public class ForecastServlet extends HttpServlet {
       // Collect and filter logs if requested
       if (logBuffer != null && stepLevelMap != null) {
         LogicStepType currentStepType = currentStep.getLogicStepType();
-        LogicStep.Level threshold = stepLevelMap.getOrDefault(currentStepType, LogicStep.Level.CONTROL);
+        LogLevel threshold = stepLevelMap.getOrDefault(currentStepType, LogLevel.CONTROL);
 
         // Print step header
         logBuffer.append("\n");
@@ -490,7 +492,7 @@ public class ForecastServlet extends HttpServlet {
 
         // Print filtered log events
         if (currentStep.getLogEventList() != null) {
-          for (LogicStep.LogEvent event : currentStep.getLogEventList()) {
+          for (LogEvent event : currentStep.getLogEventList()) {
             if (meetsThreshold(event.getLevel(), threshold)) {
               if (event.isAlert()) {
                 logBuffer.append("  + ALERT: ").append(event.getMessage()).append("\n");
@@ -522,18 +524,18 @@ public class ForecastServlet extends HttpServlet {
    * @param req The HTTP request
    * @return Map of LogicStepType to log Level
    */
-  protected Map<LogicStepType, LogicStep.Level> buildStepLevelMap(HttpServletRequest req) {
-    Map<LogicStepType, LogicStep.Level> stepLevelMap = new EnumMap<>(LogicStepType.class);
+  protected Map<LogicStepType, LogLevel> buildStepLevelMap(HttpServletRequest req) {
+    Map<LogicStepType, LogLevel> stepLevelMap = new EnumMap<>(LogicStepType.class);
 
     // Parse global default level
     String globalLevelParam = req.getParameter("logLevel");
-    LogicStep.Level defaultLevel = LogicStep.Level.CONTROL;
+    LogLevel defaultLevel = LogLevel.CONTROL;
     if (globalLevelParam != null) {
       try {
-        defaultLevel = LogicStep.Level.valueOf(globalLevelParam.toUpperCase());
+        defaultLevel = LogLevel.valueOf(globalLevelParam.toUpperCase());
       } catch (IllegalArgumentException e) {
         // Invalid level, use default
-        defaultLevel = LogicStep.Level.CONTROL;
+        defaultLevel = LogLevel.CONTROL;
       }
     }
 
@@ -548,7 +550,7 @@ public class ForecastServlet extends HttpServlet {
       String levelParam = req.getParameter(paramName);
       if (levelParam != null) {
         try {
-          LogicStep.Level level = LogicStep.Level.valueOf(levelParam.toUpperCase());
+          LogLevel level = LogLevel.valueOf(levelParam.toUpperCase());
           stepLevelMap.put(stepType, level);
         } catch (IllegalArgumentException e) {
           // Invalid level, keep default
@@ -569,7 +571,7 @@ public class ForecastServlet extends HttpServlet {
    * @param threshold  The threshold level for filtering
    * @return true if the event should be printed
    */
-  private boolean meetsThreshold(LogicStep.Level eventLevel, LogicStep.Level threshold) {
+  private boolean meetsThreshold(LogLevel eventLevel, LogLevel threshold) {
     // Lower ordinal = less verbose (CONTROL=0, DUMP=4)
     // Print if event level is at or below threshold
     return eventLevel.ordinal() <= threshold.ordinal();

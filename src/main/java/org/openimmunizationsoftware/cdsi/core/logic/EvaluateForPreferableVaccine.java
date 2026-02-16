@@ -11,6 +11,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.PreferrableVaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
@@ -75,6 +76,7 @@ public class EvaluateForPreferableVaccine extends LogicStep {
         logicTable.caVaccineTypeEndAgeDate.setInitialValue(dateFrom);
       }
 
+      logicTable.setLogicStepSink(this.getLogicStepSink());
       logicTableList.add(logicTable);
     }
   }
@@ -90,10 +92,10 @@ public class EvaluateForPreferableVaccine extends LogicStep {
       }
     }
     if (atLeastOnePass == YesNo.NO) {
-      log(Level.STATE, "No PREFERABLE vaccines found matching vaccine type and age");
+      log(LogLevel.STATE, "No PREFERABLE vaccines found matching vaccine type and age");
       setNextLogicStepType(LogicStepType.EVALUATE_FOR_ALLOWABLE_VACCINE);
     } else {
-      log(Level.STATE, "PREFERABLE vaccine match found - evaluating satisfaction");
+      log(LogLevel.STATE, "PREFERABLE vaccine match found - evaluating satisfaction");
     }
     return next();
   }

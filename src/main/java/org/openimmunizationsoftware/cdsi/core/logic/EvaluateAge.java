@@ -12,8 +12,8 @@ import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
@@ -48,6 +48,7 @@ public class EvaluateAge extends LogicStep {
     conditionAttributesList.add(caAbsoluteMinimumAgeDate);
 
     LT logicTable = new LT();
+    logicTable.setLogicStepSink(this.getLogicStepSink());
     logicTableList.add(logicTable);
 
     AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
@@ -75,12 +76,6 @@ public class EvaluateAge extends LogicStep {
   public LogicStep process() throws Exception {
     setNextLogicStepType(LogicStepType.EVALUATE_PREFERABLE_INTERVAL);
     evaluateLogicTables();
-    TargetDoseStatus status = dataModel.getTargetDose().getTargetDoseStatus();
-    if (status == TargetDoseStatus.NOT_SATISFIED) {
-      log(Level.CONTROL, "✗ DOSE REJECTED: Age validation failed (too young or too old)");
-    } else {
-      log(Level.STATE, "Age validation passed");
-    }
 
     // evaluation should now be set
 
@@ -121,9 +116,16 @@ public class EvaluateAge extends LogicStep {
       setLogicCondition(0, new LogicCondition("Is the date administered < absolute minimum age date?") {
         @Override
         public LogicResult evaluateInternal() {
-          if (caDateAdministered.getFinalValue().before(caAbsoluteMinimumAgeDate.getFinalValue())) {
+          Date dateAdministered = caDateAdministered.getFinalValue();
+          Date absoluteMinimumDate = caAbsoluteMinimumAgeDate.getFinalValue();
+          log(LogLevel.REASONING, "Checking: Is date administered < absolute minimum age date?");
+          log(LogLevel.TRACE, "  Date administered: " + sdf.format(dateAdministered));
+          log(LogLevel.TRACE, "  Absolute minimum age date: " + sdf.format(absoluteMinimumDate));
+          if (dateAdministered.before(absoluteMinimumDate)) {
+            log(LogLevel.REASONING, "  Result: YES - Date administered is BEFORE absolute minimum age date");
             return YES;
           }
+          log(LogLevel.REASONING, "  Result: NO - Date administered is NOT before absolute minimum age date");
           return NO;
         }
       });
@@ -135,9 +137,21 @@ public class EvaluateAge extends LogicStep {
               Date absoluteMinimumDate = caAbsoluteMinimumAgeDate.getFinalValue();
               Date dateAdministered = caDateAdministered.getFinalValue();
               Date minimumDate = caMinimumAgeDate.getFinalValue();
-              if (!absoluteMinimumDate.after(dateAdministered) && dateAdministered.before(minimumDate)) {
+              log(LogLevel.REASONING,
+                  "Checking: Is absolute minimum age date <= date administered < minimum age date (grace period)?");
+              log(LogLevel.TRACE, "  Absolute minimum age date: " + sdf.format(absoluteMinimumDate));
+              log(LogLevel.TRACE, "  Date administered: " + sdf.format(dateAdministered));
+              log(LogLevel.TRACE, "  Minimum age date: " + sdf.format(minimumDate));
+              boolean absoluteMinOK = !absoluteMinimumDate.after(dateAdministered);
+              boolean minimumOK = dateAdministered.before(minimumDate);
+              log(LogLevel.DUMP, "    Absolute minimum <= administered: " + absoluteMinOK);
+              log(LogLevel.DUMP, "    Administered < minimum: " + minimumOK);
+              if (absoluteMinOK && minimumOK) {
+                log(LogLevel.REASONING,
+                    "  Result: YES - Dose in grace period (between absolute minimum and minimum age)");
                 return YES;
               }
+              log(LogLevel.REASONING, "  Result: NO - Dose NOT in grace period");
               return NO;
             }
           });
@@ -149,9 +163,19 @@ public class EvaluateAge extends LogicStep {
               Date minimumDate = caMinimumAgeDate.getFinalValue();
               Date administeredDate = caDateAdministered.getFinalValue();
               Date maximumDate = caMaximumAgeDate.getFinalValue();
-              if (!minimumDate.after(administeredDate) && administeredDate.before(maximumDate)) {
+              log(LogLevel.REASONING, "Checking: Is minimum age date <= date administered < maximum age date?");
+              log(LogLevel.TRACE, "  Minimum age date: " + sdf.format(minimumDate));
+              log(LogLevel.TRACE, "  Date administered: " + sdf.format(administeredDate));
+              log(LogLevel.TRACE, "  Maximum age date: " + sdf.format(maximumDate));
+              boolean minimumOK = !minimumDate.after(administeredDate);
+              boolean maximumOK = administeredDate.before(maximumDate);
+              log(LogLevel.DUMP, "    Minimum <= administered: " + minimumOK);
+              log(LogLevel.DUMP, "    Administered < maximum: " + maximumOK);
+              if (minimumOK && maximumOK) {
+                log(LogLevel.REASONING, "  Result: YES - Dose at valid age (within recommended age range)");
                 return YES;
               }
+              log(LogLevel.REASONING, "  Result: NO - Dose NOT within valid age range");
               return NO;
             }
           });
@@ -161,9 +185,14 @@ public class EvaluateAge extends LogicStep {
         public LogicResult evaluateInternal() {
           Date administeredDate = caDateAdministered.getFinalValue();
           Date maximumDate = caMaximumAgeDate.getFinalValue();
+          log(LogLevel.REASONING, "Checking: Is date administered >= maximum age date?");
+          log(LogLevel.TRACE, "  Date administered: " + sdf.format(administeredDate));
+          log(LogLevel.TRACE, "  Maximum age date: " + sdf.format(maximumDate));
           if (!administeredDate.before(maximumDate)) {
+            log(LogLevel.REASONING, "  Result: YES - Date administered is AT OR AFTER maximum age date (extraneous)");
             return YES;
           }
+          log(LogLevel.REASONING, "  Result: NO - Date administered is BEFORE maximum age date");
           return NO;
         }
       });
@@ -176,33 +205,36 @@ public class EvaluateAge extends LogicStep {
       setLogicOutcome(0, new LogicOutcome() {
         @Override
         public void perform() {
+          log(LogLevel.CONTROL, "DOSE REJECTED: Vaccine dose was administered before the absolute minimum age");
+          log(LogLevel.STATE, "Setting evaluation status to \"not valid\"");
+          log(LogLevel.STATE, "Setting evaluation reason to \"too young\"");
           dataModel.setEvaluationForCurrentTargetDose(EvaluationStatus.NOT_VALID, EvaluationReason.TOO_YOUNG);
-          log("No. The vaccine dose was not administered at a valid age for the target dose.");
-          log("Evaluation reason is \'too young.\'");
         }
       });
       setLogicOutcome(1, new LogicOutcome() {
         @Override
         public void perform() {
+          log(LogLevel.CONTROL, "DOSE ACCEPTED: Vaccine dose was administered at a valid age (Grace period)");
+          log(LogLevel.STATE, "Setting evaluation status to \"valid\"");
+          log(LogLevel.STATE, "Setting evaluation reason to \"grace period\"");
           dataModel.setEvaluationForCurrentTargetDose(EvaluationStatus.VALID, EvaluationReason.GRACE_PERIOD);
-          log("Yes. The vaccine dose was administered at a valid age for the target dose.");
-          log("Evaluation reason is \"Grace period.\"");
         }
       });
       setLogicOutcome(2, new LogicOutcome() {
         @Override
         public void perform() {
+          log(LogLevel.CONTROL, "DOSE ACCEPTED: Vaccine dose was administered at a valid age");
+          log(LogLevel.STATE, "Setting evaluation status to \"valid\"");
           dataModel.setEvaluationForCurrentTargetDose(EvaluationStatus.VALID, null);
-          log("Yes. The vaccine dose was administered at a valid age for the target dose.");
         }
       });
       setLogicOutcome(3, new LogicOutcome() {
         @Override
         public void perform() {
+          log(LogLevel.CONTROL, "DOSE REJECTED: Vaccine dose was administered after the maximum age (extraneous)");
+          log(LogLevel.STATE, "Setting evaluation status to \"extraneous\"");
+          log(LogLevel.STATE, "Setting evaluation reason to \"too old\"");
           dataModel.setEvaluationForCurrentTargetDose(EvaluationStatus.EXTRANEOUS, EvaluationReason.TOO_OLD);
-          log("No. The vaccine dose was not administered at a valid age for the target dose.");
-          log("It is extraneous.");
-          log("Evaluation reason is 'Too old'.");
         }
       });
     }

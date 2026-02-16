@@ -80,8 +80,10 @@ public class SelectRelevantPatientSeries extends LogicStep {
         logicTable54.caIndicationEndAgeDate.setInitialValue(CALCDTIND_2.evaluate(dataModel, this, indication));
 
         logicTable55.addInnerSet(logicTable54);
+        logicTable54.setLogicStepSink(this.getLogicStepSink());
         logicTableList.add(logicTable54);
       }
+      logicTable55.setLogicStepSink(this.getLogicStepSink());
       logicTableList.add(logicTable55);
     }
   }

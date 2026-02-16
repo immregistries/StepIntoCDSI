@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepType;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
 
 /**
  * Human-friendly servlet for execution with log level controls.
@@ -29,17 +30,17 @@ public class RunServlet extends ForecastServlet {
 
             // Parse logging settings
             boolean loggingEnabled = req.getParameter("log") != null;
-            Map<LogicStepType, LogicStep.Level> stepLevelMap = null;
-            LogicStep.Level defaultLevel = LogicStep.Level.CONTROL;
+            Map<LogicStepType, LogLevel> stepLevelMap = null;
+            LogLevel defaultLevel = LogLevel.CONTROL;
 
             if (loggingEnabled) {
                 stepLevelMap = buildStepLevelMap(req);
                 String globalLevelParam = req.getParameter("logLevel");
                 if (globalLevelParam != null) {
                     try {
-                        defaultLevel = LogicStep.Level.valueOf(globalLevelParam.toUpperCase());
+                        defaultLevel = LogLevel.valueOf(globalLevelParam.toUpperCase());
                     } catch (IllegalArgumentException e) {
-                        defaultLevel = LogicStep.Level.CONTROL;
+                        defaultLevel = LogLevel.CONTROL;
                     }
                 }
             }
@@ -64,8 +65,8 @@ public class RunServlet extends ForecastServlet {
     }
 
     private void renderHtmlPage(PrintWriter out, HttpServletRequest req,
-            boolean loggingEnabled, LogicStep.Level defaultLevel,
-            Map<LogicStepType, LogicStep.Level> stepLevelMap, String outputText) {
+            boolean loggingEnabled, LogLevel defaultLevel,
+            Map<LogicStepType, LogLevel> stepLevelMap, String outputText) {
 
         out.println("<!DOCTYPE html>");
         out.println("<html>");
@@ -120,7 +121,7 @@ public class RunServlet extends ForecastServlet {
                 + (loggingEnabled ? "checked" : "") + "> Enable Logging</label>");
         out.println("    <label style=\"margin-left: 20px;\">Default Level: ");
         out.println("      <select name=\"logLevel\">");
-        for (LogicStep.Level level : LogicStep.Level.values()) {
+        for (LogLevel level : LogLevel.values()) {
             String selected = (level == defaultLevel) ? " selected" : "";
             out.println("        <option value=\"" + level.name() + "\"" + selected + ">"
                     + level.name() + "</option>");
@@ -145,7 +146,7 @@ public class RunServlet extends ForecastServlet {
             if (stepType == LogicStepType.END)
                 continue; // Skip END step
 
-            LogicStep.Level currentLevel = (stepLevelMap != null)
+            LogLevel currentLevel = (stepLevelMap != null)
                     ? stepLevelMap.getOrDefault(stepType, defaultLevel)
                     : defaultLevel;
             String paramName = "log" + stepType.name();
@@ -153,7 +154,7 @@ public class RunServlet extends ForecastServlet {
             out.println("    <tr>");
             out.println("      <td class=\"step-name\">" + stepType.getChapter() + " " + stepType.getName() + "</td>");
 
-            for (LogicStep.Level level : LogicStep.Level.values()) {
+            for (LogLevel level : LogLevel.values()) {
                 String checked = (level == currentLevel) ? " checked" : "";
                 out.println("      <td><input type=\"radio\" name=\"" + paramName
                         + "\" value=\"" + level.name() + "\"" + checked + "></td>");
