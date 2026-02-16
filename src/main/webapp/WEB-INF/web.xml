@@ -52,8 +52,10 @@
     <servlet>
         <servlet-name>dataModelViewLiveVirusConflict</servlet-name>
         <servlet-class>org.openimmunizationsoftware.cdsi.servlet.dataModelView.LiveVirusConflictServlet</servlet-class>
-    </servlet>
-   
+    </servlet>	<servlet>
+        <servlet-name>sandbox</servlet-name>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.SandboxServlet</servlet-class>
+    </servlet>   
     
     <servlet-mapping>
         <servlet-name>forecast</servlet-name>
@@ -106,6 +108,10 @@
     <servlet-mapping>
         <servlet-name>dataModelViewLiveVirusConflict</servlet-name>
         <url-pattern>/dataModelViewLiveVirusConflict</url-pattern>
+    </servlet-mapping>
+	<servlet-mapping>
+        <servlet-name>sandbox</servlet-name>
+        <url-pattern>/sandbox</url-pattern>
     </servlet-mapping>
 
 

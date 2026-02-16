@@ -308,7 +308,18 @@ public class FitsServlet extends ForecastServlet {
                                             + recommendedPass;
 
                                     out.println(
-                                            "          <a href=\"" + linkRunTest + "\" target=\"_blank\">Run</a>");
+                                            "          <a href=\"" + linkRunTest + "\" target=\"_blank\">Run</a> | ");
+
+                                    // Build code snippet for SandboxServlet
+                                    String sandboxLink = createLink(testCaseRegistered);
+                                    String codeSnippet = "add(\"" + groupName + "\", \""
+                                            + testCaseRegistered.getTestCase().getUid() + " "
+                                            + testCaseRegistered.getTestCase().getName() + "\", \""
+                                            + sandboxLink + "\");";
+
+                                    out.println("          <a href=\"javascript:void(0);\" onclick=\"copyToClipboard('"
+                                            + codeSnippet.replace("'", "\\'").replace("\"", "&quot;")
+                                            + "')\" title=\"Copy code snippet\">Copy</a>");
                                 } else {
                                     out.println("          " + testCaseRegistered.getProblemReason());
                                 }
@@ -465,6 +476,34 @@ public class FitsServlet extends ForecastServlet {
         out.println("    <input type=\"password\" id=\"password\" name=\"password\" required>");
         out.println("    <input type=\"Submit\" name=\"action\" value=\"Refresh\">");
         out.println("  </form>");
+
+        out.println("  <script>");
+        out.println("    function copyToClipboard(text) {");
+        out.println("      if (navigator.clipboard && window.isSecureContext) {");
+        out.println("        navigator.clipboard.writeText(text).then(() => {");
+        out.println("          alert('Code snippet copied to clipboard!');");
+        out.println("        }).catch(err => {");
+        out.println("          alert('Failed to copy: ' + err);");
+        out.println("        });");
+        out.println("      } else {");
+        out.println("        // Fallback for older browsers");
+        out.println("        const textArea = document.createElement('textarea');");
+        out.println("        textArea.value = text;");
+        out.println("        textArea.style.position = 'fixed';");
+        out.println("        textArea.style.left = '-999999px';");
+        out.println("        document.body.appendChild(textArea);");
+        out.println("        textArea.focus();");
+        out.println("        textArea.select();");
+        out.println("        try {");
+        out.println("          document.execCommand('copy');");
+        out.println("          alert('Code snippet copied to clipboard!');");
+        out.println("        } catch (err) {");
+        out.println("          alert('Failed to copy');");
+        out.println("        }");
+        out.println("        document.body.removeChild(textArea);");
+        out.println("      }");
+        out.println("    }");
+        out.println("  </script>");
 
         out.println("  </body>");
         out.println("</html>");
