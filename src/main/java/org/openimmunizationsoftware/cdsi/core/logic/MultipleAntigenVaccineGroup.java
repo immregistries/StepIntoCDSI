@@ -95,11 +95,10 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
       }
       // Add the vaccine group forecast only once with all antigens
       if (!vgf.getAntigenList().isEmpty()) {
-        vgf.setAntigen(selectPrimaryAntigen(vgf.getAntigenList())); // Set primary antigen intelligently
+        vgf.setAntigen(vgf.getAntigenList().get(0)); // Set primary antigen
         dataModel.getVaccineGroupForecastList().add(vgf);
         log(LogLevel.STATE,
-            "STATE: Added combined vaccine group forecast with " + vgf.getAntigenList().size() + " antigens (primary: "
-                + vgf.getAntigen().getName() + ")");
+            "STATE: Added combined vaccine group forecast with " + vgf.getAntigenList().size() + " antigens");
       }
       log(LogLevel.STATE, "STATE: Selected List size: " + selectedList.size());
       log(LogLevel.STATE, "STATE: Vaccine group forecast list size: " + dataModel.getVaccineGroupForecastList().size());
@@ -123,45 +122,15 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
       }
       // Add the vaccine group forecast with COMPLETE/IMMUNE status
       if (!vgf.getAntigenList().isEmpty()) {
-        vgf.setAntigen(selectPrimaryAntigen(vgf.getAntigenList())); // Set primary antigen intelligently
+        vgf.setAntigen(vgf.getAntigenList().get(0)); // Set primary antigen
         dataModel.getVaccineGroupForecastList().add(vgf);
         log(LogLevel.STATE,
-            "STATE: Added COMPLETE/IMMUNE vaccine group forecast with " + vgf.getAntigenList().size()
-                + " antigens (primary: " + vgf.getAntigen().getName() + ")");
+            "STATE: Added COMPLETE/IMMUNE vaccine group forecast with " + vgf.getAntigenList().size() + " antigens");
       }
       log(LogLevel.STATE, "STATE: Vaccine group forecast list size: " + dataModel.getVaccineGroupForecastList().size());
     }
 
     return next();
-  }
-
-  /**
-   * Select the primary antigen for a multi-antigen vaccine group.
-   * For MMR, prefer Measles (expected by FitsServlet mapping).
-   * For DTaP/Tdap, prefer Diphtheria.
-   * Otherwise, return the first antigen.
-   */
-  private Antigen selectPrimaryAntigen(List<Antigen> antigens) {
-    if (antigens == null || antigens.isEmpty()) {
-      return null;
-    }
-
-    // For MMR: prefer Measles (FitsServlet expects this)
-    for (Antigen antigen : antigens) {
-      if ("Measles".equalsIgnoreCase(antigen.getName())) {
-        return antigen;
-      }
-    }
-
-    // For DTaP/Tdap: prefer Diphtheria
-    for (Antigen antigen : antigens) {
-      if ("Diphtheria".equalsIgnoreCase(antigen.getName())) {
-        return antigen;
-      }
-    }
-
-    // Default to first antigen
-    return antigens.get(0);
   }
 
   private void MULTIANTVG_8() {

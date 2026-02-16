@@ -36,7 +36,8 @@ public class FitsServlet extends ForecastServlet {
     }
 
     private static String[][] equivalentCvx = new String[][] { { "85", "52" }, { "107", "112" },
-            { "45", "08", "189", "43" }, { "163", "164", "162" }, { "137", "165" }, { "48", "17" }, { "07", "03" },
+            { "45", "08", "189", "43" }, { "163", "164", "162" }, { "137", "165" }, { "48", "17" },
+            { "03", "05", "06", "07" }, // MMR (03), Measles (05), Rubella (06), Mumps (07)
             { "109", "152", "133" }, { "188", "187" }, { "108", "147" } };
 
     private static boolean isSameVaccineCvx(String cvx1, String cvx2) {
@@ -553,6 +554,7 @@ public class FitsServlet extends ForecastServlet {
             return null;
         }
         // Map FITS group names to CDSI antigen names
+        // For multi-component vaccines (MMR), return null to rely on CVX code matching
         switch (groupName.toUpperCase()) {
             case "DTAP":
             case "DTAP/TDAP/TD":
@@ -565,7 +567,7 @@ public class FitsServlet extends ForecastServlet {
             case "MENINGOCOCCAL B":
                 return "Meningococcal";
             case "MMR":
-                return "Measles";
+                return null; // Multi-component: match by CVX equivalence instead
             case "PCV":
             case "PNEUMOCOCCAL":
                 return "Pneumococcal";
