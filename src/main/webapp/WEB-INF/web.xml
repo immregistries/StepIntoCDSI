@@ -13,6 +13,14 @@
         <servlet-name>fhir</servlet-name>
         <servlet-class>org.openimmunizationsoftware.cdsi.servlet.FhirServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>supportingData</servlet-name>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.SupportingDataServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>home</servlet-name>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.HomeServlet</servlet-class>
+    </servlet>
 	<servlet>
         <servlet-name>forecast</servlet-name>
         <servlet-class>org.openimmunizationsoftware.cdsi.servlet.ForecastServlet</servlet-class>
@@ -112,6 +120,18 @@
 	<servlet-mapping>
         <servlet-name>sandbox</servlet-name>
         <url-pattern>/sandbox</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>supportingData</servlet-name>
+        <url-pattern>/supportingData</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>home</servlet-name>
+        <url-pattern>/home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>home</servlet-name>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
 
 

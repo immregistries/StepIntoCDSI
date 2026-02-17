@@ -71,6 +71,8 @@ public class FitsServlet extends ForecastServlet {
         Exception exception = null;
         String testPlanIdSelected = req.getParameter("testPlanId");
         String groupNameSelected = req.getParameter("groupName");
+        String selectedSupportingDataSet = resolveSupportingDataSet(req);
+        List<String> supportingDataSetIdList = SupportingDataManager.listSupportingDataSetIds(getServletContext());
 
         if (action != null) {
             if (action.equals("Refresh")) {
@@ -97,7 +99,7 @@ public class FitsServlet extends ForecastServlet {
                         Map<String, TestCaseRegistered> testCaseMap = groupTestCaseMap.get(groupName);
                         if (testCaseMap != null) {
                             logToOut("  Processing group: " + groupName);
-                            runTestsForGroup(testCaseMap);
+                            runTestsForGroup(testCaseMap, selectedSupportingDataSet);
                         }
                     }
                 } else {
@@ -105,7 +107,7 @@ public class FitsServlet extends ForecastServlet {
                     Map<String, TestCaseRegistered> testCaseMap = groupTestCaseMap.get(groupNameSelected);
                     if (testCaseMap != null) {
                         logToOut("Running forecaster for " + testPlanIdSelected + " - " + groupNameSelected);
-                        runTestsForGroup(testCaseMap);
+                        runTestsForGroup(testCaseMap, selectedSupportingDataSet);
                     }
                 }
             }
@@ -467,6 +469,19 @@ public class FitsServlet extends ForecastServlet {
 
         out.println("  <form action=\"fits\" method=\"GET\" id=\"fitsForm\">");
         out.println("    <h3>Enter FITS Credentials</h3>");
+        out.println("    <label for=\"" + PARAM_SUPPORTING_DATA_SET + "\">Forecaster (Supporting Data Set):</label>");
+        out.println("    <select id=\"" + PARAM_SUPPORTING_DATA_SET + "\" name=\"" + PARAM_SUPPORTING_DATA_SET + "\">");
+        if (supportingDataSetIdList.isEmpty()) {
+            out.println("      <option value=\"\">default</option>");
+        } else {
+            for (String setId : supportingDataSetIdList) {
+                String selected = setId.equalsIgnoreCase(String.valueOf(selectedSupportingDataSet)) ? " selected" : "";
+                out.println("      <option value=\"" + escapeHtml(setId) + "\"" + selected + ">"
+                        + escapeHtml(setId) + "</option>");
+            }
+        }
+        out.println("    </select>");
+        out.println("    <br/>");
         out.println("    <label for=\"username\">Username:</label>");
         out.println(
                 "    <input type=\"text\" id=\"username\" name=\"username\" value=\"" + usernameString + "\"required>");
@@ -539,14 +554,16 @@ public class FitsServlet extends ForecastServlet {
         }
     }
 
-    private void runTestsForGroup(Map<String, TestCaseRegistered> testCaseMap) {
+    private void runTestsForGroup(Map<String, TestCaseRegistered> testCaseMap, String supportingDataSet) {
         for (TestCaseRegistered testCaseRegistered : testCaseMap.values()) {
             try {
                 String link = createLink(testCaseRegistered);
                 String linkStep = "step" + link;
                 logToOut(" - Running " + testCaseRegistered.getTestCase().getUid());
                 logToOut("   - " + linkStep);
-                DataModel dataModel = DataModelLoader.createDataModel();
+                DataModel dataModel = supportingDataSet == null || supportingDataSet.trim().equals("")
+                        ? DataModelLoader.createDataModel()
+                        : DataModelLoader.createDataModel(supportingDataSet);
                 // setup data model
                 dataModel.setTestCaseRegistered(testCaseRegistered);
                 LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel);
@@ -705,6 +722,17 @@ public class FitsServlet extends ForecastServlet {
             }
         }
         return link;
+    }
+
+    private String escapeHtml(String text) {
+        if (text == null) {
+            return "";
+        }
+        return text.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&#39;");
     }
 
 }

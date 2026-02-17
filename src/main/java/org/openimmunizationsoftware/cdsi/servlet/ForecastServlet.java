@@ -42,6 +42,7 @@ public class ForecastServlet extends HttpServlet {
   public static final String RESULT_FORMAT_COMPACT = "compact";
 
   public static final String PARAM_RESULT_FORMAT = "resultFormat";
+  public static final String PARAM_SUPPORTING_DATA_SET = "supportingDataSet";
 
   // Test case parameters for displaying test information
   public static final String PARAM_TEST_CASE = "_test_case";
@@ -592,7 +593,10 @@ public class ForecastServlet extends HttpServlet {
   }
 
   protected DataModel readRequest(HttpServletRequest req) throws Exception {
-    DataModel dataModel = DataModelLoader.createDataModel();
+    String supportingDataSet = resolveSupportingDataSet(req);
+    DataModel dataModel = supportingDataSet == null || supportingDataSet.trim().equals("")
+        ? DataModelLoader.createDataModel()
+        : DataModelLoader.createDataModel(supportingDataSet.trim());
     dataModel.setRequest(req);
 
     // Parse antigenInclude parameters (antigenInclude1, antigenInclude2, etc.)
@@ -615,6 +619,14 @@ public class ForecastServlet extends HttpServlet {
     dataModel.setNextLogicStep(
         LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel));
     return dataModel;
+  }
+
+  protected String resolveSupportingDataSet(HttpServletRequest req) {
+    String supportingDataSet = req.getParameter(PARAM_SUPPORTING_DATA_SET);
+    if (supportingDataSet != null && !supportingDataSet.trim().equals("")) {
+      return SupportingDataManager.normalizeSetId(supportingDataSet);
+    }
+    return SupportingDataManager.resolveDefaultSupportingDataSet(getServletContext());
   }
 
   public static String n(Date date) {

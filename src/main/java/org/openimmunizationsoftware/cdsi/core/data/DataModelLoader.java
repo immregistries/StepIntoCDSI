@@ -1,11 +1,24 @@
 package org.openimmunizationsoftware.cdsi.core.data;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -52,52 +65,194 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class DataModelLoader {
-  private static final String[] scheduleNames = { "Cholera", "Diphtheria", "HepA", "HepB", "Hib", "HPV", "Influenza",
-      "JE", "Measles", "Meningococcal B", "Meningococcal", "Mumps",
-      "Pertussis", "Pneumococcal", "Polio", "Rabies", "Rotavirus", "Rubella", "Tetanus", "Typhoid", "Varicella", "YF",
-      "Zoster" };
+  private static final String SCHEDULE_SUPPORTING_DATA_FILE = "ScheduleSupportingData.xml";
+  private static final String SCHEDULE_SUPPORTING_DATA_FILE_WITH_SPACE = "Schedule SupportingData.xml";
+  private static final Pattern ANTIGEN_FILE_PATTERN = Pattern
+      .compile("^AntigenSupportingData-\\s*(.+?)(?:-\\s*508)?\\.xml$", Pattern.CASE_INSENSITIVE);
 
   public static DataModel createDataModel() throws Exception {
+    throw new IllegalArgumentException(
+        "Supporting data set is required. Call createDataModel(String supportingDataSet) with a zip file name or ID.");
+  }
+
+  public static DataModel createDataModel(String supportingDataSet) throws Exception {
+    if (supportingDataSet == null || supportingDataSet.trim().equals("")) {
+      throw new IllegalArgumentException(
+          "Supporting data set parameter cannot be null or empty. Provide a zip file name or ID.");
+    }
+
     DataModel dataModel = new DataModel();
+    loadZipData(dataModel, supportingDataSet.trim());
+    return dataModel;
+  }
 
-    String baseLocation = "";
+  private static void loadZipData(DataModel dataModel, String supportingDataSet) throws Exception {
+    ZipSource zipSource = resolveSupportingDataZipSource(supportingDataSet);
 
-    {
-      InputStream is = DataModelLoader.class.getResourceAsStream(baseLocation + "ScheduleSupportingData.xml");
+    try (InputStream zipInputStream = zipSource.inputStream;
+        ZipInputStream zis = new ZipInputStream(new BufferedInputStream(zipInputStream))) {
+      Document scheduleDoc = null;
+      List<ZipScheduleDocument> scheduleDocList = new ArrayList<ZipScheduleDocument>();
 
+      ZipEntry entry;
+      while ((entry = zis.getNextEntry()) != null) {
+        if (entry.isDirectory()) {
+          zis.closeEntry();
+          continue;
+        }
+
+        String fileName = getSimpleFileName(entry.getName());
+        byte[] entryContent = readEntryContent(zis);
+
+        if (isScheduleSupportingDataFile(fileName)) {
+          scheduleDoc = parseDocument(entryContent);
+          zis.closeEntry();
+          continue;
+        }
+
+        Matcher matcher = ANTIGEN_FILE_PATTERN.matcher(fileName);
+        if (matcher.matches()) {
+          String scheduleName = matcher.group(1).trim();
+          if (!scheduleName.equals("")) {
+            Document doc = parseDocument(entryContent);
+            scheduleDocList.add(new ZipScheduleDocument(scheduleName, doc));
+          }
+        }
+
+        zis.closeEntry();
+      }
+
+      if (scheduleDoc == null) {
+        throw new IllegalArgumentException(
+            "Zip '" + zipSource.displayName + "' does not contain " + SCHEDULE_SUPPORTING_DATA_FILE
+                + " or " + SCHEDULE_SUPPORTING_DATA_FILE_WITH_SPACE);
+      }
+
+      readCvxToAntigenMap(dataModel, scheduleDoc);
+      readVaccineGroups(dataModel, scheduleDoc);
+      readVaccineGroupToAntigenMap(dataModel, scheduleDoc);
+      readLiveVirusConflicts(dataModel, scheduleDoc);
+      readObservations(dataModel, scheduleDoc);
+
+      if (scheduleDocList.isEmpty()) {
+        throw new IllegalArgumentException(
+            "Zip '" + zipSource.displayName + "' does not contain any AntigenSupportingData-*.xml files");
+      }
+
+      Collections.sort(scheduleDocList);
+      for (ZipScheduleDocument zipScheduleDocument : scheduleDocList) {
+        Schedule schedule = new Schedule();
+        schedule.setScheduleName(zipScheduleDocument.scheduleName);
+        dataModel.getScheduleList().add(schedule);
+        readImmunity(schedule, dataModel, zipScheduleDocument.document);
+        readAntigenSeries(schedule, dataModel, zipScheduleDocument.document);
+        readContraindications(schedule, dataModel, zipScheduleDocument.document);
+      }
+    }
+  }
+
+  private static Document parseDocument(InputStream inputStream) throws Exception {
+    try (InputStream is = inputStream) {
       DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
       DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
       Document doc = dBuilder.parse(is);
-
       doc.getDocumentElement().normalize();
-      readCvxToAntigenMap(dataModel, doc);
-      readVaccineGroups(dataModel, doc);
-      readVaccineGroupToAntigenMap(dataModel, doc);
-      readLiveVirusConflicts(dataModel, doc);
-      readObservations(dataModel, doc);
+      return doc;
+    }
+  }
+
+  private static Document parseDocument(byte[] content) throws Exception {
+    return parseDocument(new ByteArrayInputStream(content));
+  }
+
+  private static boolean isScheduleSupportingDataFile(String fileName) {
+    return fileName.equalsIgnoreCase(SCHEDULE_SUPPORTING_DATA_FILE)
+        || fileName.equalsIgnoreCase(SCHEDULE_SUPPORTING_DATA_FILE_WITH_SPACE)
+        || fileName.replace(" ", "").equalsIgnoreCase(SCHEDULE_SUPPORTING_DATA_FILE);
+  }
+
+  private static byte[] readEntryContent(ZipInputStream zis) throws Exception {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    byte[] buffer = new byte[4096];
+    int bytesRead;
+    while ((bytesRead = zis.read(buffer)) > 0) {
+      baos.write(buffer, 0, bytesRead);
+    }
+    return baos.toByteArray();
+  }
+
+  private static String getSimpleFileName(String path) {
+    int slashPos = Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
+    if (slashPos < 0) {
+      return path;
+    }
+    return path.substring(slashPos + 1);
+  }
+
+  private static ZipSource resolveSupportingDataZipSource(String supportingDataSet) throws Exception {
+    List<String> fileNamesToTry = new ArrayList<String>();
+    fileNamesToTry.add(supportingDataSet);
+    if (!supportingDataSet.toLowerCase(Locale.ROOT).endsWith(".zip")) {
+      fileNamesToTry.add(supportingDataSet + ".zip");
     }
 
-    for (String scheduleName : scheduleNames) {
-      InputStream is = DataModelLoader.class
-          .getResourceAsStream(baseLocation + "AntigenSupportingData- " + scheduleName + "-508.xml");
-
-      if (is != null) {
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document doc = dBuilder.parse(is);
-
-        doc.getDocumentElement().normalize();
-
-        Schedule schedule = new Schedule();
-        schedule.setScheduleName(scheduleName);
-        dataModel.getScheduleList().add(schedule);
-        readImmunity(schedule, dataModel, doc);
-        readAntigenSeries(schedule, dataModel, doc);
-        readContraindications(schedule, dataModel, doc);
+    List<File> candidates = new ArrayList<File>();
+    String configuredDir = System.getProperty("cdsi.supportingDataDirectory");
+    for (String fileName : fileNamesToTry) {
+      candidates.add(new File(fileName));
+      candidates.add(new File("supporting-data", fileName));
+      if (configuredDir != null && !configuredDir.trim().equals("")) {
+        candidates.add(new File(configuredDir, fileName));
       }
     }
 
-    return dataModel;
+    for (File candidate : candidates) {
+      if (candidate.exists() && candidate.isFile()) {
+        return new ZipSource(candidate.getAbsolutePath(), new FileInputStream(candidate));
+      }
+    }
+
+    List<String> classpathCandidates = new ArrayList<String>();
+    for (String fileName : fileNamesToTry) {
+      classpathCandidates.add(fileName);
+      classpathCandidates.add("supporting-data/" + fileName);
+      classpathCandidates.add("org/openimmunizationsoftware/cdsi/core/data/supporting-data/" + fileName);
+    }
+    for (String classpathPath : classpathCandidates) {
+      InputStream is = DataModelLoader.class.getClassLoader().getResourceAsStream(classpathPath);
+      if (is != null) {
+        return new ZipSource("classpath:" + classpathPath, is);
+      }
+    }
+
+    throw new IllegalArgumentException(
+        "Unable to find supporting data zip for '" + supportingDataSet
+            + "'. Tried direct path, ./supporting-data, -Dcdsi.supportingDataDirectory, and classpath locations");
+  }
+
+  private static class ZipSource {
+    private final String displayName;
+    private final InputStream inputStream;
+
+    private ZipSource(String displayName, InputStream inputStream) {
+      this.displayName = displayName;
+      this.inputStream = inputStream;
+    }
+  }
+
+  private static class ZipScheduleDocument implements Comparable<ZipScheduleDocument> {
+    private final String scheduleName;
+    private final Document document;
+
+    private ZipScheduleDocument(String scheduleName, Document document) {
+      this.scheduleName = scheduleName;
+      this.document = document;
+    }
+
+    @Override
+    public int compareTo(ZipScheduleDocument other) {
+      return scheduleName.compareToIgnoreCase(other.scheduleName);
+    }
   }
 
   private static void readImmunity(Schedule schedule, DataModel dataModel, Document doc) {

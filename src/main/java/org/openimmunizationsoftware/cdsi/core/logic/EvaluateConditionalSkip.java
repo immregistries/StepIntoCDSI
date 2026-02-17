@@ -112,7 +112,9 @@ public class EvaluateConditionalSkip extends LogicStep {
                     } else if (condition
                             .getConditionType() == ConditionalSkipConditionType.VACCINE_COUNT_BY_AGE
                             || condition
-                                    .getConditionType() == ConditionalSkipConditionType.VACCINE_COUNT_BY_DATE) {
+                                    .getConditionType() == ConditionalSkipConditionType.VACCINE_COUNT_BY_DATE
+                            || condition
+                                    .getConditionType() == ConditionalSkipConditionType.VACCINE_COUNT_BY_DATE_AND_AGE) {
                         lt = new LT69();
                     } else {
                         throw new IllegalArgumentException("Unknown Conditional Skip Condition Type: "

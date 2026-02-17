@@ -14,8 +14,10 @@ import org.openimmunizationsoftware.cdsi.core.logic.LogicStepFactory;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepType;
 import org.openimmunizationsoftware.cdsi.servlet.fits.TestCaseRegistered;
 import org.openimmunizationsoftware.cdsi.servlet.fits.TestCaseRegistered.Vaccination;
+import org.openimmunizationsoftware.cdsi.servlet.SupportingDataManager;
 import org.hl7.fhir.r4.model.*;
 
+import javax.servlet.ServletContext;
 import java.util.*;
 
 public class ImmunizationRecommendationForecastProvider {
@@ -34,15 +36,23 @@ public class ImmunizationRecommendationForecastProvider {
 	public static final String PATIENT = "patient";
 	public static final String RECOMMENDATION = "recommendation";
 	public static final String IMMUNIZATION = "immunization";
+	public static final String SUPPORTING_DATA_SET = "supportingDataSet";
+
+	private ServletContext servletContext;
 
 	public ImmunizationRecommendationForecastProvider() {
+	}
+
+	public void setServletContext(ServletContext servletContext) {
+		this.servletContext = servletContext;
 	}
 
 	@Operation(name = $_IMMDS_FORECAST)
 	public Parameters immdsForecastSample(
 			@Description(shortDefinition = "The date on which to assess the forecast.") @OperationParam(name = ASSESSMENT_DATE, min = 1, max = 1, typeName = "date") IPrimitiveType<Date> assessmentDate,
 			@Description(shortDefinition = "Patient information.") @OperationParam(name = PATIENT, min = 1, max = 1) Patient patient,
-			@Description(shortDefinition = "Patient immunization history.") @OperationParam(name = IMMUNIZATION) List<Immunization> immunization) {
+			@Description(shortDefinition = "Patient immunization history.") @OperationParam(name = IMMUNIZATION) List<Immunization> immunization,
+			@Description(shortDefinition = "Optional supporting data zip set id or path.") @OperationParam(name = SUPPORTING_DATA_SET, min = 0, max = 1, typeName = "string") String supportingDataSet) {
 		Parameters out = new Parameters();
 		TestCaseRegistered tcr = new TestCaseRegistered();
 		tcr.setBirthDate(patient.getBirthDate());
@@ -56,7 +66,16 @@ public class ImmunizationRecommendationForecastProvider {
 		}
 		ImmunizationRecommendation recommendation = new ImmunizationRecommendation();
 		try {
-			DataModel dataModel = DataModelLoader.createDataModel();
+			// Resolve supportingDataSet to default if not provided
+			String resolvedSupportingDataSet = supportingDataSet;
+			if ((resolvedSupportingDataSet == null || resolvedSupportingDataSet.trim().equals(""))
+					&& servletContext != null) {
+				resolvedSupportingDataSet = SupportingDataManager.resolveDefaultSupportingDataSet(servletContext);
+			}
+
+			DataModel dataModel = resolvedSupportingDataSet == null || resolvedSupportingDataSet.trim().equals("")
+					? DataModelLoader.createDataModel()
+					: DataModelLoader.createDataModel(resolvedSupportingDataSet.trim());
 			// setup data model
 			dataModel.setTestCaseRegistered(tcr);
 			LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel);

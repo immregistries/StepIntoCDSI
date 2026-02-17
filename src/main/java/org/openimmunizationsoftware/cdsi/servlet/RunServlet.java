@@ -2,6 +2,7 @@ package org.openimmunizationsoftware.cdsi.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -54,8 +55,13 @@ public class RunServlet extends ForecastServlet {
                 outputText = generateTextOutput(dataModel, logBuffer, req);
             }
 
+            String selectedSupportingDataSet = resolveSupportingDataSet(req);
+            List<String> supportingDataSetIdList = SupportingDataManager
+                    .listSupportingDataSetIds(getServletContext());
+
             // Render HTML page
-            renderHtmlPage(out, req, loggingEnabled, defaultLevel, stepLevelMap, outputText);
+            renderHtmlPage(out, req, loggingEnabled, defaultLevel, stepLevelMap, outputText,
+                    selectedSupportingDataSet, supportingDataSetIdList);
 
             out.close();
         } catch (Exception e) {
@@ -66,7 +72,8 @@ public class RunServlet extends ForecastServlet {
 
     private void renderHtmlPage(PrintWriter out, HttpServletRequest req,
             boolean loggingEnabled, LogLevel defaultLevel,
-            Map<LogicStepType, LogLevel> stepLevelMap, String outputText) {
+            Map<LogicStepType, LogLevel> stepLevelMap, String outputText,
+            String selectedSupportingDataSet, List<String> supportingDataSetIdList) {
 
         out.println("<!DOCTYPE html>");
         out.println("<html>");
@@ -117,6 +124,19 @@ public class RunServlet extends ForecastServlet {
         // Global logging controls
         out.println("  <div class=\"controls\">");
         out.println("    <h3>Global Logging Controls</h3>");
+        out.println("    <label style=\"margin-right: 20px;\">Supporting Data Set: ");
+        out.println("      <select name=\"" + PARAM_SUPPORTING_DATA_SET + "\">");
+        if (supportingDataSetIdList.isEmpty()) {
+            out.println("        <option value=\"\">default</option>");
+        } else {
+            for (String setId : supportingDataSetIdList) {
+                String selected = setId.equalsIgnoreCase(String.valueOf(selectedSupportingDataSet)) ? " selected" : "";
+                out.println("        <option value=\"" + escapeHtml(setId) + "\"" + selected + ">"
+                        + escapeHtml(setId) + "</option>");
+            }
+        }
+        out.println("      </select>");
+        out.println("    </label>");
         out.println("    <label><input type=\"checkbox\" name=\"log\" value=\"true\" "
                 + (loggingEnabled ? "checked" : "") + "> Enable Logging</label>");
         out.println("    <label style=\"margin-left: 20px;\">Default Level: ");
@@ -195,7 +215,8 @@ public class RunServlet extends ForecastServlet {
             String name = entry.getKey();
 
             // Skip log control parameters and execute flag
-            if (name.equals("log") || name.equals("logLevel") || name.equals("execute")) {
+            if (name.equals("log") || name.equals("logLevel") || name.equals("execute")
+                    || name.equals(PARAM_SUPPORTING_DATA_SET)) {
                 continue;
             }
 

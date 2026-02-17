@@ -2,271 +2,132 @@ package org.openimmunizationsoftware.cdsi.core.data;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+import java.util.List;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openimmunizationsoftware.cdsi.core.domain.Age;
-import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
 import org.openimmunizationsoftware.cdsi.core.domain.Schedule;
-import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
-import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriodType;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 
-
+/**
+ * Sanity check tests for DataModelLoader with zip-based supporting data.
+ * These tests verify that at least one zip file exists and can be loaded
+ * successfully.
+ * They do NOT check specific counts or structure details to avoid breaking on
+ * CDC updates.
+ */
 public class DataModelLoaderTest {
 
+    private static String testSupportingDataSet;
+
+    @BeforeClass
+    public static void findTestSupportingData() throws Exception {
+        // Look for zip files in common locations
+        List<String> candidatePaths = java.util.Arrays.asList(
+                "src/main/resources/supporting-data-4.64-508.zip",
+                "src/main/resources/supporting-data",
+                "supporting-data");
+
+        for (String path : candidatePaths) {
+            File file = new File(path);
+            if (file.exists()) {
+                if (file.isFile() && file.getName().toLowerCase().endsWith(".zip")) {
+                    testSupportingDataSet = file.getName();
+                    break;
+                } else if (file.isDirectory()) {
+                    File[] zipFiles = file.listFiles((dir, name) -> name.toLowerCase().endsWith(".zip"));
+                    if (zipFiles != null && zipFiles.length > 0) {
+                        testSupportingDataSet = zipFiles[0].getName();
+                        break;
+                    }
+                }
+            }
+        }
+
+        assertNotNull(
+                "No supporting data zip file found. Place a CDC supporting data zip in src/main/resources/ or supporting-data/",
+                testSupportingDataSet);
+    }
+
     @Test
-    public void testLoadDataBasic() throws Exception
-    {
-        DataModel dataModel = DataModelLoader.createDataModel();  
-        assertTrue(dataModel.getVaccineGroupMap().size() > 18);
-        boolean foundCholera = false;
-        boolean foundDtap = false;
-        for (String name : dataModel.getVaccineGroupMap().keySet()) 
-        {
-            VaccineGroup vaccineGroup = dataModel.getVaccineGroupMap().get(name);
-            if (name.equals("Cholera"))
-            {
-                foundCholera = true;
-                
-            }
-            else if (name.equals("DTaP/Tdap/Td"))
-            {
-                foundDtap = true;
-                assertEquals(YesNo.NO, vaccineGroup.getAdministerFullVaccineGroup());
-            }
+    public void testZipFileCanBeLoaded() throws Exception {
+        assertNotNull("Test supporting data set not initialized", testSupportingDataSet);
+        DataModel dataModel = DataModelLoader.createDataModel(testSupportingDataSet);
+        assertNotNull("DataModel should not be null", dataModel);
+    }
+
+    @Test
+    public void testHasVaccineGroups() throws Exception {
+        DataModel dataModel = DataModelLoader.createDataModel(testSupportingDataSet);
+        assertNotNull("VaccineGroupMap should not be null", dataModel.getVaccineGroupMap());
+        assertTrue("Should have at least some vaccine groups", dataModel.getVaccineGroupMap().size() > 0);
+        assertNotNull("VaccineGroupList should not be null", dataModel.getVaccineGroupList());
+        assertTrue("VaccineGroupList should not be empty", dataModel.getVaccineGroupList().size() > 0);
+    }
+
+    @Test
+    public void testHasCvxMappings() throws Exception {
+        DataModel dataModel = DataModelLoader.createDataModel(testSupportingDataSet);
+        assertNotNull("CvxMap should not be null", dataModel.getCvxMap());
+        assertTrue("Should have CVX to antigen mappings", dataModel.getCvxMap().size() > 0);
+    }
+
+    @Test
+    public void testHasSchedules() throws Exception {
+        DataModel dataModel = DataModelLoader.createDataModel(testSupportingDataSet);
+        assertNotNull("ScheduleList should not be null", dataModel.getScheduleList());
+        assertTrue("Should have at least some schedules/antigens", dataModel.getScheduleList().size() > 0);
+
+        // Verify schedules have basic structure
+        for (Schedule schedule : dataModel.getScheduleList()) {
+            assertNotNull("Schedule name should not be null", schedule.getScheduleName());
+            assertNotEquals("Schedule name should not be empty", "", schedule.getScheduleName());
         }
-        assertTrue(foundCholera);
-        assertTrue(foundDtap);
     }
 
-    @Test 
-    public void testLoadDataLiveVirusConflict() throws Exception
-    {
-        DataModel dataModel = DataModelLoader.createDataModel();  
-        assertTrue(dataModel.getLiveVirusConflictList().size() > 360);
-        boolean foundWhatweWereLookingFor = false;
-        for (LiveVirusConflict liveVirusConflict : dataModel.getLiveVirusConflictList())
-        {
-            assertNotNull(liveVirusConflict.getPreviousVaccineType());
-            assertNotNull(liveVirusConflict.getCurrentVaccineType());
-            assertNotNull(liveVirusConflict.getConflictBeginInterval());
-            assertNotNull(liveVirusConflict.getConflictEndInterval());
-            assertNotNull(liveVirusConflict.getMinimalConflictEndInterval());
-            assertTrue(liveVirusConflict.getConflictBeginInterval().isValued());
-            assertTrue(liveVirusConflict.getConflictEndInterval().isValued());
-            assertTrue(liveVirusConflict.getMinimalConflictEndInterval().isValued());
-            if (liveVirusConflict.getPreviousVaccineType().getCvxCode().equals("03") 
-              && liveVirusConflict.getCurrentVaccineType().getCvxCode().equals("111"))
-            {
-                foundWhatweWereLookingFor = true;
-                assertNotNull(liveVirusConflict.getPreviousVaccineType().getShortDescription());
-                assertNotNull(liveVirusConflict.getCurrentVaccineType().getShortDescription());
-                assertNotEquals("", liveVirusConflict.getPreviousVaccineType().getShortDescription());
-                assertNotEquals("", liveVirusConflict.getCurrentVaccineType().getShortDescription());
-                assertEquals(1, liveVirusConflict.getConflictBeginInterval().getAmount());
-                assertEquals(TimePeriodType.DAY, liveVirusConflict.getConflictBeginInterval().getType());
-                assertEquals(28, liveVirusConflict.getConflictEndInterval().getAmount());
-                assertEquals(TimePeriodType.DAY, liveVirusConflict.getConflictEndInterval().getType());
-                assertEquals(28, liveVirusConflict.getMinimalConflictEndInterval().getAmount());
-                assertEquals(TimePeriodType.DAY, liveVirusConflict.getMinimalConflictEndInterval().getType());
-            }
+    @Test
+    public void testHasLiveVirusConflicts() throws Exception {
+        DataModel dataModel = DataModelLoader.createDataModel(testSupportingDataSet);
+        assertNotNull("LiveVirusConflictList should not be null", dataModel.getLiveVirusConflictList());
+        assertTrue("Should have live virus conflicts defined", dataModel.getLiveVirusConflictList().size() > 0);
+    }
+
+    @Test
+    public void testNullSupportingDataSetThrowsException() {
+        try {
+            DataModelLoader.createDataModel(null);
+            fail("Should throw IllegalArgumentException for null supporting data set");
+        } catch (IllegalArgumentException e) {
+            assertTrue("Error message should mention parameter requirement",
+                    e.getMessage().contains("cannot be null"));
+        } catch (Exception e) {
+            fail("Should throw IllegalArgumentException, not " + e.getClass().getName());
         }
-        assertTrue(foundWhatweWereLookingFor);
     }
 
-    @Test 
-    public void testLoadDataVaccineGroups() throws Exception
-    {
-        DataModel dataModel = DataModelLoader.createDataModel();
-        boolean foundVaccineGroupMMR = false;
-        assertTrue(dataModel.getVaccineGroupMap().size() > 18);
-        for (VaccineGroup vaccineGroup : dataModel.getVaccineGroupList()) {
-            assertNotNull(vaccineGroup.getName());
-            assertNotEquals("", vaccineGroup.getName());
-            if(vaccineGroup.getAdministerFullVaccineGroup() != null) {
-                assertNotEquals("", vaccineGroup.getAdministerFullVaccineGroup());
-            }
-            if(vaccineGroup.getName().equals("MMR")) {
-                foundVaccineGroupMMR = true;
-                assertEquals(YesNo.YES, vaccineGroup.getAdministerFullVaccineGroup());
-            }
+    @Test
+    public void testEmptySupportingDataSetThrowsException() {
+        try {
+            DataModelLoader.createDataModel("");
+            fail("Should throw IllegalArgumentException for empty supporting data set");
+        } catch (IllegalArgumentException e) {
+            assertTrue("Error message should mention parameter requirement",
+                    e.getMessage().contains("cannot be null or empty"));
+        } catch (Exception e) {
+            fail("Should throw IllegalArgumentException, not " + e.getClass().getName());
         }
-        assertTrue(foundVaccineGroupMMR);
     }
 
-    @Test 
-    public void testLoadDataVaccineGroupToAntigenMap() throws Exception
-    {
-        DataModel dataModel = DataModelLoader.createDataModel();
-        boolean foundDTap = false;
-        assertTrue(dataModel.getVaccineGroupMap().size() > 18);
-        for (String vaccineGroupKey : dataModel.getVaccineGroupMap().keySet()) {
-            if(vaccineGroupKey.equals("DTaP/Tdap/Td")) {
-                foundDTap = true;
-                assertEquals(3,dataModel.getVaccineGroupMap().get(vaccineGroupKey).getAntigenList().size());
-                assertEquals("Pertussis",dataModel.getVaccineGroupMap().get(vaccineGroupKey).getAntigenList().get(1).toString());
-            }
+    @Test
+    public void testNoArgCreateDataModelThrowsException() {
+        try {
+            DataModelLoader.createDataModel();
+            fail("Should throw IllegalArgumentException when no supporting data set specified");
+        } catch (IllegalArgumentException e) {
+            assertTrue("Error message should mention requirement",
+                    e.getMessage().contains("required"));
+        } catch (Exception e) {
+            fail("Should throw IllegalArgumentException, not " + e.getClass().getName());
         }
-        assertTrue(foundDTap);
     }
-
-    //observations does not exist. "DataModelLoader.java" line 72 needs implemented
-    @Test 
-    public void testLoadObservation() throws Exception
-    {
-        DataModel dataModel = DataModelLoader.createDataModel();
-        assertEquals(0, dataModel.getClinicalGuidelineObservationMap().size());
-    }
-
-    @Test 
-    public void testLoadDataCvxToAntigenMap() throws Exception
-    {
-        DataModel dataModel = DataModelLoader.createDataModel();
-        boolean foundPolio = false;
-        boolean foundDtp = false;
-        assertTrue(dataModel.getCvxMap().size() > 140);
-        for (String vaccineCvx : dataModel.getCvxMap().keySet()) {
-            assertNotNull(dataModel.getCvxMap().get(vaccineCvx).getCvxCode());
-            if(vaccineCvx.equals("02")) {
-                foundPolio = true;
-                assertEquals("OPV",dataModel.getCvxMap().get(vaccineCvx).getShortDescription());
-                assertNotNull(dataModel.getCvxMap().get(vaccineCvx).getAntigenList().get(0));
-                assertEquals("Polio",dataModel.getCvxMap().get(vaccineCvx).getAntigenList().get(0).getName());
-            }
-            if(vaccineCvx.equals("22")) {
-                foundDtp = true;
-                assertEquals("DTP-Hib",dataModel.getCvxMap().get(vaccineCvx).getShortDescription());
-                assertNotNull(dataModel.getCvxMap().get(vaccineCvx).getAntigenList().get(0));
-                assertEquals("Diphtheria",dataModel.getCvxMap().get(vaccineCvx).getAntigenList().get(0).getName());
-                assertEquals("Tetanus",dataModel.getCvxMap().get(vaccineCvx).getAntigenList().get(1).getName());
-                assertEquals("Hib",dataModel.getCvxMap().get(vaccineCvx).getAntigenList().get(3).getName());
-            }
-        }
-        assertTrue(foundPolio);
-        assertTrue(foundDtp);
-    }
-
-    @Test 
-    public void testLoadDataAntigenImmunity() throws Exception
-    {
-        DataModel dataModel = DataModelLoader.createDataModel();
-
-        assertEquals(23, dataModel.getScheduleList().size());
-        boolean foundMeasles = false;
-        for (Schedule currentSchedule : dataModel.getScheduleList()) {
-            if(currentSchedule.getScheduleName().equals("Measles")) {
-                foundMeasles = true;
-
-                //assert for clinicalHistory
-                assertEquals(1,currentSchedule.getImmunity().getClinicalHistoryList().size());
-                assertEquals("020",currentSchedule.getImmunity().getClinicalHistoryList().get(0).getImmunityGuidelineCode());
-
-                //assert for dateOfBirth and Exclusion
-                assertEquals(1,currentSchedule.getImmunity().getBirthDateImmunityList().size());
-                assertEquals("Tue Jan 01 00:00:00 MST 1957",currentSchedule.getImmunity().getBirthDateImmunityList().get(0).getImmunityBirthDate().toString());
-                assertEquals(1, currentSchedule.getImmunity().getBirthDateImmunityList().get(0).getExclusionList().size());
-                assertEquals("055", currentSchedule.getImmunity().getBirthDateImmunityList().get(0).getExclusionList().get(0).getExclusionCode());
-            }
-        }
-        assertTrue(foundMeasles);
-    }
-
-    //contraindications do not exist yet.
-    @Test 
-    public void testLoadContraindications() throws Exception
-    {
-        DataModel dataModel = DataModelLoader.createDataModel();
-        assertEquals(0, dataModel.getContraindicationList().size());
-    }
-
-    @Test 
-    public void testLoadDataAntigenSeries() throws Exception
-    {
-        DataModel dataModel = DataModelLoader.createDataModel();
-
-        boolean foundRabies = false;
-        for (Schedule currentSchedule : dataModel.getScheduleList()) {
-            if(currentSchedule.getScheduleName().equals("Rabies")) {
-                foundRabies = true;
-                //testing series
-                assertTrue(currentSchedule.getAntigenSeriesList().size() > 0);
-                assertNotEquals("", currentSchedule.getAntigenSeriesList().get(1).getSeriesName());
-                assertEquals("Rabies", currentSchedule.getAntigenSeriesList().get(1).getTargetDisease().getName());
-
-                //testing selectSeries
-                //getDefaultSeries, getProductPath, getSeriesPreference, and getMaxAgeToStart return null.
-                //assertEquals(YesNo.NO, currentSchedule.getAntigenSeriesList().get(1).getSelectBestPatientSeries().getProductPath());
-                //seriesGroupName, seriesGroup, seriesPriority and minAgeToStart all do not exist.
-                
-                //testing indication and observationCode.
-                //the entire indication section and all children do not exist.
-
-                //testing seriesDose
-                assertTrue(currentSchedule.getAntigenSeriesList().get(1).getSeriesDoseList().size() > 3);
-
-                SeriesDose currentSeriesDose = currentSchedule.getAntigenSeriesList().get(1).getSeriesDoseList().get(2);
-                assertEquals("3",currentSeriesDose.getDoseNumber());
-                assertEquals(YesNo.NO,currentSeriesDose.getRecurringDose().getValue());
-
-                //testing age
-                assertTrue(currentSeriesDose.getAgeList().size() > 0);
-                Age ageToCheck = currentSeriesDose.getAgeList().get(0);
-                assertNotNull(ageToCheck.getAbsoluteMinimumAge());
-                assertNotEquals("",ageToCheck.getAbsoluteMinimumAge().toString());
-                assertNotNull(ageToCheck.getMinimumAge());
-                assertNotEquals("",ageToCheck.getMinimumAge().toString());
-                assertNotNull(ageToCheck.getEarliestRecommendedAge());
-                assertNotEquals("",ageToCheck.getEarliestRecommendedAge().toString());
-                assertNotNull(ageToCheck.getLatestRecommendedAge());
-                assertNotEquals("",ageToCheck.getLatestRecommendedAge().toString());
-                assertNotNull(ageToCheck.getMaximumAge());
-                assertNotEquals("",ageToCheck.getMaximumAge().toString());
-                //both effectiveDate and cessationDate do not exist.
-
-                //testing interval
-                assertTrue(currentSeriesDose.getIntervalList().size() > 0);
-                assertEquals(YesNo.YES,currentSeriesDose.getIntervalList().get(0).getFromImmediatePreviousDoseAdministered());
-                assertEquals("",currentSeriesDose.getIntervalList().get(0).getFromTargetDoseNumberInSeries());
-                //both fromMostRecent and fromRelevantObs do not exist.
-                assertEquals("14 days",currentSeriesDose.getIntervalList().get(0).getAbsoluteMinimumInterval().toString());
-                assertEquals("14 days",currentSeriesDose.getIntervalList().get(0).getMinimumInterval().toString());
-                assertEquals("14 days",currentSeriesDose.getIntervalList().get(0).getEarliestRecommendedInterval().toString());
-                assertEquals("21 days",currentSeriesDose.getIntervalList().get(0).getLatestRecommendedInterval().toString());
-                assertNull(currentSeriesDose.getIntervalList().get(0).getIntervalPriority());
-                //both effectiveDate and cessationDate do not exist.
-
-                //testing allowableInterval
-                assertEquals(0,currentSeriesDose.getAllowableintervalList().size());
-
-                //testing preferableVaccine
-                assertTrue(currentSeriesDose.getPreferrableVaccineList().size() > 1);
-                assertEquals("176",currentSeriesDose.getPreferrableVaccineList().get(1).getVaccineType().getCvxCode());
-                assertEquals("0 days",currentSeriesDose.getPreferrableVaccineList().get(1).getVaccineTypeBeginAge().toString());
-                assertNotEquals("",currentSeriesDose.getPreferrableVaccineList().get(1).getVaccineTypeEndAge().toString());
-                assertEquals("",currentSeriesDose.getPreferrableVaccineList().get(1).getTradeName());
-                //mvx does not exist except for in the supporting data.
-                assertEquals("1.0",currentSeriesDose.getPreferrableVaccineList().get(1).getVolume());
-                assertEquals(YesNo.NO,currentSeriesDose.getPreferrableVaccineList().get(1).getForecastVaccineType());
-
-                //testing allowableVaccine
-                assertTrue(currentSeriesDose.getAllowableVaccineList().size() > 3);
-                assertEquals("90",currentSeriesDose.getAllowableVaccineList().get(1).getVaccineType().getCvxCode());
-                assertNotEquals("",currentSeriesDose.getAllowableVaccineList().get(1).getVaccineTypeBeginAge().toString());
-                assertNotEquals("",currentSeriesDose.getAllowableVaccineList().get(1).getVaccineTypeEndAge().toString());
-
-                //testing inadvertentVaccine
-                //inadvertentVaccine does not exist.
-
-                //testing conditionalSkip
-                //getConditionalSkip() should be getConditionalSkipList() and should return a list of conditionalSkip classes if it is to match 'antigenSupportingData.xsd'
-                assertNotNull(currentSeriesDose.getConditionalSkip());
-
-                //testing seasonalRecommendation
-                assertNotNull(currentSeriesDose.getSeasonalRecommendationList().size());
-            }
-        }
-        assertTrue(foundRabies);
-    }
-
 }
