@@ -30,7 +30,6 @@ import org.openimmunizationsoftware.cdsi.core.logic.LogicStepType;
 
 public class StepServlet extends ForecastServlet {
 
-  private static final String ACTION_SELECT_SUPPORTING_DATA = "selectSupportingData";
   private static final String SESSION_SUPPORTING_DATA_SET = "stepSupportingDataSet";
 
   static List<StepExample> stepExamples = null;
@@ -79,13 +78,7 @@ public class StepServlet extends ForecastServlet {
 
     HttpSession session = req.getSession(true);
 
-    if (isInitialStepRequest(req)) {
-      session.removeAttribute("dataModel");
-      session.removeAttribute(SESSION_SUPPORTING_DATA_SET);
-      renderSupportingDataSelectionPage(req, resp);
-      return;
-    }
-
+    // Remove forced selection - now uses default if not specified
     String selectedSupportingDataSet = req.getParameter(PARAM_SUPPORTING_DATA_SET);
     if (selectedSupportingDataSet != null && !selectedSupportingDataSet.trim().equals("")) {
       session.setAttribute(SESSION_SUPPORTING_DATA_SET,
@@ -296,65 +289,6 @@ public class StepServlet extends ForecastServlet {
     }
 
     return SupportingDataManager.resolveDefaultSupportingDataSet(getServletContext());
-  }
-
-  private boolean isInitialStepRequest(HttpServletRequest req) {
-    if (!"GET".equalsIgnoreCase(req.getMethod())) {
-      return false;
-    }
-    if (req.getParameter("action") != null) {
-      return false;
-    }
-    return req.getParameterMap().isEmpty();
-  }
-
-  private void renderSupportingDataSelectionPage(HttpServletRequest req, HttpServletResponse resp)
-      throws IOException {
-    List<String> setIdList = SupportingDataManager.listSupportingDataSetIds(getServletContext());
-    String selectedSetId = SupportingDataManager.resolveDefaultSupportingDataSet(getServletContext());
-
-    resp.setContentType("text/html");
-    PrintWriter out = new PrintWriter(resp.getOutputStream());
-    out.println("<!DOCTYPE html>");
-    out.println("<html>");
-    out.println("<head>");
-    out.println("  <meta charset=\"UTF-8\">");
-    out.println("  <title>CDSi Step - Select Supporting Data</title>");
-    out.println("  <style>");
-    out.println("    body { font-family: Arial, sans-serif; margin: 20px; }");
-    out.println("    h1 { color: #333; }");
-    out.println(
-        "    .panel { margin: 20px 0; padding: 15px; background-color: #f5f5f5; border: 1px solid #ddd; max-width: 680px; }");
-    out.println("    label { display: inline-block; margin-right: 10px; }");
-    out.println("    select { min-width: 350px; padding: 6px; }");
-    out.println("    button { margin-top: 14px; padding: 10px 16px; font-size: 14px; cursor: pointer; }");
-    out.println("  </style>");
-    out.println("</head>");
-    out.println("<body>");
-    out.println("  <h1>Step Into CDSi - Select Supporting Data</h1>");
-    out.println("  <div class=\"panel\">");
-    out.println("    <p>Select the supporting data set to use for this Step session.</p>");
-    out.println("    <form method=\"get\" action=\"step\">");
-    out.println("      <input type=\"hidden\" name=\"action\" value=\"" + ACTION_SELECT_SUPPORTING_DATA + "\"/>");
-    out.println("      <label for=\"" + PARAM_SUPPORTING_DATA_SET + "\">Supporting Data Set:</label>");
-    out.println("      <select id=\"" + PARAM_SUPPORTING_DATA_SET + "\" name=\"" + PARAM_SUPPORTING_DATA_SET + "\">");
-    if (setIdList.isEmpty()) {
-      out.println("        <option value=\"\">default</option>");
-    } else {
-      for (String setId : setIdList) {
-        String selected = setId.equalsIgnoreCase(String.valueOf(selectedSetId)) ? " selected" : "";
-        out.println("        <option value=\"" + escapeHtml(setId) + "\"" + selected + ">"
-            + escapeHtml(setId) + "</option>");
-      }
-    }
-    out.println("      </select>");
-    out.println("      <br/>");
-    out.println("      <button type=\"submit\">Continue</button>");
-    out.println("    </form>");
-    out.println("  </div>");
-    out.println("</body>");
-    out.println("</html>");
-    out.close();
   }
 
   private String appendSupportingDataSet(String link, String supportingDataSet) {

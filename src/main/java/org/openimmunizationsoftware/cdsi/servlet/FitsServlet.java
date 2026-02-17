@@ -210,7 +210,7 @@ public class FitsServlet extends ForecastServlet {
                     out.println("        <th>Act<br/>CVX</th>");
                     out.println("      </tr>");
                     for (TestCaseRegistered testCaseRegistered : groupTestCaseMap.get(groupName).values()) {
-                        String link = createLink(testCaseRegistered);
+                        String link = createLink(testCaseRegistered, selectedSupportingDataSet);
                         String linkStep = "step" + link;
                         String linkForecast = "forecast" + link;
                         int numberOfForecasts = testCaseRegistered.getForecastList().size();
@@ -313,7 +313,7 @@ public class FitsServlet extends ForecastServlet {
                                             "          <a href=\"" + linkRunTest + "\" target=\"_blank\">Run</a> | ");
 
                                     // Build code snippet for SandboxServlet
-                                    String sandboxLink = createLink(testCaseRegistered);
+                                    String sandboxLink = createLink(testCaseRegistered, selectedSupportingDataSet);
                                     String codeSnippet = "add(\"" + groupName + "\", \""
                                             + testCaseRegistered.getTestCase().getUid() + " "
                                             + testCaseRegistered.getTestCase().getName() + "\", \""
@@ -557,7 +557,7 @@ public class FitsServlet extends ForecastServlet {
     private void runTestsForGroup(Map<String, TestCaseRegistered> testCaseMap, String supportingDataSet) {
         for (TestCaseRegistered testCaseRegistered : testCaseMap.values()) {
             try {
-                String link = createLink(testCaseRegistered);
+                String link = createLink(testCaseRegistered, supportingDataSet);
                 String linkStep = "step" + link;
                 logToOut(" - Running " + testCaseRegistered.getTestCase().getUid());
                 logToOut("   - " + linkStep);
@@ -687,6 +687,10 @@ public class FitsServlet extends ForecastServlet {
     }
 
     private String createLink(TestCaseRegistered testCaseRegistered) {
+        return createLink(testCaseRegistered, null);
+    }
+
+    private String createLink(TestCaseRegistered testCaseRegistered, String supportingDataSet) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         String link = "?";
         if (testCaseRegistered.getEvalDate() != null) {
@@ -720,6 +724,10 @@ public class FitsServlet extends ForecastServlet {
                 link += vaccination.getVaccineMvx();
                 position++;
             }
+        }
+        // Append supporting data set if specified
+        if (supportingDataSet != null && !supportingDataSet.trim().isEmpty()) {
+            link += "&supportingDataSet=" + supportingDataSet;
         }
         return link;
     }
