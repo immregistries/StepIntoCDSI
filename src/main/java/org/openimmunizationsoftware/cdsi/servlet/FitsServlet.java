@@ -469,7 +469,14 @@ public class FitsServlet extends ForecastServlet {
 
         out.println("  <form action=\"fits\" method=\"GET\" id=\"fitsForm\">");
         out.println("    <h3>Enter FITS Credentials</h3>");
-        out.println("    <label for=\"" + PARAM_SUPPORTING_DATA_SET + "\">Forecaster (Supporting Data Set):</label>");
+        out.println("    <label for=\"username\">Username:</label>");
+        out.println(
+                "    <input type=\"text\" id=\"username\" name=\"username\" value=\"" + usernameString + "\"required>");
+        out.println("    <label for=\"url\">URL:</label>");
+        out.println("    <input type=\"text\" id=\"url\" name=\"url\" value=\"" + urlString + "\" required>");
+        out.println("    <label for=\"password\">Password:</label>");
+        out.println("    <input type=\"password\" id=\"password\" name=\"password\" required>");
+        out.println("    <label for=\"" + PARAM_SUPPORTING_DATA_SET + "\">Supporting Data:</label>");
         out.println("    <select id=\"" + PARAM_SUPPORTING_DATA_SET + "\" name=\"" + PARAM_SUPPORTING_DATA_SET + "\">");
         if (supportingDataSetIdList.isEmpty()) {
             out.println("      <option value=\"\">default</option>");
@@ -481,14 +488,6 @@ public class FitsServlet extends ForecastServlet {
             }
         }
         out.println("    </select>");
-        out.println("    <br/>");
-        out.println("    <label for=\"username\">Username:</label>");
-        out.println(
-                "    <input type=\"text\" id=\"username\" name=\"username\" value=\"" + usernameString + "\"required>");
-        out.println("    <label for=\"url\">URL:</label>");
-        out.println("    <input type=\"text\" id=\"url\" name=\"url\" value=\"" + urlString + "\" required>");
-        out.println("    <label for=\"password\">Password:</label>");
-        out.println("    <input type=\"password\" id=\"password\" name=\"password\" required>");
         out.println("    <input type=\"Submit\" name=\"action\" value=\"Refresh\">");
         out.println("  </form>");
 
