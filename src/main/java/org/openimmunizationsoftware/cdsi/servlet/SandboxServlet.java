@@ -30,6 +30,7 @@ import org.hl7.fhir.r4.model.Parameters;
 import org.hl7.fhir.r4.model.Parameters.ParametersParameterComponent;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Resource;
+import org.hl7.fhir.r4.model.StringType;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
@@ -242,6 +243,8 @@ public class SandboxServlet extends HttpServlet {
         public String patientDob = "";
         public String patientSex = "";
         public String encoding = "json";
+        public String knowledgeBase = "";
+        public String knowledgeBaseVersion = "";
         public List<String> errors = new ArrayList<>();
         public String requestPretty = "";
         public String responsePretty = "";
@@ -276,6 +279,10 @@ public class SandboxServlet extends HttpServlet {
 
             this.patientSex = req.getParameter("patientSex") != null ? req.getParameter("patientSex") : "";
             this.encoding = req.getParameter("encoding") != null ? req.getParameter("encoding") : "json";
+            this.knowledgeBase = req.getParameter("knowledgeBase") != null ? req.getParameter("knowledgeBase") : "";
+            this.knowledgeBaseVersion = req.getParameter("knowledgeBaseVersion") != null
+                    ? req.getParameter("knowledgeBaseVersion")
+                    : "";
 
             // Load vaccine dates and CVX codes, formatting dates to MM/DD/YYYY
             for (int i = 1; i <= NUM_IMMUNIZATION_ROWS; i++) {
@@ -441,7 +448,7 @@ public class SandboxServlet extends HttpServlet {
 
             // Call runForecast
             Result result = runForecast(model.endpointBase, model.encoding, assessmentDate, patientDob,
-                    model.patientSex, immunizations);
+                    model.patientSex, immunizations, model.knowledgeBase, model.knowledgeBaseVersion);
 
             // Store the endpoint URL in session for future use
             req.getSession().setAttribute(SESSION_ENDPOINT_KEY, model.endpointBase);
@@ -467,17 +474,20 @@ public class SandboxServlet extends HttpServlet {
     /**
      * Execute the $immds-forecast operation and return results.
      * 
-     * @param endpointBase   FHIR endpoint base URL
-     * @param encoding       JSON or XML
-     * @param assessmentDate Assessment date (LocalDate)
-     * @param patientDob     Patient date of birth (LocalDate)
-     * @param patientSex     Patient sex (M/F/O/U)
-     * @param immunizations  List of immunization records (LocalDate date, String
-     *                       cvx)
+     * @param endpointBase         FHIR endpoint base URL
+     * @param encoding             JSON or XML
+     * @param assessmentDate       Assessment date (LocalDate)
+     * @param patientDob           Patient date of birth (LocalDate)
+     * @param patientSex           Patient sex (M/F/O/U)
+     * @param immunizations        List of immunization records (LocalDate date,
+     *                             String cvx)
+     * @param knowledgeBase        Knowledge base ID (e.g., "USA-CDC-CDSI")
+     * @param knowledgeBaseVersion Knowledge base version (e.g., "4.64")
      * @return Result object with request, response, and extracted data
      */
     private Result runForecast(String endpointBase, String encoding, LocalDate assessmentDate,
-            LocalDate patientDob, String patientSex, List<ImmunizationRecord> immunizations) {
+            LocalDate patientDob, String patientSex, List<ImmunizationRecord> immunizations,
+            String knowledgeBase, String knowledgeBaseVersion) {
         Result result = new Result();
 
         try {
@@ -508,6 +518,21 @@ public class SandboxServlet extends HttpServlet {
                 }
 
                 requestParams.addParameter().setName("patient").setResource(patient);
+            }
+
+            // Add knowledge base parameter (CodeableConcept)
+            if (knowledgeBase != null && !knowledgeBase.trim().isEmpty()) {
+                CodeableConcept kbConcept = new CodeableConcept();
+                kbConcept.addCoding()
+                        .setSystem("https://ivci.org/knowledge-base")
+                        .setCode(knowledgeBase.trim())
+                        .setDisplay(knowledgeBase.trim());
+                requestParams.addParameter().setName("knowledgeBase").setValue(kbConcept);
+            }
+
+            // Add knowledge base version parameter (string)
+            if (knowledgeBaseVersion != null && !knowledgeBaseVersion.trim().isEmpty()) {
+                requestParams.addParameter("knowledgeBaseVersion", new StringType(knowledgeBaseVersion.trim()));
             }
 
             // Add immunization parameters
@@ -1070,6 +1095,25 @@ public class SandboxServlet extends HttpServlet {
                 + ("json".equals(model.encoding) ? " checked" : "") + "> JSON</label>");
         out.println("      <label class=\"radio-label\"><input type=\"radio\" name=\"encoding\" value=\"xml\""
                 + ("xml".equals(model.encoding) ? " checked" : "") + "> XML</label>");
+        out.println("    </div>");
+
+        // Knowledge Base ID
+        out.println("    <div class=\"form-group\">");
+        out.println("      <label for=\"knowledgeBase\">Knowledge Base ID:</label>");
+        out.println("      <input type=\"text\" id=\"knowledgeBase\" name=\"knowledgeBase\" value=\""
+                + escapeHtml(model.knowledgeBase)
+                + "\" placeholder=\"USA-CDC-CDSI\">");
+        out.println("    </div>");
+
+        // Knowledge Base Version
+        out.println("    <div class=\"form-group\">");
+        out.println("      <label for=\"knowledgeBaseVersion\">Knowledge Base Version:</label>");
+        out.println("      <input type=\"text\" id=\"knowledgeBaseVersion\" name=\"knowledgeBaseVersion\" value=\""
+                + escapeHtml(model.knowledgeBaseVersion)
+                + "\" placeholder=\"Leave blank to use latest\">");
+        out.println("      <small style=\"color: #666; display: block; margin-top: 4px;\">");
+        out.println("        Leave blank to use latest available (computed using numeric segment comparison).");
+        out.println("      </small>");
         out.println("    </div>");
 
         // Assessment Date
