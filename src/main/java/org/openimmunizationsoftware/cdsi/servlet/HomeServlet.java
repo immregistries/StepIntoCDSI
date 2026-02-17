@@ -69,38 +69,14 @@ public class HomeServlet extends HttpServlet {
                 "    <a href=\"https://www.cdc.gov/iis/cdsi/index.html\">https://www.cdc.gov/iis/cdsi/index.html</a>");
         out.println("  </p>");
 
-        // Example Test Cases section
-        out.println("  <h2>Example Test Cases</h2>");
-        out.println("  <p class=\"muted\">Select an example to run through different interfaces:</p>");
-        out.println("  <table>");
-        out.println("    <tr>");
-        out.println("      <th>Category</th>");
-        out.println("      <th>Example Name</th>");
-        out.println("      <th style=\"width: 300px;\">Actions</th>");
-        out.println("    </tr>");
-
-        // Get examples from SandboxServletExamples
-        java.util.List<SandboxServletExamples.ExampleCategory> examples = SandboxServletExamples
-                .getExamples();
-        for (SandboxServletExamples.ExampleCategory category : examples) {
-            for (SandboxServletExamples.ExampleLink link : category.links) {
-                out.println("    <tr>");
-                out.println("      <td>" + escapeHtml(category.title) + "</td>");
-                out.println("      <td>" + escapeHtml(link.name) + "</td>");
-                out.println("      <td class=\"action-links\">");
-                out.println("        <a href=\"/step/step" + escapeHtml(link.url) + "\">Step</a>");
-                out.println("        <a href=\"/step/forecast" + escapeHtml(link.url) + "\">Forecast</a>");
-                out.println("        <a href=\"/step/run" + escapeHtml(link.url) + "\">Run</a>");
-                out.println("        <a href=\"/step/sandbox" + escapeHtml(link.url) + "\">FHIR Sandbox</a>");
-                out.println("      </td>");
-                out.println("    </tr>");
-            }
-        }
-
-        out.println("  </table>");
-
         // Application Areas section
         out.println("  <h2>Application Areas</h2>");
+        out.println("  <p class=\"action-links\">");
+        out.println("    <a href=\"/step/step\">Step</a>");
+        out.println("    <a href=\"/step/supportingData\">Supporting Data</a>");
+        out.println("    <a href=\"/step/forecast\">Forecast</a>");
+        out.println("    <a href=\"/step/sandbox\">FHIR Sandbox</a>");
+        out.println("  </p>");
 
         out.println("  <h3>Step</h3>");
         out.println("  <p>");
@@ -140,6 +116,36 @@ public class HomeServlet extends HttpServlet {
                 "    Provide a simple FHIR client for interacting with the FHIR server, supporting testing, validation, and demonstration");
         out.println("    of CDS interoperability workflows.");
         out.println("  </p>");
+
+        // Example Test Cases section
+        out.println("  <h2>Example Test Cases</h2>");
+        out.println("  <p class=\"muted\">Select an example to run through different interfaces:</p>");
+        out.println("  <table>");
+        out.println("    <tr>");
+        out.println("      <th>Category</th>");
+        out.println("      <th>Example Name</th>");
+        out.println("      <th style=\"width: 300px;\">Actions</th>");
+        out.println("    </tr>");
+
+        // Get examples from SandboxServletExamples
+        java.util.List<SandboxServletExamples.ExampleCategory> examples = SandboxServletExamples
+                .getExamples();
+        for (SandboxServletExamples.ExampleCategory category : examples) {
+            for (SandboxServletExamples.ExampleLink link : category.links) {
+                out.println("    <tr>");
+                out.println("      <td>" + escapeHtml(category.title) + "</td>");
+                out.println("      <td>" + escapeHtml(link.name) + "</td>");
+                out.println("      <td class=\"action-links\">");
+                out.println("        <a href=\"/step/step" + escapeHtml(link.url) + "\">Step</a>");
+                out.println("        <a href=\"/step/forecast" + escapeHtml(link.url) + "\">Forecast</a>");
+                out.println("        <a href=\"/step/run" + escapeHtml(link.url) + "\">Run</a>");
+                out.println("        <a href=\"/step/sandbox" + escapeHtml(link.url) + "\">FHIR Sandbox</a>");
+                out.println("      </td>");
+                out.println("    </tr>");
+            }
+        }
+
+        out.println("  </table>");
 
         // Remaining content sections
         out.println("  <h2>Transparent Immunization Decision Support</h2>");
@@ -209,9 +215,10 @@ public class HomeServlet extends HttpServlet {
         out.println(
                 "    However, integration with the FITS platform for automated testing requires valid FITS credentials issued through that");
         out.println(
-                "    service. This separation preserves ease of demonstration while respecting the access controls associated with official");
-        out.println("    test infrastructure.");
+                "    service.");
         out.println("  </p>");
+
+        FooterRenderer.render(out, getServletContext());
 
         out.println("</body>");
         out.println("</html>");

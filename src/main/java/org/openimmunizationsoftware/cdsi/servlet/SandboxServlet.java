@@ -1143,6 +1143,7 @@ public class SandboxServlet extends HttpServlet {
         }
 
         out.println("  </div>"); // Close main-content div
+        FooterRenderer.render(out, getServletContext());
         out.println("</body>");
         out.println("</html>");
 

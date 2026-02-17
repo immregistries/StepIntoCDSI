@@ -37,6 +37,16 @@ public class SingleAntigenVaccineGroup extends LogicStep {
   @Override
   public LogicStep process() throws Exception {
     VaccineGroup vaccineGroup = dataModel.getVaccineGroup();
+    if (vaccineGroup == null || vaccineGroup.getAntigenList() == null || vaccineGroup.getAntigenList().isEmpty()
+        || vaccineGroup.getAntigenList().get(0) == null) {
+      alert(LogLevel.CONTROL,
+          "ALERT.MISSING: Vaccine group or primary antigen missing in SINGLE_ANTIGEN_VACCINE_GROUP; " +
+              "vaccineGroup=" + (vaccineGroup != null ? vaccineGroup.getName() : "null") +
+              ". Skipping vaccine group forecast generation for this group.");
+      setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);
+      return next();
+    }
+
     log(LogLevel.CONTROL, "SINGLEANTVG: Starting single antigen vaccine group processing; " +
         "vaccineGroup=" + (vaccineGroup != null ? vaccineGroup.getName() : "null") +
         ", bestPatientSeriesListSize=" + dataModel.getBestPatientSeriesList().size());
@@ -53,7 +63,8 @@ public class SingleAntigenVaccineGroup extends LogicStep {
           ", patientSeriesStatus=" + p.getPatientSeriesStatus() +
           ", forecastIsNull=" + (forecast == null));
 
-      if (forecast != null && forecast.getAntigen().equals(vaccineGroup.getAntigenList().get(0))) {
+      if (forecast != null && forecast.getAntigen() != null
+          && forecast.getAntigen().equals(vaccineGroup.getAntigenList().get(0))) {
         matchCount++;
         log(LogLevel.REASONING, "SINGLEANTVG: Forecast antigen matches vaccine group antigen; " +
             "antigen=" + forecast.getAntigen().getName() +

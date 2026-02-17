@@ -88,6 +88,9 @@ public class DataModel {
   private PatientSeries forecastingForPatientSeries = null;
 
   private Neighborhood neighborhood = Neighborhood.SETUP;
+  private String evaluateForecastLoopSignature = null;
+  private int evaluateForecastRepeatedStateCount = 0;
+  private int evaluateForecastTotalCycleCount = 0;
 
   public Neighborhood getNeighborhood() {
     return neighborhood;
@@ -107,6 +110,40 @@ public class DataModel {
 
   public boolean isNeighborhoodForecast() {
     return neighborhood == Neighborhood.FORECAST;
+  }
+
+  public int incrementEvaluateForecastTotalCycleCount() {
+    evaluateForecastTotalCycleCount++;
+    return evaluateForecastTotalCycleCount;
+  }
+
+  public int recordEvaluateForecastLoopSignature(String loopSignature) {
+    if (loopSignature == null) {
+      evaluateForecastLoopSignature = null;
+      evaluateForecastRepeatedStateCount = 0;
+      return evaluateForecastRepeatedStateCount;
+    }
+    if (loopSignature.equals(evaluateForecastLoopSignature)) {
+      evaluateForecastRepeatedStateCount++;
+    } else {
+      evaluateForecastLoopSignature = loopSignature;
+      evaluateForecastRepeatedStateCount = 1;
+    }
+    return evaluateForecastRepeatedStateCount;
+  }
+
+  public int getEvaluateForecastRepeatedStateCount() {
+    return evaluateForecastRepeatedStateCount;
+  }
+
+  public int getEvaluateForecastTotalCycleCount() {
+    return evaluateForecastTotalCycleCount;
+  }
+
+  public void resetEvaluateForecastLoopGuard() {
+    evaluateForecastLoopSignature = null;
+    evaluateForecastRepeatedStateCount = 0;
+    evaluateForecastTotalCycleCount = 0;
   }
 
   public Stepper<PatientSeries> getPatientSeriesStepper() {

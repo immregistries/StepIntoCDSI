@@ -203,6 +203,8 @@ public class RunServlet extends ForecastServlet {
             out.println("  </div>");
         }
 
+        FooterRenderer.render(out, getServletContext());
+
         out.println("</body>");
         out.println("</html>");
     }

@@ -685,10 +685,6 @@ public class FitsServlet extends ForecastServlet {
         return urlString;
     }
 
-    private String createLink(TestCaseRegistered testCaseRegistered) {
-        return createLink(testCaseRegistered, null);
-    }
-
     private String createLink(TestCaseRegistered testCaseRegistered, String supportingDataSet) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         String link = "?";

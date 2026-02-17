@@ -21,89 +21,68 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
 
 public class EvaluateAndForecastAllPatientSeries extends LogicStep {
 
-  // State tracking for infinite loop detection
-  private static final int MAX_PROCESS_CALLS = 100;
-  private int lastTargetDosePos = -1;
-  private int lastAARPos = -1;
-  private PatientSeries lastPatientSeries = null;
-  private Neighborhood lastNeighborhood = null;
-  private int processCallCount = 0;
+  private static final int MAX_TOTAL_CYCLES = 1000;
+  private static final int MAX_REPEATED_STATE_CYCLES = 200;
 
   public EvaluateAndForecastAllPatientSeries(DataModel dataModel) {
     super(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES, dataModel);
   }
 
-  /**
-   * Capture the current critical state to detect infinite loops
-   */
-  private void captureState() {
-    this.lastTargetDosePos = dataModel.getTargetDoseListPos();
-    this.lastAARPos = dataModel.getSelectedAntigenAdministeredRecordPos();
-    Stepper<PatientSeries> patientSeriesStepper = dataModel.getPatientSeriesStepper();
-    this.lastPatientSeries = patientSeriesStepper.getCurrent();
-    this.lastNeighborhood = dataModel.getNeighborhood();
-  }
-
-  /**
-   * Check if state has changed since last capture. If not, return true to
-   * indicate a possible infinite loop.
-   */
-  private boolean isLoopDetected() {
-    int currentTargetDosePos = dataModel.getTargetDoseListPos();
-    int currentAARPos = dataModel.getSelectedAntigenAdministeredRecordPos();
+  private String buildLoopSignature() {
     Stepper<PatientSeries> patientSeriesStepper = dataModel.getPatientSeriesStepper();
     PatientSeries currentPatientSeries = patientSeriesStepper.getCurrent();
-    Neighborhood currentNeighborhood = dataModel.getNeighborhood();
-
-    boolean targetDosePosChanged = (currentTargetDosePos != lastTargetDosePos);
-    boolean aarPosChanged = (currentAARPos != lastAARPos);
-    boolean patientSeriesChanged = (currentPatientSeries != lastPatientSeries);
-    boolean neighborhoodChanged = (currentNeighborhood != lastNeighborhood);
-
-    // If ANY of these changed, we're making progress
-    if (!targetDosePosChanged && !aarPosChanged && !patientSeriesChanged && !neighborhoodChanged) {
-      String currentSeriesName = (currentPatientSeries != null &&
-          currentPatientSeries.getTrackedAntigenSeries() != null)
-              ? currentPatientSeries.getTrackedAntigenSeries().getSeriesName()
-              : "null";
-
-      alert(LogLevel.CONTROL,
-          "ALERT.INFINITE_LOOP: State has not changed between iterations of process(). " +
-              "Expected at least one of: targetDosePos, aarPos, patientSeries, or neighborhood to change. " +
-              "Current state: targetDosePos=" + currentTargetDosePos + " aarPos=" + currentAARPos +
-              " patientSeries=" + currentSeriesName + " neighborhood=" + currentNeighborhood);
-      return true;
+    String seriesName = "none";
+    if (currentPatientSeries != null && currentPatientSeries.getTrackedAntigenSeries() != null) {
+      seriesName = currentPatientSeries.getTrackedAntigenSeries().getSeriesName();
     }
 
-    log(LogLevel.TRACE, "TRACE: State validation passed. Changes: targetDosePos=" + targetDosePosChanged +
-        " aarPos=" + aarPosChanged + " patientSeries=" + patientSeriesChanged +
-        " neighborhood=" + neighborhoodChanged);
-    return false;
+    String targetDoseStatus = "none";
+    if (dataModel.getTargetDose() != null && dataModel.getTargetDose().getTargetDoseStatus() != null) {
+      targetDoseStatus = dataModel.getTargetDose().getTargetDoseStatus().name();
+    }
+
+    int targetDoseListSize = dataModel.getTargetDoseList() == null ? -1 : dataModel.getTargetDoseList().size();
+    int selectedAarListSize = dataModel.getSelectedAntigenAdministeredRecordList() == null
+        ? -1
+        : dataModel.getSelectedAntigenAdministeredRecordList().size();
+
+    return dataModel.getNeighborhood() +
+        "|series=" + seriesName +
+        "|targetDosePos=" + dataModel.getTargetDoseListPos() +
+        "|aarPos=" + dataModel.getSelectedAntigenAdministeredRecordPos() +
+        "|targetDoseStatus=" + targetDoseStatus +
+        "|targetDoseListSize=" + targetDoseListSize +
+        "|selectedAarListSize=" + selectedAarListSize;
   }
 
   private LogicStep finalizeStep(LogicStepType nextStepType) {
-    if (processCallCount > MAX_PROCESS_CALLS) {
+    int totalCycleCount = dataModel.getEvaluateForecastTotalCycleCount();
+    int repeatedStateCount = dataModel.getEvaluateForecastRepeatedStateCount();
+
+    if (totalCycleCount > MAX_TOTAL_CYCLES) {
       alert(LogLevel.CONTROL,
-          "ALERT.MAX_PROCESS_CALLS: EvaluateAndForecastAllPatientSeries exceeded " + MAX_PROCESS_CALLS +
-              " iterations. Forcing transition to SELECT_BEST_PATIENT_SERIES. " +
+          "ALERT.MAX_PROCESS_CALLS: EvaluateAndForecastAllPatientSeries exceeded " + MAX_TOTAL_CYCLES +
+              " cycles. Forcing transition to SELECT_BEST_PATIENT_SERIES. " +
               "Current state: targetDosePos=" + dataModel.getTargetDoseListPos() +
               " aarPos=" + dataModel.getSelectedAntigenAdministeredRecordPos() +
-              " neighborhood=" + dataModel.getNeighborhood());
+              " neighborhood=" + dataModel.getNeighborhood() +
+              " repeatedStateCount=" + repeatedStateCount);
       dataModel.setNeighborhood(Neighborhood.SELECT_BEST_SERIES);
-      processCallCount = 0;
+      dataModel.resetEvaluateForecastLoopGuard();
       return LogicStepFactory.createLogicStep(LogicStepType.SELECT_BEST_PATIENT_SERIES, dataModel);
     }
 
-    if (isLoopDetected()) {
+    if (repeatedStateCount > MAX_REPEATED_STATE_CYCLES) {
       alert(LogLevel.CONTROL,
-          "ALERT.LOOP_DETECTED: Forcing transition to SELECT_BEST_PATIENT_SERIES to avoid lockup.");
+          "ALERT.LOOP_DETECTED: EvaluateAndForecastAllPatientSeries repeated same state " +
+              repeatedStateCount + " times. Forcing transition to SELECT_BEST_PATIENT_SERIES to avoid lockup.");
       dataModel.setNeighborhood(Neighborhood.SELECT_BEST_SERIES);
-      processCallCount = 0;
+      dataModel.resetEvaluateForecastLoopGuard();
       return LogicStepFactory.createLogicStep(LogicStepType.SELECT_BEST_PATIENT_SERIES, dataModel);
     }
 
     if (nextStepType == LogicStepType.SELECT_BEST_PATIENT_SERIES) {
-      processCallCount = 0;
+      dataModel.resetEvaluateForecastLoopGuard();
     }
 
     return LogicStepFactory.createLogicStep(nextStepType, dataModel);
@@ -157,11 +136,15 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
     final LogicStepType SELECT_BEST = LogicStepType.SELECT_BEST_PATIENT_SERIES;
     final LogicStepType END = LogicStepType.END;
 
-    // Capture state at start for infinite loop detection
-    captureState();
-    processCallCount++;
+    int totalCycleCount = dataModel.incrementEvaluateForecastTotalCycleCount();
+    String loopSignature = buildLoopSignature();
+    int repeatedStateCount = dataModel.recordEvaluateForecastLoopSignature(loopSignature);
 
-    if (processCallCount > MAX_PROCESS_CALLS) {
+    log(LogLevel.TRACE,
+        "TRACE: Loop guard state totalCycles=" + totalCycleCount + " repeatedStateCycles=" + repeatedStateCount +
+            " signature=" + loopSignature);
+
+    if (totalCycleCount > MAX_TOTAL_CYCLES || repeatedStateCount > MAX_REPEATED_STATE_CYCLES) {
       return finalizeStep(LogicStepType.SELECT_BEST_PATIENT_SERIES);
     }
 
@@ -174,6 +157,7 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
 
     // Very first time
     if (!patientSeriesStepper.isStarted()) {
+      dataModel.resetEvaluateForecastLoopGuard();
       log(LogLevel.CONTROL, "Patient series stepper not started - initializing first patient series");
       patientSeriesStepper.increment();
     }
