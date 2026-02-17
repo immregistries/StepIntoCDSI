@@ -59,6 +59,9 @@ public class Antigen {
     if (name.equals("Cholera")) {
       return "26";
     }
+    if (name.equals("COVID-19")) {
+      return "213";
+    }
     if (name.equals("Diphtheria")) {
       return "20";
     }
