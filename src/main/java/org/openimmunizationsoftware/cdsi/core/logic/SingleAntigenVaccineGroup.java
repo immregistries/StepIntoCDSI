@@ -6,9 +6,12 @@ import java.util.List;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
 
 public class SingleAntigenVaccineGroup extends LogicStep {
 
@@ -34,21 +37,52 @@ public class SingleAntigenVaccineGroup extends LogicStep {
   @Override
   public LogicStep process() throws Exception {
     VaccineGroup vaccineGroup = dataModel.getVaccineGroup();
+    log(LogLevel.CONTROL, "SINGLEANTVG: Starting single antigen vaccine group processing; " +
+        "vaccineGroup=" + (vaccineGroup != null ? vaccineGroup.getName() : "null") +
+        ", bestPatientSeriesListSize=" + dataModel.getBestPatientSeriesList().size());
+
     VaccineGroupForecast vgf = new VaccineGroupForecast();
     vgf.setVaccineGroup(vaccineGroup);
 
+    int matchCount = 0;
     for (PatientSeries p : dataModel.getBestPatientSeriesList()) {
       Forecast forecast = p.getForecast();
+      String seriesName = p.getTrackedAntigenSeries() != null ? p.getTrackedAntigenSeries().getSeriesName() : "null";
+      log(LogLevel.STATE, "SINGLEANTVG: Evaluating patient series; " +
+          "seriesName=" + seriesName +
+          ", patientSeriesStatus=" + p.getPatientSeriesStatus() +
+          ", forecastIsNull=" + (forecast == null));
+
       if (forecast != null && forecast.getAntigen().equals(vaccineGroup.getAntigenList().get(0))) {
-        log("Forecast antigen matches vaccine group antigen: " + forecast.getAntigen().getName());
+        matchCount++;
+        log(LogLevel.REASONING, "SINGLEANTVG: Forecast antigen matches vaccine group antigen; " +
+            "antigen=" + forecast.getAntigen().getName() +
+            ", targetDose=" + p.getForecast().getTargetDose() +
+            ", patientSeriesStatus=" + p.getPatientSeriesStatus());
+
         // Règle en plus
         vgf.setAntigen(forecast.getAntigen());
         vgf.setTargetDose(p.getForecast().getTargetDose());
+
         // SINGLEANTVG-1 The vaccine group status for a single antigen vaccine group
-        // must be the
-        // patient series status of the best patient series.
-        vgf.setVaccineGroupStatus(p.getPatientSeriesStatus());
-        vgf.setPatientSeriesStatus(p.getPatientSeriesStatus());
+        // must be the patient series status of the best patient series.
+        PatientSeriesStatus pss = p.getPatientSeriesStatus();
+        if (pss == null) {
+          String targetDoseNum = "null";
+          if (p.getTargetDoseList() != null && p.getTargetDoseList().size() > 0) {
+            TargetDose td = p.getTargetDoseList().get(0);
+            if (td.getTrackedSeriesDose() != null) {
+              targetDoseNum = td.getTrackedSeriesDose().getDoseNumber();
+            }
+          }
+          alert(LogLevel.CONTROL, "ALERT.MISSING: PatientSeriesStatus is null in best patient series; " +
+              "context: step=SINGLE_ANTIGEN_VACCINE_GROUP, series=" + seriesName +
+              ", targetDose=" + targetDoseNum +
+              "; fallback: will default to NOT_COMPLETE; " +
+              "impact: vaccine group status may be incorrect");
+        }
+        vgf.setVaccineGroupStatus(pss);
+        vgf.setPatientSeriesStatus(pss);
 
         // SINGLEANTVG-2 The vaccine group forecast earliest date for a single antigen
         // vaccine group
@@ -91,9 +125,25 @@ public class SingleAntigenVaccineGroup extends LogicStep {
         // antigen
         // vaccine group must be the best patient series forecast recommended vaccines.
         //
+        log(LogLevel.REASONING, "SINGLEANTVG: Adding vaccine group forecast; " +
+            "antigen=" + vgf.getAntigen().getName() +
+            ", status=" + vgf.getVaccineGroupStatus() +
+            ", earliestDate=" + vgf.getEarliestDate() +
+            ", recommendedDate=" + vgf.getAdjustedRecommendedDate());
         dataModel.getVaccineGroupForecastList().add(vgf);
       }
-      log("Vaccine group forecast list size: " + dataModel.getVaccineGroupForecastList().size() + " ");
+    }
+
+    log(LogLevel.STATE, "SINGLEANTVG: Completed processing; " +
+        "matchedSeries=" + matchCount +
+        ", vaccineGroupForecastListSize=" + dataModel.getVaccineGroupForecastList().size());
+
+    if (matchCount == 0) {
+      alert(LogLevel.CONTROL, "ALERT.SPECGAP: No matching forecast found for vaccine group; " +
+          "context: step=SINGLE_ANTIGEN_VACCINE_GROUP, vaccineGroup=" +
+          (vaccineGroup != null ? vaccineGroup.getName() : "null") +
+          ", bestPatientSeriesCount=" + dataModel.getBestPatientSeriesList().size() +
+          "; impact: vaccine group forecast list may be incomplete");
     }
 
     setNextLogicStepType(LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP);

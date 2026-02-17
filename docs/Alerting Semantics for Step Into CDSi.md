@@ -20,7 +20,10 @@ not production runtime monitoring.
    - Any condition that “should not happen” must emit an alert.
 
 2. **Execution continues**
-   - Alerts never stop orchestration or throw runtime exceptions.
+   - Alerts **must never** throw exceptions, stop orchestration, or trigger recovery logic
+   - The CDSi engine must always complete forecast generation
+   - Missing data triggers safe defaults, not error states
+   - Process failures are captured as alerts, not exceptions
 
 3. **Spec expectations drive alerts**
    - Alerts represent divergence from:
@@ -148,6 +151,107 @@ Do **not** emit alerts:
 
 ---
 
+## Technical Architecture of Alerts
+
+### Alert Emission Layer (Logical vs. Domain)
+
+**Alerts MUST only be emitted from LogicStep subclasses**, never from domain objects.
+
+**Reasoning:**
+- The `alert()` method is defined in `LogicStep` and inherited by all subclasses (`SingleAntigenVaccineGroup`, `EvaluateAndForecastAllPatientSeries`, etc.)
+- Domain objects (`VaccineGroupForecast`, `PatientSeries`, `Forecast`, etc.) have no `alert()` method
+- Domain objects should **silently handle invalid states** by applying sensible defaults
+- **Business logic layer** (LogicStep subclasses) is responsible for observing these conditions and alerting upstream consumers
+
+### Pattern: Defensive Handling + Alerting
+
+When a required field is null:
+
+1. **Domain Layer** (e.g., `VaccineGroupForecast.setVaccineGroupStatus()`):
+   - Check for null
+   - Apply safe default (e.g., `NOT_COMPLETE`)
+   - Return/continue silently
+
+2. **Logic Layer** (e.g., `SingleAntigenVaccineGroup.process()`):
+   - Before passing data to domain object, check for null
+   - If null is found, call `alert(LogLevel.CONTROL, "ALERT.MISSING: ...")` with full context
+   - Then pass the value (null or otherwise) to domain object
+   - Domain object handles it safely
+
+### Example
+
+```java
+// Domain layer - silent fallback
+public void setVaccineGroupStatus(PatientSeriesStatus status) {
+  if (status == null) {
+    // No alert here - just apply default
+    setVaccineGroupStatus(VaccineGroupStatus.NOT_COMPLETE);
+    return;
+  }
+  // ... process normally
+}
+
+// Logic layer - alert with context, then call domain
+PatientSeriesStatus pss = patientSeries.getPatientSeriesStatus();
+if (pss == null) {
+  alert(LogLevel.CONTROL, 
+    "ALERT.MISSING: PatientSeriesStatus is null; " +
+    "context: step=SINGLE_ANTIGEN_VACCINE_GROUP, series=" + seriesName + "; " +
+    "fallback: defaulting to NOT_COMPLETE");
+}
+// Domain object handles the null or correct value safely
+vgf.setVaccineGroupStatus(pss);
+```
+
+### Alert Method Availability
+
+| Layer | Has `alert()` Method | Emits Alerts | Notes |
+|-------|---------------------|--------------|-------|
+| LogicStep subclasses | ✅ YES | ✅ YES | Direct access to `alert()` method |
+| Domain objects | ❌ NO | ❌ NO | No method, should not emit |
+| Servlets | ❌ NO | ❌ NO | Consume logs/alerts from LogicStep |
+| Utilities | ❌ NO | ❌ NO | Cannot emit alerts; pass context upward |
+
+### Forbidden Patterns
+
+❌ **DO NOT use these patterns:**
+
+```java
+// WRONG: System.err.println instead of alert()
+System.err.println("ALERT.MISSING: PatientSeriesStatus is null");
+dataModel.setStatus(DEFAULT_STATUS);
+
+// WRONG: Throwing exception on missing data
+if (patientSeriesStatus == null) {
+  throw new NullPointerException("PatientSeriesStatus cannot be null");
+}
+
+// WRONG: Try-catch-rethrow that stops execution
+try {
+  vgf.setVaccineGroupStatus(p.getPatientSeriesStatus());
+} catch (NullPointerException e) {
+  System.err.println("ALERT: " + e.getMessage());
+  throw e;  // STOPS EXECUTION - VIOLATION
+}
+```
+
+✅ **DO use this pattern:**
+
+```java
+// CORRECT: Check, alert, proceed with safe default
+PatientSeriesStatus pss = p.getPatientSeriesStatus();
+if (pss == null) {
+  alert(LogLevel.CONTROL, "ALERT.MISSING: PatientSeriesStatus is null; " +
+    "context: step=SINGLE_ANTIGEN_VACCINE_GROUP; " +
+    "fallback: defaulting to NOT_COMPLETE; " +
+    "impact: vaccine group status may be incorrect");
+}
+// Pass value (null or valid) to domain object, which applies safe default
+vgf.setVaccineGroupStatus(pss);  // Domain layer handles null safely
+```
+
+---
+
 ## Alert Message Structure
 
 Alerts must be **machine-parsable and human readable**.
@@ -182,17 +286,39 @@ impact=earliest/recommended dates may be too early
 
 ## Relationship to Log Levels
 
-Alerts are **independent of verbosity levels**.
+Alerts are **independent of verbosity level filtering**.
 
-- Alerts must always appear in output.
-- Alerts may occur alongside any log level:
-  - CONTROL
-  - STATE
-  - REASONING
-  - TRACE
-  - DUMP
+### Alert Method Signature
 
-Filtering log verbosity **must never hide alerts**.
+```java
+public void alert(String message);           // Uses default log level CONTROL
+public void alert(LogLevel level, String message);  // Explicit log level
+```
+
+### Technical Behavior
+
+- `alert()` methods in `LogicStep` bypass the configured minimum log level
+- Alerts are **always emitted to output**, regardless of verbosity filter
+- The `LogLevel` parameter is for **categorization** (CONTROL, STATE, etc.), not filtering
+- Even if minimum verbosity is set to DUMP, alerts will still appear
+- Alerts may be interleaved with STATE, CONTROL, REASONING, TRACE, or DUMP level logs
+
+### Usage Pattern
+
+When emitting alerts from logic steps:
+
+```java
+// Alert with explicit log level (typically CONTROL for problem identification)
+alert(LogLevel.CONTROL, "ALERT.MISSING: PatientSeriesStatus is null; fallback: ...");
+
+// Alert with method overload (implicit CONTROL level)
+alert("ALERT.MISSING: PatientSeriesStatus is null; fallback: ...");
+```
+
+### Design Principle
+
+Alerts represent **correctness violations** that must always be visible for debugging.  
+They are not subject to normal log level filtering because they indicate the output may be wrong.
 
 ---
 
