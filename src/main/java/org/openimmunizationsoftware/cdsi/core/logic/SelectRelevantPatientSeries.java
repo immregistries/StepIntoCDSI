@@ -43,7 +43,7 @@ public class SelectRelevantPatientSeries extends LogicStep {
 
         logicTable54.caGender = new ConditionAttribute<String>("Patient", "Gender");
         logicTable54.caDateOfBirth = new ConditionAttribute<Date>("Patient", "Date Of Birth");
-        // TODO: 'MedicalHistory' needs to be replaced with new class 'PatientHistory'
+        // 'MedicalHistory' needs to be replaced with new class 'PatientHistory'
         logicTable54.caActivePatientObservations = new ConditionAttribute<MedicalHistory>("Patient history",
             "Active Patient Observation(s)");
         logicTable54.caRequiredGender = new ConditionAttribute<List<String>>("Supporting Data (Gender)",
@@ -80,8 +80,10 @@ public class SelectRelevantPatientSeries extends LogicStep {
         logicTable54.caIndicationEndAgeDate.setInitialValue(CALCDTIND_2.evaluate(dataModel, this, indication));
 
         logicTable55.addInnerSet(logicTable54);
+        logicTable54.setLogicStepSink(this.getLogicStepSink());
         logicTableList.add(logicTable54);
       }
+      logicTable55.setLogicStepSink(this.getLogicStepSink());
       logicTableList.add(logicTable55);
     }
   }
@@ -139,7 +141,7 @@ public class SelectRelevantPatientSeries extends LogicStep {
     out.println("       <th>Target Disease</th>");
     out.println("       <th>Vaccine Group</th>");
     out.println("     </tr>");
-    for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {
+    for (PatientSeries patientSeries : dataModel.getPatientSeriesStepper().getList()) {
       AntigenSeries antigenSeries = patientSeries.getTrackedAntigenSeries();
       out.println("     <tr>");
       out.println("       <td>" + antigenSeries.getSeriesName() + "</td>");
@@ -182,12 +184,12 @@ public class SelectRelevantPatientSeries extends LogicStep {
   private class LT54 extends LTInnerSet {
     public LT54() {
       super(2, 4, "TABLE 5-4 DOES THE INDICATION APPLY TO THE PATIENT?");
-      
+
       setLogicCondition(0, new LogicCondition(
           "Does the indication describe any active patient observations?") {
         @Override
         public LogicResult evaluateInternal() {
-          // TODO logic condition not yet implemented
+          // logic condition not yet implemented
           return LogicResult.NO;
         }
       });
@@ -202,8 +204,8 @@ public class SelectRelevantPatientSeries extends LogicStep {
           if (caIndicationBeginAgeDate.getFinalValue().after(caAssessmentDate.getFinalValue())) {
             return LogicResult.NO;
           }
-          if (caAssessmentDate.getFinalValue().after(caIndicationEndAgeDate.getFinalValue())) {
-            log("yes, indication begin age date is <= assesment date is < indication end age date");
+          if (caAssessmentDate.getFinalValue().before(caIndicationEndAgeDate.getFinalValue())) {
+            log("yes, indication begin age date is <= assessment date is < indication end age date");
             return LogicResult.YES;
           }
           return LogicResult.NO;
@@ -315,7 +317,7 @@ public class SelectRelevantPatientSeries extends LogicStep {
         public void perform() {
           log("Yes. The antigen series is a relevant patient series for the patient.");
           PatientSeries patientSeries = new PatientSeries(antigenSeries);
-          dataModel.getPatientSeriesList().add(patientSeries);
+          dataModel.getPatientSeriesStepper().add(patientSeries);
         }
       });
 
@@ -331,7 +333,7 @@ public class SelectRelevantPatientSeries extends LogicStep {
         public void perform() {
           log("Yes. The antigen series is a relevant patient series for the patient.");
           PatientSeries patientSeries = new PatientSeries(antigenSeries);
-          dataModel.getPatientSeriesList().add(patientSeries);
+          dataModel.getPatientSeriesStepper().add(patientSeries);
         }
       });
       setLogicOutcome(3, new LogicOutcome() {

@@ -10,7 +10,6 @@ import javax.servlet.http.HttpSession;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
-import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
 
 /**

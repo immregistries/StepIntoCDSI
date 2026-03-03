@@ -12,14 +12,13 @@ import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.ClinicalGuidelineObservation;
-import org.openimmunizationsoftware.cdsi.core.domain.Observation;
-import org.openimmunizationsoftware.cdsi.core.domain.CodedValue;
 import org.openimmunizationsoftware.cdsi.core.domain.Contraindication_TO_BE_REMOVED;
 import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.Immunity;
 import org.openimmunizationsoftware.cdsi.core.domain.ImmunizationHistory;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
+import org.openimmunizationsoftware.cdsi.core.domain.Observation;
 import org.openimmunizationsoftware.cdsi.core.domain.Patient;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.Schedule;
@@ -42,9 +41,9 @@ public class DataModel {
   private List<LiveVirusConflict> liveVirusConflictList = new ArrayList<LiveVirusConflict>();
   private Map<String, VaccineType> cvxMap = new HashMap<String, VaccineType>();
   private Map<String, Antigen> antigenMap = new HashMap<String, Antigen>();
-  private Map<String, CodedValue> codedValueMap = new HashMap<String, CodedValue>();
   private List<Antigen> antigenList = null;
   private List<Antigen> antigenSelectedList = null;
+  private List<String> antigenLabelFilterList = null;
   private int antigenPos = -1;
   private int antigenSelectedPos = -1;
   private Antigen antigen = null;
@@ -62,7 +61,6 @@ public class DataModel {
   private TargetDose previousTargetDose = null;
   private List<TargetDose> targetDoseList = null;
   private AntigenAdministeredRecord antigenAdministeredRecordThatSatisfiedPreviousTargetDose = null;
-  private EvaluationStatus evaluationStatus = null;
   private Patient patient = null;
   private ImmunizationHistory immunizationHistory = null;
   private Date assessmentDate = new Date();
@@ -79,15 +77,78 @@ public class DataModel {
 
   private AntigenAdministeredRecord previousAntigenAdministeredRecord = null;
   private List<AntigenSeries> antigenSeriesList = new ArrayList<AntigenSeries>();
-  private List<PatientSeries> patientSeriesList = new ArrayList<PatientSeries>();
+  private Stepper<PatientSeries> patientSeriesStepper = new Stepper<PatientSeries>();
   private List<PatientSeries> scorablePatientSeriesList = null;
-  private PatientSeries patientSeries = null;
   private List<Forecast> forecastList = new ArrayList<Forecast>();
   private List<VaccineGroupForecast> vaccineGroupForecastList = new ArrayList<VaccineGroupForecast>();
   private VaccineGroup vaccineGroup;
   private List<VaccineGroup> vaccineGroupList;
   private int vaccineGroupPos = -1;
   private Forecast forecast = null;
+  private PatientSeries forecastingForPatientSeries = null;
+
+  private Neighborhood neighborhood = Neighborhood.SETUP;
+  private String evaluateForecastLoopSignature = null;
+  private int evaluateForecastRepeatedStateCount = 0;
+  private int evaluateForecastTotalCycleCount = 0;
+
+  public Neighborhood getNeighborhood() {
+    return neighborhood;
+  }
+
+  public void setNeighborhood(Neighborhood neighborhood) {
+    this.neighborhood = neighborhood;
+  }
+
+  public boolean isNeighborhoodSetup() {
+    return neighborhood == Neighborhood.SETUP;
+  }
+
+  public boolean isNeighborhoodEvaluate() {
+    return neighborhood == Neighborhood.EVALUATE;
+  }
+
+  public boolean isNeighborhoodForecast() {
+    return neighborhood == Neighborhood.FORECAST;
+  }
+
+  public int incrementEvaluateForecastTotalCycleCount() {
+    evaluateForecastTotalCycleCount++;
+    return evaluateForecastTotalCycleCount;
+  }
+
+  public int recordEvaluateForecastLoopSignature(String loopSignature) {
+    if (loopSignature == null) {
+      evaluateForecastLoopSignature = null;
+      evaluateForecastRepeatedStateCount = 0;
+      return evaluateForecastRepeatedStateCount;
+    }
+    if (loopSignature.equals(evaluateForecastLoopSignature)) {
+      evaluateForecastRepeatedStateCount++;
+    } else {
+      evaluateForecastLoopSignature = loopSignature;
+      evaluateForecastRepeatedStateCount = 1;
+    }
+    return evaluateForecastRepeatedStateCount;
+  }
+
+  public int getEvaluateForecastRepeatedStateCount() {
+    return evaluateForecastRepeatedStateCount;
+  }
+
+  public int getEvaluateForecastTotalCycleCount() {
+    return evaluateForecastTotalCycleCount;
+  }
+
+  public void resetEvaluateForecastLoopGuard() {
+    evaluateForecastLoopSignature = null;
+    evaluateForecastRepeatedStateCount = 0;
+    evaluateForecastTotalCycleCount = 0;
+  }
+
+  public Stepper<PatientSeries> getPatientSeriesStepper() {
+    return patientSeriesStepper;
+  }
 
   private Map<String, Observation> ObservationMap = new HashMap<String, Observation>();
 
@@ -160,6 +221,14 @@ public class DataModel {
 
   public Map<String, ClinicalGuidelineObservation> getClinicalGuidelineObservationMap() {
     return clinicalGuidelineObservationMap;
+  }
+
+  public PatientSeries getForecastingForPatientSeries() {
+    return forecastingForPatientSeries;
+  }
+
+  public void setForecastingForPatientSeries(PatientSeries patientSeries) {
+    this.forecastingForPatientSeries = patientSeries;
   }
 
   public Forecast getForecast() {
@@ -270,6 +339,14 @@ public class DataModel {
 
   public void setAntigenSelectedList(List<Antigen> antigenSelectedList) {
     this.antigenSelectedList = antigenSelectedList;
+  }
+
+  public List<String> getAntigenLabelFilterList() {
+    return antigenLabelFilterList;
+  }
+
+  public void setAntigenLabelFilterList(List<String> antigenLabelFilterList) {
+    this.antigenLabelFilterList = antigenLabelFilterList;
   }
 
   public int getAntigenPos() {
@@ -389,18 +466,6 @@ public class DataModel {
 
   public void setAntigenAdministeredRecord(AntigenAdministeredRecord antigenAdministeredRecord) {
     this.antigenAdministeredRecord = antigenAdministeredRecord;
-  }
-
-  public PatientSeries getPatientSeries() {
-    return patientSeries;
-  }
-
-  public void setPatientSeries(PatientSeries patientSeries) {
-    this.patientSeries = patientSeries;
-  }
-
-  public List<PatientSeries> getPatientSeriesList() {
-    return patientSeriesList;
   }
 
   public List<AntigenSeries> getAntigenSeriesList() {

@@ -55,10 +55,12 @@ public class Antigen {
     return super.equals(obj);
   }
 
-  // TODO get rid of this method
   public String getCvxForForecast() {
     if (name.equals("Cholera")) {
       return "26";
+    }
+    if (name.equals("COVID-19")) {
+      return "213";
     }
     if (name.equals("Diphtheria")) {
       return "20";
@@ -107,6 +109,9 @@ public class Antigen {
     }
     if (name.equals("Rotavirus")) {
       return "122";
+    }
+    if (name.equals("RSV")) {
+      return "303";
     }
     if (name.equals("Rubella")) {
       return "06";

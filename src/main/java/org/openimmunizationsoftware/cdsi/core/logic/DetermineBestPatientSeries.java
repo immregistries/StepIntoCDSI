@@ -1,12 +1,9 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
-import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.apache.jena.sparql.function.library.leviathan.log;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
-import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
@@ -16,7 +13,7 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
 public class DetermineBestPatientSeries extends LogicStep {
-    private List<PatientSeries> patientSeriesList = dataModel.getPatientSeriesList();
+    private List<PatientSeries> patientSeriesList = dataModel.getPatientSeriesStepper().getList();
 
     public DetermineBestPatientSeries(DataModel dataModel) {
         super(LogicStepType.DETERMINE_BEST_PATIENT_SERIES, dataModel);
@@ -24,17 +21,16 @@ public class DetermineBestPatientSeries extends LogicStep {
         for (PatientSeries ps : dataModel.getPrioritizedPatientSeriesList()) {
             log("Evaluating patient series: " + ps.getTrackedAntigenSeries().getTargetDisease().getName());
             if (!ps.getTrackedAntigenSeries().getTargetDisease().equals(dataModel.getAntigen())) {
-              continue;
+                continue;
             }
             log("Patient series " + ps.getTrackedAntigenSeries().getTargetDisease().getName()
                     + " matches antigen " + dataModel.getAntigen());
             LT logicTable = new LT();
             logicTable.pps = ps;
+            logicTable.setLogicStepSink(this.getLogicStepSink());
             logicTableList.add(logicTable);
         }
     }
-
-    private LinkedHashMap<PatientSeries, Integer> patientSeriesMap = new LinkedHashMap<PatientSeries, Integer>();
 
     @Override
     public LogicStep process() throws Exception {

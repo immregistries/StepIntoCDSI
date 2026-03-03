@@ -5,17 +5,6 @@
 
 	<display-name>CDSi core</display-name>
 
-	<!--
-		There are three means to configure Wickets configuration mode and they 
-		are tested in the order given.
-		
-		1) A system property: -Dwicket.configuration 
-		2) servlet specific <init-param> 
-		3) context specific <context-param>
-
-		The value might be either "development" (reloading when templates change) or 
-		"deployment". If no configuration is found, "development" is the default. -->
-
     <servlet>
         <servlet-name>step</servlet-name>
         <servlet-class>org.openimmunizationsoftware.cdsi.servlet.StepServlet</servlet-class>
@@ -24,9 +13,21 @@
         <servlet-name>fhir</servlet-name>
         <servlet-class>org.openimmunizationsoftware.cdsi.servlet.FhirServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>supportingData</servlet-name>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.SupportingDataServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>home</servlet-name>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.HomeServlet</servlet-class>
+    </servlet>
 	<servlet>
         <servlet-name>forecast</servlet-name>
         <servlet-class>org.openimmunizationsoftware.cdsi.servlet.ForecastServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>run</servlet-name>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.RunServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>fits</servlet-name>
@@ -59,12 +60,18 @@
     <servlet>
         <servlet-name>dataModelViewLiveVirusConflict</servlet-name>
         <servlet-class>org.openimmunizationsoftware.cdsi.servlet.dataModelView.LiveVirusConflictServlet</servlet-class>
-    </servlet>
-   
+    </servlet>	<servlet>
+        <servlet-name>sandbox</servlet-name>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.SandboxServlet</servlet-class>
+    </servlet>   
     
     <servlet-mapping>
         <servlet-name>forecast</servlet-name>
         <url-pattern>/forecast</url-pattern>
+    </servlet-mapping>	 
+    <servlet-mapping>
+        <servlet-name>run</servlet-name>
+        <url-pattern>/run</url-pattern>
     </servlet-mapping>	 
     <servlet-mapping>
         <servlet-name>step</servlet-name>
@@ -110,21 +117,20 @@
         <servlet-name>dataModelViewLiveVirusConflict</servlet-name>
         <url-pattern>/dataModelViewLiveVirusConflict</url-pattern>
     </servlet-mapping>
+	<servlet-mapping>
+        <servlet-name>sandbox</servlet-name>
+        <url-pattern>/sandbox</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>supportingData</servlet-name>
+        <url-pattern>/supportingData</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>home</servlet-name>
+        <url-pattern>/home</url-pattern>
+    </servlet-mapping>
+    <welcome-file-list>
+        <welcome-file>home</welcome-file>
+    </welcome-file-list>
 
-
-
-
-    <filter>
-		<filter-name>wicket.core</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
-		<init-param>
-			<param-name>applicationClassName</param-name>
-			<param-value>org.openimmunizationsoftware.cdsi.WicketApplication</param-value>
-		</init-param>
-	</filter>
-
-	<filter-mapping>
-		<filter-name>wicket.core</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
 </web-app>

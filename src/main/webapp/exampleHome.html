@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Step Into CDSi</title>
+</head>
+<body>
+
+  <h1>Step Into CDSi</h1>
+
+  <p>
+    <strong>Step Into CDSi</strong> is an open-source reference and demonstration tool for understanding how
+    immunization clinical decision support (CDS) logic is executed in practice. It enables developers, analysts,
+    and public-health stakeholders to explore vaccine evaluation and forecasting behavior in a transparent,
+    step-by-step manner rather than relying on opaque “black-box” forecasting engines.
+  </p>
+
+  <p>
+    This project is <strong>independent of the CDC CDSi initiative</strong>, but it is designed to work with and
+    illuminate the publicly available CDSi Logic Specification, Supporting Data, and test materials published by CDC.
+    For official CDSi background and resources, see:
+    <a href="https://www.cdc.gov/iis/cdsi/index.html">https://www.cdc.gov/iis/cdsi/index.html</a>
+  </p>
+
+  <h2>Application Areas</h2>
+
+  <h3>Step</h3>
+  <p>
+    Walk through CDS logic one step at a time for a specific patient scenario. Each step corresponds to a chapter
+    of the CDSi Logic Specification, allowing users to see exactly how intermediate decisions and calculations are produced.
+  </p>
+
+  <h3>Supporting Data</h3>
+  <p>
+    Browse and inspect the CDSi supporting data used by the engine. This enables direct comparison between specification
+    inputs and step-level processing behavior.
+  </p>
+
+  <h3>Forecast</h3>
+  <p>
+    Generate a full text forecast similar to outputs produced by production CDS engines. The system evaluates immunization
+    history, applies CDSi logic end-to-end, and returns final evaluation and recommendation results.
+  </p>
+
+  <h3>FHIR Server</h3>
+  <p>
+    Expose forecasting functionality through a FHIR endpoint aligned with the Immunization Decision Support (ImmDS) FHIR
+    implementation guide:
+    <a href="https://hl7.org/fhir/us/immds/index.html">https://hl7.org/fhir/us/immds/index.html</a>
+  </p>
+
+  <h3>FHIR Sandbox</h3>
+  <p>
+    Provide a simple FHIR client for interacting with the FHIR server, supporting testing, validation, and demonstration
+    of CDS interoperability workflows.
+  </p>
+
+  <h2>Transparent Immunization Decision Support</h2>
+<p>
+  Immunization clinical decision support converts complex vaccination guidance into computable logic that determines
+  which vaccines a patient needs and when they should be given. Because national recommendations are published in
+  clinical language rather than executable rules, implementations across health information systems often vary.
+  Step Into CDSi makes this translation visible by exposing each stage of evaluation and forecasting, allowing users
+  to trace how patient history, timing rules, and schedule logic combine to produce final recommendations.
+</p>
+
+<h2>Designed for Learning, Testing, and Demonstration</h2>
+<p>
+  Step Into CDSi is intentionally built as a <strong>reference and demonstration system</strong>, not a production
+  clinical service. The application enables step-through inspection of logic, review of supporting data, and generation
+  of realistic forecast output comparable to operational CDS engines. As of February 2025, approximately
+  <strong>90% of CDSi-defined test cases pass</strong>, though patient condition logic and certain edge scenarios remain
+  incomplete. Results are broadly representative of real-world system behavior and useful for education, prototyping,
+  and interoperability demonstrations, but the system <strong>must not be used for clinical or public-health decision
+  making</strong>.
+</p>
+
+<h2>Integration with the NIST FITS Testing Platform</h2>
+<p>
+  Step Into CDSi works directly with the <strong>Forecasting for Immunization Test Suite (FITS)</strong> maintained by NIST:
+  <a href="https://fits.nist.gov/fits/">https://fits.nist.gov/fits/</a>.
+  CDC publishes official CDSi test cases through FITS, and the platform supports bidirectional testing workflows.
+  Step Into CDSi can retrieve and execute FITS test cases locally for validation and debugging, while FITS can also invoke
+  Step Into CDSi as an external forecasting engine for comparative testing. These complementary patterns support
+  specification verification, regression testing, and interoperability experimentation across CDS implementations.
+</p>
+
+<h2>Open Source Java Implementation</h2>
+<p>
+  The full source code is publicly available on GitHub:
+  <a href="https://github.com/immregistries/StepIntoCDSI">https://github.com/immregistries/StepIntoCDSI</a>.
+  Step Into CDSi is implemented as a <strong>Java web application</strong> designed to run in a standard servlet container
+  such as Apache Tomcat and is distributed under the <strong>Apache 2.0 open-source license</strong>. This allows
+  implementers, researchers, and standards developers to review the logic, adapt the code, and use the system as a
+  foundation for experimentation or education without licensing barriers.
+</p>
+
+<h2>Access and Security Context</h2>
+<p>
+  The demonstration application itself <strong>does not require login or authentication</strong> for general use.
+  However, integration with the FITS platform for automated testing requires valid FITS credentials issued through that
+  service. This separation preserves ease of demonstration while respecting the access controls associated with official
+  test infrastructure.
+</p>
+
+
+</body>
+</html>

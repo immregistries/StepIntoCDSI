@@ -2,7 +2,6 @@ package org.openimmunizationsoftware.cdsi.servlet.dataModelView;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -41,8 +40,6 @@ public class CvxServlet extends MainServlet {
       search_term = "";
     }
 
-
-
     try {
       printHeader(out, "CVX");
 
@@ -66,18 +63,20 @@ public class CvxServlet extends MainServlet {
       out.println("        </tr>");
       for (VaccineDoseAdministered vaccineDoseAdministered : dataModel.getPatient()
           .getReceivesList()) {
-        if (search_term.length() >= 1) {
-          VaccineType vaccineType = dataModel.getCvxMap().get(search_term);
-          out.println("   <tr>");
-          out.println("      <td>" + vaccineType.getCvxCode() + "</td>");
-          out.println("      <td>" + makeLink(vaccineType) + "</td>");
-          out.println("   </tr>");
-        } else {
-          for (VaccineType vaccineType : dataModel.getCvxMap().values()) {
+        if (vaccineDoseAdministered != null) {
+          if (search_term.length() >= 1) {
+            VaccineType vaccineType = dataModel.getCvxMap().get(search_term);
             out.println("   <tr>");
             out.println("      <td>" + vaccineType.getCvxCode() + "</td>");
             out.println("      <td>" + makeLink(vaccineType) + "</td>");
             out.println("   </tr>");
+          } else {
+            for (VaccineType vaccineType : dataModel.getCvxMap().values()) {
+              out.println("   <tr>");
+              out.println("      <td>" + vaccineType.getCvxCode() + "</td>");
+              out.println("      <td>" + makeLink(vaccineType) + "</td>");
+              out.println("   </tr>");
+            }
           }
         }
       }

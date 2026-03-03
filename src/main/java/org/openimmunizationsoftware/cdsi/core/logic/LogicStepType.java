@@ -5,10 +5,10 @@ public enum LogicStepType {
   GATHER_NECESSARY_DATA("4.1", "Gather Necessary Data", false),
   ORGANIZE_IMMUNIZATION_HISTORY("4.2", "Organize Immunization History", false),
   CREATE_RELEVANT_PATIENT_SERIES("4.3", "Create Relevant Patient Series", false),
-  SELECT_RELEVANT_PATIENT_SERIES("5.1", "Select Relevant Patient Series", false),
   EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES("4.4", "Evaluate and Forecast all Patient Series", false),
   SELECT_BEST_PATIENT_SERIES("4.5", "Select Best Patient Series", false),
   IDENTIFY_AND_EVALUATE_VACCINE_GROUP("4.6", "Identify and Evaluate Vaccine Group", false),
+  SELECT_RELEVANT_PATIENT_SERIES("5.1", "Select Relevant Patient Series", false),
   EVALUATE_DOSE_ADMINISTERED_CONDITION("6.1", "Evaluate Dose Administered Condition", true),
   EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION("6.2", "Evaluate Conditional Skip", true),
   EVALUATE_FOR_INADVERTENT_VACCINE("6.3", "Evaluate for Inadvertent Vaccine", true),
@@ -18,7 +18,6 @@ public enum LogicStepType {
   EVALUATE_VACCINE_CONFLICT("6.7", "Evaluate Vaccine Conflict", true),
   EVALUATE_FOR_PREFERABLE_VACCINE("6.8", "Evaluate for Preferable Vaccine", true),
   EVALUATE_FOR_ALLOWABLE_VACCINE("6.9", "Evaluate Allowable Vaccine", true),
-  EVALUATE_GENDER("xx", "Evaluate Gender", true),
   SATISFY_TARGET_DOSE("6.10", "Satisfy Target Dose", true),
   FORECAST_DATES_AND_REASONS("7", "Forecast Dates and Reasons", true),
   EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST("7.1", "Evaluate Conditional Skip", true),
@@ -39,6 +38,7 @@ public enum LogicStepType {
   SINGLE_ANTIGEN_VACCINE_GROUP("9.2", "Single Antigen Vaccine Group", true),
   MULTIPLE_ANTIGEN_VACCINE_GROUP("9.3", "Multiple Antigen Vaccine Group", true),
   END("End", "End", false),
+  EVALUATE_GENDER("xx", "Evaluate Gender", true),
   ;
 
   private String name = "";

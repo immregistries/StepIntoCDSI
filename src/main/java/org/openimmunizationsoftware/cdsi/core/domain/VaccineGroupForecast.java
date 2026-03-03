@@ -58,6 +58,11 @@ public class VaccineGroupForecast extends Forecast {
   }
 
   public void setVaccineGroupStatus(PatientSeriesStatus patientSeriesStatus) {
+    if (patientSeriesStatus == null) {
+      // Silently default to NOT_COMPLETE; alerting handled by caller
+      setVaccineGroupStatus(VaccineGroupStatus.NOT_COMPLETE);
+      return;
+    }
     switch (patientSeriesStatus) {
       case COMPLETE:
         setVaccineGroupStatus(VaccineGroupStatus.COMPLETE);

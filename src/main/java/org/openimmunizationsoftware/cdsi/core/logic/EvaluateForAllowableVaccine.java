@@ -9,6 +9,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
@@ -47,6 +48,7 @@ public class EvaluateForAllowableVaccine extends LogicStep {
       logicTable.caVaccineType.setInitialValue(aar.getVaccineType());
       logicTable.caAllowableVaccineElements.setInitialValue(pi);
 
+      logicTable.setLogicStepSink(this.getLogicStepSink());
       logicTableList.add(logicTable);
     }
   }
@@ -62,9 +64,11 @@ public class EvaluateForAllowableVaccine extends LogicStep {
       }
     }
     if (atLeastOnePass == YesNo.NO) {
-      log("none pass, appending 'vaccine'");
+      log(LogLevel.STATE, "VACCINE INVALID - No allowable vaccines found matching vaccine type and age");
       dataModel.getTargetDose()
           .setStatusCause(dataModel.getTargetDose().getStatusCause() + "Vaccine");
+    } else {
+      log(LogLevel.STATE, "ALLOWABLE vaccine match found - evaluating satisfaction");
     }
     return next();
   }

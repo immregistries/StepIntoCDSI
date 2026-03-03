@@ -2,13 +2,12 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 
 import java.util.Date;
 
+import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
-import org.apache.jena.sparql.function.library.leviathan.log;
-import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 
 public class Interval {
   private SeriesDose seriesDose = null;
@@ -122,11 +121,14 @@ public class Interval {
   }
 
   public Date getPatientReferenceDoseDate(DataModel dataModel, LogicStep logicStep) {
-    logicStep.log("---< calculating Patient Reference Dose Date (PRDD)");
-    logicStep.log("Absolute minimum interval is (" + absoluteMinimumInterval.toString() + ")");
+    logicStep.log(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.TRACE,
+        "TRACE: Calculating Patient Reference Dose Date (PRDD)");
+    logicStep.log(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.TRACE,
+        "TRACE: Absolute minimum interval is (" + absoluteMinimumInterval.toString() + ")");
 
     if (dataModel.getAntigenAdministeredRecord() == null) {
-      logicStep.log("---> dataModel.getAntigenAdministeredRecord() is null, returning null");
+      logicStep.alert(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
+          "ALERT.MISSING: AntigenAdministeredRecord is null when calculating PRDD; returning null");
       return null;
     }
 
@@ -134,32 +136,44 @@ public class Interval {
     {
       TargetDose previousTargetDose = dataModel.getPreviousTargetDose();
       if (previousTargetDose == null) {
-        logicStep.log("---> Previous target dose is null, returning null");
+        logicStep.alert(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
+            "ALERT.MISSING: Previous target dose is null when calculating PRDD; returning null");
         return null;
       } else {
-        logicStep.log("Previous targetDose #" + previousTargetDose.getTrackedSeriesDose().getDoseNumber());
+        logicStep.log(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.TRACE,
+            "TRACE: Previous targetDose #" + previousTargetDose.getTrackedSeriesDose().getDoseNumber());
         previousVdaEvaluation = previousTargetDose.getEvaluation();
       }
     }
 
     Date tmpPatientReferenceDoseDate = null;
     if (previousVdaEvaluation == null) {
-      logicStep.log("---> VdaEvaluation is null, returning null");
+      logicStep.alert(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
+          "ALERT.MISSING: Previous evaluation is null when calculating PRDD; returning null");
       return null;
     }
     try {
       // CALCDTINT-1
       if (fromImmediatePreviousDoseAdministered == YesNo.YES) {
         logicStep
-            .log("Attempting to use CALCDTINT-1 where previous evaluation status = " + previousVdaEvaluation.getEvaluationStatus());
+            .log(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
+                "REASONING: Attempting to use CALCDTINT-1 where previous evaluation status = "
+                    + previousVdaEvaluation.getEvaluationStatus());
         if (previousVdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.VALID)
             || previousVdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.NOT_VALID)) {
-          logicStep.log("evaluationReason is " + previousVdaEvaluation.getEvaluationReason());
+          logicStep.log(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.TRACE,
+              "TRACE: evaluationReason is " + previousVdaEvaluation.getEvaluationReason());
           if (previousVdaEvaluation.getEvaluationReason() == null
               || !previousVdaEvaluation.getEvaluationReason().equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
             AntigenAdministeredRecord previousAAR = dataModel.getPreviousAntigenAdministeredRecord();
-            tmpPatientReferenceDoseDate = previousAAR.getVaccineDoseAdministered().getDateAdministered();
-            logicStep.log("Success using CALCDTINT-1");
+            if (previousAAR == null) {
+              logicStep.alert(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
+                  "ALERT.MISSING: Previous AAR is null in CALCDTINT-1; cannot determine PRDD");
+            } else {
+              tmpPatientReferenceDoseDate = previousAAR.getVaccineDoseAdministered().getDateAdministered();
+              logicStep.log(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
+                  "REASONING: Success using CALCDTINT-1");
+            }
           }
         }
       }
@@ -167,12 +181,14 @@ public class Interval {
       if (fromImmediatePreviousDoseAdministered == YesNo.NO) {
         if (!this.getFromTargetDoseNumberInSeries().equals("")) {
           for (TargetDose td : dataModel.getTargetDoseList()) {
-            if(td.getSatisfiedByVaccineDoseAdministered() == null || td.getSatisfiedByVaccineDoseAdministered().getDateAdministered() == null) {
+            if (td.getSatisfiedByVaccineDoseAdministered() == null
+                || td.getSatisfiedByVaccineDoseAdministered().getDateAdministered() == null) {
               continue;
             }
             if (this.getFromTargetDoseNumberInSeries().equals(td.getTrackedSeriesDose().getDoseNumber())) {
               tmpPatientReferenceDoseDate = td.getSatisfiedByVaccineDoseAdministered().getDateAdministered();
-              logicStep.log("Success using CALCDTINT-2");
+              logicStep.log(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
+                  "REASONING: Success using CALCDTINT-2");
             }
           }
         }
@@ -188,26 +204,28 @@ public class Interval {
               }
             }
             tmpPatientReferenceDoseDate = mostRecentDate;
-            logicStep.log("Using CALCDTINT-8");
+            logicStep.log(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
+                "REASONING: Using CALCDTINT-8");
           }
         }
       }
       // CALCDTINT-9
       if (fromImmediatePreviousDoseAdministered == YesNo.NO) {
         if (this.getFromRelevantObservation() != null && !this.getFromRelevantObservation().getCode().equals("")) {
-          // TODO set tmpPatientReferenceDoseDate to 'the observation date of the most
-          // recent active patient observation'
-          logicStep.log("Using CALCDTINT-9");
+          logicStep.log(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
+              "REASONING: Using CALCDTINT-9");
         }
       }
     } catch (NullPointerException np) {
-      np.getCause();
-      logicStep.log("NullPointerException " + np.getMessage());
+      logicStep.alert(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
+          "ALERT.INVARIANT: NullPointerException in PRDD calculation: " + np.getMessage());
     }
     if (tmpPatientReferenceDoseDate != null) {
-      logicStep.log("---> PRDD returning " + tmpPatientReferenceDoseDate.toString());
+      logicStep.log(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
+          "REASONING: PRDD calculated as " + logicStep.formatDate(tmpPatientReferenceDoseDate));
     } else {
-      logicStep.log("---> PRDD returning null");
+      logicStep.alert(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
+          "ALERT.MISSING: PRDD is null; no valid interval calculation rule (CALCDTINT-1/2/8/9) succeeded");
     }
 
     return tmpPatientReferenceDoseDate;

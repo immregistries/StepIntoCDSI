@@ -125,7 +125,7 @@ public class PatientResourceProvider implements IResourceProvider {
          Patient nextPatient = nextPatientList.getLast();
          NAMELOOP: for (HumanName nextName : nextPatient.getName()) {
             String nextFamily = nextName.getFamily();
-            if (theFamilyName.equals(nextFamily)) {
+            if (theFamilyName.toString().equals(nextFamily)) {
                retVal.add(nextPatient);
                break NAMELOOP;
             }

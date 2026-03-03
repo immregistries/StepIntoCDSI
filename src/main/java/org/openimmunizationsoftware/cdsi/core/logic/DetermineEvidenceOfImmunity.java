@@ -32,10 +32,10 @@ public class DetermineEvidenceOfImmunity extends LogicStep {
     super(LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY, dataModel);
 
     Forecast forecast = new Forecast();
-    forecast.setAntigen(dataModel.getPatientSeries().getTrackedAntigenSeries().getTargetDisease());
+    forecast.setAntigen(dataModel.getPatientSeriesStepper().getCurrent().getTrackedAntigenSeries().getTargetDisease());
     forecast.setTargetDose(dataModel.getTargetDose());
     dataModel.setForecast(forecast);
-    dataModel.getPatientSeries().setForecast(forecast);
+    dataModel.getPatientSeriesStepper().getCurrent().setForecast(forecast);
 
     // Table 7-2
     setConditionTableName("Table 7-2 Immunity attributes");
@@ -101,7 +101,7 @@ public class DetermineEvidenceOfImmunity extends LogicStep {
         protected LogicResult evaluateInternal() {
           if (caEvidenceOfImmunity != null) {
             /*
-             * TODO add logic condition
+             * add logic condition
              * for(int i = 0; i <= caEvidenceOfImmunity.get; )
              * OR
              * for (VaccineDoseAdministered vda :
@@ -209,7 +209,7 @@ public class DetermineEvidenceOfImmunity extends LogicStep {
         @Override
         public void perform() {
           log("Yes. The patient has evidence of immunity.");
-          dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.IMMUNE);
+          dataModel.getPatientSeriesStepper().getCurrent().setPatientSeriesStatus(PatientSeriesStatus.IMMUNE);
           log("Forecast reason is \"patient has evidence of immunity\". ");
           dataModel.getForecast().setForecastReason("Patient has Evidence of immunity");
         }
@@ -226,7 +226,7 @@ public class DetermineEvidenceOfImmunity extends LogicStep {
         @Override
         public void perform() {
           log("Yes. The patient has evidence of immunity.");
-          dataModel.getPatientSeries().setPatientSeriesStatus(PatientSeriesStatus.IMMUNE);
+          dataModel.getPatientSeriesStepper().getCurrent().setPatientSeriesStatus(PatientSeriesStatus.IMMUNE);
           dataModel.getForecast().setForecastReason("Patient has evidence of immunity");
           log("Forecast reason is \"patient has evidence of immunity\". ");
         }

@@ -10,7 +10,6 @@ import javax.servlet.http.HttpSession;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
-import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 
 public class LiveVirusConflictServlet extends MainServlet {
@@ -73,7 +72,6 @@ public class LiveVirusConflictServlet extends MainServlet {
       out.close();
     }
   }
-
 
   private void printRowLiveVirusConflict(LiveVirusConflict liveVirusConflict, PrintWriter out) {
     out.println("     <tr>");

@@ -4,11 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -18,8 +13,6 @@ import javax.servlet.http.HttpSession;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.ClinicalHistory;
-import org.openimmunizationsoftware.cdsi.core.domain.Contraindication;
-import org.openimmunizationsoftware.cdsi.core.domain.Observation;
 import org.openimmunizationsoftware.cdsi.core.domain.Schedule;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 
@@ -114,7 +107,7 @@ public class ScheduleServlet extends MainServlet {
         + schedule.getScheduleName() + "\" >" + schedule.getScheduleName() + "</td>");
     out.println("        <td>Length of " + schedule.getContraindicationList().size() + "</td>");
     out.println("        <td>" + schedule.getLiveVirusConflictList() + "</td>");
-    
+
     out.println("        <td>");
     out.println("         <table>");
     for (AntigenSeries antigenSeries : schedule.getAntigenSeriesList()) {
@@ -123,11 +116,11 @@ public class ScheduleServlet extends MainServlet {
             + "=" + URLEncoder.encode(schedule.getScheduleName(), "UTF-8") + "&"
             + PARAM_ANTIGEN_SERIES + "="
             + URLEncoder.encode(antigenSeries.getSeriesName(), "UTF-8");
-        
+
         out.println("      <tr>");
         out.println("          <td><a href=\"" + link + "\" target=\"dataModelView\">"
             + antigenSeries.getSeriesName() + "</a></td>");
-         out.println("      </tr>");
+        out.println("      </tr>");
       } catch (UnsupportedEncodingException uee) {
         uee.printStackTrace();
       }

@@ -6,6 +6,8 @@ import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.net.URLEncoder;
+import java.io.UnsupportedEncodingException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +16,6 @@ import javax.servlet.http.HttpSession;
 
 import org.openimmunizationsoftware.cdsi.SoftwareVersion;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
-import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
@@ -28,6 +29,8 @@ import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepType;
 
 public class StepServlet extends ForecastServlet {
+
+  private static final String SESSION_SUPPORTING_DATA_SET = "stepSupportingDataSet";
 
   static List<StepExample> stepExamples = null;
   static int stepExampleStartCount = 0;
@@ -74,6 +77,14 @@ public class StepServlet extends ForecastServlet {
       throws ServletException, IOException {
 
     HttpSession session = req.getSession(true);
+
+    // Remove forced selection - now uses default if not specified
+    String selectedSupportingDataSet = req.getParameter(PARAM_SUPPORTING_DATA_SET);
+    if (selectedSupportingDataSet != null && !selectedSupportingDataSet.trim().equals("")) {
+      session.setAttribute(SESSION_SUPPORTING_DATA_SET,
+          SupportingDataManager.normalizeSetId(selectedSupportingDataSet));
+    }
+
     DataModel dataModel = null;
     String action = req.getParameter("action");
     if (action != null && action.equals("next")) {
@@ -132,6 +143,11 @@ public class StepServlet extends ForecastServlet {
     out.println("  <body>");
 
     out.println("      <form action=\"step\" method=\"POST\" id=\"stepForm\">");
+    String activeSupportingDataSet = resolveSupportingDataSet(req);
+    if (activeSupportingDataSet != null && !activeSupportingDataSet.equals("")) {
+      out.println("      <input type=\"hidden\" name=\"" + PARAM_SUPPORTING_DATA_SET + "\" value=\""
+          + escapeHtml(activeSupportingDataSet) + "\"/>");
+    }
     out.println("    <div class=\"cell\">");
     if (exception != null) {
       StringWriter sw = new StringWriter();
@@ -147,6 +163,9 @@ public class StepServlet extends ForecastServlet {
       out.println("Version " + SoftwareVersion.VERSION + "<br/>");
       out.println("  <a href=\"dataModelView\" target=\"dataModelView\">View Data Model</a><br/>");
       out.println("  <a href=\"fits\">FITS Test Cases</a>");
+      out.println("<br/>Supporting Data Set: <strong>"
+          + escapeHtml(activeSupportingDataSet == null ? "default" : activeSupportingDataSet)
+          + "</strong>");
       out.println("<br clear=\"all\"/>");
       if (dataModel.getLogicStepPrevious() == null) {
         out.println("<h1>CDSi Demonstration System</h1> ");
@@ -164,8 +183,9 @@ public class StepServlet extends ForecastServlet {
         }
         for (StepExample stepExample : stepExamples) {
           out.println("  <tr>");
-          String stepLink = "step?" + stepExample.getRequestString();
-          String forecastLink = "forecast?" + stepExample.getRequestString();
+          String stepLink = appendSupportingDataSet("step?" + stepExample.getRequestString(), activeSupportingDataSet);
+          String forecastLink = appendSupportingDataSet("forecast?" + stepExample.getRequestString(),
+              activeSupportingDataSet);
           out.println("      <td><a href=\"" + stepLink + "\">" + stepExample.getLabel() + "</a></td><td><a href=\""
               + forecastLink + "\">Forecast</a></td>");
           out.println("  </tr>");
@@ -253,16 +273,57 @@ public class StepServlet extends ForecastServlet {
     out.close();
   }
 
+  @Override
+  protected String resolveSupportingDataSet(HttpServletRequest req) {
+    String supportingDataSet = req.getParameter(PARAM_SUPPORTING_DATA_SET);
+    if (supportingDataSet != null && !supportingDataSet.trim().equals("")) {
+      return SupportingDataManager.normalizeSetId(supportingDataSet);
+    }
+
+    HttpSession session = req.getSession(false);
+    if (session != null) {
+      Object value = session.getAttribute(SESSION_SUPPORTING_DATA_SET);
+      if (value instanceof String && !((String) value).trim().equals("")) {
+        return SupportingDataManager.normalizeSetId((String) value);
+      }
+    }
+
+    return SupportingDataManager.resolveDefaultSupportingDataSet(getServletContext());
+  }
+
+  private String appendSupportingDataSet(String link, String supportingDataSet) {
+    if (supportingDataSet == null || supportingDataSet.equals("")) {
+      return link;
+    }
+    try {
+      String sep = link.contains("?") ? "&" : "?";
+      return link + sep + PARAM_SUPPORTING_DATA_SET + "=" + URLEncoder.encode(supportingDataSet, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      return link;
+    }
+  }
+
+  private String escapeHtml(String text) {
+    if (text == null) {
+      return "";
+    }
+    return text.replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace("\"", "&quot;")
+        .replace("'", "&#39;");
+  }
+
   private void printStableView(DataModel dataModel, PrintWriter out) {
-    //print out patient date of birth
+    // print out patient date of birth
     if (dataModel.getPatient().getDateOfBirth() != null) {
       SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
       out.println("<h2>Patient DOB: " + sdf.format(dataModel.getPatient().getDateOfBirth()) + "</h2>");
     }
 
     // print out antigen
-    if (dataModel.getPatientSeries() != null) {
-      out.println("<h2>" + dataModel.getPatientSeries() + "</h2>");
+    if (dataModel.getPatientSeriesStepper().hasCurrent()) {
+      out.println("<h2>" + dataModel.getPatientSeriesStepper().getCurrent() + "</h2>");
     } else if (dataModel.getAntigen() != null) {
       out.println("<h2>" + dataModel.getAntigen() + "</h2>");
     }
@@ -337,9 +398,11 @@ public class StepServlet extends ForecastServlet {
             out.println("</tr><tr>");
           }
           out.println("    <td>--&gt;</td>");
-          VaccineDoseAdministered vda = aar.getVaccineDoseAdministered();
-          printVda(out, vda);
-          vaccineDoseAdministeredList.remove(vda);
+          VaccineDoseAdministered vda = aar == null ? null : aar.getVaccineDoseAdministered();
+          if (vda != null) {
+            printVda(out, vda);
+            vaccineDoseAdministeredList.remove(vda);
+          }
         }
         out.println("  </tr>");
       }
@@ -363,8 +426,8 @@ public class StepServlet extends ForecastServlet {
       out.println("</ul>");
     }
 
-    if (dataModel.getPatientSeriesList() != null && dataModel.getPatientSeriesList().size() > 0) {
-      out.println("psl hashcode " + dataModel.getPatientSeriesList().hashCode() + "<br/>");
+    if (dataModel.getPatientSeriesStepper() != null && dataModel.getPatientSeriesStepper().getList().size() > 0) {
+      out.println("psl hashcode " + dataModel.getPatientSeriesStepper().getList().hashCode() + "<br/>");
       out.println("<h2>Patient Series</h2>");
       out.println("<table>");
       out.println("  <tr>");
@@ -374,7 +437,7 @@ public class StepServlet extends ForecastServlet {
       out.println("    <th>Earliest</th>");
       out.println("    <th>Recommended</th>");
       out.println("  </tr>");
-      for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {
+      for (PatientSeries patientSeries : dataModel.getPatientSeriesStepper().getList()) {
         AntigenSeries antigenSeries = patientSeries.getTrackedAntigenSeries();
         out.println("  <tr>");
         out.println("    <td>" + antigenSeries.getTargetDisease().getName() + "</td>");
@@ -458,7 +521,7 @@ public class StepServlet extends ForecastServlet {
       out.println("</table>");
     }
 
-     if (dataModel.getPrioritizedPatientSeriesList() != null) {
+    if (dataModel.getPrioritizedPatientSeriesList() != null) {
       out.println("<h3>Prioritized Patient Series</h3>");
       out.println("<table>");
       out.println("  <tr>");

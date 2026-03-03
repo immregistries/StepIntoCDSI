@@ -39,6 +39,7 @@ public class FhirServlet extends RestfulServer {
 		 * type of resource.
 		 */
 		ImmunizationRecommendationForecastProvider immunizationRecommendationForecastProvider = new ImmunizationRecommendationForecastProvider();
+		immunizationRecommendationForecastProvider.setServletContext(getServletContext());
 		ImmunizationRecommendationProvider immunizationRecommendationProvider = new ImmunizationRecommendationProvider(
 				immunizationRecommendationForecastProvider);
 		List<IResourceProvider> providers = new ArrayList<>();

@@ -1,15 +1,7 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
@@ -23,20 +15,32 @@ public class CompletePatientSeries extends LogicStep {
 
   private int numberOfValidDoses(PatientSeries patientSeries) {
     int nbOfValidDoses = 0;
-    for (TargetDose target : patientSeries.getTargetDoseList()) {
-      if(target.getTargetDoseStatus() != null) {
-        if(target.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
+
+    List<TargetDose> targetDoseList = patientSeries.getTargetDoseList();
+    if (targetDoseList == null) {
+      alert("ALERT: TargetDoseList is null for patient series; expected to be populated by previous process");
+      return nbOfValidDoses;
+    }
+
+    log("Counting valid doses for patient series. Total target doses: " + targetDoseList.size());
+
+    for (TargetDose target : targetDoseList) {
+      if (target.getTargetDoseStatus() != null) {
+        if (target.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
           nbOfValidDoses++;
+          log("  Found satisfied target dose (count: " + nbOfValidDoses + ")");
         }
       }
 
     }
+    log("Total valid doses: " + nbOfValidDoses);
     return nbOfValidDoses;
   }
 
   public CompletePatientSeries(DataModel dataModel) {
     super(LogicStepType.COMPLETE_PATIENT_SERIES, dataModel);
     setConditionTableName("Table ");
+    log("CompletePatientSeries initialized. Total patient series to evaluate: " + patientSeriesList.size());
   }
 
   /***
@@ -45,42 +49,63 @@ public class CompletePatientSeries extends LogicStep {
 
   private void evaluate_ACandidatePatientSeriesHasTheMostValidDoses() {
     int mostValidDoses = 0;
-    int numPatientSeriesWithMostValidDoses = 0;
-    PatientSeries patientSeriesWithMostValidDoses = null;
+    log("Starting evaluation: A candidate patient series has the most valid doses");
 
-    //set mostValidDoses to the greatest number of valid doses found in one patient series
+    // set mostValidDoses to the greatest number of valid doses found in one patient
+    // series
+    log("Phase 1: Scanning all patient series to find maximum valid dose count");
+    int seriesCount = 0;
     for (PatientSeries patientSeries : patientSeriesList) {
-      if(!patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)) {
+      seriesCount++;
+      if (patientSeries.getPatientSeriesStatus() != null
+          && !patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)) {
+        log("  Series " + seriesCount + ": Skipping (status is not COMPLETE: " + patientSeries.getPatientSeriesStatus()
+            + ")");
         continue;
       }
-      
+
       int newValidDoses = numberOfValidDoses(patientSeries);
-      if(newValidDoses > mostValidDoses) {
+      log("  Series " + seriesCount + ": Valid dose count = " + newValidDoses);
+      if (newValidDoses > mostValidDoses) {
         mostValidDoses = newValidDoses;
+        log("    New max valid doses found: " + mostValidDoses);
       }
     }
 
-    //get number of patientSeries with the most valid dose
+    log("Phase 1 complete. Maximum valid dose count: " + mostValidDoses);
+    log("Phase 2: Scoring patient series based on valid dose count");
+
+    // get number of patientSeries with the most valid dose
+    int scoredSeriesCount = 0;
     for (PatientSeries patientSeries : patientSeriesList) {
-      if(!patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)) {
+      scoredSeriesCount++;
+      if (patientSeries.getPatientSeriesStatus() != null
+          && !patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)) {
         patientSeries.descPatientScoreSeries();
+        log("  Series " + scoredSeriesCount + ": Score decreased (status is not COMPLETE)");
         continue;
       }
 
-      if(numberOfValidDoses(patientSeries) < mostValidDoses) {
+      if (numberOfValidDoses(patientSeries) < mostValidDoses) {
         patientSeries.descPatientScoreSeries();
+        log("  Series " + scoredSeriesCount + ": Score decreased (valid doses less than max)");
         continue;
       }
       patientSeries.incPatientScoreSeries();
+      log("  Series " + scoredSeriesCount + ": Score increased (has most valid doses) - SELECTED");
       break;
     }
+    log("Phase 2 complete. Patient series evaluation finished.");
 
   }
 
   @Override
   public LogicStep process() throws Exception {
+    log("CompletePatientSeries.process() started");
     setNextLogicStepType(LogicStepType.SELECT_PRIORITIZED_PATIENT_SERIES);
     evaluate_ACandidatePatientSeriesHasTheMostValidDoses();
+    log("CompletePatientSeries.process() completed. Moving to next step: "
+        + LogicStepType.SELECT_PRIORITIZED_PATIENT_SERIES);
     return next();
   }
 

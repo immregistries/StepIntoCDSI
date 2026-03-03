@@ -12,13 +12,18 @@ import java.util.Map;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
+import org.openimmunizationsoftware.cdsi.core.logic.items.BusinessRule;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogEvent;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogSink;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogicStepSink;
 
-public abstract class LogicStep {
+public abstract class LogicStep implements LogSink {
 
   public static final LogicStepType[] STEPS = { LogicStepType.GATHER_NECESSARY_DATA,
 
@@ -99,7 +104,7 @@ public abstract class LogicStep {
   protected LogicStepType logicStepType = null;
   protected LogicStepType nextLogicStepType = null;
   private String conditionTableName = "";
-  private List<String> logList = new ArrayList<String>();
+  private LogicStepSink logicStepSink = new LogicStepSink();
 
   public LogicStepType getLogicStepType() {
     return logicStepType;
@@ -113,27 +118,127 @@ public abstract class LogicStep {
     this.nextLogicStepType = nextLogicStepType;
   }
 
+  /**
+   * Get the LogicSink for this LogicStep.
+   * This is used to propagate logging to child LogicTables and LogicOutcomes.
+   * 
+   * @return The LogicSink instance
+   */
+  protected LogSink getLogicStepSink() {
+    return logicStepSink;
+  }
+
+  /**
+   * Returns the list of log messages as strings, preserving order.
+   * Maintained for backwards compatibility.
+   * 
+   * @return List of log messages
+   */
   public List<String> getLogList() {
-    return logList;
+    return logicStepSink.getLogList();
+  }
+
+  /**
+   * Returns the list of log events with level and alert information.
+   * 
+   * @return Unmodifiable list of log events
+   */
+  public List<LogEvent> getLogEventList() {
+    return logicStepSink.getLogEventList();
   }
 
   public String getTitle() {
     return logicStepType.getDisplay();
   }
 
+  public String formatDate(Date date) {
+    if (date == null) {
+      return "null";
+    }
+    synchronized (sdf) {
+      return sdf.format(date);
+    }
+  }
+
+  public String formatDateList(List<Date> dates) {
+    if (dates == null) {
+      return "null";
+    }
+    if (dates.isEmpty()) {
+      return "[]";
+    }
+    StringBuilder sb = new StringBuilder("[");
+    for (int i = 0; i < dates.size(); i++) {
+      if (i > 0) {
+        sb.append(", ");
+      }
+      sb.append(formatDate(dates.get(i)));
+    }
+    sb.append("]");
+    return sb.toString();
+  }
+
+  /**
+   * Log a message at DUMP level (most verbose).
+   * Maintained for backwards compatibility.
+   * 
+   * @param s The message to log
+   */
   public void log(String s) {
-    logList.add(s);
+    logicStepSink.log(s);
+  }
+
+  /**
+   * Log a message at the specified level.
+   * 
+   * For guidance on choosing the appropriate log level,
+   * see: docs/Alerting Semantics for Step Into CDSi.md
+   * 
+   * @param level   The log level
+   * @param message The message to log
+   */
+  public void log(LogLevel level, String message) {
+    logicStepSink.log(level, message);
+  }
+
+  /**
+   * Log an alert message at CONTROL level (least verbose).
+   * 
+   * Alerts are used to flag important conditions that require attention.
+   * For guidance on when to use alerts vs. regular logs,
+   * see: docs/Alerting Semantics for Step Into CDSi.md
+   * 
+   * @param message The alert message to log
+   */
+  public void alert(String message) {
+    alert(LogLevel.CONTROL, message);
+  }
+
+  /**
+   * Log an alert message at the specified level.
+   * 
+   * Alerts are used to flag important conditions that require attention.
+   * For guidance on when to use alerts vs. regular logs,
+   * see: docs/Alerting Semantics for Step Into CDSi.md
+   * 
+   * @param level   The log level
+   * @param message The alert message to log
+   */
+  public void alert(LogLevel level, String message) {
+    logicStepSink.alert(level, message);
   }
 
   public void printLog(PrintWriter out) {
-    if (logList.size() > 0) {
+    List<String> messages = getLogList();
+    if (messages.size() > 0) {
       out.println("<p>Processing log</p>");
       out.println("<ul>");
-      for (String s : logList) {
+      for (String s : messages) {
         out.println("<li>" + s + "</li>");
       }
       out.println("</ul>");
     }
+    printBussinessRules(out);
   }
 
   public LogicStep next() {
@@ -167,6 +272,15 @@ public abstract class LogicStep {
   protected Map<String, List<ConditionAttribute<?>>> conditionAttributesAdditionalMap = new HashMap<String, List<ConditionAttribute<?>>>();
 
   protected List<LogicTable> logicTableList = new ArrayList<LogicTable>();
+  protected List<BusinessRule<?, ?>> businessRuleList = new ArrayList<BusinessRule<?, ?>>();
+
+  public List<BusinessRule<?, ?>> getBusinessRuleList() {
+    return businessRuleList;
+  }
+
+  public void setBusinessRuleList(List<BusinessRule<?, ?>> businessRuleList) {
+    this.businessRuleList = businessRuleList;
+  }
 
   public List<LogicTable> getLogicTableList() {
     return logicTableList;
@@ -250,6 +364,13 @@ public abstract class LogicStep {
       out.println("  </tr>");
     }
     out.println("</table>");
+  }
+
+  protected void printBussinessRules(PrintWriter out) {
+    out.println("<p>Business Rules Processing Log</p>");
+    for (BusinessRule<?, ?> businessRule : businessRuleList) {
+      businessRule.printLog(out);
+    }
   }
 
   protected void printLogicTables(PrintWriter out) {
@@ -363,7 +484,7 @@ public abstract class LogicStep {
     out.println("    <th> Patient Series Status </th>");
     out.println("    <th> Target Dose List size </th>");
     out.println("  </tr>");
-    for (PatientSeries patientSeries : dataModel.getPatientSeriesList()) {
+    for (PatientSeries patientSeries : dataModel.getPatientSeriesStepper().getList()) {
       out.println("  <tr>");
       out.println("    <td>" + patientSeries.getTrackedAntigenSeries().getTargetDisease().getName() + "</td>");
       out.println("    <td>" + patientSeries.getTrackedAntigenSeries().getSeriesName() + "</td>");

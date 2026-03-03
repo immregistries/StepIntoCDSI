@@ -3,7 +3,6 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTSKIP_3;
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTSKIP_4;
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTSKIP_5;
-import static org.openimmunizationsoftware.cdsi.core.logic.items.BusinessRuleTable.CONDSKIP_1;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -17,9 +16,10 @@ import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipCondition;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipConditionType;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipSet;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
-import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
+import org.openimmunizationsoftware.cdsi.core.logic.businessRules.CONDSKIP_1;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
+import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
@@ -77,11 +77,11 @@ public class EvaluateConditionalSkip extends LogicStep {
             caDateAdministered.setInitialValue(aar == null ? null : aar.getDateAdministered());
         }
         caAssessmentDate.setInitialValue(dataModel.getAssessmentDate());
+
         caAdministeredDoseCount.setInitialValue(dataModel.getSelectedAntigenAdministeredRecordList().size());
 
         // This appears to be the core logic of the function?
         /*
-         * TODO:
          * I'm sure there is a better place to list this but before the for loop starts,
          * we should eliminate Conditional Skip instances without a context of
          * Evaluation or Both
@@ -98,6 +98,7 @@ public class EvaluateConditionalSkip extends LogicStep {
                 logicTable610.setConditionLogicType(conditionalSkipSet.getConditionLogic());
                 // 3. Second for loop box; For Each Condition in a Set
                 for (ConditionalSkipCondition condition : conditionalSkipSet.getConditionList()) {
+
                     // 4. Evaluate condition; uses Business Rule Table 4-5 and Decision Tables 4-6,
                     // 4-7, and 4-8
                     // Defining the condition as a class that corresponds to each Decision Table
@@ -111,8 +112,13 @@ public class EvaluateConditionalSkip extends LogicStep {
                     } else if (condition
                             .getConditionType() == ConditionalSkipConditionType.VACCINE_COUNT_BY_AGE
                             || condition
-                                    .getConditionType() == ConditionalSkipConditionType.VACCINE_COUNT_BY_DATE) {
+                                    .getConditionType() == ConditionalSkipConditionType.VACCINE_COUNT_BY_DATE
+                            || condition
+                                    .getConditionType() == ConditionalSkipConditionType.VACCINE_COUNT_BY_DATE_AND_AGE) {
                         lt = new LT69();
+                    } else {
+                        throw new IllegalArgumentException("Unknown Conditional Skip Condition Type: "
+                                + condition.getConditionType());
                     }
                     if (lt != null) {
                         logicTableList.add(lt);
@@ -178,10 +184,11 @@ public class EvaluateConditionalSkip extends LogicStep {
                         }
 
                         lt.caConditionalSkipElements.setInitialValue(condition);
-                        if (condition.getEndDate() != null) {
-                            lt.caNumberofConditionalDosesAdministered
-                                    .setInitialValue(CONDSKIP_1.evaluate(dataModel, condition));
-                        }
+                        CONDSKIP_1 condskip1 = new CONDSKIP_1();
+                        log("Evaluating Business Rule CONDSKIP_1 for Condition ");
+                        businessRuleList.add(condskip1);
+                        lt.caNumberofConditionalDosesAdministered
+                                .setInitialValue(condskip1.evaluate(dataModel, condition));
                     }
                     logicTable610.addInnerSet(lt);
                 }
@@ -200,6 +207,12 @@ public class EvaluateConditionalSkip extends LogicStep {
     public LogicStep process() throws Exception {
         setNextLogicStepType(noSkipLogicStep);
         evaluateLogicTables();
+        TargetDoseStatus status = dataModel.getTargetDose().getTargetDoseStatus();
+        if (status == TargetDoseStatus.SKIPPED) {
+            log(LogLevel.CONTROL, "DOSE SKIPPED - Conditional skip conditions met");
+        } else {
+            log(LogLevel.STATE, "Dose NOT skipped - continuing evaluation");
+        }
         return next();
     }
 
@@ -305,7 +318,6 @@ public class EvaluateConditionalSkip extends LogicStep {
         }
     }
 
-    // TODO: add logic for 6-7
     protected class LT67 extends LTInnerSet {
         public LT67() {
             super(1, 2, "TABLE 6-7 CONDITIONAL TYPE OF COMPLETED SERIES – IS THE CONDITION MET?");
@@ -416,26 +428,34 @@ public class EvaluateConditionalSkip extends LogicStep {
 
             setLogicCondition(0, new LogicCondition(
                     "Comparing the Number of Conditional Doses Administered with the Conditional Skip Dose Count") {
+
                 @Override
                 public LogicResult evaluateInternal() {
+                    log("Conditional Skip Elements Dose Count (ref): "
+                            + caConditionalSkipElements.getFinalValue().getDoseCount());
+                    log("Administered Dose Count (act): "
+                            + caNumberofConditionalDosesAdministered.getFinalValue());
                     if (caConditionalSkipElements.getFinalValue().getDoseCountLogic()
                             .equalsIgnoreCase("greater than")) {
-                        if (caConditionalSkipElements.getFinalValue().getDoseCount() < caAdministeredDoseCount
-                                .getFinalValue()) {
+                        if (caConditionalSkipElements.getFinalValue()
+                                .getDoseCount() < caNumberofConditionalDosesAdministered
+                                        .getFinalValue()) {
                             return LogicResult.YES;
                         }
                         return LogicResult.NO;
                     }
                     if (caConditionalSkipElements.getFinalValue().getDoseCountLogic().equalsIgnoreCase("equal")) {
-                        if (caConditionalSkipElements.getFinalValue().getDoseCount() == caAdministeredDoseCount
-                                .getFinalValue()) {
+                        if (caConditionalSkipElements.getFinalValue()
+                                .getDoseCount() == caNumberofConditionalDosesAdministered
+                                        .getFinalValue()) {
                             return LogicResult.YES;
                         }
                         return LogicResult.NO;
                     }
                     if (caConditionalSkipElements.getFinalValue().getDoseCountLogic().equalsIgnoreCase("less than")) {
-                        if (caConditionalSkipElements.getFinalValue().getDoseCount() > caAdministeredDoseCount
-                                .getFinalValue()) {
+                        if (caConditionalSkipElements.getFinalValue()
+                                .getDoseCount() > caNumberofConditionalDosesAdministered
+                                        .getFinalValue()) {
                             return LogicResult.YES;
                         }
                         return LogicResult.NO;

@@ -10,7 +10,6 @@ import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.data.DataModelLoader;
@@ -36,8 +35,11 @@ public class FitsServlet extends ForecastServlet {
         doGet(req, resp);
     }
 
-    private static String[][] equivalentCvx = new String[][] { { "85", "52" }, { "107", "112" },
-            { "45", "08", "189", "43" }, { "163", "164", "162" }, { "137", "165" }, { "48", "17" }, { "07", "03" },
+    private static String[][] equivalentCvx = new String[][] { { "85", "52" },
+            { "45", "08", "189", "43" }, { "163", "164", "162" }, { "137", "165" }, { "48", "17" },
+            { "03", "05", "06", "07" }, // MMR (03), Measles (05), Rubella (06), Mumps (07)
+            { "107", "112", "20", "11", "112" }, // DTaP: Diphtheria (20), Pertussis (11), Tetanus (112)
+            { "304", "122", "303", "305", "306", "307" }, // RSV vaccines and monoclonal antibodies
             { "109", "152", "133" }, { "188", "187" }, { "108", "147" } };
 
     private static boolean isSameVaccineCvx(String cvx1, String cvx2) {
@@ -65,11 +67,12 @@ public class FitsServlet extends ForecastServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        HttpSession session = req.getSession(true);
         String action = req.getParameter("action");
         Exception exception = null;
         String testPlanIdSelected = req.getParameter("testPlanId");
         String groupNameSelected = req.getParameter("groupName");
+        String selectedSupportingDataSet = resolveSupportingDataSet(req);
+        List<String> supportingDataSetIdList = SupportingDataManager.listSupportingDataSetIds(getServletContext());
 
         if (action != null) {
             if (action.equals("Refresh")) {
@@ -84,61 +87,27 @@ public class FitsServlet extends ForecastServlet {
                     e.printStackTrace();
                 }
             } else if (action.equals("Run") && fitsManager != null) {
-                // get map of TestCaseRegistered for testPlanIdSelected and groupNameSelected
-                Map<String, TestCaseRegistered> testCaseMap = fitsManager.getGroupTestCaseMap(testPlanIdSelected)
-                        .get(groupNameSelected);
-                if (testCaseMap != null) {
-                    logToOut("Running forecaster for " + testPlanIdSelected + " - " + groupNameSelected);
-                    for (TestCaseRegistered testCaseRegistered : testCaseMap.values()) {
-                        try {
-                            String link = createLink(testCaseRegistered);
-                            String linkStep = "step" + link;
-                            String linkForecast = "forecast" + link;
-                            logToOut(" - Running " + testCaseRegistered.getTestCase().getUid());
-                            logToOut("   - " + linkStep);
-                            logToOut("   - " + linkForecast);
-                            DataModel dataModel = DataModelLoader.createDataModel();
-                            // setup data model
-                            dataModel.setTestCaseRegistered(testCaseRegistered);
-                            LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel);
-                            dataModel.setNextLogicStep(
-                                    LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel));
-                            process(dataModel);
-                            List<VaccineGroupForecast> vaccineGroupForecastList = dataModel
-                                    .getVaccineGroupForecastList();
-                            if (vaccineGroupForecastList != null) {
-                                logToOut("     - Found " + vaccineGroupForecastList.size()
-                                        + " vaccine group forecasts and " + testCaseRegistered.getForecastList().size()
-                                        + " forecasts");
-                                for (TestCaseRegistered.Forecast forecast : testCaseRegistered.getForecastList()) {
-                                    for (VaccineGroupForecast vgf : vaccineGroupForecastList) {
-                                        String expCvx = forecast.getVaccineCvxExp();
-                                        String actCvx = vgf.getAntigen().getCvxForForecast();
-                                        logToOut("     - Forecasing for: " + vgf.getAntigen().getName() + " (" + expCvx
-                                                + ") " + " (" + actCvx
-                                                + ") " + vgf.getVaccineGroupStatus());
-                                        if (isSameVaccineCvx(expCvx, actCvx)) {
-                                            VaccineGroupStatus vaccineGroupStatus = vgf.getVaccineGroupStatus();
-                                            SerieStatus serieStatus = vaccineGroupStatus.getSerieStatus();
-                                            forecast.setSerieStatusAct(serieStatus);
-                                            forecast.setVaccineCvxAct(actCvx);
-                                            logToOut(
-                                                    "       - This is the one we are looking for, setting series status to "
-                                                            + serieStatus);
-                                            if (vgf.getVaccineGroupStatus() == VaccineGroupStatus.NOT_COMPLETE) {
-                                                forecast.setEarliestAct(vgf.getEarliestDate());
-                                                forecast.setRecommendedAct(vgf.getAdjustedRecommendedDate());
-                                            }
-                                            break;
-                                        }
-                                    }
-                                }
-                            } else {
-                                logToOut("     - No vaccine group forecast list found for test case registered: ");
-                            }
-                        } catch (Exception e) {
-                            testCaseRegistered.setException(e);
+                // Handle "-- All --" by running all groups
+                boolean runAllGroups = "-- All --".equals(groupNameSelected);
+                Map<String, Map<String, TestCaseRegistered>> groupTestCaseMap = fitsManager
+                        .getGroupTestCaseMap(testPlanIdSelected);
+
+                if (runAllGroups) {
+                    // Run tests for all groups
+                    logToOut("Running forecaster for " + testPlanIdSelected + " - ALL GROUPS");
+                    for (String groupName : groupTestCaseMap.keySet()) {
+                        Map<String, TestCaseRegistered> testCaseMap = groupTestCaseMap.get(groupName);
+                        if (testCaseMap != null) {
+                            logToOut("  Processing group: " + groupName);
+                            runTestsForGroup(testCaseMap, selectedSupportingDataSet);
                         }
+                    }
+                } else {
+                    // Run tests for specific group
+                    Map<String, TestCaseRegistered> testCaseMap = groupTestCaseMap.get(groupNameSelected);
+                    if (testCaseMap != null) {
+                        logToOut("Running forecaster for " + testPlanIdSelected + " - " + groupNameSelected);
+                        runTestsForGroup(testCaseMap, selectedSupportingDataSet);
                     }
                 }
             }
@@ -181,6 +150,9 @@ public class FitsServlet extends ForecastServlet {
             out.println("    </select>");
             out.println("    <label for=\"groupName\">Group Name:</label>");
             out.println("    <select id=\"groupName\" name=\"groupName\">");
+            out.println("      <option value=\"-- All --\""
+                    + ((groupNameSelected != null && groupNameSelected.equals("-- All --")) ? " selected" : "")
+                    + ">-- All --</option>");
             for (String groupName : fitsManager.getGroupNames()) {
                 out.println("      <option value=\"" + groupName + "\""
                         + ((groupNameSelected != null && groupName.equals(groupNameSelected)) ? " selected" : "")
@@ -198,6 +170,9 @@ public class FitsServlet extends ForecastServlet {
             int numberOfTestCasesRun = 0;
             int numberOfTestCasesPassed = 0;
 
+            // Track if we're running all groups for overall stats display
+            boolean isRunningAllGroups = "-- All --".equals(groupNameSelected);
+
             for (TestPlan testPlan : fitsManager.getTestPlanList()) {
                 if (testPlanIdSelected == null || !testPlan.getId().equals(testPlanIdSelected)) {
                     continue;
@@ -206,9 +181,18 @@ public class FitsServlet extends ForecastServlet {
                 Map<String, Map<String, TestCaseRegistered>> groupTestCaseMap = fitsManager
                         .getGroupTestCaseMap(testPlan.getId());
                 for (String groupName : groupTestCaseMap.keySet()) {
-                    if (groupNameSelected == null || !groupName.equals(groupNameSelected)) {
+                    // Skip if specific group selected and this isn't it
+                    if (groupNameSelected != null && !isRunningAllGroups && !groupName.equals(groupNameSelected)) {
                         continue;
                     }
+
+                    // Track stats per group when running all groups
+                    int groupFails = 0;
+                    int groupPasses = 0;
+                    int groupTestChecksRun = 0;
+                    int groupTestCasesRun = 0;
+                    int groupTestCasesPassed = 0;
+
                     out.println("    <h3>" + groupName + "</h3>");
                     out.println("    <table>");
                     out.println("      <tr>");
@@ -226,16 +210,9 @@ public class FitsServlet extends ForecastServlet {
                     out.println("        <th>Act<br/>CVX</th>");
                     out.println("      </tr>");
                     for (TestCaseRegistered testCaseRegistered : groupTestCaseMap.get(groupName).values()) {
-                        String link = createLink(testCaseRegistered);
+                        String link = createLink(testCaseRegistered, selectedSupportingDataSet);
                         String linkStep = "step" + link;
                         String linkForecast = "forecast" + link;
-                        String groupNameUrlEncoded = groupName.replaceAll(" ", "%20");
-                        String uidUrlEncoded = testCaseRegistered.getTestCase().getUid().replaceAll(" ", "%20");
-                        String linkRun = "forecast";
-                        linkRun += link + "&action=Run";
-                        linkRun += "&testPlanId=" + testPlan.getId();
-                        linkRun += "&groupName=" + groupNameUrlEncoded;
-                        linkRun += "&uid=" + uidUrlEncoded;
                         int numberOfForecasts = testCaseRegistered.getForecastList().size();
                         String rowspan = numberOfForecasts > 1 ? (" rowspan=\"" + numberOfForecasts + "\"") : "";
                         out.println("      <tr>");
@@ -243,27 +220,112 @@ public class FitsServlet extends ForecastServlet {
                                 "        <td" + rowspan + ">" + testCaseRegistered.getTestCase().getUid() + "</td>");
                         out.println(
                                 "        <td" + rowspan + ">" + testCaseRegistered.getTestCase().getName() + "</td>");
-                        out.println("        <td" + rowspan + ">");
-                        // can't take actions if test case registered is has problems
-                        if (testCaseRegistered.isGood()) {
-                            out.println("          <a href=\"" + linkStep + "\" target=\"_blank\">Step</a> | ");
-                            out.println("          <a href=\"" + linkForecast + "\" target=\"_blank\">Forecast</a> | ");
-                            out.println("          <a href=\"" + linkRun + "\" target=\"_blank\">Run</a> ");
-                        } else {
-                            // print out problem reason, no link
-                            out.println("          " + testCaseRegistered.getProblemReason());
-                        }
-                        out.println("        </td>");
                         if (numberOfForecasts == 0) {
+                            out.println("        <td" + rowspan + ">");
+                            // can't take actions if test case registered is has problems
+                            if (testCaseRegistered.isGood()) {
+                                out.println("          <a href=\"" + linkStep + "\" target=\"_blank\">Step</a> | ");
+                                out.println(
+                                        "          <a href=\"" + linkForecast + "\" target=\"_blank\">Forecast</a>");
+                            } else {
+                                // print out problem reason, no link
+                                out.println("          " + testCaseRegistered.getProblemReason());
+                            }
+                            out.println("        </td>");
                             out.println("<td colspan=\"4\">No Forecast Expectations</td>");
                         } else {
 
                             for (TestCaseRegistered.Forecast f : testCaseRegistered.getForecastList()) {
                                 numberOfTestCasesRun += 1;
+                                groupTestCasesRun += 1;
                                 boolean isTestCasePassing = true;
+                                boolean statusPass = false;
+                                boolean earliestPass = false;
+                                boolean recommendedPass = false;
+
+                                // Calculate pass/fail status first (before building Run link)
+                                if (testCaseRegistered.getException() == null) {
+                                    if (f.getSerieStatusExp() != null && f.getSerieStatusAct() != null) {
+                                        statusPass = f.getSerieStatusExp().equals(f.getSerieStatusAct());
+                                        if (!statusPass) {
+                                            isTestCasePassing = false;
+                                        }
+                                    }
+                                    if (f.getEarliestExp() != null && f.getEarliestAct() != null) {
+                                        earliestPass = format(f.getEarliestExp()).equals(format(f.getEarliestAct()));
+                                        if (!earliestPass) {
+                                            isTestCasePassing = false;
+                                        }
+                                    }
+                                    if (f.getRecommendedExp() != null && f.getRecommendedAct() != null) {
+                                        recommendedPass = format(f.getRecommendedExp())
+                                                .equals(format(f.getRecommendedAct()));
+                                        if (!recommendedPass) {
+                                            isTestCasePassing = false;
+                                        }
+                                    }
+                                }
+
                                 if (f != testCaseRegistered.getForecastList().get(0)) {
                                     out.println("      <tr>");
                                 }
+
+                                // Add Action column with Run link for each forecast
+                                out.println("        <td>");
+                                if (testCaseRegistered.isGood()) {
+                                    out.println("          <a href=\"" + linkStep + "\" target=\"_blank\">Step</a> | ");
+                                    out.println("          <a href=\"" + linkForecast
+                                            + "\" target=\"_blank\">Forecast</a> | ");
+
+                                    // Build Run link with all test parameters
+                                    String linkRunTest = "run" + link;
+                                    linkRunTest += "&log";
+
+                                    // Map group name to antigen
+                                    String antigenName = mapGroupNameToAntigen(groupName);
+                                    if (antigenName != null) {
+                                        linkRunTest += "&antigenInclude1=" + urlEncode(antigenName);
+                                    }
+
+                                    linkRunTest += "&" + ForecastServlet.PARAM_TEST_CASE + "="
+                                            + urlEncode(testCaseRegistered.getTestCase().getUid());
+                                    linkRunTest += "&" + ForecastServlet.PARAM_TEST_TITLE + "="
+                                            + urlEncode(testCaseRegistered.getTestCase().getName());
+                                    linkRunTest += "&" + ForecastServlet.PARAM_TEST_EXP_STATUS + "="
+                                            + urlEncode(String.valueOf(f.getSerieStatusExp()));
+                                    linkRunTest += "&" + ForecastServlet.PARAM_TEST_EXP_EARLIEST + "="
+                                            + urlEncode(format(f.getEarliestExp()));
+                                    linkRunTest += "&" + ForecastServlet.PARAM_TEST_EXP_RECOMMENDED + "="
+                                            + urlEncode(format(f.getRecommendedExp()));
+                                    linkRunTest += "&" + ForecastServlet.PARAM_TEST_ACT_STATUS + "="
+                                            + urlEncode(String.valueOf(f.getSerieStatusAct()));
+                                    linkRunTest += "&" + ForecastServlet.PARAM_TEST_ACT_EARLIEST + "="
+                                            + urlEncode(format(f.getEarliestAct()));
+                                    linkRunTest += "&" + ForecastServlet.PARAM_TEST_ACT_RECOMMENDED + "="
+                                            + urlEncode(format(f.getRecommendedAct()));
+                                    linkRunTest += "&" + ForecastServlet.PARAM_TEST_ACT_STATUS_PASS + "=" + statusPass;
+                                    linkRunTest += "&" + ForecastServlet.PARAM_TEST_ACT_EARLIEST_PASS + "="
+                                            + earliestPass;
+                                    linkRunTest += "&" + ForecastServlet.PARAM_TEST_ACT_RECOMMENDED_PASS + "="
+                                            + recommendedPass;
+
+                                    out.println(
+                                            "          <a href=\"" + linkRunTest + "\" target=\"_blank\">Run</a> | ");
+
+                                    // Build code snippet for SandboxServlet
+                                    String sandboxLink = createLink(testCaseRegistered, selectedSupportingDataSet);
+                                    String codeSnippet = "add(\"" + groupName + "\", \""
+                                            + testCaseRegistered.getTestCase().getUid() + " "
+                                            + testCaseRegistered.getTestCase().getName() + "\", \""
+                                            + sandboxLink + "\");";
+
+                                    out.println("          <a href=\"javascript:void(0);\" onclick=\"copyToClipboard('"
+                                            + codeSnippet.replace("'", "\\'").replace("\"", "&quot;")
+                                            + "')\" title=\"Copy code snippet\">Copy</a>");
+                                } else {
+                                    out.println("          " + testCaseRegistered.getProblemReason());
+                                }
+                                out.println("        </td>");
                                 out.println("        <td>" + f.getVaccineCvxExp() + "</td>");
                                 out.println("        <td>" + f.getSerieStatusExp() + "</td>");
                                 out.println("        <td>" + format(f.getEarliestExp()) + "</td>");
@@ -279,45 +341,52 @@ public class FitsServlet extends ForecastServlet {
                                     String ts = "";
                                     if (f.getSerieStatusExp() != null && f.getSerieStatusAct() != null) {
                                         numberOfTestChecksRun += 1;
-                                        if (f.getSerieStatusExp().equals(f.getSerieStatusAct())) {
+                                        groupTestChecksRun += 1;
+                                        if (statusPass) {
                                             ts = " class=\"pass\"";
                                             numberOfPasses += 1;
+                                            groupPasses += 1;
                                         } else {
                                             ts = " class=\"fail\"";
                                             numberOfFails += 1;
-                                            isTestCasePassing = false;
+                                            groupFails += 1;
                                         }
                                     }
                                     out.println("        <td" + ts + ">" + f.getSerieStatusAct() + "</td>");
                                     ts = "";
                                     if (f.getEarliestExp() != null && f.getEarliestAct() != null) {
                                         numberOfTestChecksRun += 1;
-                                        if (format(f.getEarliestExp()).equals(format(f.getEarliestAct()))) {
+                                        groupTestChecksRun += 1;
+                                        if (earliestPass) {
                                             ts = " class=\"pass\"";
                                             numberOfPasses += 1;
+                                            groupPasses += 1;
                                         } else {
                                             ts = " class=\"fail\"";
                                             numberOfFails += 1;
-                                            isTestCasePassing = false;
+                                            groupFails += 1;
                                         }
                                     }
                                     out.println("        <td" + ts + ">" + format(f.getEarliestAct()) + "</td>");
                                     ts = "";
                                     if (f.getRecommendedExp() != null && f.getRecommendedAct() != null) {
                                         numberOfTestChecksRun += 1;
-                                        if (format(f.getRecommendedExp()).equals(format(f.getRecommendedAct()))) {
+                                        groupTestChecksRun += 1;
+                                        if (recommendedPass) {
                                             ts = " class=\"pass\"";
                                             numberOfPasses += 1;
+                                            groupPasses += 1;
                                         } else {
                                             ts = " class=\"fail\"";
                                             numberOfFails += 1;
-                                            isTestCasePassing = false;
+                                            groupFails += 1;
                                         }
                                     }
                                     out.println("        <td" + ts + ">" + format(f.getRecommendedAct()) + "</td>");
 
-                                    if(isTestCasePassing) {
+                                    if (isTestCasePassing) {
                                         numberOfTestCasesPassed += 1;
+                                        groupTestCasesPassed += 1;
                                     }
                                 }
                                 out.println("        <td>" + f.getVaccineCvxExp() + "</td>");
@@ -328,6 +397,37 @@ public class FitsServlet extends ForecastServlet {
                         out.println("      </tr>");
                     }
                     out.println("    </table>");
+
+                    // Display group stats when running all groups
+                    if (isRunningAllGroups && groupTestChecksRun > 0) {
+                        int groupPercentageOfPasses = (groupTestChecksRun != 0 && groupPasses != 0)
+                                ? Math.round(((float) groupPasses / (float) groupTestChecksRun) * 100)
+                                : -1;
+                        out.println("</br>");
+                        out.println("<table>");
+                        out.println("<tr>");
+                        out.println("    <th> test checks run </th>");
+                        out.println("    <th> passes </th>");
+                        out.println("    <th> fails </th>");
+                        out.println("    <th> percentage </th>");
+                        out.println("    <th> test cases run</th>");
+                        out.println("    <th> test cases passed</th>");
+                        out.println("</tr>");
+                        out.println("<tr>");
+                        out.println("    <td> " + groupTestChecksRun + " </td>");
+                        out.println("    <td class=\"pass\" > " + groupPasses + " </td>");
+                        if (groupFails == 0) {
+                            out.println("    <td> " + groupFails + " </td>");
+                        } else {
+                            out.println("    <td class=\"fail\" > " + groupFails + " </td>");
+                        }
+                        out.println("    <td> ~" + groupPercentageOfPasses + "% </td>");
+                        out.println("    <td> " + groupTestCasesRun + " </td>");
+                        out.println("    <td class=\"pass\" > " + groupTestCasesPassed + " </td>");
+                        out.println("</tr>");
+                        out.println("</table>");
+                        out.println("</br>");
+                    }
                 }
             }
             out.println("</ol>");
@@ -336,6 +436,10 @@ public class FitsServlet extends ForecastServlet {
                     ? Math.round(((float) numberOfPasses / (float) numberOfTestChecksRun) * 100)
                     : -1;
             if (numberOfTestChecksRun > 0) {
+                // Add header for overall stats when running all groups
+                if (isRunningAllGroups) {
+                    out.println("<h3>Overall Statistics</h3>");
+                }
                 out.println("</br>");
                 out.println("<table>");
                 out.println("<tr>");
@@ -372,15 +476,55 @@ public class FitsServlet extends ForecastServlet {
         out.println("    <input type=\"text\" id=\"url\" name=\"url\" value=\"" + urlString + "\" required>");
         out.println("    <label for=\"password\">Password:</label>");
         out.println("    <input type=\"password\" id=\"password\" name=\"password\" required>");
+        out.println("    <label for=\"" + PARAM_SUPPORTING_DATA_SET + "\">Supporting Data:</label>");
+        out.println("    <select id=\"" + PARAM_SUPPORTING_DATA_SET + "\" name=\"" + PARAM_SUPPORTING_DATA_SET + "\">");
+        if (supportingDataSetIdList.isEmpty()) {
+            out.println("      <option value=\"\">default</option>");
+        } else {
+            for (String setId : supportingDataSetIdList) {
+                String selected = setId.equalsIgnoreCase(String.valueOf(selectedSupportingDataSet)) ? " selected" : "";
+                out.println("      <option value=\"" + escapeHtml(setId) + "\"" + selected + ">"
+                        + escapeHtml(setId) + "</option>");
+            }
+        }
+        out.println("    </select>");
         out.println("    <input type=\"Submit\" name=\"action\" value=\"Refresh\">");
         out.println("  </form>");
+
+        out.println("  <script>");
+        out.println("    function copyToClipboard(text) {");
+        out.println("      if (navigator.clipboard && window.isSecureContext) {");
+        out.println("        navigator.clipboard.writeText(text).then(() => {");
+        out.println("          alert('Code snippet copied to clipboard!');");
+        out.println("        }).catch(err => {");
+        out.println("          alert('Failed to copy: ' + err);");
+        out.println("        });");
+        out.println("      } else {");
+        out.println("        // Fallback for older browsers");
+        out.println("        const textArea = document.createElement('textarea');");
+        out.println("        textArea.value = text;");
+        out.println("        textArea.style.position = 'fixed';");
+        out.println("        textArea.style.left = '-999999px';");
+        out.println("        document.body.appendChild(textArea);");
+        out.println("        textArea.focus();");
+        out.println("        textArea.select();");
+        out.println("        try {");
+        out.println("          document.execCommand('copy');");
+        out.println("          alert('Code snippet copied to clipboard!');");
+        out.println("        } catch (err) {");
+        out.println("          alert('Failed to copy');");
+        out.println("        }");
+        out.println("        document.body.removeChild(textArea);");
+        out.println("      }");
+        out.println("    }");
+        out.println("  </script>");
 
         out.println("  </body>");
         out.println("</html>");
         out.close();
     }
 
-    private boolean enableLoggingToOut = true;
+    private boolean enableLoggingToOut = false;
 
     private void logToOut(String log) {
         if (enableLoggingToOut) {
@@ -402,8 +546,63 @@ public class FitsServlet extends ForecastServlet {
                 // too many steps!
                 if (count > 100100) {
                     throw new RuntimeException(
-                            "Logic steps seem to be caught in a loop, unable to get results");
+                            "Logic steps seem to be caught in a loop at " + dataModel.getLogicStep().getTitle()
+                                    + ", unable to get results");
                 }
+            }
+        }
+    }
+
+    private void runTestsForGroup(Map<String, TestCaseRegistered> testCaseMap, String supportingDataSet) {
+        for (TestCaseRegistered testCaseRegistered : testCaseMap.values()) {
+            try {
+                String link = createLink(testCaseRegistered, supportingDataSet);
+                String linkStep = "step" + link;
+                logToOut(" - Running " + testCaseRegistered.getTestCase().getUid());
+                logToOut("   - " + linkStep);
+                DataModel dataModel = supportingDataSet == null || supportingDataSet.trim().equals("")
+                        ? DataModelLoader.createDataModel()
+                        : DataModelLoader.createDataModel(supportingDataSet);
+                // setup data model
+                dataModel.setTestCaseRegistered(testCaseRegistered);
+                LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel);
+                dataModel.setNextLogicStep(
+                        LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel));
+                process(dataModel);
+                List<VaccineGroupForecast> vaccineGroupForecastList = dataModel
+                        .getVaccineGroupForecastList();
+                if (vaccineGroupForecastList != null) {
+                    logToOut("     - Found " + vaccineGroupForecastList.size()
+                            + " vaccine group forecasts and " + testCaseRegistered.getForecastList().size()
+                            + " forecasts");
+                    for (TestCaseRegistered.Forecast forecast : testCaseRegistered.getForecastList()) {
+                        for (VaccineGroupForecast vgf : vaccineGroupForecastList) {
+                            String expCvx = forecast.getVaccineCvxExp();
+                            String actCvx = vgf.getAntigen().getCvxForForecast();
+                            logToOut("     - Forecasing for: " + vgf.getAntigen().getName() + " (" + expCvx
+                                    + ") " + " (" + actCvx
+                                    + ") " + vgf.getVaccineGroupStatus());
+                            if (isSameVaccineCvx(expCvx, actCvx)) {
+                                VaccineGroupStatus vaccineGroupStatus = vgf.getVaccineGroupStatus();
+                                SerieStatus serieStatus = vaccineGroupStatus.getSerieStatus();
+                                forecast.setSerieStatusAct(serieStatus);
+                                forecast.setVaccineCvxAct(actCvx);
+                                logToOut(
+                                        "       - This is the one we are looking for, setting series status to "
+                                                + serieStatus);
+                                if (vgf.getVaccineGroupStatus() == VaccineGroupStatus.NOT_COMPLETE) {
+                                    forecast.setEarliestAct(vgf.getEarliestDate());
+                                    forecast.setRecommendedAct(vgf.getAdjustedRecommendedDate());
+                                }
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    logToOut("     - No vaccine group forecast list found for test case registered: ");
+                }
+            } catch (Exception e) {
+                testCaseRegistered.setException(e);
             }
         }
     }
@@ -414,6 +613,60 @@ public class FitsServlet extends ForecastServlet {
         }
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
         return sdf.format(date);
+    }
+
+    private String urlEncode(String value) {
+        if (value == null) {
+            return "";
+        }
+        try {
+            return java.net.URLEncoder.encode(value, "UTF-8");
+        } catch (java.io.UnsupportedEncodingException e) {
+            return value.replaceAll(" ", "%20");
+        }
+    }
+
+    private String mapGroupNameToAntigen(String groupName) {
+        if (groupName == null) {
+            return null;
+        }
+        // Map FITS group names to CDSI antigen names
+        // For multi-component vaccines (MMR, DTaP), return null to rely on CVX code
+        // matching
+        switch (groupName.toUpperCase()) {
+            case "DTAP":
+            case "DTAP/TDAP/TD":
+                return null; // Multi-component: match by CVX equivalence instead
+            case "FLU":
+                return "Influenza";
+            case "HIB":
+                return "Hib";
+            case "MEN B":
+            case "MENINGOCOCCAL B":
+                return "Meningococcal";
+            case "MMR":
+                return null; // Multi-component: match by CVX equivalence instead
+            case "PCV":
+            case "PNEUMOCOCCAL":
+                return "Pneumococcal";
+            case "POL":
+            case "POLIO":
+                return "Polio";
+            case "ROTA":
+            case "ROTAVIRUS":
+                return "Rotavirus";
+            case "RSV":
+                return "RSV";
+            case "VAR":
+            case "VARICELLA":
+                return "Varicella";
+            case "ZOSTER":
+                return "Zoster";
+            default:
+                // For unmapped groups, try returning the group name itself
+                // If it doesn't match an antigen, the system will just show all forecasts
+                return groupName;
+        }
     }
 
     private String setupUsernameString(HttpServletRequest req) {
@@ -432,7 +685,7 @@ public class FitsServlet extends ForecastServlet {
         return urlString;
     }
 
-    private String createLink(TestCaseRegistered testCaseRegistered) {
+    private String createLink(TestCaseRegistered testCaseRegistered, String supportingDataSet) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         String link = "?";
         if (testCaseRegistered.getEvalDate() != null) {
@@ -467,7 +720,22 @@ public class FitsServlet extends ForecastServlet {
                 position++;
             }
         }
+        // Append supporting data set if specified
+        if (supportingDataSet != null && !supportingDataSet.trim().isEmpty()) {
+            link += "&supportingDataSet=" + supportingDataSet;
+        }
         return link;
+    }
+
+    private String escapeHtml(String text) {
+        if (text == null) {
+            return "";
+        }
+        return text.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&#39;");
     }
 
 }

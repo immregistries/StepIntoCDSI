@@ -10,11 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
-import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
-import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
+import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.Patient;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
-import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 
 public class PatientServlet extends MainServlet {
 
@@ -249,64 +247,4 @@ public class PatientServlet extends MainServlet {
     out.println("     </tr>");
   }
 
-  private void printAntigenAdministeredRecordTable(
-      AntigenAdministeredRecord antigenAdministeredRecord, String caption, PrintWriter out) {
-    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-    if (antigenAdministeredRecord != null) {
-      out.println("   <table>");
-      out.println("     <tr>");
-      out.println("       <caption>" + caption + "</caption>");
-
-      out.println("       <th>Antigen</th>");
-      out.println("       <td>" + antigenAdministeredRecord.getAntigen() + "/td>");
-      out.println("     </tr>");
-
-      out.println("     <tr>");
-      out.println("       <th>Date Administered</th>");
-
-      out.println(
-          "       <td>" + sdf.format(antigenAdministeredRecord.getDateAdministered()) + "</td>");
-      out.println("     </tr>");
-      out.println("       <th>Vaccine Type</th>");
-      out.println("       <td>" + antigenAdministeredRecord.getVaccineType() + "</td>");
-      out.println("     </tr>");
-      out.println("     </tr>");
-      out.println("       <th>Manufacturer</th>");
-      out.println("       <td>" + antigenAdministeredRecord.getManufacturer() + "</td>");
-      out.println("     </tr>");
-      out.println("     </tr>");
-      out.println("       <th>Trade Name</th>");
-      out.println("       <td>" + antigenAdministeredRecord.getTradeName() + "</td>");
-      out.println("     </tr>");
-      out.println("     </tr>");
-      out.println("       <th>Amount</th>");
-      out.println("       <td>" + antigenAdministeredRecord.getAmount() + "</td>");
-      out.println("     </tr>");
-      out.println("     </tr>");
-      out.println("       <th>Lot Expiration Date</th>");
-      out.println("       <td>" + sdf.format(antigenAdministeredRecord.getVaccineType()) + "</td>");
-      out.println("     </tr>");
-      out.println("     </tr>");
-      out.println("       <th>Dose Condition</th>");
-      out.println("       <td>" + antigenAdministeredRecord.getDoseCondition() + "</td>");
-      out.println("     </tr>");
-      out.println("   </table>");
-    }
-  }
-
-  private void printRowLiveVirusConflict(LiveVirusConflict liveVirusConflict, PrintWriter out) {
-    out.println("     <tr>");
-    out.println("       <td>" + n(liveVirusConflict.getSchedule()) + "</td>");
-
-    out.println("       <td>" + liveVirusConflict.getPreviousVaccineType() + "</td>");
-
-    out.println("       <td>" + liveVirusConflict.getCurrentVaccineType() + "</td>");
-
-    out.println("       <td>" + liveVirusConflict.getConflictBeginInterval() + "</td>");
-
-    out.println("       <td>" + liveVirusConflict.getMinimalConflictEndInterval() + "</td>");
-
-    out.println("       <td>" + liveVirusConflict.getConflictEndInterval() + "</td>");
-    out.println("     </tr>");
-  }
 }
