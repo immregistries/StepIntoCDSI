@@ -51,6 +51,10 @@ public class SandboxServletExamples {
                 "?evalDate=20260216&resultFormat=text&patientDob=20260216&patientSex=F&vaccineDate1=20260216&vaccineCvx1=45&vaccineMvx1=");
         add("HepB", "2013-0257 dose 1 to 2 Pediarix, interval 28-4 days",
                 "?evalDate=20260216&resultFormat=text&patientDob=20251123&patientSex=F&vaccineDate1=20260123&vaccineCvx1=110&vaccineMvx1=&vaccineDate2=20260216&vaccineCvx2=110&vaccineMvx2=");
+
+        add("HPV", "2013-0460 Adolescent male, no HPV yet given.",
+                "?evalDate=20260220&resultFormat=text&patientDob=20170325&patientSex=M");
+
     }
 
     /**

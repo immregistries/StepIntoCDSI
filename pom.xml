@@ -16,7 +16,7 @@
 	<groupId>org.openimmunizationsoftware.cdsi</groupId>
 	<artifactId>core</artifactId>
 	<packaging>war</packaging>
-	<version>5.0.1</version>
+	<version>5.1.0</version>
 	<!-- TODO project name -->
 	<name>quickstart</name>
 	<description></description>
@@ -30,7 +30,7 @@
 		</license>
 	</licenses>
 	<properties>
-		<software.version>5.0.1</software.version>
+		<software.version>5.1.0</software.version>
 		<jetty.version>7.6.13.v20130916</jetty.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- allowed values: R7, 1.0, 1.5, 2.0 or none -->

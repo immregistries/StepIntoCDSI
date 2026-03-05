@@ -851,6 +851,7 @@ public class SandboxServlet extends HttpServlet {
             throws IOException {
         resp.setContentType("text/html; charset=UTF-8");
         PrintWriter out = resp.getWriter();
+        List<String> availableKnowledgeBaseIdList = SupportingDataManager.listKnowledgeBaseIds(getServletContext());
 
         out.println("<!DOCTYPE html>");
         out.println("<html>");
@@ -975,6 +976,20 @@ public class SandboxServlet extends HttpServlet {
         out.println("      <input type=\"text\" id=\"knowledgeBase\" name=\"knowledgeBase\" value=\""
                 + escapeHtml(model.knowledgeBase)
                 + "\" placeholder=\"USA-CDC-CDSI\">");
+        out.println("      <small style=\"color: #666; display: block; margin-top: 4px;\">");
+        out.println("        Leave blank to use default: " + escapeHtml(SupportingDataManager.DEFAULT_KNOWLEDGE_BASE_ID)
+                + ".");
+        out.println("      </small>");
+        if (availableKnowledgeBaseIdList.isEmpty()) {
+            out.println("      <small style=\"color: #666; display: block; margin-top: 4px;\">");
+            out.println("        Available Knowledge Base IDs: none detected.");
+            out.println("      </small>");
+        } else {
+            out.println("      <small style=\"color: #666; display: block; margin-top: 4px;\">");
+            out.println("        Available Knowledge Base IDs: "
+                    + escapeHtml(String.join(", ", availableKnowledgeBaseIdList)) + ".");
+            out.println("      </small>");
+        }
         out.println("    </div>");
 
         // Knowledge Base Version

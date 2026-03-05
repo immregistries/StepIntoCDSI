@@ -45,6 +45,14 @@ public class SupportingDataServlet extends HttpServlet {
             .compile("^AntigenSupportingData-\\s*(.+?)(?:-\\s*508)?\\.xml$", Pattern.CASE_INSENSITIVE);
     private static final Pattern ANTIGEN_XLSX_PATTERN = Pattern
             .compile("^AntigenSupportingData-\\s*(.+?)(?:-\\s*508)?\\.xlsx$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern LEGACY_CDC_ZIP_PATTERN = Pattern
+            .compile("^supporting-data-(\\d+(?:\\.\\d+)*)(?:-508)?\\.zip$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern KNOWLEDGE_BASE_ZIP_PATTERN = Pattern
+            .compile("^(.+)-(\\d+(?:\\.\\d+)*)\\.zip$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern VERSION_FOLDER_PATTERN = Pattern.compile("^Version\\b.*", Pattern.CASE_INSENSITIVE);
+
+    private static final String DEFAULT_KNOWLEDGE_BASE = "USA-CDC-CDSI";
+    private static final String DEFAULT_HUMAN_READABLE_NAME = "HHS/ACIP";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -164,27 +172,30 @@ public class SupportingDataServlet extends HttpServlet {
         out.println("  <h2>Versions Available</h2>");
         out.println("  <table>");
         out.println("    <tr>");
-        out.println("      <th>Set ID</th>");
-        out.println("      <th>Zip Name</th>");
+        out.println("      <th>Schedule Name</th>");
+        out.println("      <th>Knowledge Base</th>");
+        out.println("      <th>Version</th>");
         out.println("      <th>Release Notes</th>");
-        out.println("      <th>Antigen Count</th>");
-        out.println("      <th>Source</th>");
+        out.println("      <th>Zip Name</th>");
         out.println("    </tr>");
 
         for (SupportingDataSet set : dataSetList) {
             out.println("    <tr>");
-            out.println("      <td>" + escapeHtml(set.id) + "</td>");
-            out.println("      <td>" + escapeHtml(set.zipFileName) + "</td>");
+            out.println("      <td>" + escapeHtml(set.scheduleName) + "</td>");
+            out.println("      <td>" + escapeHtml(set.knowledgeBaseId) + "</td>");
+            out.println("      <td>" + escapeHtml(set.version) + "</td>");
             out.println("      <td>" + buildDownloadLink("View", set.id, set.releaseNotesEntryPath) + "</td>");
-            out.println("      <td>" + set.antigenMap.size() + "</td>");
-            out.println("      <td><span class=\"muted\">" + escapeHtml(set.zipSource.description()) + "</span></td>");
+            out.println("      <td>" + escapeHtml(set.zipFileName) + "</td>");
             out.println("    </tr>");
         }
         out.println("  </table>");
 
         for (SupportingDataSet set : dataSetList) {
             out.println("  <div class=\"set-block\">");
-            out.println("    <h3>" + escapeHtml(set.id) + "</h3>");
+            out.println("    <h3>" + escapeHtml(set.scheduleName) + "</h3>");
+            out.println(
+                    "    <p><span class=\"muted\">Knowledge Base:</span> " + escapeHtml(set.knowledgeBaseId) + "</p>");
+            out.println("    <p><span class=\"muted\">Version:</span> " + escapeHtml(set.version) + "</p>");
             out.println("    <p><span class=\"muted\">Zip:</span> " + escapeHtml(set.zipFileName) + "</p>");
             out.println("    <p><span class=\"muted\">Release Notes:</span> "
                     + buildDownloadLink(set.releaseNotesEntryPath == null ? "Not found" : "Download", set.id,
@@ -294,19 +305,30 @@ public class SupportingDataServlet extends HttpServlet {
         SupportingDataSet set = new SupportingDataSet();
         set.zipFileName = source.fileName();
         set.id = normalizeSetId(set.zipFileName);
+        parseKnowledgeBaseAndVersion(set);
         set.zipSource = source;
+        Set<String> rootFolderNameSet = new HashSet<String>();
 
         try (InputStream is = source.openStream(servletContext);
                 ZipInputStream zis = new ZipInputStream(new BufferedInputStream(is))) {
 
             ZipEntry entry;
             while ((entry = zis.getNextEntry()) != null) {
+                String entryPath = normalizeZipPath(entry.getName());
+                String rootFolderName = findRootFolderName(entryPath);
+                if (rootFolderName == null) {
+                    throw new IOException("Supporting data zip must contain a single root folder: " + set.zipFileName);
+                }
+                rootFolderNameSet.add(rootFolderName);
+                if (rootFolderNameSet.size() > 1) {
+                    throw new IOException("Supporting data zip contains more than one root folder: " + set.zipFileName);
+                }
+
                 if (entry.isDirectory()) {
                     zis.closeEntry();
                     continue;
                 }
 
-                String entryPath = entry.getName();
                 String fileName = simpleName(entryPath);
 
                 if (isReleaseNotesFile(fileName) && set.releaseNotesEntryPath == null) {
@@ -337,6 +359,16 @@ public class SupportingDataServlet extends HttpServlet {
                 zis.closeEntry();
             }
         }
+
+        if (rootFolderNameSet.size() != 1) {
+            throw new IOException("Supporting data zip must contain exactly one root folder: " + set.zipFileName);
+        }
+
+        String rootFolderName = rootFolderNameSet.iterator().next();
+        String humanReadableName = VERSION_FOLDER_PATTERN.matcher(rootFolderName).matches()
+                ? DEFAULT_HUMAN_READABLE_NAME
+                : rootFolderName;
+        set.scheduleName = humanReadableName + " " + set.version;
 
         if (set.antigenMap.isEmpty() && set.releaseNotesEntryPath == null) {
             return null;
@@ -374,6 +406,56 @@ public class SupportingDataServlet extends HttpServlet {
             return zipFileName.substring(0, zipFileName.length() - 4);
         }
         return zipFileName;
+    }
+
+    private void parseKnowledgeBaseAndVersion(SupportingDataSet set) throws IOException {
+        Matcher legacyMatcher = LEGACY_CDC_ZIP_PATTERN.matcher(set.zipFileName);
+        if (legacyMatcher.matches()) {
+            set.knowledgeBaseId = DEFAULT_KNOWLEDGE_BASE;
+            set.version = legacyMatcher.group(1).trim();
+            return;
+        }
+
+        Matcher kbMatcher = KNOWLEDGE_BASE_ZIP_PATTERN.matcher(set.zipFileName);
+        if (!kbMatcher.matches()) {
+            throw new IOException("Zip name is not in expected format [knowledge base id]-[version].zip: "
+                    + set.zipFileName);
+        }
+
+        String knowledgeBaseId = kbMatcher.group(1).trim();
+        String version = kbMatcher.group(2).trim();
+
+        if (knowledgeBaseId.equals("") || version.equals("")) {
+            throw new IOException("Unable to parse knowledge base/version from zip name: " + set.zipFileName);
+        }
+
+        set.knowledgeBaseId = knowledgeBaseId;
+        set.version = version;
+    }
+
+    private String normalizeZipPath(String path) {
+        if (path == null) {
+            return "";
+        }
+
+        String normalized = path.replace('\\', '/');
+        while (normalized.startsWith("/")) {
+            normalized = normalized.substring(1);
+        }
+        return normalized;
+    }
+
+    private String findRootFolderName(String normalizedPath) {
+        if (normalizedPath == null || normalizedPath.equals("")) {
+            return null;
+        }
+
+        int slashPos = normalizedPath.indexOf('/');
+        if (slashPos <= 0) {
+            return null;
+        }
+
+        return normalizedPath.substring(0, slashPos).trim();
     }
 
     private String resolveContentType(String fileName) {
@@ -427,6 +509,9 @@ public class SupportingDataServlet extends HttpServlet {
     private static class SupportingDataSet {
         private String id;
         private String zipFileName;
+        private String knowledgeBaseId;
+        private String version;
+        private String scheduleName;
         private ZipSource zipSource;
         private String releaseNotesEntryPath;
         private Map<String, AntigenArtifacts> antigenMap = new HashMap<String, AntigenArtifacts>();
@@ -481,13 +566,6 @@ public class SupportingDataServlet extends HttpServlet {
             }
             int pos = servletResourcePath.lastIndexOf('/');
             return pos < 0 ? servletResourcePath : servletResourcePath.substring(pos + 1);
-        }
-
-        private String description() {
-            if (file != null) {
-                return "filesystem: " + file.getPath();
-            }
-            return "war resource: " + servletResourcePath;
         }
     }
 }

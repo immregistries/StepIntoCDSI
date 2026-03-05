@@ -1,0 +1,29 @@
+Step Into Clinical Decision Support for Immunizations version 5.0.1
+
+VACCINATIONS RECOMMENDED 02/20/2026
+Forecasting Polio status due dose 1 due 04/20/2025 valid 04/03/2025 overdue 06/16/2025 finished 02/19/2043
+Forecasting HepA status due dose 1 due 02/20/2026 valid 02/20/2026 overdue 03/19/2027 finished 02/19/2044
+Forecasting HepB status due dose 1 due 02/20/2025 valid 02/20/2025 overdue 03/19/2025 finished 01/01/2200
+Forecasting COVID-19 status due dose 1 due 08/20/2025 valid 08/20/2025 
+Forecasting Pneumococcal status due dose 1 due 04/20/2025 valid 04/03/2025 overdue 06/16/2025 finished 02/19/2030
+Forecasting Varicella status due dose 1 due 02/20/2026 valid 02/20/2026 overdue 07/17/2026 finished 01/01/2200
+Forecasting Pertussis status due dose 1 due 04/20/2025 valid 04/03/2025 overdue 06/16/2025 finished 01/01/2200
+Forecasting MMR status due dose 1 due 02/20/2026 valid 02/20/2026 overdue 07/17/2026 finished 01/01/2200
+Forecasting Influenza status due dose 1 due 08/20/2025 valid 08/20/2025 
+
+VACCINATIONS RECOMMENDED AFTER 02/20/2026
+Forecasting Meningococcal B status due later dose 1 due 02/20/2041 valid 02/20/2041 
+Forecasting Zoster status due later dose 1 due 02/20/2075 valid 02/20/2075 
+Forecasting Meningococcal status due later dose 1 due 02/20/2036 valid 02/20/2036 overdue 03/19/2038 finished 02/19/2044
+Forecasting HPV status due later dose 1 due 02/20/2036 valid 02/20/2034 overdue 03/19/2038 finished 02/19/2071
+Forecasting Hib status due later dose 3 due 03/20/2026 valid 03/20/2026 overdue 03/20/2026 finished 02/19/2030
+
+VACCINATIONS COMPLETE OR NOT RECOMMENDED 02/20/2026
+Forecasting Rotavirus status Aged Out
+Forecasting RSV status Aged Out
+
+IMMUNIZATION EVALUATION
+Vaccination #1: Hib (PRP-T) given 04/20/2025 is a valid Hib dose 1
+Vaccination #2: Hib (PRP-T) given 02/20/2026 is a valid Hib dose 2
+
+Forecast generated 02/20/2026 using knowledge base USA-CDC-CDSI v4.64.

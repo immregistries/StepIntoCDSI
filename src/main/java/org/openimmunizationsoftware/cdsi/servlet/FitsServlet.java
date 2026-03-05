@@ -312,8 +312,8 @@ public class FitsServlet extends ForecastServlet {
                                     out.println(
                                             "          <a href=\"" + linkRunTest + "\" target=\"_blank\">Run</a> | ");
 
-                                    // Build code snippet for SandboxServlet
-                                    String sandboxLink = createLink(testCaseRegistered, selectedSupportingDataSet);
+                                    // Build code snippet for SandboxServlet (without supportingDataSet parameter)
+                                    String sandboxLink = createLink(testCaseRegistered, null);
                                     String codeSnippet = "add(\"" + groupName + "\", \""
                                             + testCaseRegistered.getTestCase().getUid() + " "
                                             + testCaseRegistered.getTestCase().getName() + "\", \""

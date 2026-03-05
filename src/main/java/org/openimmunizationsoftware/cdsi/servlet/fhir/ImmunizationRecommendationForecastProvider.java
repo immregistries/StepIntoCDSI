@@ -15,7 +15,6 @@ import org.openimmunizationsoftware.cdsi.core.logic.LogicStepType;
 import org.openimmunizationsoftware.cdsi.servlet.fits.TestCaseRegistered;
 import org.openimmunizationsoftware.cdsi.servlet.fits.TestCaseRegistered.Vaccination;
 import org.openimmunizationsoftware.cdsi.servlet.SupportingDataManager;
-import org.openimmunizationsoftware.cdsi.servlet.VersionComparator;
 import org.hl7.fhir.r4.model.*;
 
 import javax.servlet.ServletContext;
@@ -44,8 +43,7 @@ public class ImmunizationRecommendationForecastProvider {
 
 	// Knowledge base system URI per ImmDS specification
 	private static final String KNOWLEDGE_BASE_SYSTEM = "https://ivci.org/knowledge-base";
-	// Hardcoded for now: all zips are from USA-CDC-CDSI knowledge base
-	private static final String USA_CDC_CDSI = "USA-CDC-CDSI";
+	private static final String USA_CDC_CDSI = SupportingDataManager.DEFAULT_KNOWLEDGE_BASE_ID;
 
 	private ServletContext servletContext;
 
@@ -79,41 +77,53 @@ public class ImmunizationRecommendationForecastProvider {
 		String knowledgeBaseVersionUsed = null;
 
 		try {
+			// Check if servletContext is available
+			if (servletContext == null) {
+				throw new IllegalStateException("ServletContext has not been initialized");
+			}
+
 			// Parse incoming knowledge base parameter
 			String requestedKnowledgeBase = null;
 			if (knowledgeBase != null && knowledgeBase.hasCoding()) {
 				for (Coding coding : knowledgeBase.getCoding()) {
-					if (KNOWLEDGE_BASE_SYSTEM.equals(coding.getSystem())) {
+					if (KNOWLEDGE_BASE_SYSTEM.equals(coding.getSystem()) && coding.hasCode()) {
 						requestedKnowledgeBase = coding.getCode();
 						break;
 					}
 				}
+				if ((requestedKnowledgeBase == null || requestedKnowledgeBase.trim().equals(""))
+						&& knowledgeBase.getCodingFirstRep().hasCode()) {
+					requestedKnowledgeBase = knowledgeBase.getCodingFirstRep().getCode();
+				}
 			}
 
-			// Validate knowledge base (only USA-CDC-CDSI supported for now)
-			if (requestedKnowledgeBase != null && !USA_CDC_CDSI.equals(requestedKnowledgeBase)) {
-				// Return OperationOutcome for unsupported knowledge base
+			// Resolve supportingDataSet based on knowledge base and version
+			String versionStr = knowledgeBaseVersion != null ? knowledgeBaseVersion.getValue() : null;
+			String resolvedSupportingDataSet = SupportingDataManager.resolveSupportingDataSetForKnowledgeBase(
+					servletContext, requestedKnowledgeBase, versionStr);
+
+			if (resolvedSupportingDataSet == null) {
 				OperationOutcome outcome = new OperationOutcome();
 				outcome.addIssue()
 						.setSeverity(OperationOutcome.IssueSeverity.ERROR)
 						.setCode(OperationOutcome.IssueType.NOTSUPPORTED)
-						.setDiagnostics("Knowledge base '" + requestedKnowledgeBase + "' is not supported. Only '"
-								+ USA_CDC_CDSI + "' is available.");
+						.setDiagnostics(buildKnowledgeBaseNotFoundMessage(requestedKnowledgeBase));
 				out.addParameter().setName("outcome").setResource(outcome);
 				return out;
 			}
 
-			// Resolve supportingDataSet based on knowledge base version
-			String versionStr = knowledgeBaseVersion != null ? knowledgeBaseVersion.getValue() : null;
-			String resolvedSupportingDataSet = resolveSupportingDataSet(versionStr);
-			// Extract actual version used from resolved setId
-			if (resolvedSupportingDataSet != null) {
-				knowledgeBaseVersionUsed = extractVersionFromSetId(resolvedSupportingDataSet);
+			SupportingDataManager.SupportingDataDescriptor descriptor = SupportingDataManager
+					.findSupportingDataDescriptor(servletContext, resolvedSupportingDataSet);
+			if (descriptor != null) {
+				knowledgeBaseUsed = descriptor.knowledgeBaseId;
+				knowledgeBaseVersionUsed = descriptor.version;
+			} else {
+				knowledgeBaseUsed = requestedKnowledgeBase == null || requestedKnowledgeBase.trim().equals("")
+						? USA_CDC_CDSI
+						: requestedKnowledgeBase;
 			}
 
-			DataModel dataModel = resolvedSupportingDataSet == null || resolvedSupportingDataSet.trim().equals("")
-					? DataModelLoader.createDataModel()
-					: DataModelLoader.createDataModel(resolvedSupportingDataSet.trim());
+			DataModel dataModel = DataModelLoader.createDataModel(resolvedSupportingDataSet.trim());
 			// setup data model
 			dataModel.setTestCaseRegistered(tcr);
 			LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel);
@@ -173,7 +183,18 @@ public class ImmunizationRecommendationForecastProvider {
 			}
 
 		} catch (Exception e) {
+			// Log the exception with full details
+			System.err.println("Error in FHIR $immds-forecast operation:");
 			e.printStackTrace();
+
+			// Return error outcome to client
+			OperationOutcome outcome = new OperationOutcome();
+			outcome.addIssue()
+					.setSeverity(OperationOutcome.IssueSeverity.ERROR)
+					.setCode(OperationOutcome.IssueType.EXCEPTION)
+					.setDiagnostics("Internal error: " + e.getMessage());
+			out.addParameter().setName("outcome").setResource(outcome);
+			return out;
 		}
 
 		// Add OUT parameters: recommendation, knowledgeBaseUsed,
@@ -196,117 +217,22 @@ public class ImmunizationRecommendationForecastProvider {
 		return out;
 	}
 
-	/**
-	 * Resolve supporting data set ID based on requested knowledge base version.
-	 * If version is null/empty, select latest using numeric comparison.
-	 * If version is specified, find exact match or best match.
-	 * 
-	 * @param requestedVersion Requested knowledge base version (e.g., "4.64")
-	 * @return Supporting data set ID (e.g., "supporting-data-4.64-508")
-	 */
-	private String resolveSupportingDataSet(String requestedVersion) {
+	private String buildKnowledgeBaseNotFoundMessage(String requestedKnowledgeBase) {
+		String target = requestedKnowledgeBase == null || requestedKnowledgeBase.trim().equals("")
+				? USA_CDC_CDSI
+				: requestedKnowledgeBase.trim();
+
+		// Check if servletContext is available
 		if (servletContext == null) {
-			return null;
+			return "Knowledge base '" + target + "' is not available (ServletContext not initialized).";
 		}
 
-		List<String> allSets = SupportingDataManager.listSupportingDataSetIds(servletContext);
-		if (allSets.isEmpty()) {
-			return null;
+		List<String> knowledgeBaseIdList = SupportingDataManager.listKnowledgeBaseIds(servletContext);
+		if (knowledgeBaseIdList.isEmpty()) {
+			return "No supporting data sets are available for knowledge base '" + target + "'.";
 		}
-
-		// If no version requested, select latest
-		if (requestedVersion == null || requestedVersion.trim().isEmpty()) {
-			return selectLatestSupportingDataSet(allSets);
-		}
-
-		// Find exact match or best match for requested version
-		String normalizedRequest = requestedVersion.trim();
-		for (String setId : allSets) {
-			String version = extractVersionFromSetId(setId);
-			if (version != null && version.equals(normalizedRequest)) {
-				return setId;
-			}
-		}
-
-		// No exact match found - return OperationOutcome would be ideal,
-		// but for now just return latest
-		return selectLatestSupportingDataSet(allSets);
-	}
-
-	/**
-	 * Select the latest supporting data set from available sets using numeric
-	 * version comparison.
-	 * 
-	 * @param setIds List of supporting data set IDs
-	 * @return Latest set ID, or first alphabetically if all versions unparseable
-	 */
-	private String selectLatestSupportingDataSet(List<String> setIds) {
-		if (setIds == null || setIds.isEmpty()) {
-			return null;
-		}
-
-		// Extract versions and find latest
-		Map<String, String> versionToSetId = new HashMap<>();
-		List<String> versions = new ArrayList<>();
-
-		for (String setId : setIds) {
-			String version = extractVersionFromSetId(setId);
-			if (version != null && !version.isEmpty()) {
-				versionToSetId.put(version, setId);
-				versions.add(version);
-			}
-		}
-
-		if (versions.isEmpty()) {
-			// No parseable versions, fall back to alphabetical
-			return setIds.get(0);
-		}
-
-		String latestVersion = VersionComparator.selectLatest(versions);
-		return versionToSetId.get(latestVersion);
-	}
-
-	/**
-	 * Extract version string from supporting data set ID.
-	 * Examples:
-	 * - "supporting-data-4.64-508" -> "4.64"
-	 * - "supporting-data-4.10" -> "4.10"
-	 * - "4.64-508" -> "4.64"
-	 * 
-	 * @param setId Supporting data set ID
-	 * @return Version string, or null if not parseable
-	 */
-	private String extractVersionFromSetId(String setId) {
-		if (setId == null || setId.trim().isEmpty()) {
-			return null;
-		}
-
-		String s = setId.trim();
-
-		// Remove common prefix if present
-		if (s.startsWith("supporting-data-")) {
-			s = s.substring("supporting-data-".length());
-		}
-
-		// Extract version as first dot-separated numeric segments
-		// Examples: "4.64-508" -> "4.64", "4.10" -> "4.10"
-		StringBuilder version = new StringBuilder();
-		boolean foundDigit = false;
-
-		for (int i = 0; i < s.length(); i++) {
-			char c = s.charAt(i);
-			if (Character.isDigit(c)) {
-				version.append(c);
-				foundDigit = true;
-			} else if (c == '.' && foundDigit && i + 1 < s.length() && Character.isDigit(s.charAt(i + 1))) {
-				version.append(c);
-			} else if (foundDigit && (c == '-' || c == '_' || !Character.isLetterOrDigit(c))) {
-				// Stop at first separator after digits
-				break;
-			}
-		}
-
-		return foundDigit ? version.toString() : null;
+		return "Knowledge base '" + target + "' is not available. Available knowledge bases: "
+				+ String.join(", ", knowledgeBaseIdList);
 	}
 
 	private void process(DataModel dataModel) throws Exception {

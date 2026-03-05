@@ -122,7 +122,7 @@ public class ForecastServlet extends HttpServlet {
 
   public static void printText(DataModel dataModel, PrintWriter out, StringBuilder logBuffer,
       HttpServletRequest req) {
-    out.println("Step Into Clinical Decision Support for Immunizations - Demonstration //System");
+    out.println("Step Into Clinical Decision Support for Immunizations version " + SoftwareVersion.VERSION);
     out.println();
 
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
@@ -316,8 +316,26 @@ public class ForecastServlet extends HttpServlet {
       out.println();
     }
 
-    out.println("Forecast generated " + sdf.format(new Date()) + " using software version "
-        + SoftwareVersion.VERSION + ".");
+    // Determine knowledge base information from supporting data set
+    String knowledgeBaseInfo = "default knowledge base";
+    if (req != null) {
+      String supportingDataSet = req.getParameter(PARAM_SUPPORTING_DATA_SET);
+      if (supportingDataSet == null || supportingDataSet.trim().isEmpty()) {
+        supportingDataSet = SupportingDataManager.resolveDefaultSupportingDataSet(req.getSession().getServletContext());
+      } else {
+        supportingDataSet = SupportingDataManager.normalizeSetId(supportingDataSet);
+      }
+
+      if (supportingDataSet != null) {
+        SupportingDataManager.SupportingDataDescriptor descriptor = SupportingDataManager
+            .findSupportingDataDescriptor(req.getSession().getServletContext(), supportingDataSet);
+        if (descriptor != null) {
+          knowledgeBaseInfo = "knowledge base " + descriptor.knowledgeBaseId + " v" + descriptor.version;
+        }
+      }
+    }
+
+    out.println("Forecast generated " + sdf.format(new Date()) + " using " + knowledgeBaseInfo + ".");
 
     // Print detailed log if requested
     if (logBuffer != null && logBuffer.length() > 0) {
