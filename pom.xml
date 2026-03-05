@@ -35,7 +35,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- allowed values: R7, 1.0, 1.5, 2.0 or none -->
 		<wtp.version>none</wtp.version>
-		<hapifhir_version>6.8.3</hapifhir_version>
+		<hapifhir_version>7.4.0</hapifhir_version>
 	</properties>
 
 	<dependencies>
@@ -141,6 +141,13 @@
 		<groupId>org.apache.httpcomponents.client5</groupId>
 		<artifactId>httpclient5</artifactId>
 		<version>5.2.1</version>
+	</dependency>
+
+	<dependency>
+		<groupId>jakarta.servlet</groupId>
+		<artifactId>jakarta.servlet-api</artifactId>
+		<version>5.0.0</version>
+		<scope>provided</scope>
 	</dependency>
 
 	<!-- Spring Framework 6.x - required by NIST fits-client -->

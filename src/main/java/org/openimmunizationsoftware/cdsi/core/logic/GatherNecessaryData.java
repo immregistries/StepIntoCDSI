@@ -5,7 +5,7 @@ import static org.openimmunizationsoftware.cdsi.servlet.ServletUtil.safe;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
