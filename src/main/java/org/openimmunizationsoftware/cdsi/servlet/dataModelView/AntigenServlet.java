@@ -3,10 +3,10 @@ package org.openimmunizationsoftware.cdsi.servlet.dataModelView;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
@@ -48,7 +48,7 @@ public class AntigenServlet extends MainServlet {
 
     PrintWriter out = new PrintWriter(resp.getOutputStream());
     try {
-      printHeader(out, "Antigen");
+      printHeader(out, req, "Antigen");
       out.println("    <form action=\"" + SERVLET_NAME + "\">");
 
       out.println("      <input type=\"text\" name=\"" + PARAM_SEARCH + "\"><br>");
@@ -65,7 +65,6 @@ public class AntigenServlet extends MainServlet {
   }
 
   private void printAntigen(DataModel dataModel, String searchParam, PrintWriter out) {
-
 
     out.println("  <div class=\"w3-card w3-cell w3-margin\">");
     out.println("    <header class=\"w3-container w3-khaki\">");
@@ -125,16 +124,18 @@ public class AntigenServlet extends MainServlet {
     out.println("        <td>");
     out.println("         <table>");
     for (Schedule s : dataModel.getScheduleList()) {
-      if(s.getScheduleName().equals(antigen.getName())) {
+      if (s.getScheduleName().equals(antigen.getName())) {
         for (ClinicalHistory ch : s.getImmunity().getClinicalHistoryList()) {
           out.println("      <tr>");
-          out.println("        <td>Code: '" + ch.getImmunityGuidelineCode() + "' Title: '" + ch.getImmunityGuidelineTitle() + "'</td>");
+          out.println("        <td>Code: '" + ch.getImmunityGuidelineCode() + "' Title: '"
+              + ch.getImmunityGuidelineTitle() + "'</td>");
           out.println("      </tr>");
         }
         for (BirthDateImmunity b : s.getImmunity().getBirthDateImmunityList()) {
           for (Exclusion e : b.getExclusionList()) {
             out.println("      <tr>");
-            out.println("        <td>ExCode: '" + e.getExclusionCode() + "' ExTitle: '" + e.getExclusionTitle() + "'</td>");
+            out.println(
+                "        <td>ExCode: '" + e.getExclusionCode() + "' ExTitle: '" + e.getExclusionTitle() + "'</td>");
             out.println("      </tr>");
           }
         }
@@ -148,10 +149,11 @@ public class AntigenServlet extends MainServlet {
     out.println("        <td>");
     out.println("         <table>");
     for (Schedule s : dataModel.getScheduleList()) {
-      if(s.getScheduleName().equals(antigen.getName())) {
+      if (s.getScheduleName().equals(antigen.getName())) {
         for (Contraindication ci : s.getContraindicationList()) {
           out.println("      <tr>");
-          out.println("        <td>Code: '" + ci.getObservationCode() + "' Title: '" + ci.getObservationTitle() + "'</td>");
+          out.println(
+              "        <td>Code: '" + ci.getObservationCode() + "' Title: '" + ci.getObservationTitle() + "'</td>");
           out.println("      </tr>");
         }
       }
@@ -164,14 +166,15 @@ public class AntigenServlet extends MainServlet {
     out.println("        <td>");
     out.println("         <table>");
     for (Schedule s : dataModel.getScheduleList()) {
-      if(s.getScheduleName().equals(antigen.getName())) {
+      if (s.getScheduleName().equals(antigen.getName())) {
         for (AntigenSeries as : s.getAntigenSeriesList()) {
-          for(Indication in : as.getIndicationList()) {
-            if(in.getObservationCode() == null) {
+          for (Indication in : as.getIndicationList()) {
+            if (in.getObservationCode() == null) {
               continue;
             }
             out.println("      <tr>");
-            out.println("        <td>Code: '" + in.getObservationCode().getCode() + "' Text: '" + in.getObservationCode().getText() + "'</td>");
+            out.println("        <td>Code: '" + in.getObservationCode().getCode() + "' Text: '"
+                + in.getObservationCode().getText() + "'</td>");
             out.println("      </tr>");
           }
         }
@@ -182,3 +185,4 @@ public class AntigenServlet extends MainServlet {
   }
 
 }
+

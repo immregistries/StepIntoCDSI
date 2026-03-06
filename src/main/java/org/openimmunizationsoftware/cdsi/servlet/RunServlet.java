@@ -5,9 +5,11 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import org.openimmunizationsoftware.cdsi.auth.AuthPageRenderer;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
@@ -113,6 +115,7 @@ public class RunServlet extends ForecastServlet {
         out.println("  </script>");
         out.println("</head>");
         out.println("<body>");
+        AuthPageRenderer.renderSignedInHeader(out, req);
         out.println("  <h1>CDSi Run - Execution + Log Controls</h1>");
         out.println(
                 "  <img src=\"pm.png\" alt=\"Process Model Diagram\" width=\"900\" style=\"cursor: pointer;\" onclick=\"alert('This diagram shows the flow and relationship of all CDSi logic steps');\" />");
@@ -210,7 +213,6 @@ public class RunServlet extends ForecastServlet {
     }
 
     private void renderHiddenInputs(PrintWriter out, HttpServletRequest req) {
-        @SuppressWarnings("unchecked")
         Map<String, String[]> paramMap = req.getParameterMap();
 
         for (Map.Entry<String, String[]> entry : paramMap.entrySet()) {
@@ -254,3 +256,4 @@ public class RunServlet extends ForecastServlet {
                 .replace("'", "&#39;");
     }
 }
+

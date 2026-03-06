@@ -7,9 +7,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import org.openimmunizationsoftware.cdsi.auth.AuthPageRenderer;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.data.DataModelLoader;
@@ -125,6 +127,8 @@ public class FitsServlet extends ForecastServlet {
         out.println("    <link rel=\"stylesheet\" type=\"text/css\" href=\"index.css\">");
         out.println("  </head>");
         out.println("  <body>");
+
+        AuthPageRenderer.renderSignedInHeader(out, req);
 
         if (exception != null) {
             out.println("    <h1>Exception</h1>");
@@ -739,3 +743,4 @@ public class FitsServlet extends ForecastServlet {
     }
 
 }
+

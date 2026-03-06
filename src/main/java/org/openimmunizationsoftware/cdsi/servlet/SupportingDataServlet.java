@@ -21,11 +21,13 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import org.openimmunizationsoftware.cdsi.auth.AuthPageRenderer;
+
+import javax.servlet.ServletException;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public class SupportingDataServlet extends HttpServlet {
 
@@ -153,6 +155,8 @@ public class SupportingDataServlet extends HttpServlet {
         out.println("</head>");
         out.println("<body>");
 
+        AuthPageRenderer.renderSignedInHeader(out, req);
+
         out.println("  <h1>CDSi Supporting Data</h1>");
         out.println("  <img src=\"pm.png\" alt=\"Process Model Diagram\" width=\"900\" />");
 
@@ -278,7 +282,6 @@ public class SupportingDataServlet extends HttpServlet {
         return sourceList;
     }
 
-    @SuppressWarnings("unchecked")
     private void addServletContextZipSources(ServletContext servletContext, String folderPath,
             List<ZipSource> sourceList, boolean recursive) {
 
@@ -569,3 +572,4 @@ public class SupportingDataServlet extends HttpServlet {
         }
     }
 }
+

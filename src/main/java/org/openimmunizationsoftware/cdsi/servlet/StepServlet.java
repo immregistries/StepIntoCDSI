@@ -9,12 +9,13 @@ import java.util.List;
 import java.net.URLEncoder;
 import java.io.UnsupportedEncodingException;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.openimmunizationsoftware.cdsi.SoftwareVersion;
+import org.openimmunizationsoftware.cdsi.auth.AuthPageRenderer;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
@@ -141,6 +142,8 @@ public class StepServlet extends ForecastServlet {
     out.println("    <link rel=\"stylesheet\" type=\"text/css\" href=\"indexStep.css\">");
     out.println("  </head>");
     out.println("  <body>");
+
+    AuthPageRenderer.renderSignedInHeader(out, req);
 
     out.println("      <form action=\"step\" method=\"POST\" id=\"stepForm\">");
     String activeSupportingDataSet = resolveSupportingDataSet(req);
@@ -601,3 +604,4 @@ public class StepServlet extends ForecastServlet {
     }
   }
 }
+

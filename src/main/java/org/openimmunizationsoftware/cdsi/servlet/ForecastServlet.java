@@ -13,10 +13,10 @@ import java.util.Map;
 
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.openimmunizationsoftware.cdsi.SoftwareVersion;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
@@ -657,3 +657,4 @@ public class ForecastServlet extends HttpServlet {
   }
 
 }
+

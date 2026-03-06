@@ -3,10 +3,12 @@ package org.openimmunizationsoftware.cdsi.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import org.openimmunizationsoftware.cdsi.auth.AuthPageRenderer;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public class HomeServlet extends HttpServlet {
 
@@ -72,6 +74,8 @@ public class HomeServlet extends HttpServlet {
                 out.println("  </script>");
                 out.println("</head>");
                 out.println("<body>");
+
+                AuthPageRenderer.renderSignedInHeader(out, req);
 
                 out.println("  <h1>Step Into CDSi</h1>");
                 out.println("  <img src=\"pm.png\" alt=\"Process Model Diagram\" width=\"900\" />");
@@ -271,9 +275,11 @@ public class HomeServlet extends HttpServlet {
                 out.println("  <h2>Access and Security Context</h2>");
                 out.println("  <p>");
                 out.println(
-                                "    The demonstration application itself <strong>does not require login or authentication</strong> for general use.");
+                                "    Regular Step Into CDSi application pages require a user session established through the external Hub login workflow.");
                 out.println(
-                                "    However, integration with the FITS platform for automated testing requires valid FITS credentials issued through that");
+                                "    FHIR and plain forecast endpoints are currently excluded from this page-level login check while authentication patterns are being finalized.");
+                out.println(
+                                "    Integration with the FITS platform for automated testing still requires valid FITS credentials issued through that");
                 out.println(
                                 "    service.");
                 out.println("  </p>");
@@ -296,3 +302,4 @@ public class HomeServlet extends HttpServlet {
                                 .replace("'", "&#39;");
         }
 }
+

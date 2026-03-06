@@ -17,7 +17,7 @@ import org.openimmunizationsoftware.cdsi.servlet.fits.TestCaseRegistered.Vaccina
 import org.openimmunizationsoftware.cdsi.servlet.SupportingDataManager;
 import org.hl7.fhir.r4.model.*;
 
-import jakarta.servlet.ServletContext;
+import javax.servlet.ServletContext;
 import java.util.*;
 
 public class ImmunizationRecommendationForecastProvider {
@@ -294,3 +294,4 @@ public class ImmunizationRecommendationForecastProvider {
 		return new Date((long) random.nextInt(60) * 3600 * 1000 * 24 + date.getTime());
 	}
 }
+

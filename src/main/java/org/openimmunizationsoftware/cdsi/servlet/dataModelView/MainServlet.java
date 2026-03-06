@@ -4,12 +4,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.openimmunizationsoftware.cdsi.SoftwareVersion;
+import org.openimmunizationsoftware.cdsi.auth.AuthPageRenderer;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
@@ -31,7 +32,7 @@ public class MainServlet extends ForecastServlet {
     PrintWriter out = new PrintWriter(resp.getOutputStream());
     try {
       String section = null;
-      printHeader(out, section);
+      printHeader(out, req, section);
       printViewDataModel(dataModel, out);
       printFooter(out);
     } catch (Exception e) {
@@ -54,7 +55,7 @@ public class MainServlet extends ForecastServlet {
     out.println("</html>");
   }
 
-  protected void printHeader(PrintWriter out, String section) {
+  protected void printHeader(PrintWriter out, HttpServletRequest req, String section) {
     out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\">");
     out.println("<html>");
     out.println("  <head>");
@@ -66,6 +67,8 @@ public class MainServlet extends ForecastServlet {
     out.println("    <link rel=\"stylesheet\" href=\"https://www.w3schools.com/w3css/4/w3.css\"/>");
     out.println("  </head>");
     out.println("  <body>");
+
+    AuthPageRenderer.renderSignedInHeader(out, req);
 
     out.println("    <header class=\"w3-container w3-light-grey\">");
     out.println("      <div class=\"w3-bar w3-light-grey\">");
@@ -250,3 +253,4 @@ public class MainServlet extends ForecastServlet {
     out.println("     </tr>");
   }
 }
+

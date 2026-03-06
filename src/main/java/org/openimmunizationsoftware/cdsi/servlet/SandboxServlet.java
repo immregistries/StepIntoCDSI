@@ -11,10 +11,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
@@ -31,6 +31,7 @@ import org.hl7.fhir.r4.model.Parameters.ParametersParameterComponent;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.r4.model.StringType;
+import org.openimmunizationsoftware.cdsi.auth.AuthPageRenderer;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
@@ -913,6 +914,8 @@ public class SandboxServlet extends HttpServlet {
         out.println("  </script>");
         out.println("</head>");
         out.println("<body>");
+        AuthPageRenderer.renderSignedInHeader(out, req);
+
         // Sidebar
         out.println("  <div class=\"sidebar\">");
         out.println("    <h3>About ImmDS</h3>");
@@ -925,7 +928,7 @@ public class SandboxServlet extends HttpServlet {
         out.println("      <li>Standardized web service interface</li>");
         out.println("    </ul>");
         out.println(
-                "    <p><a href=\"https://hl7.org/fhir/us/immds/index.html\" target=\"_blank\">📖 View FHIR Implementation Guide</a></p>");
+                "    <p><a href=\"https://hl7.org/fhir/us/immds/index.html\" target=\"_blank\">View FHIR Implementation Guide</a></p>");
 
         // Add example links
         out.println("    <hr style=\"margin: 15px 0; border: none; border-top: 1px solid #0056b3;\">");

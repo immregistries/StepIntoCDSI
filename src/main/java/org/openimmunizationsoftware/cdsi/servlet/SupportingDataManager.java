@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jakarta.servlet.ServletContext;
+import javax.servlet.ServletContext;
 
 public class SupportingDataManager {
 
@@ -215,7 +215,6 @@ public class SupportingDataManager {
         return s;
     }
 
-    @SuppressWarnings("unchecked")
     private static void addServletContextZipNames(ServletContext servletContext, String folderPath,
             List<String> zipNameList, boolean recursive) {
 
@@ -274,3 +273,4 @@ public class SupportingDataManager {
         }
     }
 }
+

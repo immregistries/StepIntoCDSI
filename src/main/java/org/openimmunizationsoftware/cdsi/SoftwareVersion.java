@@ -5,27 +5,58 @@ import java.util.Properties;
 
 public class SoftwareVersion {
   private static final String DEFAULT_VERSION = "5.0.0";
-  public static final String VERSION = loadVersion();
+  private static final String DEFAULT_STEP_EXTERNAL_URL = "http://localhost:8080/step";
+  private static final String DEFAULT_HUB_EXTERNAL_URL = "http://localhost:8080/hub/home";
 
-  private static String loadVersion() {
+  public static final String VERSION;
+  public static final String STEP_EXTERNAL_URL;
+  public static final String HUB_EXTERNAL_URL;
+
+  static {
+    LoadedProperties loaded = loadProperties();
+    VERSION = loaded.version;
+    STEP_EXTERNAL_URL = loaded.stepExternalUrl;
+    HUB_EXTERNAL_URL = loaded.hubExternalUrl;
+  }
+
+  private static LoadedProperties loadProperties() {
     Properties properties = new Properties();
     try (InputStream inputStream = SoftwareVersion.class.getClassLoader()
         .getResourceAsStream("software-version.properties")) {
       if (inputStream == null) {
-        return DEFAULT_VERSION;
+        return new LoadedProperties(DEFAULT_VERSION, DEFAULT_STEP_EXTERNAL_URL, DEFAULT_HUB_EXTERNAL_URL);
       }
       properties.load(inputStream);
-      String configuredVersion = properties.getProperty("software.version");
-      if (configuredVersion == null || configuredVersion.trim().isEmpty()) {
-        return DEFAULT_VERSION;
-      }
-      configuredVersion = configuredVersion.trim();
-      if (configuredVersion.contains("${") || configuredVersion.contains("}")) {
-        return DEFAULT_VERSION;
-      }
-      return configuredVersion;
+      String configuredVersion = resolveProperty(properties, "software.version", DEFAULT_VERSION);
+      String configuredStepExternalUrl = resolveProperty(properties, "step.external.url", DEFAULT_STEP_EXTERNAL_URL);
+      String configuredHubExternalUrl = resolveProperty(properties, "hub.external.url", DEFAULT_HUB_EXTERNAL_URL);
+      return new LoadedProperties(configuredVersion, configuredStepExternalUrl, configuredHubExternalUrl);
     } catch (Exception e) {
-      return DEFAULT_VERSION;
+      return new LoadedProperties(DEFAULT_VERSION, DEFAULT_STEP_EXTERNAL_URL, DEFAULT_HUB_EXTERNAL_URL);
+    }
+  }
+
+  private static String resolveProperty(Properties properties, String key, String defaultValue) {
+    String configuredValue = properties.getProperty(key);
+    if (configuredValue == null || configuredValue.trim().isEmpty()) {
+      return defaultValue;
+    }
+    configuredValue = configuredValue.trim();
+    if (configuredValue.contains("${") || configuredValue.contains("}")) {
+      return defaultValue;
+    }
+    return configuredValue;
+  }
+
+  private static class LoadedProperties {
+    private final String version;
+    private final String stepExternalUrl;
+    private final String hubExternalUrl;
+
+    private LoadedProperties(String version, String stepExternalUrl, String hubExternalUrl) {
+      this.version = version;
+      this.stepExternalUrl = stepExternalUrl;
+      this.hubExternalUrl = hubExternalUrl;
     }
   }
 }

@@ -31,11 +31,13 @@
 	</licenses>
 	<properties>
 		<software.version>5.1.1</software.version>
+		<step.external.url>http://localhost:8080/step</step.external.url>
+		<hub.external.url>http://localhost:8080/hub/home</hub.external.url>
 		<jetty.version>7.6.13.v20130916</jetty.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- allowed values: R7, 1.0, 1.5, 2.0 or none -->
 		<wtp.version>none</wtp.version>
-		<hapifhir_version>7.4.0</hapifhir_version>
+		<hapifhir_version>6.10.0</hapifhir_version>
 	</properties>
 
 	<dependencies>
@@ -144,9 +146,9 @@
 	</dependency>
 
 	<dependency>
-		<groupId>jakarta.servlet</groupId>
-		<artifactId>jakarta.servlet-api</artifactId>
-		<version>5.0.0</version>
+		<groupId>javax.servlet</groupId>
+		<artifactId>javax.servlet-api</artifactId>
+		<version>4.0.1</version>
 		<scope>provided</scope>
 	</dependency>
 

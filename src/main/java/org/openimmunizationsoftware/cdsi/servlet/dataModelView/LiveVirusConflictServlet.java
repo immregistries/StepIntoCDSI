@@ -3,10 +3,10 @@ package org.openimmunizationsoftware.cdsi.servlet.dataModelView;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
@@ -42,7 +42,7 @@ public class LiveVirusConflictServlet extends MainServlet {
     }
 
     try {
-      printHeader(out, "Live Virus Conflict");
+      printHeader(out, req, "Live Virus Conflict");
 
       out.println("  <div class=\"w3-card w3-cell w3-margin\">");
       out.println("    <header class=\"w3-container w3-khaki\">");
@@ -86,3 +86,4 @@ public class LiveVirusConflictServlet extends MainServlet {
     out.println("     </tr>");
   }
 }
+

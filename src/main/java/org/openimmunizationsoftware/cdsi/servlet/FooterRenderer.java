@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
-import jakarta.servlet.ServletContext;
+import javax.servlet.ServletContext;
 
 import org.openimmunizationsoftware.cdsi.SoftwareVersion;
 
@@ -73,3 +73,4 @@ public final class FooterRenderer {
                 .replace("'", "&#39;");
     }
 }
+
