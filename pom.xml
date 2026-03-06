@@ -32,7 +32,7 @@
 	<properties>
 		<software.version>5.1.1</software.version>
 		<step.external.url>http://localhost:8080/step</step.external.url>
-		<hub.external.url>http://localhost:8080/hub/home</hub.external.url>
+		<hub.external.url>http://localhost:8080/hub</hub.external.url>
 		<jetty.version>7.6.13.v20130916</jetty.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- allowed values: R7, 1.0, 1.5, 2.0 or none -->
@@ -63,6 +63,12 @@
 			<artifactId>jetty-all-server</artifactId>
 			<version>${jetty.version}</version>
 			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.eclipse.jetty.orbit</groupId>
+					<artifactId>javax.servlet</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>

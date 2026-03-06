@@ -2,13 +2,13 @@ package org.openimmunizationsoftware.cdsi.servlet;
 
 import java.io.IOException;
 
-import org.openimmunizationsoftware.cdsi.SoftwareVersion;
 import org.openimmunizationsoftware.cdsi.auth.AuthSessionSupport;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class LogoutServlet extends HttpServlet {
 
@@ -29,7 +29,10 @@ public class LogoutServlet extends HttpServlet {
     private void logoutAndRedirect(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
         AuthSessionSupport.clearSessionUser(req);
-        resp.sendRedirect(SoftwareVersion.HUB_EXTERNAL_URL);
+        HttpSession session = req.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        resp.sendRedirect(AuthSessionSupport.getHubHomeUrl());
     }
 }
-

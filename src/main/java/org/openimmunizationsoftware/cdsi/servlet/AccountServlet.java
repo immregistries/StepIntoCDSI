@@ -3,7 +3,6 @@ package org.openimmunizationsoftware.cdsi.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import org.openimmunizationsoftware.cdsi.SoftwareVersion;
 import org.openimmunizationsoftware.cdsi.auth.AuthPageRenderer;
 import org.openimmunizationsoftware.cdsi.auth.AuthSessionSupport;
 import org.openimmunizationsoftware.cdsi.auth.SessionUser;
@@ -60,7 +59,7 @@ public class AccountServlet extends HttpServlet {
         out.println("  </table>");
 
         out.println("  <div class=\"actions\">");
-        out.println("    <a href=\"" + SoftwareVersion.HUB_EXTERNAL_URL + "\">Return To Hub</a>");
+        out.println("    <a href=\"" + AuthSessionSupport.getHubHomeUrl() + "\">Return To Hub</a>");
         out.println("    <form method=\"post\" action=\"" + req.getContextPath()
                 + "/logout\" style=\"display:inline;\">");
         out.println("      <button type=\"submit\">Logout Of Step</button>");
@@ -73,4 +72,3 @@ public class AccountServlet extends HttpServlet {
         out.println("</html>");
     }
 }
-

@@ -6,7 +6,7 @@ import java.util.Properties;
 public class SoftwareVersion {
   private static final String DEFAULT_VERSION = "5.0.0";
   private static final String DEFAULT_STEP_EXTERNAL_URL = "http://localhost:8080/step";
-  private static final String DEFAULT_HUB_EXTERNAL_URL = "http://localhost:8080/hub/home";
+  private static final String DEFAULT_HUB_EXTERNAL_URL = "http://localhost:8080/hub";
 
   public static final String VERSION;
   public static final String STEP_EXTERNAL_URL;
