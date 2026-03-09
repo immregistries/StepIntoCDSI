@@ -16,7 +16,7 @@
 	<groupId>org.openimmunizationsoftware.cdsi</groupId>
 	<artifactId>core</artifactId>
 	<packaging>war</packaging>
-	<version>5.1.1</version>
+	<version>5.2.0</version>
 	<!-- TODO project name -->
 	<name>quickstart</name>
 	<description></description>
@@ -30,9 +30,10 @@
 		</license>
 	</licenses>
 	<properties>
-		<software.version>5.1.1</software.version>
+		<software.version>5.2.0</software.version>
 		<step.external.url>http://localhost:8080/step</step.external.url>
 		<hub.external.url>http://localhost:8080/hub</hub.external.url>
+		<auth.enabled>false</auth.enabled>
 		<jetty.version>7.6.13.v20130916</jetty.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- allowed values: R7, 1.0, 1.5, 2.0 or none -->
@@ -158,16 +159,16 @@
 		<scope>provided</scope>
 	</dependency>
 
-	<!-- Spring Framework 6.x - required by NIST fits-client -->
+	<!-- Spring Framework 5.3.x - compatible with HAPI FHIR 6.x on Tomcat 9 -->
 	<dependency>
 		<groupId>org.springframework</groupId>
 		<artifactId>spring-web</artifactId>
-		<version>6.0.11</version>
+		<version>5.3.27</version>
 	</dependency>
 	<dependency>
 		<groupId>org.springframework</groupId>
 		<artifactId>spring-core</artifactId>
-		<version>6.0.11</version>
+		<version>5.3.27</version>
 	</dependency>
 
       <!-- This dependency includes the core HAPI-FHIR classes -->

@@ -12,7 +12,9 @@ import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
 import ca.uhn.fhir.narrative.INarrativeGenerator;
 import ca.uhn.fhir.rest.server.IResourceProvider;
 import ca.uhn.fhir.rest.server.RestfulServer;
+import ca.uhn.fhir.rest.server.interceptor.CorsInterceptor;
 import ca.uhn.fhir.rest.server.interceptor.ResponseHighlighterInterceptor;
+import org.springframework.web.cors.CorsConfiguration;
 
 /**
  * This servlet is the actual FHIR server itself
@@ -34,6 +36,15 @@ public class FhirServlet extends RestfulServer {
 	 */
 	@Override
 	public void initialize() {
+		CorsConfiguration corsConfiguration = new CorsConfiguration();
+		corsConfiguration.addAllowedOrigin("*");
+		corsConfiguration.addAllowedHeader("*");
+		corsConfiguration.addAllowedMethod("GET");
+		corsConfiguration.addAllowedMethod("POST");
+		corsConfiguration.addAllowedMethod("OPTIONS");
+		CorsInterceptor corsInterceptor = new CorsInterceptor(corsConfiguration);
+		registerInterceptor(corsInterceptor);
+
 		/*
 		 * Two resource providers are defined. Each one handles a specific
 		 * type of resource.

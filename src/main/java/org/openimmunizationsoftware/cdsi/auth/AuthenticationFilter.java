@@ -2,6 +2,8 @@ package org.openimmunizationsoftware.cdsi.auth;
 
 import java.io.IOException;
 
+import org.openimmunizationsoftware.cdsi.SoftwareVersion;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -28,6 +30,11 @@ public class AuthenticationFilter implements Filter {
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
+
+        if (!SoftwareVersion.AUTH_ENABLED) {
+            chain.doFilter(request, response);
+            return;
+        }
 
         if (isPublicPath(httpRequest)) {
             chain.doFilter(request, response);
