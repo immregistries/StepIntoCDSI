@@ -14,7 +14,7 @@ public final class AuthPageRenderer {
         out.println(
                 "<div style=\"padding: 8px 12px; margin-bottom: 12px; background: #f5f7fa; border: 1px solid #d6dde6; text-align: right;\">");
         if (user == null) {
-            out.println("No Authenticated");
+            out.println("Not Authenticated");
         } else {
             String accountUrl = request.getContextPath() + "/account";
             out.println("Signed in as <a href=\"" + accountUrl + "\">" + escapeHtml(user.getDisplayName()) + "</a>");
