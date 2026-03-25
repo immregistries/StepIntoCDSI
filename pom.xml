@@ -33,7 +33,7 @@
 		<software.version>5.2.0</software.version>
 		<step.external.url>http://localhost:8080/step</step.external.url>
 		<hub.external.url>http://localhost:8080/hub</hub.external.url>
-		<auth.enabled>false</auth.enabled>
+		<auth.enabled>true</auth.enabled>
 		<jetty.version>7.6.13.v20130916</jetty.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- allowed values: R7, 1.0, 1.5, 2.0 or none -->
