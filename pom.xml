@@ -34,11 +34,11 @@
 		<step.external.url>http://localhost:8080/step</step.external.url>
 		<hub.external.url>http://localhost:8080/hub</hub.external.url>
 		<auth.enabled>true</auth.enabled>
-		<jetty.version>7.6.13.v20130916</jetty.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- allowed values: R7, 1.0, 1.5, 2.0 or none -->
 		<wtp.version>none</wtp.version>
-		<hapifhir_version>6.10.0</hapifhir_version>
+		<hapifhir_version>8.0.0</hapifhir_version>
+		<spring.version>6.1.14</spring.version>
 	</properties>
 
 	<dependencies>
@@ -56,20 +56,6 @@
 			<groupId>javax.xml.parsers</groupId>
 			<artifactId>jaxp-api</artifactId>
 			<version>1.4.5</version>
-		</dependency>
-
-		<!-- JETTY DEPENDENCIES FOR TESTING -->
-		<dependency>
-			<groupId>org.eclipse.jetty.aggregate</groupId>
-			<artifactId>jetty-all-server</artifactId>
-			<version>${jetty.version}</version>
-			<scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.eclipse.jetty.orbit</groupId>
-					<artifactId>javax.servlet</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -153,22 +139,22 @@
 	</dependency>
 
 	<dependency>
-		<groupId>javax.servlet</groupId>
-		<artifactId>javax.servlet-api</artifactId>
-		<version>4.0.1</version>
+		<groupId>jakarta.servlet</groupId>
+		<artifactId>jakarta.servlet-api</artifactId>
+		<version>5.0.0</version>
 		<scope>provided</scope>
 	</dependency>
 
-	<!-- Spring Framework 5.3.x - compatible with HAPI FHIR 6.x on Tomcat 9 -->
+	<!-- Spring Framework 6.x - Jakarta compatible for Tomcat 10 -->
 	<dependency>
 		<groupId>org.springframework</groupId>
 		<artifactId>spring-web</artifactId>
-		<version>5.3.27</version>
+		<version>${spring.version}</version>
 	</dependency>
 	<dependency>
 		<groupId>org.springframework</groupId>
 		<artifactId>spring-core</artifactId>
-		<version>5.3.27</version>
+		<version>${spring.version}</version>
 	</dependency>
 
       <!-- This dependency includes the core HAPI-FHIR classes -->

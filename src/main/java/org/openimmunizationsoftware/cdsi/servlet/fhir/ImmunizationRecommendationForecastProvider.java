@@ -17,7 +17,7 @@ import org.openimmunizationsoftware.cdsi.servlet.fits.TestCaseRegistered.Vaccina
 import org.openimmunizationsoftware.cdsi.servlet.SupportingDataManager;
 import org.hl7.fhir.r4.model.*;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import java.util.*;
 
 public class ImmunizationRecommendationForecastProvider {

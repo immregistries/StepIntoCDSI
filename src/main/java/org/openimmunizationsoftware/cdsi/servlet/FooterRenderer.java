@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.openimmunizationsoftware.cdsi.SoftwareVersion;
 
