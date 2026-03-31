@@ -3,6 +3,8 @@ package org.openimmunizationsoftware.cdsi.auth;
 import java.io.IOException;
 
 import org.openimmunizationsoftware.cdsi.SoftwareVersion;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -14,6 +16,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class AuthenticationFilter implements Filter {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AuthenticationFilter.class);
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -42,6 +46,11 @@ public class AuthenticationFilter implements Filter {
         }
 
         if (AuthSessionSupport.getSessionUser(httpRequest) == null) {
+            LOG.info("Unauthenticated request intercepted: method={} uri={} query={} fullUrl={}",
+                    httpRequest.getMethod(),
+                    httpRequest.getRequestURI(),
+                    httpRequest.getQueryString(),
+                    AuthSessionSupport.getCurrentUrl(httpRequest));
             AuthSessionSupport.redirectToHubLogin(httpRequest, httpResponse);
             return;
         }

@@ -16,7 +16,7 @@
 	<groupId>org.openimmunizationsoftware.cdsi</groupId>
 	<artifactId>core</artifactId>
 	<packaging>war</packaging>
-	<version>5.2.0</version>
+	<version>5.3.1</version>
 	<!-- TODO project name -->
 	<name>quickstart</name>
 	<description></description>
@@ -31,14 +31,16 @@
 	</licenses>
 	<properties>
 		<software.version>5.2.0</software.version>
-		<step.external.url>http://localhost:8080/step</step.external.url>
-		<hub.external.url>http://localhost:8080/hub</hub.external.url>
+		<base.url>https://informatics.immregistries.org</base.url>
+		<step.external.url>${base.url}/step</step.external.url>
+		<hub.external.url>${base.url}/hub</hub.external.url>
 		<auth.enabled>true</auth.enabled>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- allowed values: R7, 1.0, 1.5, 2.0 or none -->
 		<wtp.version>none</wtp.version>
 		<hapifhir_version>8.0.0</hapifhir_version>
 		<spring.version>6.1.14</spring.version>
+		<slf4j.version>2.0.16</slf4j.version>
 	</properties>
 
 	<dependencies>
@@ -208,6 +210,11 @@
 		also need to include a logging library. Logback is used here, but log4j
 		would also be fine. 
 		-->
+	  <dependency>
+	     <groupId>org.slf4j</groupId>
+	     <artifactId>slf4j-api</artifactId>
+	     <version>${slf4j.version}</version>
+	  </dependency>
       <dependency>
          <groupId>ch.qos.logback</groupId>
          <artifactId>logback-classic</artifactId>
@@ -323,6 +330,7 @@
 			<id>local-tomcat-deploy</id>
 			<properties>
 				<deploy.context.name>step</deploy.context.name>
+				<base.url>http://localhost:8080</base.url>
 			</properties>
 			<build>
 				<plugins>

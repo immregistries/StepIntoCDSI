@@ -6,12 +6,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import org.openimmunizationsoftware.cdsi.SoftwareVersion;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 public final class AuthSessionSupport {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AuthSessionSupport.class);
 
     public static final String SESSION_USER_ATTRIBUTE = "stepAuthenticatedUser";
 
@@ -47,11 +51,15 @@ public final class AuthSessionSupport {
         String hubHomeUrl = getHubHomeUrl();
         String separator = hubHomeUrl.contains("?") ? "&" : "?";
         String returnTo = buildLoginReturnUrl();
+        String state = UUID.randomUUID().toString();
+
+        LOG.info("Preparing Hub login redirect: sessionId={} requestedUrl={} returnTo={} state={} hubHomeUrl={}",
+                getSessionId(request), requestedUrl, returnTo, state, hubHomeUrl);
 
         return hubHomeUrl + separator
                 + "app_code=step"
                 + "&return_to=" + encode(returnTo)
-                + "&state=" + encode(UUID.randomUUID().toString())
+                + "&state=" + encode(state)
                 + "&requested_url=" + encode(requestedUrl);
     }
 
@@ -65,7 +73,9 @@ public final class AuthSessionSupport {
 
     public static void redirectToHubLogin(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        response.sendRedirect(getHubLoginUrl(request));
+        String redirectUrl = getHubLoginUrl(request);
+        LOG.info("Redirecting to Hub login: sessionId={} redirectUrl={}", getSessionId(request), redirectUrl);
+        response.sendRedirect(redirectUrl);
     }
 
     public static String getCurrentUrl(HttpServletRequest request) {
@@ -106,5 +116,10 @@ public final class AuthSessionSupport {
 
     private static boolean isBlank(String value) {
         return value == null || value.trim().isEmpty();
+    }
+
+    private static String getSessionId(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        return session == null ? "none" : session.getId();
     }
 }

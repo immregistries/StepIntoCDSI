@@ -46,7 +46,7 @@ public class SandboxServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private static final int NUM_IMMUNIZATION_ROWS = 20;
-    private static final String DEFAULT_ENDPOINT_BASE = "https://florence.immregistries.org/step/fhir";
+    private static final String DEFAULT_ENDPOINT_BASE = "https://informatics.immregistries.org/step/fhir";
     private static final String SESSION_ENDPOINT_KEY = "sandboxEndpointBase";
 
     /**

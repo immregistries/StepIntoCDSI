@@ -5,8 +5,8 @@ import java.util.Properties;
 
 public class SoftwareVersion {
   private static final String DEFAULT_VERSION = "5.0.0";
-  private static final String DEFAULT_STEP_EXTERNAL_URL = "http://localhost:8080/step";
-  private static final String DEFAULT_HUB_EXTERNAL_URL = "http://localhost:8080/hub";
+  private static final String DEFAULT_STEP_EXTERNAL_URL = "https://informatics.immregistries.org/step";
+  private static final String DEFAULT_HUB_EXTERNAL_URL = "https://informatics.immregistries.org/hub";
   private static final boolean DEFAULT_AUTH_ENABLED = false;
 
   public static final String VERSION;
