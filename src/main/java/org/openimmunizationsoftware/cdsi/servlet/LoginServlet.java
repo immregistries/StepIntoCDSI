@@ -53,7 +53,7 @@ public class LoginServlet extends HttpServlet {
 
         ExchangeResult exchangeResult = null;
         if (code != null && !code.trim().isEmpty()) {
-            exchangeResult = exchangeCodeWithHub(code.trim());
+            exchangeResult = exchangeCodeWithHub(req, code.trim());
         }
 
         if (exchangeResult != null && exchangeResult.success && exchangeResult.hasRequiredUserInfo()) {
@@ -172,7 +172,7 @@ public class LoginServlet extends HttpServlet {
         out.println("    <tr><th>" + key + "</th><td>" + AuthPageRenderer.escapeHtml(value) + "</td></tr>");
     }
 
-    private ExchangeResult exchangeCodeWithHub(String code) {
+    private ExchangeResult exchangeCodeWithHub(HttpServletRequest req, String code) {
         ExchangeResult result = new ExchangeResult();
         String endpoint = buildHubExchangeUrl();
         result.httpStatus = -1;
@@ -191,8 +191,9 @@ public class LoginServlet extends HttpServlet {
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Accept", "application/json");
 
+            String userIp = req.getRemoteAddr();
             String requestJson = "{\"app_code\":\"" + APP_CODE + "\",\"code\":\""
-                    + escapeJson(code) + "\"}";
+                    + escapeJson(code) + "\",\"user_ip\":\"" + escapeJson(userIp) + "\"}";
             byte[] body = requestJson.getBytes(StandardCharsets.UTF_8);
 
             try (OutputStream outputStream = connection.getOutputStream()) {
