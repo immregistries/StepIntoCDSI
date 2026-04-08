@@ -79,12 +79,23 @@ public final class AuthSessionSupport {
     }
 
     public static String getCurrentUrl(HttpServletRequest request) {
-        StringBuffer requestUrl = request.getRequestURL();
-        String query = request.getQueryString();
-        if (query == null || query.isEmpty()) {
-            return requestUrl.toString();
+        String basePath = SoftwareVersion.STEP_EXTERNAL_URL;
+        if (basePath.endsWith("/")) {
+            basePath = basePath.substring(0, basePath.length() - 1);
         }
-        return requestUrl.toString() + "?" + query;
+
+        String requestPath = request.getRequestURI();
+        String contextPath = request.getContextPath();
+        if (contextPath != null && !contextPath.isEmpty() && requestPath.startsWith(contextPath)) {
+            requestPath = requestPath.substring(contextPath.length());
+        }
+
+        String query = request.getQueryString();
+        String result = basePath + requestPath;
+        if (query != null && !query.isEmpty()) {
+            result = result + "?" + query;
+        }
+        return result;
     }
 
     private static String encode(String value) {

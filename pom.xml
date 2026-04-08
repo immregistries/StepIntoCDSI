@@ -16,7 +16,7 @@
 	<groupId>org.openimmunizationsoftware.cdsi</groupId>
 	<artifactId>core</artifactId>
 	<packaging>war</packaging>
-	<version>5.3.2</version>
+	<version>5.3.3</version>
 	<!-- TODO project name -->
 	<name>quickstart</name>
 	<description></description>
@@ -30,7 +30,7 @@
 		</license>
 	</licenses>
 	<properties>
-		<software.version>5.2.0</software.version>
+		<software.version>5.3.3</software.version>
 		<base.url>https://informatics.immregistries.org</base.url>
 		<step.external.url>${base.url}/step</step.external.url>
 		<hub.external.url>${base.url}/hub</hub.external.url>
