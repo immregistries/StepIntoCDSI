@@ -41,6 +41,7 @@
 		<hapifhir_version>8.0.0</hapifhir_version>
 		<spring.version>6.1.14</spring.version>
 		<slf4j.version>2.0.16</slf4j.version>
+		<interophub.client.version>1.0.0</interophub.client.version>
 	</properties>
 
 	<dependencies>
@@ -214,6 +215,11 @@
 	     <groupId>org.slf4j</groupId>
 	     <artifactId>slf4j-api</artifactId>
 	     <version>${slf4j.version}</version>
+	  </dependency>
+	  <dependency>
+	     <groupId>org.immregistries</groupId>
+	     <artifactId>interophub-client</artifactId>
+	     <version>${interophub.client.version}</version>
 	  </dependency>
       <dependency>
          <groupId>ch.qos.logback</groupId>
