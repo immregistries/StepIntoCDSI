@@ -1,10 +1,10 @@
 package org.openimmunizationsoftware.cdsi.auth;
 
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.UUID;
 
+import org.immregistries.interophub.client.HubClientConfig;
+import org.immregistries.interophub.client.InteropHubClient;
+import org.immregistries.interophub.client.InteropHubClientFactory;
 import org.openimmunizationsoftware.cdsi.SoftwareVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +16,16 @@ import jakarta.servlet.http.HttpSession;
 public final class AuthSessionSupport {
 
     private static final Logger LOG = LoggerFactory.getLogger(AuthSessionSupport.class);
+    private static final String APP_CODE = "step";
+    private static final int DEFAULT_CONNECT_TIMEOUT_MS = 8000;
+    private static final int DEFAULT_READ_TIMEOUT_MS = 12000;
+    private static final InteropHubClient HUB_CLIENT = InteropHubClientFactory.create(
+            new HubClientConfig(
+                    SoftwareVersion.STEP_EXTERNAL_URL,
+                    SoftwareVersion.HUB_EXTERNAL_URL,
+                    APP_CODE,
+                    DEFAULT_CONNECT_TIMEOUT_MS,
+                    DEFAULT_READ_TIMEOUT_MS));
 
     public static final String SESSION_USER_ATTRIBUTE = "stepAuthenticatedUser";
 
@@ -48,27 +58,24 @@ public final class AuthSessionSupport {
 
     public static String getHubLoginUrl(HttpServletRequest request) {
         String requestedUrl = getCurrentUrl(request);
-        String hubHomeUrl = getHubHomeUrl();
-        String separator = hubHomeUrl.contains("?") ? "&" : "?";
-        String returnTo = buildLoginReturnUrl();
-        String state = UUID.randomUUID().toString();
+        String redirectUrl = HUB_CLIENT.buildLoginUrl(requestedUrl);
 
-        LOG.info("Preparing Hub login redirect: sessionId={} requestedUrl={} returnTo={} state={} hubHomeUrl={}",
-                getSessionId(request), requestedUrl, returnTo, state, hubHomeUrl);
+        LOG.info("Preparing Hub login redirect: sessionId={} requestedUrl={} redirectUrl={}",
+                getSessionId(request), requestedUrl, redirectUrl);
 
-        return hubHomeUrl + separator
-                + "app_code=step"
-                + "&return_to=" + encode(returnTo)
-                + "&state=" + encode(state)
-                + "&requested_url=" + encode(requestedUrl);
+        return redirectUrl;
     }
 
     public static String getHubHomeUrl() {
-        return appendPathToHubBase("home");
+        return HUB_CLIENT.getHubHomeUrl();
     }
 
     public static String getHubAuthExchangeUrl() {
-        return appendPathToHubBase("api/auth/exchange");
+        return HUB_CLIENT.getHubAuthExchangeUrl();
+    }
+
+    public static InteropHubClient getInteropHubClient() {
+        return HUB_CLIENT;
     }
 
     public static void redirectToHubLogin(HttpServletRequest request, HttpServletResponse response)
@@ -96,33 +103,6 @@ public final class AuthSessionSupport {
             result = result + "?" + query;
         }
         return result;
-    }
-
-    private static String encode(String value) {
-        return URLEncoder.encode(value, StandardCharsets.UTF_8);
-    }
-
-    private static String buildLoginReturnUrl() {
-        String base = SoftwareVersion.STEP_EXTERNAL_URL;
-        if (base.endsWith("/")) {
-            base = base.substring(0, base.length() - 1);
-        }
-        return base + "/login";
-    }
-
-    private static String appendPathToHubBase(String path) {
-        String base = SoftwareVersion.HUB_EXTERNAL_URL;
-        if (base.endsWith("/")) {
-            base = base.substring(0, base.length() - 1);
-        }
-        String p = path == null ? "" : path;
-        if (p.startsWith("/")) {
-            p = p.substring(1);
-        }
-        if (p.isEmpty()) {
-            return base;
-        }
-        return base + "/" + p;
     }
 
     private static boolean isBlank(String value) {

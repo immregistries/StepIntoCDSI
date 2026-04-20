@@ -1,20 +1,11 @@
 package org.openimmunizationsoftware.cdsi.servlet;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.openimmunizationsoftware.cdsi.SoftwareVersion;
+import org.immregistries.interophub.client.HubExchangeResult;
+import org.immregistries.interophub.client.HubRedirectDecision;
+import org.immregistries.interophub.client.HubUserInfo;
 import org.openimmunizationsoftware.cdsi.auth.AuthPageRenderer;
 import org.openimmunizationsoftware.cdsi.auth.AuthSessionSupport;
 import org.openimmunizationsoftware.cdsi.auth.SessionUser;
@@ -174,70 +165,27 @@ public class LoginServlet extends HttpServlet {
 
     private ExchangeResult exchangeCodeWithHub(HttpServletRequest req, String code) {
         ExchangeResult result = new ExchangeResult();
-        String endpoint = buildHubExchangeUrl();
+        String endpoint = AuthSessionSupport.getHubAuthExchangeUrl();
         result.httpStatus = -1;
 
         LOG.info("Calling Hub exchange API: endpoint={} app_code={} codeLength={}", endpoint, APP_CODE,
                 code == null ? 0 : code.length());
 
-        HttpURLConnection connection = null;
-        try {
-            URL url = new URL(endpoint);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setConnectTimeout(8000);
-            connection.setReadTimeout(12000);
-            connection.setDoOutput(true);
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setRequestProperty("Accept", "application/json");
+        HubExchangeResult hubResult = AuthSessionSupport.getInteropHubClient().exchangeCode(code, req.getRemoteAddr());
+        HubUserInfo user = hubResult.getUserInfo();
 
-            String userIp = req.getRemoteAddr();
-            String requestJson = "{\"app_code\":\"" + APP_CODE + "\",\"code\":\""
-                    + escapeJson(code) + "\",\"user_ip\":\"" + escapeJson(userIp) + "\"}";
-            byte[] body = requestJson.getBytes(StandardCharsets.UTF_8);
-
-            try (OutputStream outputStream = connection.getOutputStream()) {
-                outputStream.write(body);
-            }
-
-            int status = connection.getResponseCode();
-            result.httpStatus = status;
-
-            InputStream responseStream = (status >= 200 && status < 300)
-                    ? connection.getInputStream()
-                    : connection.getErrorStream();
-            result.responseBody = readStream(responseStream);
-            result.success = status >= 200 && status < 300;
-            result.hubUserId = extractJsonNumber(result.responseBody, "hub_user_id");
-            result.email = extractJsonString(result.responseBody, "email");
-            result.name = extractJsonString(result.responseBody, "name");
-            result.organization = extractJsonString(result.responseBody, "organization");
-            result.title = extractJsonString(result.responseBody, "title");
-            result.issuedAt = extractJsonString(result.responseBody, "issued_at");
-            result.expiresInSeconds = extractJsonNumber(result.responseBody, "expires_in_seconds");
-            result.requestedUrlFromHub = extractJsonString(result.responseBody, "requested_url");
-            result.returnToFromHub = extractJsonString(result.responseBody, "return_to");
-            LOG.info("Hub exchange parsed fields: requested_url={} return_to={} hub_user_id={} email={} login_ready={}",
-                    result.requestedUrlFromHub,
-                    result.returnToFromHub,
-                    result.hubUserId,
-                    result.email,
-                    result.hasRequiredUserInfo());
-            if (!result.success) {
-                result.errorMessage = "Hub returned non-success HTTP status";
-            } else if (!result.hasRequiredUserInfo()) {
-                result.errorMessage = "Hub response is missing one or more required user fields";
-                result.success = false;
-            }
-        } catch (Exception e) {
-            result.success = false;
-            result.errorMessage = e.getClass().getSimpleName() + ": " + e.getMessage();
-            LOG.warn("Exception during Hub exchange call", e);
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-        }
+        result.success = hubResult.isSuccess();
+        result.httpStatus = hubResult.getHttpStatus();
+        result.responseBody = hubResult.getResponseBody();
+        result.errorMessage = hubResult.getErrorMessage();
+        result.hubUserId = user.getHubUserId();
+        result.email = user.getEmail();
+        result.name = user.getName();
+        result.organization = user.getOrganization();
+        result.title = user.getTitle();
+        result.issuedAt = user.getIssuedAt();
+        result.expiresInSeconds = user.getExpiresInSeconds();
+        result.requestedUrlFromHub = hubResult.getRequestedUrlFromHub();
 
         return result;
     }
@@ -248,85 +196,9 @@ public class LoginServlet extends HttpServlet {
 
     private RedirectDecision determineRedirectDecision(HttpServletRequest req, String requestedUrlFromHub) {
         String homeTarget = req.getContextPath() + "/home";
-        if (requestedUrlFromHub == null || requestedUrlFromHub.trim().isEmpty()) {
-            return new RedirectDecision(homeTarget, "Hub exchange response did not include requested_url");
-        }
-
-        try {
-            URI requestedUri = new URI(requestedUrlFromHub.trim());
-            URI configuredStepUri = new URI(SoftwareVersion.STEP_EXTERNAL_URL);
-
-            if (!equalsIgnoreCase(requestedUri.getScheme(), configuredStepUri.getScheme())
-                    || !equalsIgnoreCase(requestedUri.getHost(), configuredStepUri.getHost())
-                    || getEffectivePort(requestedUri) != getEffectivePort(configuredStepUri)) {
-                return new RedirectDecision(homeTarget,
-                        "requested_url host, scheme, or port did not match configured step.external.url");
-            }
-
-            String configuredPath = normalizePath(configuredStepUri.getPath());
-            String requestedPath = normalizePath(requestedUri.getPath());
-            if (!requestedPath.equals(configuredPath) && !requestedPath.startsWith(configuredPath + "/")) {
-                return new RedirectDecision(homeTarget,
-                        "requested_url path was outside configured Step base path");
-            }
-
-            StringBuilder redirectTarget = new StringBuilder(requestedPath);
-            if (requestedUri.getRawQuery() != null && !requestedUri.getRawQuery().isEmpty()) {
-                redirectTarget.append('?').append(requestedUri.getRawQuery());
-            }
-            if (requestedUri.getRawFragment() != null && !requestedUri.getRawFragment().isEmpty()) {
-                redirectTarget.append('#').append(requestedUri.getRawFragment());
-            }
-            return new RedirectDecision(redirectTarget.toString(), "none");
-        } catch (URISyntaxException e) {
-            LOG.warn("Invalid requested_url returned from Hub: {}", requestedUrlFromHub, e);
-            return new RedirectDecision(homeTarget, "requested_url from Hub was not a valid URI");
-        }
-    }
-
-    private String readStream(InputStream inputStream) throws IOException {
-        if (inputStream == null) {
-            return "";
-        }
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line).append('\n');
-            }
-            return sb.toString().trim();
-        }
-    }
-
-    private String escapeJson(String value) {
-        if (value == null) {
-            return "";
-        }
-        return value.replace("\\", "\\\\").replace("\"", "\\\"");
-    }
-
-    private String extractJsonString(String json, String key) {
-        if (json == null || json.isEmpty()) {
-            return "";
-        }
-        Pattern pattern = Pattern.compile("\\\"" + Pattern.quote(key) + "\\\"\\s*:\\s*\\\"([^\\\"]*)\\\"");
-        Matcher matcher = pattern.matcher(json);
-        if (matcher.find()) {
-            return matcher.group(1);
-        }
-        return "";
-    }
-
-    private String extractJsonNumber(String json, String key) {
-        if (json == null || json.isEmpty()) {
-            return "";
-        }
-        Pattern pattern = Pattern.compile("\\\"" + Pattern.quote(key) + "\\\"\\s*:\\s*([0-9]+)");
-        Matcher matcher = pattern.matcher(json);
-        if (matcher.find()) {
-            return matcher.group(1);
-        }
-        return "";
+        HubRedirectDecision decision = AuthSessionSupport.getInteropHubClient()
+                .determineRedirectDecision(requestedUrlFromHub, homeTarget);
+        return new RedirectDecision(decision.getTarget(), decision.getFallbackReason());
     }
 
     private String abbreviateForLog(String value, int maxLength) {
@@ -338,44 +210,6 @@ public class LoginServlet extends HttpServlet {
             return normalized;
         }
         return normalized.substring(0, maxLength) + "...";
-    }
-
-    private String normalizePath(String path) {
-        if (path == null || path.trim().isEmpty()) {
-            return "/";
-        }
-        String normalized = path.trim();
-        if (!normalized.startsWith("/")) {
-            normalized = "/" + normalized;
-        }
-        while (normalized.endsWith("/") && normalized.length() > 1) {
-            normalized = normalized.substring(0, normalized.length() - 1);
-        }
-        return normalized;
-    }
-
-    private int getEffectivePort(URI uri) {
-        if (uri.getPort() > -1) {
-            return uri.getPort();
-        }
-        String scheme = uri.getScheme();
-        if (scheme == null) {
-            return -1;
-        }
-        if (scheme.equalsIgnoreCase("https")) {
-            return 443;
-        }
-        if (scheme.equalsIgnoreCase("http")) {
-            return 80;
-        }
-        return -1;
-    }
-
-    private boolean equalsIgnoreCase(String first, String second) {
-        if (first == null) {
-            return second == null;
-        }
-        return second != null && first.equalsIgnoreCase(second);
     }
 
     private static class ExchangeResult {
@@ -391,7 +225,6 @@ public class LoginServlet extends HttpServlet {
         private String issuedAt = "";
         private String expiresInSeconds = "";
         private String requestedUrlFromHub = "";
-        private String returnToFromHub = "";
 
         private boolean hasRequiredUserInfo() {
             return !isBlank(name) && !isBlank(organization) && !isBlank(title) && !isBlank(email);
