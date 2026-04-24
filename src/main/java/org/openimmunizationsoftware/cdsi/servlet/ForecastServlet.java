@@ -22,7 +22,9 @@ import org.openimmunizationsoftware.cdsi.SoftwareVersion;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.data.DataModelLoader;
 import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
+import org.openimmunizationsoftware.cdsi.core.domain.ObservationCode;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.PatientObservation;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
@@ -225,6 +227,21 @@ public class ForecastServlet extends HttpServlet {
             }
             String vaccineLabel = "  Vaccine " + cvxCode + ":";
             out.println(padLabel(vaccineLabel, 20) + sdf.format(vda.getDateAdministered()));
+          }
+        }
+
+        if (dataModel.getPatient().getMedicalHistory() != null
+            && dataModel.getPatient().getMedicalHistory().getPatientObservationList() != null
+            && !dataModel.getPatient().getMedicalHistory().getPatientObservationList().isEmpty()) {
+          for (PatientObservation patientObservation : dataModel.getPatient().getMedicalHistory()
+              .getPatientObservationList()) {
+            ObservationCode observationCode = patientObservation.getObservationCode();
+            String code = observationCode == null ? "" : observationCode.getCode();
+            String observationLabel = "  Observation " + code + ":";
+            String observationDate = patientObservation.getObservationDate() == null
+                ? "(no date)"
+                : sdf.format(patientObservation.getObservationDate());
+            out.println(padLabel(observationLabel, 20) + observationDate);
           }
         }
 
@@ -657,4 +674,3 @@ public class ForecastServlet extends HttpServlet {
   }
 
 }
-

@@ -42,6 +42,8 @@ public class SandboxServletExamples {
                 "?evalDate=20260216&resultFormat=text&patientDob=20230207&patientSex=F&vaccineDate1=20240413&vaccineCvx1=07&vaccineMvx1=&vaccineDate2=20240613&vaccineCvx2=06&vaccineMvx2=&vaccineDate3=20250213&vaccineCvx3=05&vaccineMvx3=&vaccineDate4=20260213&vaccineCvx4=03&vaccineMvx4=");
         add("MMR", "2013-0572 Dose 2 at age 13 mo ",
                 "?evalDate=20260216&resultFormat=text&patientDob=20250116&patientSex=F&vaccineDate1=20260116&vaccineCvx1=03&vaccineMvx1=&vaccineDate2=20260216&vaccineCvx2=03&vaccineMvx2=");
+        add("MMR", "Patient is pregnant and contraindicated",
+            "?evalDate=20260216&resultFormat=text&patientDob=19950116&patientSex=F&observationCode1=007");
 
         add("HepB", "2013-0241 # 3 Pediarix at 24 weeks-4 days. Valid for dose 3",
                 "?evalDate=20260216&resultFormat=text&patientDob=20250905&patientSex=F&vaccineDate1=20251017&vaccineCvx1=08&vaccineMvx1=&vaccineDate2=20251217&vaccineCvx2=08&vaccineMvx2=&vaccineDate3=20260216&vaccineCvx3=110&vaccineMvx3=");

@@ -66,6 +66,8 @@ public abstract class LogicStep implements LogSink {
   public static final String PARAM_VACCINE_CVX = "vaccineCvx";
   public static final String PARAM_VACCINE_CONDITION_CODE = "vaccineConditionCode";
   public static final String PARAM_VACCINE_DATE = "vaccineDate";
+  public static final String PARAM_OBSERVATION_CODE = "observationCode";
+  public static final String PARAM_OBSERVATION_DATE = "observationDate";
   public static final String PARAM_PATIENT_SEX = "patientSex";
   public static final String PARAM_PATIENT_DOB = "patientDob";
   public static final String PARAM_RESULT_FORMAT = "resultFormat";

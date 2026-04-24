@@ -7,8 +7,7 @@ import java.util.Set;
 
 public class MedicalHistory {
   private ImmunizationHistory immunizationHistory = null;
-  private List<RelevantMedicalObservation> relevantMedicalObservationList =
-      new ArrayList<RelevantMedicalObservation>();
+  private List<PatientObservation> patientObservationList = new ArrayList<PatientObservation>();
   private Set<Contraindication_TO_BE_REMOVED> contraindicationSet = new HashSet<Contraindication_TO_BE_REMOVED>();
 
   public Set<Contraindication_TO_BE_REMOVED> getContraindicationSet() {
@@ -23,12 +22,12 @@ public class MedicalHistory {
     this.immunizationHistory = immunizationHistory;
   }
 
-  public List<RelevantMedicalObservation> getRelevantMedicalObservationList() {
-    return relevantMedicalObservationList;
+  public List<PatientObservation> getPatientObservationList() {
+    return patientObservationList;
   }
 
-  public void setRelevantMedicalObservationList(
-      List<RelevantMedicalObservation> relevantMedicalObservationList) {
-    this.relevantMedicalObservationList = relevantMedicalObservationList;
+  public void setPatientObservationList(
+      List<PatientObservation> patientObservationList) {
+    this.patientObservationList = patientObservationList;
   }
 }

@@ -11,7 +11,10 @@ import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.ImmunizationHistory;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
+import org.openimmunizationsoftware.cdsi.core.domain.Observation;
+import org.openimmunizationsoftware.cdsi.core.domain.ObservationCode;
 import org.openimmunizationsoftware.cdsi.core.domain.Patient;
+import org.openimmunizationsoftware.cdsi.core.domain.PatientObservation;
 import org.openimmunizationsoftware.cdsi.core.domain.Vaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
@@ -39,6 +42,8 @@ public class GatherNecessaryData extends LogicStep {
 
       ImmunizationHistory immunizationHistory = new ImmunizationHistory();
       dataModel.setImmunizationHistory(immunizationHistory);
+      patient.getMedicalHistory().setImmunizationHistory(immunizationHistory);
+      immunizationHistory.setMedicalHistory(patient.getMedicalHistory());
       int i = 1;
       while (req.getParameter(PARAM_VACCINE_CVX + i) != null) {
         VaccineDoseAdministered vda = new VaccineDoseAdministered();
@@ -68,6 +73,32 @@ public class GatherNecessaryData extends LogicStep {
         vda.setVaccine(vaccine);
         i++;
       }
+
+      i = 1;
+      while (req.getParameter(PARAM_OBSERVATION_CODE + i) != null) {
+        String observationCodeValue = req.getParameter(PARAM_OBSERVATION_CODE + i);
+        if (!observationCodeValue.equals("")) {
+          Observation observation = dataModel.getObservationMap().get(observationCodeValue);
+          if (observation == null) {
+            throw new IllegalArgumentException(
+                "Unrecognized observation code '" + observationCodeValue + "'");
+          }
+
+          PatientObservation patientObservation = new PatientObservation();
+          ObservationCode observationCode = new ObservationCode();
+          observationCode.setCode(observation.getObservationCode());
+          observationCode.setText(observation.getObservationTitle());
+          patientObservation.setObservationCode(observationCode);
+
+          String observationDateValue = req.getParameter(PARAM_OBSERVATION_DATE + i);
+          if (observationDateValue != null && !observationDateValue.equals("")) {
+            patientObservation.setObservationDate(sdf.parse(observationDateValue));
+          }
+
+          patient.getMedicalHistory().getPatientObservationList().add(patientObservation);
+        }
+        i++;
+      }
     } else if (dataModel.getTestCaseRegistered() != null) {
       TestCaseRegistered tcr = dataModel.getTestCaseRegistered();
       Patient patient = new Patient();
@@ -78,6 +109,8 @@ public class GatherNecessaryData extends LogicStep {
 
       ImmunizationHistory immunizationHistory = new ImmunizationHistory();
       dataModel.setImmunizationHistory(immunizationHistory);
+      patient.getMedicalHistory().setImmunizationHistory(immunizationHistory);
+      immunizationHistory.setMedicalHistory(patient.getMedicalHistory());
       for (TestCaseRegistered.Vaccination v : tcr.getVaccinationList()) {
         VaccineDoseAdministered vaccineDoseAdministered = new VaccineDoseAdministered();
         vaccineDoseAdministered.setPatient(patient);
@@ -154,6 +187,26 @@ public class GatherNecessaryData extends LogicStep {
     }
     out.println("</table>");
 
+    out.println("<p>Patient observation input data:</p>");
+    out.println("<table>");
+    out.println("  <tr>");
+    out.println("    <th>Observation</th>");
+    out.println("    <th>Code</th>");
+    out.println("    <th>Date</th>");
+    out.println("  </tr>");
+    i = 1;
+    while (req.getParameter(PARAM_OBSERVATION_CODE + i) != null) {
+      out.println("  <tr>");
+      out.println("    <th>" + i + "</th>");
+      out.println("    <td><input type=\"text\" name=\"" + PARAM_OBSERVATION_CODE + i + "\" value=\""
+          + n(req.getParameter(PARAM_OBSERVATION_CODE + i)) + "\" size=\"12\"/></td>");
+      out.println("    <td><input type=\"text\" name=\"" + PARAM_OBSERVATION_DATE + i + "\" value=\""
+          + n(req.getParameter(PARAM_OBSERVATION_DATE + i)) + "\" size=\"10\"/></td>");
+      out.println("  </tr>");
+      i++;
+    }
+    out.println("</table>");
+
   }
 
   @Override
@@ -189,8 +242,23 @@ public class GatherNecessaryData extends LogicStep {
     out.println("   </table>");
     out.println("   <h3>Adverse Reactions</h3>");
     out.println("   <p><em>Not implemented yet</em></p>");
-    out.println("   <h3>Relevant Medical History</h3>");
-    out.println("   <p><em>Not implemented yet</em></p>");
+    out.println("   <h3>Patient Observations</h3>");
+    out.println("   <table>");
+    out.println("     <tr>");
+    out.println("       <th>Code</th>");
+    out.println("       <th>Text</th>");
+    out.println("       <th>Date</th>");
+    out.println("     </tr>");
+    for (PatientObservation patientObservation : dataModel.getPatient().getMedicalHistory()
+        .getPatientObservationList()) {
+      out.println("     <tr>");
+      ObservationCode observationCode = patientObservation.getObservationCode();
+      out.println("       <td>" + safe(observationCode == null ? "" : observationCode.getCode()) + "</td>");
+      out.println("       <td>" + safe(observationCode == null ? "" : observationCode.getText()) + "</td>");
+      out.println("       <td>" + n(patientObservation.getObservationDate()) + "</td>");
+      out.println("     </tr>");
+    }
+    out.println("   </table>");
 
     out.println("   <h2>Evaluation and Forecasting Related Data</h2>");
 
@@ -249,4 +317,3 @@ public class GatherNecessaryData extends LogicStep {
   }
 
 }
-

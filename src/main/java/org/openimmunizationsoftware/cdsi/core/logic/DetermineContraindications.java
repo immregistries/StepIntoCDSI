@@ -9,7 +9,7 @@ import java.io.PrintWriter;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AdverseReaction;
 import org.openimmunizationsoftware.cdsi.core.domain.Contraindication;
-import org.openimmunizationsoftware.cdsi.core.domain.RelevantMedicalObservation;
+import org.openimmunizationsoftware.cdsi.core.domain.PatientObservation;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTCI_1;
@@ -28,7 +28,7 @@ import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CA
 public class DetermineContraindications extends LogicStep {
 
         // ConditionAttributes to be used
-        private ConditionAttribute<List<RelevantMedicalObservation>> caActivePatientObservations = null;
+        private ConditionAttribute<List<PatientObservation>> caActivePatientObservations = null;
         private ConditionAttribute<List<AdverseReaction>> caAdverseReactions = null;
         private ConditionAttribute<Contraindication> caContraindicationElements = null;
         private ConditionAttribute<Date> caAssessmentDate = null;
@@ -40,7 +40,7 @@ public class DetermineContraindications extends LogicStep {
 
                 // Table 7-4
                 setConditionTableName("Table 7-4 Determine Contraindication Attributes");
-                caActivePatientObservations = new ConditionAttribute<List<RelevantMedicalObservation>>("Patient Data",
+                caActivePatientObservations = new ConditionAttribute<List<PatientObservation>>("Patient Data",
                                 "Active Patient Observations");
                 caAdverseReactions = new ConditionAttribute<List<AdverseReaction>>("Patient Data", "Adverse Reactions");
                 caContraindicationElements = new ConditionAttribute<Contraindication>("Supporting Data",
@@ -59,7 +59,7 @@ public class DetermineContraindications extends LogicStep {
                 // set initial values
                 caActivePatientObservations
                                 .setInitialValue(dataModel.getPatient().getMedicalHistory()
-                                                .getRelevantMedicalObservationList());
+                                                .getPatientObservationList());
                 caAdverseReactions
                                 .setInitialValue(dataModel
                                                 .getPatient().getMedicalHistory().getImmunizationHistory() == null
