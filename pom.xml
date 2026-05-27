@@ -21,7 +21,7 @@
 	<name>quickstart</name>
 	<description></description>
 	<!-- <organization> <name>company name</name> <url>company url</url> </organization> -->
-	<!-- mvn clean install -Dbase.url=http://localhost:8080 --> 
+	<!-- mvn clean install "-Dbase.url=http://localhost:8080 ""--> 
 
 	<licenses>
 		<license>
