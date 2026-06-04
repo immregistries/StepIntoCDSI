@@ -273,6 +273,13 @@
 					<exclude>**/*.java</exclude>
 				</excludes>
 			</resource>
+			<resource>
+				<filtering>false</filtering>
+				<directory>_source</directory>
+				<includes>
+					<include>**/*.xml</include>
+				</includes>
+			</resource>
 		</resources>
 		<testResources>
 			<testResource>
