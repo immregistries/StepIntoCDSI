@@ -14,7 +14,7 @@ import java.util.List;
 
 public class CodeSystemProvider implements IResourceProvider {
 
-    public static final String SYSTEM_URL = "https://ivci.org/conditions";
+    public static final String SYSTEM_URL = "https://ivci.org/contextual-conditions/usa/cdc-cdsi";
     public static final String CODE_SYSTEM_ID = "contextual-conditions";
 
     @Override
@@ -48,7 +48,7 @@ public class CodeSystemProvider implements IResourceProvider {
         cs.setTitle("CDC CDSI Contextual Conditions");
         cs.setStatus(Enumerations.PublicationStatus.ACTIVE);
         cs.setExperimental(false);
-        cs.setPublisher("Unknown");
+        cs.setPublisher("CDC CDSi");
         cs.setDescription("Contextual conditions used in Clinical Decision Support for Immunization (CDSI). These conditions include contraindications, indications, and observations that affect immunization recommendations.");
 
         cs.setContent(CodeSystem.CodeSystemContentMode.COMPLETE);

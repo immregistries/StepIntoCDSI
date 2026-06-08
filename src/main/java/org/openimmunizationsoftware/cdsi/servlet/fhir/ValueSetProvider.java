@@ -48,7 +48,7 @@ public class ValueSetProvider implements IResourceProvider {
         vs.setTitle("Supported Contextual Conditions");
         vs.setStatus(Enumerations.PublicationStatus.ACTIVE);
         vs.setExperimental(false);
-        vs.setPublisher("Unknown");
+        vs.setPublisher("CDC CDSi");
 
         vs.setDescription("ValueSet of contextual conditions supported by the CDSI system. These conditions include contraindications, indications, and observations that affect immunization recommendations.");
 
