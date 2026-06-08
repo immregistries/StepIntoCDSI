@@ -67,6 +67,13 @@ public class ForecastServlet extends HttpServlet {
     try {
       StepServlet.registerRequest(req);
       PrintWriter out = new PrintWriter(resp.getOutputStream());
+
+      if (!hasRequiredParameters(req)) {
+        printMissingParameterPage(resp, out);
+        out.close();
+        return;
+      }
+
       DataModel dataModel = readRequest(req);
 
       // Check if logging is requested
@@ -97,6 +104,47 @@ public class ForecastServlet extends HttpServlet {
       e.printStackTrace();
       throw new ServletException(e);
     }
+  }
+
+  private boolean hasRequiredParameters(HttpServletRequest req) {
+    return !isBlank(req.getParameter(LogicStep.PARAM_PATIENT_DOB))
+        && !isBlank(req.getParameter(LogicStep.PARAM_EVAL_DATE));
+  }
+
+  private boolean isBlank(String value) {
+    return value == null || value.trim().isEmpty();
+  }
+
+  private void printMissingParameterPage(HttpServletResponse resp, PrintWriter out) {
+    resp.setContentType("text/html");
+    out.println("<!DOCTYPE html>");
+    out.println("<html lang=\"en\">");
+    out.println("<head>");
+    out.println("  <meta charset=\"UTF-8\" />");
+    out.println("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />");
+    out.println("  <title>Forecast Endpoint</title>");
+    out.println("  <style>");
+    out.println("    body { font-family: Arial, sans-serif; margin: 2rem; line-height: 1.5; }");
+    out.println("    code { background: #f2f2f2; padding: 0.15rem 0.35rem; border-radius: 4px; }");
+    out.println("    .card { max-width: 800px; border: 1px solid #ddd; border-radius: 8px; padding: 1rem 1.25rem; }");
+    out.println("  </style>");
+    out.println("</head>");
+    out.println("<body>");
+    out.println("  <div class=\"card\">");
+    out.println("    <h1>Forecast Endpoint</h1>");
+    out.println("    <p>This is the Step Into CDSi forecast endpoint.</p>");
+    out.println("    <p>Required query parameters were not provided.</p>");
+    out.println("    <p>Required parameters:</p>");
+    out.println("    <ul>");
+    out.println("      <li><code>patientDob</code> in <code>yyyyMMdd</code> format</li>");
+    out.println("      <li><code>evalDate</code> in <code>yyyyMMdd</code> format</li>");
+    out.println("    </ul>");
+    out.println("    <p>Example:</p>");
+    out.println(
+        "    <p><code>/forecast?patientDob=20190115&patientSex=F&evalDate=20260608&vaccineCvx1=10&vaccineMvx1=PMC&vaccineDate1=20200110</code></p>");
+    out.println("  </div>");
+    out.println("</body>");
+    out.println("</html>");
   }
 
   private static void printText(HttpServletResponse resp, DataModel dataModel, PrintWriter out,

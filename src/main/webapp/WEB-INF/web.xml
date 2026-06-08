@@ -91,6 +91,10 @@
         <url-pattern>/forecast</url-pattern>
     </servlet-mapping>	 
     <servlet-mapping>
+        <servlet-name>forecast</servlet-name>
+        <url-pattern>/step/forecast</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>run</servlet-name>
         <url-pattern>/run</url-pattern>
     </servlet-mapping>	 

@@ -84,6 +84,7 @@ public class AuthenticationFilter implements Filter {
                 || path.equals("/temp-auth")
                 || path.equals("/logout")
                 || path.equals("/forecast")
+                || path.equals("/step/forecast")
                 || path.startsWith("/fhir/")
                 || path.equals("/fhir");
     }
