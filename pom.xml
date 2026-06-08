@@ -16,7 +16,7 @@
 	<groupId>org.openimmunizationsoftware.cdsi</groupId>
 	<artifactId>core</artifactId>
 	<packaging>war</packaging>
-	<version>5.3.3</version>
+	<version>5.3.4</version>
 	<!-- TODO project name -->
 	<name>quickstart</name>
 	<description></description>
