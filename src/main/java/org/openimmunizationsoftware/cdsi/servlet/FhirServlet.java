@@ -3,9 +3,11 @@ package org.openimmunizationsoftware.cdsi.servlet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openimmunizationsoftware.cdsi.servlet.fhir.CodeSystemProvider;
 import org.openimmunizationsoftware.cdsi.servlet.fhir.ImmunizationRecommendationForecastProvider;
 import org.openimmunizationsoftware.cdsi.servlet.fhir.ImmunizationRecommendationProvider;
 import org.openimmunizationsoftware.cdsi.servlet.fhir.PatientResourceProvider;
+import org.openimmunizationsoftware.cdsi.servlet.fhir.ValueSetProvider;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.narrative.DefaultThymeleafNarrativeGenerator;
@@ -59,6 +61,11 @@ public class FhirServlet extends RestfulServer {
 		setResourceProviders(providers);
 
 		registerProvider(immunizationRecommendationForecastProvider);
+
+		CodeSystemProvider codeSystemProvider = new CodeSystemProvider();
+		ValueSetProvider valueSetProvider = new ValueSetProvider();
+		registerProvider(codeSystemProvider);
+		registerProvider(valueSetProvider);
 
 		/*
 		 * Use a narrative generator. This is a completely optional step,
