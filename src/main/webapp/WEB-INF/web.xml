@@ -63,6 +63,10 @@
     </servlet>	<servlet>
         <servlet-name>sandbox</servlet-name>
         <servlet-class>org.openimmunizationsoftware.cdsi.servlet.SandboxServlet</servlet-class>
+    </servlet>
+	<servlet>
+        <servlet-name>iceSandbox</servlet-name>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.IceSandboxServlet</servlet-class>
     </servlet>   
     
     <servlet-mapping>
@@ -120,6 +124,10 @@
 	<servlet-mapping>
         <servlet-name>sandbox</servlet-name>
         <url-pattern>/sandbox</url-pattern>
+    </servlet-mapping>
+	<servlet-mapping>
+        <servlet-name>iceSandbox</servlet-name>
+        <url-pattern>/iceSandbox</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>supportingData</servlet-name>

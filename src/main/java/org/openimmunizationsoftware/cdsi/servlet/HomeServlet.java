@@ -103,6 +103,8 @@ public class HomeServlet extends HttpServlet {
                 out.println("    <a href=\"/step/supportingData\">Supporting Data</a>");
                 out.println("    <a href=\"/step/forecast\">Forecast</a>");
                 out.println("    <a href=\"/step/sandbox\">FHIR Sandbox</a>");
+                out.println("    <a href=\"/step/iceSandbox\">ICE Sandbox (R6)</a>");
+                out.println("    <a href=\"/step/iceSandbox?view=conformance\">ICE Conformance</a>");
                 out.println("  </p>");
 
                 out.println("  <h3>Step</h3>");
@@ -142,6 +144,20 @@ public class HomeServlet extends HttpServlet {
                 out.println(
                                 "    Provide a simple FHIR client for interacting with the FHIR server, supporting testing, validation, and demonstration");
                 out.println("    of CDS interoperability workflows.");
+                out.println("  </p>");
+
+                out.println("  <h3>ICE Sandbox (R6)</h3>");
+                out.println("  <p>");
+                out.println(
+                                "    Demonstrate the proposed R6 ImmDS forecast operation against the external ICE service");
+                out.println(
+                                "    (<code>POST /cds/$immds-forecast</code> with canonical <code>knowledgeBase</code> and <code>observation</code> support).");
+                out.println(
+                                "    Use this to evaluate how the ICE endpoint implements the new API – including FHIR <code>valueCanonical</code>, contextual-condition observations, and enriched response (<code>durationMs</code>, <code>GuidanceResponse</code>, <code>ImmunizationEvaluation</code>).");
+                out.println(
+                                "    See <a href=\"https://ice-service.cdsframework.org/opencds-decision-support-service/cds/ice-forecast/swagger-ui/index.html#/ImmDS%20Forecast/immDsForecast\">ICE Swagger</a>.");
+                out.println(
+                                "    <br/><a href=\"/step/iceSandbox?view=conformance\">View wire-only conformance report</a> (16 wire + 8 supporting-data probes, live against ICE).");
                 out.println("  </p>");
 
                 // Example Test Cases section
@@ -192,6 +208,12 @@ public class HomeServlet extends HttpServlet {
                                         sandboxUrl += "&knowledgeBaseVersion=" + escapeHtml(selectedDescriptor.version);
                                 }
 
+                                // For ICE Sandbox, use canonical knowledgeBase (url|version) – URL-encoded
+                                String iceKb = "https://terminology.cdsframework.org/PlanDefinition/ice-forecast|1.0.0";
+                                String iceKbEncoded;
+                                try { iceKbEncoded = java.net.URLEncoder.encode(iceKb, "UTF-8"); } catch (Exception e) { iceKbEncoded = iceKb; }
+                                String iceSandboxUrl = "/step/iceSandbox" + baseUrl + "&knowledgeBase=" + escapeHtml(iceKbEncoded);
+
                                 out.println("    <tr>");
                                 out.println("      <td>" + escapeHtml(category.title) + "</td>");
                                 out.println("      <td>" + escapeHtml(link.name) + "</td>");
@@ -200,6 +222,7 @@ public class HomeServlet extends HttpServlet {
                                 out.println("        <a href=\"" + forecastUrl + "\">Forecast</a>");
                                 out.println("        <a href=\"" + runUrl + "\">Run</a>");
                                 out.println("        <a href=\"" + sandboxUrl + "\">FHIR Sandbox</a>");
+                                out.println("        <a href=\"" + iceSandboxUrl + "\">ICE Sandbox</a>");
                                 out.println("      </td>");
                                 out.println("    </tr>");
                         }
