@@ -25,10 +25,9 @@ public class CreateRelevantPatientSeries extends LogicStep {
       log("Antigen selected list is null, creating");
       List<Antigen> antigenSelectedList = new ArrayList<Antigen>();
       dataModel.setAntigenSelectedList(antigenSelectedList);
-      int i = 1;
       boolean foundAtLeastOne = false;
 
-      // Check if antigen label filter has been specified by ForecastServlet
+      // Check if antigen label filter has been specified by the caller (e.g. ForecastServlet)
       List<String> antigenLabelFilterList = dataModel.getAntigenLabelFilterList();
       if (antigenLabelFilterList != null && !antigenLabelFilterList.isEmpty()) {
         log("Antigen label filter specified, filtering antigens by label");
@@ -38,19 +37,6 @@ public class CreateRelevantPatientSeries extends LogicStep {
             foundAtLeastOne = true;
             antigenSelectedList.add(antigen);
           }
-        }
-      } else {
-        // Original logic: check TestCaseRegistered or request parameters
-        for (Antigen antigen : dataModel.getAntigenList()) {
-          if (dataModel.getTestCaseRegistered() != null
-              || dataModel.getRequest().getParameter(PARAM_ANTIGEN_INCLUDE + i) != null) {
-            log("  + antigen indicated " + antigen.getName());
-            foundAtLeastOne = true;
-            antigenSelectedList.add(antigen);
-          } else {
-            log("  - antigen not indicated " + antigen.getName());
-          }
-          i++;
         }
       }
 

@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
+import org.openimmunizationsoftware.cdsi.core.data.ForecastInput;
+
 import gov.nist.healthcare.cds.domain.Event;
 import gov.nist.healthcare.cds.domain.ExpectedForecast;
 import gov.nist.healthcare.cds.domain.VaccinationEvent;
@@ -216,6 +218,24 @@ public class TestCaseRegistered {
     } else if ("".equals(testCase.getUid())) {
       recordProblem("Test case id is not defined (testCase.getUid().equals(\"\")");
     }
+  }
+
+  /**
+   * Adapts this FITS test case into the transport-agnostic {@link ForecastInput}
+   * the CDSi engine consumes.
+   */
+  public ForecastInput toForecastInput() {
+    ForecastInput input = new ForecastInput();
+    input.setPatientDateOfBirth(birthDate);
+    input.setPatientSex("F");
+    input.setAssessmentDate(evalDate);
+    for (Vaccination v : vaccinationList) {
+      ForecastInput.VaccinationInput vaccination = input.addVaccination();
+      vaccination.setDateAdministered(v.getVaccineDate());
+      vaccination.setVaccineCvx(v.getVaccineCvx());
+      vaccination.setVaccineMvx(v.getVaccineMvx());
+    }
+    return input;
   }
 
   private void recordProblem(String problem) {

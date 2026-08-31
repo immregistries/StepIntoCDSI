@@ -21,6 +21,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.openimmunizationsoftware.cdsi.SoftwareVersion;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.data.DataModelLoader;
+import org.openimmunizationsoftware.cdsi.core.data.ForecastInput;
 import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.ObservationCode;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
@@ -29,6 +30,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.DoseCondition;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
@@ -681,6 +683,7 @@ public class ForecastServlet extends HttpServlet {
         ? DataModelLoader.createDataModel()
         : DataModelLoader.createDataModel(supportingDataSet.trim());
     dataModel.setRequest(req);
+    dataModel.setForecastInput(buildForecastInput(req));
 
     // Parse antigenInclude parameters (antigenInclude1, antigenInclude2, etc.)
     List<String> antigenLabelFilterList = new ArrayList<String>();
@@ -702,6 +705,49 @@ public class ForecastServlet extends HttpServlet {
     dataModel.setNextLogicStep(
         LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel));
     return dataModel;
+  }
+
+  /**
+   * Adapts the raw HTTP request parameters (patientDob, patientSex, evalDate,
+   * vaccineCvx1/vaccineMvx1/vaccineDate1/vaccineConditionCode1, ...,
+   * observationCode1/observationDate1, ...) into the transport-agnostic
+   * {@link ForecastInput} that the CDSi engine actually consumes.
+   */
+  protected static ForecastInput buildForecastInput(HttpServletRequest req) throws ParseException {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+    ForecastInput input = new ForecastInput();
+    input.setPatientDateOfBirth(sdf.parse(req.getParameter(LogicStep.PARAM_PATIENT_DOB)));
+    input.setPatientSex(req.getParameter(LogicStep.PARAM_PATIENT_SEX));
+    input.setAssessmentDate(sdf.parse(req.getParameter(LogicStep.PARAM_EVAL_DATE)));
+
+    int i = 1;
+    while (req.getParameter(LogicStep.PARAM_VACCINE_CVX + i) != null) {
+      ForecastInput.VaccinationInput vaccination = input.addVaccination();
+      vaccination.setDateAdministered(sdf.parse(req.getParameter(LogicStep.PARAM_VACCINE_DATE + i)));
+      vaccination.setVaccineCvx(req.getParameter(LogicStep.PARAM_VACCINE_CVX + i));
+      vaccination.setVaccineMvx(req.getParameter(LogicStep.PARAM_VACCINE_MVX + i));
+      String conditionCode = req.getParameter(LogicStep.PARAM_VACCINE_CONDITION_CODE + i);
+      if (conditionCode != null && !conditionCode.equals("")) {
+        vaccination.setDoseCondition(
+            conditionCode.equalsIgnoreCase("yes") ? DoseCondition.YES : DoseCondition.NO);
+      }
+      i++;
+    }
+
+    i = 1;
+    while (req.getParameter(LogicStep.PARAM_OBSERVATION_CODE + i) != null) {
+      String observationCodeValue = req.getParameter(LogicStep.PARAM_OBSERVATION_CODE + i);
+      if (!observationCodeValue.equals("")) {
+        ForecastInput.ObservationInput observation = input.addObservation();
+        observation.setObservationCode(observationCodeValue);
+        String observationDateValue = req.getParameter(LogicStep.PARAM_OBSERVATION_DATE + i);
+        if (observationDateValue != null && !observationDateValue.equals("")) {
+          observation.setObservationDate(sdf.parse(observationDateValue));
+        }
+      }
+      i++;
+    }
+    return input;
   }
 
   protected String resolveSupportingDataSet(HttpServletRequest req) {

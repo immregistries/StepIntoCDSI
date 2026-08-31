@@ -30,13 +30,12 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.Stepper;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
-import org.openimmunizationsoftware.cdsi.servlet.fits.TestCaseRegistered;
 
 public class DataModel {
 
   // Input mechanisms
   private HttpServletRequest request = null;
-  private TestCaseRegistered testCaseRegistered = null;
+  private ForecastInput forecastInput = null;
 
   private List<LiveVirusConflict> liveVirusConflictList = new ArrayList<LiveVirusConflict>();
   private Map<String, VaccineType> cvxMap = new HashMap<String, VaccineType>();
@@ -209,12 +208,12 @@ public class DataModel {
     this.scorablePatientSeriesList = relevantPatientSeriesList;
   }
 
-  public void setTestCaseRegistered(TestCaseRegistered testCaseRegistered) {
-    this.testCaseRegistered = testCaseRegistered;
+  public void setForecastInput(ForecastInput forecastInput) {
+    this.forecastInput = forecastInput;
   }
 
-  public TestCaseRegistered getTestCaseRegistered() {
-    return testCaseRegistered;
+  public ForecastInput getForecastInput() {
+    return forecastInput;
   }
 
   private Map<String, ClinicalGuidelineObservation> clinicalGuidelineObservationMap = new HashMap<String, ClinicalGuidelineObservation>();

@@ -568,7 +568,7 @@ public class FitsServlet extends ForecastServlet {
                         ? DataModelLoader.createDataModel()
                         : DataModelLoader.createDataModel(supportingDataSet);
                 // setup data model
-                dataModel.setTestCaseRegistered(testCaseRegistered);
+                dataModel.setForecastInput(testCaseRegistered.toForecastInput());
                 LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel);
                 dataModel.setNextLogicStep(
                         LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel));

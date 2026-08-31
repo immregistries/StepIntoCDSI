@@ -7,13 +7,12 @@ import ca.uhn.fhir.rest.annotation.OperationParam;
 import org.hl7.fhir.instance.model.api.IPrimitiveType;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.data.DataModelLoader;
+import org.openimmunizationsoftware.cdsi.core.data.ForecastInput;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepFactory;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepType;
-import org.openimmunizationsoftware.cdsi.servlet.fits.TestCaseRegistered;
-import org.openimmunizationsoftware.cdsi.servlet.fits.TestCaseRegistered.Vaccination;
 import org.openimmunizationsoftware.cdsi.servlet.SupportingDataManager;
 import org.hl7.fhir.r4.model.*;
 
@@ -62,13 +61,15 @@ public class ImmunizationRecommendationForecastProvider {
 			@Description(shortDefinition = "Knowledge base identifier (CodeableConcept).") @OperationParam(name = KNOWLEDGE_BASE, min = 0, max = 1) CodeableConcept knowledgeBase,
 			@Description(shortDefinition = "Knowledge base version string.") @OperationParam(name = KNOWLEDGE_BASE_VERSION, min = 0, max = 1, typeName = "string") StringType knowledgeBaseVersion) {
 		Parameters out = new Parameters();
-		TestCaseRegistered tcr = new TestCaseRegistered();
-		tcr.setBirthDate(patient.getBirthDate());
-		tcr.setEvalDate(assessmentDate.getValue() == null ? new Date() : assessmentDate.getValue());
+		ForecastInput forecastInput = new ForecastInput();
+		Date evalDate = assessmentDate.getValue() == null ? new Date() : assessmentDate.getValue();
+		forecastInput.setPatientDateOfBirth(patient.getBirthDate());
+		forecastInput.setPatientSex("F");
+		forecastInput.setAssessmentDate(evalDate);
 		if (immunization != null) {
 			for (Immunization imm : immunization) {
-				Vaccination vaccination = tcr.addVaccination();
-				vaccination.setVaccineDate(imm.getOccurrenceDateTimeType().getValue());
+				ForecastInput.VaccinationInput vaccination = forecastInput.addVaccination();
+				vaccination.setDateAdministered(imm.getOccurrenceDateTimeType().getValue());
 				vaccination.setVaccineCvx(imm.getVaccineCode().getCodingFirstRep().getCode());
 			}
 		}
@@ -125,13 +126,13 @@ public class ImmunizationRecommendationForecastProvider {
 
 			DataModel dataModel = DataModelLoader.createDataModel(resolvedSupportingDataSet.trim());
 			// setup data model
-			dataModel.setTestCaseRegistered(tcr);
+			dataModel.setForecastInput(forecastInput);
 			LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel);
 			dataModel.setNextLogicStep(
 					LogicStepFactory.createLogicStep(LogicStepType.GATHER_NECESSARY_DATA, dataModel));
 			process(dataModel);
 
-			recommendation.setDate(tcr.getEvalDate());
+			recommendation.setDate(evalDate);
 			recommendation.setAuthority(new Reference()
 					.setIdentifier(new Identifier().setSystem("AIRA_TEST").setValue("step")));
 			List<VaccineGroupForecast> vaccineGroupForecastList = dataModel.getVaccineGroupForecastList();

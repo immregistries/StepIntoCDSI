@@ -3,11 +3,11 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 import static org.openimmunizationsoftware.cdsi.servlet.ServletUtil.safe;
 
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
 
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.data.ForecastInput;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.ImmunizationHistory;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
@@ -18,9 +18,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.PatientObservation;
 import org.openimmunizationsoftware.cdsi.core.domain.Vaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.DoseCondition;
 import org.openimmunizationsoftware.cdsi.servlet.dataModelView.AntigenServlet;
-import org.openimmunizationsoftware.cdsi.servlet.fits.TestCaseRegistered;
 
 public class GatherNecessaryData extends LogicStep {
 
@@ -31,106 +29,66 @@ public class GatherNecessaryData extends LogicStep {
   @Override
   public LogicStep process() throws Exception {
 
-    if (dataModel.getRequest() != null) {
-      HttpServletRequest req = dataModel.getRequest();
-      SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-      Patient patient = new Patient();
-      dataModel.setPatient(patient);
-      patient.setDateOfBirth(sdf.parse(req.getParameter(PARAM_PATIENT_DOB)));
-      patient.setGender(req.getParameter(PARAM_PATIENT_SEX));
-      dataModel.setAssessmentDate(sdf.parse(req.getParameter(PARAM_EVAL_DATE)));
-
-      ImmunizationHistory immunizationHistory = new ImmunizationHistory();
-      dataModel.setImmunizationHistory(immunizationHistory);
-      patient.getMedicalHistory().setImmunizationHistory(immunizationHistory);
-      immunizationHistory.setMedicalHistory(patient.getMedicalHistory());
-      int i = 1;
-      while (req.getParameter(PARAM_VACCINE_CVX + i) != null) {
-        VaccineDoseAdministered vda = new VaccineDoseAdministered();
-        vda.setId(i);
-        vda.setPatient(patient);
-        vda.setImmunizationHistory(immunizationHistory);
-        immunizationHistory.getVaccineDoseAdministeredList().add(vda);
-        patient.getReceivesList().add(vda);
-        vda
-            .setDateAdministered(sdf.parse(req.getParameter(PARAM_VACCINE_DATE + i)));
-        if (req.getParameter(PARAM_VACCINE_CONDITION_CODE + i) != null
-            && !req.getParameter(PARAM_VACCINE_CONDITION_CODE + i).equals("")) {
-          vda.setDoseCondition(
-              req.getParameter(PARAM_VACCINE_CONDITION_CODE + i).equalsIgnoreCase("yes")
-                  ? DoseCondition.YES
-                  : DoseCondition.NO);
-        }
-        String cvxCode = req.getParameter(PARAM_VACCINE_CVX + i);
-        String mvxCode = req.getParameter(PARAM_VACCINE_MVX + i);
-        Vaccine vaccine = new Vaccine();
-        VaccineType cvx = dataModel.getCvxMap().get(cvxCode);
-        if (cvx == null) {
-          throw new IllegalArgumentException("Unrecognized cvx code '" + cvxCode + "'");
-        }
-        vaccine.setVaccineType(cvx);
-        vaccine.setManufacturer(mvxCode);
-        vda.setVaccine(vaccine);
-        i++;
-      }
-
-      i = 1;
-      while (req.getParameter(PARAM_OBSERVATION_CODE + i) != null) {
-        String observationCodeValue = req.getParameter(PARAM_OBSERVATION_CODE + i);
-        if (!observationCodeValue.equals("")) {
-          Observation observation = dataModel.getObservationMap().get(observationCodeValue);
-          if (observation == null) {
-            throw new IllegalArgumentException(
-                "Unrecognized observation code '" + observationCodeValue + "'");
-          }
-
-          PatientObservation patientObservation = new PatientObservation();
-          ObservationCode observationCode = new ObservationCode();
-          observationCode.setCode(observation.getObservationCode());
-          observationCode.setText(observation.getObservationTitle());
-          patientObservation.setObservationCode(observationCode);
-
-          String observationDateValue = req.getParameter(PARAM_OBSERVATION_DATE + i);
-          if (observationDateValue != null && !observationDateValue.equals("")) {
-            patientObservation.setObservationDate(sdf.parse(observationDateValue));
-          }
-
-          patient.getMedicalHistory().getPatientObservationList().add(patientObservation);
-        }
-        i++;
-      }
-    } else if (dataModel.getTestCaseRegistered() != null) {
-      TestCaseRegistered tcr = dataModel.getTestCaseRegistered();
-      Patient patient = new Patient();
-      dataModel.setPatient(patient);
-      patient.setDateOfBirth(tcr.getBirthDate());
-      patient.setGender("F");
-      dataModel.setAssessmentDate(tcr.getEvalDate());
-
-      ImmunizationHistory immunizationHistory = new ImmunizationHistory();
-      dataModel.setImmunizationHistory(immunizationHistory);
-      patient.getMedicalHistory().setImmunizationHistory(immunizationHistory);
-      immunizationHistory.setMedicalHistory(patient.getMedicalHistory());
-      for (TestCaseRegistered.Vaccination v : tcr.getVaccinationList()) {
-        VaccineDoseAdministered vaccineDoseAdministered = new VaccineDoseAdministered();
-        vaccineDoseAdministered.setPatient(patient);
-        vaccineDoseAdministered.setImmunizationHistory(immunizationHistory);
-        immunizationHistory.getVaccineDoseAdministeredList().add(vaccineDoseAdministered);
-        patient.getReceivesList().add(vaccineDoseAdministered);
-        vaccineDoseAdministered
-            .setDateAdministered(v.getVaccineDate());
-        String cvxCode = v.getVaccineCvx();
-        String mvxCode = v.getVaccineMvx();
-        Vaccine vaccine = new Vaccine();
-        VaccineType cvx = dataModel.getCvxMap().get(cvxCode);
-        if (cvx == null) {
-          throw new IllegalArgumentException("Unrecognized cvx code '" + cvxCode + "'");
-        }
-        vaccine.setVaccineType(cvx);
-        vaccine.setManufacturer(mvxCode);
-        vaccineDoseAdministered.setVaccine(vaccine);
-      }
+    ForecastInput input = dataModel.getForecastInput();
+    if (input == null) {
+      throw new IllegalStateException(
+          "No ForecastInput has been set on the data model; the caller must adapt its input (web request, FITS test case, FHIR operation, etc.) into a ForecastInput before running the engine");
     }
+
+    Patient patient = new Patient();
+    dataModel.setPatient(patient);
+    patient.setDateOfBirth(input.getPatientDateOfBirth());
+    patient.setGender(input.getPatientSex());
+    dataModel.setAssessmentDate(input.getAssessmentDate());
+
+    ImmunizationHistory immunizationHistory = new ImmunizationHistory();
+    dataModel.setImmunizationHistory(immunizationHistory);
+    patient.getMedicalHistory().setImmunizationHistory(immunizationHistory);
+    immunizationHistory.setMedicalHistory(patient.getMedicalHistory());
+
+    int id = 1;
+    for (ForecastInput.VaccinationInput v : input.getVaccinationList()) {
+      VaccineDoseAdministered vda = new VaccineDoseAdministered();
+      vda.setId(id++);
+      vda.setPatient(patient);
+      vda.setImmunizationHistory(immunizationHistory);
+      immunizationHistory.getVaccineDoseAdministeredList().add(vda);
+      patient.getReceivesList().add(vda);
+      vda.setDateAdministered(v.getDateAdministered());
+      if (v.getDoseCondition() != null) {
+        vda.setDoseCondition(v.getDoseCondition());
+      }
+      String cvxCode = v.getVaccineCvx();
+      VaccineType cvx = dataModel.getCvxMap().get(cvxCode);
+      if (cvx == null) {
+        throw new IllegalArgumentException("Unrecognized cvx code '" + cvxCode + "'");
+      }
+      Vaccine vaccine = new Vaccine();
+      vaccine.setVaccineType(cvx);
+      vaccine.setManufacturer(v.getVaccineMvx());
+      vda.setVaccine(vaccine);
+    }
+
+    for (ForecastInput.ObservationInput o : input.getObservationList()) {
+      String observationCodeValue = o.getObservationCode();
+      if (observationCodeValue == null || observationCodeValue.equals("")) {
+        continue;
+      }
+      Observation observation = dataModel.getObservationMap().get(observationCodeValue);
+      if (observation == null) {
+        throw new IllegalArgumentException("Unrecognized observation code '" + observationCodeValue + "'");
+      }
+
+      PatientObservation patientObservation = new PatientObservation();
+      ObservationCode observationCode = new ObservationCode();
+      observationCode.setCode(observation.getObservationCode());
+      observationCode.setText(observation.getObservationTitle());
+      patientObservation.setObservationCode(observationCode);
+      patientObservation.setObservationDate(o.getObservationDate());
+
+      patient.getMedicalHistory().getPatientObservationList().add(patientObservation);
+    }
+
     return LogicStepFactory.createLogicStep(LogicStepType.ORGANIZE_IMMUNIZATION_HISTORY, dataModel);
   }
 
