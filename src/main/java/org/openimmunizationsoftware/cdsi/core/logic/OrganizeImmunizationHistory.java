@@ -1,7 +1,5 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
-import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -9,7 +7,6 @@ import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
-import org.openimmunizationsoftware.cdsi.servlet.dataModelView.AntigenServlet;
 
 public class OrganizeImmunizationHistory extends LogicStep {
 
@@ -43,65 +40,6 @@ public class OrganizeImmunizationHistory extends LogicStep {
 
     return LogicStepFactory.createLogicStep(LogicStepType.CREATE_RELEVANT_PATIENT_SERIES,
         dataModel);
-  }
-
-  @Override
-  public void printPre(PrintWriter out) throws Exception {
-    out.println(
-        "   <p>The third step in the process is to look at the patient's immunization history and prepare those records "
-            + "for evaluation and forecasting by breaking them into their antigen parts. This allows the evaluation and "
-            + "forecasting engine to be as granular and specific as possible for both evaluation and forecasting purposes. "
-            + "Later in the process (section 8.6), these antigens are assembled into commonly known vaccine groups (vaccine families) "
-            + "for vaccine group forecasts.</p>");
-
-  }
-
-  @Override
-  public void printPost(PrintWriter out) {
-    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-
-    out.println(
-        "   <p>The third step in the process is to look at the patient's immunization history and prepare those records "
-            + "for evaluation and forecasting by breaking them into their antigen parts. This allows the evaluation and "
-            + "forecasting engine to be as granular and specific as possible for both evaluation and forecasting purposes. "
-            + "Later in the process (section 8.6), these antigens are assembled into commonly known vaccine groups (vaccine families) "
-            + "for vaccine group forecasts.</p>");
-
-    out.println("<h2>Table 8 - 2 Prior to Organize Immunization History Example</h2>");
-    out.println("<table>");
-    out.println("  <tr>");
-    out.println("    <th>Product (CVX/MVX) - Description</th>");
-    out.println("    <th>Date</th>");
-    out.println("  </tr>");
-    for (VaccineDoseAdministered vda : dataModel.getImmunizationHistory()
-        .getVaccineDoseAdministeredList()) {
-      out.println("  <tr>");
-      out.println("    <td>" + vda.getVaccine().getTradeName() + " ("
-          + vda.getVaccine().getVaccineType().getCvxCode() + "/"
-          + vda.getVaccine().getManufacturer() + ") - "
-          + vda.getVaccine().getVaccineType().getShortDescription() + "</td>");
-      out.println("    <td>" + sdf.format(vda.getDateAdministered()) + "</td>");
-      out.println("  </tr>");
-    }
-    out.println("</table>");
-
-    out.println("<h2>Table 8 - 3 After Organize Immunization History Example</h2>");
-    out.println("<p>*Sorted by antigen and then by date</p>");
-    out.println("<table>");
-    out.println("  <tr>");
-    out.println("    <th>Product (CVX/MVX) - Description</th>");
-    out.println("    <th>Date</th>");
-    out.println("    <th>Antigen*</th>");
-    out.println("  </tr>");
-    for (AntigenAdministeredRecord aar : dataModel.getAntigenAdministeredRecordList()) {
-      out.println("  <tr>");
-      out.println("    <td>" + aar.getTradeName() + " (" + aar.getVaccineType().getCvxCode() + "/"
-          + aar.getManufacturer() + ") - " + aar.getVaccineType().getShortDescription() + "</td>");
-      out.println("    <td>" + sdf.format(aar.getDateAdministered()) + "</td>");
-      out.println("    <td>" + AntigenServlet.makeLink(aar.getAntigen()) + "</td>");
-      out.println("  </tr>");
-    }
-    out.println("</table>");
   }
 
 }

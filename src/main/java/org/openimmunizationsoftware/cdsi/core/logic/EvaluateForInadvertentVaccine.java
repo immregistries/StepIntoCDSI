@@ -3,7 +3,6 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 
 // Importing modules
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,20 +54,6 @@ public class EvaluateForInadvertentVaccine extends LogicStep {
         setNextLogicStepType(LogicStepType.EVALUATE_AGE);
         evaluateLogicTables();
         return next();
-    }
-
-    @Override
-    public void printPre(PrintWriter out) throws Exception {
-        printStandard(out);
-    }
-
-    @Override
-    public void printPost(PrintWriter out) throws Exception {
-        printStandard(out);
-    }
-
-    private void printStandard(PrintWriter out) {
-        printLogicTables(out);
     }
 
     private class LT extends LogicTable {

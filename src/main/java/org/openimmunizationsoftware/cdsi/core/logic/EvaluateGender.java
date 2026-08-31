@@ -3,7 +3,6 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
 
-import java.io.PrintWriter;
 import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
@@ -46,29 +45,6 @@ public class EvaluateGender extends LogicStep {
       logicTable.evaluate();
     }
     return next();
-  }
-
-  @Override
-  public void printPre(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  @Override
-  public void printPost(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  private void printStandard(PrintWriter out) {
-    out.println(
-        "<p>Evaluate gender  validates the  patient gender  against the  required  gender.  In cases where a  target dose  does not specify gender attributes, the gender is valid.</p>");
-
-    out.println(
-        "<p>The following process model, attribute table, and decision table are used to evaluate the gender.</p>");
-    out.println("<img src=\"Figure 4.21.PNG\"/>");
-    out.println("<p>FIGURE 4 - 21 GENDER PROCESS MODEL</p>");
-
-    printConditionAttributesTable(out);
-    printLogicTables(out);
   }
 
   private class LT extends LogicTable {

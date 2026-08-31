@@ -1,6 +1,5 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -528,23 +527,4 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
     log(LogLevel.STATE, "STATE: Completed marking " + remainingAARs + " AARs as EXTRANEOUS");
   }
 
-  @Override
-  public void printPre(PrintWriter out) throws Exception {
-    out.println(
-        "<p>This step is the core of the business logic and decision points many people think of when describing evaluation and forecasting. In the Logic Specification, this step contains all of the clinical business rules and decision logic in the form of business rules and decision tables.</p>");
-    out.println(
-        "<p>At the end of this step, each patient series will have an evaluated history and a forecast.</p>");
-  }
-
-  @Override
-  public void printPost(PrintWriter out) {
-    out.println(
-        "<p>This step is the core of the business logic and decision points many people think of when describing evaluation and forecasting. In the Logic Specification, this step contains all of the clinical business rules and decision logic in the form of business rules and decision tables.</p>");
-    out.println(
-        "<p>At the end of this step, each patient series will have an evaluated history and a forecast.</p>");
-    out.println("<h2>Selected Patient Series</h2>");
-    if (dataModel.getPatientSeriesStepper().getList() == null) {
-      out.println("<p>No patient series to process</p>");
-    }
-  }
 }

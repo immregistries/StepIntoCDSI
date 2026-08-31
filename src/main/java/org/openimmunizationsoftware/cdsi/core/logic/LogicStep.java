@@ -1,24 +1,18 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
-import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
-import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.logic.items.BusinessRule;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogEvent;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
-import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
-import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
-import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogSink;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicStepSink;
@@ -110,6 +104,14 @@ public abstract class LogicStep implements LogSink {
 
   public LogicStepType getLogicStepType() {
     return logicStepType;
+  }
+
+  public DataModel getDataModel() {
+    return dataModel;
+  }
+
+  public Map<String, List<ConditionAttribute<?>>> getConditionAttributesAdditionalMap() {
+    return conditionAttributesAdditionalMap;
   }
 
   public LogicStepType getNextLogicStepType() {
@@ -230,19 +232,6 @@ public abstract class LogicStep implements LogSink {
     logicStepSink.alert(level, message);
   }
 
-  public void printLog(PrintWriter out) {
-    List<String> messages = getLogList();
-    if (messages.size() > 0) {
-      out.println("<p>Processing log</p>");
-      out.println("<ul>");
-      for (String s : messages) {
-        out.println("<li>" + s + "</li>");
-      }
-      out.println("</ul>");
-    }
-    printBussinessRules(out);
-  }
-
   public LogicStep next() {
     return LogicStepFactory.createLogicStep(nextLogicStepType, dataModel);
   }
@@ -298,225 +287,11 @@ public abstract class LogicStep implements LogSink {
 
   public abstract LogicStep process() throws Exception;
 
-  public abstract void printPre(PrintWriter out) throws Exception;
-
-  public abstract void printPost(PrintWriter out) throws Exception;
-
-  protected void printConditionAttributesTable(PrintWriter out) {
-    printConditionAttributesTable(out, conditionTableName);
-  }
-
-  protected void printConditionAttributesTable(PrintWriter out, String tableName) {
-    {
-      List<ConditionAttribute<?>> caList = conditionAttributesList;
-      if (caList.size() > 0) {
-        printConditionAttributesTable(out, tableName, caList);
-      }
-    }
-    if (conditionAttributesAdditionalMap.size() > 0) {
-      List<String> nameList = new ArrayList<String>(conditionAttributesAdditionalMap.keySet());
-      Collections.sort(nameList);
-      for (String name : nameList) {
-        List<ConditionAttribute<?>> caList = conditionAttributesAdditionalMap.get(name);
-        printConditionAttributesTable(out, name, caList);
-      }
-    }
-  }
-
-  private void printConditionAttributesTable(PrintWriter out, String tableName,
-      List<ConditionAttribute<?>> caList) {
-    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-    out.println("<h2>" + tableName + "</h2>");
-    out.println("<table>");
-    out.println("  <tr>");
-    out.println("    <th>Attribute Type</th>");
-    out.println("    <th>Attribute Name</th>");
-    out.println("    <th>Value</th>");
-    out.println("    <th>Assumed Value if empty</th>");
-    out.println("    <th>Final Value</th>");
-    out.println("  </tr>");
-    for (ConditionAttribute<?> conditionAttribute : caList) {
-      if (conditionAttribute == null) {
-        continue;
-      }
-      out.println("  <tr>");
-      out.println("    <td>" + conditionAttribute.getAttributeType() + "</td>");
-      out.println("    <td>" + conditionAttribute.getAttributeName() + "</td>");
-      if (conditionAttribute.getInitialValue() == null) {
-        out.println("    <td>-</td>");
-      } else if (conditionAttribute.getInitialValue() instanceof Date) {
-        out.println("    <td>" + sdf.format(conditionAttribute.getInitialValue()) + "</td>");
-      } else {
-        out.println("    <td>" + conditionAttribute.getInitialValue() + "</td>");
-      }
-      if (conditionAttribute.getAssumedValue() == null) {
-        out.println("    <td>-</td>");
-      } else if (conditionAttribute.getAssumedValue() instanceof Date) {
-        out.println("    <td>" + sdf.format(conditionAttribute.getAssumedValue()) + "</td>");
-      } else {
-        out.println("    <td>" + conditionAttribute.getAssumedValue() + "</td>");
-      }
-      if (conditionAttribute.getFinalValue() == null) {
-        out.println("    <td>-</td>");
-      } else if (conditionAttribute.getFinalValue() instanceof Date) {
-        out.println("    <td>" + sdf.format(conditionAttribute.getFinalValue()) + "</td>");
-      } else {
-        out.println("    <td>" + conditionAttribute.getFinalValue() + "</td>");
-      }
-      out.println("  </tr>");
-    }
-    out.println("</table>");
-  }
-
-  protected void printBussinessRules(PrintWriter out) {
-    out.println("<p>Business Rules Processing Log</p>");
-    for (BusinessRule<?, ?> businessRule : businessRuleList) {
-      businessRule.printLog(out);
-    }
-  }
-
-  protected void printLogicTables(PrintWriter out) {
-    for (LogicTable logicTable : logicTableList) {
-      out.println("<h2>" + logicTable.getLabel() + "</h2>");
-      out.println("<table>");
-      out.println("  <tr>");
-      out.println("    <th>Conditions</th>");
-      out.println("    <th colspan=\"" + logicTable.getLogicOutcomes().length + "\">Rules</th>");
-      out.println("  </tr>");
-      for (int i = 0; i < logicTable.getLogicConditions().length; i++) {
-        out.println("  <tr>");
-        LogicCondition logicCondition = logicTable.getLogicConditions()[i];
-
-        if (logicCondition == null) {
-          out.println("    <td>TODO</td>");
-        } else if (logicCondition.getLogicResult() == null) {
-          out.println("    <td>" + logicCondition.getLabel() + "</td>");
-        } else {
-          out.println("    <td>" + logicCondition.getLabel() + " <b>"
-              + logicCondition.getLogicResult() + "</b></td>");
-        }
-        for (int j = 0; j < logicTable.getLogicResultTable()[i].length; j++) {
-          LogicResult logicResult = logicTable.getLogicResultTable()[i][j];
-          String style = "";
-          if (logicCondition != null && logicCondition.getLogicResult() != null
-              && (logicCondition.getLogicResult() == logicResult
-                  || logicResult == LogicResult.ANY)) {
-            style = "pass";
-          }
-          if (logicResult == LogicResult.YES) {
-            out.println("    <td class=\"" + style + "\">Yes</td>");
-          } else if (logicResult == LogicResult.NO) {
-            out.println("    <td class=\"" + style + "\">No</td>");
-          } else if (logicResult == LogicResult.ANY) {
-            out.println("    <td class=\"" + style + "\">-</td>");
-          } else if (logicResult == LogicResult.UNKNOWN) {
-            out.println("    <td class=\"" + style + "\">Unknown</td>");
-          } else if (logicResult == LogicResult.EXTRANEOUS) {
-            out.println("    <td class=\"" + style + "\">Extraneous</td>");
-          } else if (logicResult == LogicResult.ZERO) {
-            out.println("    <td class=\"" + style + "\">0</td>");
-          } else if (logicResult == LogicResult.ONE) {
-            out.println("    <td class=\"" + style + "\">1</td>");
-          } else if (logicResult == LogicResult.MORE_THAN_ONE) {
-            out.println("    <td class=\"" + style + "\">&gt;1</td>");
-          }
-        }
-        out.println("  </tr>");
-      }
-      out.println("  <tr>");
-
-      LogicOutcome logicOutcomeDefault = logicTable.getLogicOutcomeDefault();
-      if (logicOutcomeDefault != null && logicOutcomeDefault.getLogList() != null
-          && logicOutcomeDefault.getLogList().size() > 0) {
-        out.println("<th class=\"pass\"><ul>");
-        for (String log : logicOutcomeDefault.getLogList()) {
-          out.println("<li>" + log + "</li>");
-        }
-        out.println("</ul></th>");
-      } else {
-        out.println("<th>Outcomes</th>");
-      }
-
-      for (int j = 0; j < logicTable.getLogicOutcomes().length; j++) {
-        LogicOutcome logicOutcome = logicTable.getLogicOutcomes()[j];
-        if (logicOutcome != null && logicOutcome.getLogList() != null
-            && logicOutcome.getLogList().size() > 0) {
-          out.println("    <td class=\"pass\"><ul>");
-          for (String log : logicOutcome.getLogList()) {
-            out.println("<li>" + log + "</li>");
-          }
-          out.println("</ul></td>");
-        } else {
-          out.println("    <td></td>");
-        }
-      }
-      out.println("  </tr>");
-
-      out.println("</table>");
-    }
-  }
-
-  protected static String n(Date d) {
+  public static String n(Date d) {
     if (d == null) {
       return "-";
     }
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
     return sdf.format(d);
-  }
-
-  protected void printBestPatientSeries(PrintWriter out) {
-    // print out best patient series
-    if (dataModel.getBestPatientSeriesList() != null) {
-      out.println("<h2>Best Patient Series</h2>");
-      out.println("<ul>");
-      for (PatientSeries ps : dataModel.getBestPatientSeriesList()) {
-        out.println("<li>" + ps.getTrackedAntigenSeries().getTargetDisease().getName() + ": "
-            + ps.getTrackedAntigenSeries().getSeriesName() + "</li>");
-      }
-      out.println("</ul>");
-    }
-  }
-
-  protected void printPatientSeriesList(PrintWriter out) {
-    out.println("<h2> Patient Series List </h2>");
-    out.println("<table>");
-    out.println("  <tr>");
-    out.println("    <th> Antigen </th>");
-    out.println("    <th> Antigen Series </th>");
-    out.println("    <th> Patient Series Status </th>");
-    out.println("    <th> Target Dose List size </th>");
-    out.println("  </tr>");
-    for (PatientSeries patientSeries : dataModel.getPatientSeriesStepper().getList()) {
-      out.println("  <tr>");
-      out.println("    <td>" + patientSeries.getTrackedAntigenSeries().getTargetDisease().getName() + "</td>");
-      out.println("    <td>" + patientSeries.getTrackedAntigenSeries().getSeriesName() + "</td>");
-      out.println("    <td>" + patientSeries.getPatientSeriesStatus() + "</td>");
-      int size = patientSeries.getTargetDoseList() == null ? 0 : patientSeries.getTargetDoseList().size();
-      out.println("    <td>" + size + "</td>");
-      out.println("  </tr>");
-    }
-    out.println("</table>");
-
-    if (dataModel.getScorablePatientSeriesList() != null) {
-      out.println("<h2> Scorable Patient Series List </h2>");
-      out.println("<table>");
-      out.println("  <tr>");
-      out.println("    <th> Antigen </th>");
-      out.println("    <th> Antigen Series </th>");
-      out.println("    <th> Patient Series Status </th>");
-      out.println("    <th> Target Dose List size </th>");
-      out.println("  </tr>");
-      for (PatientSeries patientSeries : dataModel.getScorablePatientSeriesList()) {
-        out.println("  <tr>");
-        out.println("    <td>" + patientSeries.getTrackedAntigenSeries().getTargetDisease().getName() + "</td>");
-        out.println("    <td>" + patientSeries.getTrackedAntigenSeries().getSeriesName() + "</td>");
-        out.println("    <td>" + patientSeries.getPatientSeriesStatus() + "</td>");
-        int size = patientSeries.getTargetDoseList() == null ? 0 : patientSeries.getTargetDoseList().size();
-        out.println("    <td>" + size + "</td>");
-        out.println("  </tr>");
-      }
-      out.println("</table>");
-    }
-
   }
 }

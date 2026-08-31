@@ -1,6 +1,5 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +24,10 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
   // private ConditionAttribute<Date> caDateAdministered = null;
   private VaccineGroupForecast vgf;
   private List<PatientSeries> selectedList;
+
+  public List<PatientSeries> getSelectedList() {
+    return selectedList;
+  }
 
   public MultipleAntigenVaccineGroup(DataModel dataModel) {
     super(LogicStepType.MULTIPLE_ANTIGEN_VACCINE_GROUP, dataModel);
@@ -312,42 +315,6 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
     }
     vgf.setEarliestDate(earliestDate);
     vgf.setTargetDose(td);
-  }
-
-  @Override
-  public void printPre(PrintWriter out) throws Exception {
-    printStandard(out);
-
-  }
-
-  @Override
-  public void printPost(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  private void printStandard(PrintWriter out) {
-    out.println(
-        "<p>The forecasting  decisions and  rules which need to be applied to a multiple antigen  vaccine group are  listed below</p>");
-
-    printConditionAttributesTable(out);
-    printLogicTables(out);
-    out.println(
-        "<h2>Selected Patient Series for " + dataModel.getVaccineGroup().getName() + "</h2>");
-    out.println("<table>");
-    out.println("  <tr>");
-    out.println("    <th>Antigen</th>");
-    out.println("    <th>Patient Series Status</th>");
-    out.println("  </tr>");
-    for (PatientSeries patientSeries : selectedList) {
-      out.println("  <tr>");
-      out.println(
-          "    <td>" + patientSeries.getTrackedAntigenSeries().getTargetDisease() + "</td>");
-      out.println("    <td>" + patientSeries.getPatientSeriesStatus() + "</td>");
-      out.println("  </tr>");
-    }
-    out.println("</table>");
-
-    printLog(out);
   }
 
   private class LT extends LogicTable {

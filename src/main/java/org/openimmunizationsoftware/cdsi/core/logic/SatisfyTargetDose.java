@@ -4,8 +4,6 @@ import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.EXT
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
 
-import java.io.PrintWriter;
-
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
@@ -41,28 +39,6 @@ public class SatisfyTargetDose extends LogicStep {
     }
     dataModel.getTargetDose().setStatusCause("");
     return next(true);
-  }
-
-  @Override
-  public void printPre(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  @Override
-  public void printPost(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  private void printStandard(PrintWriter out) {
-    out.println(
-        "<p>Satisfy  target  dose  uses  the  results  from  the  previous  evaluation  sections  as  conditions  to  determine  if the target dose is satisfied.  </p>");
-
-    out.println(
-        "<p>The following processing model and decision table are used to determine if the target dose was satisfied</p>");
-    out.println("<img src=\"Figure 6.23.PNG\"/>");
-    out.println("<p>FIGURE 6 - 23 SATISFY TARGET DOSE PROCESS MODEL</p>");
-    printConditionAttributesTable(out);
-    printLogicTables(out);
   }
 
   private class LT extends LogicTable {

@@ -1,6 +1,5 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -134,21 +133,6 @@ public class PreFilterPatientSeries extends LogicStep {
 
         setNextLogicStepType(LogicStepType.IDENTIFY_ONE_PRIORITIZED_PATIENT_SERIES);
         return next();
-    }
-
-    @Override
-    public void printPre(PrintWriter out) throws Exception {
-        printStandard(out);
-    }
-
-    @Override
-    public void printPost(PrintWriter out) throws Exception {
-        printStandard(out);
-    }
-
-    private void printStandard(PrintWriter out) {
-        printPatientSeriesList(out);
-        printBestPatientSeries(out);
     }
 
 }

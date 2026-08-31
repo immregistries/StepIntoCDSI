@@ -1,6 +1,5 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
-import java.io.PrintWriter;
 import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
@@ -37,22 +36,6 @@ public class DetermineBestPatientSeries extends LogicStep {
         evaluateLogicTables();
         setNextLogicStepType(LogicStepType.SELECT_BEST_PATIENT_SERIES);
         return next();
-    }
-
-    @Override
-    public void printPre(PrintWriter out) throws Exception {
-        printStandard(out);
-    }
-
-    @Override
-    public void printPost(PrintWriter out) throws Exception {
-        printStandard(out);
-    }
-
-    private void printStandard(PrintWriter out) {
-        out.print("<h4> " + dataModel.getAntigen().getName() + " </h4>");
-        printBestPatientSeries(out);
-        printLogicTables(out);
     }
 
     private class LT extends LogicTable {

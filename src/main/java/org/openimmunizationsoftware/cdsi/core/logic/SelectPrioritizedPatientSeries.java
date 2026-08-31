@@ -1,6 +1,5 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
-import java.io.PrintWriter;
 import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
@@ -19,6 +18,14 @@ public class SelectPrioritizedPatientSeries extends LogicStep {
   }
 
   private PatientSeries prioritizedPatientSeries = null;
+
+  public List<PatientSeries> getPatientSeriesList() {
+    return patientSeriesList;
+  }
+
+  public PatientSeries getPrioritizedPatientSeries() {
+    return prioritizedPatientSeries;
+  }
 
   private void selectPrioritizedPatientSeries() {
     if (patientSeriesList.size() > 0) {
@@ -54,12 +61,7 @@ public class SelectPrioritizedPatientSeries extends LogicStep {
     return next();
   }
 
-  @Override
-  public void printPre(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  private int numberOfValidDoses(PatientSeries patientSeries) {
+  public int numberOfValidDoses(PatientSeries patientSeries) {
     int nbOfValidDoses = 0;
     for (TargetDose target : patientSeries.getTargetDoseList()) {
       if (target.getTargetDoseStatus() != null) {
@@ -70,25 +72,6 @@ public class SelectPrioritizedPatientSeries extends LogicStep {
 
     }
     return nbOfValidDoses;
-  }
-
-  @Override
-  public void printPost(PrintWriter out) throws Exception {
-    printStandard(out);
-    out.println("<p>Prioritized Patient Series: " + prioritizedPatientSeries + "</p>");
-    for (PatientSeries patientSeries : patientSeriesList) {
-      out.println(
-          "<p> PatientSeries : " + patientSeries.getTrackedAntigenSeries().getSeriesName() + " Value : "
-              + patientSeries.getScorePatientSeries() + " valid doses : " + numberOfValidDoses(patientSeries)
-              + " </p>");
-    }
-  }
-
-  private void printStandard(PrintWriter out) {
-    out.println(
-        "<p>Select prioritized patient series provides the business rules to be applied to the scored patient series which will result in the prioritized patient series for the series group.</p>");
-
-    out.print("<h4> " + dataModel.getAntigen().getName() + " </h4>");
   }
 
 }

@@ -1,6 +1,5 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
-import java.io.PrintWriter;
 import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
@@ -107,43 +106,6 @@ public class CompletePatientSeries extends LogicStep {
     log("CompletePatientSeries.process() completed. Moving to next step: "
         + LogicStepType.SELECT_PRIORITIZED_PATIENT_SERIES);
     return next();
-  }
-
-  @Override
-  public void printPre(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  @Override
-  public void printPost(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  private void printStandard(PrintWriter out) {
-    out.println(
-        "<p>Complete  patient  series  provides  the  decision  table  for  determining  the  "
-            + "number  of  points  to  assign  to  a complete patient series based on a specified condition. </p>");
-    printTable(out);
-    printBestPatientSeries(out);
-  }
-
-  private void printTable(PrintWriter out) {
-    out.println("");
-    out.println("<table BORDER=\"1\"> ");
-    out.println("  <tr> ");
-    out.println(" <th> Conditions </th> ");
-    out.println(" <th> If this condition is true for the candidate patient series </th> ");
-    out.println(" <th>If this condition is true for two or more candidate patient series </th> ");
-    out.println(" <th>If this condition is not true for the candidate patient serie </th> ");
-    out.println("  </tr> ");
-    out.println("  <tr> ");
-    out.println(" <td >A candidate patient series has the most valid doses.</th> ");
-    out.println(" <td align=\"center\"> +1</td> ");
-    out.println(" <td align=\"center\"> 0</td> ");
-    out.println(" <td align=\"center\"> -1 </td> ");
-    out.println("  </tr> ");
-    out.println("</table>");
-
   }
 
 }

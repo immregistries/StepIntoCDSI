@@ -1,6 +1,5 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
-import java.io.PrintWriter;
 import java.util.Date;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
@@ -71,33 +70,6 @@ public class EvaluateForAllowableVaccine extends LogicStep {
       log(LogLevel.STATE, "ALLOWABLE vaccine match found - evaluating satisfaction");
     }
     return next();
-  }
-
-  @Override
-  public void printPre(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  @Override
-  public void printPost(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  private void printStandard(PrintWriter out) {
-    out.println(
-        "<p>Evaluate for allowable vaccine validates the vaccine of a vaccine dose administered against the list of allowable vaccines. </p>");
-    out.println(
-        "<p>Figures 6-20 depicts a patient who received an allowable vaccine while figure 6-21 depicts a patient who did not receive an allowable vaccine.</p>");
-    out.println("<img src=\"Figure 6.20.PNG\"/>");
-    out.println("<p>FIGURE 6 - 20 PATIENT RECEIVED AN ALLOWABLE VACCINE</p>");
-    out.println("<img src=\"Figure 6.21.PNG\"/>");
-    out.println("<p>FIGURE 6 - 21 PATIENT DID NOT RECEIVE AN ALLOWABLE VACCINE</p>");
-    out.println(
-        "<p>The following process model, attribute table, decision table, and business rule table are used to evaluate for an allowable vaccine.</p>");
-    out.println("<img src=\"Figure 6.22.PNG\"/>");
-    out.println("<p>FIGURE 6 - 22 EVALUATE FOR AN ALLOWABLE VACCINE PROCESS MODEL</p>");
-    printConditionAttributesTable(out);
-    printLogicTables(out);
   }
 
   private class LT extends LogicTable {

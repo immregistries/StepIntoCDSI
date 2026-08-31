@@ -3,7 +3,6 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
 
-import java.io.PrintWriter;
 import java.util.Date;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
@@ -83,30 +82,6 @@ public class EvaluateAge extends LogicStep {
       throw new NullPointerException("Evaluation should not be null at this point");
     }
     return next();
-  }
-
-  @Override
-  public void printPre(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  @Override
-  public void printPost(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  private void printStandard(PrintWriter out) {
-    out.println(
-        "<p>Evaluate age validates the age at administration of a vaccine dose administered against a defined age range of a target dose. In cases where a target dose does not specify age attributes, the age at administration is considered \"valid.\"</p>");
-    out.println("<img src=\"Figure 6.5.PNG\"/>");
-    out.println("<p>FIGURE 6 - 5 EVALUATE AGE TIMELINE</p>");
-    out.println("<img src=\"Figure 6.6.PNG\"/>");
-    out.println("<p>FIGURE 6 - 6 EVALUATE AGE PROCESS MODEL</p>");
-
-    printConditionAttributesTable(out);
-    printLogicTables(out);
-    SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-    seriesDose.toHtml(out);
   }
 
   private class LT extends LogicTable {

@@ -2,8 +2,6 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTINT_5;
 
-import java.io.PrintWriter;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -314,55 +312,6 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     return next();
   }
 
-  @Override
-  public void printPre(PrintWriter out) throws Exception {
-    printStandard(out);
-    TablePre(out);
-  }
-
-  @Override
-  public void printPost(PrintWriter out) throws Exception {
-    printStandard(out);
-    TablePost(out);
-  }
-
-  private void printStandard(PrintWriter out) {
-    out.println(
-        "<p>Generate forecast dates  and recommend vaccines  determines the forecast dates for the next  target dose  and identifies one  or  more recommended vaccines if the target dose warrants specific vaccine recommendations. The forecast dates are generated based on the patient’s immunization history. If the patient has not adhered to  the preferred schedule, then the forecast dates  are  adjusted to provide  the best  dates for the next target dose.</p>");
-    out.println(
-        "<p>Figure 7-7 below provides an illustration of how forecast dates appear on the timeline.</p>");
-    out.println("<img src=\"Figure 7.7.png\"/>");
-    out.println("<p>FIGURE 7 - 7 FORECAST DATES TIMELINE</p>");
-    out.println(
-        "<p>The following process model, attribute table, and business rule table are used to generate forecast dates.If an attribute value is empty, then the date calculations will remain empty. No assumptions will be made for the attribute.</p>");
-    out.println("<img src=\"Figure 7.8.png\"/>");
-    out.print("<p>FIGURE 7 - 8 GENERATE FORECAST DATES AND RECOMMENDED VACCINE PROCESS MODEL</p>");
-    printConditionAttributesTable(out);
-    printLogicTables(out);
-    out.println("<p>Patient Series Status: " + dataModel.getPatientSeriesStepper().getCurrent().getPatientSeriesStatus()
-        + "</p>");
-    out.println(
-        "<p>" + dataModel.getPatientSeriesStepper().getCurrent().getTrackedAntigenSeries().getSeriesName() + "</p>");
-  }
-
-  private void insertTableRow(PrintWriter out, String BusinessRuleID, String Term,
-      String BusinessRule) {
-    out.println("  <tr>");
-    out.println("    <td>" + BusinessRuleID + "</td>");
-    out.println("    <td>" + Term + "</td> ");
-    out.println("    <td>" + BusinessRule + "</td>");
-    out.println("  </tr>");
-
-  }
-
-  private void insertTableInit(PrintWriter out) {
-    out.println("  <tr>");
-    out.println("    <th> BusinessRuleID  </th>");
-    out.println("    <th> Term </th> ");
-    out.println("    <th> BusinessRule </th>");
-    out.println("  </tr>");
-  }
-
   public static Date getLatestDate(List<Date> dateList) {
     if (dateList == null || dateList.size() == 0) {
       return null;
@@ -381,7 +330,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     return tmp;
   }
 
-  private Date computeEarliestDate() {
+  public Date computeEarliestDate() {
     // FORECASTDTCAN-1
     List<Date> list = new ArrayList<Date>();
 
@@ -422,7 +371,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     return earliestDate;
   }
 
-  private Date computeUnadjustedRecommendedDate() {
+  public Date computeUnadjustedRecommendedDate() {
     Date unadjustedRecommendedDate = null;
     Date earliestRecommendedAgeDate = caEarliestRecommendedAgeDate.getFinalValue();
 
@@ -459,7 +408,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     return latestDate;
   }
 
-  private Date computeUnadjustedPastDueDate() {
+  public Date computeUnadjustedPastDueDate() {
     log(LogLevel.TRACE, "---< Computing Unadjusted Past Due Date");
     // "The unadjusted past due date of a patient series forecast must be one of the
     // following:"
@@ -495,7 +444,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     return unadjustedPastDueDate;
   }
 
-  private Date computeAdjustedRecommendedDate() {
+  public Date computeAdjustedRecommendedDate() {
     Date adjustedRecommendedDate = new Date();
     Date earliestDate = computeEarliestDate();
     Date unadjustedRecommendedDate = computeUnadjustedRecommendedDate();
@@ -509,7 +458,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     return adjustedRecommendedDate;
   }
 
-  private Date computeAdjustedPastDueDate() {
+  public Date computeAdjustedPastDueDate() {
     Date adjustedPastDueDate = null;
     Date earliestDate = computeEarliestDate();
     Date unadjustedPastDueDate = computeUnadjustedPastDueDate();
@@ -528,32 +477,4 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     forecast.setLatestDate(computeLatestDate());
   }
 
-  private void TablePre(PrintWriter out) {
-    out.println("<p>TABLE 7 - 13 GENERATE FORECAST DATE AND RECOMMENDED VACCINE BUSINESS RULES</p>");
-    out.println("<table BORDER=\"1\"> ");
-    insertTableInit(out);
-    insertTableRow(out, "FORECASTDT-1", "Earliest Date", "");
-    insertTableRow(out, "FORECASTDT-2", "Unadjusted Recommended Date", "");
-    insertTableRow(out, "FORECASTDT-3", "Unadjusted Past Due Date", "");
-    insertTableRow(out, "FORECASTDT-4", "Latest Date", "");
-    insertTableRow(out, "FORECASTDT-5", "Adjusted Recommended Date", "");
-    insertTableRow(out, "FORECASTDT-6", "Adjusted Past Due Date", "");
-    insertTableRow(out, "FORECASTRECVACT-1", "Recommended Vaccine", "");
-    out.println("</table>");
-  }
-
-  private void TablePost(PrintWriter out) throws ParseException {
-    out.println(
-        "<p> TABLE 7 - 13 GENERATE FORECAST DATE AND RECOMMENDED VACCINE BUSINESS RULES</p>");
-    out.println("<table BORDER=\"1\"> ");
-    insertTableInit(out);
-    insertTableRow(out, "FORECASTDT-1", "Earliest Date", computeEarliestDate().toString());
-    insertTableRow(out, "FORECASTDT-2", "Unadjusted Recommended Date", computeUnadjustedRecommendedDate().toString());
-    insertTableRow(out, "FORECASTDT-3", "Unadjusted Past Due Date", n(computeUnadjustedPastDueDate()));
-    insertTableRow(out, "FORECASTDT-4", "Latest Date", n(computeUnadjustedPastDueDate()));
-    insertTableRow(out, "FORECASTDT-5", "Adjusted Recommended Date", computeAdjustedRecommendedDate().toString());
-    insertTableRow(out, "FORECASTDT-6", "Adjusted Past Due Date", n(computeAdjustedPastDueDate()));
-    insertTableRow(out, "FORECASTRECVACT-1", "Recommended Vaccine", "recommendedVaccine");
-    out.println("</table>");
-  }
 }

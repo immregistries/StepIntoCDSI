@@ -1,6 +1,5 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
-import java.io.PrintWriter;
 import java.util.Date;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
@@ -125,34 +124,4 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
     }
   }
 
-  @Override
-  public void printPre(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  private void printStandard(PrintWriter out) {
-    out.println(
-        "<p>Target dose : " + dataModel.getTargetDose().getTrackedSeriesDose().getDoseNumber() + " "
-            + dataModel.getTargetDose().getTrackedSeriesDose().getAntigenSeries().getSeriesName()
-            + " </p>");
-    out.println(
-        "<p>Dose administered condition checks the dose administered to see if the dose must be repeated regardless of the other evaluation rules.</p>");
-    out.println("<p>Relationship to ACIP recommendations:</p>");
-    out.println("<ul>");
-    out.println(
-        "  <li>Doses which were administered after the lot expiration date or which contain a condition do not need to be evaluated.</li>");
-    out.println(
-        "  <li>Examples of conditions which would prevent evaluation of dose range from misadministration to recalls to cold chain breaks.</li>");
-    out.println("</ul>");
-    out.println("<img src=\"Figure 4.2.png\"/>");
-    out.println("<p>FIGURE 4 - 2 VACCINE DOSE ADMINISTERED CONDITION PROCESS MODEL</p>");
-
-    printConditionAttributesTable(out);
-    printLogicTables(out);
-  }
-
-  @Override
-  public void printPost(PrintWriter out) {
-    printStandard(out);
-  }
 }

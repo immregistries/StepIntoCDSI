@@ -4,7 +4,6 @@ import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.ANY
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
 
-import java.io.PrintWriter;
 import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
@@ -40,25 +39,6 @@ public class ClassifyScorablePatientSeries extends LogicStep {
     setNextLogicStepType(LogicStepType.NO_VALID_DOSES);
     evaluateLogicTables();
     return next();
-  }
-
-  @Override
-  public void printPre(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  @Override
-  public void printPost(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  private void printStandard(PrintWriter out) {
-    out.println(
-        "<p>Classify  patient series  is an attempt to reduce  the total number of  patient series  to only those  which have  a chance to be selected as the best patient series.</p>");
-
-    // printConditionAttributesTable(out);
-    printLogicTables(out);
-    printBestPatientSeries(out);
   }
 
   private int calculateCompletePatientSeriesCount() {

@@ -1,6 +1,5 @@
 package org.openimmunizationsoftware.cdsi.core.logic.items;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,17 +21,6 @@ public abstract class BusinessRule<T, S> {
 
   public void log(String s) {
     logList.add(s);
-  }
-
-  public void printLog(PrintWriter out) {
-    if (logList.size() > 0) {
-      out.println("<p>Business Rule " + businessRuleId + " " + term + "</p>");
-      out.println("<ul>");
-      for (String s : logList) {
-        out.println("<li>" + s + "</li>");
-      }
-      out.println("</ul>");
-    }
   }
 
   public String getBusinessRuleId() {

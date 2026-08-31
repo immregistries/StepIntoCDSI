@@ -4,7 +4,6 @@ import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.ANY
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
 
-import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
 
@@ -65,28 +64,6 @@ public class DetermineEvidenceOfImmunity extends LogicStep {
     setNextLogicStepType(LogicStepType.DETERMINE_CONTRAINDICATIONS);
     evaluateLogicTables();
     return next();
-  }
-
-  @Override
-  public void printPre(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  @Override
-  public void printPost(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  private void printStandard(PrintWriter out) {
-    out.println(
-        "<p>Determine evidence of immunity  assesses the patient’s profile to determine if the patient is already potentially immune to the target disease, negating the need for additional doses.</p>");
-    out.println(
-        "<p>A patient may be considered immune due to their clinical history or if they were born before a defined date for the given target disease.</p>");
-    out.println("<img src=\"Figure 7.2.png\"/>");
-    out.println("<p>FIGURE 7 - 2 EVIDENCE OF IMMUNITY PROCESS MODEL</p>");
-
-    printConditionAttributesTable(out);
-    printLogicTables(out);
   }
 
   // Table 7-3, no actual changes to functional logic but it has to work with the

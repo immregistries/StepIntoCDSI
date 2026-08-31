@@ -28,6 +28,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 import org.openimmunizationsoftware.cdsi.core.logic.LogicStepType;
+import org.openimmunizationsoftware.cdsi.servlet.render.LogicStepRenderer;
 
 public class StepServlet extends ForecastServlet {
 
@@ -244,8 +245,8 @@ public class StepServlet extends ForecastServlet {
       if (logicStep != null) {
         LogicStepType logicStepType = logicStep.getLogicStepType();
         out.println("<h1>" + logicStepType.getChapter() + " " + logicStepType.getName() + "</h1>");
-        logicStep.printPost(out);
-        logicStep.printLog(out);
+        LogicStepRenderer.printPost(logicStep, out);
+        LogicStepRenderer.printLog(logicStep, out);
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -260,7 +261,7 @@ public class StepServlet extends ForecastServlet {
       if (logicStep != null) {
         LogicStepType logicStepType = logicStep.getLogicStepType();
         out.println("<h1>" + logicStepType.getChapter() + " " + logicStepType.getName() + "</h1>");
-        logicStep.printPre(out);
+        LogicStepRenderer.printPre(logicStep, out);
       }
     } catch (Exception e) {
       e.printStackTrace();

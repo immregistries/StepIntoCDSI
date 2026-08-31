@@ -5,8 +5,6 @@ import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.MOR
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.ZERO;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.ONE;
 
-import java.io.PrintWriter;
-
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
@@ -45,28 +43,6 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
     setNextLogicStepType(LogicStepType.CLASSIFY_SCORABLE_PATIENT_SERIES);
     evaluateLogicTables();
     return next();
-  }
-
-  @Override
-  public void printPre(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  @Override
-  public void printPost(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  private void printStandard(PrintWriter out) {
-    out.println(
-        "<p>Identify one prioritized patient series examines all of the patient "
-            + "series for a given Series Group to determine if one of the patient "
-            + "series is superior to all other patient series and can be considered "
-            + "the prioritized patient series.</p>");
-    printLogicTables(out);
-    // print out list of patient series
-    printPatientSeriesList(out);
-    printBestPatientSeries(out);
   }
 
   private class LT extends LogicTable {

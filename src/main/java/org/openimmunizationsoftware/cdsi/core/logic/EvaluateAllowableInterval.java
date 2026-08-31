@@ -2,7 +2,6 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 
 import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CALCDTINT_3;
 
-import java.io.PrintWriter;
 import java.util.Date;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
@@ -78,42 +77,6 @@ public class EvaluateAllowableInterval extends LogicStep {
 
     setNextLogicStepType(LogicStepType.EVALUATE_VACCINE_CONFLICT);
     return next();
-  }
-
-  @Override
-  public void printPre(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  @Override
-  public void printPost(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  private void printStandard(PrintWriter out) {
-    out.println(
-        "<p>Evaluate allowable interval validates the date administered of a vaccine dose administered against defined allowable interval(s) from previous vaccine dose(s) administered.  In rare cases, intervals can be applied which are either abnormally early – usually specified in ACIP footnotes or subsequent clarifications – or intervals which differ following a not valid administration.</p>");
-    out.println(
-        "<p>In cases where a target dose does not specify allowable interval attributes, evaluate allowable interval cannot be used to validate a vaccine dose administered.  To avoid a false validation, the allowable interval should be considered \"not valid\" in these cases.</p>");
-    out.println(
-        "<p>The figure below provides evaluate allowable interval timeline used to define all adjacent intervals by using from immediate previous dose administered as the reference dose.</p>");
-    out.println("<img src=\"Figure 4.10.PNG\"/>");
-    out.println(
-        "<p>FIGURE 4 - 10 EVALUATE ALLOWABLE INTERVAL 'FROM IMMEDIATE PREVIOUS DOSE' TIMELINE</p>");
-    out.println(
-        "<p>The figure below illustrates evaluate allowable interval timeline used to define all non-adjacent intervals by using from target dose number in series as the reference dose.</p>");
-    out.println("<img src=\"Figure 4.11.PNG\"/>");
-    out.println(
-        "<p>FIGURE 4 - 11 EVALUATE ALLOWABLE INTERVAL 'FROM TARGET DOSE NUMBER IN SERIES' TIMELINE</p>");
-    out.println(
-        "<p>The following process model, attribute table, decision table, and business rule table are used to evaluate interval of a vaccine dose administered.</p>");
-    out.println("<img src=\"Figure 4.12.PNG\"/>");
-    out.println("<p>FIGURE 6 - 14 EVALUATE ALLOWABLE INTERVAL PROCESS MODEL</p>");
-    printConditionAttributesTable(out);
-    printLogicTables(out);
-    if (logicTableList.size() == 0) {
-      out.println("<p>No allowable intervals defined. Interval defaulting to 'Not Valid'</p>");
-    }
   }
 
   private class LT extends LogicTable {

@@ -4,7 +4,6 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.util.Date;
 import java.util.List;
-import java.io.PrintWriter;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AdverseReaction;
@@ -100,20 +99,6 @@ public class DetermineContraindications extends LogicStep {
                 setNextLogicStepType(LogicStepType.DETERMINE_FORECAST_NEED);
                 evaluateLogicTables();
                 return next();
-        }
-
-        @Override
-        public void printPre(PrintWriter out) throws Exception {
-                printStandard(out);
-        }
-
-        @Override
-        public void printPost(PrintWriter out) throws Exception {
-                printStandard(out);
-        }
-
-        private void printStandard(PrintWriter out) {
-                out.println("<p>Placeholder text</p>");
         }
 
         // Logic Tables

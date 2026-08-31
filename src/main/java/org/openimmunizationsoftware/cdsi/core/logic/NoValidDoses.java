@@ -1,6 +1,5 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
-import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
 
@@ -197,68 +196,6 @@ public class NoValidDoses extends LogicStep {
     evaluateLogicTables();
     evalTable();
     return next();
-  }
-
-  @Override
-  public void printPre(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  @Override
-  public void printPost(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  private void printStandard(PrintWriter out) {
-    out.println(
-        "<p>This section  provides the decision table for determining the number of points to assign to a scorable patient series when there are no valid doses.</p>");
-    printTable(out);
-    // printConditionAttributesTable(out);
-    // printLogicTables(out);
-    printBestPatientSeries(out);
-  }
-
-  private void printTable(PrintWriter out) {
-    out.println("<table BORDER=\"1\"> ");
-    out.println("  <tr> ");
-    out.println(" <th> Conditions </th> ");
-    out.println(" <th> If this condition is true for the scorable patient series </th> ");
-    out.println(" <th>If this condition is true for two or more scorable patient series </th> ");
-    out.println(" <th>If this condition is not true for the scorable patient series </th> ");
-    out.println("  </tr> ");
-    out.println("  <tr> ");
-    out.println(" <td >A scorable patient series can start earliest. </th> ");
-    out.println(" <td align=\"center\"> +1</td> ");
-    out.println(" <td align=\"center\"> 0</td> ");
-    out.println(" <td align=\"center\"> -1 </td> ");
-    out.println("  </tr> ");
-    out.println("<tr> ");
-    out.println(" <td>A scorable patient series is completable.</th> ");
-    out.println(" <td align=\"center\"> +1</td> ");
-    out.println(" <td align=\"center\"> n/a</td> ");
-    out.println(" <td align=\"center\"> -1 </td> ");
-    out.println("  </tr> ");
-    out.println("<tr> ");
-    out.println(
-        " <td>A scorable patient series is a gender-specific patient series and the patient's gender matches a required gender specified on the first target dose.</th> ");
-    out.println(" <td align=\"center\"> +1</td> ");
-    out.println(" <td align=\"center\"> n/a</td> ");
-    out.println(" <td align=\"center\"> 0 </td> ");
-    out.println("  </tr> ");
-    out.println("<tr> ");
-    out.println(" <td>A scorable patient series is a product patient series. </th> ");
-    out.println(" <td align=\"center\"> -1</td> ");
-    out.println(" <td align=\"center\"> n/a</td> ");
-    out.println(" <td align=\"center\"> +1 </td> ");
-    out.println("  </tr> ");
-    out.println("<tr> ");
-    out.println(" <td>A scorable patient series has exceeded maximum age. </th> ");
-    out.println(" <td align=\"center\"> -1</td> ");
-    out.println(" <td align=\"center\"> n/a</td> ");
-    out.println(" <td align=\"center\"> +1 </td> ");
-    out.println("  </tr> ");
-    out.println("</table>");
-
   }
 
 }

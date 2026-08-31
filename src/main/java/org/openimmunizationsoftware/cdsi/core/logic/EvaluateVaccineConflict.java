@@ -4,7 +4,6 @@ import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.ANY
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
 
-import java.io.PrintWriter;
 import java.util.Date;
 
 import org.apache.commons.lang.time.DateUtils;
@@ -104,29 +103,6 @@ public class EvaluateVaccineConflict extends LogicStep {
       log(LogLevel.STATE, "No live virus conflict detected");
     }
     return next();
-  }
-
-  @Override
-  public void printPre(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  @Override
-  public void printPost(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  private void printStandard(PrintWriter out) {
-    out.println(
-        "<p>Evaluate live virus conflict validates the date administered of a live virus vaccine dose administered against previous live virus administered vaccines to ensure proper spacing between administrations. For some live virus vaccines and for inactivated virus or recombinant vaccines, this condition does not exist. Therefore, if no live virus supporting data exists for the vaccine dose administered being evaluated, the vaccine dose administered is not in conflict with any other vaccine dose administered.</p>");// <------------------------------------------------------
-    out.println("<img src=\"Figure 4.13.PNG\"/>");
-    out.println("<p>FIGURE 4 - 13 EVALUATE LIVE VIRUS CONFLICT TIMELINE</p>");
-    out.println(
-        "<p>The following process model, attribute table, decision tables, and business rule table are used to evaluate for a live virus conflict.</p>");
-    out.println("<img src=\"Figure 4.14.PNG\"/>");
-    out.println("<p>FIGURE 4 - 14 EVALUATE LIVE VIRUS CONFLICT PROCESS MODEL</p>");
-    printConditionAttributesTable(out);
-    printLogicTables(out);
   }
 
   private class LT420 extends LogicTable {

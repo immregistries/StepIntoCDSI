@@ -1,6 +1,5 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -98,35 +97,6 @@ public class EvaluateForPreferableVaccine extends LogicStep {
       log(LogLevel.STATE, "PREFERABLE vaccine match found - evaluating satisfaction");
     }
     return next();
-  }
-
-  @Override
-  public void printPre(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  @Override
-  public void printPost(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  private void printStandard(PrintWriter out) {
-    out.println(
-        "<p>Evaluate for preferable vaccine validates the vaccine of a vaccine dose administered against the list of preferable vaccines.</p>");
-    out.println(
-        "<p>Figures 6-17 depicts a patient who received a preferable vaccine while figure 6-18 depicts a patient who did not receive a preferable vaccine.</p>");
-    out.println("<img src=\"Figure 6.17.PNG\"/>");
-    out.println("<p>FIGURE 6 - 17 PATIENT RECEIVED A PREFERABLE VACCINE</p>");
-    out.println("<img src=\"Figure 6.18.PNG\"/>");
-    out.println("<p>FIGURE 6 - 18 PATIENT DID NOT RECEIVE A PREFERABLE VACCINE</p>");
-    out.println(
-        "<p>It should be noted that volume is sparsely populated and tracked differently in most systems. Therefore, volume will not be used to evaluate the validity of a vaccine dose administered. However, it will be provided as an evaluation reason that less than sufficient volume was administered.</p>");
-    out.println(
-        "<p>The following process model, attribute table, decision table, and business rule table are used to evaluate for a preferable vaccine.</p>");
-    out.println("<img src=\"Figure 6.19.PNG\"/>");
-    out.println("<p>FIGURE 6 - 19 EVALUATE FOR A PREFERABLE VACCINE PROCESS MODEL</p>");
-    printConditionAttributesTable(out);
-    printLogicTables(out);
   }
 
   private class LT extends LogicTable {

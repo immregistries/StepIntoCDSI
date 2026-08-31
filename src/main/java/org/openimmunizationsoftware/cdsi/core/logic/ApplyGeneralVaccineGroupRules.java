@@ -3,8 +3,6 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
 
-import java.io.PrintWriter;
-
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
@@ -25,24 +23,6 @@ public class ApplyGeneralVaccineGroupRules extends LogicStep {
   public LogicStep process() throws Exception {
     evaluateLogicTables();
     return next();
-  }
-
-  @Override
-  public void printPre(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  @Override
-  public void printPost(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  private void printStandard(PrintWriter out) {
-    out.println(
-        "<p>Classify vaccine group provides initial questioning to determine which vaccine group forecast rules to apply.</p>");
-
-    printConditionAttributesTable(out);
-    printLogicTables(out);
   }
 
   private class LT extends LogicTable {

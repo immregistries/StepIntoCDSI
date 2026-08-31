@@ -5,14 +5,12 @@ import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.ANY
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
-import org.openimmunizationsoftware.cdsi.core.domain.Contraindication_TO_BE_REMOVED;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
@@ -119,38 +117,6 @@ public class DetermineForecastNeed extends LogicStep {
     }
 
     return next();
-  }
-
-  @Override
-  public void printPre(PrintWriter out) throws Exception {
-    printStandard(out);
-  }
-
-  @Override
-  public void printPost(PrintWriter out) throws Exception {
-    printStandard(out);
-
-    if (!dataModel.getPatient().getMedicalHistory().getContraindicationSet().isEmpty()) {
-      out.println("<h2>Contraindications for Patient</h2>");
-      for (Contraindication_TO_BE_REMOVED contraindication : dataModel.getPatient().getMedicalHistory()
-          .getContraindicationSet()) {
-        if (contraindication.getAntigen()
-            .equals(dataModel.getPatientSeriesStepper().getCurrent().getTrackedAntigenSeries().getTargetDisease())) {
-          out.println("<li>" + contraindication + "</li>");
-        }
-      }
-    }
-  }
-
-  private void printStandard(PrintWriter out) {
-    out.println(
-        "<p>Determine forecast need determines  if there is a need to forecast dates. This involves reviewing patient data, antigen  administered  records,  and  patient  series.  This  is  a  prerequisite  before  a  CDS  engine  can  produce forecast dates and reasons </p>");
-    out.println(
-        "<p>The following process model, attribute table, and decision table are used to determine the need to generate forecast dates.</p>");
-    out.println("<img src=\"Figure 7.6.png\"/>");
-    out.println("<p>FIGURE 7 - 6 DETERMINE FORECAST NEED PROCESS MODEL</p>");
-    printConditionAttributesTable(out);
-    printLogicTables(out);
   }
 
   private class LT extends LogicTable {
