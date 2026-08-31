@@ -88,7 +88,8 @@ public class LogicStepRenderer {
   private LogicStepRenderer() {
   }
 
-  public static void printPre(LogicStep step, PrintWriter out) throws Exception {
+  public static void printPre(LogicStep step, PrintWriter out, jakarta.servlet.http.HttpServletRequest req)
+      throws Exception {
     if (step instanceof ApplyGeneralVaccineGroupRules s) {
       printApplyGeneralVaccineGroupRulesPre(s, out);
     } else if (step instanceof ClassifyScorablePatientSeries s) {
@@ -106,7 +107,7 @@ public class LogicStepRenderer {
     } else if (step instanceof DetermineForecastNeed s) {
       printDetermineForecastNeedPre(s, out);
     } else if (step instanceof org.openimmunizationsoftware.cdsi.core.logic.End s) {
-      printEndPre(s, out);
+      printEndPre(s, out, req);
     } else if (step instanceof org.openimmunizationsoftware.cdsi.core.logic.EvaluateAge s) {
       printEvaluateAgePre(s, out);
     } else if (step instanceof EvaluateAllowableInterval s) {
@@ -134,7 +135,7 @@ public class LogicStepRenderer {
     } else if (step instanceof ForecastDatesAndReasons s) {
       printForecastDatesAndReasonsPre(s, out);
     } else if (step instanceof org.openimmunizationsoftware.cdsi.core.logic.GatherNecessaryData s) {
-      printGatherNecessaryDataPre(s, out);
+      printGatherNecessaryDataPre(s, out, req);
     } else if (step instanceof GenerateForecastDatesAndRecommendedVaccines s) {
       printGenerateForecastDatesAndRecommendedVaccinesPre(s, out);
     } else if (step instanceof IdentifyAndEvaluateVaccineGroup s) {
@@ -1930,7 +1931,8 @@ public class LogicStepRenderer {
     out.println("</table>");
   }
 
-  private static void printEndPre(org.openimmunizationsoftware.cdsi.core.logic.End step, PrintWriter out)
+  private static void printEndPre(org.openimmunizationsoftware.cdsi.core.logic.End step, PrintWriter out,
+      jakarta.servlet.http.HttpServletRequest req)
       throws Exception {
     DataModel dataModel = step.getDataModel();
     out.println(
@@ -2000,7 +2002,7 @@ public class LogicStepRenderer {
       out.println("</table>");
     }
     out.println("<pre>");
-    ForecastServlet.printText(dataModel, out, null, dataModel.getRequest());
+    ForecastServlet.printText(dataModel, out, null, req);
     out.println("</pre>");
     out.println("<h2>Printing Standard</h2>");
     printEndStandard(step, out);
@@ -2048,10 +2050,8 @@ public class LogicStepRenderer {
   }
 
   private static void printGatherNecessaryDataPre(org.openimmunizationsoftware.cdsi.core.logic.GatherNecessaryData step,
-      PrintWriter out) throws Exception {
+      PrintWriter out, jakarta.servlet.http.HttpServletRequest req) throws Exception {
     out.println("<h2>Input Data</h2>");
-
-    jakarta.servlet.http.HttpServletRequest req = step.getDataModel().getRequest();
 
     out.println("<p>Patient input data:</p>");
     out.println("<table>");

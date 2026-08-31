@@ -682,7 +682,6 @@ public class ForecastServlet extends HttpServlet {
     DataModel dataModel = supportingDataSet == null || supportingDataSet.trim().equals("")
         ? DataModelLoader.createDataModel()
         : DataModelLoader.createDataModel(supportingDataSet.trim());
-    dataModel.setRequest(req);
     dataModel.setForecastInput(buildForecastInput(req));
 
     // Parse antigenInclude parameters (antigenInclude1, antigenInclude2, etc.)

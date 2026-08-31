@@ -104,7 +104,6 @@ public class StepServlet extends ForecastServlet {
         throw new ServletException(e);
       }
     } else {
-      dataModel.setRequest(req);
       try {
         String submit = req.getParameter("submit");
         if (submit != null && submit.equals("Jump")) {
@@ -261,7 +260,7 @@ public class StepServlet extends ForecastServlet {
       if (logicStep != null) {
         LogicStepType logicStepType = logicStep.getLogicStepType();
         out.println("<h1>" + logicStepType.getChapter() + " " + logicStepType.getName() + "</h1>");
-        LogicStepRenderer.printPre(logicStep, out);
+        LogicStepRenderer.printPre(logicStep, out, req);
       }
     } catch (Exception e) {
       e.printStackTrace();

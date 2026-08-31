@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jakarta.servlet.http.HttpServletRequest;
-
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
@@ -33,8 +31,7 @@ import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 
 public class DataModel {
 
-  // Input mechanisms
-  private HttpServletRequest request = null;
+  // Input mechanism
   private ForecastInput forecastInput = null;
 
   private List<LiveVirusConflict> liveVirusConflictList = new ArrayList<LiveVirusConflict>();
@@ -478,14 +475,6 @@ public class DataModel {
   public void setAntigenAdministeredRecordList(
       List<AntigenAdministeredRecord> antigenAdministeredRecordList) {
     this.antigenAdministeredRecordList = antigenAdministeredRecordList;
-  }
-
-  public HttpServletRequest getRequest() {
-    return request;
-  }
-
-  public void setRequest(HttpServletRequest request) {
-    this.request = request;
   }
 
   public Date getAssessmentDate() {
