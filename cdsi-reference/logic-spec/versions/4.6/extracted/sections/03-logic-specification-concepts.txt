@@ -1,0 +1,6 @@
+3 LOGIC SPECIFICATION CONCEPTS 
+The information contained in this chapter will be useful in understanding the business rules, decision tables, and 
+process models that are used in the Logic Specification. The first section provides a basic understanding of 
+target dose and how it is used throughout the document. Next, relevant meanings of statuses used during 
+evaluation and forecasting are provided for clarity. Then, rules for selecting the correct Supporting Data is 
+provided. Business rules used when calculating dates for evaluation and forecasting are provided next.

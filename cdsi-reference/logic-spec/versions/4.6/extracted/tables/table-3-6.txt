@@ -1,0 +1,9 @@
+TABLE 3-6 General Date Rules
+
+Business Rule ID | Business Rule | Example
+CALCDT-1 | The computed date of adding any number of years to an existing date must be calculated by incrementing the date-year while holding the date-month and date-day constant. | 01/01/2000 + 3 years = 01/01/2003
+CALCDT-2 | The computed date of adding any number of months to an existing date must be calculated by incrementing the date-month (and date- year, if necessary) while holding the date-day constant. | 01/01/2000 + 6 months = 07/01/2000 11/01/2000 + 6 months = 05/01/2001
+CALCDT-3 | The computed date of adding any number of weeks or days to an existing date must be calculated by adding the total days to the existing date. | 01/01/2000 + 3 days = 01/04/2000 01/01/2000 + 3 weeks = 01/22/2000 02/01/2000 + 5 weeks = 03/07/2000 (leap year) 02/01/2001 + 5 weeks = 03/08/2001 (not a leap year)
+CALCDT-4 | The computed date of subtracting any number of days from an existing date must be calculated by subtracting the total days from the existing date. | 01/15/2000 – 4 days = 01/11/2000
+CALCDT-5 | A computed date which is not a real date must be moved forward to first day of the next month. | 03/31/2000 + 6 months = 10/01/2000 (September 31 does not exist) 08/31/20010 + 6 months = 03/01/2001 (February 31 does not exist)
+CALCDT-6 | A computed date must be calculated by first adjusting the years, followed by the months, and finally the weeks and/or days. | 01/31/2000 + 6 months – 4 days = 07/27/2000

@@ -1,0 +1,7 @@
+TABLE 3-1 Evaluation Statuses
+
+Status | Meaning
+Extraneous | An evaluation status that indicates the vaccine dose administered was not administered according to ACIP recommendations, but the dose does not need to be repeated (including maximum age and extra doses)
+Not Valid | An evaluation status that indicates the vaccine dose administered was not administered according to ACIP recommendations and must be repeated at an appropriate time in the future
+Sub-standard | An evaluation status that indicates the vaccine dose administered has a known dose condition (e.g., expired, sub-potent, and recall) which requires the dose to be repeated at an appropriate time in the future
+Valid | An evaluation status that indicates the vaccine dose administered was administered according to ACIP recommendations

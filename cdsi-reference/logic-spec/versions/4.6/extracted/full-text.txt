@@ -1,3 +1,394 @@
+3 LOGIC SPECIFICATION CONCEPTS 
+The information contained in this chapter will be useful in understanding the business rules, decision tables, and 
+process models that are used in the Logic Specification. The first section provides a basic understanding of 
+target dose and how it is used throughout the document. Next, relevant meanings of statuses used during 
+evaluation and forecasting are provided for clarity. Then, rules for selecting the correct Supporting Data is 
+provided. Business rules used when calculating dates for evaluation and forecasting are provided next.
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 23 of 151 
+ 
+3.1 TARGET DOSE  
+Target dose is a term used often in the Logic Specification document.  A target dose is a patient-specific dose 
+required to satisfy the recommendations of ACIP.  Until a target dose is satisfied, the patient is not allowed to 
+move to the next target dose in the patient series.  The patient remains on the “unsatisfied” target dose until the 
+patient has a “valid” vaccine dose administered that satisfies the target dose.  A target dose is also allowed to 
+be skipped. This situation isn’t the common path and not immediately discussed here.  Details on skipping target 
+doses can be found in Chapters 6 and 7. 
+This concept can be seen graphically below in Figure 3-1.  For simplicity in this hypothetical patient series, the 
+target doses are defined only by the minimum age.  The target doses have minimum ages of 0 days, 2 months, 
+and 6 months.  These are the minimum ages allowed by this patient series.  The patient must have vaccine 
+doses administered on or after these minimum ages to be considered valid.  A valid vaccine dose administered 
+will satisfy a target dose and allow movement to the next target dose.  A vaccine dose administered which is 
+anything but valid does not satisfy a target dose and does not allow movement to the next target dose.   
+This can be seen in Figure 3-1 by looking at target dose 2 and vaccine doses administered dose 2 and dose 3. 
+Dose 2 was administered too early and resulted in the evaluation status “not valid.”   A not valid vaccine dose 
+administered means the target dose was not satisfied and must be repeated.  Dose 3 was given at an appropriate 
+age which resulted in the evaluation status “valid” and satisfied the goals of target dose 2.  This allows movement 
+to target dose 3 which is subsequently satisfied by vaccine dose administered dose 4. 
+While not shown on this graphic, there is also a status which tracks the patient’s progress towards completion of 
+a patient series.  In this example, the patient series status is “not complete” for the first three vaccine doses 
+administered.  The patient series status is changed to “complete” once the fourth vaccine dose administered 
+satisfies the third target dose which completes the patient series. 
+
+ 
+FIGURE 3-1 HOW A VACCINE DOSE ADMINISTERED SATISFIES A TARGET DOSE
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 24 of 151 
+ 
+3.2 STATUSES 
+The Logic Specification uses different statuses to denote the state of evaluation, target dose, and patient series. 
+The following tables provide the meanings of statuses used in Logic Specification business rules and decision 
+tables. 
+TABLE 3-1 EVALUATION STATUSES 
+Status 
+Meaning 
+Extraneous  
+An evaluation status that indicates the vaccine dose administered was not administered according to ACIP 
+recommendations, but the dose does not need to be repeated (including maximum age and extra doses)  
+Not Valid  
+An evaluation status that indicates the vaccine dose administered was not administered according to ACIP 
+recommendations and must be repeated at an appropriate time in the future  
+Sub-standard  
+An evaluation status that indicates the vaccine dose administered has a known dose condition (e.g., expired, 
+sub-potent, and recall) which requires the dose to be repeated at an appropriate time in the future  
+Valid  
+An evaluation status that indicates the vaccine dose administered was administered according to ACIP 
+recommendations  
+ 
+
+TABLE 3-2 TARGET DOSE STATUSES  
+Status 
+Meaning 
+Not Satisfied  
+A target dose status that indicates no vaccine dose administered has met the goals of the target dose  
+Satisfied  
+A target dose status that indicates a vaccine dose administered has met the goals of the target dose  
+Skipped  
+A target dose status that indicates no vaccine dose administered has met the goals of the target dose. Due 
+to the patient's age and/or interval from a previous dose, the target dose does not need to be satisfied.  
+ 
+ TABLE 3-3 PATIENT SERIES STATUSES 
+Status 
+Meaning 
+Aged Out  
+A patient series status that indicates the patient exceeded the maximum age prior to completing the patient 
+series  
+Complete  
+A patient series status that indicates the patient has met all of the ACIP recommendations for the patient 
+series  
+Contraindicated  
+A patient series status that indicates no further vaccines should be administered at this time for the patient 
+series  
+Immune  
+A patient series status that indicates the patient has evidence of immunity indicating no further vaccines 
+are needed for the patient series  
+Not Complete  
+A patient series status that indicates the patient has not yet met all of the ACIP recommendations for the 
+patient series  
+Not Recommended  
+A patient series status that indicates the patient's immunization history provides sufficient protection 
+against a target disease and there's no recommended action at this time
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 25 of 151 
+ 
+3.3 SELECTING SUPPORTING DATA 
+When a clinical recommendation is changed, it is typically applied to patient evaluation and forecasting 
+retroactively but, depending on the nature of the change, the evaluation status of administered doses may or 
+may not change.  For example, if a recommendation changed the minimum interval from 6 months to 4 months, 
+previously administered doses that met the 6 month interval requirement are still considered valid when the new 
+4 month interval is applied. For this reason, many recommendations changes are instituted in new published 
+versions of the Supporting Data simply as a new value with no indication of the previous value.  
+However, some recommendation changes are not applied retroactively, and historical Supporting Data must be 
+retained and selectively applied during the evaluation and forecasting processes. For example, prior to the ACIP 
+HPV recommendation published 12/16/2016, the absolute minimum interval between Doses 1 and 3 was 16 
+weeks but the recommendation increased the absolute minimum interval to 5 months minus 4 days. However, 
+the change was not applied retroactively. Therefore, a third dose administered prior to 12/16/2016 need only 
+meet the 16-week interval while a third dose (for a different patient) administered on or after 12/16/2016 would 
+need to meet the longer 5 month interval. In the figure below, these differential requirements are represented, 
+highlighted in blue, in the Supporting Data using Effective and Cessation Dates which indicate a date range that 
+the Supporting Data component was in effect.  
+Only a subset of the Supporting Data Logical Components use Effective and Cessation Dates elements (e.g. 
+Age, Preferable Interval, Allowable Interval and Conditional Skip). When a Logical Component does not include 
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 26 of 151 
+ 
+Effective and Cessation Dates elements (e.g. Preferable Vaccine, Allowable Vaccine, Inadvertent Vaccine, 
+Recurring Dose and Seasonal Recommendation), the Instances of supporting data in that Logical Component 
+must be selected for evaluation and forecasting purposes. 
+In order to determine if a Supporting Data Logical Component Instance is relevant, the anchor date (the 
+administration date in the case of an evaluation or the assessment date in the case of a forecast) must fall 
+between the Effective and Cessation Dates (see decision table below) for the Supporting Data. This selection 
+process must be applied any time either the Effective Date or Cessation Date is valued other than “n/a” in the 
+Supporting Data as highlighted in red below. Data Instances where both valued “n/a” must be always be applied 
+during the evaluation and forecasting process. 
+ 
+FIGURE 3-2 SELECTING SUPPORTING DATA 
+ 
+TABLE 3-4 RELEVANT SUPPORTING DATA ATTRIBUTES 
+Attribute Type 
+Attribute Name 
+Assumed Value if Empty 
+Vaccine dose administered 
+Date Administered 
+- 
+Runtime data 
+Assessment Date 
+current date 
+Supporting Data (Effective Date) 
+Effective Date 
+01/01/1900 
+Supporting Data (Cessation Date) 
+Cessation Date 
+12/31/2999 
+ 
+TABLE 3-5 SELECT RELEVANT SUPPORTING DATA LOGICAL COMPONENT ELEMENT 
+Business Rule ID 
+Business Rule 
+RELEVANT-1  
+A logical component instance must be used in evaluation if one of the following is true: 
+• 
+the effective date and cessation date are both 'n/a' 
+• 
+the date administered is on or after the effective date and on or before the cessation date.  
+RELEVANT-2  
+A logical component instance must be used in forecasting or selecting the best patient series if one of the 
+following is true: 
+• 
+the effective date and cessation date are both 'n/a' 
+• 
+the assessment date is on or after the effective date and on or before the cessation date.  
+ 
+In addition to Supporting Data selection by Effective and Cessation Dates, relevant Conditional Skip Logic 
+Component Instances must be selected on the basis of context. In some scenarios, the rationale for skipping a 
+dose in a series differs depending on whether a retrospective evaluation or a prospective forecast is being 
+performed. In the Supporting Data, 4 contexts are possible: 
+• 
+Evaluation – applicable when a dose is being evaluated (see section 6.2) 
+• 
+Forecast – applicable when a dose is being forecasted (see section 7.1) 
+• 
+Both – applicable when a dose is being either evaluated or forecasted (see sections 6.2 and 7.1) 
+• 
+n/a – there are no conditions that can result in a dose being skipped during either evaluation or forecast 
+
+ 
+FIGURE 3-3 CONDITIONAL SKIP CONTEXT
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 27 of 151 
+ 
+3.4 DATE CALCULATIONS 
+Business rules that are specific to calculating dates are provided in this section. A calculated date is a date that 
+is mathematically derived from one or more terms. The first table provides rules for calculating dates in general. 
+The second table provides rules for calculating dates by logical component. 
+TABLE 3-6 GENERAL DATE RULES 
+Business Rule ID 
+Business Rule 
+Example 
+CALCDT-1  
+The computed date of adding any number of years to an existing 
+date must be calculated by incrementing the date-year while 
+holding the date-month and date-day constant.  
+01/01/2000 + 3 years = 01/01/2003  
+CALCDT-2  
+The computed date of adding any number of months to an existing 
+date must be calculated by incrementing the date-month (and date-
+year, if necessary) while holding the date-day constant.  
+01/01/2000 + 6 months = 07/01/2000  
+11/01/2000 + 6 months = 05/01/2001  
+CALCDT-3  
+The computed date of adding any number of weeks or days to an 
+existing date must be calculated by adding the total days to the 
+existing date.  
+01/01/2000 + 3 days = 01/04/2000  
+01/01/2000 + 3 weeks = 01/22/2000  
+02/01/2000 + 5 weeks = 03/07/2000 
+(leap year)  
+02/01/2001 + 5 weeks = 03/08/2001 
+(not a leap year)  
+CALCDT-4  
+The computed date of subtracting any number of days from an 
+existing date must be calculated by subtracting the total days from 
+the existing date.  
+01/15/2000 – 4 days = 01/11/2000  
+CALCDT-5  
+A computed date which is not a real date must be moved forward 
+to first day of the next month.  
+03/31/2000 + 6 months = 10/01/2000 
+(September 31 does not exist)  
+08/31/20010 + 6 months = 
+03/01/2001 (February 31 does not 
+exist)  
+CALCDT-6  
+A computed date must be calculated by first adjusting the years, 
+followed by the months, and finally the weeks and/or days.  
+01/31/2000 + 6 months – 4 days = 
+07/27/2000  
+ 
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 28 of 151 
+ 
+TABLE 3-7 LOGICAL COMPONENT DATE RULES 
+Business Rule ID 
+Business Rule 
+CALCDTAGE-1  
+A patient's maximum age date must be calculated as the patient's date of birth plus the maximum age.  
+CALCDTAGE-2  
+A patient's latest recommended age date must be calculated as the patient's date of birth plus the latest 
+recommended age.  
+CALCDTAGE-3  
+A patient's earliest recommended age date must be calculated as the patient's date of birth plus the earliest 
+recommended age.  
+CALCDTAGE-4  
+A patient's minimum age date must be calculated as the patient's date of birth plus the minimum age.  
+CALCDTAGE-5  
+A patient's absolute minimum age date must be calculated as the patient's date of birth plus the absolute 
+minimum age.  
+CALCDTALLOW-1  
+A patient's allowable vaccine type begin age date must be calculated as the patient's date of birth plus the 
+vaccine type begin age of an allowable vaccine.  
+CALCDTALLOW-2  
+A patient's allowable vaccine type end age date must be calculated as the patient's date of birth plus the 
+vaccine type end age of an allowable vaccine.  
+CALCDTCI-1  
+A patient's contraindication begin age date must be calculated as the patient's date of birth plus the 
+contraindication begin age of a contraindication.  
+CALCDTCI-2  
+A patient's contraindication end age date must be calculated as the patient's date of birth plus the 
+contraindication end age of a contraindication.  
+CALCDTCONFLICT-1  
+The conflict begin interval date for a previous vaccine dose administered must be calculated as the date 
+administered of the previous vaccine dose administered plus the conflict begin interval of a vaccine type 
+conflict where all the following are true: 
+• 
+The vaccine type of the current vaccine dose administered is an impacted vaccine type.  
+• 
+The vaccine type of the previous vaccine dose administered is a conflicting vaccine type for the 
+impacted vaccine type.  
+CALCDTCONFLICT-2  
+The conflict end interval date for a previous vaccine dose administered must be calculated as one of the 
+following: 
+• 
+the date administered of the previous vaccine dose administered plus the minimum conflict end 
+interval of a vaccine type conflict if all the following are true:  
+o 
+The vaccine type of the current vaccine dose administered is an impacted vaccine type.  
+o 
+The vaccine type of the previous vaccine dose administered is a conflicting vaccine type 
+for the impacted vaccine type.  
+o 
+The previous vaccine dose administered has one of the following: 
+▪ 
+an evaluation status of 'Valid' 
+▪ 
+no evaluation status. 
+• 
+the date administered of the previous vaccine dose administered plus the conflict end interval of a 
+vaccine type conflict if all the following are true:  
+o 
+The vaccine type of the current vaccine dose administered is an impacted vaccine type.  
+o 
+The vaccine type of the previous vaccine dose administered is a conflicting vaccine type 
+for the impacted vaccine type.  
+o 
+The previous vaccine dose administered has an evaluation status. 
+o 
+The previous vaccine dose administered does not have an evaluation status of 'Valid'. 
+CALCDTCONFLICT-3  
+The forecast conflict end date of a vaccine type conflict that impacts a next target dose must be calculated 
+as the date administered of a vaccine dose administered plus the conflict end interval of the vaccine type 
+conflict if all the following are true: 
+• 
+The next target dose is tracked by a series dose that includes a preferable vaccine that is 
+classified by an impacted vaccine type.  
+• 
+The vaccine type of the vaccine dose administered is a conflicting vaccine type for the impacted 
+vaccine type.  
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 29 of 151 
+ 
+Business Rule ID 
+Business Rule 
+CALCDTIND-1  
+A patient's indication begin age date must be calculated as the patient's date of birth plus the indication begin 
+age of an indication.  
+CALCDTIND-2  
+A patient's indication end age date must be calculated as the patient's date of birth plus the indication end 
+age of an indication.  
+CALCDTINT-1  
+A patient's reference dose date for an interval must be calculated as the date administered of the most 
+immediate previous vaccine dose administered if all the following are true: 
+• 
+The interval has a from immediate previous dose administered flag of 'Y' 
+• 
+The vaccine dose administered has an evaluation status of 'Valid' or 'Not Valid' 
+• 
+The vaccine dose administered is not an inadvertent administration. 
+CALCDTINT-2  
+A patient's reference dose date for an interval must be calculated as the date administered of the vaccine 
+dose administered that satisfies the target dose with the same target dose number as the from target dose 
+number in series if all the following are true for the interval: 
+• 
+From immediate previous dose administered flag is 'N' 
+• 
+From target dose number in series is not 'n/a' 
+CALCDTINT-3  
+A patient's absolute minimum interval date must be calculated as the patient's reference dose date plus the 
+absolute minimum interval.  
+CALCDTINT-4  
+A patient's minimum interval date must be calculated as the patient's reference dose date plus the minimum 
+interval.  
+CALCDTINT-5  
+A patient's earliest recommended interval date must be calculated as the patient's reference dose date plus 
+the earliest recommended interval.  
+CALCDTINT-6  
+A patient's latest recommended interval date must be calculated as the patient's reference dose date plus 
+the latest recommended interval.  
+CALCDTINT-8  
+A patient's reference dose date for an interval must be calculated as the date administered of the most recent 
+vaccine dose administered that is the same vaccine type as the from most recent vaccine type if all the 
+following are true for the interval: 
+• 
+From immediate previous dose administered flag is 'N' 
+• 
+From most recent vaccine type is not 'n/a' 
+• 
+The vaccine dose administered is not an inadvertent administration. 
+CALCDTINT-9  
+A patient's reference dose date for an interval must be calculated as the observation date of the most recent 
+active patient observation if all the following are true for the interval: 
+• 
+From immediate previous dose administered flag is 'N' 
+• 
+From relevant observation code is not 'n/a' 
+CALCDTLOTEXP-1  
+The lot number expiration date must be one of the following: 
+• 
+Lot number expiration date if the month, day, and year are all known. 
+• 
+Last day of the month if only the month and year are known. 
+CALCDTPREF-1  
+A patient's preferable vaccine type begin age date must be calculated as the patient's date of birth plus the 
+vaccine type begin age of a preferable vaccine.  
+CALCDTPREF-2  
+A patient's preferable vaccine type end age date must be calculated as the patient's date of birth plus the 
+vaccine type end age of a preferable vaccine.  
+CALCDTSKIP-3  
+A patient's conditional skip begin age date must be calculated as the patient's date of birth plus the 
+conditional skip begin age of a conditional skip.  
+CALCDTSKIP-4  
+A patient's conditional skip end age date must be calculated as the patient's date of birth plus the conditional 
+skip end age of a conditional skip.  
+CALCDTSKIP-5  
+A patient's conditional skip interval date must be calculated as the vaccine date administered from the 
+immediate previous vaccine dose administered plus the Interval of the conditional skip condition.
+
 Logic Specification for ACIP Recommendations v4.6 
 Page 30 of 151 
  

@@ -1,0 +1,9 @@
+TABLE 3-3 Patient Series Statuses
+
+Status | Meaning
+Aged Out | A patient series status that indicates the patient exceeded the maximum age prior to completing the patient series
+Complete | A patient series status that indicates the patient has met all of the ACIP recommendations for the patient series
+Contraindicated | A patient series status that indicates no further vaccines should be administered at this time for the patient series
+Immune | A patient series status that indicates the patient has evidence of immunity indicating no further vaccines are needed for the patient series
+Not Complete | A patient series status that indicates the patient has not yet met all of the ACIP recommendations for the patient series
+Not Recommended | A patient series status that indicates the patient's immunization history provides sufficient protection against a target disease and there's no recommended action at this time

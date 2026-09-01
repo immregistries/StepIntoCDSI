@@ -1,0 +1,7 @@
+TABLE 3-4 Relevant supporting data Attributes
+
+Attribute Type | Attribute Name | Assumed Value if Empty
+Vaccine dose administered | Date Administered | -
+Runtime data | Assessment Date | current date
+Supporting Data (Effective Date) | Effective Date | 01/01/1900
+Supporting Data (Cessation Date) | Cessation Date | 12/31/2999

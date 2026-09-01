@@ -1,0 +1,28 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 23 of 151 
+ 
+3.1 TARGET DOSE  
+Target dose is a term used often in the Logic Specification document.  A target dose is a patient-specific dose 
+required to satisfy the recommendations of ACIP.  Until a target dose is satisfied, the patient is not allowed to 
+move to the next target dose in the patient series.  The patient remains on the “unsatisfied” target dose until the 
+patient has a “valid” vaccine dose administered that satisfies the target dose.  A target dose is also allowed to 
+be skipped. This situation isn’t the common path and not immediately discussed here.  Details on skipping target 
+doses can be found in Chapters 6 and 7. 
+This concept can be seen graphically below in Figure 3-1.  For simplicity in this hypothetical patient series, the 
+target doses are defined only by the minimum age.  The target doses have minimum ages of 0 days, 2 months, 
+and 6 months.  These are the minimum ages allowed by this patient series.  The patient must have vaccine 
+doses administered on or after these minimum ages to be considered valid.  A valid vaccine dose administered 
+will satisfy a target dose and allow movement to the next target dose.  A vaccine dose administered which is 
+anything but valid does not satisfy a target dose and does not allow movement to the next target dose.   
+This can be seen in Figure 3-1 by looking at target dose 2 and vaccine doses administered dose 2 and dose 3. 
+Dose 2 was administered too early and resulted in the evaluation status “not valid.”   A not valid vaccine dose 
+administered means the target dose was not satisfied and must be repeated.  Dose 3 was given at an appropriate 
+age which resulted in the evaluation status “valid” and satisfied the goals of target dose 2.  This allows movement 
+to target dose 3 which is subsequently satisfied by vaccine dose administered dose 4. 
+While not shown on this graphic, there is also a status which tracks the patient’s progress towards completion of 
+a patient series.  In this example, the patient series status is “not complete” for the first three vaccine doses 
+administered.  The patient series status is changed to “complete” once the fourth vaccine dose administered 
+satisfies the third target dose which completes the patient series. 
+
+ 
+FIGURE 3-1 HOW A VACCINE DOSE ADMINISTERED SATISFIES A TARGET DOSE

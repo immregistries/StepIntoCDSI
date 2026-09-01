@@ -15,7 +15,17 @@ import yaml
 from . import build_index, extract_figures, extract_tables, paths, split_sections, toc
 from .__init__ import __version__ as tool_version
 
-CHAPTERS_IN_SCOPE = (4, 5, 6, 7, 8, 9)
+# Chapter 3, "Logic Specification Concepts" (3.1 Target Dose, 3.2 Statuses,
+# 3.3 Selecting Supporting Data, 3.4 Date Calculations), is not a chain of
+# executable processing steps - Phase 5's step packages don't cover it. It's
+# in scope for extraction anyway because Phase 6's concept documents
+# (concepts/target-dose.md, statuses.md, selecting-supporting-data.md,
+# date-calculations.md) map onto it almost one-to-one, and should be built
+# from properly-cited extracted text/tables like everything else, not
+# written from memory. Chapters 4-9 remain the step-package chapters.
+CONCEPT_CHAPTERS = (3,)
+STEP_CHAPTERS = (4, 5, 6, 7, 8, 9)
+CHAPTERS_IN_SCOPE = CONCEPT_CHAPTERS + STEP_CHAPTERS
 
 
 def _numeric_sort_key(number: str) -> tuple:

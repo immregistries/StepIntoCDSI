@@ -1,0 +1,210 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 27 of 151 
+ 
+3.4 DATE CALCULATIONS 
+Business rules that are specific to calculating dates are provided in this section. A calculated date is a date that 
+is mathematically derived from one or more terms. The first table provides rules for calculating dates in general. 
+The second table provides rules for calculating dates by logical component. 
+TABLE 3-6 GENERAL DATE RULES 
+Business Rule ID 
+Business Rule 
+Example 
+CALCDT-1  
+The computed date of adding any number of years to an existing 
+date must be calculated by incrementing the date-year while 
+holding the date-month and date-day constant.  
+01/01/2000 + 3 years = 01/01/2003  
+CALCDT-2  
+The computed date of adding any number of months to an existing 
+date must be calculated by incrementing the date-month (and date-
+year, if necessary) while holding the date-day constant.  
+01/01/2000 + 6 months = 07/01/2000  
+11/01/2000 + 6 months = 05/01/2001  
+CALCDT-3  
+The computed date of adding any number of weeks or days to an 
+existing date must be calculated by adding the total days to the 
+existing date.  
+01/01/2000 + 3 days = 01/04/2000  
+01/01/2000 + 3 weeks = 01/22/2000  
+02/01/2000 + 5 weeks = 03/07/2000 
+(leap year)  
+02/01/2001 + 5 weeks = 03/08/2001 
+(not a leap year)  
+CALCDT-4  
+The computed date of subtracting any number of days from an 
+existing date must be calculated by subtracting the total days from 
+the existing date.  
+01/15/2000 – 4 days = 01/11/2000  
+CALCDT-5  
+A computed date which is not a real date must be moved forward 
+to first day of the next month.  
+03/31/2000 + 6 months = 10/01/2000 
+(September 31 does not exist)  
+08/31/20010 + 6 months = 
+03/01/2001 (February 31 does not 
+exist)  
+CALCDT-6  
+A computed date must be calculated by first adjusting the years, 
+followed by the months, and finally the weeks and/or days.  
+01/31/2000 + 6 months – 4 days = 
+07/27/2000  
+ 
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 28 of 151 
+ 
+TABLE 3-7 LOGICAL COMPONENT DATE RULES 
+Business Rule ID 
+Business Rule 
+CALCDTAGE-1  
+A patient's maximum age date must be calculated as the patient's date of birth plus the maximum age.  
+CALCDTAGE-2  
+A patient's latest recommended age date must be calculated as the patient's date of birth plus the latest 
+recommended age.  
+CALCDTAGE-3  
+A patient's earliest recommended age date must be calculated as the patient's date of birth plus the earliest 
+recommended age.  
+CALCDTAGE-4  
+A patient's minimum age date must be calculated as the patient's date of birth plus the minimum age.  
+CALCDTAGE-5  
+A patient's absolute minimum age date must be calculated as the patient's date of birth plus the absolute 
+minimum age.  
+CALCDTALLOW-1  
+A patient's allowable vaccine type begin age date must be calculated as the patient's date of birth plus the 
+vaccine type begin age of an allowable vaccine.  
+CALCDTALLOW-2  
+A patient's allowable vaccine type end age date must be calculated as the patient's date of birth plus the 
+vaccine type end age of an allowable vaccine.  
+CALCDTCI-1  
+A patient's contraindication begin age date must be calculated as the patient's date of birth plus the 
+contraindication begin age of a contraindication.  
+CALCDTCI-2  
+A patient's contraindication end age date must be calculated as the patient's date of birth plus the 
+contraindication end age of a contraindication.  
+CALCDTCONFLICT-1  
+The conflict begin interval date for a previous vaccine dose administered must be calculated as the date 
+administered of the previous vaccine dose administered plus the conflict begin interval of a vaccine type 
+conflict where all the following are true: 
+• 
+The vaccine type of the current vaccine dose administered is an impacted vaccine type.  
+• 
+The vaccine type of the previous vaccine dose administered is a conflicting vaccine type for the 
+impacted vaccine type.  
+CALCDTCONFLICT-2  
+The conflict end interval date for a previous vaccine dose administered must be calculated as one of the 
+following: 
+• 
+the date administered of the previous vaccine dose administered plus the minimum conflict end 
+interval of a vaccine type conflict if all the following are true:  
+o 
+The vaccine type of the current vaccine dose administered is an impacted vaccine type.  
+o 
+The vaccine type of the previous vaccine dose administered is a conflicting vaccine type 
+for the impacted vaccine type.  
+o 
+The previous vaccine dose administered has one of the following: 
+▪ 
+an evaluation status of 'Valid' 
+▪ 
+no evaluation status. 
+• 
+the date administered of the previous vaccine dose administered plus the conflict end interval of a 
+vaccine type conflict if all the following are true:  
+o 
+The vaccine type of the current vaccine dose administered is an impacted vaccine type.  
+o 
+The vaccine type of the previous vaccine dose administered is a conflicting vaccine type 
+for the impacted vaccine type.  
+o 
+The previous vaccine dose administered has an evaluation status. 
+o 
+The previous vaccine dose administered does not have an evaluation status of 'Valid'. 
+CALCDTCONFLICT-3  
+The forecast conflict end date of a vaccine type conflict that impacts a next target dose must be calculated 
+as the date administered of a vaccine dose administered plus the conflict end interval of the vaccine type 
+conflict if all the following are true: 
+• 
+The next target dose is tracked by a series dose that includes a preferable vaccine that is 
+classified by an impacted vaccine type.  
+• 
+The vaccine type of the vaccine dose administered is a conflicting vaccine type for the impacted 
+vaccine type.  
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 29 of 151 
+ 
+Business Rule ID 
+Business Rule 
+CALCDTIND-1  
+A patient's indication begin age date must be calculated as the patient's date of birth plus the indication begin 
+age of an indication.  
+CALCDTIND-2  
+A patient's indication end age date must be calculated as the patient's date of birth plus the indication end 
+age of an indication.  
+CALCDTINT-1  
+A patient's reference dose date for an interval must be calculated as the date administered of the most 
+immediate previous vaccine dose administered if all the following are true: 
+• 
+The interval has a from immediate previous dose administered flag of 'Y' 
+• 
+The vaccine dose administered has an evaluation status of 'Valid' or 'Not Valid' 
+• 
+The vaccine dose administered is not an inadvertent administration. 
+CALCDTINT-2  
+A patient's reference dose date for an interval must be calculated as the date administered of the vaccine 
+dose administered that satisfies the target dose with the same target dose number as the from target dose 
+number in series if all the following are true for the interval: 
+• 
+From immediate previous dose administered flag is 'N' 
+• 
+From target dose number in series is not 'n/a' 
+CALCDTINT-3  
+A patient's absolute minimum interval date must be calculated as the patient's reference dose date plus the 
+absolute minimum interval.  
+CALCDTINT-4  
+A patient's minimum interval date must be calculated as the patient's reference dose date plus the minimum 
+interval.  
+CALCDTINT-5  
+A patient's earliest recommended interval date must be calculated as the patient's reference dose date plus 
+the earliest recommended interval.  
+CALCDTINT-6  
+A patient's latest recommended interval date must be calculated as the patient's reference dose date plus 
+the latest recommended interval.  
+CALCDTINT-8  
+A patient's reference dose date for an interval must be calculated as the date administered of the most recent 
+vaccine dose administered that is the same vaccine type as the from most recent vaccine type if all the 
+following are true for the interval: 
+• 
+From immediate previous dose administered flag is 'N' 
+• 
+From most recent vaccine type is not 'n/a' 
+• 
+The vaccine dose administered is not an inadvertent administration. 
+CALCDTINT-9  
+A patient's reference dose date for an interval must be calculated as the observation date of the most recent 
+active patient observation if all the following are true for the interval: 
+• 
+From immediate previous dose administered flag is 'N' 
+• 
+From relevant observation code is not 'n/a' 
+CALCDTLOTEXP-1  
+The lot number expiration date must be one of the following: 
+• 
+Lot number expiration date if the month, day, and year are all known. 
+• 
+Last day of the month if only the month and year are known. 
+CALCDTPREF-1  
+A patient's preferable vaccine type begin age date must be calculated as the patient's date of birth plus the 
+vaccine type begin age of a preferable vaccine.  
+CALCDTPREF-2  
+A patient's preferable vaccine type end age date must be calculated as the patient's date of birth plus the 
+vaccine type end age of a preferable vaccine.  
+CALCDTSKIP-3  
+A patient's conditional skip begin age date must be calculated as the patient's date of birth plus the 
+conditional skip begin age of a conditional skip.  
+CALCDTSKIP-4  
+A patient's conditional skip end age date must be calculated as the patient's date of birth plus the conditional 
+skip end age of a conditional skip.  
+CALCDTSKIP-5  
+A patient's conditional skip interval date must be calculated as the vaccine date administered from the 
+immediate previous vaccine dose administered plus the Interval of the conditional skip condition.

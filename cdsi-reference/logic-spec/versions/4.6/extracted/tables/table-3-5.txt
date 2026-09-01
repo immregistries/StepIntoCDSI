@@ -1,0 +1,5 @@
+TABLE 3-5 Select Relevant supporting data Logical Component element
+
+Business Rule ID | Business Rule
+RELEVANT-1 | A logical component instance must be used in evaluation if one of the following is true: • the effective date and cessation date are both 'n/a' • the date administered is on or after the effective date and on or before the cessation date.
+RELEVANT-2 | A logical component instance must be used in forecasting or selecting the best patient series if one of the following is true: • the effective date and cessation date are both 'n/a' • the assessment date is on or after the effective date and on or before the cessation date.

@@ -1,0 +1,86 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 25 of 151 
+ 
+3.3 SELECTING SUPPORTING DATA 
+When a clinical recommendation is changed, it is typically applied to patient evaluation and forecasting 
+retroactively but, depending on the nature of the change, the evaluation status of administered doses may or 
+may not change.  For example, if a recommendation changed the minimum interval from 6 months to 4 months, 
+previously administered doses that met the 6 month interval requirement are still considered valid when the new 
+4 month interval is applied. For this reason, many recommendations changes are instituted in new published 
+versions of the Supporting Data simply as a new value with no indication of the previous value.  
+However, some recommendation changes are not applied retroactively, and historical Supporting Data must be 
+retained and selectively applied during the evaluation and forecasting processes. For example, prior to the ACIP 
+HPV recommendation published 12/16/2016, the absolute minimum interval between Doses 1 and 3 was 16 
+weeks but the recommendation increased the absolute minimum interval to 5 months minus 4 days. However, 
+the change was not applied retroactively. Therefore, a third dose administered prior to 12/16/2016 need only 
+meet the 16-week interval while a third dose (for a different patient) administered on or after 12/16/2016 would 
+need to meet the longer 5 month interval. In the figure below, these differential requirements are represented, 
+highlighted in blue, in the Supporting Data using Effective and Cessation Dates which indicate a date range that 
+the Supporting Data component was in effect.  
+Only a subset of the Supporting Data Logical Components use Effective and Cessation Dates elements (e.g. 
+Age, Preferable Interval, Allowable Interval and Conditional Skip). When a Logical Component does not include 
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 26 of 151 
+ 
+Effective and Cessation Dates elements (e.g. Preferable Vaccine, Allowable Vaccine, Inadvertent Vaccine, 
+Recurring Dose and Seasonal Recommendation), the Instances of supporting data in that Logical Component 
+must be selected for evaluation and forecasting purposes. 
+In order to determine if a Supporting Data Logical Component Instance is relevant, the anchor date (the 
+administration date in the case of an evaluation or the assessment date in the case of a forecast) must fall 
+between the Effective and Cessation Dates (see decision table below) for the Supporting Data. This selection 
+process must be applied any time either the Effective Date or Cessation Date is valued other than “n/a” in the 
+Supporting Data as highlighted in red below. Data Instances where both valued “n/a” must be always be applied 
+during the evaluation and forecasting process. 
+ 
+FIGURE 3-2 SELECTING SUPPORTING DATA 
+ 
+TABLE 3-4 RELEVANT SUPPORTING DATA ATTRIBUTES 
+Attribute Type 
+Attribute Name 
+Assumed Value if Empty 
+Vaccine dose administered 
+Date Administered 
+- 
+Runtime data 
+Assessment Date 
+current date 
+Supporting Data (Effective Date) 
+Effective Date 
+01/01/1900 
+Supporting Data (Cessation Date) 
+Cessation Date 
+12/31/2999 
+ 
+TABLE 3-5 SELECT RELEVANT SUPPORTING DATA LOGICAL COMPONENT ELEMENT 
+Business Rule ID 
+Business Rule 
+RELEVANT-1  
+A logical component instance must be used in evaluation if one of the following is true: 
+• 
+the effective date and cessation date are both 'n/a' 
+• 
+the date administered is on or after the effective date and on or before the cessation date.  
+RELEVANT-2  
+A logical component instance must be used in forecasting or selecting the best patient series if one of the 
+following is true: 
+• 
+the effective date and cessation date are both 'n/a' 
+• 
+the assessment date is on or after the effective date and on or before the cessation date.  
+ 
+In addition to Supporting Data selection by Effective and Cessation Dates, relevant Conditional Skip Logic 
+Component Instances must be selected on the basis of context. In some scenarios, the rationale for skipping a 
+dose in a series differs depending on whether a retrospective evaluation or a prospective forecast is being 
+performed. In the Supporting Data, 4 contexts are possible: 
+• 
+Evaluation – applicable when a dose is being evaluated (see section 6.2) 
+• 
+Forecast – applicable when a dose is being forecasted (see section 7.1) 
+• 
+Both – applicable when a dose is being either evaluated or forecasted (see sections 6.2 and 7.1) 
+• 
+n/a – there are no conditions that can result in a dose being skipped during either evaluation or forecast 
+
+ 
+FIGURE 3-3 CONDITIONAL SKIP CONTEXT

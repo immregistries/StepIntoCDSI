@@ -1,0 +1,56 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 24 of 151 
+ 
+3.2 STATUSES 
+The Logic Specification uses different statuses to denote the state of evaluation, target dose, and patient series. 
+The following tables provide the meanings of statuses used in Logic Specification business rules and decision 
+tables. 
+TABLE 3-1 EVALUATION STATUSES 
+Status 
+Meaning 
+Extraneous  
+An evaluation status that indicates the vaccine dose administered was not administered according to ACIP 
+recommendations, but the dose does not need to be repeated (including maximum age and extra doses)  
+Not Valid  
+An evaluation status that indicates the vaccine dose administered was not administered according to ACIP 
+recommendations and must be repeated at an appropriate time in the future  
+Sub-standard  
+An evaluation status that indicates the vaccine dose administered has a known dose condition (e.g., expired, 
+sub-potent, and recall) which requires the dose to be repeated at an appropriate time in the future  
+Valid  
+An evaluation status that indicates the vaccine dose administered was administered according to ACIP 
+recommendations  
+ 
+
+TABLE 3-2 TARGET DOSE STATUSES  
+Status 
+Meaning 
+Not Satisfied  
+A target dose status that indicates no vaccine dose administered has met the goals of the target dose  
+Satisfied  
+A target dose status that indicates a vaccine dose administered has met the goals of the target dose  
+Skipped  
+A target dose status that indicates no vaccine dose administered has met the goals of the target dose. Due 
+to the patient's age and/or interval from a previous dose, the target dose does not need to be satisfied.  
+ 
+ TABLE 3-3 PATIENT SERIES STATUSES 
+Status 
+Meaning 
+Aged Out  
+A patient series status that indicates the patient exceeded the maximum age prior to completing the patient 
+series  
+Complete  
+A patient series status that indicates the patient has met all of the ACIP recommendations for the patient 
+series  
+Contraindicated  
+A patient series status that indicates no further vaccines should be administered at this time for the patient 
+series  
+Immune  
+A patient series status that indicates the patient has evidence of immunity indicating no further vaccines 
+are needed for the patient series  
+Not Complete  
+A patient series status that indicates the patient has not yet met all of the ACIP recommendations for the 
+patient series  
+Not Recommended  
+A patient series status that indicates the patient's immunization history provides sufficient protection 
+against a target disease and there's no recommended action at this time
