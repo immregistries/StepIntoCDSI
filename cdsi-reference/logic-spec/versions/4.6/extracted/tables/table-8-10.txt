@@ -1,0 +1,8 @@
+TABLE 8-10 In-Process Patient Series Business Rules
+
+Business Rule ID | Business Rule
+SELECTB-2 | A scorable patient series has all valid doses only if all evaluations based on the target doses that are part of the scorable patient series have an evaluation status of 'Valid'.
+SELECTB-3 | A patient series must be considered completable if the forecast finish date is less than the maximum age date of the last target dose.
+SELECTB-5 | A patient series must be the considered the closest to completion if the number of not satisfied target doses is less than the number of not satisfied target doses in all other patient series.
+SELECTB-11 | A patient series can finish earliest if the patient series is completable and the forecast finish date is on or before the forecast finish date in all other completable patient series.
+SELECTB-12 | The forecast finish date for a scorable patient series must be calculated as the earliest date of the patient series forecast made from the scorable patient series plus the latest minimum interval from the remaining target dose(s).

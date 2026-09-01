@@ -1,0 +1,8 @@
+TABLE 7-9 Determine Forecast Need Attributes
+
+Attribute Type | Attribute Name | Assumed Value if Empty
+Immunization history | Vaccine Dose(s) Administered | -
+Relevant Patient series | Target Dose Statuses | -
+Supporting Data (Seasonal Recommendation) | Seasonal Recommendation End Date | 12/31/2999
+Section 7.2 Outcome | Evidence of Immunity | No evidence of immunity
+Section 7.3 Outcome | Contraindicated Patient Series | The relevant patient series is NOT a contraindicated patient series.

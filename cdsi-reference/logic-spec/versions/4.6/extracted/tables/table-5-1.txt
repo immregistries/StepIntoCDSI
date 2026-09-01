@@ -1,0 +1,4 @@
+TABLE 5-1 Create Relevant Patient Series Process Steps
+
+Section | Activity | Goal
+5.1 | Select Relevant Patient Series | The goal of this step is to identify the antigen series which are appropriate for the patient.

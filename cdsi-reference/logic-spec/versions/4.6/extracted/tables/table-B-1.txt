@@ -1,0 +1,34 @@
+TABLE B-1 Acronyms and Abbreviations
+
+Term | Meaning
+ACIP | Advisory Committee on Immunization Practices
+CDC | Centers for Disease Control and Prevention
+CDS | Clinical Decision Support
+CDSi | Clinical Decision Support for Immunization
+DHHS | U.S. Department of Health and Human Services
+DT | Diphtheria and tetanus toxoids adsorbed (children)
+DTaP | Diphtheria and tetanus toxoids and acellular pertussis vaccine adsorbed
+EHR | Electronic Health Record
+FDA | Federal Drug Administration
+Flu | Influenza
+HECB | Health Education and Communication Branch
+HepA | Hepatitis A vaccine
+HepB | Hepatitis B vaccine
+Hib | Haemophilus influenza type b conjugate vaccine
+HIE | Health Information Exchange
+HIS | Health Information System
+HIV | Human Immunodeficiency Virus
+HPV | Human papillomavirus vaccine
+IDAB | Informatics and Data Analytics Branch
+IIS | Immunization Information System
+JE | Japanese Encephalitis vaccine
+MCV | Meningococcal conjugate vaccine
+MMR | Measles, Mumps, and Rubella vaccine
+MMRV | Measles, Mumps, Rubella, and Varicella vaccine
+MMWR | Morbidity and Mortality Weekly Report
+NCIRD | National Center for Infectious Diseases
+Mpox & Smallpox | Orthopoxvirus vaccine
+PCV | Pneumococcal conjugate vaccine
+PPSV | Pneumococcal polysaccharide vaccine
+Polio | Poliomyelitis vaccine
+Rota | Rotavirus vaccine

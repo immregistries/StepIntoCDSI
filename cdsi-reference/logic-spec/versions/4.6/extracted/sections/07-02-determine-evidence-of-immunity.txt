@@ -1,0 +1,88 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 73 of 151 
+ 
+7.2 DETERMINE EVIDENCE OF IMMUNITY  
+Determine evidence of immunity assesses the patient’s profile to determine if the patient is already potentially 
+immune to the target disease, negating the need for additional doses. A patient may be considered immune due 
+to their clinical history or if they were born before a defined date for the given target disease. For example, for 
+measles, a patient is considered immune if they have a clinical finding of “Measles immune” or if they were born 
+before 01/01/1957. Additional patient attributes, such as occupation or pregnancy status, may supersede the 
+birth date logic. 
+ 
+FIGURE 7-2 EVIDENCE OF IMMUNITY PROCESS MODEL 
+ 
+TABLE 7-2 IMMUNITY ATTRIBUTES 
+Attribute Type 
+Attribute Name 
+Assumed Value if Empty 
+Patient 
+Date of Birth 
+- 
+Patient 
+Country of Birth 
+- 
+Patient 
+Evidence of Immunity 
+ 
+Supporting Data 
+Immunity elements 
+- 
+ 
+TABLE 7-3 DOES THE PATIENT HAVE EVIDENCE OF IMMUNITY? 
+CONDITIONS 
+RULES 
+Does the patient history 
+contain one of the immunity 
+guidelines? 
+Yes 
+No 
+No 
+No 
+No 
+Is the patient's date of birth 
+< the immunity birth date? 
+- 
+Yes 
+Yes 
+Yes 
+No 
+Does this patient have an 
+immunity exclusion 
+condition? 
+- 
+Yes 
+No 
+No 
+-      
+Is the patient's country of 
+birth the same as the 
+immunity country of birth? 
+- 
+- 
+Yes 
+No 
+- 
+
+CONDITIONS 
+RULES 
+  
+OUTCOMES 
+Yes. The patient 
+has evidence of 
+immunity. 
+ 
+No. The patient 
+does not have 
+evidence of 
+immunity. 
+Yes. The patient 
+has evidence of 
+immunity. 
+No. The patient 
+does not have 
+evidence of 
+immunity. 
+No. The patient 
+does not have 
+evidence of 
+immunity.

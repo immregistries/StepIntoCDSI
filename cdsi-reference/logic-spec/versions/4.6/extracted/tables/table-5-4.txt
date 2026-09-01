@@ -1,0 +1,6 @@
+TABLE 5-4 Does the Indication Apply to the Patient?
+
+CONDITIONS | RULES |  |  | 
+Does the indication describe any active patient observations? | Yes | No | Unknown | -
+Is the indication begin age date ≤ assessment date < indication end age date? | Yes | Yes | Yes | No
+OUTCOMES | Yes. The Indication applies to the patient. | No. The Indication does not apply to the patient. | No. The Indication does not apply to the patient; however, the Indication Text Description should be made available to the clinician for manual determination. | No. The indication does not apply to the patient.

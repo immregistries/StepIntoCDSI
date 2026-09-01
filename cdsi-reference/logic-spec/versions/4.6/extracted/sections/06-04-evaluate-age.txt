@@ -1,0 +1,110 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 52 of 151 
+ 
+6.4 EVALUATE AGE  
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 53 of 151 
+ 
+Evaluate age validates the age at administration of a vaccine dose administered against a defined age range of 
+a target dose.  In cases where a target dose does not specify age attributes, the age at administration is 
+considered “valid.”   
+ 
+FIGURE 6-5 EVALUATE AGE TIMELINE 
+ 
+The following process model, attribute table and decision table are used to evaluate age at administration. 
+ 
+FIGURE 6-6 EVALUATE AGE PROCESS MODEL 
+ 
+TABLE 6-14 AGE ATTRIBUTES 
+Attribute Type 
+Attribute Name 
+Assumed Value if Empty 
+Patient 
+Date of Birth 
+- 
+Vaccine dose administered 
+Date Administered 
+- 
+Calculated date (CALCDTAGE-1) 
+Maximum Age Date 
+12/31/2999 
+Calculated date (CALCDTAGE-4) 
+Minimum Age Date 
+01/01/1900 
+Calculated date (CALCDTAGE-5) 
+Absolute Minimum Age Date 
+01/01/1900 
+ 
+TABLE 6-15 WAS THE VACCINE DOSE ADMINISTERED AT A VALID AGE? 
+ 
+
+CONDITIONS 
+RULES 
+Is the date 
+administered < 
+absolute minimum 
+age date? 
+Yes 
+No 
+No 
+No 
+Is the absolute 
+minimum age date ≤ 
+date administered < 
+minimum age date? 
+No 
+Yes 
+No 
+No 
+Is the minimum age 
+date ≤ date 
+administered < 
+maximum age date? 
+No 
+No 
+Yes 
+No 
+Is the date 
+administered ≥ 
+maximum age date? 
+No 
+No 
+No 
+Yes 
+  
+OUTCOMES 
+No. The vaccine dose 
+administered was not 
+administered at a valid age 
+for the target dose. 
+Evaluation reason is 'Too 
+young'. 
+Yes. The vaccine dose 
+administered was 
+administered at a valid age 
+for the target dose. 
+Evaluation reason is 
+'Grace period'. 
+Yes. The vaccine 
+dose administered 
+was administered at a 
+valid age for the target 
+dose. 
+No. The vaccine dose 
+administered was not 
+administered at a valid age 
+for the target dose. It is 
+extraneous. Evaluation 
+reason is 'Too old'. 
+ 
+TABLE 6-16 EVALUATE AGE BUSINESS RULES 
+Business Rule ID 
+Business Rule 
+CALCDTAGE-1  
+A patient's maximum age date must be calculated as the patient's date of birth plus the maximum age.  
+CALCDTAGE-4  
+A patient's minimum age date must be calculated as the patient's date of birth plus the minimum age.  
+CALCDTAGE-5  
+A patient's absolute minimum age date must be calculated as the patient's date of birth plus the absolute 
+minimum age.

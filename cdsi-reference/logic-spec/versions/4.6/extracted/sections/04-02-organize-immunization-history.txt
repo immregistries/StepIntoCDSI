@@ -1,0 +1,126 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 32 of 151 
+ 
+4.2 ORGANIZE IMMUNIZATION HISTORY 
+The second step in the process is to look at the patient’s immunization history and prepare those records for 
+evaluation and forecasting by breaking them into their antigen parts.  This allows the evaluation and forecasting 
+engine to be as granular and specific as possible for both evaluation and forecasting purposes.  Later in the 
+process, these antigens are assembled into commonly known vaccine groups (vaccine families) for vaccine 
+group forecasts. 
+To provide some specifics to this step, the following tables are provided as a high-level example of the work 
+organize immunization history performs. 
+TABLE 4-2 PRIOR TO ORGANIZE IMMUNIZATION HISTORY EXAMPLE 
+Product (CVX/MVX) – Description 
+Date  
+Engerix B-Peds (08/SKB) – HepB 
+01/01/2011 
+Pediarix (110/SKB) – DTaP-HepB-IPV 
+03/01/2011 
+ActHIB (48/PMC) – Hib 
+03/01/2011 
+Prevnar 13 (133/WAL) – PCV13 
+03/01/2011 
+Pediarix (110/SKB) – DTaP-HepB-IPV 
+06/01/2011 
+ActHIB (48/PMC) – Hib 
+06/01/2011 
+Prevnar 13 (133/WAL) – PCV13 
+06/01/2011 
+ProQuad (94/MSD) – MMRV 
+01/01/2012 
+ 
+TABLE 4-3 AFTER ORGANIZE IMMUNIZATION HISTORY EXAMPLE 
+Product (CVX/MVX) – Description 
+Date 
+Antigen* 
+Pediarix (110/SKB) – DTaP-HepB-IPV 
+03/01/2011 
+Diphtheria 
+Pediarix (110/SKB) – DTaP-HepB-IPV 
+06/01/2011 
+Diphtheria 
+Engerix B-Peds (08/SKB) – HepB 
+01/01/2011 
+HepB 
+Pediarix (110/SKB) – DTaP-HepB-IPV 
+03/01/2011 
+HepB 
+Pediarix (110/SKB) – DTaP-HepB-IPV 
+06/01/2011 
+HepB 
+ActHIB (48/PMC) – Hib 
+03/01/2011 
+Hib 
+ActHIB (48/PMC) – Hib 
+06/01/2011 
+Hib 
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 33 of 151 
+ 
+Product (CVX/MVX) – Description 
+Date 
+Antigen* 
+ProQuad (94/MSD) – MMRV 
+01/01/2012 
+Measles 
+ProQuad (94/MSD) – MMRV 
+01/01/2012 
+Mumps 
+Prevnar 13 (133/Wal) – PCV13 
+03/01/2011 
+PCV 
+Prevnar 13 (133/Wal) – PCV13 
+06/01/2011 
+PCV 
+Pediarix (110/SKB) – DTaP-HepB-IPV 
+03/01/2011 
+Pertussis 
+Pediarix (110/SKB) – DTaP-HepB-IPV 
+06/01/2011 
+Pertussis 
+Pediarix (110/SKB) – DTaP-HepB-IPV 
+03/01/2011 
+Polio 
+Pediarix (110/SKB) – DTaP-HepB-IPV 
+06/01/2011 
+Polio 
+ProQuad (94/MSD) – MMRV 
+01/01/2012 
+Rubella 
+Pediarix (110/SKB) – DTaP-HepB-IPV 
+03/01/2011 
+Tetanus 
+Pediarix (110/SKB) – DTaP-HepB-IPV 
+06/01/2011 
+Tetanus 
+ProQuad (94/MSD) – MMRV 
+01/01/2012 
+Varicella 
+*Sorted by antigen and then by date 
+ 
+The figure below illustrates how an immunization history of vaccine doses administered can be converted into 
+antigen administered records.   
+ 
+
+FIGURE 4-3 ORGANIZE IMMUNIZATION HISTORY PROCESS MODEL 
+ 
+The process of breaking apart vaccine doses administered into their antigen parts is a fairly simple iterative 
+process.   
+1. For each vaccine dose administered in the patient’s immunization history, the vaccine dose administered is 
+interrogated for the antigens contained within.  
+2. For each antigen within a vaccine dose administered, an antigen administered record is created.  The activity 
+diagram above provides the basic data elements used in evaluation and forecasting.   The following notes 
+should be considered: 
+a. The CVX to Antigen Supporting Data includes Association Begin Age and Association End Age 
+attributes to properly associate the administered vaccine with the proper antigen based on the 
+age of patient at the time of administration (e.g., a Zoster vaccine administered below 50 years 
+should be associated with Varicella). 
+b. The activity diagram above provides the basic data elements used in evaluation and forecasting.  
+It is entirely possible different implementations may use more or less attributes from this list. 
+3. After all vaccine doses administered have been turned into antigen administered records, the final step in 
+the activity diagram is to sort the antigen administered records by antigen and then by ascending date order 
+within each antigen.  Sorting these now will allow for consistent and accurate results in remainder of the 
+steps. 
+A Supporting Data table mapping CVX codes to antigens to aid in this process can be found at the following 
+location: http://www.cdc.gov/vaccines/programs/iis/cdsi.html

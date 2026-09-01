@@ -1,0 +1,5 @@
+TABLE 6-27 Preferable Vaccine Business Rules
+
+Business Rule ID | Business Rule
+CALCDTPREF-1 | A patient's preferable vaccine type begin age date must be calculated as the patient's date of birth plus the vaccine type begin age of a preferable vaccine.
+CALCDTPREF-2 | A patient's preferable vaccine type end age date must be calculated as the patient's date of birth plus the vaccine type end age of a preferable vaccine.

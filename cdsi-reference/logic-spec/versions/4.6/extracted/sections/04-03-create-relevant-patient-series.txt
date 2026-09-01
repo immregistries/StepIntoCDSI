@@ -1,0 +1,24 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 34 of 151 
+ 
+4.3 CREATE RELEVANT PATIENT SERIES 
+An antigen series is one way to reach perceived immunity against a disease.  An antigen series can be thought 
+of as a “path to immunity” and is described in relative terms.  In many cases, a single antigen may have more 
+than one successful path to immunity and as such may have more than one antigen series.  Antigen series are 
+defined through Supporting Data spreadsheets defined in Chapters 2 and 3. Some series, classified here as 
+“Standard” series, are based on recommendations for all patients based on age. Other series, classified as “Risk” 
+series, are based on recommendations for patients with specific characteristics or underlying conditions which 
+put them at increased risk. Finally, some series are strictly for the purpose of “Evaluation Only” and should not 
+be recommended for completion, but if already complete can be used as proof of series completion. 
+Similar to gathering necessary data (section 4.1), create relevant patient series will likely vary from system to 
+system based on design details and technologies used.  The important aspect of this step is to instantiate each 
+antigen series as a relevant patient series provided it meets necessary requirements as defined by the logic in 
+Chapter 5. 
+The process model below shows the iterative steps to create relevant patient series. At the end of this step, each 
+antigen series relevant for the patient is turned into a relevant patient series. The set of relevant patient series 
+for a given patient are used in subsequent chapters. Those not relevant for the patient are excluded from further 
+processing. 
+ 
+
+ 
+FIGURE 4-4 CREATE RELEVANT PATIENT SERIES PROCESS MODEL

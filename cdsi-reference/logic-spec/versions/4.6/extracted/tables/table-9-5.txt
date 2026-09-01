@@ -1,0 +1,5 @@
+TABLE 9-5 Multiple Antigen Vaccine Group Business Rules
+
+Business Rule ID | Business Rule
+MULTIANTVG-1 | The earliest date of a vaccine group forecast for a multiple antigen vaccine group must be one of the following: • The later of the following dates if any patient series forecast contained in the vaccine group forecast is a priority patient series forecast: o The earliest date of all the patient series forecasts contained in the vaccine group forecast. o The latest date administered of all the vaccine doses administered containing a vaccine classified by a vaccine type that belongs to the vaccine group. • The latest earliest date of all the patient series forecasts contained in the vaccine group forecast if there is no priority patient series forecast contained in the vaccine group forecast.
+FORECASTPRIORITY-1 | A patient series forecast must be considered a priority patient series forecast if all the following are true: • The target dose forecasted by the patient series forecast includes at least one preferable interval. • Each preferable interval for the target dose has an interval priority flag of 'Y'.

@@ -1,0 +1,6 @@
+TABLE 6-3 Can the Vaccine Dose Administered be Evaluated?
+
+CONDITIONS | RULES |  | 
+Date administered > lot number expiration date? | Yes | No | No
+Is the dose condition flag 'Y'? | - | Yes | No
+OUTCOMES | No. The vaccine dose administered cannot be evaluated. Target dose status is 'not satisfied.' Evaluation status is 'sub-standard.' | No. The vaccine dose administered cannot be evaluated. Target dose status is 'not satisfied.' Evaluation status is 'sub-standard.' | Yes. The vaccine dose administered can be evaluated.

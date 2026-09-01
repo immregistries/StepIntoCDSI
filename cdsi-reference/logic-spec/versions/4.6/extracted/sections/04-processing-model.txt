@@ -1,0 +1,58 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 30 of 151 
+ 
+4 PROCESSING MODEL 
+At a very simple level, the major logical steps involved in the immunization evaluation and forecasting engine 
+can be described in two parts.  The first part is very mechanical in nature and focuses on gathering and prepping 
+all of the required data.  The second part uses the data gathered earlier to generate the evaluation and forecast.  
+The following table lists the major steps of the processing model. 
+TABLE 4-1 LOGIC SPECIFICATION PROCESSING STEPS 
+Section 
+Activity 
+Goal 
+4.1 
+Gather Necessary Data 
+The goal of this step is to gather all pertinent information which will be used in 
+subsequent steps in the process. 
+4.2 
+Organize Immunization History 
+The goal of this step is to break apart vaccine doses administered into their 
+antigen parts. 
+4.3 
+Create Relevant Patient Series 
+The goal of this step is to instantiate (Chapter 5) antigen series into relevant 
+patient series for this patient. 
+4.4 
+Evaluate and Forecast All Patient 
+Series 
+The goal of this step is to evaluate (Chapter 6) each antigen administered and 
+create a forecast for each relevant patient series (Chapter 7). 
+4.5 
+Select Best Patient Series 
+The goal of this step is to select one or more best patient series (Chapter 8) for 
+the patient based on their evaluated history and forecast. 
+4.6 
+Identify and Evaluate Vaccine Group 
+The goal of this step is to merge together patient series forecasts into a vaccine 
+group forecast (Chapter 9). 
+ 
+Figure 4-1 provides the high-level process of the major steps of the processing model. 
+ 
+FIGURE 4-1 LOGIC SPECIFICATION PROCESSING MODEL 
+ 
+
+As illustrated in Figure 4-2, as the process model progresses, the set of patient series continually becomes more 
+restricted as: 
+• 
+Relevant Patient Series are selected from the total list of Antigen Series based on standard 
+recommendations, patient gender, and patient observations. 
+• 
+Scorable Patient Series are selected from the evaluated and forecasted Relevant Patient Series. 
+• 
+A Prioritized Patient Series is selected per Series Group (provided the Series Group had at least one 
+Relevant Patient Series. 
+• 
+One or more non-redundant Best Patient Series are selected from the Prioritized Patient Series 
+ 
+ 
+FIGURE 4-2 REFINEMENT OF PATIENT SERIES

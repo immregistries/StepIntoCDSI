@@ -1,0 +1,81 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 88 of 151 
+ 
+8.3 CLASSIFY SCORABLE PATIENT SERIES  
+Classify scorable patient series is an attempt to reduce the total number of patient series within a Series Group 
+to only those which have a chance to be selected as the prioritized patient series. 
+TABLE 8-5 WHICH SCORABLE PATIENT SERIES SHOULD BE SCORED? 
+CONDITIONS 
+RULES 
+Are there 2 or more 
+complete patient 
+series in the series 
+group? 
+Yes 
+No 
+No 
+
+CONDITIONS 
+RULES 
+Are there 2 or more 
+in-process patient 
+series and no 
+complete patient 
+series in the series 
+group? 
+- 
+Yes 
+No 
+Is the number of 
+valid doses = 0 for all 
+scorable patient 
+series in the series 
+group? 
+- 
+No 
+Yes 
+  
+OUTCOMES 
+All complete patient series in the 
+series group should be scored. 
+Apply the complete patient series 
+scoring business rules to these 
+scorable patient series only. All 
+other patient series in the series 
+group are not scored and are 
+dropped from consideration. 
+All in-process patient series in the 
+series group should be scored. 
+Apply the in-process patient series 
+scoring business rules to these 
+scorable patient series only. All 
+other patient series in the series 
+group are not scored and are 
+dropped from consideration. 
+All scorable patient series in the 
+series group with the number of valid 
+doses = 0 should be scored. Apply 
+the no valid doses scoring business 
+rules to all scorable patient series in 
+the series group. All other patient 
+series in the series group are not 
+scored and are dropped from 
+consideration. 
+ 
+TABLE 8-6 CLASSIFY SCORABLE PATIENT SERIES BUSINESS RULES 
+Business Rule ID 
+Business Rule 
+SELECTB-6  
+A scorable patient series must be considered a complete patient series if the patient series forecast made 
+from the scorable patient series has a patient series status of 'Complete'.  
+SELECTB-16  
+A scorable patient series must be considered an in-process patient series if all the following are true: 
+• 
+The scorable patient series includes at least one target dose with a target dose status of 
+'Satisfied.'  
+• 
+The patient series forecast made from the scorable patient series has a patient series status of 
+'Not Complete'.  
+SELECTB-21  
+The number of valid doses for a scorable patient series must be calculated as the count of the target doses 
+included in the scorable patient series with a target dose status of 'Satisfied'.

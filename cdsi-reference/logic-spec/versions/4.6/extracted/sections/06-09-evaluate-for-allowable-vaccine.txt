@@ -1,0 +1,92 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 66 of 151 
+ 
+6.9 EVALUATE FOR ALLOWABLE VACCINE  
+Evaluate for allowable vaccine validates the vaccine of a vaccine dose administered against the list of allowable 
+vaccines.  
+Figure 6-20 depicts a patient who received an allowable vaccine while Figure 6-21 depicts a patient who did not 
+receive an allowable vaccine. 
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 67 of 151 
+ 
+ 
+FIGURE 6-20 PATIENT RECEIVED AN ALLOWABLE VACCINE 
+ 
+ 
+FIGURE 6-21 PATIENT DID NOT RECEIVE AN ALLOWABLE VACCINE 
+ 
+The following process model, attribute table, decision table, and business rule table are used to evaluate for an 
+allowable vaccine. 
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 68 of 151 
+ 
+ 
+FIGURE 6-22 EVALUATE FOR AN ALLOWABLE VACCINE PROCESS MODEL 
+ 
+TABLE 6-28 ALLOWABLE VACCINE ATTRIBUTES 
+Attribute Type 
+Attribute Name 
+Assumed Value if Empty 
+Vaccine dose administered 
+Date Administered 
+- 
+Vaccine dose administered 
+Vaccine Type 
+- 
+Supporting data 
+Allowable Vaccine elements  
+- 
+Calculated date (CALCDTALLOW-1) 
+Allowable Vaccine Type Begin Age Date 
+01/01/1900 
+Calculated date (CALCDTALLOW-2) 
+Allowable Vaccine Type End Age Date 
+12/31/2999 
+ 
+TABLE 6-29 WAS THE VACCINE DOSE ADMNINSTERED AN ALLOWABLE VACCINE FOR THE TARGET DOSE? 
+CONDITIONS 
+RULES 
+Is the vaccine type of the vaccine 
+dose administered the same as 
+the vaccine type of an allowable 
+vaccine for the target dose? 
+Yes 
+No 
+Yes 
+Is the allowable vaccine type begin 
+age date ≤ date administered < 
+allowable vaccine type end age 
+date? 
+Yes 
+- 
+No 
+  
+
+CONDITIONS 
+RULES 
+OUTCOMES 
+Yes. The vaccine dose 
+administered was an 
+allowable vaccine for the 
+target dose. 
+No. The vaccine dose 
+administered was not an 
+allowable vaccine for the 
+target dose. 
+No. The vaccine dose administered was 
+not an allowable vaccine for the target 
+dose. It was administered out of the 
+recommended age range for the allowable 
+vaccine. 
+ 
+TABLE 6-30 ALLOWABLE VACCINE BUSINESS RULES 
+Business Rule ID 
+Business Rule 
+CALCDTALLOW-1  
+A patient's allowable vaccine type begin age date must be calculated as the patient's date of birth plus the 
+vaccine type begin age of an allowable vaccine.  
+CALCDTALLOW-2  
+A patient's allowable vaccine type end age date must be calculated as the patient's date of birth plus the 
+vaccine type end age of an allowable vaccine.

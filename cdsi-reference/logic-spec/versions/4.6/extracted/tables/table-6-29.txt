@@ -1,0 +1,5 @@
+TABLE 6-29 Was the vaccine dose admninstered an Allowable Vaccine for the target dose?
+
+CONDITIONS | RULES |  | 
+Is the vaccine type of the vaccine dose administered the same as the vaccine type of an allowable vaccine for the target dose? | Yes | No | Yes
+Is the allowable vaccine type begin age date ≤ date administered < allowable vaccine type end age date? | Yes | - | No

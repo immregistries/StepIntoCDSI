@@ -37,6 +37,13 @@ dependency and a web module built on it:
     dev-time tool that refreshes those fixtures from a live NIST FITS
     account (needs `NIST_FITS_URL`/`NIST_FITS_USERNAME`/`NIST_FITS_PASSWORD`
     env vars - see its class Javadoc)
+- `cdsi-reference/` - Python tooling and versioned, agent-readable copies
+  of the Logic Specification and Supporting Data, mapped to `cdsi-engine`
+  classes/tests. NOT a Maven module and never a runtime dependency of the
+  other three. See `cdsi-reference/README.md` and its own `AGENTS.md`
+  before touching clinical logic anywhere in this repository - read the
+  relevant step package first. Status and full 24-phase design:
+  `StepIntoCDSi-Specification-Reference-Module-Plan.md` one directory up.
 - `docs/` - Logic documentation and ACIP specification
 
 ## Running

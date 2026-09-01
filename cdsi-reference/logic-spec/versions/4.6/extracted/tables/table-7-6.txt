@@ -1,0 +1,8 @@
+TABLE 7-6 Does the Vaccine Contraindication Apply to the Patient?
+
+CONDITIONS | RULES |  |  |  |  |  | 
+Does the vaccine contraindication describe any active patient observations? | Yes | Yes | No | No | No | - | Unknown
+Does the vaccine contraindication describe any adverse reactions? | No | No | Yes | Yes | No | - | Unknown
+Is the contraindication begin age date ≤ assessment date < contraindication end age date? | Yes | Yes | Yes | Yes | - | No | Yes
+Is the vaccine type of the preferable vaccine one of the contraindicated vacci ne types for the contraindication? | Yes | No | Yes | No | - | - | Yes
+OUTCOMES | Yes. The vaccine contraindicati on applies to the patient. | No. The vaccine contraindicati on does not apply to the patient. | Yes. The vaccine contraindicati on applies to the patient. | No. The vaccine contraindicati on does not apply to the patient. | No. The vaccine contraindicati on does not apply to the patient. | No. The vaccine contraindicati on does not apply to the patient. | No. It could not be determined if the vaccine contraindicatio n applies to the patient; however, the Contraindicati on Text Description should be made available to the clinician for manual determination.

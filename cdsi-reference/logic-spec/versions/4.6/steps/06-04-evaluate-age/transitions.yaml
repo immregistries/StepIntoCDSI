@@ -1,0 +1,11 @@
+from: "6.4"
+spec_defines_transition: true
+note: >
+  Table 6-15's four rules all lead to the SAME next processing step (6.5) -
+  they differ only in the evaluation status/reason recorded, not in
+  control flow. Verified against EvaluateAge.process(), which sets its
+  next-step type unconditionally before evaluating the decision table.
+transitions:
+  - condition: "always (all four Table 6-15 outcomes proceed identically)"
+    to: "6.5"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.EvaluateAge#process"

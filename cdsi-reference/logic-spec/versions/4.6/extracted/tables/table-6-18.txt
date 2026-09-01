@@ -1,0 +1,5 @@
+TABLE 6-18 Did the Vaccine Dose Administered Satisfy the preferable Interval for the target dose?
+
+CONDITIONS | RULES |  | 
+Is the date administered < absolute minimum interval date? | Yes | No | No
+Is the absolute minimum interval date ≤ date administered < minimum interval date? | No | Yes | No

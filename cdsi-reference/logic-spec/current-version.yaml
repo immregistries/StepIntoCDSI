@@ -1,0 +1,3 @@
+# The active Logic Specification version. Deliberately a plain file (not a
+# symlink) so behavior is identical on Windows and Unix-like systems.
+version: "4.6"

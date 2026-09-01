@@ -1,0 +1,6 @@
+TABLE 8-11 How Many Points are Awarded to a Scorable Patient Series that has No Valid Doses?
+
+Conditions | If this condition is true for the scorable patient series | If this condition is true for two or more scorable patient series | If this condition is not true for the scorable patient series
+A scorable patient series can start earliest. | +1 | 0 | -1
+A scorable patient series is completable. | +1 | n/a | -1
+A scorable patient series is a product patient series. | -1 | n/a | +1

@@ -1,0 +1,156 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 63 of 151 
+ 
+6.8 EVALUATE FOR PREFERABLE VACCINE  
+Evaluate for preferable vaccine validates the vaccine of a vaccine dose administered against the list of preferable 
+vaccines. 
+Figure 6-17 depicts a patient who received a preferable vaccine while Figure 6-18 depicts a patient who did not 
+receive a preferable vaccine. 
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 64 of 151 
+ 
+ 
+FIGURE 6-17 PATIENT RECEIVED A PREFERABLE VACCINE 
+ 
+ 
+FIGURE 6-18 PATIENT DID NOT RECEIVE A PREFERABLE VACCINE 
+ 
+It should be noted that volume is sparsely populated and tracked differently in most systems. Therefore, volume 
+will not be used to evaluate the validity of a vaccine dose administered. However, it will be provided as an 
+evaluation reason that less than sufficient volume was administered. 
+The following process model, attribute table, decision table, and business rule table are used to evaluate for a 
+preferable vaccine. 
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 65 of 151 
+ 
+ 
+FIGURE 6-19 EVALUATE FOR A PREFERABLE VACCINE PROCESS MODEL 
+ 
+TABLE 6-25 PREFERABLE VACCINE ADMINISTERED ATTRIBUTES 
+Attribute Type 
+Attribute Name 
+Assumed Value if Empty 
+Vaccine dose administered 
+Date Administered 
+- 
+Vaccine dose administered 
+Volume  
+- 
+Vaccine dose administered 
+Trade Name  
+- 
+Supporting Data 
+Preferable Vaccine elements 
+- 
+Calculated date (CALCDTPREF-1) 
+Preferable Vaccine Type Begin Age Date 
+01/01/1900 
+Calculated date (CALCDTPREF-2) 
+Preferable Vaccine Type End Age Date 
+12/31/2999 
+ 
+TABLE 6-26 WAS THE VACCINE DOSE ADMINISTERED A PREFERABLE VACCINE FOR THE TARGET DOSE? 
+CONDITIONS 
+RULES 
+Is the vaccine type of 
+the vaccine dose 
+administered the 
+same as the vaccine 
+type of a preferable 
+vaccine for the target 
+dose? 
+Yes 
+Yes 
+No 
+Yes 
+Yes 
+
+CONDITIONS 
+RULES 
+Is the preferable 
+vaccine type begin 
+age date ≤ date 
+administered < 
+preferable vaccine 
+type end age date? 
+Yes 
+Yes 
+- 
+No 
+Yes 
+Is the trade name of 
+the vaccine dose 
+administered the 
+same as the trade 
+name of the 
+preferable vaccine for 
+the target dose? 
+Yes 
+Yes 
+- 
+- 
+No 
+Is the volume of the 
+vaccine dose 
+administered ≥ the 
+volume of the 
+preferable vaccine for 
+the target dose? 
+Yes 
+No 
+- 
+- 
+- 
+  
+OUTCOMES 
+Yes. The vaccine 
+dose 
+administered was 
+a preferable 
+vaccine for the 
+target dose. 
+Yes. The vaccine dose 
+administered was a 
+preferable vaccine for 
+the target dose. 
+Evaluation Reason is 
+'Volume administered is 
+less than recommended 
+volume'. 
+No. The vaccine 
+dose 
+administered was 
+not a preferable 
+vaccine for the 
+target dose. 
+No. The vaccine dose 
+administered was not a 
+preferable vaccine for 
+the target dose. It was 
+administered out of the 
+recommended age 
+range for the preferable 
+vaccine. 
+No. The vaccine 
+dose administered 
+was not a 
+preferable vaccine 
+for the target dose. 
+The trade name of 
+the vaccine dose 
+administered is not 
+the same as the 
+trade name of the 
+preferable vaccine. 
+ 
+TABLE 6-27 PREFERABLE VACCINE BUSINESS RULES 
+Business Rule ID 
+Business Rule 
+CALCDTPREF-1  
+A patient's preferable vaccine type begin age date must be calculated as the patient's date of birth plus the 
+vaccine type begin age of a preferable vaccine.  
+CALCDTPREF-2  
+A patient's preferable vaccine type end age date must be calculated as the patient's date of birth plus the 
+vaccine type end age of a preferable vaccine.

@@ -1,0 +1,168 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 80 of 151 
+ 
+7.5 GENERATE FORECAST DATES AND RECOMMENDED VACCINES 
+Generate forecast dates and recommend vaccines determines the forecast dates for the next target dose and 
+identifies one or more recommended vaccines if the target dose warrants specific vaccine recommendations. 
+Additional detail, such as administrative guidance for providers may also be included. The forecast dates are 
+generated based on the patient’s immunization history. If the patient has not adhered to the preferred schedule, 
+then the forecast dates are adjusted to provide the best dates for the next target dose. Figure 7-7 below provides 
+an illustration of how forecast dates appear on the timeline. 
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 81 of 151 
+ 
+ 
+FIGURE 7-7 FORECAST DATES TIMELINE 
+ 
+The following process model, attribute table, and business rule table are used to generate forecast dates. If an 
+attribute value is empty, then the date calculations will remain empty. No assumptions will be made for the 
+attribute. 
+ 
+FIGURE 7-8 GENERATE FORECAST DATES AND RECOMMENDED VACCINE PROCESS MODEL 
+ 
+TABLE 7-12 GENERATE FORECAST DATE AND RECOMMENDED VACCINE ATTRIBUTES 
+Attribute Type 
+Attribute Name 
+Assumed Value if Empty 
+Calculated date (CALCDTAGE-4) 
+Minimum Age Date 
+- 
+Calculated date (CALCDTAGE-3) 
+Earliest Recommended Age Date 
+- 
+Calculated date (CALCDTAGE-2) 
+Latest Recommended Age Date 
+- 
+Calculated date (CALCDTAGE-1) 
+Maximum Age Date 
+- 
+Calculated date (CALCDTINT-4) 
+Minimum Interval Date(s) 
+- 
+Calculated date (CALCDTINT-5) 
+Earliest Recommended Interval Date(s) 
+- 
+Calculated date (CALCDTINT-6) 
+Latest Recommended Interval Date(s) 
+- 
+Calculated date (CALCDTLIVE-4) 
+Latest Conflict End Interval Date 
+- 
+Supporting Data (Seasonal 
+Recommendation) 
+Seasonal Recommendation Start Date 
+01/01/1900 
+Supporting Data (Preferable Vaccine) 
+Vaccine Type (CVX) 
+- 
+Supporting Data (Preferable Vaccine) 
+Forecast Vaccine Type Flag 
+N 
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 82 of 151 
+ 
+ 
+TABLE 7-13 GENERATE FORECAST DATE AND RECOMMENDED VACCINE BUSINESS RULES 
+Business Rule ID 
+Business Rule 
+FORECASTDT-1  
+The earliest date of a patient series forecast made from a relevant patient series must be the candidate 
+earliest date.  
+FORECASTDT-2  
+The unadjusted recommended date of a patient series forecast must be one of the following: 
+• 
+The earliest recommended age date. 
+• 
+The latest of all earliest recommended interval dates if there is no earliest recommended age 
+date.  
+• 
+The earliest date of the patient series forecast if there is no earliest recommended age date or 
+earliest recommended interval date.  
+FORECASTDT-3  
+The unadjusted past due date of a patient series forecast must be one of the following: 
+• 
+The latest recommended age date minus 1 day. 
+• 
+The latest of all latest recommended interval dates minus 1 day if there is no latest recommended 
+age date.  
+• 
+Blank if there is no latest recommended age date or latest recommended interval date. 
+FORECASTDT-4  
+The latest date of a patient series forecast must be one of the following: 
+• 
+The maximum age date minus 1 day if there is a maximum age date. 
+• 
+Blank if there is no maximum age date. 
+FORECASTDT-5  
+The adjusted recommended date of a patient series forecast must be one of the following: 
+• 
+The earliest date of the patient series forecast. 
+• 
+The unadjusted recommended date of the patient series forecast if it is after the earliest date.  
+FORECASTDT-6  
+The adjusted past due date of a patient series forecast must be one of the following: 
+• 
+The later of the earliest date of the patient series forecast and the unadjusted past due date of the 
+patient series forecast if there is an unadjusted past due date.  
+• 
+Blank if there is no unadjusted past due date. 
+FORECASTGUIDANCE-
+1  
+Administrative guidance included in a forecast made for a patient must include all the following: 
+• 
+Administrative guidance pertaining to any antigen series that defines the regimen for a 
+recommended antigen.  
+• 
+Administrative guidance pertaining to any indication for which there is an active patient 
+observation for the patient.  
+• 
+Administrative guidance pertaining to any contraindication for which there is an active patient 
+observation for the patient.  
+FORECASTRECVAC-1  
+A series dose vaccine must be considered a recommended series dose vaccine for a patient series forecast 
+if all the following are true: 
+• 
+The series dose vaccine is a preferable vaccine. 
+• 
+The forecast vaccine type flag of the series dose vaccine is 'Y' 
+• 
+There is no vaccine contraindication involving the vaccine type that is used for the series dose 
+vaccine.  
+• 
+At least one of the following is true:  
+o 
+The earliest date of the patient series forecast is on or after the preferable vaccine type 
+begin age date and before the preferable vaccine type end age date of the series dose 
+vaccine.  
+o 
+The adjusted recommended date of the patient series forecast is on or after the 
+preferable vaccine type begin age date and before the preferable vaccine type end age 
+date of the series dose vaccine.  
+
+Business Rule ID 
+Business Rule 
+FORECASTDN-1  
+The forecast dose number for a patient series forecast must be calculated as one of the following: 
+• 
+The count of all target doses plus 1 where all the following are true: 
+o 
+The target dose is part of the relevant patient series. 
+o 
+The target dose has a target dose status of 'Satisfied.' 
+o 
+There is no seasonal recommendation start date for the series dose that is tracked by 
+the target dose.  
+• 
+The count of all target doses plus 1 where all the following are true: 
+o 
+The target dose is part of the relevant patient series. 
+o 
+The target dose has a target dose status of 'Satisfied.' 
+o 
+There is a seasonal recommendation start date for the series dose that is tracked by the 
+target dose.  
+o 
+The date administered of the vaccine dose administered evaluated by the target dose is 
+on or after the seasonal recommendation start date.

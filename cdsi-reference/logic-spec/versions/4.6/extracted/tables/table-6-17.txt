@@ -1,0 +1,7 @@
+TABLE 6-17 Preferable Interval Attributes
+
+Attribute Type | Attribute Name | Assumed Value if Empty
+Vaccine dose administered | Date Administered | -
+Supporting Data | Preferable Interval elements | -
+Calculated date (CALCDTINT-3) | Absolute Minimum Interval Date | 01/01/1900
+Calculated date (CALCDTINT-4) | Minimum Interval Date | 01/01/1900

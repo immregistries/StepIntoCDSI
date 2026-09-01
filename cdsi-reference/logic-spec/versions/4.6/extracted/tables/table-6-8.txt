@@ -1,0 +1,6 @@
+TABLE 6-8 Conditional Type of Interval – Is the Condition Met?
+
+Number of conditional doses administered (BR: CONDSKIP-1) / Dose Count Logic | Greater than Conditional Skip Dose Count | Equal to Conditional Skip Dose Count | Less than Conditional Skip Dose Count
+Greater Than | Yes. The condition is met. | No. The condition is not met. | No. The condition is not met.
+Equal | No. The condition is not met. | Yes. The condition is met. | No. The condition is not met.
+Less Than | No. The condition is not met. | No. The condition is not met. | Yes. The condition is met.

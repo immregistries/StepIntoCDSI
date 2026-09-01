@@ -1,0 +1,6 @@
+TABLE 6-22 Evaluate Allowable Interval Business Rules
+
+Business Rule ID | Business Rule
+CALCDTINT-1 | A patient's reference dose date for an interval must be calculated as the date administered of the most immediate previous vaccine dose administered if all the following are true: • The interval has a from immediate previous dose administered flag of 'Y' • The vaccine dose administered has an evaluation status of 'Valid' or 'Not Valid' • The vaccine dose administered is not an inadvertent administration.
+CALCDTINT-2 | A patient's reference dose date for an interval must be calculated as the date administered of the vaccine dose administered that satisfies the target dose with the same target dose number as the from target dose number in series if all the following are true for the interval: • From immediate previous dose administered flag is 'N' • From target dose number in series is not 'n/a'
+CALCDTINT-3 | A patient's absolute minimum interval date must be calculated as the patient's reference dose date plus the absolute minimum interval.

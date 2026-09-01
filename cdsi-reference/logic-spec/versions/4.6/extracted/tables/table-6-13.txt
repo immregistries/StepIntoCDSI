@@ -1,0 +1,5 @@
+TABLE 6-13 Was the vaccine dose administered an Inadvertent administration for the target dose?
+
+CONDITIONS | RULES | 
+Is the vaccine type of the vaccine dose administered one of the vaccine types of an inadvertent vaccine for the target dose? | Yes | No
+OUTCOMES | Yes. The vaccine dose administered was an inadvertent administration for the target dose. Target Dose Status is 'Not Satisfied'. Evaluation Status is 'Not Valid'. Evaluation Reason is 'Inadvertent Administration'. | No. The vaccine dose administered was not an inadvertent administration for the target dose.

@@ -1,0 +1,299 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 78 of 151 
+ 
+7.4 DETERMINE FORECAST NEED  
+Determine forecast need determines if there is a need to forecast dates. This involves reviewing patient data, 
+antigen administered records, and patient series. This is a prerequisite before a CDS engine can produce 
+forecast dates and reasons. 
+The following process model, attribute table, and decision table are used to determine the need to generate 
+forecast dates. 
+ 
+FIGURE 7-6 DETERMINE FORECAST NEED PROCESS MODEL 
+ 
+TABLE 7-9 DETERMINE FORECAST NEED ATTRIBUTES 
+Attribute Type 
+Attribute Name 
+Assumed Value if Empty 
+Immunization history 
+Vaccine Dose(s) Administered 
+- 
+Relevant Patient series 
+Target Dose Statuses 
+- 
+Supporting Data (Seasonal Recommendation) 
+Seasonal Recommendation End Date 
+12/31/2999 
+Section 7.2 Outcome 
+Evidence of Immunity 
+No evidence of immunity 
+Section 7.3 Outcome 
+Contraindicated Patient Series 
+The relevant patient series is 
+NOT a contraindicated patient 
+series. 
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 79 of 151 
+ 
+Attribute Type 
+Attribute Name 
+Assumed Value if Empty 
+Runtime data 
+Assessment Date 
+current date 
+Calculated date (CALCDTAGE-1) 
+Maximum Age Date 
+12/31/2999 
+Calculated date (FORECASTDTCAN-1) 
+Candidate Earliest Date 
+12/31/2999 
+ 
+TABLE 7-10 SHOULD THE PATIENT RECEIVE ANOTHER TARGET DOSE? 
+CONDITIONS 
+RULES 
+Does the patient 
+have at least one 
+target dose with 
+a target dose 
+status of 'Not 
+Satisfied'? 
+Yes 
+No 
+No 
+- 
+- 
+- 
+- 
+- 
+Does the patient 
+have at least one 
+target dose with 
+a target dose 
+status of 
+'Satisfied'? 
+- 
+Yes 
+No 
+- 
+- 
+- 
+- 
+- 
+Does the patient 
+have evidence of 
+immunity? 
+No 
+- 
+- 
+Yes 
+- 
+- 
+- 
+- 
+Is the relevant 
+patient series a 
+contraindicated 
+patient series? 
+No 
+- 
+- 
+- 
+Yes 
+- 
+- 
+- 
+Is the 
+assessment date 
+≤ the seasonal 
+recommendation 
+end date? 
+Yes 
+- 
+- 
+- 
+- 
+No 
+- 
+- 
+Is the 
+assessment date 
+< the maximum 
+age date? 
+Yes 
+- 
+- 
+- 
+- 
+- 
+No 
+- 
+Is the candidate 
+earliest date < 
+the maximum 
+age date? 
+Yes 
+- 
+- 
+- 
+- 
+- 
+- 
+No 
+  
+
+CONDITIONS 
+RULES 
+OUTCOMES 
+Yes. The 
+patient 
+should 
+receive 
+another 
+dose. 
+ 
+Patient 
+Series 
+Status is 
+'Not 
+Complete' 
+No. The 
+patient 
+should not 
+receive 
+another 
+dose. 
+ 
+Patient 
+Series 
+Status is 
+'Complete' 
+ 
+Forecast 
+reason is 
+'Patient 
+series is 
+complete'. 
+No. The patient 
+should not 
+receive another 
+dose. 
+ 
+Patient series 
+status is 'Not 
+Recommended' 
+ 
+Forecast reason 
+is 'Not 
+recommended 
+at this time due 
+to past 
+immunization 
+history' 
+No. The 
+patient 
+should not 
+receive 
+another 
+dose.  
+ 
+Patient 
+Series 
+Status is 
+'Immune' 
+ 
+Forecast 
+reason is 
+'Patient 
+has 
+evidence 
+of 
+immunity'. 
+No. The patient 
+should not 
+receive another 
+dose. 
+ 
+Patient Series 
+Status is 
+'Contraindicated' 
+ 
+Forecast reason 
+is 'Patient has a 
+contraindication'. 
+No. The patient 
+should not 
+receive another 
+dose.  
+ 
+Patient Series 
+Status is 'Not 
+Recommended'  
+ 
+Forecast reason 
+is 'Past seasonal 
+recommendation 
+end date'. 
+No. The 
+patient 
+should 
+not 
+receive 
+another 
+dose.  
+ 
+Patient 
+Series 
+Status is 
+'Aged Out' 
+ 
+Forecast 
+reason is 
+'Patient 
+has 
+exceeded 
+the 
+maximum 
+age' 
+No. The 
+patient 
+should not 
+receive 
+another 
+dose. 
+Patient 
+Series 
+Status is 
+'Aged Out'  
+ 
+Forecast 
+reason is 
+'Patient is 
+unable to 
+finish the 
+series 
+prior to 
+the 
+maximum 
+age'.  
+ 
+TABLE 7-11 DETERMINE FORECAST NEED BUSINESS RULES 
+Business Rule ID 
+Business Rule 
+CALCDTAGE-1  
+A patient's maximum age date must be calculated as the patient's date of birth plus the maximum age.  
+FORECASTDTCAN-1  
+The candidate earliest date of a patient series forecast must be the latest of the following dates: 
+• 
+Minimum age date 
+• 
+Latest of all minimum interval dates 
+• 
+Latest of all forecast conflict end dates 
+• 
+Seasonal recommendation start date 
+• 
+Latest of all dates administered of any inadvertent administration being evaluated against a target 
+dose that is part of a patient series that is the basis of the patient series forecast  
+• 
+Date administered of the most recent vaccine dose administered being evaluated against a target 
+dose that is part of a patient series that is the basis of the patient series forecast.

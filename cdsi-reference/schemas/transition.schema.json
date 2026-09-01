@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stepintocdsi/cdsi-reference/schemas/transition.schema.json",
+  "title": "Logic Specification transitions.yaml",
+  "type": "object",
+  "required": ["from", "spec_defines_transition", "transitions"],
+  "properties": {
+    "from": { "type": "string" },
+    "spec_defines_transition": { "type": "boolean" },
+    "note": { "type": "string" },
+    "transitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["condition", "to"],
+        "properties": {
+          "condition": { "type": "string" },
+          "to": { "type": "string" },
+          "verified_in": { "type": "string" }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

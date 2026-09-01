@@ -1,0 +1,6 @@
+TABLE 5-5 Is An Antigen Series a Relevant Patient series for a Patient?
+
+CONDITIONS | RULES |  |  | 
+Is the patient gender one of the required genders of the antigen series? | Yes | No | Yes | Yes
+Is the series type of the antigen series 'Standard' or 'Evaluation Only'? | Yes | - | No | No
+Does at least one indication that drives the need for the antigen series apply to the patient? | - | - | Yes | No

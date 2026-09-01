@@ -1,0 +1,17 @@
+5 CREATE RELEVANT PATIENT SERIES 
+The antigen Supporting Data defines one or more antigen series for each antigen. Before beginning the 
+evaluation process for a given patient, a set of relevant patient series must first be selected and created for the 
+patient. Not all antigen series will be relevant for a given patient and only antigen series appropriate for the 
+patient should be evaluated, forecasted, and considered for best patient series selection. The appropriateness 
+of an antigen series is based on criteria such as patient gender, age, and underlying conditions. 
+TABLE 5-1 CREATE RELEVANT PATIENT SERIES PROCESS STEPS 
+Section 
+Activity 
+Goal 
+5.1 
+Select Relevant Patient Series 
+The goal of this step is to identify the antigen series which are appropriate for the 
+patient. 
+ 
+ 
+FIGURE 5-1 CREATE RELEVANT SERIES PROCESS MODEL

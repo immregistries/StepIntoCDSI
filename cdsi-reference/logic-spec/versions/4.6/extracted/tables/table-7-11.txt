@@ -1,0 +1,5 @@
+TABLE 7-11 Determine Forecast Need Business Rules
+
+Business Rule ID | Business Rule
+CALCDTAGE-1 | A patient's maximum age date must be calculated as the patient's date of birth plus the maximum age.
+FORECASTDTCAN-1 | The candidate earliest date of a patient series forecast must be the latest of the following dates: • Minimum age date • Latest of all minimum interval dates • Latest of all forecast conflict end dates • Seasonal recommendation start date • Latest of all dates administered of any inadvertent administration being evaluated against a target dose that is part of a patient series that is the basis of the patient series forecast • Date administered of the most recent vaccine dose administered being evaluated against a target dose that is part of a patient series that is the basis of the patient series forecast.

@@ -1,0 +1,8 @@
+TABLE 6-5 Conditional Skip Business Rules
+
+Business Rule ID | Business Rule
+CALCDTSKIP-3 | A patient's conditional skip begin age date must be calculated as the patient's date of birth plus the conditional skip begin age of a conditional skip.
+CALCDTSKIP-4 | A patient's conditional skip end age date must be calculated as the patient's date of birth plus the conditional skip end age of a conditional skip.
+CALCDTSKIP-5 | A patient's conditional skip interval date must be calculated as the vaccine date administered from the immediate previous vaccine dose administered plus the Interval of the conditional skip condition.
+CONDSKIP-1 | The Number of Conditional Doses Administered must be calculated as the count of vaccine doses administered where all the following are true: • The vaccine type of the vaccine dose administered is one of the conditional skip vaccine types. • The date administered is on or after the conditional skip begin age date and before the conditional skip end age date. • The date administered is on or after the conditional skip start date and before conditional skip end date. • The Evaluation Status must be one of the following: • 'Valid' when the conditional skip dose type is 'Valid'. • Any status when the conditional skip dose type is 'Total'.
+CONDSKIP-2 | The Conditional Skip Reference Date must be one of the following: • The Date Administered of the vaccine dose administered when evaluating a vaccine dose administered. • The Assessment Date when determining a forecast. • The Earliest Date when validating a forecast.

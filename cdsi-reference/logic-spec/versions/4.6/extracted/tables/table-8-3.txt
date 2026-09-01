@@ -1,0 +1,12 @@
+TABLE 8-3 Is There a single Prioritized Patient Series in a series group?
+
+CONDITIONS | RULES |  |  |  | 
+How many scorable patient series are in the series group? | 0 | 1 | >1 | >1 | >1
+How many default patient series are in the series group? | 1 | - | - | - | 1
+How many complete patient series are in the series group? | - | - | 1 | 0 | 0
+How many in-process patient series are in the series group? | - | - | - | 1 | 0
+OUTCOMES | Yes. The single default patient series is the prioritized patient series for the series group. | Yes. The single scorable patient | Yes. The single complete patient | Yes. The single in-process patient series is the prioritized patient series for the series group. | Yes. The default patient series is the prioritized patient series for the series group.
+Default: No. There is no single |  | series is the | series is the |  | 
+prioritized patient series. More than |  | prioritized patient | prioritized patient |  | 
+one scorable patient series has |  | series for the | series for the |  | 
+potential. All scorable patient series are examined to see which should be scored and selected as the prioritized patient series for the series group. |  | series group. | series group. |  | 

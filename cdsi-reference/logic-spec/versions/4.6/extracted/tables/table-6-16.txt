@@ -1,0 +1,6 @@
+TABLE 6-16 Evaluate Age Business Rules
+
+Business Rule ID | Business Rule
+CALCDTAGE-1 | A patient's maximum age date must be calculated as the patient's date of birth plus the maximum age.
+CALCDTAGE-4 | A patient's minimum age date must be calculated as the patient's date of birth plus the minimum age.
+CALCDTAGE-5 | A patient's absolute minimum age date must be calculated as the patient's date of birth plus the absolute minimum age.

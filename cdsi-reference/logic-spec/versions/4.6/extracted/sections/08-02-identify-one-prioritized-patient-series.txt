@@ -1,0 +1,94 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 87 of 151 
+ 
+8.2 IDENTIFY ONE PRIORITIZED PATIENT SERIES 
+Identify one prioritized patient series examines all of the patient series for a given Series Group to determine if 
+one of the patient series is superior to all other patient series and can be considered the prioritized patient series. 
+TABLE 8-3 IS THERE A SINGLE PRIORITIZED PATIENT SERIES IN A SERIES GROUP? 
+
+CONDITIONS  
+RULES 
+How many scorable patient series 
+are in the series group? 
+0 
+1 
+>1 
+>1 
+>1 
+How many default patient series are 
+in the series group? 
+1 
+- 
+- 
+- 
+1 
+How many complete patient series 
+are in the series group? 
+- 
+- 
+1 
+0 
+0 
+How many in-process patient series 
+are in the series group? 
+- 
+- 
+- 
+1 
+0 
+OUTCOMES 
+ 
+Default: No. There is no single 
+prioritized patient series. More than 
+one scorable patient series has 
+potential. All scorable patient series 
+are examined to see which should be 
+scored and selected as the prioritized 
+patient series for the series group. 
+Yes. The single 
+default patient 
+series is the 
+prioritized patient 
+series for the 
+series group. 
+Yes. The single 
+scorable patient 
+series is the 
+prioritized patient 
+series for the 
+series group. 
+Yes. The single 
+complete patient 
+series is the 
+prioritized patient 
+series for the 
+series group. 
+Yes. The single 
+in-process patient 
+series is the 
+prioritized patient 
+series for the 
+series group. 
+Yes. The default 
+patient series is 
+the prioritized 
+patient series for 
+the series group. 
+ 
+TABLE 8-4 IDENTIFY ONE PRIORITIZED PATIENT SERIES BUSINESS RULES 
+Business Rule ID 
+Business Rule 
+SELECTB-6  
+A scorable patient series must be considered a complete patient series if the patient series forecast made 
+from the scorable patient series has a patient series status of 'Complete'.  
+SELECTB-7  
+A relevant patient series must be considered a default patient series if the default series flag is 'Y' for the 
+antigen series.  
+SELECTB-16  
+A scorable patient series must be considered an in-process patient series if all the following are true: 
+• 
+The scorable patient series includes at least one target dose with a target dose status of 
+'Satisfied.'  
+• 
+The patient series forecast made from the scorable patient series has a patient series status of 
+'Not Complete'.

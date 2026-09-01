@@ -1,0 +1,9 @@
+TABLE 4-1 Logic Specification Processing Steps
+
+Section | Activity | Goal
+4.1 | Gather Necessary Data | The goal of this step is to gather all pertinent information which will be used in subsequent steps in the process.
+4.2 | Organize Immunization History | The goal of this step is to break apart vaccine doses administered into their antigen parts.
+4.3 | Create Relevant Patient Series | The goal of this step is to instantiate (Chapter 5) antigen series into relevant patient series for this patient.
+4.4 | Evaluate and Forecast All Patient Series | The goal of this step is to evaluate (Chapter 6) each antigen administered and create a forecast for each relevant patient series (Chapter 7).
+4.5 | Select Best Patient Series | The goal of this step is to select one or more best patient series (Chapter 8) for the patient based on their evaluated history and forecast.
+4.6 | Identify and Evaluate Vaccine Group | The goal of this step is to merge together patient series forecasts into a vaccine group forecast (Chapter 9).

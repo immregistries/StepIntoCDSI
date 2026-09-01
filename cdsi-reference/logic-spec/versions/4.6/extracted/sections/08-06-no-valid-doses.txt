@@ -1,0 +1,44 @@
+8.6 NO VALID DOSES 
+No valid doses provide the decision table for determining the number of points to assign to a scorable patient 
+series when there are no valid doses. 
+TABLE 8-11 HOW MANY POINTS ARE AWARDED TO A SCORABLE PATIENT SERIES THAT HAS NO VALID 
+DOSES? 
+Conditions 
+If this condition is true for 
+the scorable patient series 
+If this condition is true for two or 
+more scorable patient series 
+If this condition is not true for 
+the scorable patient series 
+A scorable patient series can 
+start earliest. 
++1 
+0 
+-1 
+A scorable patient series is 
+completable. 
++1 
+n/a 
+-1 
+A scorable patient series is a 
+product patient series. 
+-1 
+n/a 
++1 
+ 
+TABLE 8-12 NO VALID DOSES BUSINESS RULES 
+Business Rule ID 
+Business Rule 
+SELECTB-3  
+A patient series must be considered completable if the forecast finish date is less than the maximum age 
+date of the last target dose.  
+SELECTB-23  
+A patient series must be considered a product patient series if the product path flag is 'Y' for the select patient 
+series.  
+SELECTB-12  
+The forecast finish date for a scorable patient series must be calculated as the earliest date of the patient 
+series forecast made from the scorable patient series plus the latest minimum interval from the remaining 
+target dose(s).  
+SELECTB-14  
+A patient series must be considered start earliest if the start date is before the start date for all other patient 
+series with a start date.

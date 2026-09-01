@@ -1,0 +1,10 @@
+TABLE 9-4 What is the Vaccine Group Status of a Vaccine Group forecast for a multiple antigent vaccine group?
+
+CONDITIONS | RULES |  |  |  |  | 
+Is there a patient series forecast contained in the vaccine group forecast with a patient series status of 'Contraindicated'? | Yes | No | No | No | No | No
+Is there a patient series forecast contained in the vaccine group forecast with a patient series status of 'Aged Out'? | - | Yes | No | No | No | No
+Is there a patient series forecast contained in the vaccine group forecast with a patient series status of 'Not Recommended'? | - | - | Yes | No | No | No
+Is there a patient series forecast contained in the vaccine group forecast with a patient series status of 'Not Complete'? | - | - | - | Yes | No | No
+Do all patient series forecasts contained in the vaccine group forecast have a patient series status of 'Immune'? | - | - | - | - | Yes | No
+Do all patient series forecasts contained in the vaccine group forecast have a patient series status of 'Complete' or 'Immune'? | - | - | - | - | - | Yes
+OUTCOMES | Contraindicated | Aged Out | Not Recommended | Not Complete | Immune | Complete

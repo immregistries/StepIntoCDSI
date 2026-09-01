@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stepintocdsi/cdsi-reference/schemas/mapping.schema.json",
+  "title": "mappings/spec-to-code.yaml",
+  "type": "object",
+  "required": ["spec_version", "sections"],
+  "properties": {
+    "spec_version": { "type": "string" },
+    "sections": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["title", "implementation", "mapping_status"],
+        "properties": {
+          "title": { "type": "string" },
+          "implementation": {
+            "type": "object",
+            "properties": {
+              "module": { "type": "string" },
+              "classes": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "tests": { "type": "array", "items": { "type": "string" } },
+          "mapping_status": { "type": "string", "enum": ["reviewed", "draft", "unmapped"] }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

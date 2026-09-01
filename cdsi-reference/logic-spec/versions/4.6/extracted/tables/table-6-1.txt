@@ -1,0 +1,13 @@
+TABLE 6-1 Evaluation Process Steps
+
+Section | Activity | Goal
+6.1 | Evaluate Dose Administered Condition | The goal of this step is to determine if a vaccine dose administered can be evaluated.
+6.2 | Evaluate Conditional Skip | The goal of this step is to determine if the target dose can be skipped due to a patient’s age or immunization history.
+6.3 | Evaluate For Inadvertent Vaccine | The goal of this step is to determine if the vaccine dose administered was an inadvertent administration due to the vaccine type that was administered.
+6.4 | Evaluate Age | The goal of this step is to determine if the vaccine dose administered was given at an appropriate age.
+6.5 | Evaluate Preferable Interval | The goal of this step is to determine if the vaccine dose administered was given at an appropriate interval.
+6.6 | Evaluate Allowable Interval | The goal of this step is to determine if the vaccine dose administered was given at an allowable interval.
+6.7 | Evaluate Vaccine Conflict | The goal of this step is to determine if the vaccine dose administered was in conflict with any other vaccines.
+6.8 | Evaluate For Preferable Vaccine | The goal of this step is to determine if the vaccine dose administered was one of the preferable vaccines.
+6.9 | Evaluate For Allowable Vaccine | The goal of this step is to determine if the vaccine dose administered was one of the allowable vaccines.
+6.10 | Satisfy Target Dose | The goal of this step is to determine if the target dose is satisfied.

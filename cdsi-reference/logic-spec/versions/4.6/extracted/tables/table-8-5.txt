@@ -1,0 +1,4 @@
+TABLE 8-5 Which Scorable Patient Series Should be Scored?
+
+CONDITIONS | RULES |  | 
+Are there 2 or more complete patient series in the series group? | Yes | No | No

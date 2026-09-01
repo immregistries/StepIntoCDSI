@@ -1,0 +1,39 @@
+6.3 EVALUATE FOR INADVERTENT VACCINE 
+Evaluate for inadvertent vaccine determines if the vaccine type of a vaccine dose administered was an 
+inadvertent administration due to the vaccine type that was administered.  
+The following process model, attribute table, Business Rule table and decision table, are used to evaluate for an 
+unallowable vaccine. 
+ 
+FIGURE 6-4 EVALUATE FOR AN INADVERTENT VACCINE PROCESS MODEL 
+ 
+TABLE 6-12 INADVERTENT VACCINE ATTRIBUTES 
+Attribute Type 
+Attribute Name 
+Assumed Value if Empty 
+Vaccine dose administered 
+Vaccine Type 
+- 
+Supporting Data (inadvertent Vaccine) 
+Vaccine Type  
+- 
+ 
+TABLE 6-13 WAS THE VACCINE DOSE ADMINISTERED AN INADVERTENT ADMINISTRATION FOR THE TARGET 
+DOSE? 
+CONDITIONS 
+RULES 
+Is the vaccine type of the vaccine dose 
+administered one of the vaccine types 
+of an inadvertent vaccine for the target 
+dose? 
+Yes 
+No 
+  
+OUTCOMES 
+Yes. The vaccine dose administered was an inadvertent 
+administration for the target dose. Target Dose Status is 
+'Not Satisfied'. Evaluation Status is 'Not Valid'. Evaluation 
+Reason is 'Inadvertent Administration'. 
+No. The vaccine dose 
+administered was not an 
+inadvertent administration for 
+the target dose.

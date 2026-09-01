@@ -1,0 +1,269 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 74 of 151 
+ 
+7.3 DETERMINE CONTRAINDICATIONS  
+ Determine contraindications assesses if any or all series for an antigen are contraindicated for the patient. 
+Contraindications may be applied at either the antigen or vaccine level.  
+Given the complex nature of contraindications, it may not always be possible to conclusively determine if a 
+contraindication applies to a patient. To minimize missed doses, in the case where a contraindication cannot be 
+definitively determined to be relevant for a patient, the contraindication will not be applied, but a notification 
+should be made to a clinician alerting them to the presence of the possible contraindication which could not be 
+resolved. 
+The following process model is used to assess contraindications. 
+ 
+FIGURE 7-3 CONTRAINDICATION PROCESS MODEL 
+ 
+TABLE 7-4 DETERMINE CONTRAINDICATION ATTRIBUTES 
+Attribute Type 
+Attribute Name 
+Assumed Value if Empty 
+Patient 
+Active Patient Observations 
+- 
+Patient 
+Adverse Reactions 
+- 
+Supporting Data 
+Contraindication elements 
+- 
+Processing data 
+Assessment Date 
+current date 
+Calculated date (CALCDTCI-1) 
+Contraindication Begin Age Date 
+01/01/1900 
+Calculated date (CALCDTCI-2) 
+Contraindication End Age Date 
+12/31/2999 
+ 
+An antigen contraindication prevents all relevant patient series for that antigen from recommending further 
+vaccination for the patient. That is, no relevant patient series for the antigen should forecast dates for the patient. 
+The patient series status will be contraindicated for each relevant patient series. 
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 75 of 151 
+ 
+ 
+FIGURE 7-4 ANTIGEN CONTRAINDICATION PROCESS MODEL 
+ 
+TABLE 7-5 DOES THE ANTIGEN CONTRAINDICATION APPLY TO THE PATIENT? 
+CONDITIONS 
+RULES 
+Does the antigen 
+contraindication 
+describe any active 
+patient 
+observations? 
+Yes 
+No 
+No 
+Unknown 
+- 
+Does the antigen 
+contraindication 
+describe any 
+adverse reactions? 
+No 
+Yes 
+No 
+Unknown 
+- 
+Is the 
+contraindication 
+begin age date ≤ 
+assessment date < 
+contraindication end 
+age date? 
+Yes 
+Yes 
+Yes 
+Yes 
+No 
+  
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 76 of 151 
+ 
+CONDITIONS 
+RULES 
+OUTCOMES 
+Yes. The antigen 
+contraindication 
+applies to the 
+patient. 
+Yes. The antigen 
+contraindication 
+applies to the 
+patient. 
+No. The antigen 
+contraindication 
+does not apply to 
+the patient. 
+No. It could not be 
+determined if the antigen 
+contraindication applies to 
+the patient; however, the 
+Contraindication Text 
+Description should be made 
+available to the clinician for 
+manual determination. 
+No. The antigen 
+contraindication 
+does not apply to 
+the patient. 
+ 
+A vaccine contraindication eliminates a specific vaccine from being forecast for the patient.  
+ 
+ 
+FIGURE 7-5 VACCINE CONTRAINDICATION PROCESS MODEL 
+ 
+TABLE 7-6 DOES THE VACCINE CONTRAINDICATION APPLY TO THE PATIENT? 
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 77 of 151 
+ 
+CONDITIONS 
+RULES 
+Does the vaccine 
+contraindication 
+describe any active 
+patient observations? 
+Yes 
+Yes 
+No 
+No 
+No 
+- 
+Unknown 
+Does the vaccine 
+contraindication 
+describe any adverse 
+reactions? 
+No 
+No 
+Yes 
+Yes 
+No 
+- 
+Unknown 
+Is the 
+contraindication 
+begin age date ≤ 
+assessment date < 
+contraindication end 
+age date? 
+Yes 
+Yes 
+Yes 
+Yes 
+- 
+No 
+Yes 
+Is the vaccine type of 
+the preferable 
+vaccine one of the 
+contraindicated vacci
+ne types for the 
+contraindication? 
+Yes 
+No 
+Yes 
+No 
+- 
+- 
+Yes 
+  
+OUTCOMES 
+Yes. The 
+vaccine 
+contraindicati
+on applies to 
+the patient. 
+No. The 
+vaccine 
+contraindicati
+on does not 
+apply to the 
+patient.      
+Yes. The 
+vaccine 
+contraindicati
+on applies to 
+the patient. 
+No. The 
+vaccine 
+contraindicati
+on does not 
+apply to the 
+patient. 
+No. The 
+vaccine 
+contraindicati
+on does not 
+apply to the 
+patient.      
+No. The 
+vaccine 
+contraindicati
+on does not 
+apply to the 
+patient. 
+No. It could 
+not be 
+determined if 
+the vaccine 
+contraindicatio
+n applies to 
+the patient; 
+however, the 
+Contraindicati
+on Text 
+Description 
+should be 
+made 
+available to 
+the clinician 
+for manual 
+determination. 
+ 
+A relevant patient series should not be forecast if either an antigen contraindication exists, or if all preferable 
+vaccines are contraindicated. 
+TABLE 7-7 IS THE RELEVANT PATIENT SERIES A CONTRAINDICATED PATIENT SERIES? 
+CONDITIONS 
+RULES 
+Are there any antigen contraindication that 
+apply to the patient? 
+Yes 
+No 
+No 
+
+CONDITIONS 
+RULES 
+Do all preferable vaccines for the relevant 
+patient series have at least one vaccine 
+contraindication that applies to the patient? 
+- 
+Yes 
+No 
+  
+OUTCOMES 
+Yes. The relevant patient 
+series is a contraindicated 
+patient series. 
+Yes. The relevant patient 
+series is a contraindicated 
+patient series. 
+No. The relevant patient 
+series is not a 
+contraindicated patient 
+series. 
+ 
+TABLE 7-8 DETERMINE CONTRAINDICATION BUSINESS RULES 
+Business Rule ID 
+Business Rule 
+CALCDTCI-1  
+A patient's contraindication begin age date must be calculated as the patient's date of birth plus the 
+contraindication begin age of a contraindication.  
+CALCDTCI-2  
+A patient's contraindication end age date must be calculated as the patient's date of birth plus the 
+contraindication end age of a contraindication.

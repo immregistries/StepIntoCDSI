@@ -1,0 +1,5 @@
+TABLE 6-30 Allowable Vaccine Business Rules
+
+CONDITIONS | RULES |  |  |  |  | 
+Was the vaccine dose administered at a valid age for the target dose? | Yes | Extraneous | No | - | - | -
+Did the vaccine dose administered satisfy all preferable intervals or all allowable intervals for the target dose? | Yes | - | - | No | - | -

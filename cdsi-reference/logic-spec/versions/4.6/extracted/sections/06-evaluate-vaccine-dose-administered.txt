@@ -1,0 +1,63 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 45 of 151 
+ 
+6 EVALUATE VACCINE DOSE ADMINISTERED  
+The core of a CDS engine is the process of evaluating a single vaccine dose administered against a defined 
+target dose within a relevant patient series to determine if the vaccine dose administered is “valid” or “not valid” 
+for the relevant patient series. The results will ultimately determine if all requirements of the target dose are 
+satisfied. This can be accomplished by breaking the evaluation process into simple logical components.  After 
+processing each logical component, the results of those logical components are used to determine if the vaccine 
+dose administered satisfies the goals of the target dose. 
+Each logical component has its own set of business rules that are used to determine if a target dose is “satisfied.” 
+These business rules are documented using business rules and decision tables. (See section 2.11 to review an 
+example of a decision table using a real-world scenario.) The decision table describes the way that the CDS 
+engine responds to various combinations of conditions. The implementer can clearly see the set of conditions, 
+how they work in combination, and what actions should be taken on a given set of conditions. 
+Specific attributes and decision tables are provided for each step of the evaluation process. 
+TABLE 6-1 EVALUATION PROCESS STEPS 
+Section 
+Activity 
+Goal 
+6.1 
+Evaluate Dose Administered Condition The goal of this step is to determine if a vaccine dose administered can be 
+evaluated. 
+6.2 
+Evaluate Conditional Skip 
+The goal of this step is to determine if the target dose can be skipped due to a 
+patient’s age or immunization history. 
+6.3 
+Evaluate For Inadvertent Vaccine 
+The goal of this step is to determine if the vaccine dose administered was an 
+inadvertent administration due to the vaccine type that was administered. 
+6.4 
+Evaluate Age 
+The goal of this step is to determine if the vaccine dose administered was given 
+at an appropriate age. 
+6.5 
+Evaluate Preferable Interval 
+The goal of this step is to determine if the vaccine dose administered was given 
+at an appropriate interval. 
+6.6 
+Evaluate Allowable Interval 
+The goal of this step is to determine if the vaccine dose administered was given 
+at an allowable interval. 
+6.7 
+Evaluate Vaccine Conflict 
+The goal of this step is to determine if the vaccine dose administered was in 
+conflict with any other vaccines. 
+6.8 
+Evaluate For Preferable Vaccine 
+The goal of this step is to determine if the vaccine dose administered was one 
+of the preferable vaccines. 
+6.9 
+Evaluate For Allowable Vaccine 
+The goal of this step is to determine if the vaccine dose administered was one 
+of the allowable vaccines. 
+6.10 
+Satisfy Target Dose 
+The goal of this step is to determine if the target dose is satisfied. 
+ 
+ 
+
+ 
+FIGURE 6-1 EVALUATION PROCESS MODEL

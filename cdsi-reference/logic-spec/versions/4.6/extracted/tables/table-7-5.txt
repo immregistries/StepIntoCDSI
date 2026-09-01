@@ -1,0 +1,6 @@
+TABLE 7-5 Does the Antigen Contraindication Apply to the Patient?
+
+CONDITIONS | RULES |  |  |  | 
+Does the antigen contraindication describe any active patient observations? | Yes | No | No | Unknown | -
+Does the antigen contraindication describe any adverse reactions? | No | Yes | No | Unknown | -
+Is the contraindication begin age date ≤ assessment date < contraindication end age date? | Yes | Yes | Yes | Yes | No

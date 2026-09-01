@@ -1,0 +1,95 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 35 of 151 
+ 
+4.4 EVALUATE AND FORECAST ALL RELEVANT PATIENT SERIES 
+This step is the core of the business logic and decision points many people think of when describing evaluation 
+and forecasting.  In the Logic Specification, this step contains all of the clinical business rules and decision logic 
+in the form of business rules and decision tables. 
+At the end of this step, each relevant patient series will have an evaluated history and a forecast. 
+The iterative nature of this step is best described with two activity diagrams.  First, Figure 4-5 shows the high-
+level iterative process of looping through all relevant patient series.  Next, Figure 4-6 specifically deals with the 
+details of evaluation.  A description of the activity diagram follows each figure. 
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 36 of 151 
+ 
+ 
+FIGURE 4-5 EVALUATE AND FORECAST PROCESS MODEL 
+ 
+At the highest level of this step, as illustrated in the figure above, a simple iterative process is used to walk 
+through each relevant patient series and apply the logic defined in the evaluation and forecasting chapters.  
+For each relevant patient series created in the create relevant patient series step (Chapter 5), the following steps 
+are performed: 
+1. Evaluate the immunization history. See the evaluate immunization history activity diagram below for further 
+details. 
+2. Create forecast dates and/or reasons for the next target dose to be administered.  Process models and 
+detailed decision logic on forecasting are in Chapter 7. 
+ 
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 37 of 151 
+ 
+ 
+FIGURE 4-6 EVALUATE IMMUNIZATION HISTORY PROCESS MODEL 
+ 
+Figure 4-6 illustrates the iterative nature of evaluate immunization history in greater detail. There are two 
+collections (e.g., arrays, lists, etc.) which must be traversed.  The first collection is the relevant patient series 
+consisting of one or more target doses. The second collection is the antigen administered records. At any point 
+in the iterative process either collection could be the trigger to end our evaluation process. Specifically, whichever 
+collection is exhausted first will be the trigger for ending the evaluation process. 
+It is important to note the contents of antigen administered records at this point in the process.  Antigen 
+administered records are only those which could potentially satisfy the goals of the relevant patient series.  For 
+example, if the patient series is a path to immunity for HepB, then the antigen administered records will only 
+contain HepB records in ascending date order. 
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 38 of 151 
+ 
+It should also be noted that when multiple relevant patient series have been created (Chapter 5), all antigen 
+administered records for the patient should be evaluated against each relevant patient series, and a status (e.g., 
+valid, not valid, etc.) should be assigned per dose per relevant patient series. An administered dose that is “valid” 
+for one relevant patient series may be “not valid” for a different relevant patient series for the same patient. 
+The evaluate immunization history process is as follows: 
+1. The process begins by getting the first target dose from the relevant patient series collection.  The current 
+target dose is an important concept as the process moves from evaluation into forecasting.  The evaluation 
+process will inform the forecasting process which target dose needs to be forecasted. 
+2. If the antigen administered collection has elements in it, the process gets the first antigen administered and 
+continues to step 3.  
+a. If the antigen administered collection is empty, the evaluation process for this relevant patient series 
+ends. 
+3. The step described as “evaluate the antigen administered record against the target dose” is a reference to 
+Chapter 6 which contains process models and detailed decision logic that must be followed prior to moving 
+on to step 4. 
+4. After the antigen administered record was evaluated against the target dose, the next step is to determine 
+which collections to iterate based on the results of the evaluation.   
+a. If the target dose status is satisfied, proceed to step 5. 
+i. The antigen administered was valid. The target dose is satisfied.  The evaluation process can 
+push forward to the next target dose if one exists. 
+b. If the target dose status is not satisfied, proceed to step 7. 
+i. The antigen administered did not meet the goals of the target dose. The evaluation process 
+cannot move onto the next target dose. 
+5. This step determines if the current target dose  is a recurring dose. This is a semi-rare condition (e.g., Td 
+boosters, yearly Flu, COVID-19, certain risk series). A recurring dose may recur based on a time interval 
+from the previous dose (i.e. a tetanus recurring dose every 10 years for adults) or based on a patient 
+observation (i.e. a pertussis recurring dose with every pregnancy).  
+a. If the target dose is defined to be a recurring dose, initialize a new target dose identical to the current 
+target dose.  The newly created target dose must now be the next element in the collection (e.g., 
+immediately following the current target dose just satisfied). Any subsequent target dose elements 
+will be moved down by one and will occur after the recurring dose.  Finally, iterate the collection to 
+get this newly created target dose and proceed to step 7. 
+b. If the target dose is not defined to be a recurring dose, proceed to step 6.  
+6. This step determines if there are more target doses in the relevant patient series collection. 
+a. If the relevant patient series collection has been exhausted, the evaluation process for this relevant 
+patient series ends.  Any remaining antigen administered records should have their evaluation 
+statuses set to “extraneous.”. 
+b. If the relevant patient series collection contains another target dose, get the next target dose and 
+proceed to step 7. 
+7. This step determines if there are any more antigen administered records to evaluate. 
+a. If the antigen administered collection has been exhausted, the evaluation process for this relevant 
+patient series ends. 
+b. If the antigen administered collection contains another record, get the next antigen administered 
+record and return back to step 3.   
+
+i. Repeat steps 3 – 7 until the evaluation process for this relevant patient series ends.  At this 
+point the process can end in one of two ways: (1) No more target doses (step 6.b) or (2) No 
+more antigen administered records (step 7a).

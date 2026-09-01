@@ -1,0 +1,40 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 93 of 151 
+ 
+9 IDENTIFY AND EVALUATE VACCINE GROUP 
+Identify and evaluate vaccine group combines patient series into a vaccine group-based forecast to provide a 
+common and consistent view for a forecast. In the evaluation, forecasting, and select patient series chapters, all 
+logic was specified for antigens. At this point it is important to define how those antigen-based evaluation and 
+forecasting results can be merged into vaccine group forecasts. For antigens which contain non-equivalent series 
+groups (e.g., multiple best patient series), it is important to only blend best patient series of the same series type 
+(e.g., risk with risk and standard with standard). Patients in this situation may end up with more than 1 vaccine 
+group forecast for a given vaccine group (e.g., a travel-based MMR forecast and an age-based MMR forecast). 
+Relationship to ACIP Recommendations 
+• 
+At present, MMR and DTaP/Tdap/Td vaccine groups are comprised of multiple antigens.  MMR contains 
+the antigens Measles, Mumps, and Rubella.  DTaP/Tdap/Td contains the antigens Diphtheria, Tetanus, 
+and Pertussis. 
+TABLE 9-1 IDENTIFY AND EVALUATE VACCINE GROUP PROCESS STEPS 
+Section 
+Activity 
+Goal 
+9.1 
+Apply General Vaccine Group Rules 
+The goal of the activity is to two-fold. The first is to apply general vaccine group 
+rules which apply to all vaccine groups. The second is to classify the vaccine 
+group type (Single Antigen or Multiple Antigen) for subsequent business rule 
+sections (9.2 or 9.3). 
+9.2 
+Single Antigen Vaccine Group 
+The goal of this activity is to apply the business rules necessary to generate a 
+vaccine group-based forecast in situations where only a single antigen is 
+associated with a vaccine group. 
+9.3 
+Multiple Antigen Vaccine Group 
+The goal of this activity is to apply the decision logic and business rules 
+necessary to generate a vaccine group-based forecast in situations where more 
+than one antigen is associated with a vaccine group. 
+ 
+The following figure provides an illustration of the identifying and evaluating vaccine group process. 
+ 
+FIGURE 9-1 IDENTIFY AND EVALUATE VACCINE GROUP PROCESS MODEL

@@ -1,0 +1,111 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 69 of 151 
+ 
+6.10 SATISFY TARGET DOSE  
+Satisfy target dose uses the results from the previous evaluation sections as conditions to determine if the target 
+dose is satisfied.   
+The following processing model and decision table are used to determine if the target dose was satisfied. 
+ 
+FIGURE 6-23 SATISFY TARGET DOSE PROCESS MODEL 
+ 
+TABLE 6-31 WAS THE TARGET DOSE SATISFIED? 
+CONDITIONS 
+RULES 
+Was the vaccine 
+dose administered at 
+a valid age for the 
+target dose? 
+Yes 
+Extraneous 
+No 
+- 
+- 
+- 
+Did the vaccine dose 
+administered satisfy 
+all preferable 
+intervals or all 
+allowable intervals 
+for the target dose? 
+Yes 
+- 
+- 
+No 
+- 
+- 
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 70 of 151 
+ 
+CONDITIONS 
+RULES 
+Is the current 
+vaccine dose 
+administered an 
+impacted vaccine 
+dose administered? 
+No 
+- 
+- 
+- 
+Yes 
+- 
+Was the vaccine 
+dose administered a 
+preferable vaccine or 
+an allowable vaccine 
+for the target dose? 
+Yes 
+- 
+- 
+- 
+- 
+No 
+  
+OUTCOMES 
+Yes. The target 
+dose status is 
+'Satisfied'. 
+Evaluation 
+status is 'Valid' 
+with evaluation 
+reasons. 
+No. The target 
+dose status is 'Not 
+Satisfied'. 
+Evaluation status 
+is 'Extraneous' 
+with evaluation 
+reasons. 
+No. The target 
+dose status is 
+'Not Satisfied'. 
+Evaluation 
+status is 'Not 
+Valid' with 
+evaluation 
+reasons. 
+No. The target 
+dose status is 
+'Not Satisfied'. 
+Evaluation 
+status is 'Not 
+Valid' with 
+evaluation 
+reasons. 
+No. The target 
+dose status is 
+'Not Satisfied'. 
+Evaluation 
+status is 'Not 
+Valid' with 
+evaluation 
+reasons. 
+No. The target 
+dose status is 
+'Not Satisfied'. 
+Evaluation 
+status is 'Not 
+Valid' with 
+evaluation 
+reasons.

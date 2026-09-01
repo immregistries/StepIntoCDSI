@@ -1,0 +1,40 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 31 of 151 
+ 
+4.1 GATHER NECESSARY DATA 
+Gathering all the necessary data is a generic step which could technically be performed in several different ways.  
+While this step is important, it is outside of the purview of this document and is only noted as a generic step in 
+the process.   
+The required data fall into two categories (1) Patient-related data and (2) Evaluation and forecasting data.  The 
+lists below provide class level data needed.  Further details on these classes can be found in Appendix A. 
+Patient-related data needed: 
+• 
+Patient 
+• 
+Vaccine Dose Administered 
+• 
+Vaccine 
+• 
+Immunization History 
+• 
+Adverse Reaction 
+• 
+Patient Observations 
+Evaluation and forecasting data needed: 
+• 
+Schedule 
+
+• 
+Antigen Series 
+• 
+Series Dose 
+• 
+Vaccine Group 
+• 
+Antigen 
+• 
+Vaccine 
+Finally, the term “gather” is not meant to imply a fetch, get, or retrieve operation to accumulate this data.  
+Depending upon the implementation, some of this data may be passed by an external entity; other data may 
+already be known; and still other data may arrive at different points in the process on an as needed basis.  It is 
+an acknowledgement of the minimal data needed in the evaluation and forecasting processes.

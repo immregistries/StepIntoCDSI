@@ -1,0 +1,6 @@
+TABLE 6-4 Conditional Skip Attributes
+
+Attribute Type | Attribute Name | Assumed Value if Empty
+Vaccine dose administered | Date Administered | -
+Patient Immunization History | Administered Dose Count | -
+Supporting Data (Conditional Skip) | Conditional Skip elements | -

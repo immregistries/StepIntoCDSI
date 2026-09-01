@@ -1,0 +1,14 @@
+TABLE 7-12 Generate Forecast Date and Recommended Vaccine Attributes
+
+Attribute Type | Attribute Name | Assumed Value if Empty
+Calculated date (CALCDTAGE-4) | Minimum Age Date | -
+Calculated date (CALCDTAGE-3) | Earliest Recommended Age Date | -
+Calculated date (CALCDTAGE-2) | Latest Recommended Age Date | -
+Calculated date (CALCDTAGE-1) | Maximum Age Date | -
+Calculated date (CALCDTINT-4) | Minimum Interval Date(s) | -
+Calculated date (CALCDTINT-5) | Earliest Recommended Interval Date(s) | -
+Calculated date (CALCDTINT-6) | Latest Recommended Interval Date(s) | -
+Calculated date (CALCDTLIVE-4) | Latest Conflict End Interval Date | -
+Supporting Data (Seasonal Recommendation) | Seasonal Recommendation Start Date | 01/01/1900
+Supporting Data (Preferable Vaccine) | Vaccine Type (CVX) | -
+Supporting Data (Preferable Vaccine) | Forecast Vaccine Type Flag | N

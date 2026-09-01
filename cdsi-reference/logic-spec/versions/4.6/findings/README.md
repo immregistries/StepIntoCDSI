@@ -1,0 +1,3 @@
+# Findings (not yet formalized as individual records)
+
+Two open questions were already surfaced while drafting the pilot step packages - see the "Review Findings" section of `../steps/06-04-evaluate-age/index.md` (a specification-internal inconsistency between Figure 6-5's column labels and Table 6-15's actual structure) and `../steps/04-01-gather-necessary-data/index.md` (an unresolved question about how the "gather" data list relates to supporting-data loading). Neither has been promoted to a formal `finding.yaml`/`finding.md` pair yet (Phase 9 of the plan) - do that once the findings workflow is built out, rather than inventing the format ad hoc here.

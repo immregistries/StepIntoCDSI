@@ -1,0 +1,90 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 58 of 151 
+ 
+6.6 EVALUATE ALLOWABLE INTERVAL  
+Evaluate allowable interval validates the date administered of a vaccine dose administered against defined 
+allowable interval(s) from previous vaccine dose(s) administered.  In rare cases, intervals can be applied which 
+are either abnormally early – usually specified in ACIP footnotes or subsequent clarifications – or intervals which 
+differ following a not valid administration.  
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 59 of 151 
+ 
+In cases where a target dose does not specify allowable interval attributes, evaluate allowable interval cannot 
+be used to validate a vaccine dose administered.  To avoid a false validation, the allowable interval should be 
+considered “not valid” in these cases. 
+The figure below provides evaluate allowable interval timeline used to define all adjacent intervals by using from 
+immediate previous dose administered flag as the reference dose.  
+ 
+FIGURE 6-12 EVALUATE ALLOWABLE INTERVAL 'FROM IMMEDIATE PREVIOUS DOSE ADMINISTERED FLAG' 
+TIMELINE 
+ 
+The figure below illustrates evaluate allowable interval timeline used to define all non-adjacent intervals by using 
+from target dose number in series as the reference dose. 
+ 
+FIGURE 6-13 EVALUATE ALLOWABLE INTERVAL 'FROM TARGET DOSE NUMBER IN SERIES' TIMELINE 
+ 
+The following process model, attribute table, decision table, and business rule table are used to evaluate interval 
+of a vaccine dose administered. 
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 60 of 151 
+ 
+ 
+FIGURE 6-14 EVALUATE ALLOWABLE INTERVAL PROCESS MODEL 
+ 
+TABLE 6-20 ALLOWABLE INTERVAL ATTRIBUTES 
+Attribute Type 
+Attribute Name 
+Assumed Value if Empty 
+Vaccine dose administered 
+Date Administered 
+- 
+Supporting Data 
+Allowable Interval elements 
+- 
+Calculated date (CALCDTINT-3) 
+Absolute Minimum Interval Date 
+01/01/1900 
+ 
+TABLE 6-21 DID THE VACCINE DOSE ADMINISTERED SATISFY THE ALLOWABLE INTERVAL FOR THE TARGET 
+DOSE? 
+CONDITIONS 
+RULES 
+Is the date administered < 
+absolute minimum interval 
+date? 
+Yes 
+No      
+  
+OUTCOMES 
+No. The vaccine dose administered did not satisfy the 
+allowable interval for the target dose. Evaluation 
+Reason is 'Too soon'. 
+Yes. The vaccine dose administered satisfied 
+the allowable interval for the target dose. 
+
+ 
+TABLE 6-22 EVALUATE ALLOWABLE INTERVAL BUSINESS RULES 
+Business Rule ID 
+Business Rule 
+CALCDTINT-1  
+A patient's reference dose date for an interval must be calculated as the date administered of the most 
+immediate previous vaccine dose administered if all the following are true: 
+• 
+The interval has a from immediate previous dose administered flag of 'Y' 
+• 
+The vaccine dose administered has an evaluation status of 'Valid' or 'Not Valid' 
+• 
+The vaccine dose administered is not an inadvertent administration. 
+CALCDTINT-2  
+A patient's reference dose date for an interval must be calculated as the date administered of the vaccine 
+dose administered that satisfies the target dose with the same target dose number as the from target dose 
+number in series if all the following are true for the interval: 
+• 
+From immediate previous dose administered flag is 'N' 
+• 
+From target dose number in series is not 'n/a' 
+CALCDTINT-3  
+A patient's absolute minimum interval date must be calculated as the patient's reference dose date plus the 
+absolute minimum interval.

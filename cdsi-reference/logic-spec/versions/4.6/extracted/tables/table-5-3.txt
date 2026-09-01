@@ -1,0 +1,5 @@
+TABLE 5-3 Select Relevant Patient Business Rules
+
+Business Rule ID | Business Rule
+CALCDTIND-1 | A patient's indication begin age date must be calculated as the patient's date of birth plus the indication begin age of an indication.
+CALCDTIND-2 | A patient's indication end age date must be calculated as the patient's date of birth plus the indication end age of an indication.

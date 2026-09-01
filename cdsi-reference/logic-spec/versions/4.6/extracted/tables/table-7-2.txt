@@ -1,0 +1,7 @@
+TABLE 7-2 Immunity Attributes
+
+CONDITIONS | RULES |  |  |  | 
+Does the patient history contain one of the immunity guidelines? | Yes | No | No | No | No
+Is the patient's date of birth < the immunity birth date? | - | Yes | Yes | Yes | No
+Does this patient have an immunity exclusion condition? | - | Yes | No | No | -
+Is the patient's country of birth the same as the immunity country of birth? | - | - | Yes | No | -

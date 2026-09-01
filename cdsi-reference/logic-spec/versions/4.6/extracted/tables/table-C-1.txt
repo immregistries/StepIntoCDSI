@@ -1,0 +1,22 @@
+TABLE C-1 Retired Items
+
+Version | Item | Name | Motivation
+4.4 | Business Rule | ALLOWABLE-1 | This rule is no longer used.
+4.4 | Business Rule | ALLOWABLE-2 | This rule is no longer used.
+4.4 | Business Rule | CALCDTINT-7 | This rule is no longer used.
+4.4 | Business Rule | CALCDTLIVE-1 | This rule is no longer used.
+4.4 | Business Rule | CALCDTLIVE-2 | This rule is no longer used.
+4.4 | Business Rule | CALCDTLIVE-3 | This rule is no longer used.
+4.4 | Business Rule | CALCDTLIVE-4 | This rule is no longer used.
+4.4 | Business Rule | CONFLICT-1 | This rule is no longer used.
+4.4 | Business Rule | CONFLICT-2 | This rule is already covered under the CONFLICT-1 business rule.
+4.4 | Business Rule | EVALINADVERT-1 | This rule is no longer used.
+4.4 | Business Rule | EVALINT-1 | This rule is no longer used.
+4.4 | Business Rule | EVALINT-2 | This rule is no longer used.
+4.4 | Business Rule | MULTIANTVG-2 | This rule is being replaced with new rule FORECASTVG-2.
+4.4 | Business Rule | MULTIANTVG-3 | This rule is being replaced with new rule FORECASTVG-3.
+4.4 | Business Rule | MULTIANTVG-4 | This rule is being replaced with new rule FORECASTVG-4.
+4.4 | Business Rule | MULTIANTVG-5 | This rule is being replaced with new rule FORECASTVG-5.
+4.4 | Business Rule | MULTIANTVG-6 | This rule is being replaced with new rule FORECASTVG-6.
+4.4 | Business Rule | MULTIANTVG-7 | This rule is being replaced with new rule FORECASTVG-7.
+4.4 | Business Rule | MULTIANTVG-8 | This rule is being replaced with new rule FORECASTVG-8.

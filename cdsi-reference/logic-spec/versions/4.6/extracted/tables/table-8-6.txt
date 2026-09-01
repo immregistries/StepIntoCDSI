@@ -1,0 +1,6 @@
+TABLE 8-6 Classify scorable patient series business rules
+
+Business Rule ID | Business Rule
+SELECTB-6 | A scorable patient series must be considered a complete patient series if the patient series forecast made from the scorable patient series has a patient series status of 'Complete'.
+SELECTB-16 | A scorable patient series must be considered an in-process patient series if all the following are true: • The scorable patient series includes at least one target dose with a target dose status of 'Satisfied.' • The patient series forecast made from the scorable patient series has a patient series status of 'Not Complete'.
+SELECTB-21 | The number of valid doses for a scorable patient series must be calculated as the count of the target doses included in the scorable patient series with a target dose status of 'Satisfied'.

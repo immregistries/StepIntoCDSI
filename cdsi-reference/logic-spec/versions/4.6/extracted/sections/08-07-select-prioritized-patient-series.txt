@@ -1,0 +1,19 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 91 of 151 
+ 
+8.7 SELECT PRIORITIZED PATIENT SERIES 
+Select prioritized patient series provides the business rules to be applied to the scored patient series which will 
+result in the prioritized patient series for the series group. 
+
+TABLE 8-13 SELECT PRIORITIZED PATIENT SERIES BUSINESS RULES 
+Business Rule ID 
+Business Rule 
+SELECTBEST-1  
+The scorable patient series score must be the sum of all points awarded to the scorable patient series.  
+SELECTBEST-2  
+The prioritized patient series must be one of the following: 
+• 
+The scorable patient series with the highest scorable patient series score. 
+• 
+The scorable patient series with the best ranked series preference if more than one scorable 
+patient series are tied for the highest scorable patient series score.

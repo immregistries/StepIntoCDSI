@@ -1,0 +1,4 @@
+TABLE 6-26 Was the vaccine dose administered a preferable Vaccine for the target dose?
+
+CONDITIONS | RULES |  |  |  | 
+Is the vaccine type of the vaccine dose administered the same as the vaccine type of a preferable vaccine for the target dose? | Yes | Yes | No | Yes | Yes

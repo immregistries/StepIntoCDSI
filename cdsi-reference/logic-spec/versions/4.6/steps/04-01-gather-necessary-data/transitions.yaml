@@ -1,0 +1,13 @@
+from: "4.1"
+spec_defines_transition: false
+note: >
+  The specification does not define a transition out of 4.1 - it explicitly
+  states gathering data is "outside of the purview of this document" (see
+  index.md's Review Findings). The transition below is therefore an
+  IMPLEMENTATION fact, not a specification citation: it documents what
+  cdsi-engine actually does, verified against
+  GatherNecessaryData.process()'s return statement.
+transitions:
+  - condition: "always (unconditional)"
+    to: "4.2"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.GatherNecessaryData#process"

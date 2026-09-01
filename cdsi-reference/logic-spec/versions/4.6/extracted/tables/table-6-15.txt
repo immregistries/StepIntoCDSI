@@ -1,0 +1,8 @@
+TABLE 6-15 Was the Vaccine Dose Administered at a Valid Age?
+
+CONDITIONS | RULES |  |  | 
+Is the date administered < absolute minimum age date? | Yes | No | No | No
+Is the absolute minimum age date ≤ date administered < minimum age date? | No | Yes | No | No
+Is the minimum age date ≤ date administered < maximum age date? | No | No | Yes | No
+Is the date administered ≥ maximum age date? | No | No | No | Yes
+OUTCOMES | No. The vaccine dose administered was not administered at a valid age for the target dose. Evaluation reason is 'Too young'. | Yes. The vaccine dose administered was administered at a valid age for the target dose. Evaluation reason is 'Grace period'. | Yes. The vaccine dose administered was administered at a valid age for the target dose. | No. The vaccine dose administered was not administered at a valid age for the target dose. It is extraneous. Evaluation reason is 'Too old'.

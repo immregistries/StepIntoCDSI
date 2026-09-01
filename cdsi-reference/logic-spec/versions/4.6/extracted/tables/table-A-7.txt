@@ -1,0 +1,22 @@
+TABLE A-7 Glossary
+
+Term | Definition
+Absolute Minimum Age | an age which may be earlier than the minimum age and allows for a vaccine dose administered to be considered valid when administered abnormally early (e.g. grace period)
+Absolute Minimum | an interval which maybe shorter than the minimum interval and allows for a vaccine dose administered to
+Interval | be considered valid when administered abnormally early (e.g. grace period)
+Active Patient Observation | a patient observation that is applicable to a patient at the time of an evaluation or forecast
+Administer Full Vaccine | an indicator whether a multiple antigen vaccine group should have all antigens in the vaccine group
+Group Flag | recommended to be administered at the same time
+Administrative Guidance | text conveying additional information pertaining to an antigen series, an indication or a contraindication
+Adverse Reaction | a negative health consequence experienced by a patient related in time to administration of vaccine (s). NOTE: 'In time' means that it happens in some reasonable time after the vaccination event. It might not be attributable to a specific vaccine dose administered, especially in cases when the patient receives several vaccines in one visit.
+Age | the length of time from birth to a specified time
+Aged Out | A patient series status that indicates the patient exceeded the maximum age prior to completing the patient series
+Allowable Interval | an interval that is outside of the preferable interval, but still counts towards immunity
+Allowable Vaccine | a series dose vaccine which is not currently recommended by ACIP for a series dose within an antigen series, but still contributes to completing the antigen series
+Allowable Vaccine Type | a list of vaccines that are allowed to be administered to a patient if a preferable vaccine is not available
+Antigen | a foreign (non-self) substance found in the body that produces an immune response
+Antigen | a contraindication which applies to all current formulations of vaccine for a given antigen (e.g. all
+Contraindication | formulations of hepatitis a vaccine are contraindicated for a patient with a hypersensitivity to alum)
+Antigen Series | one possible path to achieve presumed immunity against a target disease
+Antigen Supporting Data | supporting data for a specific antigen
+Assessment Date | the date for which a forecast is determined

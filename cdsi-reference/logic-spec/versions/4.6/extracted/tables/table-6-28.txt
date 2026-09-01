@@ -1,0 +1,8 @@
+TABLE 6-28 Allowable Vaccine Attributes
+
+Attribute Type | Attribute Name | Assumed Value if Empty
+Vaccine dose administered | Date Administered | -
+Vaccine dose administered | Vaccine Type | -
+Supporting data | Allowable Vaccine elements | -
+Calculated date (CALCDTALLOW-1) | Allowable Vaccine Type Begin Age Date | 01/01/1900
+Calculated date (CALCDTALLOW-2) | Allowable Vaccine Type End Age Date | 12/31/2999

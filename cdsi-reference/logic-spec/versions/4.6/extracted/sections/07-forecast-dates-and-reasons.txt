@@ -1,0 +1,41 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 71 of 151 
+ 
+7 FORECAST DATES AND REASONS  
+A CDS engine uses a patient’s medical and vaccine history to forecast immunization due dates for a relevant 
+patient series. It is also possible the patient would not be recommended additional doses. In that case, the 
+outcome of the forecast will be an appropriate status (e.g., complete, immune, contraindicated) and no dates will 
+be generated. This chapter identifies specific business rules that are used by a CDS engine to forecast the next 
+target dose. The major steps involved in this process are listed in the table below. 
+TABLE 7-1 FORECAST DATES AND REASONS PROCESS STEPS 
+Section 
+Activity 
+Goal 
+7.1 
+Evaluate Conditional Skip 
+The goal of this step is to determine if the target dose can be skipped due to a 
+patient’s age at assessment or immunization history. 
+7.2 
+Determine Evidence Of Immunity 
+The goal of this step is to determine if the patient has evidence of immunity. 
+7.3 
+Determine Contraindications 
+The goal of this step is to determine if any patient series are contraindicated. 
+7.4 
+Determine Forecast Need 
+The goal of this step is to determine if the patient should receive another dose. 
+7.5 
+Generate Forecast Dates And 
+Recommended Vaccines 
+The goal of this step is to generate forecast dates for the next target dose. 
+7.6 
+Validate Recommendation 
+The goal of this step is to ensure the generated forecast will be logical when the 
+patient arrives for their next visit (e.g., will they no longer need the dose). 
+ 
+The next figure provides an illustration of the forecast dates and reasons process. 
+ 
+   
+
+ 
+FIGURE 7-1 FORECAST DATES AND REASON PROCESS MODEL

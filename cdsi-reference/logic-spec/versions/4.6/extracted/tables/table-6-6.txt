@@ -1,0 +1,5 @@
+TABLE 6-6 Conditional Type of Age – Is the Condition Met?
+
+CONDITIONS | RULES | 
+Is the Conditional Skip End Age Date > Conditional Skip Reference Date ≥ Conditional Skip Begin Age Date? | Yes | No
+OUTCOMES | Yes. The condition is met. | No. The condition is not met.

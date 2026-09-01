@@ -1,0 +1,106 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 61 of 151 
+ 
+6.7 EVALUATE VACCINE CONFLICT  
+Evaluate vaccine conflict validates the date administered of a vaccine dose administered against previous 
+administered vaccines to ensure proper spacing between administrations. This covers live virus vaccine conflicts 
+as well as non-live virus vaccine conflicts. Many vaccines do not have any conflict with each other. Therefore, if 
+no vaccine Supporting Data exists for the vaccine type of the vaccine dose administered being evaluated, the 
+vaccine dose administered is not in conflict with any other vaccine dose administered. 
+ 
+FIGURE 6-15 EVALUATE VACCINE CONFLICT TIMELINE 
+ 
+The following process model, attribute table, decision tables, and business rule table are used to evaluate for a 
+vaccine conflict. 
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 62 of 151 
+ 
+ 
+FIGURE 6-16 EVALUATE VACCINE CONFLICT PROCESS MODEL 
+ 
+TABLE 6-23 VACCINE CONFLICT ATTRIBUTES 
+Attribute Type 
+Attribute Name 
+Assumed Value if Empty 
+Vaccine dose administered 
+Date Administered 
+- 
+Vaccine dose administered 
+Vaccine Type 
+- 
+Supporting Data 
+Live Virus Conflicts 
+- 
+Calculated date (CALCDTCONFLICT-1) 
+Conflict Begin Interval Date 
+- 
+Calculated date (CALCDTCONFLICT-2) 
+Conflict End Interval Date 
+- 
+ 
+Implementer Note 
+This section of the logic specification has been considerable refined in version 4.4 to be less process driven and more 
+business rule based. The outcome should be functionally equivalent to previous versions of the logic specification. One 
+important note is in the terminology used in the logic specification and the supporting data. In an effort to not break 
+existing implementations who auto-consume the supporting data, we have not updated headings or XML tags. These will 
+be migrated in 5.0 to use the same terms across the logic specification and the supporting data. 
+In the meantime, here are the terms in this version of the logic specification mapped to existing supporting data terms. 
+ 
+Logic Specification Term 
+Supporting Data Term 
+Conflicting Vaccine Type 
+Previous Vaccine Type 
+Impacted Vaccine Type 
+Current Vaccine Type 
+   
+ 
+TABLE 6-24 VACCINE CONFLICT BUSINESS RULES 
+
+Business Rule ID 
+Business Rule 
+CALCDTCONFLICT-1  
+The conflict begin interval date for a previous vaccine dose administered must be calculated as the date 
+administered of the previous vaccine dose administered plus the conflict begin interval of a vaccine type 
+conflict where all the following are true: 
+• 
+The vaccine type of the current vaccine dose administered is an impacted vaccine type.  
+• 
+The vaccine type of the previous vaccine dose administered is a conflicting vaccine type for the 
+impacted vaccine type.  
+CALCDTCONFLICT-2  
+The conflict end interval date for a previous vaccine dose administered must be calculated as one of the 
+following: 
+• 
+the date administered of the previous vaccine dose administered plus the minimum conflict end 
+interval of a vaccine type conflict if all the following are true:  
+o 
+The vaccine type of the current vaccine dose administered is an impacted vaccine type.  
+o 
+The vaccine type of the previous vaccine dose administered is a conflicting vaccine type 
+for the impacted vaccine type.  
+o 
+The previous vaccine dose administered has one of the following: 
+▪ 
+an evaluation status of 'Valid' 
+▪ 
+no evaluation status. 
+• 
+the date administered of the previous vaccine dose administered plus the conflict end interval of a 
+vaccine type conflict if all the following are true:  
+o 
+The vaccine type of the current vaccine dose administered is an impacted vaccine type.  
+o 
+The vaccine type of the previous vaccine dose administered is a conflicting vaccine type 
+for the impacted vaccine type.  
+o 
+The previous vaccine dose administered has an evaluation status. 
+o 
+The previous vaccine dose administered does not have an evaluation status of 'Valid'. 
+CONFLICT-3  
+A current vaccine dose administered must be considered an impacted vaccine dose administered if all the 
+following are true for the date administered of the current vaccine dose administered:  
+• 
+It is on or after the conflict begin interval date. 
+• 
+It is before the conflict end interval date.

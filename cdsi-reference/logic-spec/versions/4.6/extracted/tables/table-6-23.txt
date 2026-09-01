@@ -1,0 +1,8 @@
+TABLE 6-23 Vaccine Conflict Attributes
+
+Attribute Type | Attribute Name | Assumed Value if Empty
+Vaccine dose administered | Date Administered | -
+Vaccine dose administered | Vaccine Type | -
+Supporting Data | Live Virus Conflicts | -
+Calculated date (CALCDTCONFLICT-1) | Conflict Begin Interval Date | -
+Calculated date (CALCDTCONFLICT-2) | Conflict End Interval Date | -

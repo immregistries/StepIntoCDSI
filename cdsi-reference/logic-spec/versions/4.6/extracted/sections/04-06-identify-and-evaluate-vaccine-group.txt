@@ -1,0 +1,19 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 39 of 151 
+ 
+4.6 IDENTIFY AND EVALUATE VACCINE GROUP 
+The goal of identify and evaluate vaccine group is to merge together antigen-based forecasts into vaccine group 
+forecasts.  This is especially important in MMR and DTaP/Tdap/Td vaccine groups which each contain more 
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 40 of 151 
+ 
+than one antigen in their respective vaccine groups.  In these cases, it is important to provide a forecast 
+consistent with the vaccine group rather than the individual antigen.  The business rules to create vaccine group 
+forecasts are defined in Chapter 9. For vaccine groups which contain non-equivalent series groups, it is important 
+to only blend best patient series of the same series type (e.g., risk with risk and standard with standard). 
+The process of identifying and evaluating a vaccine group at the highest level is a simple iterative process which 
+loops through each vaccine group and applies the business rules defined in Chapter 9 to each vaccine group.  
+Figure 4-8 is a sample iterative process model that shows the looping structure. 
+ 
+FIGURE 4-8 IDENTIFY AND EVALUATE VACCINE GROUP PROCESS MODEL

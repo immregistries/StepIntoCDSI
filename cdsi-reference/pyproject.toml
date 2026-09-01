@@ -1,0 +1,26 @@
+[project]
+name = "cdsi-reference-tools"
+version = "0.1.0"
+description = "Deterministic extraction, normalization, and validation tools for cdsi-reference: the CDC CDSi Logic Specification and Supporting Data, versioned and mapped to the StepIntoCDSi engine."
+requires-python = ">=3.11"
+dependencies = [
+    "pymupdf==1.28.2",
+    "pyyaml==6.0.2",
+    "jsonschema==4.23.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.3.4",
+]
+
+[project.scripts]
+cdsi-reference-tools = "cdsi_reference_tools.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["tools"]
+include = ["cdsi_reference_tools*"]

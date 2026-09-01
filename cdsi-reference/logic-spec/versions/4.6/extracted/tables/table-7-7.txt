@@ -1,0 +1,4 @@
+TABLE 7-7 Is the Relevant Patient Series a Contraindicated Patient Series?
+
+CONDITIONS | RULES |  | 
+Are there any antigen contraindication that apply to the patient? | Yes | No | No

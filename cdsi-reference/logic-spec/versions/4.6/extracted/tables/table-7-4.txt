@@ -1,0 +1,9 @@
+TABLE 7-4 Determine Contraindication Attributes
+
+Attribute Type | Attribute Name | Assumed Value if Empty
+Patient | Active Patient Observations | -
+Patient | Adverse Reactions | -
+Supporting Data | Contraindication elements | -
+Processing data | Assessment Date | current date
+Calculated date (CALCDTCI-1) | Contraindication Begin Age Date | 01/01/1900
+Calculated date (CALCDTCI-2) | Contraindication End Age Date | 12/31/2999

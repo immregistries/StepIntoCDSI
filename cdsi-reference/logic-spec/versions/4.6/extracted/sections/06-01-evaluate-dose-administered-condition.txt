@@ -1,0 +1,59 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 46 of 151 
+ 
+6.1 EVALUATE DOSE ADMINISTERED CONDITION  
+
+Evaluate Dose Administered Condition checks the dose administered to see if the target dose must be repeated 
+regardless of the other evaluation rules.   
+Relationship to ACIP recommendations:  
+• 
+Doses which were administered after the lot expiration date or which contain a condition do not need to 
+be evaluated.   
+• 
+Examples of conditions which would prevent evaluation of a vaccine dose administered range from 
+misadministration to recalls to cold chain breaks. 
+The following processing model, attribute table and decision table are used to determine if dose administered 
+can be evaluated. 
+ 
+FIGURE 6-2 VACCINE DOSE ADMINISTERED CONDITION PROCESS MODEL 
+ 
+TABLE 6-2 DOSE ADMINISTERED CONDITION ATTRIBUTES 
+Attribute Type 
+Attribute Name 
+Assumed Value if Empty 
+Vaccine dose administered 
+Date Administered 
+- 
+Vaccine dose administered 
+Dose Condition Flag 
+- 
+Calculated date (CALCDTLOTEXP-1) 
+Lot Expiration Date 
+12/31/2999 
+ 
+TABLE 6-3 CAN THE VACCINE DOSE ADMINISTERED BE EVALUATED? 
+CONDITIONS 
+RULES 
+Date administered > lot 
+number expiration 
+date? 
+Yes 
+No 
+No 
+Is the dose condition 
+flag 'Y'? 
+- 
+Yes 
+No 
+  
+OUTCOMES 
+No. The vaccine dose administered 
+cannot be evaluated. Target dose 
+status is 'not satisfied.'  
+Evaluation status is 'sub-standard.' 
+No. The vaccine dose administered cannot 
+be evaluated. Target dose status is 'not 
+satisfied.' Evaluation status is 'sub-standard.' 
+Yes. The vaccine dose 
+administered can be 
+evaluated.

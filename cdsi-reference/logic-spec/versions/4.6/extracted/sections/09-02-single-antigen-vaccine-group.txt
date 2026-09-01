@@ -1,0 +1,11 @@
+9.2 SINGLE ANTIGEN VACCINE GROUP  
+The forecasting rules which need to be applied to a single antigen vaccine group are listed in the table below. 
+TABLE 9-3 SINGLE ANTIGEN VACCINE GROUP BUSINESS RULES 
+Business Rule ID 
+Business Rule 
+SINGLEANTVG-1  
+The vaccine group status of a vaccine group forecast made for a single antigen vaccine group must be the 
+patient series status of the patient series forecast contained in the vaccine group forecast.  
+SINGLEANTVG-2  
+The earliest date of a vaccine group forecast made for a single antigen vaccine group must be the earliest 
+date of all the patient series forecasts contained in the vaccine group forecast.

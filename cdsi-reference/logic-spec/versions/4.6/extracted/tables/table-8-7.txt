@@ -1,0 +1,4 @@
+TABLE 8-7 How Many Points are Awarded to a Scorable Patient Series that is a Complete Patient Series?
+
+Conditions | If this condition is true for the scorable patient series | If this condition is true for two or more scorable patient series | If this condition is not true for the scorable patient series
+A scorable patient series has the most valid doses. | +1 | 0 | -1

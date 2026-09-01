@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stepintocdsi/cdsi-reference/schemas/step.schema.json",
+  "title": "Logic Specification step.yaml",
+  "type": "object",
+  "required": ["spec_version", "section", "title", "source_pages", "review_status"],
+  "properties": {
+    "spec_version": { "type": "string" },
+    "section": { "type": "string", "pattern": "^[0-9]+(\\.[0-9]+)?$" },
+    "title": { "type": "string" },
+    "source_pages": { "type": "array", "items": { "type": "integer", "minimum": 1 } },
+    "figures": { "type": "array", "items": { "type": "string" } },
+    "tables": { "type": "array", "items": { "type": "string" } },
+    "business_rules": { "type": "array", "items": { "type": "string" } },
+    "implementation": {
+      "type": "object",
+      "properties": {
+        "module": { "type": "string" },
+        "classes": { "type": "array", "items": { "type": "string" } },
+        "logic_step_type": { "type": "string" }
+      }
+    },
+    "tests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "enum": ["present", "test-gap"] },
+          "note": { "type": "string" },
+          "class": { "type": "string" }
+        }
+      }
+    },
+    "review_status": { "type": "string", "enum": ["draft", "reviewed"] }
+  },
+  "additionalProperties": true
+}

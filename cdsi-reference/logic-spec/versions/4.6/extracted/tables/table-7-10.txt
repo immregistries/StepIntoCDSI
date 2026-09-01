@@ -1,0 +1,10 @@
+TABLE 7-10 Should the Patient Receive Another Target Dose?
+
+CONDITIONS | RULES |  |  |  |  |  |  | 
+Does the patient have at least one target dose with a target dose status of 'Not Satisfied'? | Yes | No | No | - | - | - | - | -
+Does the patient have at least one target dose with a target dose status of 'Satisfied'? | - | Yes | No | - | - | - | - | -
+Does the patient have evidence of immunity? | No | - | - | Yes | - | - | - | -
+Is the relevant patient series a contraindicated patient series? | No | - | - | - | Yes | - | - | -
+Is the assessment date ≤ the seasonal recommendation end date? | Yes | - | - | - | - | No | - | -
+Is the assessment date < the maximum age date? | Yes | - | - | - | - | - | No | -
+Is the candidate earliest date < the maximum age date? | Yes | - | - | - | - | - | - | No

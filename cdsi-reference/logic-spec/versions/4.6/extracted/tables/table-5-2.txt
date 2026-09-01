@@ -1,0 +1,12 @@
+TABLE 5-2 Select Relevant Patient Series Attributes
+
+Attribute Type | Attribute Name | Assumed Value if Empty
+Patient | Gender | Unknown
+Patient | Date of Birth | -
+Patient history | Active Patient Observation(s) | -
+Supporting Data (Gender) | Required Gender | Gender of the patient
+Supporting Data (Series Type) | Series type | -
+Supporting Data (Indication) | Observation Code | -
+Runtime data | Assessment Date | current date
+Calculated date (CALCDTIND-1) | Indication Begin Age Date | 01/01/1900
+Calculated date (CALCDTIND-2) | Indication End Age Date | 12/31/2999

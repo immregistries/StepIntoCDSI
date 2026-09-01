@@ -1,0 +1,31 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 89 of 151 
+ 
+8.4 COMPLETE PATIENT SERIES 
+Complete patient series provides the decision table for determining the number of points to assign to a complete 
+patient series based on a specified condition.  
+TABLE 8-7 HOW MANY POINTS ARE AWARDED TO A SCORABLE PATIENT SERIES THAT IS A COMPLETE 
+PATIENT SERIES? 
+Conditions 
+If this condition is true for the 
+scorable patient series 
+If this condition is true for two or 
+more scorable patient series 
+If this condition is not true for 
+the scorable patient series 
+A scorable patient series has 
+the most valid doses. 
++1 
+0 
+-1 
+
+ 
+ TABLE 8-8 COMPLETE PATIENT SERIES BUSINESS RULES 
+Business Rule ID 
+Business Rule 
+SELECTB-6  
+A scorable patient series must be considered a complete patient series if the patient series forecast made 
+from the scorable patient series has a patient series status of 'Complete'.  
+SELECTB-19  
+A scorable patient series has the most valid doses if the number of valid doses is the same as or greater 
+than the number of valid doses in all other scorable patient series.

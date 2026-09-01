@@ -1,0 +1,97 @@
+Logic Specification for ACIP Recommendations v4.6 
+Page 84 of 151 
+ 
+8 SELECT BEST PATIENT SERIES  
+Select Best Patient Series involves reviewing all potential patient series which might satisfy the goals of an 
+antigen and determining the one or more revelant patient series which best fits the patient needs based on 
+several important factors.   
+The basic steps of this process are listed in table 8-1. Process steps 8.1 through 8.7 are repeated for each series 
+group to identify one prioritized patient series per series group. Process step 8.8 is then used to determing which 
+prioritized patient series are selected as a best patient series. In some cases, the prioritized patient series from 
+one series group may negate the need for the prioritized patient series from another equivalent series group. 
+However, in other cases, multiple prioritized patient series may be needed to fully protect the patient. 
+TABLE 8-1 SELECT BEST PATIENT SERIES PROCESS STEPS 
+Section 
+Activity 
+Goal 
+8.1 
+Pre-Filter Patient Series 
+The goal of this step is to determine which relevant patient series should be 
+excluded and which should be considered a scorable patient series. 
+8.2 
+Identify One Prioritized Patient Series 
+The goal of this step is to determine if one scorable patient series is superior to 
+the other scorable patient series for each series group. 
+8.3 
+Classify Scorable Patient Series 
+The goal of this step is to classify where the patient is in the overall path to 
+immunity and pass those scorable patient series on to the next step. Only those 
+scorable patient series with the most likely chance to be considered the best 
+are retained for scoring. 
+8.4 
+Complete Patient Series 
+The goal of this step is to apply the proper scoring business rules based on 
+results of the Classify Scorable Patient Series step. The scoring business rules 
+will determine the prioritized patient series. Scoring business rules are specific 
+to where the patient is in the overall path to immunity. The complete patient 
+series scoring business rules look at factors important when scorable patient 
+series are complete. Similarly, in-process patient series scoring business rules 
+and no valid doses scoring business rules look at factors important to their 
+respective situation. For any given Series Group, only one set of these scoring 
+business rules will be applied to each scorable patient series as determined by 
+Classify Scorable Patient Series. 
+8.5 
+In-Process Patient Series 
+The goal of this step is to apply the proper scoring business rules based on 
+results of the Classify Scorable Patient Series step. The scoring business rules 
+will determine the prioritized patient series. Scoring business rules are specific 
+to where the patient is in the overall path to immunity. The complete patient 
+series scoring business rules look at factors important when scorable patient 
+series are complete. Similarly, in-process patient series scoring business rules 
+and no valid doses scoring business rules look at factors important to their 
+respective situation. For any given Series Group, only one set of these scoring 
+business rules will be applied to each scorable patient series as determined by 
+the Classify Scorable Patient Series. 
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 85 of 151 
+ 
+Section 
+Activity 
+Goal 
+8.6 
+No Valid Doses 
+The goal of this step is to apply the proper scoring business rules based on 
+results of the Classify Scorable Patient Series step. The scoring business rules 
+will determine the prioritized patient series. Scoring business rules are specific 
+to where the patient is in the overall path to immunity. The complete patient 
+series scoring business rules look at factors important when scorable patient 
+series are complete. Similarly, in-process patient series scoring business rules 
+and no valid doses scoring business rules look at factors important to their 
+respective situation. For any given Series Group, only one set of these scoring 
+business rules will be applied to each scorable patient series as determined by 
+the Classify Scorable Patient Series. 
+8.7 
+Select Prioritized Patient Series 
+The goal of this step is to evaluate the scored patient series and determine 
+which of the scorable patient series is the one and only prioritized patient series 
+for the series group. 
+8.8 
+Determine Best Patient Series 
+The goal of this step is to identify a final set of best patient series that apply to 
+the patient. 
+ 
+The process model below illustrates the major steps involved in selecting the best patient series.  
+ 
+FIGURE 8-1 SELECT BEST PATIENT SERIES PROCESS MODEL 
+
+Logic Specification for ACIP Recommendations v4.6 
+Page 86 of 151 
+ 
+ 
+The process model below illustrates for a Series Group the major steps involved in selecting the prioritized 
+patient series.  
+ 
+ 
+
+FIGURE 8-2 SELECT PRIORITIZED PATIENT SERIES PROCESS MODEL

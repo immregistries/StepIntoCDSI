@@ -1,0 +1,8 @@
+TABLE 8-8 Complete Patient Series Business Rules
+
+Conditions | If this condition is true for the scorable patient series | If this condition is true for two or more scorable patient series | If this condition is not true for the scorable patient series
+A scorable patient series is a product patient series and has all valid doses. | +2 | n/a | -2
+A scorable patient series is completable. | +3 | n/a | -3
+A scorable patient series has the most valid doses. | +2 | 0 | -2
+A scorable patient series is closest to completion. | +2 | 0 | -2
+A scorable patient series can finish earliest. | +1 | 0 | -1

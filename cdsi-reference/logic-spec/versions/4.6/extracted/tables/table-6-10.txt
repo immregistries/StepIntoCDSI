@@ -1,0 +1,5 @@
+TABLE 6-10 Is the Conditional Skip Set Met?
+
+How many conditions were met? / Condition Logic Type | All | At least one, but not all N | one
+AND | Yes. The set is met. | No. The set is not met. | No. The set is not met.
+OR | Yes. The set is met. | Yes. The set is met. | No. The set is not met.

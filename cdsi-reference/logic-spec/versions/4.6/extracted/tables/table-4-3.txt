@@ -1,0 +1,10 @@
+TABLE 4-3 After Organize Immunization History Example
+
+Product (CVX/MVX) – Description | Date | Antigen* | 
+Pediarix (110/SKB) – DTaP-HepB-IPV | 03/01/2011 | Diphtheria | 
+Pediarix (110/SKB) – DTaP-HepB-IPV | 06/01/2011 | Diphtheria | 
+Engerix B-Peds (08/SKB) – HepB | 01/01/2011 | HepB | 
+Pediarix (110/SKB) – DTaP-HepB-IPV | 03/01/2011 | HepB | 
+Pediarix (110/SKB) – DTaP-HepB-IPV | 06/01/2011 | HepB | 
+ActHIB (48/PMC) – Hib | 03/01/2011 | Hib | 
+ActHIB (48/PMC) – Hib | 06/01/2011 | Hib | 

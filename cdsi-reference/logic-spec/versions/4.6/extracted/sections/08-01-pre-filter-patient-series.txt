@@ -1,0 +1,62 @@
+8.1 PRE-FILTER PATIENT SERIES 
+Pre-filter patient series examines each of the patient series for a given Series Group to determine if any series 
+should be removed from consideration for best patient series. If a Series Group contains relevant patient series 
+of different priorities, only the set of highest priority patient series should be considered when determining the 
+best patient series for the Series Group. 
+TABLE 8-2 PRE-FILTER PATIENT SERIES BUSINESS RULES 
+Business Rule ID 
+Business Rule 
+SELECTB-24  
+A relevant patient series that is the basis of a patient series forecast must be considered a candidate scorable 
+patient series if one of the following is true: 
+• 
+The patient series forecast does not have a patient series status of 'Contraindicated.' 
+• 
+All the following are true: 
+o 
+The patient series forecast has a patient series status of 'Contraindicated.' 
+o 
+Each relevant patient series that is the basis of a patient series forecast that is made for 
+the same series group has a patient series status of 'Contraindicated'  
+SELECTSCORE-2  
+A relevant patient series must be considered a scorable patient series if one of the following is true: 
+• 
+All the following are true for the relevant patient series: 
+o 
+The relevant patient series tracks an antigen series with a series type of 'Risk.' 
+o 
+The series priority of the antigen series tracked by the relevant patient series is the same 
+as or greater than the series priority of any relevant patient series that tracks an antigen 
+series that belongs to the same series group as the relevant patient series.  
+o 
+It is a candidate scorable patient series. 
+• 
+All the following are true for the relevant patient series: 
+o 
+The relevant patient series tracks an antigen series with a series type of 'Standard.' 
+o 
+The relevant patient series includes a target dose evaluating at least one vaccine dose 
+administered with an evaluation status of 'Valid'.  
+o 
+The earliest vaccine dose administered with an evaluation status of 'Valid' associated 
+with the relevant patient series has a date administered before the maximum age to start 
+date.  
+o 
+It is a candidate scorable patient series. 
+• 
+All the following are true for the relevant patient series: 
+o 
+The relevant patient series tracks an antigen series with a series type of 'Standard' 
+o 
+The number of valid doses is 0 for each relevant patient series in the series group.  
+o 
+There is no default patient series for the series group. 
+o 
+It is a candidate scorable patient series. 
+• 
+All the following are true for the relevant patient series: 
+o 
+The relevant patient series tracks an antigen series with a series type of 'Evaluation 
+Only'  
+o 
+The relevant patient series is a complete patient series.

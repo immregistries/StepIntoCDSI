@@ -1,0 +1,5 @@
+TABLE 6-21 Did the Vaccine Dose Administered Satisfy the Allowable Interval for the target dose?
+
+CONDITIONS | RULES | 
+Is the date administered < absolute minimum interval date? | Yes | No
+OUTCOMES | No. The vaccine dose administered did not satisfy the allowable interval for the target dose. Evaluation Reason is 'Too soon'. | Yes. The vaccine dose administered satisfied the allowable interval for the target dose.

@@ -1,0 +1,8 @@
+TABLE 6-14 Age Attributes
+
+Attribute Type | Attribute Name | Assumed Value if Empty
+Patient | Date of Birth | -
+Vaccine dose administered | Date Administered | -
+Calculated date (CALCDTAGE-1) | Maximum Age Date | 12/31/2999
+Calculated date (CALCDTAGE-4) | Minimum Age Date | 01/01/1900
+Calculated date (CALCDTAGE-5) | Absolute Minimum Age Date | 01/01/1900

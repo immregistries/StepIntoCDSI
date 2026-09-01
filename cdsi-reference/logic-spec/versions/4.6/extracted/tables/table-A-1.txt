@@ -1,0 +1,20 @@
+TABLE A-1 Domain Model Glossary
+
+Term | Definition
+Binary Verb Concept | a verb concept that involves exactly two noun concepts
+Business Rule | a rule that is practicable and that is under business jurisdiction
+Category | a general concept whose meaning is more restrictive, but otherwise compliant with, another general concept (the super-category)
+Concept | a notion in a person’s mind that is a unit of knowledge created by a unique combination of definitional criteria
+Concept Model | a set of concepts structured according to the relations among them
+Concept Model Diagram | a graphical representation of a concept model
+General Concept | a noun concept that classifies potentially many things on the basis of common properties
+Neighborhood | a section of a concept model diagram separated for convenience
+Noun Concept | a concept that is the meaning of a noun or noun phrase
+Property | a quality or trait belonging to a thing itself
+Role | A noun concept that reflects how another noun concept is viewed in the context of a verb concept
+Rule | a guide for conduct or action; one of a set of usually official regulations by which an activity (as a sport) is governed; a standard on which a decision or judgment may be based [MWUD 1a, 1f and [criterion] 2]
+Rule-based Term | a term for a concept for which some explicit definitional rule(s) is/are specified separately from the concept’s definition
+Super-Category | a general concept that is broader than its related category/ies
+Synonym | a word (or phrase) having the same meaning as another word (or phrase)
+Term | a designation for a general concept
+U-nary Verb Concept | a verb concept that involves exactly one noun concept
