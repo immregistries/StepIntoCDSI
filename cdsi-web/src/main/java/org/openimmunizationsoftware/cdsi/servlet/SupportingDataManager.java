@@ -208,6 +208,20 @@ public class SupportingDataManager {
             }
         }
 
+        // No configured override: default to the latest version of the standard
+        // CDC knowledge base, not merely the alphabetically-first set overall.
+        // Without this, a bundled alternative schedule (e.g. "USA-DEMO-...")
+        // could silently become the plain default the moment its name sorted
+        // before "supporting-data-...", and among CDC sets themselves the
+        // alphabetically-first one is not reliably the latest (e.g. "4.10"
+        // sorts before "4.9"). Alternative schedules remain fully selectable
+        // via an explicit supportingDataSet/knowledgeBaseId request parameter -
+        // this only changes what's picked when nothing was requested.
+        String latestDefaultKnowledgeBaseSetId = resolveSupportingDataSetForKnowledgeBase(servletContext, null, null);
+        if (latestDefaultKnowledgeBaseSetId != null) {
+            return latestDefaultKnowledgeBaseSetId;
+        }
+
         return setIdList.get(0);
     }
 
