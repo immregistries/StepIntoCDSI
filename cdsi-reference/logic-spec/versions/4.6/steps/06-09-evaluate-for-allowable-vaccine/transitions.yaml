@@ -1,0 +1,7 @@
+from: "6.9"
+spec_defines_transition: false
+note: "Unconditional, regardless of whether an allowable vaccine matched - a miss is recorded (statusCause += \"Vaccine\") for 6.10, not branched on here."
+transitions:
+  - condition: "always"
+    to: "6.10"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.EvaluateForAllowableVaccine#process"

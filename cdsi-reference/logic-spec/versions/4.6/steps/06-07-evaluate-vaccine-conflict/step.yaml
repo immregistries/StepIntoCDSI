@@ -1,0 +1,26 @@
+spec_version: "4.6"
+section: "6.7"
+title: "Evaluate Vaccine Conflict"
+source_pages: [61, 62]
+figures:
+  - "Figure 6-15"
+  - "Figure 6-16"
+tables: []
+business_rules:
+  - "CALCDTCONFLICT-1"
+  - "CALCDTCONFLICT-2"
+  - "CONFLICT-3"
+implementation:
+  module: "cdsi-engine"
+  classes:
+    - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateVaccineConflict"
+  note: >
+    No decision table is cited because this section genuinely has none
+    in v4.6 (see its Implementer Note - refined in v4.4 to be business-
+    rule based, not process/table driven). The code still implements it
+    internally as three nested LogicTables with stale "Table 4-20/4-21/
+    4-22" labels left over from a pre-4.6 chapter numbering.
+tests:
+  - status: "test-gap"
+    note: "No dedicated unit test."
+review_status: "draft"

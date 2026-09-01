@@ -1,0 +1,20 @@
+spec_version: "4.6"
+section: "6.1"
+title: "Evaluate Dose Administered Condition"
+source_pages: [46, 47]
+figures:
+  - "Figure 6-2"
+tables:
+  - "Table 6-2"
+  - "Table 6-3"
+business_rules:
+  - "CALCDTLOTEXP-1"
+implementation:
+  module: "cdsi-engine"
+  classes:
+    - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateDoseAdministeredCondition"
+tests:
+  - status: "present"
+    class: "org.openimmunizationsoftware.cdsi.core.logic.EvaluateDoseAdministeredConditionTest"
+    note: "cdsi-engine unit test - exists, unlike most Chapter 6 steps."
+review_status: "draft"

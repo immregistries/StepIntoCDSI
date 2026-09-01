@@ -1,0 +1,19 @@
+from: "6.1"
+spec_defines_transition: false
+note: >
+  EvaluateDoseAdministeredCondition.process() sets an initial default
+  next-step of EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST (7.1) BEFORE
+  evaluateLogicTables() runs - that looks wrong (6.1 should default
+  toward 6.2, not skip into forecasting), but it is provably dead code:
+  Table 6-3's two conditions are logically exhaustive (YES/NO x
+  ANY/YES/NO covers every case) and all three outcomes explicitly call
+  setNextLogicStepType() themselves, so the pre-evaluation default is
+  always overwritten. Documented here as a code-clarity finding, not a
+  functional defect.
+transitions:
+  - condition: "Rule 1 (lot expired) or Rule 2 (dose condition flag 'Y') - dose rejected"
+    to: "4.4"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.EvaluateDoseAdministeredCondition$LT outcomes 0/1"
+  - condition: "Rule 3 (neither) - dose can be evaluated"
+    to: "6.2"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.EvaluateDoseAdministeredCondition$LT outcome 2"

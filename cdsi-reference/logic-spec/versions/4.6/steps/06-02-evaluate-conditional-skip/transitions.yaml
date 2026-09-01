@@ -1,0 +1,16 @@
+from: "6.2"
+spec_defines_transition: false
+note: >
+  Verified in EvaluateConditionalSkipForEvaluation's constructor call to
+  its superclass EvaluateConditionalSkip: noSkip=EVALUATE_FOR_INADVERTENT_VACCINE
+  (6.3), skip=EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES (4.4). The shared
+  base class's process() sets the default to noSkipLogicStep before
+  evaluating; LT611's two outcomes explicitly set skipLogicStep or
+  noSkipLogicStep respectively, matching Table 6-11's two outcomes.
+transitions:
+  - condition: "target dose can be skipped (Table 6-11 'Yes')"
+    to: "4.4"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkip$LT611 outcome 0"
+  - condition: "target dose cannot be skipped (Table 6-11 'No', or no Conditional Skip is defined for this target dose at all)"
+    to: "6.3"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkip$LT611 outcome 1; EvaluateConditionalSkip constructor (no-op when seriesDose.getConditionalSkip() == null)"

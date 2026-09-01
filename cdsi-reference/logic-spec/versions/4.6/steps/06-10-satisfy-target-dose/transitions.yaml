@@ -1,0 +1,13 @@
+from: "6.10"
+spec_defines_transition: false
+note: >
+  Unconditional loop back to 4.4 (EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES)
+  regardless of Table 6-31's outcome - none of its six LogicOutcomes call
+  setNextLogicStepType(); the default set at the top of process() before
+  evaluateLogicTables() is the actual, unoverridden transition every time.
+  This is 6.10's real "closes the loop back to the per-dose evaluation
+  driver" behavior described in docs/01-overview-subchapter-loops.md.
+transitions:
+  - condition: "always, regardless of whether the target dose was satisfied, extraneous, or not satisfied"
+    to: "4.4"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.SatisfyTargetDose#process"

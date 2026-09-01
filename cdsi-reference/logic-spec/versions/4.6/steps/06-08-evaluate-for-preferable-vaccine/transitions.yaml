@@ -1,0 +1,16 @@
+from: "6.8"
+spec_defines_transition: false
+note: >
+  The only Chapter 6 evaluation step (besides 6.1-6.3) whose default
+  gets overridden by its own process() logic rather than by a per-rule
+  LogicOutcome: process() sets SATISFY_TARGET_DOSE as the default, then
+  explicitly overrides to 6.9 if no preferable vaccine matched at all
+  (checked after all per-preferable-vaccine LogicTables have run, not
+  per-table).
+transitions:
+  - condition: "at least one defined preferable vaccine matched (by CVX) the administered vaccine"
+    to: "6.10"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.EvaluateForPreferableVaccine#process"
+  - condition: "no preferable vaccine matched (including the case where the target dose has no preferable vaccines defined at all)"
+    to: "6.9"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.EvaluateForPreferableVaccine#process"

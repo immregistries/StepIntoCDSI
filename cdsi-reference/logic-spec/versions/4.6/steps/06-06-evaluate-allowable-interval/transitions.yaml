@@ -1,0 +1,7 @@
+from: "6.6"
+spec_defines_transition: false
+note: "Unconditional, same pattern as 6.5 - the failure state is recorded (statusCause += \"Interval\") for 6.10 to read later, not branched on here."
+transitions:
+  - condition: "always"
+    to: "6.7"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.EvaluateAllowableInterval#process"

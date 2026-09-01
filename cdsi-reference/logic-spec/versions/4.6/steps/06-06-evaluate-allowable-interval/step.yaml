@@ -1,0 +1,24 @@
+spec_version: "4.6"
+section: "6.6"
+title: "Evaluate Allowable Interval"
+source_pages: [58, 59, 60]
+figures:
+  - "Figure 6-12"
+  - "Figure 6-13"
+  - "Figure 6-14"
+tables:
+  - "Table 6-20"
+  - "Table 6-21"
+  - "Table 6-22"
+business_rules:
+  - "CALCDTINT-1"
+  - "CALCDTINT-2"
+  - "CALCDTINT-3"
+implementation:
+  module: "cdsi-engine"
+  classes:
+    - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateAllowableInterval"
+tests:
+  - status: "test-gap"
+    note: "No dedicated unit test."
+review_status: "draft"

@@ -1,0 +1,9 @@
+from: "6.3"
+spec_defines_transition: false
+transitions:
+  - condition: "vaccine type is an inadvertent administration for the target dose (Table 6-13 'Yes')"
+    to: "4.4"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.EvaluateForInadvertentVaccine$LT outcome 0"
+  - condition: "not an inadvertent administration (Table 6-13 'No')"
+    to: "6.4"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.EvaluateForInadvertentVaccine$LT outcome 1"

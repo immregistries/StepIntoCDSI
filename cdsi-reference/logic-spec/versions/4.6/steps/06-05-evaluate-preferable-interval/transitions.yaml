@@ -1,0 +1,10 @@
+from: "6.5"
+spec_defines_transition: false
+note: >
+  Unconditional destination regardless of outcome (unlike 6.1-6.3, this
+  step never branches back to 4.4) - a failed preferable interval falls
+  through to allowable-interval evaluation rather than rejecting the dose.
+transitions:
+  - condition: "always (all preferable intervals satisfied, or not)"
+    to: "6.6"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.EvaluatePreferableInterval#process"
