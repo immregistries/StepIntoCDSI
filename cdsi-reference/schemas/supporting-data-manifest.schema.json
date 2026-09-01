@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stepintocdsi/cdsi-reference/schemas/supporting-data-manifest.schema.json",
+  "title": "Supporting Data release manifest",
+  "type": "object",
+  "required": ["release_id", "source", "retrieved_at", "source_filename", "bundle_sha256", "files", "normalizer_version", "normalized_at", "warnings"],
+  "properties": {
+    "release_id": { "type": "string" },
+    "source": { "type": "string" },
+    "published_at": { "type": ["string", "null"] },
+    "retrieved_at": { "type": "string" },
+    "source_filename": { "type": "string" },
+    "bundle_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "sha256", "category"],
+        "properties": {
+          "path": { "type": "string" },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "category": { "type": "string", "enum": ["xml", "xsd", "spreadsheets", "release-notes"] }
+        }
+      }
+    },
+    "normalizer_version": { "type": ["string", "null"] },
+    "normalized_at": { "type": ["string", "null"] },
+    "warnings": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}

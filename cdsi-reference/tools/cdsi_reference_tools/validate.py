@@ -266,6 +266,52 @@ def validate_findings(version: str) -> list[str]:
     return problems
 
 
+def validate_supporting_data_release(release_id: str) -> list[str]:
+    """Phase 13: a registered release's manifest satisfies its schema, its
+    preserved zip's checksum still matches bundle_sha256, and every file it
+    lists on disk still matches its recorded per-file checksum - catches
+    the source silently drifting or a file going missing after
+    registration, the Supporting Data equivalent of validate_manifest."""
+    problems = []
+    manifest_file = paths.supporting_data_manifest_path(release_id)
+    if not manifest_file.exists():
+        return [f"No manifest.yaml for Supporting Data release {release_id}"]
+    manifest = yaml.safe_load(manifest_file.read_text(encoding="utf-8"))
+
+    schema = _load_schema("supporting-data-manifest.schema.json")
+    try:
+        jsonschema.validate(manifest, schema)
+    except jsonschema.ValidationError as e:
+        problems.append(f"manifest.yaml does not satisfy supporting-data-manifest.schema.json: {e.message}")
+        return problems
+
+    source_dir = paths.supporting_data_source_dir(release_id)
+    preserved_zip = source_dir / manifest.get("source_filename", "")
+    if not preserved_zip.exists():
+        problems.append(f"Preserved source zip does not exist: {preserved_zip}")
+    else:
+        actual_bundle_sha256 = extract.sha256_of(preserved_zip)
+        if actual_bundle_sha256 != manifest.get("bundle_sha256"):
+            problems.append(
+                f"Bundle checksum mismatch: manifest says {manifest.get('bundle_sha256')}, "
+                f"preserved zip hashes to {actual_bundle_sha256}"
+            )
+
+    for file_entry in manifest.get("files", []):
+        file_path = source_dir / file_entry["path"]
+        if not file_path.exists():
+            problems.append(f"manifest lists {file_entry['path']!r} but it is missing from source/")
+            continue
+        actual_sha256 = extract.sha256_of(file_path)
+        if actual_sha256 != file_entry["sha256"]:
+            problems.append(
+                f"{file_entry['path']}: checksum mismatch (manifest says {file_entry['sha256']}, "
+                f"file hashes to {actual_sha256})"
+            )
+
+    return problems
+
+
 def validate_version(version: str) -> list[str]:
     problems = []
     problems.extend(f"manifest: {p}" for p in validate_manifest(version))

@@ -4,7 +4,7 @@ Versioned, agent-readable copies of the two sources `cdsi-engine` is built from 
 
 This is a **development and documentation asset**. It is never a runtime dependency of `cdsi-engine`, `cdsi-web`, or `cdsi-fits-tests`, and it makes no network calls and no LLM calls - extraction is mechanical PDF parsing; anything that looks like interpretation (a step's plain-language walkthrough, a review finding) was drafted by a human or an agent working *outside* this tool and is marked `draft` until reviewed.
 
-Status: **Phases 1-9 and 11-12** of the design plan are complete (Phase 10, version comparison, is documented but deliberately not built yet - see below) - version 4.6 is registered, the full deterministic extractor runs across Chapter 3 and Chapters 4-9 with zero warnings, every executable step in Chapters 4-9 has its own package (34 step packages plus 6 chapter-overview indexes), all nine required concept documents exist under `logic-spec/versions/4.6/concepts/`, all six required process-loop diagrams (figure + structured `transitions.yaml` + Mermaid + explanation) exist under `logic-spec/versions/4.6/diagrams/`, `mappings/spec-to-code.yaml` is cross-checked against `cdsi-engine`'s actual source by `logic-spec validate`, every real, independently-verified gap found so far is a formal record under `logic-spec/versions/4.6/findings/`, and `logic-spec validate` now checks everything Phase 11 requires (manifest checksum and page count, every step package's structure/figures/tables/transitions, the spec-to-code mapping, and every finding record) with network access physically blocked for the whole `logic-spec` command tree, not just claimed unnecessary.
+Status: **Phases 1-9 and 11-13** of the design plan are complete (Phase 10, version comparison, is documented but deliberately not built yet - see below) - version 4.6 is registered, the full deterministic extractor runs across Chapter 3 and Chapters 4-9 with zero warnings, every executable step in Chapters 4-9 has its own package (34 step packages plus 6 chapter-overview indexes), all nine required concept documents exist under `logic-spec/versions/4.6/concepts/`, all six required process-loop diagrams (figure + structured `transitions.yaml` + Mermaid + explanation) exist under `logic-spec/versions/4.6/diagrams/`, `mappings/spec-to-code.yaml` is cross-checked against `cdsi-engine`'s actual source by `logic-spec validate`, every real, independently-verified gap found so far is a formal record under `logic-spec/versions/4.6/findings/`, and `logic-spec validate` now checks everything Phase 11 requires (manifest checksum and page count, every step package's structure/figures/tables/transitions, the spec-to-code mapping, and every finding record) with network access physically blocked for the whole `logic-spec` command tree, not just claimed unnecessary.
 
 This pass surfaced a number of real, independently-verified `cdsi-engine` gaps and bugs - tracked deliberately, not fixed yet (this is a demonstration/reference system; the project owner wants a dedicated fix pass once the full documentation and testing system is in place, not fixes mixed into documentation work). Each now has its own `finding.yaml`/`finding.md` pair under `logic-spec/versions/4.6/findings/`; most significant:
 - **[SPEC-4.6-0001](logic-spec/versions/4.6/findings/SPEC-4.6-0001/finding.md): Section 7.3 (Determine Contraindications) is essentially unimplemented** - no decision-table logic exists in code at all.
@@ -15,7 +15,7 @@ This pass surfaced a number of real, independently-verified `cdsi-engine` gaps a
 
 Phase 8's validator (`logic-spec validate`) checks every `LogicStepType` cdsi-engine can actually instantiate against `mappings/spec-to-code.yaml`, flagging any class the mapping doesn't cite, any mapping entry citing a class or file that doesn't exist, and any step package missing a mapping entry. Two classes are acknowledged as known, deliberately-tracked gaps (see `unmapped_classes` above) rather than left as an unexplained validator failure; the command exits 0 while still printing them. The same command now also validates every finding record under `findings/` against `schemas/finding.schema.json`.
 
-Version comparison (Phase 10) is documented but deliberately not implemented - see "Comparing two versions" below for why and what to do about it. Supporting Data versioning and FITS run history are not yet built either. See `StepIntoCDSi-Specification-Reference-Module-Plan.md` (repository root, one level above this module) for the full 24-phase design.
+Version comparison (Phase 10) is documented but deliberately not implemented - see "Comparing two versions" below for why and what to do about it. Supporting Data source registration (Phase 13) is built and covers both real CDC releases (4.64 and 4.65 - see `supporting-data/README.md`), but normalizing that XML into agent-readable structured data (Phase 14), comparing releases (Phase 15), reference sets (Phase 16), and FITS run history are not yet built. See `StepIntoCDSi-Specification-Reference-Module-Plan.md` (repository root, one level above this module) for the full 24-phase design.
 
 Phase 12 (this pass) audited every piece of this module's own documentation against the plan's checklist rather than assuming earlier phases kept it current: `logic-spec/versions/4.6/{concepts,diagrams,findings}/README.md` still said "not yet built" for work finished phases ago, and `mappings/spec-to-code.yaml`'s header comment still said Chapter 9 wasn't mapped - all four are now corrected to describe what actually exists. `templates/*.md` and `supporting-data/README.md`/`reference-sets/README.md` (genuinely not started - Phases 13+) were checked too and needed no changes.
 
@@ -30,7 +30,9 @@ Phase 12 (this pass) audited every piece of this module's own documentation agai
 | `mappings/spec-to-code.yaml` | Hand-maintained; every class name in it has been read directly from `cdsi-engine`'s source, and `logic-spec validate` now cross-checks it against that source directly (Phase 8) |
 | `logic-spec/versions/<v>/findings/<id>/finding.yaml`, `finding.md` | Hand-maintained (a human or an agent proposes a finding; it stays `draft`/`open` until a human confirms it) - `logic-spec validate` checks structure, not truth |
 | `logic-spec/diffs/` | Not built yet (Phase 10 - see "Comparing two versions" above); would be generated by `logic-spec compare` once implemented |
-| `supporting-data/`, `reference-sets/` | Not built yet - see their own README.md placeholders |
+| `supporting-data/versions/<release-id>/source/` | Immutable - the exact original release zip plus its categorized (`xml/`, `xsd/`, `spreadsheets/`, `release-notes/`) contents, both preserved; never edited in place |
+| `supporting-data/versions/<release-id>/manifest.yaml` | Generated once at registration (Phase 13) by `supporting-data import`; every file checksummed, verified (not overwritten) on re-import |
+| `supporting-data/diffs/`, `reference-sets/` | Not built yet (Phases 15-16) - see their own README.md placeholders |
 
 ## Setup
 
@@ -48,6 +50,9 @@ Use Python 3.11, not the newest installed Python - PyMuPDF and PyYAML's prebuilt
 python -m cdsi_reference_tools logic-spec extract --version 4.6
 python -m cdsi_reference_tools logic-spec validate --version 4.6
 python -m cdsi_reference_tools logic-spec compare --from 4.6 --to 4.7   # not implemented yet - prints the Phase 10 checklist and exits 1; see "Comparing two versions" below
+python -m cdsi_reference_tools supporting-data import --source <path>   # see "Supporting Data releases" below
+python -m cdsi_reference_tools supporting-data list
+python -m cdsi_reference_tools supporting-data validate --release 4.65
 ```
 
 `extract` is always safe to rerun for an already-registered version - it deletes and fully rebuilds `logic-spec/versions/<v>/extracted/` from the checked-in source PDF alone (verifying the manifest checksum first), and never touches anything else in that version's directory (`steps/`, `concepts/`, `diagrams/`, `findings/`, `index.md`, `manifest.yaml`). Rerun it after a change to `extract.py`/`extract_tables.py`/`extract_figures.py`/`split_sections.py`/`build_index.py`, or if you ever suspect `extracted/` drifted from the source; `tests/test_extraction_invariants.py` proves both of those properties (determinism and reviewed-content isolation) against the real 4.6 PDF.
@@ -101,6 +106,20 @@ The change report (`<old>-to-<new>.md`) should read like this, one entry per ste
 ```
 
 Build and validate this against the real two versions as you go - the same pilot-then-scale discipline Phase 4 used for extraction (two sections by hand before trusting it across Chapters 4-9) applies here too. Once it's real and tested, update this section, the Status line at the top of this README, and `compare_versions.py`'s module docstring to say so.
+
+## Supporting Data releases (Phase 13)
+
+A separate versioned tree from `logic-spec/`, since the Logic Specification and Supporting Data change on different schedules and don't have a one-to-one version relationship - see `supporting-data/README.md` for the full detail. In short:
+
+```bash
+python -m cdsi_reference_tools supporting-data import --source cdsi-engine/src/main/resources/supporting-data
+python -m cdsi_reference_tools supporting-data list
+python -m cdsi_reference_tools supporting-data validate --release 4.65
+```
+
+Only `supporting-data-*.zip` files are ever registered as a real CDSi release - **not** an alternative schedule like the demo/preview set `cdsi-engine` also bundles for the web UI. This mirrors the same rule `cdsi-fits-tests`' `DefaultSupportingDataSet` and `cdsi-web`'s `SupportingDataManager` already use for picking the standard CDC set: comparisons and defaults are only meaningful against real published CDSi releases, and mixing in an alternative schedule would misrepresent both. Releases 4.64 and 4.65 are both registered under `supporting-data/versions/`.
+
+This is source preservation and checksumming only (Phase 13) - parsing the XML into agent-readable structured data (Phase 14) and comparing releases (Phase 15) aren't built yet.
 
 ## Finding the documentation for a CDSi step
 

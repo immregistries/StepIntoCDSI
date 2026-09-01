@@ -54,3 +54,44 @@ def findings_dir(version: str) -> Path:
 
 def schemas_dir() -> Path:
     return reference_root() / "schemas"
+
+
+# --- Supporting Data (Phase 13) - a separate versioned tree from
+# logic-spec/, since the two resources change on different schedules and
+# don't have a one-to-one version relationship. ---
+
+
+def supporting_data_root() -> Path:
+    return reference_root() / "supporting-data"
+
+
+def supporting_data_version_dir(release_id: str) -> Path:
+    return supporting_data_root() / "versions" / release_id
+
+
+def supporting_data_source_dir(release_id: str) -> Path:
+    return supporting_data_version_dir(release_id) / "source"
+
+
+def supporting_data_manifest_path(release_id: str) -> Path:
+    return supporting_data_version_dir(release_id) / "manifest.yaml"
+
+
+def supporting_data_normalized_dir(release_id: str) -> Path:
+    return supporting_data_version_dir(release_id) / "normalized"
+
+
+def supporting_data_documentation_dir(release_id: str) -> Path:
+    return supporting_data_version_dir(release_id) / "documentation"
+
+
+def supporting_data_findings_dir(release_id: str) -> Path:
+    return supporting_data_version_dir(release_id) / "findings"
+
+
+def supporting_data_validation_dir(release_id: str) -> Path:
+    return supporting_data_version_dir(release_id) / "validation"
+
+
+def supporting_data_diffs_dir() -> Path:
+    return supporting_data_root() / "diffs"

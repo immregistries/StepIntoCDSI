@@ -1,0 +1,222 @@
+release_id: '4.64'
+source: CDC CDSi Supporting Data release 4.64
+published_at: null
+retrieved_at: '2026-09-01T18:16:15Z'
+source_filename: supporting-data-4.64-508.zip
+bundle_sha256: 9ff50f7ecee25eb3ced19f94fe1814eb8d752837012ef900ff1e47e0df64e5fe
+files:
+- path: release-notes/Release Notes.docx
+  sha256: 6ddab341cd1e6c0b3ddb0e4fa1f45e17f474e4dbcdf7192a9fc2fcd59dce3832
+  category: release-notes
+- path: release-notes/Supporting Data Overview.docx
+  sha256: c5df39d29fd8e169186a23a3e4e29aa723a776590b7abec950b6ce6412cdf94b
+  category: release-notes
+- path: spreadsheets/AntigenSupportingData- COVID-19-508.xlsx
+  sha256: 8d657e91470f7a3cda6a4c8f1d61c91a9108c0569dfe2bc24a67894645ddef54
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- Chikungunya-508.xlsx
+  sha256: 13954f0815f9398c7a70d9e9e4238655e0fc766186fe24ff92d31787bf9dc409
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- Cholera-508.xlsx
+  sha256: c9e899c82081ad8c5c6fcb046fefe0190ee3af7443c6b768325f5961c58139c7
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- Dengue-508.xlsx
+  sha256: 70fa129922552d7d477ce5b550bd4feed11cc07a872fd8146e34b9eef33cbf7b
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- Diphtheria-508.xlsx
+  sha256: f7aa1bce162d3edce0f829e8a95f748830b6d02b6efb677cd62dc644175cbf81
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- Ebola-508.xlsx
+  sha256: 6f5b16d571ed2704a28d9284d54399a33f4c67e7ffd6792ff3cffff0e10fde39
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- HPV-508.xlsx
+  sha256: d92aced88a3b6ddd388a7f22f44ca156dd44cb1e02273ed472253348d41eef7d
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- HepA-508.xlsx
+  sha256: 73d81af58802afe383d19d9073fd7a2a267b65707b3dcdccaee04e9fffdc7f78
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- HepB-508.xlsx
+  sha256: b0dbd4c29cc1d0827ea58c4b1695352713dd745ff849853f0e036118cfd4e272
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- Hib-508.xlsx
+  sha256: 9936ed051f1398e661197b9406e27b0233446b7dcfe0c812a8bf9269193e1b56
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- Influenza-508.xlsx
+  sha256: 69ebfd331f805b961db5d2912994cce0a76afebdd5ff7b305d278e265874b3e2
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- JE-508.xlsx
+  sha256: 10bfc66aa879a688cddbaa1b3f755773241fea77df16f0fc1b7e8a463c084a88
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- Measles-508.xlsx
+  sha256: 9a403f1a9173e9d37a46b6564363b0236b97b97c4374b93223ae7581f7ba2564
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- Meningococcal B-508.xlsx
+  sha256: ab0398907b38f168895f5186be9012ba00bfae547db559beb60cdcf3e619b143
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- Meningococcal-508.xlsx
+  sha256: 11c27e9a2aeae1ba1fd6aee097cb827c359b0b3b9d700ca8558d9fea400f0683
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- Mumps-508.xlsx
+  sha256: 963852c4c6e65014fac2a471fcd1df491a3a3a3655ddc33231390a7ab9743b95
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- Orthopoxvirus-508.xlsx
+  sha256: 65fff4e56f041088df67d127dfd351ad39d5fbecd7e4bb1991a25598c677cac9
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- Pertussis-508.xlsx
+  sha256: 528c6df5e03822b28d355714a5607f95488306b1c77d5559a4070d8c5cec7cdd
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- Pneumococcal-508.xlsx
+  sha256: b932309f8c12bb9d293d60b12ba4934ffbe52f830641c0c36da94778b983fb4e
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- Polio-508.xlsx
+  sha256: 17f778b21df2d81b41019d42a186fdc7b4375597ec3353ae7de000efe14c40f1
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- RSV-508.xlsx
+  sha256: 295c30c3c640b2cd03de4597bfeadd10237f7878e21b03bf51f5f5e9f1b5bca4
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- Rabies-508.xlsx
+  sha256: 87a1065e929071c514a825ef346ac8667614de46c1e83867e9ebecf6245e978d
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- Rotavirus-508.xlsx
+  sha256: 00f90ccaa757ed425e28de824a48aa09f213292f80ef19ada679662b0b883b2f
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- Rubella-508.xlsx
+  sha256: 3d3b709a947db4f1831b616e2a57802a63487b7afa49796e7227bee65928d1ac
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- TBE-508.xlsx
+  sha256: 3456322ffbcc3496a71fa973531a6f2d18cbf644ab79644e55929c459f8d7351
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- Tetanus-508.xlsx
+  sha256: 5d210712eb1a9d2dd907632845297a3de8312e2de095d44dce95b6c76b43025e
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- Typhoid-508.xlsx
+  sha256: 7b0ef2a2fe5f4aab05ec7609d7bc3246e248139b2876320a00699968e6b18df0
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- Varicella-508.xlsx
+  sha256: 757ec12994ec99249746a1818ea184b9a0160f0238d564771c5f981bd385f2ff
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- YF-508.xlsx
+  sha256: e87e72bc2210192041b5e72731cd7c55db9bee39420b3acbb22e497eb645fdc2
+  category: spreadsheets
+- path: spreadsheets/AntigenSupportingData- Zoster-508.xlsx
+  sha256: 403d0fb0853d2e3c49e219405fd54d6966c90bfda2aa8cd7a96cfcf08ee3923a
+  category: spreadsheets
+- path: spreadsheets/ScheduleSupportingData- CVX to Antigen Map-508.xlsx
+  sha256: 3b0b044367ec36fc2e9689a258317f2b085633f606017e278b4fdb4db5096d36
+  category: spreadsheets
+- path: spreadsheets/ScheduleSupportingData- Coded Observations-508.xlsx
+  sha256: eee8346b3290d50bfed7c7a8439f8e92d98191aa87ca7a34d33332337346e6c7
+  category: spreadsheets
+- path: spreadsheets/ScheduleSupportingData- Live Virus Conflicts-508.xlsx
+  sha256: 26b710c65fc98d048d797f3eb9a1778c8cdb05494f2a710237d65b01b649c9ec
+  category: spreadsheets
+- path: spreadsheets/ScheduleSupportingData- Vaccine Group to Antigen Map-508.xlsx
+  sha256: be2f1c7b3626511fabaddb4d79c3fc882cf7045b9fcb0899cf0987ded4f21dcf
+  category: spreadsheets
+- path: spreadsheets/ScheduleSupportingData- Vaccine Group-508.xlsx
+  sha256: b1eee9be3d9abd144b6f67f8dccf2d2224cec447e6c2f7684dbb499a17e803f3
+  category: spreadsheets
+- path: xml/AntigenSupportingData- COVID-19-508.xml
+  sha256: 6da31f5809f39471c46574fa68da3906dae47622479d49df594dd9485df0fe4e
+  category: xml
+- path: xml/AntigenSupportingData- Chikungunya-508.xml
+  sha256: 275539b3afb6f53be86c23cfc2e1a2d0452a1744c2c8349e85d3ee26a23224c0
+  category: xml
+- path: xml/AntigenSupportingData- Cholera-508.xml
+  sha256: c0f5efe40cd59da90b271196d0d9fd7ef4ed8c9b1a59c59472005be3cc55372f
+  category: xml
+- path: xml/AntigenSupportingData- Dengue-508.xml
+  sha256: 55f7326f1f14c41a80dbb5819d6060a5aa81103849a49e22494977d232428710
+  category: xml
+- path: xml/AntigenSupportingData- Diphtheria-508.xml
+  sha256: 7dbccefbe7d4a9cf175a821fedfd7ebd3c4daa77019be53f724de7be0bc85314
+  category: xml
+- path: xml/AntigenSupportingData- Ebola-508.xml
+  sha256: 37a64f8e49ab038ffa2773ac025d5b68ad91f88fa46bac41658ddd06f09ca45b
+  category: xml
+- path: xml/AntigenSupportingData- HPV-508.xml
+  sha256: 8371e891133717796b90946f83bc2641e2f9dcac90507a05e092204cc3559805
+  category: xml
+- path: xml/AntigenSupportingData- HepA-508.xml
+  sha256: 74bacdd283db3e802273f1b6a21748de3083b6a080f74e9301f5859660438fce
+  category: xml
+- path: xml/AntigenSupportingData- HepB-508.xml
+  sha256: 8803450b46180643a021c6b052286c45e4caaf4495a2d5509938d87cbfecd126
+  category: xml
+- path: xml/AntigenSupportingData- Hib-508.xml
+  sha256: 5048b03abe37ecc0483083618f92df2dc0b8e7e8ada0ed64594ef01f56d20136
+  category: xml
+- path: xml/AntigenSupportingData- Influenza-508.xml
+  sha256: 6b53b23ca20568fc8f106fd774cac01fd40ea4b1c565541820ebad1eadeb3482
+  category: xml
+- path: xml/AntigenSupportingData- JE-508.xml
+  sha256: 62d2aa702d3aeb36b8b2aeeb8a18090ba643be5fcdf85f90c116084846e8f987
+  category: xml
+- path: xml/AntigenSupportingData- Measles-508.xml
+  sha256: 686d0025f00f89e4007ae51e8337f565f77cc3a3e9032d7aa500b00c64fd2495
+  category: xml
+- path: xml/AntigenSupportingData- Meningococcal B-508.xml
+  sha256: e45a3ae2409d927f80d2b73ceba57f878540fae8de08e9fd61ebf9eb5ad243d5
+  category: xml
+- path: xml/AntigenSupportingData- Meningococcal-508.xml
+  sha256: 8af9517ab715637c329d26187458f58865492aa3390ba6951252d7ac081d476b
+  category: xml
+- path: xml/AntigenSupportingData- Mumps-508.xml
+  sha256: 4195c69cbd37bc9298adeb0c83f91c245148512633d835f04854995e6d043fb2
+  category: xml
+- path: xml/AntigenSupportingData- Orthopoxvirus-508.xml
+  sha256: 512c160f0fa770fd253f0b11fc1d7cff4079c032a56a3a9f9768359f1a1c2202
+  category: xml
+- path: xml/AntigenSupportingData- Pertussis-508.xml
+  sha256: 8a06ea5d3a3daa74d098083464833ef9b73163afaa9907a86c9eae74c8b85315
+  category: xml
+- path: xml/AntigenSupportingData- Pneumococcal-508.xml
+  sha256: 0f7a9c44f438dc5c099a8bcd306ef01da16fb9a76571bce152438dbfd6e212d9
+  category: xml
+- path: xml/AntigenSupportingData- Polio-508.xml
+  sha256: 0ee1d09b5f99a4869c5b8640b34fa11e5356955f3de728cea7312c5a43abc4a1
+  category: xml
+- path: xml/AntigenSupportingData- RSV-508.xml
+  sha256: 1547cae792a969416172c4782c9ce5fa7831709ee8dd76ada677c385d6b3cb14
+  category: xml
+- path: xml/AntigenSupportingData- Rabies-508.xml
+  sha256: 501f7d4dcf023a13bdb2aae47e7b8f281f4e5c456c87d415b7e6f4f9904fceb7
+  category: xml
+- path: xml/AntigenSupportingData- Rotavirus-508.xml
+  sha256: eb1e1502674a83336c0cc49631e4c2befa46b38d355e7be87dc8940be7a1cd17
+  category: xml
+- path: xml/AntigenSupportingData- Rubella-508.xml
+  sha256: eaf07102a3b6adaa55881b80f80624a9af1c2e0819fff40cd141970efb05d895
+  category: xml
+- path: xml/AntigenSupportingData- TBE-508.xml
+  sha256: 208b8956911456fb89b89b7cd0c1e077ad4555cfaa2d858956dc7b095a0b61f6
+  category: xml
+- path: xml/AntigenSupportingData- Tetanus-508.xml
+  sha256: 7917ad08d2447f4feaee65115a91f068b8f923e6ce155e5aa39919ac0a24d7d9
+  category: xml
+- path: xml/AntigenSupportingData- Typhoid-508.xml
+  sha256: e4341a1b625487cc72428f2e193e7b3f70dde0272467c2eb344ec73b448ace71
+  category: xml
+- path: xml/AntigenSupportingData- Varicella-508.xml
+  sha256: 2f54f05fcd1f85464e3db9fda8d9d6886ef57ccbc955239eff452a4a60f44501
+  category: xml
+- path: xml/AntigenSupportingData- YF-508.xml
+  sha256: 2ad3e6a026c5caa5aa965e6711d15d00ddbf0664eb2715ad7e1b314ea2c93655
+  category: xml
+- path: xml/AntigenSupportingData- Zoster-508.xml
+  sha256: 56406e947a93f5a48bca0820cb1ad2968945c0a68148bb292ee0d11a117b288d
+  category: xml
+- path: xml/ScheduleSupportingData.xml
+  sha256: a537a43711e240f2c8a207828f0ac7dd7cac0ac28b302375e9527ca40d886a69
+  category: xml
+- path: xsd/AntigenSupportingData.xsd
+  sha256: 7978a2fed7d59e693788f69da0a99f86c8921bf2765f3f031c0d1cab3dab609a
+  category: xsd
+- path: xsd/ScheduleSupportingData.xsd
+  sha256: 3d13e7cc42147a673599f8b53f108d98b2ab9baffc017c56b0b1134cceb57750
+  category: xsd
+normalizer_version: null
+normalized_at: null
+warnings:
+- 'Skipped ''Version 4.64 - 508/Excel/Thumbs.db'': not an xml/xsd/spreadsheet/release-notes
+  file'

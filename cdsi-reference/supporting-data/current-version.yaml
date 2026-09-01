@@ -1,0 +1,6 @@
+# The active Supporting Data release. Deliberately a plain file (not a
+# symlink) so behavior is identical on Windows and Unix-like systems.
+# Independent of logic-spec/current-version.yaml - the Logic Specification
+# and Supporting Data change on different schedules and don't have a
+# one-to-one version relationship.
+release_id: "4.65"

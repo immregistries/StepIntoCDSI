@@ -1,0 +1,7 @@
+# Supporting Data releases under cdsi-reference are checksummed byte-for-byte
+# in their manifest.yaml (see supporting_data.py) - git's default line-ending
+# normalization (core.autocrlf) would silently rewrite the XML/XSD text files
+# on checkout, breaking those checksums on any machine with a different
+# autocrlf setting than the one that originally staged them. Treat the whole
+# preserved source tree as binary so it round-trips byte-for-byte everywhere.
+cdsi-reference/supporting-data/versions/**/source/** binary
