@@ -121,7 +121,9 @@ def run_extract(version: str) -> build_index.ExtractionIndex:
 
     full_text_parts = []
     section_index_entries: list[build_index.SectionIndexEntry] = []
-    for extracted in split_sections.extract_all_sections(doc, entries, CHAPTERS_IN_SCOPE):
+    appendix_page = toc.find_first_appendix_page(doc)
+    overall_end_page = (appendix_page - 1) if appendix_page is not None else None
+    for extracted in split_sections.extract_all_sections(doc, entries, CHAPTERS_IN_SCOPE, overall_end_page):
         filename = split_sections.section_filename(extracted.entry)
         (sections_dir / filename).write_text(extracted.text, encoding="utf-8")
         full_text_parts.append(extracted.text)

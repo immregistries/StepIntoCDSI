@@ -288,3 +288,30 @@ sections:
     tests:
       - "test-gap: no dedicated unit test"
     mapping_status: "draft"
+  "9.1":
+    title: "Apply General Vaccine Group Rules"
+    implementation:
+      module: "cdsi-engine"
+      classes:
+        - "org.openimmunizationsoftware.cdsi.core.logic.ApplyGeneralVaccineGroupRules"
+    tests:
+      - "test-gap: no dedicated unit test; implements only VACCINEGROUP-1/2, see 09-01's Review Findings for where FORECASTVG-1..9/FORECASTDN-2 actually live"
+    mapping_status: "draft"
+  "9.2":
+    title: "Single Antigen Vaccine Group"
+    implementation:
+      module: "cdsi-engine"
+      classes:
+        - "org.openimmunizationsoftware.cdsi.core.logic.SingleAntigenVaccineGroup"
+    tests:
+      - "test-gap: no dedicated unit test"
+    mapping_status: "draft"
+  "9.3":
+    title: "Multiple Antigen Vaccine Group"
+    implementation:
+      module: "cdsi-engine"
+      classes:
+        - "org.openimmunizationsoftware.cdsi.core.logic.MultipleAntigenVaccineGroup"
+    tests:
+      - "test-gap: no dedicated unit test"
+    mapping_status: "draft"

@@ -1,0 +1,12 @@
+from: "9.2"
+spec_defines_transition: false
+note: >
+  Not stated in the spec text. Verified in code: SingleAntigenVaccineGroup
+  always returns to the chapter driver (section "9",
+  IdentifyAndEvaluateVaccineGroup), both on its normal completion path and
+  on its early-exit path when the vaccine group or primary antigen is
+  missing.
+transitions:
+  - condition: "always (unconditional)"
+    to: "9"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.SingleAntigenVaccineGroup#process"

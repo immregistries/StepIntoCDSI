@@ -50,10 +50,21 @@ def _find_heading_y(page: "fitz.Page", entry: SectionEntry) -> tuple[float, str]
     return None
 
 
-def extract_section(doc: "fitz.Document", entry: SectionEntry, next_entry: SectionEntry | None) -> ExtractedSection:
+def extract_section(
+    doc: "fitz.Document", entry: SectionEntry, next_entry: SectionEntry | None, overall_end_page: int | None = None
+) -> ExtractedSection:
+    """`overall_end_page` (0-based, inclusive) bounds the LAST in-scope
+    section when there's no next entry to bound it against - without it,
+    that section would run to the end of the entire document, sweeping in
+    unrelated appendix content."""
     warnings: list[str] = []
     start_page = page_index_for_printed_page(entry.page)
-    end_page = page_index_for_printed_page(next_entry.page) if next_entry else doc.page_count - 1
+    if next_entry is not None:
+        end_page = page_index_for_printed_page(next_entry.page)
+    elif overall_end_page is not None:
+        end_page = overall_end_page
+    else:
+        end_page = doc.page_count - 1
 
     start_hit = _find_heading_y(doc[start_page], entry)
     if start_hit is None:
@@ -97,14 +108,20 @@ def extract_section(doc: "fitz.Document", entry: SectionEntry, next_entry: Secti
 
 
 def extract_all_sections(
-    doc: "fitz.Document", entries: list[SectionEntry], chapters: tuple[int, ...] = (4, 5, 6, 7, 8, 9)
+    doc: "fitz.Document",
+    entries: list[SectionEntry],
+    chapters: tuple[int, ...] = (4, 5, 6, 7, 8, 9),
+    overall_end_page: int | None = None,
 ) -> list[ExtractedSection]:
-    """Extracts every section whose top-level chapter number is in `chapters`."""
+    """Extracts every section whose top-level chapter number is in `chapters`.
+
+    `overall_end_page`: see `extract_section` - bounds the very last
+    in-scope section, which has no "next section" of its own to stop at."""
     in_scope = [e for e in entries if int(e.number.split(".")[0]) in chapters]
     results = []
     for i, entry in enumerate(in_scope):
         next_entry = in_scope[i + 1] if i + 1 < len(in_scope) else None
-        results.append(extract_section(doc, entry, next_entry))
+        results.append(extract_section(doc, entry, next_entry, overall_end_page))
     return results
 
 

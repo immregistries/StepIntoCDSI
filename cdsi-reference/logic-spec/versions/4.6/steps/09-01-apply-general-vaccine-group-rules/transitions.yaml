@@ -1,0 +1,15 @@
+from: "9.1"
+spec_defines_transition: false
+note: >
+  The specification doesn't state a transition rule here (Table 9-2 is
+  business rules, not control flow); the branch below is the
+  classification VACCINEGROUP-1/2 exist to drive, confirmed by reading
+  ApplyGeneralVaccineGroupRules.process() directly, which evaluates its
+  one decision table and branches on the result before returning.
+transitions:
+  - condition: "vaccine group classifies exactly one antigen (VACCINEGROUP-1)"
+    to: "9.2"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.ApplyGeneralVaccineGroupRules$LT"
+  - condition: "vaccine group classifies more than one antigen (VACCINEGROUP-2)"
+    to: "9.3"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.ApplyGeneralVaccineGroupRules$LT"

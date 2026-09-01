@@ -142,6 +142,24 @@ def parse_loft(doc: "fitz.Document", loft_pages: list[int]) -> list[FigureOrTabl
     return entries
 
 
+_APPENDIX_A_RE = re.compile(r"^APPENDIX\s+A\s*:", re.IGNORECASE)
+
+
+def find_first_appendix_page(doc: "fitz.Document", search_from_page: int = 10) -> int | None:
+    """0-based page index where 'Appendix A:' first appears as a body
+    heading - the natural upper bound for "everything in Chapters 4-9",
+    since the last in-scope chapter has no "next section" of its own to
+    bound it. Starts searching after the front matter (the Table of
+    Contents and List of Figures/Tables both mention "Appendix A:" too,
+    as a dot-leader entry pointing at this same page - skipping the first
+    few pages avoids matching that mention instead of the real heading)."""
+    for i in range(search_from_page, doc.page_count):
+        for line in doc[i].get_text().split("\n"):
+            if _APPENDIX_A_RE.match(line.strip()):
+                return i
+    return None
+
+
 def page_index_for_printed_page(printed_page: int) -> int:
     """The document prints "Page N of 151" on every page at a fixed offset
     from PyMuPDF's 0-based page index; verified against the source (see

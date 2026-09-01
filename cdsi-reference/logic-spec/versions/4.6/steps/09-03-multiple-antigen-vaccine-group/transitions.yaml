@@ -1,0 +1,13 @@
+from: "9.3"
+spec_defines_transition: false
+note: >
+  Not stated in the spec text. Verified in code: every outcome of
+  MultipleAntigenVaccineGroup's Table 9-4 decision (all six of them) and
+  its own early-entry point return to the chapter driver (section "9",
+  IdentifyAndEvaluateVaccineGroup) - confirmed by grepping every
+  setNextLogicStepType call in the class, all seven of which target
+  IDENTIFY_AND_EVALUATE_VACCINE_GROUP.
+transitions:
+  - condition: "always (unconditional, regardless of Table 9-4's outcome)"
+    to: "9"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.MultipleAntigenVaccineGroup"
