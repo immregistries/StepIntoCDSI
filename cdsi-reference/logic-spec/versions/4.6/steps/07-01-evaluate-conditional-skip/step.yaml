@@ -1,0 +1,17 @@
+spec_version: "4.6"
+section: "7.1"
+title: "Evaluate Conditional Skip"
+source_pages: [72]
+figures: []
+tables: []
+business_rules: []
+implementation:
+  module: "cdsi-engine"
+  classes:
+    - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkipForForecast"
+    - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkip"
+  logic_step_type: "EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST"
+tests:
+  - status: "test-gap"
+    note: "No dedicated unit test. Shares its implementation with 6.2 - see that section's package for the actual attributes/business-rules/decision-tables (6.2's Tables 6-4 through 6-11), which this section explicitly says are identical."
+review_status: "draft"

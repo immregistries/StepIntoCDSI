@@ -1,0 +1,13 @@
+from: "7.4"
+spec_defines_transition: false
+note: >
+  Verified against DetermineForecastNeed.process() and each LogicOutcome in
+  its LT class - only Rule 1 ("Yes, receive another dose") proceeds to 7.5;
+  every other rule explicitly calls setNextLogicStepType back to 4.4.
+transitions:
+  - condition: "Rule 1 (patient should receive another dose)"
+    to: "7.5"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.DetermineForecastNeed#process (default next-step, not overridden by outcome 0)"
+  - condition: "Rules 2-8 (patient should not receive another dose, for any reason - Complete/Not Recommended/Immune/Contraindicated/season ended/aged out)"
+    to: "4.4"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.DetermineForecastNeed$LT (outcomes 1 through 7, each calls setNextLogicStepType(EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES))"

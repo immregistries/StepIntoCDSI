@@ -1,0 +1,11 @@
+from: "7.3"
+spec_defines_transition: false
+note: >
+  Verified against DetermineContraindications.process(), which sets its
+  next step unconditionally and does not evaluate any decision table (see
+  index.md's Review Findings - no LogicTable is currently instantiated in
+  this class at all).
+transitions:
+  - condition: "always (no decision logic currently runs in this step)"
+    to: "7.4"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.DetermineContraindications#process"

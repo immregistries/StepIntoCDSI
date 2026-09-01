@@ -1,0 +1,22 @@
+spec_version: "4.6"
+section: "7.4"
+title: "Determine Forecast Need"
+source_pages: [78, 79, 80]
+figures:
+  - "Figure 7-6"
+tables:
+  - "Table 7-9"
+  - "Table 7-10"
+  - "Table 7-11"
+business_rules:
+  - "CALCDTAGE-1"
+  - "FORECASTDTCAN-1"
+implementation:
+  module: "cdsi-engine"
+  classes:
+    - "org.openimmunizationsoftware.cdsi.core.logic.DetermineForecastNeed"
+  logic_step_type: "DETERMINE_FORECAST_NEED"
+tests:
+  - status: "test-gap"
+    note: "No dedicated unit test. Condition 3 (contraindication check) reads a data structure that 7.3 never populates - see Review Findings."
+review_status: "draft"

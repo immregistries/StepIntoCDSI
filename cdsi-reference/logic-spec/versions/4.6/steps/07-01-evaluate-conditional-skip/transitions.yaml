@@ -1,0 +1,14 @@
+from: "7.1"
+spec_defines_transition: false
+note: >
+  Same shared class as 6.2 (EvaluateConditionalSkip), instantiated here as
+  EvaluateConditionalSkipForForecast with different destination
+  LogicStepTypes than 6.2 uses - verified directly in the subclass
+  constructor, not inferred.
+transitions:
+  - condition: "conditional skip set is met (dose can be skipped)"
+    to: "4.4"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkipForForecast (constructor 'skip' argument)"
+  - condition: "conditional skip set is not met (dose cannot be skipped)"
+    to: "7.2"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkipForForecast (constructor 'noSkip' argument)"

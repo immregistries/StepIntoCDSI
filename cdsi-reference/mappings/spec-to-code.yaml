@@ -1,8 +1,8 @@
 # Specification-to-code mapping (Phase 8 of the reference-module plan).
 #
-# Chapters 4, 5, and 6, plus the pilot sections (4.1, 6.4), are populated so
-# far - see the "Logic Specification Milestone" in the plan for extending
-# this to Chapters 7-9. Every class name here has been read directly from
+# Chapters 4, 5, 6, and 7, plus the pilot sections (4.1, 6.4), are populated
+# so far - see the "Logic Specification Milestone" in the plan for extending
+# this to Chapters 8-9. Every class name here has been read directly from
 # cdsi-engine's source, not guessed.
 spec_version: "4.6"
 sections:
@@ -160,4 +160,59 @@ sections:
         - "org.openimmunizationsoftware.cdsi.core.logic.SatisfyTargetDose"
     tests:
       - "test-gap: no dedicated unit test"
+    mapping_status: "draft"
+  "7.1":
+    title: "Evaluate Conditional Skip"
+    implementation:
+      module: "cdsi-engine"
+      classes:
+        - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkipForForecast"
+        - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkip"
+    tests:
+      - "test-gap: no dedicated unit test; shares implementation with 6.2"
+    mapping_status: "draft"
+  "7.2":
+    title: "Determine Evidence of Immunity"
+    implementation:
+      module: "cdsi-engine"
+      classes:
+        - "org.openimmunizationsoftware.cdsi.core.logic.DetermineEvidenceOfImmunity"
+    tests:
+      - "test-gap: no dedicated unit test"
+    mapping_status: "draft"
+  "7.3":
+    title: "Determine Contraindications"
+    implementation:
+      module: "cdsi-engine"
+      classes:
+        - "org.openimmunizationsoftware.cdsi.core.logic.DetermineContraindications"
+    tests:
+      - "test-gap: no dedicated unit test; the class currently implements no contraindication logic at all (see 07-03's Review Findings)"
+    mapping_status: "draft"
+  "7.4":
+    title: "Determine Forecast Need"
+    implementation:
+      module: "cdsi-engine"
+      classes:
+        - "org.openimmunizationsoftware.cdsi.core.logic.DetermineForecastNeed"
+    tests:
+      - "test-gap: no dedicated unit test"
+    mapping_status: "draft"
+  "7.5":
+    title: "Generate Forecast Dates and Recommended Vaccines"
+    implementation:
+      module: "cdsi-engine"
+      classes:
+        - "org.openimmunizationsoftware.cdsi.core.logic.GenerateForecastDatesAndRecommendedVaccines"
+    tests:
+      - "test-gap: no dedicated unit test isolating this class; exercised end-to-end by every cdsi-fits-tests fixture with a NOT_COMPLETE forecast"
+    mapping_status: "draft"
+  "7.6":
+    title: "Validate Recommendation"
+    implementation:
+      module: "cdsi-engine"
+      classes:
+        - "org.openimmunizationsoftware.cdsi.core.logic.ValidateRecommendation"
+    tests:
+      - "test-gap: no dedicated unit test; the class currently performs no validation at all (see 07-06's Review Findings)"
     mapping_status: "draft"

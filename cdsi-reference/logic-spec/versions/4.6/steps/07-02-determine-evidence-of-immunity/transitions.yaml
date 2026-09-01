@@ -1,0 +1,11 @@
+from: "7.2"
+spec_defines_transition: false
+note: >
+  Table 7-3's five rules all set patient-series status/forecast-reason
+  state but do not branch control flow - verified against
+  DetermineEvidenceOfImmunity.process(), which sets its next step
+  unconditionally before evaluating the decision table.
+transitions:
+  - condition: "always (all five Table 7-3 outcomes proceed identically)"
+    to: "7.3"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.DetermineEvidenceOfImmunity#process"

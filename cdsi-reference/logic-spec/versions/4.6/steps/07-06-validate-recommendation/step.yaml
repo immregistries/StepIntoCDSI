@@ -1,0 +1,17 @@
+spec_version: "4.6"
+section: "7.6"
+title: "Validate Recommendation"
+source_pages: [83]
+figures:
+  - "Figure 7-9"
+tables: []
+business_rules: []
+implementation:
+  module: "cdsi-engine"
+  classes:
+    - "org.openimmunizationsoftware.cdsi.core.logic.ValidateRecommendation"
+  logic_step_type: "VALIDATE_RECOMMENDATION"
+tests:
+  - status: "test-gap"
+    note: "No dedicated unit test. This class's process() override never evaluates the conditional-skip logic it inherits - see Review Findings."
+review_status: "draft"

@@ -1,0 +1,13 @@
+from: "7.6"
+spec_defines_transition: false
+note: >
+  ValidateRecommendation overrides process() to skip evaluateLogicTables()
+  entirely and always go to 4.4 - the constructor still wires a "skip"
+  destination of 7.1 for the inherited EvaluateConditionalSkip logic, but
+  that path is dead code as currently written (see index.md's Review
+  Findings). Recorded is what ACTUALLY happens, not what the constructor's
+  unused wiring implies.
+transitions:
+  - condition: "always (the overridden process() never evaluates the conditional-skip decision it inherits)"
+    to: "4.4"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.ValidateRecommendation#process"
