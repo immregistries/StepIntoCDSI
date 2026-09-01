@@ -31,3 +31,29 @@ Before building the dynamic test list, `FitsFixtureTest` calls `ReferenceSetVeri
 If either has drifted - a newer Supporting Data release replaced the one the reference set was created against, or the fixture files changed - `fitsFixtures()` throws `IllegalStateException` with a message naming exactly what changed, and JUnit reports the whole test class as failed rather than silently running against something the reference set doesn't describe. When that happens, the fix is to create and export a new reference set from `cdsi-reference` (`reference-set create` + `reference-set export`), not to edit this module's copy by hand.
 
 The Logic Specification version recorded in the reference set is not checked here - there's no runtime artifact in a compiled `cdsi-engine` build to compare it against.
+
+## Diagnostic run bundles (Phase 17)
+
+Every run of `FitsFixtureTest` writes a complete, disposable diagnostic bundle to `target/fits-runs/<run-id>/`:
+
+```text
+target/fits-runs/<run-id>/
+├── run.json            # git commit/branch/dirty, Java/Maven versions, reference set + checksums, test filter
+├── summary.json         # discovered/executed/passed/failed/error counts
+├── results.jsonl        # one compact JSON object per case: status, expected/actual hashes and values, field differences, duration
+├── changed-cases.json   # diff against the most recent *previous* local run, if one exists
+└── failures/<case-id>/
+    ├── input.json        # the FITS fixture's patient/history/eval-date input
+    ├── expected.json     # what FITS expected, per vaccine group
+    ├── actual.json       # what the engine actually forecasted
+    └── difference.json   # the specific field(s) that diverged, or "no forecasted vaccine group matched"
+```
+
+`target/` is Maven's own build directory and already gitignored - nothing here is ever committed automatically. `<run-id>` is `<timestamp>-<abbreviated-git-commit>-<reference-set-id>`, sanitized for use as a directory name on both Windows and POSIX filesystems.
+
+`<case-id>` is `<testPlanId>-<groupName>-<uid>` - **not** just `<groupName>-<uid>`. The same group name (e.g. "HepA") and the same uid numbering scheme recur across different NIST test plans; groupName+uid alone collides for real (confirmed against the actual fixture set: 1053 of 4896 collide that way), which would otherwise make unrelated cases' failure bundles silently overwrite each other. `FitsRunRecorderTest` reproduces this exact scenario with two synthetic cases sharing a group and uid but different test plans, and confirms both bundles are written independently.
+
+Two categories the plan's design for this bundle describes aren't available yet, and are recorded as `null` with an explanatory note rather than guessed at:
+
+- **Baseline-relative fields** (`knownFailures`, `newRegressions`, `newlyPassingCases`, `changedKnownFailures` in `summary.json`, and each case's `baselineComparison` in `results.jsonl`) depend on a reviewed case-level regression baseline - Phase 19 of the reference-module plan, not built yet. `changed-cases.json`'s comparison against the previous local run is a same-machine convenience in the meantime, not a substitute for one.
+- **`trace.jsonl`** (a structured, per-decision engine trace for each failure) depends on Phase 18 ("Improve Structured Engine Tracing"), not built yet. It is not written at all right now, rather than written empty - an absent file says "this capability doesn't exist yet," where an empty one would misleadingly say "the engine made no decisions."

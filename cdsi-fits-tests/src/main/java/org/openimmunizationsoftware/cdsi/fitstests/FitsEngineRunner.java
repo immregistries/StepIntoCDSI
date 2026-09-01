@@ -149,6 +149,26 @@ public final class FitsEngineRunner {
       return pass;
     }
 
+    public FitsTestCase.ExpectedForecast getExpected() {
+      return expected;
+    }
+
+    public String getActualStatus() {
+      return actualStatus;
+    }
+
+    public String getActualEarliest() {
+      return actualEarliest;
+    }
+
+    public String getActualRecommended() {
+      return actualRecommended;
+    }
+
+    public String getProblem() {
+      return problem;
+    }
+
     public String describe() {
       if (problem != null) {
         return "cvx " + expected.getVaccineCvx() + ": " + problem;

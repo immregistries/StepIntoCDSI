@@ -3,11 +3,15 @@ package org.openimmunizationsoftware.cdsi.fitstests;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
+import org.openimmunizationsoftware.cdsi.fitstests.diagnostics.FitsRunRecorder;
+import org.openimmunizationsoftware.cdsi.fitstests.diagnostics.RunContext;
 
 /**
  * Runs every FITS fixture under src/test/resources/fits/ against cdsi-engine
@@ -36,8 +40,17 @@ import org.junit.jupiter.api.TestFactory;
  * instead of silently running against something different than intended
  * - see ReferenceSetVerifier's class Javadoc for exactly what is and
  * isn't checked, and why.
+ *
+ * Phase 17: every case's result (pass, fail, or error) is recorded into a
+ * structured diagnostic bundle under target/fits-runs/&lt;run-id&gt;/ - see
+ * FitsRunRecorder's class Javadoc for exactly what that bundle contains
+ * and what it deliberately doesn't yet (case-level baseline comparison,
+ * Phase 19; structured engine traces, Phase 18). This is disposable local
+ * build output, never committed automatically.
  */
 class FitsFixtureTest {
+
+  private static final FitsRunRecorder RECORDER = new FitsRunRecorder();
 
   @TestFactory
   List<DynamicTest> fitsFixtures() {
@@ -50,11 +63,22 @@ class FitsFixtureTest {
               + "Supporting Data release was likely added). Create and export a new reference set from "
               + "cdsi-reference before running this suite against it.");
     }
-    return FitsFixtures.loadAll().stream()
+    List<FitsTestCase> testCases = FitsFixtures.loadAll();
+    RECORDER.start(RunContext.capture(referenceSet), testCases.size());
+    return testCases.stream()
         .map(testCase -> dynamicTest(testCase.displayName(), () -> {
+          long start = System.nanoTime();
           FitsEngineRunner.FitsRunResult result = FitsEngineRunner.run(testCase, supportingDataSet);
+          long durationMs = (System.nanoTime() - start) / 1_000_000;
+          RECORDER.record(testCase, result, durationMs);
           assertTrue(result.isPass(), result.describeFailure());
         }))
         .collect(Collectors.toList());
+  }
+
+  @AfterAll
+  static void writeRunBundle() {
+    Path runDir = RECORDER.finish();
+    System.out.println("FITS run bundle written to " + runDir.toAbsolutePath());
   }
 }
