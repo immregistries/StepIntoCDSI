@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stepintocdsi/cdsi-reference/schemas/reference-set.schema.json",
+  "title": "reference-sets/<id>.yaml",
+  "type": "object",
+  "required": [
+    "id", "logic_spec", "supporting_data", "fits_fixture_set", "created_at", "status"
+  ],
+  "properties": {
+    "id": { "type": "string" },
+    "logic_spec": {
+      "type": "object",
+      "required": ["version", "source_sha256"],
+      "properties": {
+        "version": { "type": "string" },
+        "source_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$", "description": "The source PDF's checksum, as recorded in manifest.yaml." }
+      }
+    },
+    "supporting_data": {
+      "type": "object",
+      "required": ["release_id", "source_filename", "bundle_sha256"],
+      "properties": {
+        "release_id": { "type": "string" },
+        "source_filename": { "type": "string" },
+        "bundle_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "fits_fixture_set": {
+      "type": "object",
+      "required": ["sha256", "case_count"],
+      "properties": {
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "case_count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "created_at": { "type": "string" },
+    "status": { "type": "string", "enum": ["active", "retired"] },
+    "notes": { "type": "string" }
+  },
+  "additionalProperties": false
+}

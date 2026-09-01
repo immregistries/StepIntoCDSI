@@ -1,0 +1,10 @@
+{
+  "id": "acip-4.6-sd-4.65-fits-8183b45d",
+  "logicSpecVersion": "4.6",
+  "supportingDataRelease": "4.65",
+  "supportingDataZipName": "supporting-data-4.65-508.zip",
+  "supportingDataBundleSha256": "741b8fd21c77887c4d2dc9ce1119a58d2659152007bda6791ffc57fdc098ce3d",
+  "fitsFixtureSetSha256": "8183b45d4f279fc6b2f2b4fb0e025ec97cee32261d8b0b8cecee03870f109eac",
+  "fitsFixtureSetCaseCount": 4896,
+  "createdAt": "2026-09-01T19:24:58Z"
+}

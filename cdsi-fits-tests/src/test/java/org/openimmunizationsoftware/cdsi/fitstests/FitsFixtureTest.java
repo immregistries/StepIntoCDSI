@@ -23,16 +23,33 @@ import org.junit.jupiter.api.TestFactory;
  * minimal fix, then re-run this suite to confirm the fix and check for
  * regressions across the rest of the fixture set.
  *
- * A fresh checkout has no fixtures until someone runs FitsDownloader
- * (org.openimmunizationsoftware.cdsi.fitstests.download) against a live
- * NIST FITS account - see its class Javadoc. Until then this factory
- * produces zero dynamic tests, which is a no-op, not a failure.
+ * The fixtures themselves are committed - a normal checkout already has
+ * them. FitsDownloader (org.openimmunizationsoftware.cdsi.fitstests.download)
+ * is only for refreshing them from a live NIST FITS account, not a
+ * prerequisite for a first run.
+ *
+ * Phase 16: before building the dynamic test list, verifies the reference
+ * set exported from cdsi-reference (reference-set.json - see
+ * ReferenceSetVerifier) still matches what's actually bundled and on the
+ * classpath. If the Supporting Data zip or the fixture set itself has
+ * drifted from what that reference set recorded, this factory throws
+ * instead of silently running against something different than intended
+ * - see ReferenceSetVerifier's class Javadoc for exactly what is and
+ * isn't checked, and why.
  */
 class FitsFixtureTest {
 
   @TestFactory
   List<DynamicTest> fitsFixtures() {
+    ReferenceSetVerifier.ReferenceSet referenceSet = ReferenceSetVerifier.loadAndVerify();
     String supportingDataSet = DefaultSupportingDataSet.resolve();
+    if (!supportingDataSet.equals(referenceSet.supportingDataZipName())) {
+      throw new IllegalStateException(
+          "Reference set " + referenceSet.id() + " was created for " + referenceSet.supportingDataZipName()
+              + ", but DefaultSupportingDataSet.resolve() currently picks " + supportingDataSet + " (a newer "
+              + "Supporting Data release was likely added). Create and export a new reference set from "
+              + "cdsi-reference before running this suite against it.");
+    }
     return FitsFixtures.loadAll().stream()
         .map(testCase -> dynamicTest(testCase.displayName(), () -> {
           FitsEngineRunner.FitsRunResult result = FitsEngineRunner.run(testCase, supportingDataSet);

@@ -95,3 +95,22 @@ def supporting_data_validation_dir(release_id: str) -> Path:
 
 def supporting_data_diffs_dir() -> Path:
     return supporting_data_root() / "diffs"
+
+
+# --- Reference sets (Phase 16) ---
+
+
+def reference_sets_dir() -> Path:
+    return reference_root() / "reference-sets"
+
+
+def reference_set_path(reference_set_id: str) -> Path:
+    return reference_sets_dir() / f"{reference_set_id}.yaml"
+
+
+def fits_tests_fixtures_dir() -> Path:
+    return reference_root().parent / "cdsi-fits-tests" / "src" / "test" / "resources" / "fits"
+
+
+def fits_tests_reference_set_export_path() -> Path:
+    return reference_root().parent / "cdsi-fits-tests" / "src" / "test" / "resources" / "reference-set.json"

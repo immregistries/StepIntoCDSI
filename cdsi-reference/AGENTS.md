@@ -1,6 +1,6 @@
 # cdsi-reference - agent instructions
 
-This module is reference documentation and tooling, not runtime code. It does not build with Maven and is never a dependency of `cdsi-engine`/`cdsi-web`/`cdsi-fits-tests` - do not add one.
+This module is reference documentation and tooling, not runtime code. It does not build with Maven and is never a dependency of `cdsi-engine`/`cdsi-web`/`cdsi-fits-tests` - do not add one. The one deliberate exception is `reference-set export` writing a plain JSON snapshot into `cdsi-fits-tests/src/test/resources/reference-set.json` (Phase 16) - a one-way, reviewed, checked-in file `cdsi-fits-tests` reads at test time, not a build or runtime dependency on this module or its tooling. Don't turn that into a live cross-module read.
 
 ## Before changing clinical logic anywhere in this repository
 
@@ -21,3 +21,4 @@ This module is reference documentation and tooling, not runtime code. It does no
 - Every `logic-spec` command runs with network access physically blocked (`network_guard.install()`, wired into `cli.py`'s `main()`) - if you add a feature that needs a real network call, it cannot go anywhere in the `logic-spec`/`supporting-data` command trees; give it its own explicitly-invoked script instead (like `cdsi-fits-tests`' `FitsDownloader`).
 - This module's own test suite (`pytest tests/`) exercises the real registered PDF; if it fails after a PyMuPDF/PyYAML upgrade, that's a real regression in extraction fidelity, not a flaky test - investigate before bumping the pinned version in `pyproject.toml`/`requirements-lock.txt`.
 - If asked to add a new Logic Specification version (a version other than 4.6 shows up), read `README.md`'s "Comparing two versions (Phase 10)" section before writing any diff logic - it explains why that command is a documented stub today and lists the required steps in order. Do not implement comparison logic against the plan alone; it needs the real second version to test against, the same way every Phases 3-5 extraction bug was only caught by testing against the real 4.6 PDF.
+- If you register a new Supporting Data release and make it current, create a new reference set (`reference-set create`) and export it (`reference-set export`) so `cdsi-fits-tests/src/test/resources/reference-set.json` stays in sync - otherwise `FitsFixtureTest` will fail clearly (by design, see `reference-sets/README.md`) the next time the FITS suite runs, reporting that the Supporting Data binding drifted.

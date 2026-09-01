@@ -6,7 +6,7 @@ Runs the NIST FITS conformance suite against `cdsi-engine` directly and offline 
 mvn -pl cdsi-fits-tests test
 ```
 
-`FitsFixtureTest` is a `@TestFactory` that turns every fixture under `src/test/resources/fits/` into a dynamic test. A fresh checkout with no fixtures downloaded yet produces zero dynamic tests - that's a no-op, not a failure.
+`FitsFixtureTest` is a `@TestFactory` that turns every fixture under `src/test/resources/fits/` into a dynamic test. The fixtures themselves are committed, so a normal checkout already has all 4896 of them - `FitsDownloader` is only for refreshing them from a live NIST FITS account, not a prerequisite for a first run.
 
 ## Which supporting data set the suite runs against
 
@@ -20,3 +20,14 @@ This means adding a newly-published CDC supporting-data zip to `cdsi-engine/src/
 `DefaultSupportingDataSetTest` locks this in against cdsi-engine's real bundled resources - if it starts failing after adding or removing a zip, that's it correctly reporting an ambiguous or unexpected bundled set, not a flaky test.
 
 Retiring an old CDC version's zip from `src/main/resources/supporting-data/` is a deliberate decision for whoever maintains this repository, not something either the FITS suite or the web UI's default forces - both are just consumers of whatever cdsi-engine bundles.
+
+## Reference sets and fixture-set integrity
+
+Before building the dynamic test list, `FitsFixtureTest` calls `ReferenceSetVerifier.loadAndVerify()`, which reads `src/test/resources/reference-set.json` (a plain JSON snapshot exported from `cdsi-reference` - see its `reference-sets/README.md`, Phase 16 of the reference-module plan) and re-derives two checksums:
+
+- The bundled Supporting Data zip named in the reference set (read straight off the classpath, the same way `DefaultSupportingDataSet` finds it) must still hash to what the reference set recorded.
+- Every fixture file actually under `src/test/resources/fits/` must still hash, combined, to what the reference set recorded (`ReferenceSetVerifier.computeFixtureSet()` - the identical algorithm, byte-for-byte, as `cdsi-reference`'s Python `compute_fixture_set`; `ReferenceSetVerifierTest` locks in that the two independently-computed values actually agree).
+
+If either has drifted - a newer Supporting Data release replaced the one the reference set was created against, or the fixture files changed - `fitsFixtures()` throws `IllegalStateException` with a message naming exactly what changed, and JUnit reports the whole test class as failed rather than silently running against something the reference set doesn't describe. When that happens, the fix is to create and export a new reference set from `cdsi-reference` (`reference-set create` + `reference-set export`), not to edit this module's copy by hand.
+
+The Logic Specification version recorded in the reference set is not checked here - there's no runtime artifact in a compiled `cdsi-engine` build to compare it against.

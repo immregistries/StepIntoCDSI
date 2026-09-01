@@ -15,6 +15,7 @@ from . import (
     compare_versions,
     extract,
     network_guard,
+    reference_sets,
     supporting_data,
     supporting_data_compare,
     supporting_data_normalize,
@@ -126,6 +127,47 @@ def _cmd_supporting_data_validate(args: argparse.Namespace) -> int:
     return 1
 
 
+def _cmd_reference_set_create(args: argparse.Namespace) -> int:
+    try:
+        record = reference_sets.create_reference_set(args.logic_spec, args.supporting_data, args.notes or "")
+    except reference_sets.ReferenceSetError as e:
+        print(f"ERROR: {e}", file=sys.stderr)
+        return 1
+    print(f"Reference set {record['id']}: {record['fits_fixture_set']['case_count']} FITS case(s)")
+    return 0
+
+
+def _cmd_reference_set_list(args: argparse.Namespace) -> int:
+    ids = reference_sets.list_reference_sets()
+    if not ids:
+        print("No reference sets defined yet.")
+        return 0
+    for i in ids:
+        print(i)
+    return 0
+
+
+def _cmd_reference_set_validate(args: argparse.Namespace) -> int:
+    problems = reference_sets.validate_reference_set(args.id)
+    if not problems:
+        print(f"Reference set {args.id}: valid.")
+        return 0
+    print(f"Reference set {args.id}: {len(problems)} problem(s):")
+    for p in problems:
+        print(f"  - {p}")
+    return 1
+
+
+def _cmd_reference_set_export(args: argparse.Namespace) -> int:
+    try:
+        dest = reference_sets.export_for_fits_tests(args.id, Path(args.to) if args.to else None)
+    except reference_sets.ReferenceSetError as e:
+        print(f"ERROR: {e}", file=sys.stderr)
+        return 1
+    print(f"Exported {args.id} to {dest}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="cdsi_reference_tools")
     subparsers = parser.add_subparsers(dest="resource", required=True)
@@ -171,6 +213,29 @@ def build_parser() -> argparse.ArgumentParser:
     p_sd_compare.add_argument("--from", dest="from", required=True)
     p_sd_compare.add_argument("--to", required=True)
     p_sd_compare.set_defaults(func=_cmd_supporting_data_compare)
+
+    reference_set_parser = subparsers.add_parser("reference-set", help="Reproducible reference-set tools")
+    reference_set_sub = reference_set_parser.add_subparsers(dest="action", required=True)
+
+    p_rs_create = reference_set_sub.add_parser(
+        "create", help="Bind a Logic Specification version, Supporting Data release, and the current FITS fixtures")
+    p_rs_create.add_argument("--logic-spec", required=True)
+    p_rs_create.add_argument("--supporting-data", required=True)
+    p_rs_create.add_argument("--notes", default="")
+    p_rs_create.set_defaults(func=_cmd_reference_set_create)
+
+    p_rs_list = reference_set_sub.add_parser("list", help="List defined reference sets")
+    p_rs_list.set_defaults(func=_cmd_reference_set_list)
+
+    p_rs_validate = reference_set_sub.add_parser("validate", help="Re-check a reference set's recorded checksums")
+    p_rs_validate.add_argument("--id", required=True)
+    p_rs_validate.set_defaults(func=_cmd_reference_set_validate)
+
+    p_rs_export = reference_set_sub.add_parser(
+        "export", help="Export a reference set as JSON for cdsi-fits-tests to read")
+    p_rs_export.add_argument("--id", required=True)
+    p_rs_export.add_argument("--to", default=None, help="Defaults to cdsi-fits-tests/src/test/resources/reference-set.json")
+    p_rs_export.set_defaults(func=_cmd_reference_set_export)
 
     return parser
 

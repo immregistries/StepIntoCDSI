@@ -50,7 +50,9 @@ public final class FitsFixtures {
     return s == null ? "" : s;
   }
 
-  private static List<Path> fixtureRoots() throws IOException {
+  /** Package-visible so ReferenceSetVerifier can walk the same fixture
+   * files this class loads, to compute the fixture-set checksum. */
+  static List<Path> fixtureRoots() throws IOException {
     List<Path> roots = new ArrayList<>();
     java.util.Enumeration<URL> resources = FitsFixtures.class.getClassLoader().getResources(FIXTURE_ROOT);
     while (resources.hasMoreElements()) {
