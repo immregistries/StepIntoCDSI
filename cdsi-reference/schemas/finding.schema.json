@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stepintocdsi/cdsi-reference/schemas/finding.schema.json",
+  "title": "findings/<version>/<id>/finding.yaml",
+  "type": "object",
+  "required": [
+    "id", "status", "category", "spec_sections", "source_pages", "tables",
+    "business_rules", "code_locations", "fits_cases", "summary", "evidence",
+    "interpretation"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "SPEC-<spec_version>-<four-digit sequence>, e.g. SPEC-4.6-0001.",
+      "pattern": "^SPEC-[0-9]+\\.[0-9]+-[0-9]{4}$"
+    },
+    "status": {
+      "type": "string",
+      "description": "draft/open: proposed, not yet reviewed by a human. confirmed: a human reviewed the evidence and agrees. resolved: the underlying mismatch/ambiguity/conflict no longer exists. wontfix: reviewed and deliberately left as-is.",
+      "enum": ["draft", "open", "confirmed", "resolved", "wontfix"]
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "IMPLEMENTATION_MISMATCH",
+        "SPECIFICATION_AMBIGUITY",
+        "SUPPORTING_DATA_CONFLICT",
+        "FITS_DIFFERENCE"
+      ]
+    },
+    "spec_sections": { "type": "array", "items": { "type": "string" } },
+    "source_pages": { "type": "array", "items": { "type": "integer" } },
+    "tables": { "type": "array", "items": { "type": "string" } },
+    "business_rules": { "type": "array", "items": { "type": "string" } },
+    "code_locations": { "type": "array", "items": { "type": "string" } },
+    "fits_cases": { "type": "array", "items": { "type": "string" } },
+    "summary": { "type": "string" },
+    "evidence": {
+      "type": "string",
+      "description": "Source-based only: quote the spec, the Supporting Data, the FITS case, or the code. No interpretation."
+    },
+    "interpretation": {
+      "type": "string",
+      "description": "Clearly labeled analysis. A failing FITS test alone does not justify 'confirmed' status."
+    }
+  },
+  "additionalProperties": false
+}

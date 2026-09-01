@@ -48,5 +48,9 @@ def steps_dir(version: str) -> Path:
     return version_dir(version) / "steps"
 
 
+def findings_dir(version: str) -> Path:
+    return version_dir(version) / "findings"
+
+
 def schemas_dir() -> Path:
     return reference_root() / "schemas"

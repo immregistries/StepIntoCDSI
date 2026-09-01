@@ -1,0 +1,36 @@
+id: "SPEC-4.6-0007"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["8.6"]
+source_pages: [91]
+tables: ["Table 8-11", "Table 8-12"]
+business_rules: ["SELECTB-3", "SELECTB-12", "SELECTB-14", "SELECTB-23"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.NoValidDoses"
+fits_cases: []
+summary: >
+  NoValidDoses's "is completable" scoring condition always contributes +1
+  regardless of the actual finish-date/max-age comparison, and two scoring
+  conditions run that aren't in Table 8-11 at all.
+evidence: >
+  evaluate_ACandidatePatientSeriesIsCompletable()'s if/else both call
+  patientSeries.incPatientScoreSeries() - there is no code path that ever
+  decrements for this condition, contradicting Table 8-11's documented
+  +1/-1 split. This looks like a copy-paste slip (the else branch should
+  very likely call descPatientScoreSeries(), matching the pattern every
+  other condition in this scoring family uses). Separately, two scoring
+  conditions run that aren't in Table 8-11 at all: a gender-match bonus
+  and an exceeded-maximum-age penalty.
+interpretation: >
+  As written, "is completable" always contributes +1 regardless of the
+  actual finish-date/max-age comparison. The two extra scoring conditions
+  (gender-match bonus, exceeded-max-age penalty) are unconfirmed as
+  intentional or not - this could be a deliberate, undocumented
+  refinement, or a copy-forward from a different section's logic that
+  doesn't belong here; this pass could not determine which and records it
+  as an open question rather than resolving it by guessing. If real
+  Supporting Data commonly has gender-restricted or near-max-age series
+  competing under this scoring path, this materially changes the outcome
+  versus a spec-literal implementation. Tracked, not fixed, per standing
+  project direction. See SPEC-4.6-0005 for a second, unrelated bug in this
+  same class (Date reference-equality breaking tie-detection).

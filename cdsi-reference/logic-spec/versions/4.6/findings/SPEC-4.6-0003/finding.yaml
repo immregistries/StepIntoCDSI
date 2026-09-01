@@ -1,0 +1,36 @@
+id: "SPEC-4.6-0003"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: []
+source_pages: []
+tables: []
+business_rules: []
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateGender"
+fits_cases: []
+summary: >
+  EvaluateGender's "is the patient's gender one of the required genders?"
+  condition unconditionally returns YES even when no required gender
+  matched, making the documented "incorrect gender" rejection outcome
+  permanently dead code.
+evidence: >
+  evaluateInternal() loops over caRequiredGender.getFinalValue(), and if
+  any RequiredGender's value contains the patient's gender, returns
+  LogicResult.YES. But after that loop exits (meaning no entry matched),
+  the method still executes `return LogicResult.YES;` unconditionally,
+  instead of returning LogicResult.NO. The class's own LT inner class
+  documents a "No, patient's gender is not one of the required genders...
+  Evaluation Reason is 'incorrect gender'" outcome that this bug makes
+  unreachable. Separately, the class cites a non-existent "Table 4-31"
+  (Chapter 4 only has Tables 4-1 through 4-3) and its log message says
+  "Setting next step: 4.10 Satisfy Target Dose" where the real next step
+  is 6.10.
+interpretation: >
+  This class has no LogicStepType section number of its own (declared
+  with placeholder "xx" in LogicStepType.java) and so has no corresponding
+  text in the Logic Specification - it was found via Phase 8's mapping
+  validator (see mappings/spec-to-code.yaml's unmapped_classes), not via a
+  step package, since it cannot be documented as a numbered specification
+  section. The bug itself is unambiguous: the gender-mismatch rejection
+  path can never execute. Tracked, not fixed, per standing project
+  direction.

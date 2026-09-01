@@ -1,0 +1,38 @@
+id: "SPEC-4.6-0005"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["8.5", "8.6"]
+source_pages: [90, 91]
+tables: ["Table 8-9", "Table 8-10", "Table 8-11", "Table 8-12"]
+business_rules: ["SELECTB-11", "SELECTB-14"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.InProcessPatientSeries"
+  - "org.openimmunizationsoftware.cdsi.core.logic.NoValidDoses"
+fits_cases: []
+summary: >
+  Two tie-detection conditions compare java.util.Date instances with
+  reference equality (==/!=) instead of .equals(), so the tie they're
+  meant to detect essentially never fires.
+evidence: >
+  InProcessPatientSeries.evaluate_ACandidatePatientSeriesCanFinishEarliest()
+  compares forecast dates with
+  `tmpDate == patientSeries.getForecast().getLatestDate()` and
+  `patientSeries.getForecast().getLatestDate() != tmpDate` - Java
+  reference equality on java.util.Date objects. Forecast's date fields are
+  ordinary java.util.Date, never a cached/interned/shared instance, so two
+  different PatientSeries objects whose forecasts land on the identical
+  calendar date will almost always be different Date instances in memory,
+  making == false even when the dates genuinely match. The same pattern
+  (confirmed by inspection) appears in NoValidDoses's
+  evaluate_AScorablePatientSeriesCanStartEarliest().
+interpretation: >
+  The tie-detection this code is supposed to perform (counting how many
+  series share the earliest/latest date) essentially never counts a real
+  tie as a tie in practice, in both locations. This is a distinct bug from
+  SPEC-4.6-0006 (8.4's tie-handling gap), in a different condition, but the
+  same category of defect: spec says "treat ties specially," code fails to
+  detect the tie. The other four conditions in InProcessPatientSeries are
+  correctly implemented, including proper tie handling for "has the most
+  valid doses" (via a greatestElementPosList pattern) - that class is the
+  correct reference implementation for that specific condition, contrasted
+  with 8.4's gap. Tracked, not fixed, per standing project direction.

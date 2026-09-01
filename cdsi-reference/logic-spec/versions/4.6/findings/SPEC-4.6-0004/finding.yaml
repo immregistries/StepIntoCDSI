@@ -1,0 +1,27 @@
+id: "SPEC-4.6-0004"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.5"]
+source_pages: [54, 55, 56, 57]
+tables: ["Table 6-17", "Table 6-18", "Table 6-19"]
+business_rules: ["CALCDTINT-1", "CALCDTINT-2", "CALCDTINT-3", "CALCDTINT-4", "CALCDTINT-8"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluatePreferableInterval"
+fits_cases: []
+summary: >
+  EvaluatePreferableInterval's outcome 0 sets EvaluationReason to
+  GRACE_PERIOD where the specification (and the code's own log message)
+  call for "Too Soon."
+evidence: >
+  Direct comparison with EvaluateAllowableInterval's equivalent,
+  correctly-implemented case shows EvaluatePreferableInterval's outcome 0
+  sets GRACE_PERIOD as its EvaluationReason instead of the "Too Soon"
+  reason the log message and the equivalent allowable-interval case both
+  use.
+interpretation: >
+  This could produce a misleading evaluation reason wherever a dose fails
+  the preferable-interval check - exactly the kind of transparency defect
+  this reference module exists to surface. Tracked, not fixed, per
+  standing project direction. Separately unresolved in this pass: whether
+  CALCDTINT-1/2/8/9 (which reference date an interval measures from) are
+  implemented anywhere was not verified either way.

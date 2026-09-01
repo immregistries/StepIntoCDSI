@@ -1,0 +1,33 @@
+id: "SPEC-4.6-0001"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["7.3"]
+source_pages: [74, 75, 76, 77]
+tables: ["Table 7-5", "Table 7-6", "Table 7-7"]
+business_rules: ["CALCDTCI-1", "CALCDTCI-2"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.DetermineContraindications"
+fits_cases: []
+summary: >
+  Section 7.3 Determine Contraindications is essentially unimplemented: no
+  decision-table logic for Tables 7-5, 7-6, or 7-7 exists in code, so no
+  patient series is ever marked Contraindicated.
+evidence: >
+  DetermineContraindications.java never adds any LogicTable to
+  logicTableList. The class's own in-code comments read "finish creating
+  entire file" and "Write the logic for logic tables 7-5 to 7-7". Its
+  caContraindicationElements condition's initial value is never set,
+  commented out and blocked on a Contraindication_TO_BE_REMOVED ->
+  Contraindication migration. Separately, DetermineForecastNeed's condition
+  3 ("is the relevant patient series a contraindicated patient series?")
+  reads dataModel.getPatient().getMedicalHistory().getContraindicationSet(),
+  a set nothing traced in this pass ever populates.
+interpretation: >
+  This is a materially different situation from the narrower single-outcome
+  gaps found in 6.2/6.5/6.8/7.2 (see SPEC-4.6-0004 and others) - an entire
+  section's worth of clinical safety logic is unimplemented, not just one
+  path through it. Per standing project direction this is tracked, not
+  fixed here: the project is a demonstration system, contraindication logic
+  is not widely tested, and the owner plans a dedicated fix pass once the
+  documentation and testing system is complete. This is the most
+  significant gap found across the whole Chapters 4-9 documentation pass.

@@ -1,0 +1,30 @@
+id: "SPEC-4.6-0006"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["8.4"]
+source_pages: [89, 90]
+tables: ["Table 8-7", "Table 8-8"]
+business_rules: ["SELECTB-6", "SELECTB-19"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.CompletePatientSeries"
+fits_cases: []
+summary: >
+  CompletePatientSeries's "has the most valid doses" scoring condition
+  handles a real tie for the maximum incorrectly: only the first series
+  found at the maximum is scored, and a break exits the loop before any
+  other tied series is visited.
+evidence: >
+  evaluate_ACandidatePatientSeriesHasTheMostValidDoses() increments the
+  score of only the first series it finds at the maximum valid-dose count,
+  then breaks out of the scoring loop entirely. Any other series also at
+  the maximum (a genuine tie) is never reached by that loop iteration
+  again. Compare with InProcessPatientSeries's
+  evaluate_ACandidatePatientSeriesHasTheMostValidDoses() (see
+  SPEC-4.6-0005's Affected class for that file), which implements the
+  identical spec pattern correctly using a greatestElementPosList that
+  collects every tied series and applies the tie treatment to all of them.
+interpretation: >
+  This confirms the gap is real and fixable, not an inherent limitation of
+  the framework - a correct reference implementation of the identical
+  pattern already exists in this codebase, in InProcessPatientSeries.
+  Tracked, not fixed, per standing project direction.

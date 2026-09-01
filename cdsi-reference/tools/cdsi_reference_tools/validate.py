@@ -10,7 +10,7 @@ from pathlib import Path
 import jsonschema
 import yaml
 
-from . import engine_index, extract, paths
+from . import engine_index, extract, findings, paths
 
 
 class ValidationError(Exception):
@@ -198,9 +198,45 @@ def acknowledged_gaps(version: str) -> list[str]:
     ]
 
 
+def validate_findings(version: str) -> list[str]:
+    """Phase 9: every finding.yaml satisfies finding.schema.json, has a
+    finding.md alongside it, and its id matches both its own directory name
+    and this version - deliberately does NOT check whether spec_sections/
+    code_locations point at real things, since a finding can legitimately
+    describe something cross-cutting (no single section) or something with
+    no corresponding class at all (a spec ambiguity)."""
+    problems = []
+    finding_schema = _load_schema("finding.schema.json")
+    seen_ids: set[str] = set()
+
+    for finding_dir in findings.list_finding_dirs(version):
+        finding_yaml = finding_dir / "finding.yaml"
+        if not finding_yaml.exists():
+            problems.append(f"{finding_dir.name}: missing finding.yaml")
+            continue
+        data = yaml.safe_load(finding_yaml.read_text(encoding="utf-8"))
+        try:
+            jsonschema.validate(data, finding_schema)
+        except jsonschema.ValidationError as e:
+            problems.append(f"{finding_dir.name}/finding.yaml does not satisfy finding.schema.json: {e.message}")
+            continue
+        if data["id"] != finding_dir.name:
+            problems.append(f"{finding_dir.name}: finding.yaml's id {data['id']!r} does not match its directory name")
+        if not data["id"].startswith(f"SPEC-{version}-"):
+            problems.append(f"{finding_dir.name}: id {data['id']!r} does not belong to version {version!r}")
+        if data["id"] in seen_ids:
+            problems.append(f"{finding_dir.name}: duplicate finding id {data['id']!r}")
+        seen_ids.add(data["id"])
+        if not (finding_dir / "finding.md").exists():
+            problems.append(f"{finding_dir.name}: missing finding.md")
+
+    return problems
+
+
 def validate_version(version: str) -> list[str]:
     problems = []
     problems.extend(f"manifest: {p}" for p in validate_manifest(version))
     problems.extend(f"steps: {p}" for p in validate_step_packages(version))
     problems.extend(validate_mappings(version))
+    problems.extend(f"findings: {p}" for p in validate_findings(version))
     return problems
