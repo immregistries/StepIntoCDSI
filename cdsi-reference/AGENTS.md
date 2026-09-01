@@ -9,7 +9,7 @@ This module is reference documentation and tooling, not runtime code. It does no
 3. Check `mappings/spec-to-code.yaml` for the section's mapped classes and known test gaps. If the section isn't in there yet, this module hasn't reviewed it - don't assume the mapping is complete or absent-because-unneeded.
 4. Run the smallest relevant test first (an engine unit test if one exists; otherwise the closest `cdsi-fits-tests` group), then the related FITS group, then the full suite.
 5. Classify a discrepancy before editing anything - don't assume the implementation is wrong just because a FITS case fails (see `docs/16-fits-conformance-philosophy-vs-clinical-correctness.md` in the repository root for why).
-6. Record an unresolved specification question as a review finding rather than resolving it silently (see `templates/finding.md`).
+6. Record an unresolved specification question rather than resolving it silently. A small or not-yet-investigated one goes in the step package's own "Review Findings" section; anything substantial gets its own record under `logic-spec/versions/<v>/findings/<id>/` (a `finding.yaml` validated by `logic-spec validate`, plus a `finding.md` narrative - see `templates/finding.md`, `tools/cdsi_reference_tools/findings.py`'s `next_finding_id()`, and README.md's "Reporting an ambiguity or a suspected mismatch"). A finding stays `draft`/`open` until a human confirms it - never mark one `confirmed` just because a FITS case failed.
 
 ## Working in this module itself
 

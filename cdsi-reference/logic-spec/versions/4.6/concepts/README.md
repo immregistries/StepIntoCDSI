@@ -1,3 +1,7 @@
-# Concepts (not yet built)
+# Concepts
 
-Cross-cutting concept documentation (overall processing model, target dose, statuses, date calculations, etc. - Phase 6 of the plan) comes after the pilot sections and Phase 5's full Chapters 4-9 extraction. Only the two pilot step packages (4.1, 6.4) exist so far - see `../steps/`.
+Cross-cutting concept documentation (Phase 6 of the plan) - material that spans multiple step packages, so it's written once here instead of repeated in every step that touches it. All nine required documents exist:
+
+`overall-processing-model.md`, `target-dose.md`, `statuses.md`, `selecting-supporting-data.md`, `date-calculations.md`, `decision-tables.md`, `patient-series.md`, `vaccine-groups.md`, `domain-model.md`.
+
+Each links back to the specific step packages and source pages it draws from rather than duplicating their content - read a concept doc first for the cross-cutting picture, then the relevant step package(s) under `../steps/` for how a specific section applies it.
