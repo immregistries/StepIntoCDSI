@@ -1,0 +1,1010 @@
+{
+  "antigen": "Mumps",
+  "source_file": "source/xml/AntigenSupportingData- Mumps-508.xml",
+  "data": {
+    "immunity": {
+      "clinicalHistory": {
+        "guidelineCode": "021",
+        "guidelineTitle": "Laboratory Evidence of Immunity for Mumps"
+      },
+      "dateOfBirth": {
+        "immunityBirthDate": "01/01/1957",
+        "birthCountry": "",
+        "exclusion": {
+          "exclusionCode": "055",
+          "exclusionTitle": "Health care personnel"
+        }
+      }
+    },
+    "contraindications": {
+      "vaccineGroup": {
+        "contraindication": [
+          {
+            "observationCode": "007",
+            "observationTitle": "Pregnant",
+            "contraindicationText": "Do not vaccinate if the patient is pregnant.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "012",
+            "observationTitle": "Family history of altered immunocompetence",
+            "contraindicationText": "Do not vaccinate if the patient has a family history of altered immunocompetence",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "031",
+            "observationTitle": "Tuberculosis",
+            "contraindicationText": "Do not vaccinate if the patient has active untreated tuberculosis.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "080",
+            "observationTitle": "Adverse reaction to vaccine component",
+            "contraindicationText": "Do not vaccinate if the patient has had an adverse reaction to a vaccine component.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "091",
+            "observationTitle": "Severe allergic reaction after previous dose of Measles",
+            "contraindicationText": "Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Measles vaccine.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "092",
+            "observationTitle": "Severe allergic reaction after previous dose of Mumps",
+            "contraindicationText": "Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Mumps vaccine.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "093",
+            "observationTitle": "Severe allergic reaction after previous dose of Rubella",
+            "contraindicationText": "Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Rubella vaccine.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "102",
+            "observationTitle": "Severe allergic reaction to gelatin",
+            "contraindicationText": "Do not vaccinate if the patient has had a severe allergic reaction to gelatin.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "107",
+            "observationTitle": "Severe allergic reaction to neomycin",
+            "contraindicationText": "Do not vaccinate if the patient has had a severe allergic reaction to neomycin.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "125",
+            "observationTitle": "Tetanus IG administration",
+            "contraindicationText": "Do not vaccinate if the patient has had Tetanus IG administered in the previous 3 months.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "126",
+            "observationTitle": "Hep A IG administration",
+            "contraindicationText": "Do not vaccinate if the patient has had Hepatitis A IG administered in the previous 6 months.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "127",
+            "observationTitle": "Hep B IG administration",
+            "contraindicationText": "Do not vaccinate if the patient has had Hepatitis B IG administered in the previous 3 months.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "128",
+            "observationTitle": "Rabies IG administration",
+            "contraindicationText": "Do not vaccinate if the patient has had Rabies IG administered in the previous 4 months.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "129",
+            "observationTitle": "Varicella IG administration",
+            "contraindicationText": "Do not vaccinate if the patient has had Varicella IG administered in the previous 5 months.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "130",
+            "observationTitle": "Measles prophylaxis IG administration - Standard",
+            "contraindicationText": "Do not vaccinate if the patient has had Measles IG at a standard dose (0.25 mL/kg) administered in the previous 5 months.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "131",
+            "observationTitle": "Measles prophylaxis IG administration - Immunocompromised Contact",
+            "contraindicationText": "Do not vaccinate if the patient has had Measles IG at an immunocompromised dose (0.5 mL/kg) administered in the previous 6 months.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "132",
+            "observationTitle": "RBC [adenine-saline added] blood transfusion",
+            "contraindicationText": "Do not vaccinate if the patient has received a blood transfusion of adenine-saline added RBCs in the previous 3 months.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "133",
+            "observationTitle": "Packed RBC blood transfusion",
+            "contraindicationText": "Do not vaccinate if the patient has received a blood transfusion of packed RBCs in the previous 6 months.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "134",
+            "observationTitle": "Whole blood transfusion",
+            "contraindicationText": "Do not vaccinate if the patient has received a whole blood transfusion in the previous 6 months.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "135",
+            "observationTitle": "Plasma/platelet products blood transfusion",
+            "contraindicationText": "Do not vaccinate if the patient has received a blood transfusion of plasma or platelet product in the previous 7 months.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "136",
+            "observationTitle": "Cytomegalovirus IGIV",
+            "contraindicationText": "Do not vaccinate if the patient has received Cytomegalovirus IGIV in the previous 6 months.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "137",
+            "observationTitle": "IGIV - Replacement therapy for immune deficiencies",
+            "contraindicationText": "Do not vaccinate if the patient has received IGIV (Replacement therapy for immune deficiencies) in the previous 8 months.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "138",
+            "observationTitle": "IGIV - Immune thrombocytopenic purpura treatment",
+            "contraindicationText": "Do not vaccinate if the patient has received IGIV (Immune thrombocytopenic purpura treatment (400 mg/kg IV)) in the previous 8 months.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "139",
+            "observationTitle": "IGIV - Postexposure varicella prophylaxis",
+            "contraindicationText": "Do not vaccinate if the patient has received IGIV (Postexposure varicella prophylaxis) in the previous 8 months.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "140",
+            "observationTitle": "IGIV - Immune thrombocytopenic purpura treatment",
+            "contraindicationText": "Do not vaccinate if the patient has received IGIV (Immune thrombocytopenic purpura treatment (1000 mg/kg IV)) in the previous 10 months.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "141",
+            "observationTitle": "IGIV - Kawasaki disease",
+            "contraindicationText": "Do not vaccinate if the patient has received IGIV (Kawasaki disease) in the previous 11 months.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "147",
+            "observationTitle": "T-lymphocyte [cell-mediated and humoral] - Complete defects",
+            "contraindicationText": "Do not vaccinate if the patient has complete cell-mediated or humoral T-lymphocyte defects (e.g., severe combined immunodeficiency [SCID] disease, complete DiGeorge syndrome).",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "148",
+            "observationTitle": "T-lymphocyte [cell-mediated and humoral] - Partial defects",
+            "contraindicationText": "Do not vaccinate if the patient has partial cell-mediated or humoral T-lymphocyte defects (e.g., most patients with DiGeorge syndrome, Wiskott-Aldrich syndrome, ataxia- telangiectasia).",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "150",
+            "observationTitle": "T-lymphocyte [cell-mediated and humoral] - interferon-gamma or interferon-alpha",
+            "contraindicationText": "Do not vaccinate if the patient has cell-mediated or humoral T-lymphocyte defects related to interferon-gamma or interferon-alpha.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "153",
+            "observationTitle": "Phagocytic function - Leukocyte adhesion defect, and myeloperoxidase deficiency",
+            "contraindicationText": "Do not vaccinate if the patient has a phagocytic function defect (e.g. leukocyte adhesion defect and myeloperoxidase deficiency).",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "154",
+            "observationTitle": "HIV/AIDS - severely immunocompromised",
+            "contraindicationText": "Do not vaccinate if the patient has HIV/AIDS and is severely immunocompromised (See the CDC general recommendations for a definition of \"severely immunocompromised\").",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "156",
+            "observationTitle": "Generalized malignant neoplasm",
+            "contraindicationText": "Do not vaccinate if the patient has generalized malignant neoplasm.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "157",
+            "observationTitle": "Solid organ transplantation",
+            "contraindicationText": "Do not vaccinate if the patient received a solid organ transplant.",
+            "contraindicationGuidance": "Certain immunosuppressive medications are administered to prevent solid organ transplant rejection. Live vaccines should be withheld for 2 months following discontinuation of anti-rejection therapies in patients with a solid organ transplant.",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "158",
+            "observationTitle": "Immunosuppressive therapy",
+            "contraindicationText": "Do not vaccinate if the patient is undergoing immunosuppressive therapy. Immunosuppressive medications include those given to prevent solid organ transplant rejection, human immune mediators like interleukins and colony-stimulating factors, immune modulators like levamisol and BCG bladder-tumor therapy, and medicines like tumor necrosis factor alpha inhibitors and anti-B cell antibodies.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "159",
+            "observationTitle": "Radiation therapy",
+            "contraindicationText": "Do not vaccinate if the patient is undergoing radiation therapy.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "168",
+            "observationTitle": "Chemotherapy",
+            "contraindicationText": "Do not vaccinate if the patient is undergoing chemotherapy, including 14 days before the start of therapy and 3 months after the completion of therapy.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "246",
+            "observationTitle": "Severe immunocompromise",
+            "contraindicationText": "Do not vaccinate persons with severe immunocompromise.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          }
+        ]
+      },
+      "vaccine": {
+        "contraindication": [
+          {
+            "observationCode": "089",
+            "observationTitle": "Severe allergic reaction after previous dose of Varicella",
+            "contraindicationText": "Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Varicella vaccine.",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": {
+              "vaccineType": "MMRV",
+              "cvx": "94",
+              "beginAge": "",
+              "endAge": ""
+            }
+          },
+          {
+            "observationCode": "155",
+            "observationTitle": "HIV/AIDS - not severely immunocompromised",
+            "contraindicationText": "Do not vaccinate if the patient has HIV/AIDS but are not severely immunocompromised (See the CDC general recommendations for a definition of \"severely immunocompromised\").",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": {
+              "vaccineType": "MMRV",
+              "cvx": "94",
+              "beginAge": "",
+              "endAge": ""
+            }
+          },
+          {
+            "observationCode": "186",
+            "observationTitle": "HIV Infection",
+            "contraindicationText": "Do not vaccinate with MMRV if the patient has an HIV infection of any severity.",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": {
+              "vaccineType": "MMRV",
+              "cvx": "94",
+              "beginAge": "",
+              "endAge": ""
+            }
+          }
+        ]
+      }
+    },
+    "series": [
+      {
+        "seriesName": "Mumps 2-dose series",
+        "targetDisease": "Mumps",
+        "vaccineGroup": "MMR",
+        "seriesAdminGuidance": "Persons identified as being at increased risk who have received less than or equal to 2 doses of mumps virus-containing vaccine should receive 1 dose.",
+        "seriesType": "Standard",
+        "equivalentSeriesGroups": "",
+        "requiredGender": "",
+        "selectSeries": {
+          "defaultSeries": "Yes",
+          "productPath": "No",
+          "seriesGroupName": "Standard",
+          "seriesGroup": "1",
+          "seriesPriority": "A",
+          "seriesPreference": "1",
+          "minAgeToStart": "",
+          "maxAgeToStart": ""
+        },
+        "indication": "",
+        "seriesDose": [
+          {
+            "doseNumber": "Dose 1",
+            "age": {
+              "absMinAge": "12 months - 4 days",
+              "minAge": "12 months",
+              "earliestRecAge": "12 months",
+              "latestRecAge": "16 months + 4 weeks",
+              "maxAge": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": "",
+            "allowableInterval": "",
+            "preferableVaccine": [
+              {
+                "vaccineType": "MMR",
+                "cvx": "03",
+                "beginAge": "12 months",
+                "endAge": "",
+                "tradeName": "",
+                "mvx": "",
+                "volume": "0.5",
+                "forecastVaccineType": "N"
+              },
+              {
+                "vaccineType": "MMRV",
+                "cvx": "94",
+                "beginAge": "4 years",
+                "endAge": "13 years",
+                "tradeName": "",
+                "mvx": "",
+                "volume": "0.5",
+                "forecastVaccineType": "N"
+              }
+            ],
+            "allowableVaccine": [
+              {
+                "vaccineType": "MMR",
+                "cvx": "03",
+                "beginAge": "12 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Mumps",
+                "cvx": "07",
+                "beginAge": "12 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Rubella/Mumps",
+                "cvx": "38",
+                "beginAge": "12 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "MMRV",
+                "cvx": "94",
+                "beginAge": "12 months - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": "",
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          },
+          {
+            "doseNumber": "Dose 2",
+            "age": {
+              "absMinAge": "13 months - 4 days",
+              "minAge": "13 months",
+              "earliestRecAge": "4 years",
+              "latestRecAge": "7 years + 4 weeks",
+              "maxAge": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": {
+              "fromPrevious": "Y",
+              "fromTargetDose": "",
+              "fromMostRecent": "",
+              "fromRelevantObs": "",
+              "absMinInt": "4 weeks - 4 days",
+              "minInt": "4 weeks",
+              "earliestRecInt": "3 years",
+              "latestRecInt": "6 years + 4 weeks",
+              "intervalPriority": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "allowableInterval": "",
+            "preferableVaccine": [
+              {
+                "vaccineType": "MMR",
+                "cvx": "03",
+                "beginAge": "12 months",
+                "endAge": "",
+                "tradeName": "",
+                "mvx": "",
+                "volume": "0.5",
+                "forecastVaccineType": "N"
+              },
+              {
+                "vaccineType": "MMRV",
+                "cvx": "94",
+                "beginAge": "4 years",
+                "endAge": "13 years",
+                "tradeName": "",
+                "mvx": "",
+                "volume": "0.5",
+                "forecastVaccineType": "N"
+              }
+            ],
+            "allowableVaccine": [
+              {
+                "vaccineType": "MMR",
+                "cvx": "03",
+                "beginAge": "12 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Mumps",
+                "cvx": "07",
+                "beginAge": "12 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Rubella/Mumps",
+                "cvx": "38",
+                "beginAge": "12 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "MMRV",
+                "cvx": "94",
+                "beginAge": "12 months - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": "",
+            "conditionalSkip": {
+              "context": "Both",
+              "setLogic": "n/a",
+              "set": {
+                "setID": "1",
+                "setDescription": "Dose is not required for those 19 years or older",
+                "effectiveDate": "",
+                "cessationDate": "",
+                "conditionLogic": "",
+                "condition": {
+                  "conditionID": "1",
+                  "conditionType": "Age",
+                  "startDate": "",
+                  "endDate": "",
+                  "beginAge": "19 years - 4 days",
+                  "endAge": "",
+                  "interval": "",
+                  "doseCount": "",
+                  "doseType": "",
+                  "doseCountLogic": "",
+                  "vaccineTypes": "",
+                  "seriesGroups": ""
+                }
+              }
+            },
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          }
+        ]
+      },
+      {
+        "seriesName": "Mumps risk 1-dose series",
+        "targetDisease": "Mumps",
+        "vaccineGroup": "MMR",
+        "seriesAdminGuidance": [
+          "Children who received MMR vaccine before age 12 months should be considered potentially susceptible to all three diseases and should be revaccinated with 2 doses of MMR vaccine, the first dose administered when the child is aged 12 through 15 months (12 months if the child remains in an area where disease risk is high) and the second dose at least 28 days later.",
+          "Persons identified as being at increased risk who have received less than or equal to 2 doses of mumps virus-containing vaccine should receive 1 dose."
+        ],
+        "seriesType": "Risk",
+        "equivalentSeriesGroups": "",
+        "requiredGender": "",
+        "selectSeries": {
+          "defaultSeries": "No",
+          "productPath": "No",
+          "seriesGroupName": "Increased Risk Infant",
+          "seriesGroup": "2",
+          "seriesPriority": "A",
+          "seriesPreference": "1",
+          "minAgeToStart": "6 months",
+          "maxAgeToStart": "12 months"
+        },
+        "indication": {
+          "observationCode": {
+            "text": "Travelling Internationally",
+            "code": "048"
+          },
+          "description": "Administer to persons who will be travelling internationally.",
+          "beginAge": "6 months",
+          "endAge": "12 months",
+          "guidance": ""
+        },
+        "seriesDose": [
+          {
+            "doseNumber": "Dose 1",
+            "age": {
+              "absMinAge": "6 months - 4 days",
+              "minAge": "6 months",
+              "earliestRecAge": "6 months",
+              "latestRecAge": "12 months",
+              "maxAge": "12 months",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "MMR",
+              "cvx": "03",
+              "beginAge": "6 months",
+              "endAge": "",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "MMR",
+                "cvx": "03",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Mumps",
+                "cvx": "07",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Rubella/Mumps",
+                "cvx": "38",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "MMRV",
+                "cvx": "94",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": "",
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          }
+        ]
+      },
+      {
+        "seriesName": "Mumps risk 2-dose series",
+        "targetDisease": "Mumps",
+        "vaccineGroup": "MMR",
+        "seriesAdminGuidance": "Persons identified as being at increased risk who have received less than or equal to 2 doses of mumps virus-containing vaccine should receive 1 dose.",
+        "seriesType": "Risk",
+        "equivalentSeriesGroups": "",
+        "requiredGender": "",
+        "selectSeries": {
+          "defaultSeries": "No",
+          "productPath": "No",
+          "seriesGroupName": "Increased Risk",
+          "seriesGroup": "3",
+          "seriesPriority": "A",
+          "seriesPreference": "1",
+          "minAgeToStart": "18 years",
+          "maxAgeToStart": ""
+        },
+        "indication": [
+          {
+            "observationCode": {
+              "text": "Travelling Internationally",
+              "code": "048"
+            },
+            "description": "Administer to persons who will be travelling internationally.",
+            "beginAge": "18 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "Health care personnel",
+              "code": "055"
+            },
+            "description": "Administer to healthcare personnel without evidence of immunity.",
+            "beginAge": "18 years",
+            "endAge": "",
+            "guidance": "Includes those born before 1957 who would normally be considered immunity."
+          },
+          {
+            "observationCode": {
+              "text": "Post secondary student",
+              "code": "063"
+            },
+            "description": "Administer to persons who are students in a postsecondary educational institution.",
+            "beginAge": "18 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "Household and close contacts of immunocompromised persons",
+              "code": "073"
+            },
+            "description": "Administer to persons who are household and close contacts of immunocompromised persons.",
+            "beginAge": "18 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "Received killed or unknown Mumps vaccine before 1979",
+              "code": "078"
+            },
+            "description": "Administer to persons who received killed or unknown Mumps vaccine before 1979.",
+            "beginAge": "18 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "HIV/AIDS - not severely immunocompromised",
+              "code": "155"
+            },
+            "description": "Administer to persons who have HIV/AIDS but are not severely immunocompromised (See the CDC general recommendations for a definition of \"severely immunocompromised\").",
+            "beginAge": "18 years",
+            "endAge": "",
+            "guidance": ""
+          }
+        ],
+        "seriesDose": [
+          {
+            "doseNumber": "Dose 1",
+            "age": {
+              "absMinAge": "12 months - 4 days",
+              "minAge": "18 years",
+              "earliestRecAge": "18 years",
+              "latestRecAge": "",
+              "maxAge": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": "",
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "MMR",
+              "cvx": "03",
+              "beginAge": "12 months",
+              "endAge": "",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "MMR",
+                "cvx": "03",
+                "beginAge": "12 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Mumps",
+                "cvx": "07",
+                "beginAge": "12 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Rubella/Mumps",
+                "cvx": "38",
+                "beginAge": "12 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "MMRV",
+                "cvx": "94",
+                "beginAge": "12 months - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": "",
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          },
+          {
+            "doseNumber": "Dose 2",
+            "age": {
+              "absMinAge": "",
+              "minAge": "",
+              "earliestRecAge": "",
+              "latestRecAge": "",
+              "maxAge": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": {
+              "fromPrevious": "Y",
+              "fromTargetDose": "",
+              "fromMostRecent": "",
+              "fromRelevantObs": "",
+              "absMinInt": "4 weeks - 4 days",
+              "minInt": "4 weeks",
+              "earliestRecInt": "4 weeks",
+              "latestRecInt": "",
+              "intervalPriority": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "MMR",
+              "cvx": "03",
+              "beginAge": "12 months",
+              "endAge": "",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "MMR",
+                "cvx": "03",
+                "beginAge": "12 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Mumps",
+                "cvx": "07",
+                "beginAge": "12 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Rubella/Mumps",
+                "cvx": "38",
+                "beginAge": "12 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "MMRV",
+                "cvx": "94",
+                "beginAge": "12 months - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": "",
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          }
+        ]
+      },
+      {
+        "seriesName": "Mumps risk 2-dose ART series",
+        "targetDisease": "Mumps",
+        "vaccineGroup": "MMR",
+        "seriesAdminGuidance": "",
+        "seriesType": "Risk",
+        "equivalentSeriesGroups": "",
+        "requiredGender": "",
+        "selectSeries": {
+          "defaultSeries": "No",
+          "productPath": "No",
+          "seriesGroupName": "Increased Risk",
+          "seriesGroup": "3",
+          "seriesPriority": "A",
+          "seriesPreference": "1",
+          "minAgeToStart": "",
+          "maxAgeToStart": ""
+        },
+        "indication": {
+          "observationCode": {
+            "text": "Persons with perinatal HIV infection who do not have evidence of severe immunosuppression and who were vaccinated with MMR before establishment of antiviral therapy [ART]",
+            "code": "026"
+          },
+          "description": "Administer to persons with perinatal HIV infection who do not have evidence of severe immunosuppression and who were vaccinated with MMR before establishment of antiviral therapy [ART].",
+          "beginAge": "",
+          "endAge": "",
+          "guidance": ""
+        },
+        "seriesDose": [
+          {
+            "doseNumber": "Dose 1",
+            "age": {
+              "absMinAge": "12 months - 4 days",
+              "minAge": "12 months",
+              "earliestRecAge": "12 months",
+              "latestRecAge": "",
+              "maxAge": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": {
+              "fromPrevious": "N",
+              "fromTargetDose": "",
+              "fromMostRecent": "",
+              "fromRelevantObs": {
+                "text": "Begin Date of antiviral therapy [ART]",
+                "code": "120"
+              },
+              "absMinInt": "0 days",
+              "minInt": "6 months",
+              "earliestRecInt": "6 months",
+              "latestRecInt": "",
+              "intervalPriority": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "MMR",
+              "cvx": "03",
+              "beginAge": "12 months",
+              "endAge": "",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "MMR",
+                "cvx": "03",
+                "beginAge": "12 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Mumps",
+                "cvx": "07",
+                "beginAge": "12 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Rubella/Mumps",
+                "cvx": "38",
+                "beginAge": "12 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "MMRV",
+                "cvx": "94",
+                "beginAge": "12 months - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": "",
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          },
+          {
+            "doseNumber": "Dose 2",
+            "age": {
+              "absMinAge": "",
+              "minAge": "",
+              "earliestRecAge": "",
+              "latestRecAge": "",
+              "maxAge": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": {
+              "fromPrevious": "Y",
+              "fromTargetDose": "",
+              "fromMostRecent": "",
+              "fromRelevantObs": "",
+              "absMinInt": "4 weeks - 4 days",
+              "minInt": "4 weeks",
+              "earliestRecInt": "4 weeks",
+              "latestRecInt": "",
+              "intervalPriority": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "MMR",
+              "cvx": "03",
+              "beginAge": "12 months",
+              "endAge": "",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "MMR",
+                "cvx": "03",
+                "beginAge": "12 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Mumps",
+                "cvx": "07",
+                "beginAge": "12 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Rubella/Mumps",
+                "cvx": "38",
+                "beginAge": "12 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "MMRV",
+                "cvx": "94",
+                "beginAge": "12 months - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": "",
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          }
+        ]
+      }
+    ]
+  }
+}

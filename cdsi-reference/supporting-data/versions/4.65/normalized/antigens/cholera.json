@@ -1,0 +1,112 @@
+{
+  "antigen": "Cholera",
+  "source_file": "source/xml/AntigenSupportingData- Cholera-508.xml",
+  "data": {
+    "immunity": "",
+    "contraindications": {
+      "vaccineGroup": {
+        "contraindication": [
+          {
+            "observationCode": "080",
+            "observationTitle": "Adverse reaction to vaccine component",
+            "contraindicationText": "Do not vaccinate if the patient has had an adverse reaction to a vaccine component.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "119",
+            "observationTitle": "Severe allergic reaction after previous dose of cholera",
+            "contraindicationText": "Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of cholera vaccine.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          }
+        ]
+      }
+    },
+    "series": [
+      {
+        "seriesName": "Cholera 1-dose series",
+        "targetDisease": "Cholera",
+        "vaccineGroup": "Cholera",
+        "seriesAdminGuidance": [
+          "The Vaxchora package insert states that CVD 103-HgR should not be given to patients who have received oral or parenteral antibiotics in the preceding 14 days, because antibiotics might have activity against the vaccine strain.",
+          "Non-U.S. vaccines (WC-rBS and BivWC) would count as valid only if there is documentation that a complete series with the appropriate dosing has been given.",
+          "No data exist on use of the currently available lyophilized CVD 103-HgR formulation in immunocompromised populations."
+        ],
+        "seriesType": "Risk",
+        "equivalentSeriesGroups": "",
+        "requiredGender": "",
+        "selectSeries": {
+          "defaultSeries": "No",
+          "productPath": "No",
+          "seriesGroupName": "Increased Risk",
+          "seriesGroup": "1",
+          "seriesPriority": "A",
+          "seriesPreference": "1",
+          "minAgeToStart": "2 years",
+          "maxAgeToStart": "65 years"
+        },
+        "indication": {
+          "observationCode": {
+            "text": "Travel to an area of active cholera transmission",
+            "code": "008"
+          },
+          "description": "Administer to travelers from the United States traveling to an area of active cholera transmission.",
+          "beginAge": "2 years",
+          "endAge": "65 years",
+          "guidance": ""
+        },
+        "seriesDose": [
+          {
+            "doseNumber": "Dose 1",
+            "age": {
+              "absMinAge": "2 years - 4 days",
+              "minAge": "2 years",
+              "earliestRecAge": "2 years",
+              "latestRecAge": "",
+              "maxAge": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": "",
+            "allowableInterval": "",
+            "preferableVaccine": [
+              {
+                "vaccineType": "cholera, live attenuated",
+                "cvx": "174",
+                "beginAge": "6 years",
+                "endAge": "65 years",
+                "tradeName": "",
+                "mvx": "",
+                "volume": "100.0",
+                "forecastVaccineType": "N"
+              },
+              {
+                "vaccineType": "cholera, live attenuated",
+                "cvx": "174",
+                "beginAge": "2 years",
+                "endAge": "6 years",
+                "tradeName": "",
+                "mvx": "",
+                "volume": "50.0",
+                "forecastVaccineType": "N"
+              }
+            ],
+            "allowableVaccine": {
+              "vaccineType": "cholera, live attenuated",
+              "cvx": "174",
+              "beginAge": "2 years - 4 days",
+              "endAge": ""
+            },
+            "inadvertentVaccine": "",
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -218,8 +218,6 @@ files:
 - path: xsd/ScheduleSupportingData.xsd
   sha256: 3d13e7cc42147a673599f8b53f108d98b2ab9baffc017c56b0b1134cceb57750
   category: xsd
-normalizer_version: null
-normalized_at: null
-warnings:
-- 'Skipped ''Version 4.65 - 508/Excel/Thumbs.db'': not an xml/xsd/spreadsheet/release-notes
-  file'
+normalizer_version: 0.1.0
+normalized_at: '2026-09-01T18:51:51Z'
+warnings: []

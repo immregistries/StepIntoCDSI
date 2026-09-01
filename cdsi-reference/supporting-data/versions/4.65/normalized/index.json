@@ -1,0 +1,1279 @@
+{
+  "release_id": "4.65",
+  "antigens": [
+    {
+      "antigen": "Chikungunya",
+      "slug": "chikungunya",
+      "source_file": "source/xml/AntigenSupportingData- Chikungunya-508.xml",
+      "series": [
+        {
+          "seriesName": "Chikungunya Risk 1-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Chikungunya",
+          "doseCount": 1
+        }
+      ]
+    },
+    {
+      "antigen": "Cholera",
+      "slug": "cholera",
+      "source_file": "source/xml/AntigenSupportingData- Cholera-508.xml",
+      "series": [
+        {
+          "seriesName": "Cholera 1-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Cholera",
+          "doseCount": 1
+        }
+      ]
+    },
+    {
+      "antigen": "COVID-19",
+      "slug": "covid-19",
+      "source_file": "source/xml/AntigenSupportingData- COVID-19-508.xml",
+      "series": [
+        {
+          "seriesName": "COVID-19 start at 6mo-23mo shared clinical decision-making series",
+          "seriesType": "Standard",
+          "vaccineGroup": "COVID-19",
+          "doseCount": 5
+        },
+        {
+          "seriesName": "COVID-19 start at 2 years+ shared clinical decision-making series",
+          "seriesType": "Standard",
+          "vaccineGroup": "COVID-19",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "COVID-19 risk immunocompromised 6 mo+ Moderna series",
+          "seriesType": "Risk",
+          "vaccineGroup": "COVID-19",
+          "doseCount": 5
+        },
+        {
+          "seriesName": "COVID-19 risk immunocompromised start at 5 yrs+ Pfizer series",
+          "seriesType": "Risk",
+          "vaccineGroup": "COVID-19",
+          "doseCount": 5
+        },
+        {
+          "seriesName": "COVID-19 risk immunocompromised 12 yrs+ Novavax series",
+          "seriesType": "Risk",
+          "vaccineGroup": "COVID-19",
+          "doseCount": 4
+        },
+        {
+          "seriesName": "COVID-19 risk immunocompromised 18 yrs+ Janssen series",
+          "seriesType": "Risk",
+          "vaccineGroup": "COVID-19",
+          "doseCount": 4
+        },
+        {
+          "seriesName": "COVID-19 risk immunocompromised start at 6 mo - 4 yrs mixed product series",
+          "seriesType": "Risk",
+          "vaccineGroup": "COVID-19",
+          "doseCount": 6
+        },
+        {
+          "seriesName": "COVID-19 risk immunocompromised start at 5 yrs+ mixed product series",
+          "seriesType": "Risk",
+          "vaccineGroup": "COVID-19",
+          "doseCount": 5
+        },
+        {
+          "seriesName": "COVID-19 risk immunocompromised WHO-authorized series",
+          "seriesType": "Risk",
+          "vaccineGroup": "COVID-19",
+          "doseCount": 5
+        },
+        {
+          "seriesName": "COVID-19 risk immunocompromised 18 yrs+ Medicago clinical trial series",
+          "seriesType": "Risk",
+          "vaccineGroup": "COVID-19",
+          "doseCount": 5
+        }
+      ]
+    },
+    {
+      "antigen": "Dengue",
+      "slug": "dengue",
+      "source_file": "source/xml/AntigenSupportingData- Dengue-508.xml",
+      "series": [
+        {
+          "seriesName": "Dengue risk 3-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Dengue",
+          "doseCount": 3
+        }
+      ]
+    },
+    {
+      "antigen": "Diphtheria",
+      "slug": "diphtheria",
+      "source_file": "source/xml/AntigenSupportingData- Diphtheria-508.xml",
+      "series": [
+        {
+          "seriesName": "Diphtheria standard series",
+          "seriesType": "Standard",
+          "vaccineGroup": "DTaP/Tdap/Td",
+          "doseCount": 11
+        },
+        {
+          "seriesName": "Diphtheria start at 12 months series",
+          "seriesType": "Standard",
+          "vaccineGroup": "DTaP/Tdap/Td",
+          "doseCount": 11
+        }
+      ]
+    },
+    {
+      "antigen": "Ebola",
+      "slug": "ebola",
+      "source_file": "source/xml/AntigenSupportingData- Ebola-508.xml",
+      "series": [
+        {
+          "seriesName": "Ebola Risk 1-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Ebola",
+          "doseCount": 1
+        }
+      ]
+    },
+    {
+      "antigen": "HepA",
+      "slug": "hepa",
+      "source_file": "source/xml/AntigenSupportingData- HepA-508.xml",
+      "series": [
+        {
+          "seriesName": "HepA 2-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "HepA",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "HepA adult 2-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "HepA",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "HepA adult Twinrix 3-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "HepA",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "HepA adult Twinrix secondary 3-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "HepA",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "HepA adult Twinrix tertiary 3-dose series",
+          "seriesType": "Evaluation Only",
+          "vaccineGroup": "HepA",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "HepA adult Twinrix 4 dose Series",
+          "seriesType": "Standard",
+          "vaccineGroup": "HepA",
+          "doseCount": 4
+        },
+        {
+          "seriesName": "HepA risk 2-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "HepA",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "HepA risk Twinrix 3-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "HepA",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "HepA risk Twinrix secondary 3-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "HepA",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "HepA risk Twinrix tertiary 3-dose series",
+          "seriesType": "Evaluation Only",
+          "vaccineGroup": "HepA",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "HepA risk Twinrix 4 dose Series",
+          "seriesType": "Risk",
+          "vaccineGroup": "HepA",
+          "doseCount": 4
+        },
+        {
+          "seriesName": "HepA risk 1-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "HepA",
+          "doseCount": 1
+        }
+      ]
+    },
+    {
+      "antigen": "HepB",
+      "slug": "hepb",
+      "source_file": "source/xml/AntigenSupportingData- HepB-508.xml",
+      "series": [
+        {
+          "seriesName": "HepB 3-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "HepB",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "HepB 4-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "HepB",
+          "doseCount": 4
+        },
+        {
+          "seriesName": "HepB adolescent 2-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "HepB",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "HepB 19+ 3-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "HepB",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "HepB 19+ 4-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "HepB",
+          "doseCount": 4
+        },
+        {
+          "seriesName": "HepB Heplisav-B 2-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "HepB",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "HepB Heplisav-B secondary 4-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "HepB",
+          "doseCount": 4
+        },
+        {
+          "seriesName": "HepB Heplisav-B tertiary 4-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "HepB",
+          "doseCount": 4
+        },
+        {
+          "seriesName": "HepB Twinrix 3 Dose Series",
+          "seriesType": "Standard",
+          "vaccineGroup": "HepB",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "HepB Twinrix 4-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "HepB",
+          "doseCount": 4
+        },
+        {
+          "seriesName": "HepB risk 3-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "HepB",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "HepB risk Heplisav-B 2-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "HepB",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "HepB risk Heplisav-B secondary 4-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "HepB",
+          "doseCount": 4
+        },
+        {
+          "seriesName": "HepB risk Heplisav-B tertiary 4-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "HepB",
+          "doseCount": 4
+        },
+        {
+          "seriesName": "HepB risk Twinrix 3 Dose Series",
+          "seriesType": "Risk",
+          "vaccineGroup": "HepB",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "HepB risk Twinrix 4-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "HepB",
+          "doseCount": 4
+        },
+        {
+          "seriesName": "HepB risk Dialysis 4-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "HepB",
+          "doseCount": 5
+        },
+        {
+          "seriesName": "HepB risk Recombivax 3-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "HepB",
+          "doseCount": 4
+        }
+      ]
+    },
+    {
+      "antigen": "Hib",
+      "slug": "hib",
+      "source_file": "source/xml/AntigenSupportingData- Hib-508.xml",
+      "series": [
+        {
+          "seriesName": "Hib start at 2 months 4-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Hib",
+          "doseCount": 4
+        },
+        {
+          "seriesName": "Hib start at 7 months 3-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Hib",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "Hib start at 12 months 2-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Hib",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "Hib start at 15 months 1-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Hib",
+          "doseCount": 1
+        },
+        {
+          "seriesName": "Hib PRP-OMP 3-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Hib",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "Hib risk child 2-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Hib",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "Hib risk 1-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Hib",
+          "doseCount": 1
+        },
+        {
+          "seriesName": "Hib risk 3-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Hib",
+          "doseCount": 3
+        }
+      ]
+    },
+    {
+      "antigen": "HPV",
+      "slug": "hpv",
+      "source_file": "source/xml/AntigenSupportingData- HPV-508.xml",
+      "series": [
+        {
+          "seriesName": "HPV 2-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "HPV",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "HPV 3-dose start under 15 years series",
+          "seriesType": "Standard",
+          "vaccineGroup": "HPV",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "HPV 3-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "HPV",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "HPV male 2-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "HPV",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "HPV male 3-dose start under 15 years series",
+          "seriesType": "Standard",
+          "vaccineGroup": "HPV",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "HPV male 3-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "HPV",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "HPV risk 2-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "HPV",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "HPV risk male 2-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "HPV",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "HPV risk 3-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "HPV",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "HPV risk male 3-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "HPV",
+          "doseCount": 3
+        }
+      ]
+    },
+    {
+      "antigen": "Influenza",
+      "slug": "influenza",
+      "source_file": "source/xml/AntigenSupportingData- Influenza-508.xml",
+      "series": [
+        {
+          "seriesName": "Influenza standard series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Influenza",
+          "doseCount": 2
+        }
+      ]
+    },
+    {
+      "antigen": "JE",
+      "slug": "je",
+      "source_file": "source/xml/AntigenSupportingData- JE-508.xml",
+      "series": [
+        {
+          "seriesName": "Japanese Encephalitis risk 2-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Japanese Encephalitis",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "Japanese Encephalitis risk 2-dose series 18-65 years",
+          "seriesType": "Risk",
+          "vaccineGroup": "Japanese Encephalitis",
+          "doseCount": 3
+        }
+      ]
+    },
+    {
+      "antigen": "Measles",
+      "slug": "measles",
+      "source_file": "source/xml/AntigenSupportingData- Measles-508.xml",
+      "series": [
+        {
+          "seriesName": "Measles 2-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "MMR",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "Measles risk 1-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "MMR",
+          "doseCount": 1
+        },
+        {
+          "seriesName": "Measles risk 2-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "MMR",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "Measles risk 2-dose ART series",
+          "seriesType": "Risk",
+          "vaccineGroup": "MMR",
+          "doseCount": 2
+        }
+      ]
+    },
+    {
+      "antigen": "Meningococcal B",
+      "slug": "meningococcal-b",
+      "source_file": "source/xml/AntigenSupportingData- Meningococcal B-508.xml",
+      "series": [
+        {
+          "seriesName": "Meningococcal B 2-dose series MenB-4C Shared Clinical Decision Making",
+          "seriesType": "Standard",
+          "vaccineGroup": "Meningococcal B",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "Meningococcal B 2-dose series MenB-FHbp Shared Clinical Decision Making",
+          "seriesType": "Standard",
+          "vaccineGroup": "Meningococcal B",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "Meningococcal B 3-dose series MenB-4C Shared Clinical Decision Making",
+          "seriesType": "Standard",
+          "vaccineGroup": "Meningococcal B",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "Meningococcal B 3-dose series MenB-FHbp Shared Clinical Decision Making",
+          "seriesType": "Standard",
+          "vaccineGroup": "Meningococcal B",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "Meningococcal B risk 3-dose series MenB-4C increased risk",
+          "seriesType": "Risk",
+          "vaccineGroup": "Meningococcal B",
+          "doseCount": 5
+        },
+        {
+          "seriesName": "Meningococcal B risk 3-dose series MenB-FHbp Increased Risk",
+          "seriesType": "Risk",
+          "vaccineGroup": "Meningococcal B",
+          "doseCount": 5
+        }
+      ]
+    },
+    {
+      "antigen": "Meningococcal",
+      "slug": "meningococcal",
+      "source_file": "source/xml/AntigenSupportingData- Meningococcal-508.xml",
+      "series": [
+        {
+          "seriesName": "Meningococcal ACWY 2-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Meningococcal",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "Meningococcal ACWY risk 2-23 month",
+          "seriesType": "Risk",
+          "vaccineGroup": "Meningococcal",
+          "doseCount": 7
+        },
+        {
+          "seriesName": "Meningococcal ACWY risk Hib-MenCY-TT 4-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Meningococcal",
+          "doseCount": 6
+        },
+        {
+          "seriesName": "Meningococcal ACWY risk 2-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Meningococcal",
+          "doseCount": 4
+        },
+        {
+          "seriesName": "Meningococcal ACWY risk 1-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Meningococcal",
+          "doseCount": 3
+        }
+      ]
+    },
+    {
+      "antigen": "Mumps",
+      "slug": "mumps",
+      "source_file": "source/xml/AntigenSupportingData- Mumps-508.xml",
+      "series": [
+        {
+          "seriesName": "Mumps 2-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "MMR",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "Mumps risk 1-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "MMR",
+          "doseCount": 1
+        },
+        {
+          "seriesName": "Mumps risk 2-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "MMR",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "Mumps risk 2-dose ART series",
+          "seriesType": "Risk",
+          "vaccineGroup": "MMR",
+          "doseCount": 2
+        }
+      ]
+    },
+    {
+      "antigen": "Orthopoxvirus",
+      "slug": "orthopoxvirus",
+      "source_file": "source/xml/AntigenSupportingData- Orthopoxvirus-508.xml",
+      "series": [
+        {
+          "seriesName": "Orthopoxvirus risk more virulent 2-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Orthopoxvirus",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "Orthopoxvirus risk less virulent 2-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Orthopoxvirus",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "Orthopoxvirus risk pre-exposure 2-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Orthopoxvirus",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "Orthopoxvirus risk post-exposure 2-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Orthopoxvirus",
+          "doseCount": 2
+        }
+      ]
+    },
+    {
+      "antigen": "Pertussis",
+      "slug": "pertussis",
+      "source_file": "source/xml/AntigenSupportingData- Pertussis-508.xml",
+      "series": [
+        {
+          "seriesName": "Pertussis standard series",
+          "seriesType": "Standard",
+          "vaccineGroup": "DTaP/Tdap/Td",
+          "doseCount": 11
+        },
+        {
+          "seriesName": "Pertussis start at 12 months series",
+          "seriesType": "Standard",
+          "vaccineGroup": "DTaP/Tdap/Td",
+          "doseCount": 11
+        },
+        {
+          "seriesName": "Pertussis risk 1-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "DTaP/Tdap/Td",
+          "doseCount": 1
+        }
+      ]
+    },
+    {
+      "antigen": "Pneumococcal",
+      "slug": "pneumococcal",
+      "source_file": "source/xml/AntigenSupportingData- Pneumococcal-508.xml",
+      "series": [
+        {
+          "seriesName": "Pneumococcal 4-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Pneumococcal",
+          "doseCount": 5
+        },
+        {
+          "seriesName": "Pneumococcal dose 2 at 7 months series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Pneumococcal",
+          "doseCount": 5
+        },
+        {
+          "seriesName": "Pneumococcal start at 12 months series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Pneumococcal",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "Pneumococcal start at 24 months series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Pneumococcal",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "Pneumococcal risk 2-5 years Chronic Medical Conditions PCV-PCV-PPSV series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Pneumococcal",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "Pneumococcal risk 2-5 years Chronic Medical Conditions PCV-PPSV-PCV series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Pneumococcal",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "Pneumococcal risk 2-5 years Chronic Medical Conditions PPSV-PCV-PCV series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Pneumococcal",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "Pneumococcal risk 2-5 years 4-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Pneumococcal",
+          "doseCount": 4
+        },
+        {
+          "seriesName": "Pneumococcal risk 6-18 years 2-dose PCV-PPSV series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Pneumococcal",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "Pneumococcal risk 6-18 years 2-dose PPSV-PCV series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Pneumococcal",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "Pneumococcal risk 6-18 yrs immunocompromised PCV-PPSV-PPSV",
+          "seriesType": "Risk",
+          "vaccineGroup": "Pneumococcal",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "Pneumococcal risk 6-18 years immunocompromised PPSV-PCV-PPSV series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Pneumococcal",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "Pneumococcal risk 6-18 years immunocompromised PPSV-PPSV-PCV series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Pneumococcal",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "Pneumococcal risk 19+ Chronic Medical Conditions PCV-PPSV series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Pneumococcal",
+          "doseCount": 4
+        },
+        {
+          "seriesName": "Pneumococcal risk 19+ years Chronic Medical Conditions PPSV-PCV series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Pneumococcal",
+          "doseCount": 4
+        },
+        {
+          "seriesName": "Pneumococcal risk 19+ years CSF Leaks or Cochlear Implants PCV-PPSV series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Pneumococcal",
+          "doseCount": 4
+        },
+        {
+          "seriesName": "Pneumococcal risk 19+ years CSF Leaks or Cochlear Implants PPSV-PCV series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Pneumococcal",
+          "doseCount": 4
+        },
+        {
+          "seriesName": "Pneumococcal risk 19+ years immunocompromised PCV-PPSV-PPSV series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Pneumococcal",
+          "doseCount": 5
+        },
+        {
+          "seriesName": "Pneumococcal risk 19+ years immunocompromised PPSV-PCV-PPSV series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Pneumococcal",
+          "doseCount": 5
+        },
+        {
+          "seriesName": "Pneumococcal risk 19+ years immunocompromised PPSV-PPSV-PCV series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Pneumococcal",
+          "doseCount": 5
+        },
+        {
+          "seriesName": "Pneumococcal 50+ 1-dose PCV series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Pneumococcal",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "Pneumococcal 50+ 2-dose PCV13 series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Pneumococcal",
+          "doseCount": 4
+        },
+        {
+          "seriesName": "Pneumococcal 50+ 2-dose PPSV23-PCV series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Pneumococcal",
+          "doseCount": 4
+        }
+      ]
+    },
+    {
+      "antigen": "Polio",
+      "slug": "polio",
+      "source_file": "source/xml/AntigenSupportingData- Polio-508.xml",
+      "series": [
+        {
+          "seriesName": "Polio 4-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Polio",
+          "doseCount": 4
+        },
+        {
+          "seriesName": "Polio 5-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Polio",
+          "doseCount": 5
+        },
+        {
+          "seriesName": "Polio adult catch-up series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Polio",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "Polio fIPV series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Polio",
+          "doseCount": 5
+        },
+        {
+          "seriesName": "Polio fIPV secondary series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Polio",
+          "doseCount": 6
+        },
+        {
+          "seriesName": "Polio risk childhood series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Polio",
+          "doseCount": 5
+        },
+        {
+          "seriesName": "Polio risk adult series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Polio",
+          "doseCount": 3
+        }
+      ]
+    },
+    {
+      "antigen": "Rabies",
+      "slug": "rabies",
+      "source_file": "source/xml/AntigenSupportingData- Rabies-508.xml",
+      "series": [
+        {
+          "seriesName": "Rabies risk continuous exposure series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Rabies",
+          "doseCount": 4
+        },
+        {
+          "seriesName": "Rabies risk frequent exposure series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Rabies",
+          "doseCount": 4
+        },
+        {
+          "seriesName": "Rabies risk infrequent exposure series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Rabies",
+          "doseCount": 4
+        }
+      ]
+    },
+    {
+      "antigen": "Rotavirus",
+      "slug": "rotavirus",
+      "source_file": "source/xml/AntigenSupportingData- Rotavirus-508.xml",
+      "series": [
+        {
+          "seriesName": "Rotavirus 3-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Rotavirus",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "Rotavirus late start at 15 weeks 3-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Rotavirus",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "Rotavirus 2-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Rotavirus",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "Rotavirus late start at 15 weeks 2-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Rotavirus",
+          "doseCount": 2
+        }
+      ]
+    },
+    {
+      "antigen": "RSV",
+      "slug": "rsv",
+      "source_file": "source/xml/AntigenSupportingData- RSV-508.xml",
+      "series": [
+        {
+          "seriesName": "RSV 1-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "RSV",
+          "doseCount": 1
+        },
+        {
+          "seriesName": "RSV risk under 20 months series",
+          "seriesType": "Risk",
+          "vaccineGroup": "RSV",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "RSV risk pregnant 1-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "RSV",
+          "doseCount": 1
+        },
+        {
+          "seriesName": "RSV risk 50-74 years 1-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "RSV",
+          "doseCount": 1
+        },
+        {
+          "seriesName": "RSV 75 years+ 1-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "RSV",
+          "doseCount": 1
+        }
+      ]
+    },
+    {
+      "antigen": "Rubella",
+      "slug": "rubella",
+      "source_file": "source/xml/AntigenSupportingData- Rubella-508.xml",
+      "series": [
+        {
+          "seriesName": "Rubella 2-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "MMR",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "Rubella risk 1-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "MMR",
+          "doseCount": 1
+        },
+        {
+          "seriesName": "Rubella risk 2-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "MMR",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "Rubella risk 2-dose ART series",
+          "seriesType": "Risk",
+          "vaccineGroup": "MMR",
+          "doseCount": 2
+        }
+      ]
+    },
+    {
+      "antigen": "TBE",
+      "slug": "tbe",
+      "source_file": "source/xml/AntigenSupportingData- TBE-508.xml",
+      "series": [
+        {
+          "seriesName": "Risk 1-15 years 3-dose",
+          "seriesType": "Risk",
+          "vaccineGroup": "TBE",
+          "doseCount": 4
+        },
+        {
+          "seriesName": "Risk 16 years+ 3-dose",
+          "seriesType": "Risk",
+          "vaccineGroup": "TBE",
+          "doseCount": 4
+        }
+      ]
+    },
+    {
+      "antigen": "Tetanus",
+      "slug": "tetanus",
+      "source_file": "source/xml/AntigenSupportingData- Tetanus-508.xml",
+      "series": [
+        {
+          "seriesName": "Tetanus standard series",
+          "seriesType": "Standard",
+          "vaccineGroup": "DTaP/Tdap/Td",
+          "doseCount": 11
+        },
+        {
+          "seriesName": "Tetanus start at 12 months series",
+          "seriesType": "Standard",
+          "vaccineGroup": "DTaP/Tdap/Td",
+          "doseCount": 11
+        }
+      ]
+    },
+    {
+      "antigen": "Typhoid",
+      "slug": "typhoid",
+      "source_file": "source/xml/AntigenSupportingData- Typhoid-508.xml",
+      "series": [
+        {
+          "seriesName": "Typhoid risk series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Typhoid",
+          "doseCount": 2
+        }
+      ]
+    },
+    {
+      "antigen": "Varicella",
+      "slug": "varicella",
+      "source_file": "source/xml/AntigenSupportingData- Varicella-508.xml",
+      "series": [
+        {
+          "seriesName": "Varicella childhood 2-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Varicella",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "Varicella 13+ 2-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Varicella",
+          "doseCount": 2
+        }
+      ]
+    },
+    {
+      "antigen": "YF",
+      "slug": "yf",
+      "source_file": "source/xml/AntigenSupportingData- YF-508.xml",
+      "series": [
+        {
+          "seriesName": "Yellow Fever risk 1-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Yellow Fever",
+          "doseCount": 1
+        }
+      ]
+    },
+    {
+      "antigen": "Zoster",
+      "slug": "zoster",
+      "source_file": "source/xml/AntigenSupportingData- Zoster-508.xml",
+      "series": [
+        {
+          "seriesName": "Zoster 2-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Zoster",
+          "doseCount": 2
+        },
+        {
+          "seriesName": "Zoster 3-dose series",
+          "seriesType": "Standard",
+          "vaccineGroup": "Zoster",
+          "doseCount": 3
+        },
+        {
+          "seriesName": "Zoster Risk 2-dose series",
+          "seriesType": "Risk",
+          "vaccineGroup": "Zoster",
+          "doseCount": 2
+        }
+      ]
+    }
+  ],
+  "schedule": {
+    "vaccineGroups": [
+      {
+        "vaccineGroup": "Chikungunya",
+        "antigens": [
+          "Chikungunya"
+        ]
+      },
+      {
+        "vaccineGroup": "Cholera",
+        "antigens": [
+          "Cholera"
+        ]
+      },
+      {
+        "vaccineGroup": "COVID-19",
+        "antigens": [
+          "COVID-19"
+        ]
+      },
+      {
+        "vaccineGroup": "Dengue",
+        "antigens": [
+          "Dengue"
+        ]
+      },
+      {
+        "vaccineGroup": "DTaP/Tdap/Td",
+        "antigens": [
+          "Diphtheria",
+          "Pertussis",
+          "Tetanus"
+        ]
+      },
+      {
+        "vaccineGroup": "Ebola",
+        "antigens": [
+          "Ebola"
+        ]
+      },
+      {
+        "vaccineGroup": "HepA",
+        "antigens": [
+          "HepA"
+        ]
+      },
+      {
+        "vaccineGroup": "HepB",
+        "antigens": [
+          "HepB"
+        ]
+      },
+      {
+        "vaccineGroup": "Hib",
+        "antigens": [
+          "Hib"
+        ]
+      },
+      {
+        "vaccineGroup": "HPV",
+        "antigens": [
+          "HPV"
+        ]
+      },
+      {
+        "vaccineGroup": "Influenza",
+        "antigens": [
+          "Influenza"
+        ]
+      },
+      {
+        "vaccineGroup": "Japanese Encephalitis",
+        "antigens": [
+          "Japanese Encephalitis"
+        ]
+      },
+      {
+        "vaccineGroup": "Meningococcal",
+        "antigens": [
+          "Meningococcal"
+        ]
+      },
+      {
+        "vaccineGroup": "Meningococcal B",
+        "antigens": [
+          "Meningococcal B"
+        ]
+      },
+      {
+        "vaccineGroup": "MMR",
+        "antigens": [
+          "Measles",
+          "Mumps",
+          "Rubella"
+        ]
+      },
+      {
+        "vaccineGroup": "Orthopoxvirus",
+        "antigens": [
+          "Orthopoxvirus"
+        ]
+      },
+      {
+        "vaccineGroup": "Pneumococcal",
+        "antigens": [
+          "Pneumococcal"
+        ]
+      },
+      {
+        "vaccineGroup": "Polio",
+        "antigens": [
+          "Polio"
+        ]
+      },
+      {
+        "vaccineGroup": "Rabies",
+        "antigens": [
+          "Rabies"
+        ]
+      },
+      {
+        "vaccineGroup": "Rotavirus",
+        "antigens": [
+          "Rotavirus"
+        ]
+      },
+      {
+        "vaccineGroup": "RSV",
+        "antigens": [
+          "RSV"
+        ]
+      },
+      {
+        "vaccineGroup": "TBE",
+        "antigens": [
+          "TBE"
+        ]
+      },
+      {
+        "vaccineGroup": "Typhoid",
+        "antigens": [
+          "Typhoid"
+        ]
+      },
+      {
+        "vaccineGroup": "Varicella",
+        "antigens": [
+          "Varicella"
+        ]
+      },
+      {
+        "vaccineGroup": "Yellow Fever",
+        "antigens": [
+          "Yellow Fever"
+        ]
+      },
+      {
+        "vaccineGroup": "Zoster",
+        "antigens": [
+          "Zoster"
+        ]
+      }
+    ]
+  }
+}

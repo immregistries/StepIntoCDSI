@@ -1,0 +1,146 @@
+{
+  "antigen": "Ebola",
+  "source_file": "source/xml/AntigenSupportingData- Ebola-508.xml",
+  "data": {
+    "immunity": "",
+    "contraindications": {
+      "vaccineGroup": {
+        "contraindication": [
+          {
+            "observationCode": "080",
+            "observationTitle": "Adverse reaction to vaccine component",
+            "contraindicationText": "Do not vaccinate if the patient has had an adverse reaction to a vaccine component.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "123",
+            "observationTitle": "Severe allergic reaction after previous dose of Ebola",
+            "contraindicationText": "Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Ebola vaccine.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "124",
+            "observationTitle": "Severe allergic reaction to rice protein",
+            "contraindicationText": "Do not vaccinate if the patient has had a severe allergic reaction to rice protein.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          }
+        ]
+      }
+    },
+    "series": [
+      {
+        "seriesName": "Ebola Risk 1-dose series",
+        "targetDisease": "Ebola",
+        "vaccineGroup": "Ebola",
+        "seriesAdminGuidance": "",
+        "seriesType": "Risk",
+        "equivalentSeriesGroups": "",
+        "requiredGender": "",
+        "selectSeries": {
+          "defaultSeries": "No",
+          "productPath": "No",
+          "seriesGroupName": "Increased Risk",
+          "seriesGroup": "1",
+          "seriesPriority": "A",
+          "seriesPreference": "1",
+          "minAgeToStart": "18 years",
+          "maxAgeToStart": ""
+        },
+        "indication": [
+          {
+            "observationCode": {
+              "text": "Ebola virus outbreak response",
+              "code": "182"
+            },
+            "description": "Administer to persons responding to an outbreak of Ebola Virus Disease.",
+            "beginAge": "18 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "Health care personnel at federally designated Ebola treatment center in U.S.",
+              "code": "183"
+            },
+            "description": "Administer to persons working as health care personnel at federally designated Ebola treatment centers in the United States",
+            "beginAge": "18 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "Laboratorians or other staff at biosafety level 4 facilities in U.S.",
+              "code": "184"
+            },
+            "description": "Administer to persons working as Laboratorians or other staff at biosafety level 4 facilities in U.S.",
+            "beginAge": "18 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "Health care personnel involved in the care and transport of patients with suspected or confirmed Ebola virus disease at Special Pathogen Treatment Centers",
+              "code": "212"
+            },
+            "description": "Administer to persons working as Health care personnel involved in the care and transport of patients with suspected or confirmed Ebola virus disease at Special Pathogen Treatment Centers",
+            "beginAge": "18 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "Laboratorians and support staff members at Laboratory Response Network (LRN) facilities that handle specimens that might contain replication-competent Ebola virus in the United States",
+              "code": "213"
+            },
+            "description": "Administer to persons working as Laboratorians and support staff members at Laboratory Response Network (LRN) facilities that handle specimens that might contain replication-competent Ebola virus in the United States",
+            "beginAge": "18 years",
+            "endAge": "",
+            "guidance": ""
+          }
+        ],
+        "seriesDose": [
+          {
+            "doseNumber": "Dose 1",
+            "age": {
+              "absMinAge": "18 years - 4 days",
+              "minAge": "18 years",
+              "earliestRecAge": "18 years",
+              "latestRecAge": "",
+              "maxAge": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": "",
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "Ebola Zaire vaccine, live",
+              "cvx": "204",
+              "beginAge": "18 years",
+              "endAge": "",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "1.0",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": {
+              "vaccineType": "Ebola Zaire vaccine, live",
+              "cvx": "204",
+              "beginAge": "18 years - 4 days",
+              "endAge": ""
+            },
+            "inadvertentVaccine": "",
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          }
+        ]
+      }
+    ]
+  }
+}

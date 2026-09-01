@@ -11,7 +11,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from . import compare_versions, extract, network_guard, supporting_data, validate
+from . import compare_versions, extract, network_guard, supporting_data, supporting_data_normalize, validate
 
 
 def _cmd_extract(args: argparse.Namespace) -> int:
@@ -82,6 +82,18 @@ def _cmd_supporting_data_list(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_supporting_data_normalize(args: argparse.Namespace) -> int:
+    try:
+        result = supporting_data_normalize.normalize_release(args.release)
+    except supporting_data_normalize.NormalizeError as e:
+        print(f"ERROR: {e}", file=sys.stderr)
+        return 1
+    print(f"Normalized release {result['release_id']}: {result['antigens']} antigen(s), {len(result['warnings'])} warning(s)")
+    for w in result["warnings"]:
+        print(f"  WARNING: {w}")
+    return 0
+
+
 def _cmd_supporting_data_validate(args: argparse.Namespace) -> int:
     problems = validate.validate_supporting_data_release(args.release)
     if not problems:
@@ -128,6 +140,11 @@ def build_parser() -> argparse.ArgumentParser:
     p_sd_validate = supporting_data_sub.add_parser("validate", help="Validate a registered Supporting Data release")
     p_sd_validate.add_argument("--release", required=True)
     p_sd_validate.set_defaults(func=_cmd_supporting_data_validate)
+
+    p_sd_normalize = supporting_data_sub.add_parser(
+        "normalize", help="Parse a registered release's XML into agent-readable structured JSON")
+    p_sd_normalize.add_argument("--release", required=True)
+    p_sd_normalize.set_defaults(func=_cmd_supporting_data_normalize)
 
     return parser
 

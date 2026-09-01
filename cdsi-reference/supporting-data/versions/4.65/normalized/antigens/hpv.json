@@ -1,0 +1,2710 @@
+{
+  "antigen": "HPV",
+  "source_file": "source/xml/AntigenSupportingData- HPV-508.xml",
+  "data": {
+    "immunity": "",
+    "contraindications": {
+      "vaccineGroup": {
+        "contraindication": [
+          {
+            "observationCode": "007",
+            "observationTitle": "Pregnant",
+            "contraindicationText": "Do not vaccinate if the patient is pregnant.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "080",
+            "observationTitle": "Adverse reaction to vaccine component",
+            "contraindicationText": "Do not vaccinate if the patient has had an adverse reaction to a vaccine component.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "090",
+            "observationTitle": "Severe allergic reaction after previous dose of HPV",
+            "contraindicationText": "Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of HPV vaccine.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "110",
+            "observationTitle": "Hypersensitivity to yeast",
+            "contraindicationText": "Do not vaccinate with 9vHPV if the patient has a hypersensitivity to yeast.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          }
+        ]
+      }
+    },
+    "series": [
+      {
+        "seriesName": "HPV 2-dose series",
+        "targetDisease": "HPV",
+        "vaccineGroup": "HPV",
+        "seriesAdminGuidance": [
+          "ACIP recommends routine HPV vaccination at age 11 or 12 years. Vaccination can be given starting at age 9 years.",
+          "Shared clinical decision-making (SCDM) is recommended regarding Human papillomavirus (HPV) vaccination for persons 27-45 years of age. Shared clinical decision-making recommendations are intended to be flexible and should be informed by the characteristics, values, and preferences of the individual patient and the clinical discretion of the healthcare provider. More guidance can be found here: https://www.cdc.gov/vaccines/hcp/admin/downloads/ISD-job-aid-SCDM-HPV-shared-clinical-decision-making-HPV.pdf"
+        ],
+        "seriesType": "Standard",
+        "equivalentSeriesGroups": "2",
+        "requiredGender": [
+          "Female",
+          "Unknown"
+        ],
+        "selectSeries": {
+          "defaultSeries": "Yes",
+          "productPath": "No",
+          "seriesGroupName": "Standard",
+          "seriesGroup": "1",
+          "seriesPriority": "A",
+          "seriesPreference": "1",
+          "minAgeToStart": "",
+          "maxAgeToStart": "15 years"
+        },
+        "indication": "",
+        "seriesDose": [
+          {
+            "doseNumber": "Dose 1",
+            "age": {
+              "absMinAge": "9 years - 4 days",
+              "minAge": "9 years",
+              "earliestRecAge": "11 years",
+              "latestRecAge": "13 years + 4 weeks",
+              "maxAge": "46 years",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": "",
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "2vHPV",
+                "cvx": "118",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": "",
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          },
+          {
+            "doseNumber": "Dose 2",
+            "age": {
+              "absMinAge": "",
+              "minAge": "",
+              "earliestRecAge": "",
+              "latestRecAge": "",
+              "maxAge": "46 years",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": [
+              {
+                "fromPrevious": "N",
+                "fromTargetDose": "1",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "5 months - 4 days",
+                "minInt": "5 months",
+                "earliestRecInt": "6 months",
+                "latestRecInt": "13 months + 4 weeks",
+                "intervalPriority": "",
+                "effectiveDate": "",
+                "cessationDate": ""
+              },
+              {
+                "fromPrevious": "Y",
+                "fromTargetDose": "",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "12 weeks - 4 days",
+                "minInt": "12 weeks",
+                "earliestRecInt": "",
+                "latestRecInt": "",
+                "intervalPriority": "",
+                "effectiveDate": "",
+                "cessationDate": ""
+              }
+            ],
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "2vHPV",
+                "cvx": "118",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": "",
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          }
+        ]
+      },
+      {
+        "seriesName": "HPV 3-dose start under 15 years series",
+        "targetDisease": "HPV",
+        "vaccineGroup": "HPV",
+        "seriesAdminGuidance": [
+          "ACIP recommends routine HPV vaccination at age 11 or 12 years. Vaccination can be given starting at age 9 years.",
+          "Shared clinical decision-making (SCDM) is recommended regarding Human papillomavirus (HPV) vaccination for persons 27-45 years of age. Shared clinical decision-making recommendations are intended to be flexible and should be informed by the characteristics, values, and preferences of the individual patient and the clinical discretion of the healthcare provider. More guidance can be found here: https://www.cdc.gov/vaccines/hcp/admin/downloads/ISD-job-aid-SCDM-HPV-shared-clinical-decision-making-HPV.pdf"
+        ],
+        "seriesType": "Standard",
+        "equivalentSeriesGroups": "2",
+        "requiredGender": [
+          "Female",
+          "Unknown"
+        ],
+        "selectSeries": {
+          "defaultSeries": "No",
+          "productPath": "No",
+          "seriesGroupName": "Standard",
+          "seriesGroup": "1",
+          "seriesPriority": "A",
+          "seriesPreference": "2",
+          "minAgeToStart": "",
+          "maxAgeToStart": "15 years"
+        },
+        "indication": "",
+        "seriesDose": [
+          {
+            "doseNumber": "Dose 1",
+            "age": {
+              "absMinAge": "9 years - 4 days",
+              "minAge": "9 years",
+              "earliestRecAge": "11 years",
+              "latestRecAge": "13 years + 4 weeks",
+              "maxAge": "46 years",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": "",
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "2vHPV",
+                "cvx": "118",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": "",
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          },
+          {
+            "doseNumber": "Dose 2",
+            "age": {
+              "absMinAge": "",
+              "minAge": "",
+              "earliestRecAge": "",
+              "latestRecAge": "",
+              "maxAge": "46 years",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": {
+              "fromPrevious": "Y",
+              "fromTargetDose": "",
+              "fromMostRecent": "",
+              "fromRelevantObs": "",
+              "absMinInt": "4 weeks - 4 days",
+              "minInt": "5 months",
+              "earliestRecInt": "6 months",
+              "latestRecInt": "13 months + 4 weeks",
+              "intervalPriority": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "2vHPV",
+                "cvx": "118",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": "",
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          },
+          {
+            "doseNumber": "Dose 3",
+            "age": {
+              "absMinAge": "",
+              "minAge": "",
+              "earliestRecAge": "",
+              "latestRecAge": "",
+              "maxAge": "46 years",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": [
+              {
+                "fromPrevious": "N",
+                "fromTargetDose": "1",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "16 weeks - 4 days",
+                "minInt": "5 months",
+                "earliestRecInt": "6 months",
+                "latestRecInt": "13 months + 4 weeks",
+                "intervalPriority": "",
+                "effectiveDate": "",
+                "cessationDate": "20161215"
+              },
+              {
+                "fromPrevious": "N",
+                "fromTargetDose": "1",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "5 months - 4 days",
+                "minInt": "5 months",
+                "earliestRecInt": "6 months",
+                "latestRecInt": "13 months + 4 weeks",
+                "intervalPriority": "",
+                "effectiveDate": "20161216",
+                "cessationDate": ""
+              },
+              {
+                "fromPrevious": "Y",
+                "fromTargetDose": "",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "12 weeks - 4 days",
+                "minInt": "12 weeks",
+                "earliestRecInt": "",
+                "latestRecInt": "",
+                "intervalPriority": "",
+                "effectiveDate": "",
+                "cessationDate": ""
+              }
+            ],
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "2vHPV",
+                "cvx": "118",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": "",
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          }
+        ]
+      },
+      {
+        "seriesName": "HPV 3-dose series",
+        "targetDisease": "HPV",
+        "vaccineGroup": "HPV",
+        "seriesAdminGuidance": [
+          "ACIP recommends routine HPV vaccination at age 11 or 12 years. Vaccination can be given starting at age 9 years.",
+          "Shared clinical decision-making (SCDM) is recommended regarding Human papillomavirus (HPV) vaccination for persons 27-45 years of age. Shared clinical decision-making recommendations are intended to be flexible and should be informed by the characteristics, values, and preferences of the individual patient and the clinical discretion of the healthcare provider. More guidance can be found here: https://www.cdc.gov/vaccines/hcp/admin/downloads/ISD-job-aid-SCDM-HPV-shared-clinical-decision-making-HPV.pdf"
+        ],
+        "seriesType": "Standard",
+        "equivalentSeriesGroups": "2",
+        "requiredGender": [
+          "Female",
+          "Unknown"
+        ],
+        "selectSeries": {
+          "defaultSeries": "No",
+          "productPath": "No",
+          "seriesGroupName": "Standard",
+          "seriesGroup": "1",
+          "seriesPriority": "A",
+          "seriesPreference": "3",
+          "minAgeToStart": "15 years",
+          "maxAgeToStart": ""
+        },
+        "indication": "",
+        "seriesDose": [
+          {
+            "doseNumber": "Dose 1",
+            "age": {
+              "absMinAge": "15 years",
+              "minAge": "15 years",
+              "earliestRecAge": "15 years",
+              "latestRecAge": "15 years",
+              "maxAge": "46 years",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": {
+              "fromPrevious": "Y",
+              "fromTargetDose": "",
+              "fromMostRecent": "",
+              "fromRelevantObs": "",
+              "absMinInt": "4 weeks - 4 days",
+              "minInt": "4 weeks",
+              "earliestRecInt": "4 weeks",
+              "latestRecInt": "4 weeks",
+              "intervalPriority": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "2vHPV",
+                "cvx": "118",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": "",
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          },
+          {
+            "doseNumber": "Dose 2",
+            "age": {
+              "absMinAge": "",
+              "minAge": "",
+              "earliestRecAge": "",
+              "latestRecAge": "",
+              "maxAge": "46 years",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": {
+              "fromPrevious": "Y",
+              "fromTargetDose": "",
+              "fromMostRecent": "",
+              "fromRelevantObs": "",
+              "absMinInt": "4 weeks - 4 days",
+              "minInt": "4 weeks",
+              "earliestRecInt": "4 weeks",
+              "latestRecInt": "16 weeks",
+              "intervalPriority": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "2vHPV",
+                "cvx": "118",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": "",
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          },
+          {
+            "doseNumber": "Dose 3",
+            "age": {
+              "absMinAge": "",
+              "minAge": "",
+              "earliestRecAge": "",
+              "latestRecAge": "",
+              "maxAge": "46 years",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": [
+              {
+                "fromPrevious": "N",
+                "fromTargetDose": "1",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "16 weeks - 4 days",
+                "minInt": "5 months",
+                "earliestRecInt": "6 months",
+                "latestRecInt": "7 months + 4 weeks",
+                "intervalPriority": "",
+                "effectiveDate": "",
+                "cessationDate": "20161215"
+              },
+              {
+                "fromPrevious": "N",
+                "fromTargetDose": "1",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "5 months - 4 days",
+                "minInt": "5 months",
+                "earliestRecInt": "6 months",
+                "latestRecInt": "7 months + 4 weeks",
+                "intervalPriority": "",
+                "effectiveDate": "20161216",
+                "cessationDate": ""
+              },
+              {
+                "fromPrevious": "Y",
+                "fromTargetDose": "",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "12 weeks - 4 days",
+                "minInt": "12 weeks",
+                "earliestRecInt": "",
+                "latestRecInt": "",
+                "intervalPriority": "",
+                "effectiveDate": "",
+                "cessationDate": ""
+              }
+            ],
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "2vHPV",
+                "cvx": "118",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": "",
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          }
+        ]
+      },
+      {
+        "seriesName": "HPV male 2-dose series",
+        "targetDisease": "HPV",
+        "vaccineGroup": "HPV",
+        "seriesAdminGuidance": [
+          "ACIP recommends routine HPV vaccination at age 11 or 12 years. Vaccination can be given starting at age 9 years.",
+          "Shared clinical decision-making (SCDM) is recommended regarding Human papillomavirus (HPV) vaccination for persons 27-45 years of age. Shared clinical decision-making recommendations are intended to be flexible and should be informed by the characteristics, values, and preferences of the individual patient and the clinical discretion of the healthcare provider. More guidance can be found here: https://www.cdc.gov/vaccines/hcp/admin/downloads/ISD-job-aid-SCDM-HPV-shared-clinical-decision-making-HPV.pdf"
+        ],
+        "seriesType": "Standard",
+        "equivalentSeriesGroups": "2",
+        "requiredGender": "Male",
+        "selectSeries": {
+          "defaultSeries": "Yes",
+          "productPath": "No",
+          "seriesGroupName": "Standard",
+          "seriesGroup": "1",
+          "seriesPriority": "A",
+          "seriesPreference": "1",
+          "minAgeToStart": "",
+          "maxAgeToStart": "15 years"
+        },
+        "indication": "",
+        "seriesDose": [
+          {
+            "doseNumber": "Dose 1",
+            "age": {
+              "absMinAge": "9 years - 4 days",
+              "minAge": "9 years",
+              "earliestRecAge": "11 years",
+              "latestRecAge": "13 years + 4 weeks",
+              "maxAge": "46 years",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": "",
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": {
+              "vaccineType": "2vHPV",
+              "cvx": "118"
+            },
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          },
+          {
+            "doseNumber": "Dose 2",
+            "age": {
+              "absMinAge": "",
+              "minAge": "",
+              "earliestRecAge": "",
+              "latestRecAge": "",
+              "maxAge": "46 years",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": [
+              {
+                "fromPrevious": "N",
+                "fromTargetDose": "1",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "5 months - 4 days",
+                "minInt": "5 months",
+                "earliestRecInt": "6 months",
+                "latestRecInt": "13 months + 4 weeks",
+                "intervalPriority": "",
+                "effectiveDate": "",
+                "cessationDate": ""
+              },
+              {
+                "fromPrevious": "Y",
+                "fromTargetDose": "",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "12 weeks - 4 days",
+                "minInt": "12 weeks",
+                "earliestRecInt": "",
+                "latestRecInt": "",
+                "intervalPriority": "",
+                "effectiveDate": "",
+                "cessationDate": ""
+              }
+            ],
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": {
+              "vaccineType": "2vHPV",
+              "cvx": "118"
+            },
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          }
+        ]
+      },
+      {
+        "seriesName": "HPV male 3-dose start under 15 years series",
+        "targetDisease": "HPV",
+        "vaccineGroup": "HPV",
+        "seriesAdminGuidance": [
+          "ACIP recommends routine HPV vaccination at age 11 or 12 years. Vaccination can be given starting at age 9 years.",
+          "Shared clinical decision-making (SCDM) is recommended regarding Human papillomavirus (HPV) vaccination for persons 27-45 years of age. Shared clinical decision-making recommendations are intended to be flexible and should be informed by the characteristics, values, and preferences of the individual patient and the clinical discretion of the healthcare provider. More guidance can be found here: https://www.cdc.gov/vaccines/hcp/admin/downloads/ISD-job-aid-SCDM-HPV-shared-clinical-decision-making-HPV.pdf"
+        ],
+        "seriesType": "Standard",
+        "equivalentSeriesGroups": "2",
+        "requiredGender": "Male",
+        "selectSeries": {
+          "defaultSeries": "No",
+          "productPath": "No",
+          "seriesGroupName": "Standard",
+          "seriesGroup": "1",
+          "seriesPriority": "A",
+          "seriesPreference": "2",
+          "minAgeToStart": "",
+          "maxAgeToStart": "15 years"
+        },
+        "indication": "",
+        "seriesDose": [
+          {
+            "doseNumber": "Dose 1",
+            "age": {
+              "absMinAge": "9 years - 4 days",
+              "minAge": "9 years",
+              "earliestRecAge": "11 years",
+              "latestRecAge": "13 years + 4 weeks",
+              "maxAge": "46 years",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": "",
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": {
+              "vaccineType": "2vHPV",
+              "cvx": "118"
+            },
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          },
+          {
+            "doseNumber": "Dose 2",
+            "age": {
+              "absMinAge": "",
+              "minAge": "",
+              "earliestRecAge": "",
+              "latestRecAge": "",
+              "maxAge": "46 years",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": {
+              "fromPrevious": "Y",
+              "fromTargetDose": "",
+              "fromMostRecent": "",
+              "fromRelevantObs": "",
+              "absMinInt": "4 weeks - 4 days",
+              "minInt": "5 months",
+              "earliestRecInt": "6 months",
+              "latestRecInt": "13 months + 4 weeks",
+              "intervalPriority": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": {
+              "vaccineType": "2vHPV",
+              "cvx": "118"
+            },
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          },
+          {
+            "doseNumber": "Dose 3",
+            "age": {
+              "absMinAge": "",
+              "minAge": "",
+              "earliestRecAge": "",
+              "latestRecAge": "",
+              "maxAge": "46 years",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": [
+              {
+                "fromPrevious": "N",
+                "fromTargetDose": "1",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "16 weeks - 4 days",
+                "minInt": "5 months",
+                "earliestRecInt": "6 months",
+                "latestRecInt": "13 months + 4 weeks",
+                "intervalPriority": "",
+                "effectiveDate": "",
+                "cessationDate": "20161215"
+              },
+              {
+                "fromPrevious": "N",
+                "fromTargetDose": "1",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "5 months - 4 days",
+                "minInt": "5 months",
+                "earliestRecInt": "6 months",
+                "latestRecInt": "13 months + 4 weeks",
+                "intervalPriority": "",
+                "effectiveDate": "20161216",
+                "cessationDate": ""
+              },
+              {
+                "fromPrevious": "Y",
+                "fromTargetDose": "",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "12 weeks - 4 days",
+                "minInt": "12 weeks",
+                "earliestRecInt": "",
+                "latestRecInt": "",
+                "intervalPriority": "",
+                "effectiveDate": "",
+                "cessationDate": ""
+              }
+            ],
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": {
+              "vaccineType": "2vHPV",
+              "cvx": "118"
+            },
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          }
+        ]
+      },
+      {
+        "seriesName": "HPV male 3-dose series",
+        "targetDisease": "HPV",
+        "vaccineGroup": "HPV",
+        "seriesAdminGuidance": [
+          "ACIP recommends routine HPV vaccination at age 11 or 12 years. Vaccination can be given starting at age 9 years.",
+          "Shared clinical decision-making (SCDM) is recommended regarding Human papillomavirus (HPV) vaccination for persons 27-45 years of age. Shared clinical decision-making recommendations are intended to be flexible and should be informed by the characteristics, values, and preferences of the individual patient and the clinical discretion of the healthcare provider. More guidance can be found here: https://www.cdc.gov/vaccines/hcp/admin/downloads/ISD-job-aid-SCDM-HPV-shared-clinical-decision-making-HPV.pdf"
+        ],
+        "seriesType": "Standard",
+        "equivalentSeriesGroups": "2",
+        "requiredGender": "Male",
+        "selectSeries": {
+          "defaultSeries": "No",
+          "productPath": "No",
+          "seriesGroupName": "Standard",
+          "seriesGroup": "1",
+          "seriesPriority": "A",
+          "seriesPreference": "3",
+          "minAgeToStart": "15 years",
+          "maxAgeToStart": ""
+        },
+        "indication": "",
+        "seriesDose": [
+          {
+            "doseNumber": "Dose 1",
+            "age": {
+              "absMinAge": "15 years",
+              "minAge": "15 years",
+              "earliestRecAge": "15 years",
+              "latestRecAge": "15 years",
+              "maxAge": "46 years",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": {
+              "fromPrevious": "Y",
+              "fromTargetDose": "",
+              "fromMostRecent": "",
+              "fromRelevantObs": "",
+              "absMinInt": "4 weeks - 4 days",
+              "minInt": "4 weeks",
+              "earliestRecInt": "4 weeks",
+              "latestRecInt": "4 weeks",
+              "intervalPriority": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": {
+              "vaccineType": "2vHPV",
+              "cvx": "118"
+            },
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          },
+          {
+            "doseNumber": "Dose 2",
+            "age": {
+              "absMinAge": "",
+              "minAge": "",
+              "earliestRecAge": "",
+              "latestRecAge": "",
+              "maxAge": "46 years",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": {
+              "fromPrevious": "Y",
+              "fromTargetDose": "",
+              "fromMostRecent": "",
+              "fromRelevantObs": "",
+              "absMinInt": "4 weeks - 4 days",
+              "minInt": "4 weeks",
+              "earliestRecInt": "4 weeks",
+              "latestRecInt": "16 weeks",
+              "intervalPriority": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": {
+              "vaccineType": "2vHPV",
+              "cvx": "118"
+            },
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          },
+          {
+            "doseNumber": "Dose 3",
+            "age": {
+              "absMinAge": "",
+              "minAge": "",
+              "earliestRecAge": "",
+              "latestRecAge": "",
+              "maxAge": "46 years",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": [
+              {
+                "fromPrevious": "N",
+                "fromTargetDose": "1",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "16 weeks - 4 days",
+                "minInt": "5 months",
+                "earliestRecInt": "6 months",
+                "latestRecInt": "7 months + 4 weeks",
+                "intervalPriority": "",
+                "effectiveDate": "",
+                "cessationDate": "20161215"
+              },
+              {
+                "fromPrevious": "N",
+                "fromTargetDose": "1",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "5 months - 4 days",
+                "minInt": "5 months",
+                "earliestRecInt": "6 months",
+                "latestRecInt": "7 months + 4 weeks",
+                "intervalPriority": "",
+                "effectiveDate": "20161216",
+                "cessationDate": ""
+              },
+              {
+                "fromPrevious": "Y",
+                "fromTargetDose": "",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "12 weeks - 4 days",
+                "minInt": "12 weeks",
+                "earliestRecInt": "",
+                "latestRecInt": "",
+                "intervalPriority": "",
+                "effectiveDate": "",
+                "cessationDate": ""
+              }
+            ],
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": {
+              "vaccineType": "2vHPV",
+              "cvx": "118"
+            },
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          }
+        ]
+      },
+      {
+        "seriesName": "HPV risk 2-dose series",
+        "targetDisease": "HPV",
+        "vaccineGroup": "HPV",
+        "seriesAdminGuidance": "",
+        "seriesType": "Risk",
+        "equivalentSeriesGroups": "1",
+        "requiredGender": [
+          "Female",
+          "Unknown"
+        ],
+        "selectSeries": {
+          "defaultSeries": "No",
+          "productPath": "No",
+          "seriesGroupName": "Increased Risk",
+          "seriesGroup": "2",
+          "seriesPriority": "A",
+          "seriesPreference": "1",
+          "minAgeToStart": "0 days",
+          "maxAgeToStart": "11 years"
+        },
+        "indication": {
+          "observationCode": {
+            "text": "History of sexual abuse or assault",
+            "code": "169"
+          },
+          "description": "Administer to persons who have a history of sexual abuse or assault.",
+          "beginAge": "0 days",
+          "endAge": "11 years",
+          "guidance": ""
+        },
+        "seriesDose": [
+          {
+            "doseNumber": "Dose 1",
+            "age": {
+              "absMinAge": "9 years - 4 days",
+              "minAge": "9 years",
+              "earliestRecAge": "9 years",
+              "latestRecAge": "11 years",
+              "maxAge": "27 years",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": "",
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "2vHPV",
+                "cvx": "118",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": "",
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          },
+          {
+            "doseNumber": "Dose 2",
+            "age": {
+              "absMinAge": "",
+              "minAge": "",
+              "earliestRecAge": "",
+              "latestRecAge": "",
+              "maxAge": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": {
+              "fromPrevious": "Y",
+              "fromTargetDose": "",
+              "fromMostRecent": "",
+              "fromRelevantObs": "",
+              "absMinInt": "4 weeks - 4 days",
+              "minInt": "5 months",
+              "earliestRecInt": "6 months",
+              "latestRecInt": "13 months + 4 weeks",
+              "intervalPriority": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "2vHPV",
+                "cvx": "118",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": "",
+            "conditionalSkip": [
+              {
+                "context": "Evaluation",
+                "setLogic": "n/a",
+                "set": {
+                  "setID": "1",
+                  "setDescription": "Target Dose is not required if current dose was administered at least 5 months - 4 das from the previous dose OR two total doses have already been administered",
+                  "effectiveDate": "",
+                  "cessationDate": "",
+                  "conditionLogic": "OR",
+                  "condition": [
+                    {
+                      "conditionID": "1",
+                      "conditionType": "Interval",
+                      "startDate": "",
+                      "endDate": "",
+                      "beginAge": "",
+                      "endAge": "",
+                      "interval": "5 months - 4 days",
+                      "doseCount": "",
+                      "doseType": "",
+                      "doseCountLogic": "",
+                      "vaccineTypes": "",
+                      "seriesGroups": ""
+                    },
+                    {
+                      "conditionID": "2",
+                      "conditionType": "Vaccine Count by Age",
+                      "startDate": "",
+                      "endDate": "",
+                      "beginAge": "9 years - 4 days",
+                      "endAge": "",
+                      "interval": "",
+                      "doseCount": "1",
+                      "doseType": "Total",
+                      "doseCountLogic": "greater than",
+                      "vaccineTypes": "62;118;137;165",
+                      "seriesGroups": ""
+                    }
+                  ]
+                }
+              },
+              {
+                "context": "Forecast",
+                "setLogic": "n/a",
+                "set": {
+                  "setID": "2",
+                  "setDescription": "Dose is not required once 5 months has passed since dose 1 or two total doses have already been administered.",
+                  "effectiveDate": "",
+                  "cessationDate": "",
+                  "conditionLogic": "OR",
+                  "condition": [
+                    {
+                      "conditionID": "1",
+                      "conditionType": "Interval",
+                      "startDate": "",
+                      "endDate": "",
+                      "beginAge": "",
+                      "endAge": "",
+                      "interval": "5 months",
+                      "doseCount": "",
+                      "doseType": "",
+                      "doseCountLogic": "",
+                      "vaccineTypes": "",
+                      "seriesGroups": ""
+                    },
+                    {
+                      "conditionID": "2",
+                      "conditionType": "Vaccine Count by Age",
+                      "startDate": "",
+                      "endDate": "",
+                      "beginAge": "9 years - 4 days",
+                      "endAge": "",
+                      "interval": "",
+                      "doseCount": "1",
+                      "doseType": "Total",
+                      "doseCountLogic": "greater than",
+                      "vaccineTypes": "62;118;137;165",
+                      "seriesGroups": ""
+                    }
+                  ]
+                }
+              }
+            ],
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          },
+          {
+            "doseNumber": "Dose 3",
+            "age": {
+              "absMinAge": "",
+              "minAge": "",
+              "earliestRecAge": "",
+              "latestRecAge": "",
+              "maxAge": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": [
+              {
+                "fromPrevious": "N",
+                "fromTargetDose": "1",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "5 months - 4 days",
+                "minInt": "5 months",
+                "earliestRecInt": "6 months",
+                "latestRecInt": "13 months + 4 weeks",
+                "intervalPriority": "",
+                "effectiveDate": "",
+                "cessationDate": ""
+              },
+              {
+                "fromPrevious": "Y",
+                "fromTargetDose": "",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "12 weeks - 4 days",
+                "minInt": "12 weeks",
+                "earliestRecInt": "",
+                "latestRecInt": "",
+                "intervalPriority": "",
+                "effectiveDate": "",
+                "cessationDate": ""
+              }
+            ],
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "2vHPV",
+                "cvx": "118",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": "",
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          }
+        ]
+      },
+      {
+        "seriesName": "HPV risk male 2-dose series",
+        "targetDisease": "HPV",
+        "vaccineGroup": "HPV",
+        "seriesAdminGuidance": "",
+        "seriesType": "Risk",
+        "equivalentSeriesGroups": "1",
+        "requiredGender": "Male",
+        "selectSeries": {
+          "defaultSeries": "No",
+          "productPath": "No",
+          "seriesGroupName": "Increased Risk",
+          "seriesGroup": "2",
+          "seriesPriority": "A",
+          "seriesPreference": "1",
+          "minAgeToStart": "0 days",
+          "maxAgeToStart": "11 years"
+        },
+        "indication": {
+          "observationCode": {
+            "text": "History of sexual abuse or assault",
+            "code": "169"
+          },
+          "description": "Administer to persons who have a history of sexual abuse or assault.",
+          "beginAge": "0 days",
+          "endAge": "11 years",
+          "guidance": ""
+        },
+        "seriesDose": [
+          {
+            "doseNumber": "Dose 1",
+            "age": {
+              "absMinAge": "9 years - 4 days",
+              "minAge": "9 years",
+              "earliestRecAge": "9 years",
+              "latestRecAge": "11 years",
+              "maxAge": "27 years",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": "",
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": {
+              "vaccineType": "2vHPV",
+              "cvx": "118"
+            },
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          },
+          {
+            "doseNumber": "Dose 2",
+            "age": {
+              "absMinAge": "",
+              "minAge": "",
+              "earliestRecAge": "",
+              "latestRecAge": "",
+              "maxAge": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": {
+              "fromPrevious": "Y",
+              "fromTargetDose": "",
+              "fromMostRecent": "",
+              "fromRelevantObs": "",
+              "absMinInt": "4 weeks - 4 days",
+              "minInt": "5 months",
+              "earliestRecInt": "6 months",
+              "latestRecInt": "13 months + 4 weeks",
+              "intervalPriority": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": {
+              "vaccineType": "2vHPV",
+              "cvx": "118"
+            },
+            "conditionalSkip": [
+              {
+                "context": "Evaluation",
+                "setLogic": "n/a",
+                "set": {
+                  "setID": "1",
+                  "setDescription": "Target Dose is not required if current dose was administered at least 5 months - 4 das from the previous dose OR two total doses have already been administered",
+                  "effectiveDate": "",
+                  "cessationDate": "",
+                  "conditionLogic": "OR",
+                  "condition": [
+                    {
+                      "conditionID": "1",
+                      "conditionType": "Interval",
+                      "startDate": "",
+                      "endDate": "",
+                      "beginAge": "",
+                      "endAge": "",
+                      "interval": "5 months - 4 days",
+                      "doseCount": "",
+                      "doseType": "",
+                      "doseCountLogic": "",
+                      "vaccineTypes": "",
+                      "seriesGroups": ""
+                    },
+                    {
+                      "conditionID": "2",
+                      "conditionType": "Vaccine Count by Age",
+                      "startDate": "",
+                      "endDate": "",
+                      "beginAge": "9 years - 4 days",
+                      "endAge": "",
+                      "interval": "",
+                      "doseCount": "1",
+                      "doseType": "Total",
+                      "doseCountLogic": "greater than",
+                      "vaccineTypes": "62;118;137;165",
+                      "seriesGroups": ""
+                    }
+                  ]
+                }
+              },
+              {
+                "context": "Forecast",
+                "setLogic": "n/a",
+                "set": {
+                  "setID": "2",
+                  "setDescription": "Dose is not required once 5 months has passed since dose 1 or two total doses have already been administered.",
+                  "effectiveDate": "",
+                  "cessationDate": "",
+                  "conditionLogic": "OR",
+                  "condition": [
+                    {
+                      "conditionID": "1",
+                      "conditionType": "Interval",
+                      "startDate": "",
+                      "endDate": "",
+                      "beginAge": "",
+                      "endAge": "",
+                      "interval": "5 months",
+                      "doseCount": "",
+                      "doseType": "",
+                      "doseCountLogic": "",
+                      "vaccineTypes": "",
+                      "seriesGroups": ""
+                    },
+                    {
+                      "conditionID": "2",
+                      "conditionType": "Vaccine Count by Age",
+                      "startDate": "",
+                      "endDate": "",
+                      "beginAge": "9 years - 4 days",
+                      "endAge": "",
+                      "interval": "",
+                      "doseCount": "1",
+                      "doseType": "Total",
+                      "doseCountLogic": "greater than",
+                      "vaccineTypes": "62;118;137;165",
+                      "seriesGroups": ""
+                    }
+                  ]
+                }
+              }
+            ],
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          },
+          {
+            "doseNumber": "Dose 3",
+            "age": {
+              "absMinAge": "",
+              "minAge": "",
+              "earliestRecAge": "",
+              "latestRecAge": "",
+              "maxAge": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": [
+              {
+                "fromPrevious": "N",
+                "fromTargetDose": "1",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "5 months - 4 days",
+                "minInt": "5 months",
+                "earliestRecInt": "6 months",
+                "latestRecInt": "13 months + 4 weeks",
+                "intervalPriority": "",
+                "effectiveDate": "",
+                "cessationDate": ""
+              },
+              {
+                "fromPrevious": "Y",
+                "fromTargetDose": "",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "12 weeks - 4 days",
+                "minInt": "12 weeks",
+                "earliestRecInt": "",
+                "latestRecInt": "",
+                "intervalPriority": "",
+                "effectiveDate": "",
+                "cessationDate": ""
+              }
+            ],
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": {
+              "vaccineType": "2vHPV",
+              "cvx": "118"
+            },
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          }
+        ]
+      },
+      {
+        "seriesName": "HPV risk 3-dose series",
+        "targetDisease": "HPV",
+        "vaccineGroup": "HPV",
+        "seriesAdminGuidance": [
+          "At the provider's discretion, the recommendation for a 3-dose schedule does not apply to children aged less than 15 years with asplenia, asthma, chronic granulomatous disease, chronic liver disease, chronic lung disease, chronic renal disease, CNS anatomic barrier defines (e.g., cochlear implant), complement deficiency, diabetes, heart disease, or sickle cell disease.",
+          "Shared clinical decision-making (SCDM) is recommended regarding Human papillomavirus (HPV) vaccination for persons 27-45 years of age. Shared clinical decision-making recommendations are intended to be flexible and should be informed by the characteristics, values, and preferences of the individual patient and the clinical discretion of the healthcare provider. More guidance can be found here: https://www.cdc.gov/vaccines/hcp/admin/downloads/ISD-job-aid-SCDM-HPV-shared-clinical-decision-making-HPV.pdf"
+        ],
+        "seriesType": "Risk",
+        "equivalentSeriesGroups": "",
+        "requiredGender": [
+          "Female",
+          "Unknown"
+        ],
+        "selectSeries": {
+          "defaultSeries": "No",
+          "productPath": "No",
+          "seriesGroupName": "Increased Risk",
+          "seriesGroup": "2",
+          "seriesPriority": "A",
+          "seriesPreference": "1",
+          "minAgeToStart": "9 years",
+          "maxAgeToStart": "46 years"
+        },
+        "indication": [
+          {
+            "observationCode": {
+              "text": "B-lymphocyte [humoral] - Severe antibody deficiencies",
+              "code": "145"
+            },
+            "description": "Administer to persons who have severe B-lymphocyte (humoral) - antibody deficiencies (e.g., X-linked agammaglobulinemia and common variable immunodeficiency).",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "B-lymphocyte [humoral] - Less severe antibody deficiencies",
+              "code": "146"
+            },
+            "description": "Administer to persons who have less severe B-lymphocyte (humoral) - antibody deficiencies (e.g., selective IgA deficiency and IgG subclass deficiency).",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "T-lymphocyte [cell-mediated and humoral] - Complete defects",
+              "code": "147"
+            },
+            "description": "Administer to persons who have complete cell-mediated or humoral T-lymphocyte defects (e.g., severe combined immunodeficiency [SCID] disease, complete DiGeorge syndrome).",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "T-lymphocyte [cell-mediated and humoral] - Partial defects",
+              "code": "148"
+            },
+            "description": "Administer to persons who have partial cell-mediated or humoral T-lymphocyte defects (e.g., most patients with DiGeorge syndrome, Wiskott-Aldrich syndrome, ataxia- telangiectasia).",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "T-lymphocyte [cell-mediated and humoral] - interferon-gamma/Interleukin 12 axis deficiencies",
+              "code": "149"
+            },
+            "description": "Administer to persons who have T-lymphocyte [cell-mediated and humoral] - interferon-gamma/Interleukin 12 axis deficiencies.",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "T-lymphocyte [cell-mediated and humoral] - interferon-gamma or interferon-alpha deficiencies",
+              "code": "150"
+            },
+            "description": "Administer to persons who have T-lymphocyte [cell-mediated and humoral] - interferon-gamma or interferon-alpha deficiencies.",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "Phagocytic function - Leukocyte adhesion defect, and myeloperoxidase deficiency",
+              "code": "153"
+            },
+            "description": "Administer to persons who have a phagocytic function defect (e.g. leukocyte adhesion defect and myeloperoxidase deficiency).",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "HIV/AIDS - severely immunocompromised",
+              "code": "154"
+            },
+            "description": "Administer to persons who have HIV/AIDS and are severely immunocompromised [See the CDC general recommendations for a definition of \"severely immunocompromised\"].",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "HIV/AIDS - not severely immunocompromised",
+              "code": "155"
+            },
+            "description": "Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of \"severely immunocompromised\"].",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "Generalized malignant neoplasm",
+              "code": "156"
+            },
+            "description": "Administer to persons who have generalized malignant neoplasm.",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "Immunosuppressive therapy",
+              "code": "158"
+            },
+            "description": "Administer to persons who are undergoing immunosuppressive therapy. Immunosuppressive medications include those given to prevent solid organ transplant rejection, human immune mediators like interleukins and colony-stimulating factors, immune modulators like levamisol and BCG bladder-tumor therapy, and medicines like tumor necrosis factor alpha inhibitors and anti-B cell antibodies.",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "Radiation therapy",
+              "code": "159"
+            },
+            "description": "Administer to persons who are undergoing radiation therapy.",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "HIV Infection",
+              "code": "186"
+            },
+            "description": "Administer to persons with HIV Infection",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "Transplantation",
+              "code": "269"
+            },
+            "description": "Administer to persons who have received a transplant.",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          }
+        ],
+        "seriesDose": [
+          {
+            "doseNumber": "Dose 1",
+            "age": {
+              "absMinAge": "9 years - 4 days",
+              "minAge": "9 years",
+              "earliestRecAge": "11 years",
+              "latestRecAge": "13 years + 4 weeks",
+              "maxAge": "46 years",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": "",
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "2vHPV",
+                "cvx": "118",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": "",
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          },
+          {
+            "doseNumber": "Dose 2",
+            "age": {
+              "absMinAge": "",
+              "minAge": "",
+              "earliestRecAge": "",
+              "latestRecAge": "",
+              "maxAge": "46 Years",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": {
+              "fromPrevious": "Y",
+              "fromTargetDose": "",
+              "fromMostRecent": "",
+              "fromRelevantObs": "",
+              "absMinInt": "4 weeks - 4 days",
+              "minInt": "4 weeks",
+              "earliestRecInt": "4 weeks",
+              "latestRecInt": "16 weeks",
+              "intervalPriority": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "2vHPV",
+                "cvx": "118",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": "",
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          },
+          {
+            "doseNumber": "Dose 3",
+            "age": {
+              "absMinAge": "",
+              "minAge": "",
+              "earliestRecAge": "",
+              "latestRecAge": "",
+              "maxAge": "46 Years",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": [
+              {
+                "fromPrevious": "N",
+                "fromTargetDose": "1",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "16 weeks - 4 days",
+                "minInt": "5 months",
+                "earliestRecInt": "6 months",
+                "latestRecInt": "7 months + 4 weeks",
+                "intervalPriority": "",
+                "effectiveDate": "",
+                "cessationDate": "20161215"
+              },
+              {
+                "fromPrevious": "N",
+                "fromTargetDose": "1",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "5 months - 4 days",
+                "minInt": "5 months",
+                "earliestRecInt": "6 months",
+                "latestRecInt": "7 months + 4 weeks",
+                "intervalPriority": "",
+                "effectiveDate": "20161216",
+                "cessationDate": ""
+              },
+              {
+                "fromPrevious": "Y",
+                "fromTargetDose": "",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "12 weeks - 4 days",
+                "minInt": "12 weeks",
+                "earliestRecInt": "",
+                "latestRecInt": "",
+                "intervalPriority": "",
+                "effectiveDate": "",
+                "cessationDate": ""
+              }
+            ],
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "2vHPV",
+                "cvx": "118",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": "",
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          }
+        ]
+      },
+      {
+        "seriesName": "HPV risk male 3-dose series",
+        "targetDisease": "HPV",
+        "vaccineGroup": "HPV",
+        "seriesAdminGuidance": [
+          "At the provider's discretion, the recommendation for a 3-dose schedule does not apply to children aged less than 15 years with asplenia, asthma, chronic granulomatous disease, chronic liver disease, chronic lung disease, chronic renal disease, CNS anatomic barrier defines (e.g., cochlear implant), complement deficiency, diabetes, heart disease, or sickle cell disease.",
+          "Shared clinical decision-making (SCDM) is recommended regarding Human papillomavirus (HPV) vaccination for persons 27-45 years of age. Shared clinical decision-making recommendations are intended to be flexible and should be informed by the characteristics, values, and preferences of the individual patient and the clinical discretion of the healthcare provider. More guidance can be found here: https://www.cdc.gov/vaccines/hcp/admin/downloads/ISD-job-aid-SCDM-HPV-shared-clinical-decision-making-HPV.pdf"
+        ],
+        "seriesType": "Risk",
+        "equivalentSeriesGroups": "",
+        "requiredGender": "Male",
+        "selectSeries": {
+          "defaultSeries": "No",
+          "productPath": "No",
+          "seriesGroupName": "Increased Risk",
+          "seriesGroup": "2",
+          "seriesPriority": "A",
+          "seriesPreference": "1",
+          "minAgeToStart": "9 years",
+          "maxAgeToStart": "46 years"
+        },
+        "indication": [
+          {
+            "observationCode": {
+              "text": "B-lymphocyte [humoral] - Severe antibody deficiencies",
+              "code": "145"
+            },
+            "description": "Administer to persons who have severe B-lymphocyte (humoral) - antibody deficiencies (e.g., X-linked agammaglobulinemia and common variable immunodeficiency).",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "B-lymphocyte [humoral] - Less severe antibody deficiencies",
+              "code": "146"
+            },
+            "description": "Administer to persons who have less severe B-lymphocyte (humoral) - antibody deficiencies (e.g., selective IgA deficiency and IgG subclass deficiency).",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "T-lymphocyte [cell-mediated and humoral] - Complete defects",
+              "code": "147"
+            },
+            "description": "Administer to persons who have complete cell-mediated or humoral T-lymphocyte defects (e.g., severe combined immunodeficiency [SCID] disease, complete DiGeorge syndrome).",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "T-lymphocyte [cell-mediated and humoral] - Partial defects",
+              "code": "148"
+            },
+            "description": "Administer to persons who have partial cell-mediated or humoral T-lymphocyte defects (e.g., most patients with DiGeorge syndrome, Wiskott-Aldrich syndrome, ataxia- telangiectasia).",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "T-lymphocyte [cell-mediated and humoral] - interferon-gamma/Interleukin 12 axis deficiencies",
+              "code": "149"
+            },
+            "description": "Administer to persons who have T-lymphocyte [cell-mediated and humoral] - interferon-gamma/Interleukin 12 axis deficiencies.",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "T-lymphocyte [cell-mediated and humoral] - interferon-gamma or interferon-alpha deficiencies",
+              "code": "150"
+            },
+            "description": "Administer to persons who have T-lymphocyte [cell-mediated and humoral] - interferon-gamma or interferon-alpha deficiencies.",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "Phagocytic function - Leukocyte adhesion defect, and myeloperoxidase deficiency",
+              "code": "153"
+            },
+            "description": "Administer to persons who have a phagocytic function defect (e.g. leukocyte adhesion defect and myeloperoxidase deficiency).",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "HIV/AIDS - severely immunocompromised",
+              "code": "154"
+            },
+            "description": "Administer to persons who have HIV/AIDS and are severely immunocompromised [See the CDC general recommendations for a definition of \"severely immunocompromised\"].",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "HIV/AIDS - not severely immunocompromised",
+              "code": "155"
+            },
+            "description": "Administer to persons who have HIV/AIDS and are not severely immunocompromised [See the CDC general recommendations for a definition of \"severely immunocompromised\"].",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "Generalized malignant neoplasm",
+              "code": "156"
+            },
+            "description": "Administer to persons who have generalized malignant neoplasm.",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "Immunosuppressive therapy",
+              "code": "158"
+            },
+            "description": "Administer to persons who are undergoing immunosuppressive therapy. Immunosuppressive medications include those given to prevent solid organ transplant rejection, human immune mediators like interleukins and colony-stimulating factors, immune modulators like levamisol and BCG bladder-tumor therapy, and medicines like tumor necrosis factor alpha inhibitors and anti-B cell antibodies.",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "Radiation therapy",
+              "code": "159"
+            },
+            "description": "Administer to persons who are undergoing radiation therapy.",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "HIV Infection",
+              "code": "186"
+            },
+            "description": "Administer to persons with HIV Infection",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          },
+          {
+            "observationCode": {
+              "text": "Transplantation",
+              "code": "269"
+            },
+            "description": "Administer to persons who have received a transplant.",
+            "beginAge": "9 years",
+            "endAge": "",
+            "guidance": ""
+          }
+        ],
+        "seriesDose": [
+          {
+            "doseNumber": "Dose 1",
+            "age": {
+              "absMinAge": "9 years - 4 days",
+              "minAge": "9 years",
+              "earliestRecAge": "11 years",
+              "latestRecAge": "13 years + 4 weeks",
+              "maxAge": "46 years",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": "",
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": {
+              "vaccineType": "2vHPV",
+              "cvx": "118"
+            },
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          },
+          {
+            "doseNumber": "Dose 2",
+            "age": {
+              "absMinAge": "",
+              "minAge": "",
+              "earliestRecAge": "",
+              "latestRecAge": "",
+              "maxAge": "46 Years",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": {
+              "fromPrevious": "Y",
+              "fromTargetDose": "",
+              "fromMostRecent": "",
+              "fromRelevantObs": "",
+              "absMinInt": "4 weeks - 4 days",
+              "minInt": "4 weeks",
+              "earliestRecInt": "4 weeks",
+              "latestRecInt": "16 weeks",
+              "intervalPriority": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": {
+              "vaccineType": "2vHPV",
+              "cvx": "118"
+            },
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          },
+          {
+            "doseNumber": "Dose 3",
+            "age": {
+              "absMinAge": "",
+              "minAge": "",
+              "earliestRecAge": "",
+              "latestRecAge": "",
+              "maxAge": "46 Years",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": [
+              {
+                "fromPrevious": "N",
+                "fromTargetDose": "1",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "16 weeks - 4 days",
+                "minInt": "5 months",
+                "earliestRecInt": "6 months",
+                "latestRecInt": "7 months + 4 weeks",
+                "intervalPriority": "",
+                "effectiveDate": "",
+                "cessationDate": "20161215"
+              },
+              {
+                "fromPrevious": "N",
+                "fromTargetDose": "1",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "5 months - 4 days",
+                "minInt": "5 months",
+                "earliestRecInt": "6 months",
+                "latestRecInt": "7 months + 4 weeks",
+                "intervalPriority": "",
+                "effectiveDate": "20161216",
+                "cessationDate": ""
+              },
+              {
+                "fromPrevious": "Y",
+                "fromTargetDose": "",
+                "fromMostRecent": "",
+                "fromRelevantObs": "",
+                "absMinInt": "12 weeks - 4 days",
+                "minInt": "12 weeks",
+                "earliestRecInt": "",
+                "latestRecInt": "",
+                "intervalPriority": "",
+                "effectiveDate": "",
+                "cessationDate": ""
+              }
+            ],
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "9vHPV",
+              "cvx": "165",
+              "beginAge": "9 years",
+              "endAge": "46 years",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.5",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "4vHPV",
+                "cvx": "62",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "HPV Unspecified",
+                "cvx": "137",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "9vHPV",
+                "cvx": "165",
+                "beginAge": "9 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": {
+              "vaccineType": "2vHPV",
+              "cvx": "118"
+            },
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          }
+        ]
+      }
+    ]
+  }
+}

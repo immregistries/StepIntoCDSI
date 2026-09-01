@@ -1,0 +1,1306 @@
+{
+  "antigen": "Influenza",
+  "source_file": "source/xml/AntigenSupportingData- Influenza-508.xml",
+  "data": {
+    "immunity": "",
+    "contraindications": {
+      "vaccineGroup": {
+        "contraindication": [
+          {
+            "observationCode": "085",
+            "observationTitle": "Severe allergic reaction after previous dose of Influenza",
+            "contraindicationText": "Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Influenza vaccine.",
+            "contraindicationGuidance": "ACIP recommends an allergist consultation if the specific type of influenza vaccine is unknown.",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "080",
+            "observationTitle": "Adverse reaction to vaccine component",
+            "contraindicationText": "Do not vaccinate if the patient has had an adverse reaction to a vaccine component.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          }
+        ]
+      },
+      "vaccine": {
+        "contraindication": [
+          {
+            "observationCode": "003",
+            "observationTitle": "Immunocompromised",
+            "contraindicationText": "Do not vaccinate with live attenuated influenza virus (LAIV) if the patient is immunocompromised.",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "",
+                "endAge": ""
+              }
+            ]
+          },
+          {
+            "observationCode": "007",
+            "observationTitle": "Pregnant",
+            "contraindicationText": "Do not vaccinate with live attenuated influenza virus (LAIV) if the patient is pregnant.",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "",
+                "endAge": ""
+              }
+            ]
+          },
+          {
+            "observationCode": "010",
+            "observationTitle": "Cerebrospinal fluid leaks",
+            "contraindicationText": "Do not vaccinate with live attenuated influenza virus (LAIV) if the patient has cerebrospinal fluid leaks.",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "",
+                "endAge": ""
+              }
+            ]
+          },
+          {
+            "observationCode": "011",
+            "observationTitle": "Cochlear Implants",
+            "contraindicationText": "Do not vaccinate with live attenuated influenza virus (LAIV) if the patient has cochlear implants.",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "",
+                "endAge": ""
+              }
+            ]
+          },
+          {
+            "observationCode": "027",
+            "observationTitle": "Asthma",
+            "contraindicationText": "Do not vaccinate with live attenuated influenza virus (LAIV) if the patient is between 2 and 4 years and has asthma.",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "2 years",
+                "endAge": "4 years"
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "2 years",
+                "endAge": "4 years"
+              }
+            ]
+          },
+          {
+            "observationCode": "033",
+            "observationTitle": "Taken influenza antiviral medications within the previous 48 hours",
+            "contraindicationText": "Do not vaccinate with live attenuated influenza virus (LAIV) if the patient has taken influenza antiviral medications  within the previous 48 hours.",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "",
+                "endAge": ""
+              }
+            ]
+          },
+          {
+            "observationCode": "034",
+            "observationTitle": "Receiving long-term aspirin therapy",
+            "contraindicationText": "Do not vaccinate with live attenuated influenza virus (LAIV) if the patient is between 2 and 17 years and is receiving long-term aspirin therapy.",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "2 years",
+                "endAge": "17 years"
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "2 years",
+                "endAge": "17 years"
+              }
+            ]
+          },
+          {
+            "observationCode": "102",
+            "observationTitle": "Severe allergic reaction to gelatin",
+            "contraindicationText": "Do not vaccinate with live attenuated influenza virus (LAIV) if the patient has had a severe allergic reaction to gelatin.",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "",
+                "endAge": ""
+              }
+            ]
+          },
+          {
+            "observationCode": "103",
+            "observationTitle": "Severe allergic reaction to arginine",
+            "contraindicationText": "Do not vaccinate with live attenuated influenza virus (LAIV) if the patient has had a severe allergic reaction to arginine.",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "",
+                "endAge": ""
+              }
+            ]
+          },
+          {
+            "observationCode": "106",
+            "observationTitle": "Severe allergic reaction to gentamicin",
+            "contraindicationText": "Do not vaccinate with live attenuated influenza virus (LAIV) if the patient has had a severe allergic reaction to gentamicin.",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "",
+                "endAge": ""
+              }
+            ]
+          },
+          {
+            "observationCode": "145",
+            "observationTitle": "B-lymphocyte [humoral] - Severe antibody deficiencies",
+            "contraindicationText": "Do not vaccinate with live attenuated influenza virus (LAIV) if the patient has severe B-lymphocyte (humoral) - antibody deficiencies (e.g., X-linked agammaglobulinemia and common variable immunodeficiency).",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "",
+                "endAge": ""
+              }
+            ]
+          },
+          {
+            "observationCode": "147",
+            "observationTitle": "T-lymphocyte [cell-mediated and humoral] - Complete defects",
+            "contraindicationText": "Do not vaccinate with live attenuated influenza virus (LAIV) if the patient has complete cell-mediated or humoral T-lymphocyte defects (e.g., severe combined immunodeficiency [SCID] disease, complete DiGeorge syndrome).",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "",
+                "endAge": ""
+              }
+            ]
+          },
+          {
+            "observationCode": "148",
+            "observationTitle": "T-lymphocyte [cell-mediated and humoral] - Partial defects",
+            "contraindicationText": "Do not vaccinate with live attenuated influenza virus (LAIV) if the patient has partial cell-mediated or humoral T-lymphocyte defects (e.g., most patients with DiGeorge syndrome, Wiskott-Aldrich syndrome, ataxia- telangiectasia).",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "",
+                "endAge": ""
+              }
+            ]
+          },
+          {
+            "observationCode": "150",
+            "observationTitle": "T-lymphocyte [cell-mediated and humoral] - interferon-gamma or interferon-alpha",
+            "contraindicationText": "Do not vaccinate with live attenuated influenza virus (LAIV) if the patient has cell-mediated or humoral T-lymphocyte defects related to interferon-gamma or interferon-alpha",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "",
+                "endAge": ""
+              }
+            ]
+          },
+          {
+            "observationCode": "153",
+            "observationTitle": "Phagocytic function - Leukocyte adhesion defect, and myeloperoxidase deficiency",
+            "contraindicationText": "Do not vaccinate with live attenuated influenza virus (LAIV) if the patient has a phagocytic function defect (e.g. leukocyte adhesion defect and myeloperoxidase deficiency).",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "",
+                "endAge": ""
+              }
+            ]
+          },
+          {
+            "observationCode": "154",
+            "observationTitle": "HIV/AIDS - severely immunocompromised",
+            "contraindicationText": "Do not vaccinate with live attenuated influenza virus (LAIV) if the patient has HIV/AIDS and is severely immunocompromised (See the CDC general recommendations for a definition of \"severely immunocompromised\").",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "",
+                "endAge": ""
+              }
+            ]
+          },
+          {
+            "observationCode": "155",
+            "observationTitle": "HIV/AIDS - not severely immunocompromised",
+            "contraindicationText": "Do not vaccinate with live attenuated influenza virus (LAIV) if the patient has HIV/AIDS even if not severely immunocompromised (See the CDC general recommendations for a definition of \"severely immunocompromised\").",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "",
+                "endAge": ""
+              }
+            ]
+          },
+          {
+            "observationCode": "156",
+            "observationTitle": "Generalized malignant neoplasm",
+            "contraindicationText": "Do not vaccinate with live attenuated influenza virus (LAIV) if the patient has generalized malignant neoplasm.",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "",
+                "endAge": ""
+              }
+            ]
+          },
+          {
+            "observationCode": "157",
+            "observationTitle": "Solid organ transplantation",
+            "contraindicationText": "Do not vaccinate with live attenuated influenza virus (LAIV) if the patient received a solid organ transplant.",
+            "contraindicationGuidance": "Certain immunosuppressive medications are administered to prevent solid organ transplant rejection. Live vaccines should be withheld for 2 months following discontinuation of anti-rejection therapies in patients with a solid organ transplant.",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "",
+                "endAge": ""
+              }
+            ]
+          },
+          {
+            "observationCode": "158",
+            "observationTitle": "Immunosuppressive therapy",
+            "contraindicationText": "Do not vaccinate with live attenuated influenza virus (LAIV) if the patient is undergoing immunosuppressive therapy. Immunosuppressive medications include those given to prevent solid organ transplant rejection, human immune mediators like interleukins and colony-stimulating factors, immune modulators like levamisol and BCG bladder-tumor therapy, and medicines like tumor necrosis factor alpha inhibitors and anti-B cell antibodies.",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "",
+                "endAge": ""
+              }
+            ]
+          },
+          {
+            "observationCode": "159",
+            "observationTitle": "Radiation therapy",
+            "contraindicationText": "Do not vaccinate with live attenuated influenza virus (LAIV) if the patient is undergoing radiation therapy.",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "",
+                "endAge": ""
+              }
+            ]
+          },
+          {
+            "observationCode": "160",
+            "observationTitle": "Anatomical or Functional Asplenia",
+            "contraindicationText": "Do not vaccinate with live attenuated influenza virus (LAIV) if the patient has anatomical or functional asplenia",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "",
+                "endAge": ""
+              }
+            ]
+          },
+          {
+            "observationCode": "161",
+            "observationTitle": "Chronic renal disease",
+            "contraindicationText": "Do not vaccinate with live attenuated influenza virus (LAIV) if the patient has chronic renal disease.",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "",
+                "endAge": ""
+              }
+            ]
+          },
+          {
+            "observationCode": "186",
+            "observationTitle": "HIV Infection",
+            "contraindicationText": "Do not vaccinate if the patient has an HIV Infection.",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "",
+                "endAge": ""
+              }
+            ]
+          },
+          {
+            "observationCode": "192",
+            "observationTitle": "Severe allergic reaction after previous dose of any egg-based IIV or LAIV influenza vaccine",
+            "contraindicationText": "Do not vaccinate with any egg-based IIV or LAIV influenza vaccine if the patient has had a severe allergic reaction after a previous dose of an egg-based IIV or LAIV influenza vaccine.",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, high dose, trivalent, PF",
+                "cvx": "135",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, split virus, trivalent, PF",
+                "cvx": "140",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, split virus, trivalent, preservative",
+                "cvx": "141",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, adjuvanted, trivalent, PF",
+                "cvx": "168",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "",
+                "endAge": ""
+              }
+            ]
+          },
+          {
+            "observationCode": "193",
+            "observationTitle": "Severe allergic reaction after previous dose of any ccIIV influenza vaccine",
+            "contraindicationText": "Do not vaccinate with any ccIIV or egg-based IIV or LAIV influenza vaccine if the patient has had a severe allergic reaction after a previous dose of a ccIIV influenza vaccine.",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, high dose, trivalent, PF",
+                "cvx": "135",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, split virus, trivalent, PF",
+                "cvx": "140",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, split virus, trivalent, preservative",
+                "cvx": "141",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, MDCK, trivalent, PF",
+                "cvx": "153",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, adjuvanted, trivalent, PF",
+                "cvx": "168",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, MDCK, trivalent, preservative",
+                "cvx": "320",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "",
+                "endAge": ""
+              }
+            ]
+          },
+          {
+            "observationCode": "194",
+            "observationTitle": "Severe allergic reaction after previous dose of any RIV influenza vaccine",
+            "contraindicationText": "Do not vaccinate with any RIV or egg-based IIV or LAIV influenza vaccine if the patient has had a severe allergic reaction after a previous dose of an RIV influenza vaccine.",
+            "contraindicationGuidance": "",
+            "contraindicatedVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, high dose, trivalent, PF",
+                "cvx": "135",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, split virus, trivalent, PF",
+                "cvx": "140",
+                "beginAge": "",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "",
+                "endAge": ""
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "series": [
+      {
+        "seriesName": "Influenza standard series",
+        "targetDisease": "Influenza",
+        "vaccineGroup": "Influenza",
+        "seriesAdminGuidance": [
+          "ACIP recommends persons aged 65 years and older preferentially receive any one of the following higher dose or adjuvanted influenza vaccines: trivalent high-dose inactivated influenza vaccine (HD-IIV3), trivalent recombinant influenza vaccine (RIV3), or trivalent adjuvanted inactivated influenza vaccine (aIIV3). If none of these three vaccines is available at an opportunity for vaccine administration, then any other age-appropriate influenza vaccine should be used.",
+          "All persons aged 6 months and older with egg allergy should receive influenza vaccine. Any influenza vaccine (egg based or non-egg based) that is otherwise appropriate for the recipient's age and health status can be used.",
+          "Solid organ transplant recipients aged 19 through 64 years receiving immunosuppressive medications can receive HD-IIV3 or aIIV3. No preference over other age-appropriate IIV3 or RIV3 vaccines.",
+          "For most people who need only one dose of influenza vaccine for the season, September and October are generally good times to be vaccinated against influenza. Ideally, everyone should be vaccinated by the end of October."
+        ],
+        "seriesType": "Standard",
+        "equivalentSeriesGroups": "",
+        "requiredGender": "",
+        "selectSeries": {
+          "defaultSeries": "Yes",
+          "productPath": "No",
+          "seriesGroupName": "Standard",
+          "seriesGroup": "1",
+          "seriesPriority": "A",
+          "seriesPreference": "1",
+          "minAgeToStart": "",
+          "maxAgeToStart": ""
+        },
+        "indication": "",
+        "seriesDose": [
+          {
+            "doseNumber": "Dose 1",
+            "age": {
+              "absMinAge": "6 months - 4 days",
+              "minAge": "6 months",
+              "earliestRecAge": "6 months",
+              "latestRecAge": "",
+              "maxAge": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": "",
+            "allowableInterval": "",
+            "preferableVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "2 years",
+                "endAge": "50 years",
+                "tradeName": "",
+                "mvx": "",
+                "volume": "0.2",
+                "forecastVaccineType": "N"
+              },
+              {
+                "vaccineType": "Influenza, split virus, trivalent, PF",
+                "cvx": "140",
+                "beginAge": "6 months",
+                "endAge": "",
+                "tradeName": "Fluarix trivalent, preservative free",
+                "mvx": "SKB",
+                "volume": "0.5",
+                "forecastVaccineType": "N"
+              },
+              {
+                "vaccineType": "Influenza, split virus, trivalent, PF",
+                "cvx": "140",
+                "beginAge": "6 months",
+                "endAge": "",
+                "tradeName": "Fluzone trivalent, preservative free",
+                "mvx": "PMC",
+                "volume": "0.5",
+                "forecastVaccineType": "N"
+              },
+              {
+                "vaccineType": "Influenza, split virus, trivalent, PF",
+                "cvx": "140",
+                "beginAge": "3 years",
+                "endAge": "",
+                "tradeName": "Afluria trivalent, preservative free",
+                "mvx": "SEQ",
+                "volume": "0.5",
+                "forecastVaccineType": "N"
+              },
+              {
+                "vaccineType": "Influenza, split virus, trivalent, PF",
+                "cvx": "140",
+                "beginAge": "6 months",
+                "endAge": "",
+                "tradeName": "Flulaval trivalent, preservative free",
+                "mvx": "IDB",
+                "volume": "0.5",
+                "forecastVaccineType": "N"
+              },
+              {
+                "vaccineType": "Influenza, MDCK, trivalent, PF",
+                "cvx": "153",
+                "beginAge": "6 months",
+                "endAge": "",
+                "tradeName": "",
+                "mvx": "",
+                "volume": "0.5",
+                "forecastVaccineType": "N"
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "2 years",
+                "endAge": "50 years",
+                "tradeName": "",
+                "mvx": "",
+                "volume": "0.2",
+                "forecastVaccineType": "N"
+              }
+            ],
+            "allowableVaccine": [
+              {
+                "vaccineType": "Influenza, split incl. purified surface antigen",
+                "cvx": "15",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, whole",
+                "cvx": "16",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, Unspecified",
+                "cvx": "88",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "6 months - 4 days",
+                "endAge": "50 years"
+              },
+              {
+                "vaccineType": "Influenza, high dose, trivalent, PF",
+                "cvx": "135",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, split virus, trivalent, PF",
+                "cvx": "140",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, split virus, trivalent, preservative",
+                "cvx": "141",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, quadrivalent, intranasal",
+                "cvx": "149",
+                "beginAge": "6 months - 4 days",
+                "endAge": "50 years"
+              },
+              {
+                "vaccineType": "Influenza, split virus, quadrivalent, PF",
+                "cvx": "150",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "influenza nasal, unspecified formulation",
+                "cvx": "151",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, MDCK, trivalent, PF",
+                "cvx": "153",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, recombinant, trivalent, PF",
+                "cvx": "155",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, split virus, quadrivalent, preservative",
+                "cvx": "158",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, injectable, quadrivalent, preservative free, peds",
+                "cvx": "161",
+                "beginAge": "6 months - 4 days",
+                "endAge": "3 years"
+              },
+              {
+                "vaccineType": "Influenza, adjuvanted, trivalent, PF",
+                "cvx": "168",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, MDCK, quadrivalent, PF",
+                "cvx": "171",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, recombinant, quadrivalent, PF",
+                "cvx": "185",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, MDCK, quadrivalent, preservative",
+                "cvx": "186",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, high-dose, quadrivalent, PF",
+                "cvx": "197",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, adjuvanted, quadrivalent, PF",
+                "cvx": "205",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, MDCK, trivalent, preservative",
+                "cvx": "320",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "6 months - 4 days",
+                "endAge": "50 years"
+              }
+            ],
+            "inadvertentVaccine": "",
+            "conditionalSkip": {
+              "context": "Both",
+              "setLogic": "n/a",
+              "set": {
+                "setID": "1",
+                "setDescription": "Dose is not required for those 9 years or older",
+                "effectiveDate": "",
+                "cessationDate": "",
+                "conditionLogic": "",
+                "condition": {
+                  "conditionID": "1",
+                  "conditionType": "Age",
+                  "startDate": "",
+                  "endDate": "",
+                  "beginAge": "9 years",
+                  "endAge": "",
+                  "interval": "",
+                  "doseCount": "",
+                  "doseType": "",
+                  "doseCountLogic": "",
+                  "vaccineTypes": "",
+                  "seriesGroups": ""
+                }
+              }
+            },
+            "recurringDose": "No",
+            "seasonalRecommendation": {
+              "startDate": "20250701",
+              "endDate": "20260630"
+            }
+          },
+          {
+            "doseNumber": "Dose 2",
+            "age": {
+              "absMinAge": "",
+              "minAge": "",
+              "earliestRecAge": "",
+              "latestRecAge": "",
+              "maxAge": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": {
+              "fromPrevious": "Y",
+              "fromTargetDose": "",
+              "fromMostRecent": "",
+              "fromRelevantObs": "",
+              "absMinInt": "4 weeks - 4 days",
+              "minInt": "4 weeks",
+              "earliestRecInt": "4 weeks",
+              "latestRecInt": "",
+              "intervalPriority": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "allowableInterval": "",
+            "preferableVaccine": [
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "2 years",
+                "endAge": "50 years",
+                "tradeName": "",
+                "mvx": "",
+                "volume": "0.2",
+                "forecastVaccineType": "N"
+              },
+              {
+                "vaccineType": "Influenza, high dose, trivalent, PF",
+                "cvx": "135",
+                "beginAge": "65 years",
+                "endAge": "",
+                "tradeName": "",
+                "mvx": "",
+                "volume": "0.5",
+                "forecastVaccineType": "N"
+              },
+              {
+                "vaccineType": "Influenza, split virus, trivalent, PF",
+                "cvx": "140",
+                "beginAge": "6 months",
+                "endAge": "",
+                "tradeName": "Fluarix trivalent, preservative free",
+                "mvx": "SKB",
+                "volume": "0.5",
+                "forecastVaccineType": "N"
+              },
+              {
+                "vaccineType": "Influenza, split virus, trivalent, PF",
+                "cvx": "140",
+                "beginAge": "6 months",
+                "endAge": "",
+                "tradeName": "Fluzone trivalent, preservative free",
+                "mvx": "PMC",
+                "volume": "0.5",
+                "forecastVaccineType": "N"
+              },
+              {
+                "vaccineType": "Influenza, split virus, trivalent, PF",
+                "cvx": "140",
+                "beginAge": "3 years",
+                "endAge": "",
+                "tradeName": "Afluria trivalent, preservative free",
+                "mvx": "SEQ",
+                "volume": "0.5",
+                "forecastVaccineType": "N"
+              },
+              {
+                "vaccineType": "Influenza, split virus, trivalent, PF",
+                "cvx": "140",
+                "beginAge": "6 months",
+                "endAge": "",
+                "tradeName": "Flulaval trivalent, preservative free",
+                "mvx": "IDB",
+                "volume": "0.5",
+                "forecastVaccineType": "N"
+              },
+              {
+                "vaccineType": "Influenza, MDCK, trivalent, PF",
+                "cvx": "153",
+                "beginAge": "6 months",
+                "endAge": "",
+                "tradeName": "",
+                "mvx": "",
+                "volume": "0.5",
+                "forecastVaccineType": "N"
+              },
+              {
+                "vaccineType": "Influenza, recombinant, trivalent, PF",
+                "cvx": "155",
+                "beginAge": "9 years",
+                "endAge": "",
+                "tradeName": "",
+                "mvx": "",
+                "volume": "0.5",
+                "forecastVaccineType": "N"
+              },
+              {
+                "vaccineType": "Influenza, adjuvanted, trivalent, PF",
+                "cvx": "168",
+                "beginAge": "65 years",
+                "endAge": "",
+                "tradeName": "",
+                "mvx": "",
+                "volume": "0.5",
+                "forecastVaccineType": "N"
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "2 years",
+                "endAge": "50 years",
+                "tradeName": "",
+                "mvx": "",
+                "volume": "0.2",
+                "forecastVaccineType": "N"
+              }
+            ],
+            "allowableVaccine": [
+              {
+                "vaccineType": "Influenza, split incl. purified surface antigen",
+                "cvx": "15",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, whole",
+                "cvx": "16",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, Unspecified",
+                "cvx": "88",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "influenza, live, trivalent, intranasal",
+                "cvx": "111",
+                "beginAge": "6 months - 4 days",
+                "endAge": "50 years"
+              },
+              {
+                "vaccineType": "Influenza, high dose, trivalent, PF",
+                "cvx": "135",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, split virus, trivalent, PF",
+                "cvx": "140",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, split virus, trivalent, preservative",
+                "cvx": "141",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, intradermal, preservative free",
+                "cvx": "144",
+                "beginAge": "12 years - 4 days",
+                "endAge": "65 years"
+              },
+              {
+                "vaccineType": "Influenza, live, quadrivalent, intranasal",
+                "cvx": "149",
+                "beginAge": "6 months - 4 days",
+                "endAge": "50 years"
+              },
+              {
+                "vaccineType": "Influenza, split virus, quadrivalent, PF",
+                "cvx": "150",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "influenza nasal, unspecified formulation",
+                "cvx": "151",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, MDCK, trivalent, PF",
+                "cvx": "153",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, recombinant, trivalent, PF",
+                "cvx": "155",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, split virus, quadrivalent, preservative",
+                "cvx": "158",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, injectable, quadrivalent, preservative free, peds",
+                "cvx": "161",
+                "beginAge": "6 months - 4 days",
+                "endAge": "3 years"
+              },
+              {
+                "vaccineType": "Influenza, intradermal, quadrivalent, preservative free",
+                "cvx": "166",
+                "beginAge": "12 years - 4 days",
+                "endAge": "65 years"
+              },
+              {
+                "vaccineType": "Influenza, adjuvanted, trivalent, PF",
+                "cvx": "168",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, MDCK, quadrivalent, PF",
+                "cvx": "171",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, recombinant, quadrivalent, PF",
+                "cvx": "185",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, MDCK, quadrivalent, preservative",
+                "cvx": "186",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, high-dose, quadrivalent, PF",
+                "cvx": "197",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, adjuvanted, quadrivalent, PF",
+                "cvx": "205",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, MDCK, trivalent, preservative",
+                "cvx": "320",
+                "beginAge": "6 months - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Influenza, live, trivalent, intranasal, self/caregiver admin, PF",
+                "cvx": "333",
+                "beginAge": "6 months - 4 days",
+                "endAge": "50 years"
+              }
+            ],
+            "inadvertentVaccine": "",
+            "conditionalSkip": {
+              "context": "Both",
+              "setLogic": "OR",
+              "set": [
+                {
+                  "setID": "1",
+                  "setDescription": "Dose is not required if the patient has received 2 or more doses during the current season.",
+                  "effectiveDate": "",
+                  "cessationDate": "",
+                  "conditionLogic": "",
+                  "condition": {
+                    "conditionID": "1",
+                    "conditionType": "Vaccine Count by Date",
+                    "startDate": "20250701",
+                    "endDate": "20260630",
+                    "beginAge": "",
+                    "endAge": "",
+                    "interval": "",
+                    "doseCount": "1",
+                    "doseType": "Valid",
+                    "doseCountLogic": "greater than",
+                    "vaccineTypes": "15; 16; 88; 111; 135; 140; 141; 144; 149; 150; 151; 153; 155; 158; 161; 166; 168; 171; 185; 186; 197; 205; 320; 333",
+                    "seriesGroups": ""
+                  }
+                },
+                {
+                  "setID": "2",
+                  "setDescription": "Dose is not required if the patient has received 1 or more doses during the current season AND patient was 9 years or older when the first dose was received.",
+                  "effectiveDate": "",
+                  "cessationDate": "",
+                  "conditionLogic": "AND",
+                  "condition": [
+                    {
+                      "conditionID": "1",
+                      "conditionType": "Vaccine Count by Date",
+                      "startDate": "20250701",
+                      "endDate": "20260630",
+                      "beginAge": "",
+                      "endAge": "",
+                      "interval": "",
+                      "doseCount": "0",
+                      "doseType": "Valid",
+                      "doseCountLogic": "greater than",
+                      "vaccineTypes": "15; 16; 88; 111; 135; 140; 141; 144; 149; 150; 151; 153; 155; 158; 161; 166; 168; 171; 185; 186; 197; 205; 320; 333",
+                      "seriesGroups": ""
+                    },
+                    {
+                      "conditionID": "2",
+                      "conditionType": "Vaccine Count by Age",
+                      "startDate": "",
+                      "endDate": "",
+                      "beginAge": "9 years",
+                      "endAge": "",
+                      "interval": "",
+                      "doseCount": "0",
+                      "doseType": "Total",
+                      "doseCountLogic": "greater than",
+                      "vaccineTypes": "15; 16; 88; 111; 135; 140; 141; 144; 149; 150; 151; 153; 155; 158; 161; 166; 168; 171; 185; 186; 197; 205; 320; 333",
+                      "seriesGroups": ""
+                    }
+                  ]
+                },
+                {
+                  "setID": "3",
+                  "setDescription": "Dose is not required if the patient has received 1 or more doses during the current season AND patient has received 2 or more doses before July 1, 2025.",
+                  "effectiveDate": "",
+                  "cessationDate": "",
+                  "conditionLogic": "AND",
+                  "condition": [
+                    {
+                      "conditionID": "1",
+                      "conditionType": "Vaccine Count by Date",
+                      "startDate": "20250701",
+                      "endDate": "20260630",
+                      "beginAge": "",
+                      "endAge": "",
+                      "interval": "",
+                      "doseCount": "0",
+                      "doseType": "Valid",
+                      "doseCountLogic": "greater than",
+                      "vaccineTypes": "15; 16; 88; 111; 135; 140; 141; 144; 149; 150; 151; 153; 155; 158; 161; 166; 168; 171; 185; 186; 197; 205; 320; 333",
+                      "seriesGroups": ""
+                    },
+                    {
+                      "conditionID": "2",
+                      "conditionType": "Vaccine Count by Date",
+                      "startDate": "",
+                      "endDate": "20250701",
+                      "beginAge": "",
+                      "endAge": "",
+                      "interval": "",
+                      "doseCount": "1",
+                      "doseType": "Valid",
+                      "doseCountLogic": "greater than",
+                      "vaccineTypes": "15; 16; 88; 111; 135; 140; 141; 144; 149; 150; 151; 153; 155; 158; 161; 166; 168; 171; 185; 186; 197; 205; 320; 333",
+                      "seriesGroups": ""
+                    }
+                  ]
+                }
+              ]
+            },
+            "recurringDose": "Yes",
+            "seasonalRecommendation": {
+              "startDate": "20250701",
+              "endDate": "20260630"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

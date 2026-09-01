@@ -1,0 +1,129 @@
+{
+  "antigen": "Chikungunya",
+  "source_file": "source/xml/AntigenSupportingData- Chikungunya-508.xml",
+  "data": {
+    "immunity": "",
+    "contraindications": {
+      "vaccineGroup": {
+        "contraindication": [
+          {
+            "observationCode": "080",
+            "observationTitle": "Adverse reaction to vaccine component",
+            "contraindicationText": "Do not vaccinate if the patient has had an adverse reaction to a vaccine component.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          },
+          {
+            "observationCode": "270",
+            "observationTitle": "Severe allergic reaction after previous dose of Chikungunya vaccine",
+            "contraindicationText": "Do not vaccinate if the patient has had a severe allergic reaction after a previous dose of Chikungunya vaccine.",
+            "contraindicationGuidance": "",
+            "beginAge": "",
+            "endAge": ""
+          }
+        ]
+      }
+    },
+    "series": [
+      {
+        "seriesName": "Chikungunya Risk 1-dose series",
+        "targetDisease": "Chikungunya",
+        "vaccineGroup": "Chikungunya",
+        "seriesAdminGuidance": [
+          "On 8/22/2025 the US FDA's Center for Biologics Evaluation and Research (CBER) has suspended the biologics license for Valneva Austria GmbH's live-attenuated IXCHIQ vaccine. CBER's decision is based on serious safety concerns related to the vaccine, which appears to be causing chikungunya-like illness in vaccine recipients. There has been one death from encephalitis directly attributable to the vaccine.",
+          "In general, vaccination of pregnant women should be deferred until after delivery. However, when the risk of infection is high (e.g., during an outbreak) and exposure cannot be avoided, a healthcare provider and pregnant woman should discuss the risks of chikungunya virus infection and the potential benefits and risks of vaccination"
+        ],
+        "seriesType": "Risk",
+        "equivalentSeriesGroups": "",
+        "requiredGender": "",
+        "selectSeries": {
+          "defaultSeries": "No",
+          "productPath": "No",
+          "seriesGroupName": "Increased Risk",
+          "seriesGroup": "1",
+          "seriesPriority": "A",
+          "seriesPreference": "1",
+          "minAgeToStart": "12 years",
+          "maxAgeToStart": ""
+        },
+        "indication": [
+          {
+            "observationCode": {
+              "text": "Traveling to a country or territory where there is a chikungunya outbreak",
+              "code": "271"
+            },
+            "description": "Administer to persons traveling to a country or territory where there is a chikungunya outbreak",
+            "beginAge": "12 years",
+            "endAge": "",
+            "guidance": "Areas with a current Chikungunya outbreak: https://www.cdc.gov/chikungunya/data-maps/index.html"
+          },
+          {
+            "observationCode": {
+              "text": "Traveling or moving to a country or territory without an outbreak but with elevated chikungunya risk for U.S. travelers if planning to stay for an extended period of time [e.g., 6 months or more]",
+              "code": "272"
+            },
+            "description": "Persons traveling or moving to a country or territory without an outbreak but with elevated chikungunya risk for U.S. travelers if planning to stay for an extended period of time [e.g., 6 months or more] may consider vaccination",
+            "beginAge": "12 years",
+            "endAge": "",
+            "guidance": "Areas with an elevated risk for U.S. travelers: https://www.cdc.gov/chikungunya/data-maps/index.html"
+          },
+          {
+            "observationCode": {
+              "text": "Laboratory worker with potential for exposure to chikungunya virus",
+              "code": "277"
+            },
+            "description": "Administer to laboratory workers with potential for exposure to chikungunya virus",
+            "beginAge": "12 years",
+            "endAge": "",
+            "guidance": ""
+          }
+        ],
+        "seriesDose": [
+          {
+            "doseNumber": "Dose 1",
+            "age": {
+              "absMinAge": "12 years - 4 days",
+              "minAge": "12 years",
+              "earliestRecAge": "12 years",
+              "latestRecAge": "",
+              "maxAge": "",
+              "effectiveDate": "",
+              "cessationDate": ""
+            },
+            "interval": "",
+            "allowableInterval": "",
+            "preferableVaccine": {
+              "vaccineType": "Chikungunya, VLP, recombinant, 0.8 mL, PF",
+              "cvx": "329",
+              "beginAge": "12 years",
+              "endAge": "",
+              "tradeName": "",
+              "mvx": "",
+              "volume": "0.8",
+              "forecastVaccineType": "N"
+            },
+            "allowableVaccine": [
+              {
+                "vaccineType": "Chikungunya live attenuated vaccine, 0.5 mL, PF",
+                "cvx": "317",
+                "beginAge": "18 years - 4 days",
+                "endAge": ""
+              },
+              {
+                "vaccineType": "Chikungunya, VLP, recombinant, 0.8 mL, PF",
+                "cvx": "329",
+                "beginAge": "12 years - 4 days",
+                "endAge": ""
+              }
+            ],
+            "inadvertentVaccine": "",
+            "conditionalSkip": "",
+            "recurringDose": "No",
+            "seasonalRecommendation": ""
+          }
+        ]
+      }
+    ]
+  }
+}
