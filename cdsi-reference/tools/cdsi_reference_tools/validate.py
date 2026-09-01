@@ -1,13 +1,14 @@
-"""Deterministic validation - no network access, no LLM. Checks that a
-version's source/manifest/extraction/step packages are internally
-consistent (Phase 11 of the reference-module plan, scoped to what exists
-so far: the two reviewed pilot step packages, not yet the full
-Chapters 4-9 extraction inventory)."""
+"""Deterministic validation - no network access, no LLM (enforced by
+network_guard, installed for every `logic-spec` CLI invocation, not just
+this one). Checks that a version's source/manifest/extraction/step
+packages/mappings/findings are internally consistent (Phase 11 of the
+reference-module plan)."""
 
 import json
 from pathlib import Path
 
 import jsonschema
+import pymupdf as fitz
 import yaml
 
 from . import engine_index, extract, findings, paths
@@ -15,6 +16,17 @@ from . import engine_index, extract, findings, paths
 
 class ValidationError(Exception):
     pass
+
+
+# Tables that genuinely exist in the source PDF's body but are missing from
+# its own List of Figures and Tables front matter, which is what drives
+# extraction - discovered while documenting Chapters 6-7 (see README.md's
+# "Known extraction limitations"), transcribed by hand into their step
+# packages instead. Acknowledged here so validate_step_packages doesn't
+# report a known, already-investigated gap as a new problem; add to this
+# set only after confirming a table is truly absent from the LOFT, not as
+# a shortcut past a real extraction bug.
+TABLES_MISSING_FROM_LOFT = frozenset({"6-11", "6-19", "7-8"})
 
 
 def _load_schema(name: str) -> dict:
@@ -43,6 +55,16 @@ def validate_manifest(version: str) -> list[str]:
             problems.append(
                 f"Source checksum mismatch: manifest says {manifest.get('sha256')}, "
                 f"file hashes to {actual_sha256}"
+            )
+        doc = fitz.open(source_pdf)
+        try:
+            actual_page_count = doc.page_count
+        finally:
+            doc.close()
+        if actual_page_count != manifest.get("page_count"):
+            problems.append(
+                f"Page count mismatch: manifest says {manifest.get('page_count')}, "
+                f"source PDF actually has {actual_page_count} pages"
             )
     return problems
 
@@ -79,6 +101,17 @@ def validate_step_packages(version: str) -> list[str]:
             image_name = f"figure-{number.replace('.', '-')}.png"
             if not (step_dir / "figures" / image_name).exists():
                 problems.append(f"{step_dir.name}: step.yaml references {figure_label!r} but {image_name} is missing from figures/")
+
+        # Unlike figures, tables are never copied into the step package itself -
+        # they're referenced back to the shared extraction output, so look there.
+        tables_dir = paths.tables_dir(version)
+        for table_label in data.get("tables", []):
+            number = table_label.replace("Table ", "")
+            if number in TABLES_MISSING_FROM_LOFT:
+                continue
+            text_name = f"table-{number.replace('.', '-')}.txt"
+            if not (tables_dir / text_name).exists():
+                problems.append(f"{step_dir.name}: step.yaml references {table_label!r} but {text_name} is missing from extracted/tables/")
 
     for step_dir in step_dirs:
         transitions_yaml = step_dir / "transitions.yaml"

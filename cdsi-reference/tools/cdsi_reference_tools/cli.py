@@ -8,7 +8,7 @@
 import argparse
 import sys
 
-from . import compare_versions, extract, validate
+from . import compare_versions, extract, network_guard, validate
 
 
 def _cmd_extract(args: argparse.Namespace) -> int:
@@ -72,6 +72,9 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    # Phase 11: enforce, not just claim, that no command here ever needs
+    # network access or an LLM - see network_guard's own module docstring.
+    network_guard.install()
     parser = build_parser()
     args = parser.parse_args(argv)
     return args.func(args)
