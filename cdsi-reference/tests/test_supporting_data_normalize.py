@@ -73,11 +73,20 @@ def test_manifest_is_updated_with_normalizer_metadata():
 
 
 def test_renormalizing_is_deterministic():
+    """normalize_release() updates manifest.yaml's normalized_at to "now"
+    every run, by design (Phase 13 reserved that field for exactly this) -
+    restore the real registered release's manifest afterward so running
+    this test doesn't leave an uncommitted timestamp-only diff behind."""
     _skip_unless_registered_and_normalized("4.65")
     before = (paths.supporting_data_normalized_dir("4.65") / "antigens" / "hepb.json").read_text()
-    norm.normalize_release("4.65")
-    after = (paths.supporting_data_normalized_dir("4.65") / "antigens" / "hepb.json").read_text()
-    assert before == after
+    manifest_path = paths.supporting_data_manifest_path("4.65")
+    manifest_before = manifest_path.read_text()
+    try:
+        norm.normalize_release("4.65")
+        after = (paths.supporting_data_normalized_dir("4.65") / "antigens" / "hepb.json").read_text()
+        assert before == after
+    finally:
+        manifest_path.write_text(manifest_before)
 
 
 def test_a_deliberately_broken_xml_fails_xsd_validation(tmp_path):

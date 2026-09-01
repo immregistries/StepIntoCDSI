@@ -11,7 +11,15 @@ import argparse
 import sys
 from pathlib import Path
 
-from . import compare_versions, extract, network_guard, supporting_data, supporting_data_normalize, validate
+from . import (
+    compare_versions,
+    extract,
+    network_guard,
+    supporting_data,
+    supporting_data_compare,
+    supporting_data_normalize,
+    validate,
+)
 
 
 def _cmd_extract(args: argparse.Namespace) -> int:
@@ -94,6 +102,19 @@ def _cmd_supporting_data_normalize(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_supporting_data_compare(args: argparse.Namespace) -> int:
+    try:
+        report = supporting_data_compare.compare_releases(getattr(args, "from"), args.to)
+    except supporting_data_compare.CompareError as e:
+        print(f"ERROR: {e}", file=sys.stderr)
+        return 1
+    print(
+        f"Compared {report['from']} to {report['to']}: {report['change_count']} change(s). "
+        f"See supporting-data/diffs/{report['from']}-to-{report['to']}.md"
+    )
+    return 0
+
+
 def _cmd_supporting_data_validate(args: argparse.Namespace) -> int:
     problems = validate.validate_supporting_data_release(args.release)
     if not problems:
@@ -145,6 +166,11 @@ def build_parser() -> argparse.ArgumentParser:
         "normalize", help="Parse a registered release's XML into agent-readable structured JSON")
     p_sd_normalize.add_argument("--release", required=True)
     p_sd_normalize.set_defaults(func=_cmd_supporting_data_normalize)
+
+    p_sd_compare = supporting_data_sub.add_parser("compare", help="Compare two normalized Supporting Data releases")
+    p_sd_compare.add_argument("--from", dest="from", required=True)
+    p_sd_compare.add_argument("--to", required=True)
+    p_sd_compare.set_defaults(func=_cmd_supporting_data_compare)
 
     return parser
 
