@@ -1,0 +1,14 @@
+from: "4.3"
+spec_defines_transition: false
+note: >
+  This step is a loop driver, not documented as such in the spec text
+  itself (see index.md's Plain-Language Walkthrough). Verified against
+  CreateRelevantPatientSeries.process(): it branches on whether more
+  antigens remain to be processed, not on a single fixed "next section."
+transitions:
+  - condition: "the antigen-selected list has not been built yet, or more antigens remain to iterate"
+    to: "5.1"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.CreateRelevantPatientSeries#process"
+  - condition: "all antigens have been iterated"
+    to: "4.4"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.CreateRelevantPatientSeries#process"

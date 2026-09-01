@@ -149,8 +149,15 @@ def run_extract(version: str) -> build_index.ExtractionIndex:
             next_page = sorted_entries[i + 1].page if i + 1 < len(sorted_entries) else 10**6
             in_scope_pages.update(range(e.page, next_page))
 
-    figures = [e for e in loft if e.kind == "figure" and e.page in in_scope_pages]
-    tables = [e for e in loft if e.kind == "table" and e.page in in_scope_pages]
+    def _in_scope(entry: toc.FigureOrTableEntry) -> bool:
+        # Appendix tables/figures (numbered "A-1", "B-1", ...) are letter-
+        # prefixed, never digit-prefixed like real chapter tables - filter
+        # on that directly rather than relying on a page-range upper bound,
+        # since the last in-scope chapter has no "next section" to bound it.
+        return entry.page in in_scope_pages and entry.number[:1].isdigit()
+
+    figures = [e for e in loft if e.kind == "figure" and _in_scope(e)]
+    tables = [e for e in loft if e.kind == "table" and _in_scope(e)]
 
     table_warnings: dict[str, list[str]] = {}
     for entry in tables:

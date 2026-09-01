@@ -1,0 +1,14 @@
+from: "4.5"
+spec_defines_transition: false
+note: >
+  Like 4.3, this step is the loop driver around Chapter 8's actual
+  decision logic (Pre-Filter Patient Series, 8.1), not documented as a
+  loop in the section's own text. Verified against
+  SelectBestPatientSeries.process().
+transitions:
+  - condition: "more antigens remain to select a best series for"
+    to: "8.1"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.SelectBestPatientSeries#process"
+  - condition: "all antigens have been processed"
+    to: "4.6"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.SelectBestPatientSeries#process"

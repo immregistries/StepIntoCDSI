@@ -1,0 +1,10 @@
+from: "4.2"
+spec_defines_transition: false
+note: >
+  Table 4-1 lists 4.2 followed by 4.3 in sequence, but the section text
+  itself doesn't state a transition rule. Verified against
+  OrganizeImmunizationHistory.process()'s return statement.
+transitions:
+  - condition: "always (unconditional, after sorting antigen administered records)"
+    to: "4.3"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.OrganizeImmunizationHistory#process"

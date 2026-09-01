@@ -1,0 +1,27 @@
+from: "4.4"
+spec_defines_transition: true
+note: >
+  Figure 4-6's evaluate-immunization-history loop can end one of two ways
+  (target doses exhausted, or antigen administered records exhausted),
+  after which the spec says forecasting begins (Chapter 7). The
+  implementation adds two loop-guard escape transitions with no
+  specification counterpart at all - see index.md's Review Findings.
+transitions:
+  - condition: "a patient series still has target doses AND antigen administered records left to evaluate"
+    to: "6.1"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.EvaluateAndForecastAllPatientSeries#process"
+  - condition: "evaluation for the current patient series just finished (target doses or AARs exhausted) - forecasting begins"
+    to: "7.1"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.EvaluateAndForecastAllPatientSeries#process"
+  - condition: "a patient series' forecast neighborhood still has a target dose to forecast"
+    to: "7.1"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.EvaluateAndForecastAllPatientSeries#process"
+  - condition: "no more relevant patient series remain to evaluate/forecast"
+    to: "4.5"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.EvaluateAndForecastAllPatientSeries#process"
+  - condition: "IMPLEMENTATION-ONLY, no spec basis: total cycle count exceeds 1000, or the same loop state repeats more than 200 times (loop-guard escape)"
+    to: "4.5"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.EvaluateAndForecastAllPatientSeries#finalizeStep"
+  - condition: "IMPLEMENTATION-ONLY, no spec basis: currentPatientSeries is unexpectedly null (defensive check)"
+    to: "end-error"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.EvaluateAndForecastAllPatientSeries#process"

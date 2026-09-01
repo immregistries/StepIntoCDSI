@@ -1,0 +1,19 @@
+spec_version: "4.6"
+section: "4.2"
+title: "Organize Immunization History"
+source_pages: [32, 33, 34]
+figures:
+  - "Figure 4-3"
+tables:
+  - "Table 4-2"
+  - "Table 4-3"
+business_rules: []
+implementation:
+  module: "cdsi-engine"
+  classes:
+    - "org.openimmunizationsoftware.cdsi.core.logic.OrganizeImmunizationHistory"
+  logic_step_type: "ORGANIZE_IMMUNIZATION_HISTORY"
+tests:
+  - status: "test-gap"
+    note: "No dedicated unit test; exercised indirectly by every cdsi-fits-tests fixture."
+review_status: "draft"

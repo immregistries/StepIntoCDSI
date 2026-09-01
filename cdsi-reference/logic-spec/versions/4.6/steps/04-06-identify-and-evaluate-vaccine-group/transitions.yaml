@@ -1,0 +1,13 @@
+from: "4.6"
+spec_defines_transition: false
+note: >
+  This is the final loop in the overall processing model, driving Chapter
+  9's per-vaccine-group rules. Verified against
+  IdentifyAndEvaluateVaccineGroup.process().
+transitions:
+  - condition: "more vaccine groups remain to process"
+    to: "9.1"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.IdentifyAndEvaluateVaccineGroup#process"
+  - condition: "all vaccine groups have been processed"
+    to: "end"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.IdentifyAndEvaluateVaccineGroup#process"

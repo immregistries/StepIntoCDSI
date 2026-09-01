@@ -1,0 +1,10 @@
+from: "5.1"
+spec_defines_transition: false
+note: >
+  Verified against SelectRelevantPatientSeries.process(): a single
+  unconditional transition back to the 4.3 loop driver, regardless of
+  which antigen series were found relevant.
+transitions:
+  - condition: "always (unconditional, after evaluating all antigen series/indications for the current antigen)"
+    to: "4.3"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.SelectRelevantPatientSeries#process"

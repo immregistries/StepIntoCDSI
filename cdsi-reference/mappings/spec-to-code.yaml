@@ -1,9 +1,9 @@
 # Specification-to-code mapping (Phase 8 of the reference-module plan).
 #
-# Only the two pilot sections are populated so far - see the "Logic
-# Specification Milestone" in the plan for when this should be extended to
-# all of Chapters 4-9. Every class name here has been read directly from
-# cdsi-engine's source, not guessed.
+# Chapters 4-5 and the two pilot sections (4.1, 6.4) are populated so far -
+# see the "Logic Specification Milestone" in the plan for extending this to
+# the rest of Chapters 6-9. Every class name here has been read directly
+# from cdsi-engine's source, not guessed.
 spec_version: "4.6"
 sections:
   "4.1":
@@ -16,6 +16,60 @@ sections:
     tests:
       - "test-gap: no dedicated unit test; exercised indirectly by every cdsi-fits-tests fixture"
     mapping_status: "reviewed"
+  "4.2":
+    title: "Organize Immunization History"
+    implementation:
+      module: "cdsi-engine"
+      classes:
+        - "org.openimmunizationsoftware.cdsi.core.logic.OrganizeImmunizationHistory"
+    tests:
+      - "test-gap: no dedicated unit test; exercised indirectly by every cdsi-fits-tests fixture"
+    mapping_status: "draft"
+  "4.3":
+    title: "Create Relevant Patient Series"
+    implementation:
+      module: "cdsi-engine"
+      classes:
+        - "org.openimmunizationsoftware.cdsi.core.logic.CreateRelevantPatientSeries"
+    tests:
+      - "test-gap: no dedicated unit test; exercised indirectly by every cdsi-fits-tests fixture"
+    mapping_status: "draft"
+  "4.4":
+    title: "Evaluate and Forecast all Relevant Patient Series"
+    implementation:
+      module: "cdsi-engine"
+      classes:
+        - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateAndForecastAllPatientSeries"
+    tests:
+      - "test-gap: no dedicated unit test isolating this class; exercised end-to-end by every cdsi-fits-tests fixture"
+    mapping_status: "draft"
+  "4.5":
+    title: "Select Best Patient Series"
+    implementation:
+      module: "cdsi-engine"
+      classes:
+        - "org.openimmunizationsoftware.cdsi.core.logic.SelectBestPatientSeries"
+    tests:
+      - "test-gap: no dedicated unit test; exercised indirectly by every cdsi-fits-tests fixture"
+    mapping_status: "draft"
+  "4.6":
+    title: "Identify and Evaluate Vaccine Group"
+    implementation:
+      module: "cdsi-engine"
+      classes:
+        - "org.openimmunizationsoftware.cdsi.core.logic.IdentifyAndEvaluateVaccineGroup"
+    tests:
+      - "test-gap: no dedicated unit test; exercised indirectly by every cdsi-fits-tests fixture"
+    mapping_status: "draft"
+  "5.1":
+    title: "Select Relevant Patient Series"
+    implementation:
+      module: "cdsi-engine"
+      classes:
+        - "org.openimmunizationsoftware.cdsi.core.logic.SelectRelevantPatientSeries"
+    tests:
+      - "test-gap: no dedicated unit test; exercised indirectly by every cdsi-fits-tests fixture"
+    mapping_status: "draft"
   "6.4":
     title: "Evaluate Age"
     implementation:
