@@ -25,13 +25,18 @@ def _cmd_extract(args: argparse.Namespace) -> int:
 
 def _cmd_validate(args: argparse.Namespace) -> int:
     problems = validate.validate_version(args.version)
+    gaps = validate.acknowledged_gaps(args.version)
     if not problems:
         print(f"Version {args.version}: valid.")
-        return 0
-    print(f"Version {args.version}: {len(problems)} problem(s):")
-    for p in problems:
-        print(f"  - {p}")
-    return 1
+    else:
+        print(f"Version {args.version}: {len(problems)} problem(s):")
+        for p in problems:
+            print(f"  - {p}")
+    if gaps:
+        print(f"{len(gaps)} acknowledged gap(s) (tracked, not fixed - see mappings/spec-to-code.yaml):")
+        for g in gaps:
+            print(f"  - {g}")
+    return 1 if problems else 0
 
 
 def _cmd_compare(args: argparse.Namespace) -> int:

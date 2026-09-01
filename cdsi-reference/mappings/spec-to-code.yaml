@@ -315,3 +315,42 @@ sections:
     tests:
       - "test-gap: no dedicated unit test"
     mapping_status: "draft"
+
+# Real, instantiable LogicStepType entries (present in both LogicStepType.java
+# and LogicStepFactory.java's dispatch chain, and in LogicStep.STEPS) that do
+# not correspond to a documented numbered specification subsection, and so
+# were never given a step package under logic-spec/versions/4.6/steps/.
+# Phase 8's validator (engine_index.py + validate.py's validate_mappings)
+# checks every LogicStepType against this list plus the sections above;
+# acknowledging a class here keeps its gap visible without failing
+# `logic-spec validate` for a known, deliberately-tracked item.
+unmapped_classes:
+  EVALUATE_GENDER:
+    enum_name: "EVALUATE_GENDER"
+    class: "org.openimmunizationsoftware.cdsi.core.logic.EvaluateGender"
+    note: >
+      LogicStepType declares this with section label "xx", a placeholder, not
+      a real subsection number - it has no corresponding text in the Logic
+      Specification and so cannot get a step package. Found while building
+      this mapping (2026): evaluateInternal()'s "is gender one of the
+      required genders" condition unconditionally returns LogicResult.YES
+      after its matching loop, regardless of whether a match was found -
+      making the documented "incorrect gender" rejection outcome permanently
+      dead code. Also cites a non-existent "Table 4-31" (Chapter 4 only has
+      Tables 4-1 through 4-3) and logs "Setting next step: 4.10" where the
+      real next step is 6.10. Tracked per standing instruction not to fix
+      cdsi-engine logic until the documentation and testing system is complete.
+  FORECAST_DATES_AND_REASONS:
+    enum_name: "FORECAST_DATES_AND_REASONS"
+    class: "org.openimmunizationsoftware.cdsi.core.logic.ForecastDatesAndReasons"
+    note: >
+      LogicStepType declares this with the bare chapter number "7", not a
+      subsection - it is the real orchestration handoff between Chapter 6
+      and Chapter 7 (dispatches to EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST),
+      previously treated as pure non-executable chapter-overview text during
+      Phase 5. Found while building this mapping (2026): it enforces a third,
+      previously-undocumented loop guard - MAX_FORECAST_HANDOFF_CYCLES = 1100 -
+      forcing an early exit to 4.5 (SELECT_BEST_PATIENT_SERIES) if
+      evaluate/forecast handoffs exceed that count, distinct from the two
+      guards already documented in 4.4's step package. Worth cross-referencing
+      from chapter-06-to-7-evaluate-and-forecast's loop diagram.

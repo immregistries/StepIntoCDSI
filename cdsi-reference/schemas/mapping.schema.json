@@ -24,6 +24,19 @@
           "mapping_status": { "type": "string", "enum": ["reviewed", "draft", "unmapped"] }
         }
       }
+    },
+    "unmapped_classes": {
+      "type": "object",
+      "description": "Real, instantiable LogicStepType classes that don't fit the numbered-section step-package model (e.g. their enum constant carries a placeholder or bare-chapter section label, not a real subsection number). Acknowledging a class here tells the Phase 8 validator its gap is known and tracked, not silently missed - it stays visible via `note`, but stops failing `logic-spec validate`.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["enum_name", "class", "note"],
+        "properties": {
+          "enum_name": { "type": "string" },
+          "class": { "type": "string" },
+          "note": { "type": "string" }
+        }
+      }
     }
   },
   "additionalProperties": false

@@ -4,14 +4,18 @@ Versioned, agent-readable copies of the two sources `cdsi-engine` is built from 
 
 This is a **development and documentation asset**. It is never a runtime dependency of `cdsi-engine`, `cdsi-web`, or `cdsi-fits-tests`, and it makes no network calls and no LLM calls - extraction is mechanical PDF parsing; anything that looks like interpretation (a step's plain-language walkthrough, a review finding) was drafted by a human or an agent working *outside* this tool and is marked `draft` until reviewed.
 
-Status: **Phases 1-7** of the design plan are complete - version 4.6 is registered, the full deterministic extractor runs across Chapter 3 and Chapters 4-9 with zero warnings, every executable step in Chapters 4-9 has its own package (34 step packages plus 6 chapter-overview indexes), all nine required concept documents exist under `logic-spec/versions/4.6/concepts/`, and all six required process-loop diagrams (figure + structured `transitions.yaml` + Mermaid + explanation) exist under `logic-spec/versions/4.6/diagrams/`.
+Status: **Phases 1-8** of the design plan are complete - version 4.6 is registered, the full deterministic extractor runs across Chapter 3 and Chapters 4-9 with zero warnings, every executable step in Chapters 4-9 has its own package (34 step packages plus 6 chapter-overview indexes), all nine required concept documents exist under `logic-spec/versions/4.6/concepts/`, all six required process-loop diagrams (figure + structured `transitions.yaml` + Mermaid + explanation) exist under `logic-spec/versions/4.6/diagrams/`, and `mappings/spec-to-code.yaml` is now cross-checked against `cdsi-engine`'s actual source (not just hand-maintained) by `logic-spec validate`.
 
 This pass surfaced a number of real, independently-verified `cdsi-engine` gaps and bugs - tracked deliberately, not fixed yet (this is a demonstration/reference system; the project owner wants a dedicated fix pass once the full documentation and testing system is in place, not fixes mixed into documentation work). Most significant:
 - **Section 7.3 (Determine Contraindications) is essentially unimplemented** - no decision-table logic exists in code at all. See that step package's Review Findings.
 - **`LogicTable.evaluate()`, the one shared mechanism every decision table in the system uses, never enforces that exactly one column matched** - the safety check is commented out, so if a table's conditions aren't perfectly mutually exclusive, every matching outcome fires with the last one silently winning. See `concepts/decision-tables.md`'s Open Questions.
 - Several narrower scoring/date/reason-code bugs in Chapters 6 and 8 (`EvaluatePreferableInterval`, `NoValidDoses`, `CompletePatientSeries`, `InProcessPatientSeries`) - see those step packages.
+- **`EvaluateGender`'s gender-match condition unconditionally returns YES** after its matching loop regardless of whether anything matched, making the documented "incorrect gender" rejection outcome dead code - found while building the Phase 8 mapping, since this class (section label `"xx"`) doesn't correspond to any real specification subsection. See `mappings/spec-to-code.yaml`'s `unmapped_classes`.
+- **`ForecastDatesAndReasons` enforces a third, previously-undocumented loop guard** (`MAX_FORECAST_HANDOFF_CYCLES = 1100`) - also found via Phase 8, since this class (section label `"7"`, a bare chapter number) is the real Chapter 6-to-7 orchestration handoff, not the non-executable chapter-overview text it was treated as during Phase 5.
 
-The full mapping validator (Phase 8 - `mappings/spec-to-code.yaml` exists and is hand-maintained, but nothing yet checks it for completeness/staleness), the formal findings workflow (Phase 9 - findings currently live as Review Findings sections inside step/concept/diagram documents, not as individual `finding.yaml`/`finding.md` records), version comparison (Phase 10), Supporting Data versioning, and FITS run history are not yet built - see `StepIntoCDSi-Specification-Reference-Module-Plan.md` at the repository root for the full 24-phase design.
+Phase 8's validator (`logic-spec validate`) checks every `LogicStepType` cdsi-engine can actually instantiate against `mappings/spec-to-code.yaml`, flagging any class the mapping doesn't cite, any mapping entry citing a class or file that doesn't exist, and any step package missing a mapping entry. Two classes are acknowledged as known, deliberately-tracked gaps (see `unmapped_classes` above) rather than left as an unexplained validator failure; the command exits 0 while still printing them.
+
+The formal findings workflow (Phase 9 - findings currently live as Review Findings sections inside step/concept/diagram documents, not as individual `finding.yaml`/`finding.md` records), version comparison (Phase 10), Supporting Data versioning, and FITS run history are not yet built - see `StepIntoCDSi-Specification-Reference-Module-Plan.md` at the repository root for the full 24-phase design.
 
 ## What's authoritative, generated, or reviewed
 
@@ -21,7 +25,7 @@ The full mapping validator (Phase 8 - `mappings/spec-to-code.yaml` exists and is
 | `logic-spec/versions/<v>/extracted/` | Fully generated by `logic-spec extract`; safe to delete and regenerate |
 | `logic-spec/versions/<v>/steps/*/step.yaml`, `index.md`, `transitions.yaml` | Drafted (by a human or an agent), reviewed, and hand-maintained - `logic-spec extract` never touches these |
 | `logic-spec/versions/<v>/index.md` | Generated - the extraction inventory (section/figure/table list and warnings) |
-| `mappings/spec-to-code.yaml` | Hand-maintained; every class name in it has been read directly from `cdsi-engine`'s source |
+| `mappings/spec-to-code.yaml` | Hand-maintained; every class name in it has been read directly from `cdsi-engine`'s source, and `logic-spec validate` now cross-checks it against that source directly (Phase 8) |
 | `supporting-data/`, `reference-sets/` | Not built yet - see their own README.md placeholders |
 
 ## Setup
@@ -58,7 +62,7 @@ Step packages live at `logic-spec/versions/<version>/steps/<chapter>-<section>-<
 
 ## Mapping a section to engine code and tests
 
-Check `mappings/spec-to-code.yaml` first. If a section isn't listed there yet, cross-reference `cdsi-engine`'s `org.openimmunizationsoftware.cdsi.core.logic.LogicStepType` (every constant is declared with its own section number and title, e.g. `EVALUATE_AGE("6.4", "Evaluate Age", true)`) and `LogicStepFactory` (an exhaustive, mechanical `if (stepName.equals(...)) return new <Class>(...)` chain) - together they are the authoritative, verifiable spec-to-class mapping; never invent a class name that isn't read directly from one of those two files.
+Check `mappings/spec-to-code.yaml` first. If a section isn't listed there yet, cross-reference `cdsi-engine`'s `org.openimmunizationsoftware.cdsi.core.logic.LogicStepType` (every constant is declared with its own section number and title, e.g. `EVALUATE_AGE("6.4", "Evaluate Age", true)`) and `LogicStepFactory` (an exhaustive, mechanical `if (stepName.equals(...)) return new <Class>(...)` chain) - together they are the authoritative, verifiable spec-to-class mapping; never invent a class name that isn't read directly from one of those two files. `tools/cdsi_reference_tools/engine_index.py` parses both files programmatically and backs `logic-spec validate`'s mapping checks (Phase 8) - use it instead of re-parsing by hand. Not every `LogicStepType` corresponds to a real specification subsection (two don't - see `unmapped_classes` in `mappings/spec-to-code.yaml`); don't force one of those into a fake numbered step package.
 
 ## Reporting an ambiguity or a suspected mismatch
 
