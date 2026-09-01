@@ -140,6 +140,13 @@ public class SupportingDataManager {
     private static List<String> listSupportingDataZipNames(ServletContext servletContext) {
         List<String> zipNameList = new ArrayList<String>();
 
+        // Supporting-data zips are bundled as resources of cdsi-engine, which is on
+        // the classpath as a jar (not loose files under WEB-INF/classes), so the
+        // engine itself is asked to list what it has rather than scanning the
+        // filesystem for them.
+        zipNameList.addAll(
+                org.openimmunizationsoftware.cdsi.core.data.DataModelLoader.listBundledSupportingDataZipNames());
+
         addServletContextZipNames(servletContext, CLASS_PATH_ROOT, zipNameList, false);
         addServletContextZipNames(servletContext, CLASS_PATH_SUPPORTING_DATA, zipNameList, true);
         addServletContextZipNames(servletContext, WEBAPP_PATH_SUPPORTING_DATA, zipNameList, true);

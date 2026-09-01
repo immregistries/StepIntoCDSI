@@ -2,8 +2,6 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 
-import gov.nist.healthcare.cds.enumeration.SerieStatus;
-
 public enum VaccineGroupStatus {
   COMPLETE, CONTRAINDICATED, IMMUNE, NOT_COMPLETE, NOT_RECOMMENDED, AGED_OUT;
 
@@ -21,24 +19,6 @@ public enum VaccineGroupStatus {
         return NOT_RECOMMENDED;
       case AGED_OUT:
         return AGED_OUT;
-    }
-    return null;
-  }
-
-  public SerieStatus getSerieStatus() {
-    switch (this) {
-      case COMPLETE:
-        return SerieStatus.C;
-      case CONTRAINDICATED:
-        return SerieStatus.X;
-      case IMMUNE:
-        return SerieStatus.I;
-      case NOT_COMPLETE:
-        return SerieStatus.N;
-      case NOT_RECOMMENDED:
-        return SerieStatus.R;
-      case AGED_OUT:
-        return SerieStatus.G;
     }
     return null;
   }

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.openimmunizationsoftware.cdsi</groupId>
+		<artifactId>cdsi-parent</artifactId>
+		<version>5.3.4</version>
+	</parent>
+
+	<artifactId>cdsi-engine</artifactId>
+	<packaging>jar</packaging>
+	<name>StepIntoCDSi Engine</name>
+	<description>The CDSi calculation engine: supporting-data loading, domain model, and the CDSi processing-model steps. No servlet/web dependency - runs headlessly.</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>javax.xml.parsers</groupId>
+			<artifactId>jaxp-api</artifactId>
+			<version>1.4.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.13.0</version>
+		</dependency>
+
+		<!-- Commons Lang 2.x for legacy DateUtils -->
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+</project>

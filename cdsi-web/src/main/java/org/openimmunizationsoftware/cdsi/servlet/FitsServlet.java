@@ -44,6 +44,25 @@ public class FitsServlet extends ForecastServlet {
             { "304", "122", "303", "305", "306", "307" }, // RSV vaccines and monoclonal antibodies
             { "109", "152", "133" }, { "188", "187" }, { "108", "147" } };
 
+    private static SerieStatus toSerieStatus(VaccineGroupStatus vaccineGroupStatus) {
+        switch (vaccineGroupStatus) {
+            case COMPLETE:
+                return SerieStatus.C;
+            case CONTRAINDICATED:
+                return SerieStatus.X;
+            case IMMUNE:
+                return SerieStatus.I;
+            case NOT_COMPLETE:
+                return SerieStatus.N;
+            case NOT_RECOMMENDED:
+                return SerieStatus.R;
+            case AGED_OUT:
+                return SerieStatus.G;
+            default:
+                return null;
+        }
+    }
+
     private static boolean isSameVaccineCvx(String cvx1, String cvx2) {
         if (cvx1 == null || cvx2 == null) {
             return false;
@@ -588,7 +607,7 @@ public class FitsServlet extends ForecastServlet {
                                     + ") " + vgf.getVaccineGroupStatus());
                             if (isSameVaccineCvx(expCvx, actCvx)) {
                                 VaccineGroupStatus vaccineGroupStatus = vgf.getVaccineGroupStatus();
-                                SerieStatus serieStatus = vaccineGroupStatus.getSerieStatus();
+                                SerieStatus serieStatus = toSerieStatus(vaccineGroupStatus);
                                 forecast.setSerieStatusAct(serieStatus);
                                 forecast.setVaccineCvxAct(actCvx);
                                 logToOut(

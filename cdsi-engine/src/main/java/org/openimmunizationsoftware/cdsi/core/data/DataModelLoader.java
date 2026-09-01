@@ -6,15 +6,19 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -69,6 +73,53 @@ public class DataModelLoader {
   private static final String SCHEDULE_SUPPORTING_DATA_FILE_WITH_SPACE = "Schedule SupportingData.xml";
   private static final Pattern ANTIGEN_FILE_PATTERN = Pattern
       .compile("^AntigenSupportingData-\\s*(.+?)(?:-\\s*508)?\\.xml$", Pattern.CASE_INSENSITIVE);
+
+  /**
+   * Lists the supporting-data zip file names bundled as classpath resources
+   * (under a "supporting-data/" directory) by this engine module - whether
+   * that directory is on-disk (running from an IDE) or packed inside this
+   * module's own jar (running deployed). Callers that need to discover which
+   * supporting data sets exist (e.g. to populate a UI) should use this
+   * instead of scanning the filesystem, since the zips may not be present as
+   * loose files at all once this module is packaged as a dependency jar.
+   */
+  public static List<String> listBundledSupportingDataZipNames() {
+    List<String> zipNames = new ArrayList<String>();
+    try {
+      URL directoryUrl = DataModelLoader.class.getClassLoader().getResource("supporting-data");
+      if (directoryUrl == null) {
+        return zipNames;
+      }
+      if ("file".equals(directoryUrl.getProtocol())) {
+        File directory = new File(directoryUrl.toURI());
+        File[] files = directory.listFiles();
+        if (files != null) {
+          for (File file : files) {
+            if (file.isFile() && file.getName().toLowerCase(Locale.ROOT).endsWith(".zip")) {
+              zipNames.add(file.getName());
+            }
+          }
+        }
+      } else if ("jar".equals(directoryUrl.getProtocol())) {
+        String path = directoryUrl.getPath();
+        String jarPath = path.substring(path.indexOf(":") + 1, path.indexOf("!"));
+        try (JarFile jarFile = new JarFile(java.net.URLDecoder.decode(jarPath, "UTF-8"))) {
+          Enumeration<JarEntry> entries = jarFile.entries();
+          while (entries.hasMoreElements()) {
+            String entryName = entries.nextElement().getName();
+            if (entryName.startsWith("supporting-data/") && entryName.toLowerCase(Locale.ROOT).endsWith(".zip")) {
+              zipNames.add(entryName.substring("supporting-data/".length()));
+            }
+          }
+        }
+      }
+    } catch (Exception e) {
+      // Best-effort discovery only; a caller that already knows the exact zip
+      // name or id can still load it directly via createDataModel(String).
+    }
+    Collections.sort(zipNames, String.CASE_INSENSITIVE_ORDER);
+    return zipNames;
+  }
 
   public static DataModel createDataModel() throws Exception {
     throw new IllegalArgumentException(

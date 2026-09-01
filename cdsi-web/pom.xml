@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.openimmunizationsoftware.cdsi</groupId>
+		<artifactId>cdsi-parent</artifactId>
+		<version>5.3.4</version>
+	</parent>
+
+	<artifactId>cdsi-web</artifactId>
+	<packaging>war</packaging>
+	<name>StepIntoCDSi Web</name>
+	<description>The Step Into CDSi web application: interactive step-through UI, FITS test-case runner, and FHIR ImmDS+HALO endpoints, built on cdsi-engine.</description>
+
+	<properties>
+		<software.version>5.3.3</software.version>
+		<base.url>https://informatics.immregistries.org</base.url>
+		<step.external.url>${base.url}/step</step.external.url>
+		<hub.external.url>${base.url}/hub</hub.external.url>
+		<auth.enabled>true</auth.enabled>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.openimmunizationsoftware.cdsi</groupId>
+			<artifactId>cdsi-engine</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.18.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>gov.nist.healthcare.cds</groupId>
+			<artifactId>cds-base-domain</artifactId>
+			<version>1.0.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>gov.nist.healthcare.cds</groupId>
+			<artifactId>cds-base-repo</artifactId>
+			<version>1.0.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>gov.nist.healthcare.cds</groupId>
+			<artifactId>cds-base-auth</artifactId>
+			<version>1.0.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>gov.nist.healthcare.cds</groupId>
+			<artifactId>cds-base-utils</artifactId>
+			<version>1.0.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>gov.nist.healthcare.cds.client</groupId>
+			<artifactId>fits-client</artifactId>
+			<version>1.2.1-AIRA-1.1</version>
+		</dependency>
+
+		<!-- Apache HttpClient 5 - required by fits-client -->
+		<dependency>
+			<groupId>org.apache.httpcomponents.client5</groupId>
+			<artifactId>httpclient5</artifactId>
+			<version>5.2.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>5.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Spring Framework 6.x - Jakarta compatible for Tomcat 10 -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<!-- This dependency includes the core HAPI-FHIR classes -->
+		<dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>hapi-fhir-base</artifactId>
+			<version>${hapifhir_version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>hapi-fhir-server</artifactId>
+			<version>${hapifhir_version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>hapi-fhir-validation</artifactId>
+			<version>${hapifhir_version}</version>
+		</dependency>
+
+		<!-- At least one "structures" JAR must also be included -->
+		<dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>hapi-fhir-structures-r4</artifactId>
+			<version>${hapifhir_version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>hapi-fhir-validation-resources-r4</artifactId>
+			<version>${hapifhir_version}</version>
+		</dependency>
+
+		<!-- This dependency is used for the "FHIR Tester" web app overlay -->
+		<dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>hapi-fhir-testpage-overlay</artifactId>
+			<version>${hapifhir_version}</version>
+			<type>war</type>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>hapi-fhir-testpage-overlay</artifactId>
+			<version>${hapifhir_version}</version>
+			<classifier>classes</classifier>
+		</dependency>
+
+		<!--
+		HAPI-FHIR uses Logback for logging support. The logback library is included
+		automatically by Maven as a part of the hapi-fhir-base dependency, but you
+		also need to include a logging library. Logback is used here, but log4j
+		would also be fine.
+		-->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.immregistries</groupId>
+			<artifactId>interophub-client</artifactId>
+			<version>${interophub.client.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.5.16</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>1.5.16</version>
+		</dependency>
+
+		<!--
+		If you are using HAPI narrative generation, you will need to include Thymeleaf
+		as well. Otherwise the following can be omitted.
+		-->
+		<dependency>
+			<groupId>org.thymeleaf</groupId>
+			<artifactId>thymeleaf</artifactId>
+			<version>3.1.2.RELEASE</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>step</finalName>
+		<resources>
+			<resource>
+				<filtering>true</filtering>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>software-version.properties</include>
+				</includes>
+			</resource>
+			<resource>
+				<filtering>false</filtering>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>software-version.properties</exclude>
+				</excludes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.4.0</version>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>local-tomcat-deploy</id>
+			<properties>
+				<deploy.context.name>step</deploy.context.name>
+				<base.url>http://localhost:8080</base.url>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>3.1.0</version>
+						<executions>
+							<execution>
+								<id>copy-war-to-local-tomcat</id>
+								<phase>package</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<target>
+										<fail message="Property 'tomcat.webapps.dir' is required when using profile 'local-tomcat-deploy'.">
+											<condition>
+												<or>
+													<not>
+														<isset property="tomcat.webapps.dir" />
+													</not>
+													<equals arg1="${tomcat.webapps.dir}" arg2="" trim="true" />
+												</or>
+											</condition>
+										</fail>
+										<copy file="${project.build.directory}/${project.build.finalName}.war" tofile="${tomcat.webapps.dir}/${deploy.context.name}.war" overwrite="true" />
+									</target>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<repositories>
+		<repository>
+			<id>data-local</id>
+			<name>data</name>
+			<url>file://${project.basedir}/../repo</url>
+		</repository>
+	</repositories>
+
+</project>
