@@ -1,0 +1,27 @@
+{
+  "uid" : "2015-0002",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "VAR",
+  "title" : "Varicella: Adult patient has received 2 doses of the Varicella Vaccine at least 4 weeks apart",
+  "patientSex" : "F",
+  "birthDate" : "2003-07-28",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-07-28",
+    "cvx" : "21",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "21",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "21",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

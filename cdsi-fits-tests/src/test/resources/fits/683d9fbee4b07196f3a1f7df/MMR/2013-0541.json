@@ -1,0 +1,22 @@
+{
+  "uid" : "2013-0541",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "MMR",
+  "title" : "MMR # 1 at 12 months-4 days",
+  "patientSex" : "F",
+  "birthDate" : "2025-09-05",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-09-01",
+    "cvx" : "03",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "03",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-10-05",
+    "recommendedDate" : "2029-09-05"
+  } ]
+}

@@ -1,0 +1,32 @@
+{
+  "uid" : "2017-0001",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HPV",
+  "title" : "Child is age 9 with 3rd dose of HPV at 5 months from first dose",
+  "patientSex" : "F",
+  "birthDate" : "2017-01-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-04-01",
+    "cvx" : "165",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-05-31",
+    "cvx" : "165",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "165",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "137",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

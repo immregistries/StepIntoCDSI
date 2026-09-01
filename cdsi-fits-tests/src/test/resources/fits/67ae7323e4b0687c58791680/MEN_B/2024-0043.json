@@ -1,0 +1,27 @@
+{
+  "uid" : "2024-0043",
+  "testPlanId" : "67ae7323e4b0687c58791680",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "MEN B",
+  "title" : "Patient is 21 years of age with two doses of the MenB vaccine (Trumenba and Penbraya)",
+  "patientSex" : "F",
+  "birthDate" : "2005-03-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-03-01",
+    "cvx" : "162",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "316",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "164",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

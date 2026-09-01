@@ -1,0 +1,37 @@
+{
+  "uid" : "2013-0612",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "PCV",
+  "title" : "Dose 3 PCV 20 to dose 4 interval 8 weeks-5 days",
+  "patientSex" : "F",
+  "birthDate" : "2025-08-11",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-02-11",
+    "cvx" : "216",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-06-11",
+    "cvx" : "216",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-07-11",
+    "cvx" : "216",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-08-31",
+    "cvx" : "216",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "152",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-10-26",
+    "recommendedDate" : "2026-10-26"
+  } ]
+}

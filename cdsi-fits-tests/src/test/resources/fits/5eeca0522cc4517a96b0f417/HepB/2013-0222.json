@@ -1,0 +1,32 @@
+{
+  "uid" : "2013-0222",
+  "testPlanId" : "5eeca0522cc4517a96b0f417",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HepB",
+  "title" : "Dose 1 to dose 3 interval of Comvax 16 wks-5 days. 4th dose needed",
+  "patientSex" : "F",
+  "birthDate" : "2002-05-15",
+  "evalDate" : "2002-11-16",
+  "vaccinations" : [ {
+    "date" : "2002-08-01",
+    "cvx" : "51",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2002-09-20",
+    "cvx" : "51",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2002-11-16",
+    "cvx" : "51",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "45",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2002-11-21",
+    "recommendedDate" : "2002-11-21"
+  } ]
+}

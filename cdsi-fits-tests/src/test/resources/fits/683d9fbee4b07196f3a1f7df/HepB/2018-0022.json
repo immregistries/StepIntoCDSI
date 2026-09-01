@@ -1,0 +1,22 @@
+{
+  "uid" : "2018-0022",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HepB",
+  "title" : "Hep B: Patient is 18 years - 5 days with first dose of Hep B (Hepislav) vaccine",
+  "patientSex" : "F",
+  "birthDate" : "2008-09-06",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-09-01",
+    "cvx" : "189",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "45",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-09-01",
+    "recommendedDate" : "2026-09-01"
+  } ]
+}

@@ -1,0 +1,17 @@
+{
+  "uid" : "2015-0024",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "MMR",
+  "title" : "MMR: Patient is born before 01/01/1957",
+  "patientSex" : "F",
+  "birthDate" : "1956-06-12",
+  "evalDate" : "2015-03-23",
+  "vaccinations" : [ ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "03",
+    "serieStatus" : "IMMUNE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

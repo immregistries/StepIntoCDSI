@@ -1,0 +1,22 @@
+{
+  "uid" : "2013-0483",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HPV",
+  "title" : "HPV bivalent to male adolescent. Not valid. Forecast quadrivalent",
+  "patientSex" : "F",
+  "birthDate" : "2000-06-18",
+  "evalDate" : "2011-06-20",
+  "vaccinations" : [ {
+    "date" : "2011-06-20",
+    "cvx" : "118",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "137",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2011-06-20",
+    "recommendedDate" : "2011-06-20"
+  } ]
+}

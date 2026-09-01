@@ -1,0 +1,27 @@
+{
+  "uid" : "2023-0071",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "COVID-19",
+  "title" : "Patient is 9 months of age with two doses of the Fall Moderna COVID-19 vaccine ",
+  "patientSex" : "F",
+  "birthDate" : "2025-12-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-08-01",
+    "cvx" : "311",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-08-29",
+    "cvx" : "311",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "213",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

@@ -1,0 +1,22 @@
+{
+  "uid" : "2023-0105",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "MCV",
+  "title" : "Patient is 11 years of age and has been administered CVX 316 as a first dose",
+  "patientSex" : "F",
+  "birthDate" : "2015-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-09-01",
+    "cvx" : "316",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "108",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2031-09-01",
+    "recommendedDate" : "2031-09-01"
+  } ]
+}

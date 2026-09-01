@@ -1,0 +1,32 @@
+{
+  "uid" : "2013-0258",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HepB",
+  "title" : "dose 2 to 3 Pediarix, interval 8 weeks-5 days. 4th dose needed.",
+  "patientSex" : "F",
+  "birthDate" : "2026-03-17",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-05-10",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-07-12",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "45",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-09-06",
+    "recommendedDate" : "2026-09-17"
+  } ]
+}

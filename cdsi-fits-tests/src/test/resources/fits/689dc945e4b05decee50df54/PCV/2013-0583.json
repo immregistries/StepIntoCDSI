@@ -1,0 +1,27 @@
+{
+  "uid" : "2013-0583",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "PCV",
+  "title" : "Dose # 1 PCV 15 at age 7 months, dose # 2 at age 8 mos and current age ≥ 12 mos.",
+  "patientSex" : "F",
+  "birthDate" : "2025-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-04-01",
+    "cvx" : "215",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-05-01",
+    "cvx" : "215",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "152",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-09-01",
+    "recommendedDate" : "2026-09-01"
+  } ]
+}

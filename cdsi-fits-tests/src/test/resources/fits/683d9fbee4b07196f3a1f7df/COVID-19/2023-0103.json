@@ -1,0 +1,32 @@
+{
+  "uid" : "2023-0103",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "COVID-19",
+  "title" : "Patient is 7 years of age and was administered a previous dose of Moderna's Fall Covid-19 vaccine as a third dose ",
+  "patientSex" : "F",
+  "birthDate" : "2017-02-22",
+  "evalDate" : "2024-08-23",
+  "vaccinations" : [ {
+    "date" : "2022-09-16",
+    "cvx" : "221",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2022-10-16",
+    "cvx" : "229",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2023-09-18",
+    "cvx" : "312",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "213",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2024-08-22",
+    "recommendedDate" : "2024-08-22"
+  } ]
+}

@@ -1,0 +1,32 @@
+{
+  "uid" : "2013-0097",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "DTAP",
+  "title" : "#3 Pediarix at age 24 weeks- 5 days",
+  "patientSex" : "F",
+  "birthDate" : "2026-03-22",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-05-03",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-07-03",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "107",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2027-06-22",
+    "recommendedDate" : "2027-06-22"
+  } ]
+}

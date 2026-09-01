@@ -1,0 +1,32 @@
+{
+  "uid" : "2013-0204",
+  "testPlanId" : "5eeca0522cc4517a96b0f417",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HepB",
+  "title" : "Dose 2 to dose 3 interval is 8 weeks.  Series complete.",
+  "patientSex" : "F",
+  "birthDate" : "2026-01-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-03-01",
+    "cvx" : "08",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-07-01",
+    "cvx" : "08",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-08-26",
+    "cvx" : "08",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "45",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

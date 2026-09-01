@@ -1,0 +1,22 @@
+{
+  "uid" : "2024-0057",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "RSV",
+  "title" : "Patient is 80 years of age and has been administered a RSV (mResvia) vaccine dose",
+  "patientSex" : "F",
+  "birthDate" : "1946-08-18",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-09-01",
+    "cvx" : "326",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "304",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

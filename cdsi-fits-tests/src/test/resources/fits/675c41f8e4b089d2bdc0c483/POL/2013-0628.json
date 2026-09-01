@@ -1,0 +1,27 @@
+{
+  "uid" : "2013-0628",
+  "testPlanId" : "675c41f8e4b089d2bdc0c483",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "POL",
+  "title" : "Dose # 2 at age 4 months",
+  "patientSex" : "F",
+  "birthDate" : "2026-05-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-07-01",
+    "cvx" : "10",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "10",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "89",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-09-29",
+    "recommendedDate" : "2026-11-01"
+  } ]
+}

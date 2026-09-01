@@ -1,0 +1,17 @@
+{
+  "uid" : "2024-0032",
+  "testPlanId" : "675c41f8e4b089d2bdc0c483",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "MEN B",
+  "title" : "Patient is 20 years of age with no doses of the MenB vaccine",
+  "patientSex" : "F",
+  "birthDate" : "2006-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "164",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2022-09-01",
+    "recommendedDate" : "2022-09-01"
+  } ]
+}

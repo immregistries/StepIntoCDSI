@@ -1,0 +1,22 @@
+{
+  "uid" : "2025-0036",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "PCV",
+  "title" : "Dose 1 of PCV 13 at 2 months",
+  "patientSex" : "F",
+  "birthDate" : "2023-06-04",
+  "evalDate" : "2023-08-04",
+  "vaccinations" : [ {
+    "date" : "2023-08-04",
+    "cvx" : "133",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "152",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2023-09-01",
+    "recommendedDate" : "2023-10-04"
+  } ]
+}

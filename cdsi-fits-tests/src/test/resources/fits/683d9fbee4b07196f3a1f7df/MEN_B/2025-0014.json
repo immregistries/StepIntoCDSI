@@ -1,0 +1,27 @@
+{
+  "uid" : "2025-0014",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "MEN B",
+  "title" : "Patient is 23 years and has been administered a second dose of the MenB (Penmenvy) vaccine at an interval of 4 weeks - 5 days ",
+  "patientSex" : "F",
+  "birthDate" : "2003-08-09",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-08-09",
+    "cvx" : "163",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "328",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "164",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2027-02-09",
+    "recommendedDate" : "2027-02-09"
+  } ]
+}

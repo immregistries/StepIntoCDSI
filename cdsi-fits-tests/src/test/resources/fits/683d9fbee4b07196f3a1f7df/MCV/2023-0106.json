@@ -1,0 +1,27 @@
+{
+  "uid" : "2023-0106",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "MCV",
+  "title" : "Patient is 16 years of age and has been administered an extraneous dose of the Meningococcal vaccine.",
+  "patientSex" : "F",
+  "birthDate" : "2010-07-07",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-07-07",
+    "cvx" : "316",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "316",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "108",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

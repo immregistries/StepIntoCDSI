@@ -1,0 +1,27 @@
+{
+  "uid" : "2015-0019",
+  "testPlanId" : "67ae7323e4b0687c58791680",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "ZOSTER",
+  "title" : "Zoster: MMR to Zoster interval 28 - 1 days",
+  "patientSex" : "F",
+  "birthDate" : "1968-03-12",
+  "evalDate" : "2019-08-14",
+  "vaccinations" : [ {
+    "date" : "2019-07-17",
+    "cvx" : "03",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2019-08-13",
+    "cvx" : "121",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "188",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2019-10-08",
+    "recommendedDate" : "2019-10-08"
+  } ]
+}

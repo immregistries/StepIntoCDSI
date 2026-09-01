@@ -1,0 +1,32 @@
+{
+  "uid" : "2013-0017",
+  "testPlanId" : "5eeca0522cc4517a96b0f417",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "DTAP",
+  "title" : "Doses # 2 and # 3 at ≥7 years old; dose # 1 at ≥ 12 months old.",
+  "patientSex" : "F",
+  "birthDate" : "2018-11-13",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2020-01-15",
+    "cvx" : "107",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2025-11-21",
+    "cvx" : "09",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "115",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "107",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2029-11-13",
+    "recommendedDate" : "2029-11-13"
+  } ]
+}

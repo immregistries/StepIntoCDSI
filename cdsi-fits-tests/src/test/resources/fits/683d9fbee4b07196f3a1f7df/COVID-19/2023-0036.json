@@ -1,0 +1,17 @@
+{
+  "uid" : "2023-0036",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "COVID-19",
+  "title" : "Patient is less than 6 months of age with no previous dose of the Covid-19 vaccine",
+  "patientSex" : "F",
+  "birthDate" : "2026-03-06",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "213",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-09-06",
+    "recommendedDate" : "2026-09-06"
+  } ]
+}

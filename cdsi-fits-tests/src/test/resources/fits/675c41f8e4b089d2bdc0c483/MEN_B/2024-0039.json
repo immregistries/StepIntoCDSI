@@ -1,0 +1,27 @@
+{
+  "uid" : "2024-0039",
+  "testPlanId" : "675c41f8e4b089d2bdc0c483",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "MEN B",
+  "title" : "Patient is 19 years of age with a second dose of the Men B vaccine (Trumemba) at an interval 6 months - 4 days",
+  "patientSex" : "F",
+  "birthDate" : "2007-03-05",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-03-05",
+    "cvx" : "162",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "162",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "164",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

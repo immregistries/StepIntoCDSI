@@ -1,0 +1,27 @@
+{
+  "uid" : "2025-0086",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "COVID-19",
+  "title" : "Patient transitions from 23 months of age to 2 years of age and has been administered a second dose of the 2025-2026 Covid-19 vaccine at an interval of 4 weeks - 4 days",
+  "patientSex" : "F",
+  "birthDate" : "2024-08-24",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-08-07",
+    "cvx" : "311",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-08-31",
+    "cvx" : "311",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "213",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

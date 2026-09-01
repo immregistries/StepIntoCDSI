@@ -1,0 +1,27 @@
+{
+  "uid" : "AART-VAR-6",
+  "testPlanId" : "671785f8e4b038904646e53a",
+  "testPlanName" : "AIRA Test Cases for CDS v2",
+  "groupName" : "VAR",
+  "title" : "Adult with two doses of Varicella",
+  "patientSex" : "F",
+  "birthDate" : "2006-08-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-08-01",
+    "cvx" : "21",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "21",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "21",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

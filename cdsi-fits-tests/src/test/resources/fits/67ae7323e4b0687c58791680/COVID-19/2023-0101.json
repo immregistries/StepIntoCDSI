@@ -1,0 +1,32 @@
+{
+  "uid" : "2023-0101",
+  "testPlanId" : "67ae7323e4b0687c58791680",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "COVID-19",
+  "title" : "Patient is 7 months of age and has been administered three doses of a Pfizer Covid-19 vaccine with the first dose at 5 months",
+  "patientSex" : "F",
+  "birthDate" : "2023-12-28",
+  "evalDate" : "2024-08-22",
+  "vaccinations" : [ {
+    "date" : "2024-06-14",
+    "cvx" : "308",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2024-07-20",
+    "cvx" : "308",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2024-08-22",
+    "cvx" : "309",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "213",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2024-10-17",
+    "recommendedDate" : "2024-10-17"
+  } ]
+}

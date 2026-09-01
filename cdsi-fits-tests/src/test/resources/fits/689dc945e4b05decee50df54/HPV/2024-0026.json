@@ -1,0 +1,32 @@
+{
+  "uid" : "2024-0026",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HPV",
+  "title" : "Male, age 34 years with three doses of the HPV vaccine at an interval of 6 months",
+  "patientSex" : "F",
+  "birthDate" : "1992-02-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-02-01",
+    "cvx" : "165",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-02-25",
+    "cvx" : "165",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-08-25",
+    "cvx" : "165",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "165",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

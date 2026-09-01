@@ -1,0 +1,42 @@
+{
+  "uid" : "2013-0075",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "DTAP",
+  "title" : "4 doses of Tetramune with a DTaP booster.  Forecast Tdap.",
+  "patientSex" : "F",
+  "birthDate" : "1999-12-12",
+  "evalDate" : "2004-12-01",
+  "vaccinations" : [ {
+    "date" : "2000-02-15",
+    "cvx" : "22",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2000-04-15",
+    "cvx" : "22",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2000-06-15",
+    "cvx" : "22",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2001-02-15",
+    "cvx" : "22",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2004-12-01",
+    "cvx" : "107",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "107",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2010-12-12",
+    "recommendedDate" : "2010-12-12"
+  } ]
+}

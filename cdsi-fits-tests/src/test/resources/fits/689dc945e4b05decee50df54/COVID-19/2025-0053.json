@@ -1,0 +1,27 @@
+{
+  "uid" : "2025-0053",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "COVID-19",
+  "title" : "Patient is 14 months of age and has been administered the second dose of the Moderna 2025-2026 Fall formula at 28 - 5 days  ",
+  "patientSex" : "F",
+  "birthDate" : "2025-06-08",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-08-08",
+    "cvx" : "311",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-08-31",
+    "cvx" : "311",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "213",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-09-28",
+    "recommendedDate" : "2026-09-28"
+  } ]
+}

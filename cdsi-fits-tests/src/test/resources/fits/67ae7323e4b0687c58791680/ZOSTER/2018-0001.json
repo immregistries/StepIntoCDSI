@@ -1,0 +1,22 @@
+{
+  "uid" : "2018-0001",
+  "testPlanId" : "67ae7323e4b0687c58791680",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "ZOSTER",
+  "title" : "Zoster: Patient has received dose 1 of the RZV (Shingrix) series",
+  "patientSex" : "F",
+  "birthDate" : "1976-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-09-01",
+    "cvx" : "187",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "188",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-09-29",
+    "recommendedDate" : "2026-10-27"
+  } ]
+}

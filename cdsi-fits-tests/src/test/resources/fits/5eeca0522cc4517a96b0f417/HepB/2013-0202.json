@@ -1,0 +1,32 @@
+{
+  "uid" : "2013-0202",
+  "testPlanId" : "5eeca0522cc4517a96b0f417",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HepB",
+  "title" : "Dose 2 to dose 3 interval 8 wks-5 days. 4th dose needed.",
+  "patientSex" : "F",
+  "birthDate" : "2026-01-09",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-04-09",
+    "cvx" : "08",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-07-09",
+    "cvx" : "08",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-08-29",
+    "cvx" : "08",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "45",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-09-03",
+    "recommendedDate" : "2026-09-03"
+  } ]
+}

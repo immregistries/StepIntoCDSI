@@ -1,0 +1,17 @@
+{
+  "uid" : "2013-0480",
+  "testPlanId" : "5eeca0522cc4517a96b0f417",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HPV",
+  "title" : "Adult female age 27 years, No Doses",
+  "patientSex" : "F",
+  "birthDate" : "1999-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "137",
+    "serieStatus" : "AGED_OUT",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

@@ -1,0 +1,32 @@
+{
+  "uid" : "2013-0590",
+  "testPlanId" : "5eeca0522cc4517a96b0f417",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "PCV",
+  "title" : "Dose # 3 PCV 13 at age 14 weeks-5 days.",
+  "patientSex" : "F",
+  "birthDate" : "2026-05-31",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-07-09",
+    "cvx" : "133",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-08-06",
+    "cvx" : "133",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "133",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "152",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-09-29",
+    "recommendedDate" : "2026-11-30"
+  } ]
+}

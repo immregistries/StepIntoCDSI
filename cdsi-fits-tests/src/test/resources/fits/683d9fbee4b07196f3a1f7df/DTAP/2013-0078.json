@@ -1,0 +1,22 @@
+{
+  "uid" : "2013-0078",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "DTAP",
+  "title" : "TriHibit as primary dose.  DTaP=valid.",
+  "patientSex" : "F",
+  "birthDate" : "2011-05-01",
+  "evalDate" : "2011-07-01",
+  "vaccinations" : [ {
+    "date" : "2011-07-01",
+    "cvx" : "50",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "107",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2011-07-29",
+    "recommendedDate" : "2011-09-01"
+  } ]
+}

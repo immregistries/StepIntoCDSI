@@ -1,0 +1,27 @@
+{
+  "uid" : "AART-MCV-3",
+  "testPlanId" : "69d68785e4b00d04c452bb99",
+  "testPlanName" : "AIRA Test Cases for CDS v3",
+  "groupName" : "MCV",
+  "title" : "Dose 2 at 16 years",
+  "patientSex" : "F",
+  "birthDate" : "2010-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2021-09-01",
+    "cvx" : "108",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "108",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "108",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

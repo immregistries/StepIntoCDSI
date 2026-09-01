@@ -1,0 +1,22 @@
+{
+  "uid" : "2015-0001",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "VAR",
+  "title" : "Varicella: Zoster dose in lieu of  first dose of Varicella for adult patient",
+  "patientSex" : "F",
+  "birthDate" : "1990-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-09-01",
+    "cvx" : "121",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "21",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-09-29",
+    "recommendedDate" : "2026-09-29"
+  } ]
+}

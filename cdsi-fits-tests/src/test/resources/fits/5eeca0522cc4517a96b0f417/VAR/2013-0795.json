@@ -1,0 +1,17 @@
+{
+  "uid" : "2013-0795",
+  "testPlanId" : "5eeca0522cc4517a96b0f417",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "VAR",
+  "title" : "No doses of Varicella: current age 13Y -1D",
+  "patientSex" : "F",
+  "birthDate" : "2013-09-02",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "21",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2014-09-02",
+    "recommendedDate" : "2014-09-02"
+  } ]
+}

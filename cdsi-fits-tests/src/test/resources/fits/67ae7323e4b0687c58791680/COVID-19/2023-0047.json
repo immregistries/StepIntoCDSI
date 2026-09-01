@@ -1,0 +1,27 @@
+{
+  "uid" : "2023-0047",
+  "testPlanId" : "67ae7323e4b0687c58791680",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "COVID-19",
+  "title" : "Patient is 28 years with two previous doses of the Pfizer Covid-19 vaccine",
+  "patientSex" : "F",
+  "birthDate" : "1996-03-20",
+  "evalDate" : "2024-08-23",
+  "vaccinations" : [ {
+    "date" : "2023-04-03",
+    "cvx" : "300",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2023-09-15",
+    "cvx" : "309",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "213",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2024-08-22",
+    "recommendedDate" : "2024-08-22"
+  } ]
+}

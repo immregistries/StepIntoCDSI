@@ -1,0 +1,27 @@
+{
+  "uid" : "2019-0001",
+  "testPlanId" : "5eeca0522cc4517a96b0f417",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "ZOSTER",
+  "title" : "Zoster: Dose #2 (Shingrix) administered at 4 weeks - 5 days after dose #1",
+  "patientSex" : "F",
+  "birthDate" : "1976-08-04",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-08-04",
+    "cvx" : "187",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-08-27",
+    "cvx" : "187",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "188",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-10-22",
+    "recommendedDate" : "2026-10-22"
+  } ]
+}

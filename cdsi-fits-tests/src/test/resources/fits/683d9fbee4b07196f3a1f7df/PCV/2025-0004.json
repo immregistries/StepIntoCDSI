@@ -1,0 +1,22 @@
+{
+  "uid" : "2025-0004",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "PCV",
+  "title" : "Patient is 53 years of age and has been administered a previous dose of PCV13 vaccine",
+  "patientSex" : "F",
+  "birthDate" : "1973-06-24",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-08-31",
+    "cvx" : "133",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "109",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2027-08-31",
+    "recommendedDate" : "2027-08-31"
+  } ]
+}

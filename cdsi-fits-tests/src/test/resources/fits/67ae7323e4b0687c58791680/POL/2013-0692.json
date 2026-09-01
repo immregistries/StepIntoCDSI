@@ -1,0 +1,42 @@
+{
+  "uid" : "2013-0692",
+  "testPlanId" : "67ae7323e4b0687c58791680",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "POL",
+  "title" : "# 5 Pediarix at 4 yrs -4 days",
+  "patientSex" : "F",
+  "birthDate" : "2022-09-05",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2022-11-05",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2022-12-05",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2023-04-06",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2023-12-14",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "89",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

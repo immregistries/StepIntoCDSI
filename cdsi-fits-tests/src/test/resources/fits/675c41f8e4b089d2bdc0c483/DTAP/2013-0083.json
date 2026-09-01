@@ -1,0 +1,27 @@
+{
+  "uid" : "2013-0083",
+  "testPlanId" : "675c41f8e4b089d2bdc0c483",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "DTAP",
+  "title" : "Kinrix at age 4 months as dose 2 of DTaP.  Off label but valid. ",
+  "patientSex" : "F",
+  "birthDate" : "2026-05-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-07-07",
+    "cvx" : "107",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "130",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "107",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-09-29",
+    "recommendedDate" : "2026-11-01"
+  } ]
+}

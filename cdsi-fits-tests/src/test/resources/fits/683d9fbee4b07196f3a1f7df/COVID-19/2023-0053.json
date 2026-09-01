@@ -1,0 +1,22 @@
+{
+  "uid" : "2023-0053",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "COVID-19",
+  "title" : "Patient is 5 years of age and is administered Pfizer's 2024-2025 Covid-19 (CVX308) vaccine as a first dose.",
+  "patientSex" : "F",
+  "birthDate" : "2021-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-09-01",
+    "cvx" : "308",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "213",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-09-01",
+    "recommendedDate" : "2026-09-01"
+  } ]
+}

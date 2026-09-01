@@ -1,0 +1,32 @@
+{
+  "uid" : "2013-0743",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "POL",
+  "title" : "invalid dose 1-2 interval in midst of others",
+  "patientSex" : "F",
+  "birthDate" : "2026-03-11",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-05-11",
+    "cvx" : "120",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-06-03",
+    "cvx" : "120",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "120",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "89",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-09-29",
+    "recommendedDate" : "2026-09-29"
+  } ]
+}

@@ -1,0 +1,22 @@
+{
+  "uid" : "2025-0082",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "COVID-19",
+  "title" : "Patient is 4 years old and was administered a dose of the 2024-2025 Pfizer Covid-19 ",
+  "patientSex" : "F",
+  "birthDate" : "2021-08-01",
+  "evalDate" : "2025-09-24",
+  "vaccinations" : [ {
+    "date" : "2024-09-26",
+    "cvx" : "310",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "213",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2025-08-27",
+    "recommendedDate" : "2025-08-27"
+  } ]
+}

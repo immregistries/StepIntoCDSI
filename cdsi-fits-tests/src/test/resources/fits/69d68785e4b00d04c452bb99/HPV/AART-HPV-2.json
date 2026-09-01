@@ -1,0 +1,22 @@
+{
+  "uid" : "AART-HPV-2",
+  "testPlanId" : "69d68785e4b00d04c452bb99",
+  "testPlanName" : "AIRA Test Cases for CDS v3",
+  "groupName" : "HPV",
+  "title" : "Dose 1 at 11 years",
+  "patientSex" : "F",
+  "birthDate" : "2015-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-09-01",
+    "cvx" : "137",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "137",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2027-02-01",
+    "recommendedDate" : "2027-03-01"
+  } ]
+}

@@ -1,0 +1,37 @@
+{
+  "uid" : "2013-0604",
+  "testPlanId" : "67ae7323e4b0687c58791680",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "PCV",
+  "title" : "Dose # 3 invalid (age) in midst of others.   Four valid doses not required in this scenario.",
+  "patientSex" : "F",
+  "birthDate" : "2025-08-20",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2025-09-30",
+    "cvx" : "133",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2025-10-27",
+    "cvx" : "133",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2025-11-07",
+    "cvx" : "133",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "133",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "152",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

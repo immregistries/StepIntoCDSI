@@ -1,0 +1,32 @@
+{
+  "uid" : "2013-0638",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "POL",
+  "title" : "Dose # 3 at 4 years-4 days but not six months after dose 2.  Child will need another. ",
+  "patientSex" : "F",
+  "birthDate" : "2022-09-05",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2023-09-05",
+    "cvx" : "10",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-04-05",
+    "cvx" : "10",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "10",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "89",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2027-03-01",
+    "recommendedDate" : "2027-03-01"
+  } ]
+}

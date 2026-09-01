@@ -1,0 +1,22 @@
+{
+  "uid" : "2025-0010",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "RSV",
+  "title" : "Patient is an infant who has been administered a dose of Abrysvo at 1 month of age",
+  "patientSex" : "F",
+  "birthDate" : "2025-11-01",
+  "evalDate" : "2025-12-01",
+  "vaccinations" : [ {
+    "date" : "2025-12-01",
+    "cvx" : "305",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "304",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2025-12-01",
+    "recommendedDate" : "2025-12-01"
+  } ]
+}

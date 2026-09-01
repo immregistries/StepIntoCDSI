@@ -1,0 +1,22 @@
+{
+  "uid" : "2015-0023",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "PCV",
+  "title" : "Adult Patient has received PPSV23 at age 65 but has no history of PCV.",
+  "patientSex" : "F",
+  "birthDate" : "1961-08-16",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-09-01",
+    "cvx" : "33",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "152",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2027-09-01",
+    "recommendedDate" : "2027-09-01"
+  } ]
+}

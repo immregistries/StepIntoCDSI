@@ -1,0 +1,22 @@
+{
+  "uid" : "2025-0001",
+  "testPlanId" : "67ae7323e4b0687c58791680",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "PCV",
+  "title" : "Patient is 55 years of age and has been administered a dose of the Pneumococcal vaccine (PCV15)",
+  "patientSex" : "F",
+  "birthDate" : "1971-08-17",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-09-01",
+    "cvx" : "215",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "109",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2027-09-01",
+    "recommendedDate" : "2027-09-01"
+  } ]
+}

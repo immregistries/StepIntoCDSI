@@ -1,0 +1,32 @@
+{
+  "uid" : "2013-0303",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HIB",
+  "title" : "Dose 2 to 3, interval 4 weeks",
+  "patientSex" : "F",
+  "birthDate" : "2026-04-04",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-06-04",
+    "cvx" : "48",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-08-04",
+    "cvx" : "48",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "48",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "48",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2027-04-04",
+    "recommendedDate" : "2027-04-04"
+  } ]
+}

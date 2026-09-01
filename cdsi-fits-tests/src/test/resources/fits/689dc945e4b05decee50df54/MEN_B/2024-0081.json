@@ -1,0 +1,27 @@
+{
+  "uid" : "2024-0081",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "MEN B",
+  "title" : "Patient is 16 years of age and has been administered one dose of Bexsero and one dose of the Trumemba  MenB vaccine",
+  "patientSex" : "F",
+  "birthDate" : "2010-03-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-03-01",
+    "cvx" : "163",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "162",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "163",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2027-01-01",
+    "recommendedDate" : "2027-01-01"
+  } ]
+}

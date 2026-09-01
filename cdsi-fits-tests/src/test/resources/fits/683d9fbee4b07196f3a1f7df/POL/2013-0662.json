@@ -1,0 +1,37 @@
+{
+  "uid" : "2013-0662",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "POL",
+  "title" : "4 doses of mixed OPV/IPV with one after age 4=polio series complete",
+  "patientSex" : "F",
+  "birthDate" : "2011-04-13",
+  "evalDate" : "2016-04-17",
+  "vaccinations" : [ {
+    "date" : "2011-06-13",
+    "cvx" : "02",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2011-08-13",
+    "cvx" : "02",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2014-04-13",
+    "cvx" : "10",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2016-04-17",
+    "cvx" : "10",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "89",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

@@ -1,0 +1,22 @@
+{
+  "uid" : "2013-0774",
+  "testPlanId" : "67ae7323e4b0687c58791680",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "ROTA",
+  "title" : "8 months old with only one rota vax",
+  "patientSex" : "F",
+  "birthDate" : "2026-01-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-04-01",
+    "cvx" : "119",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "122",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-04-29",
+    "recommendedDate" : "2026-05-01"
+  } ]
+}

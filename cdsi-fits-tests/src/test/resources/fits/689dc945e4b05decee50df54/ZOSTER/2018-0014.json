@@ -1,0 +1,32 @@
+{
+  "uid" : "2018-0014",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "ZOSTER",
+  "title" : "Zoster: Patient has received all three doses of the zoster vaccine",
+  "patientSex" : "F",
+  "birthDate" : "1968-07-12",
+  "evalDate" : "2024-07-30",
+  "vaccinations" : [ {
+    "date" : "2019-07-30",
+    "cvx" : "121",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2019-09-24",
+    "cvx" : "187",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2019-11-19",
+    "cvx" : "187",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "188",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

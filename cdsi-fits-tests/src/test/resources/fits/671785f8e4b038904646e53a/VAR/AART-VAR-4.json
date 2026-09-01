@@ -1,0 +1,17 @@
+{
+  "uid" : "AART-VAR-4",
+  "testPlanId" : "671785f8e4b038904646e53a",
+  "testPlanName" : "AIRA Test Cases for CDS v2",
+  "groupName" : "VAR",
+  "title" : "Adult with no doses of Varicella",
+  "patientSex" : "F",
+  "birthDate" : "2006-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "21",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2007-09-01",
+    "recommendedDate" : "2007-09-01"
+  } ]
+}

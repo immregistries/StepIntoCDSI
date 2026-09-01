@@ -1,0 +1,22 @@
+{
+  "uid" : "2025-0020",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "FLU",
+  "title" : "Adult with a self-administered dose of the FluMist vaccine",
+  "patientSex" : "F",
+  "birthDate" : "1997-09-12",
+  "evalDate" : "2025-09-26",
+  "vaccinations" : [ {
+    "date" : "2025-09-26",
+    "cvx" : "333",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "88",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

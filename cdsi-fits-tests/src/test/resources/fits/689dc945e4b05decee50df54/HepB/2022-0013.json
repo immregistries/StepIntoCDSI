@@ -1,0 +1,17 @@
+{
+  "uid" : "2022-0013",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HepB",
+  "title" : "Hep B: Patient is 23 years and has not received any doses of the Hep B vaccine",
+  "patientSex" : "F",
+  "birthDate" : "2003-08-04",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "45",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2003-08-04",
+    "recommendedDate" : "2003-08-04"
+  } ]
+}

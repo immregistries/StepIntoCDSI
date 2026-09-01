@@ -1,0 +1,37 @@
+{
+  "uid" : "2016-0010",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "DTAP",
+  "title" : "Dose 1 and 2 given at < 12 months of age. Dose # 3 given at 2 years and dose #4 given at 3 years. Current age is 7 years. ",
+  "patientSex" : "F",
+  "birthDate" : "2019-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2019-12-01",
+    "cvx" : "107",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2020-06-01",
+    "cvx" : "107",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2021-09-13",
+    "cvx" : "107",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2022-10-15",
+    "cvx" : "107",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "107",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-09-01",
+    "recommendedDate" : "2026-09-01"
+  } ]
+}

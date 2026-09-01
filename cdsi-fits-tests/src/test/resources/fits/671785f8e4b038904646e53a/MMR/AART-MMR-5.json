@@ -1,0 +1,22 @@
+{
+  "uid" : "AART-MMR-5",
+  "testPlanId" : "671785f8e4b038904646e53a",
+  "testPlanName" : "AIRA Test Cases for CDS v2",
+  "groupName" : "MMR",
+  "title" : "Adult with one dose of MMR at age 25",
+  "patientSex" : "F",
+  "birthDate" : "2001-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-09-01",
+    "cvx" : "03",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "03",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

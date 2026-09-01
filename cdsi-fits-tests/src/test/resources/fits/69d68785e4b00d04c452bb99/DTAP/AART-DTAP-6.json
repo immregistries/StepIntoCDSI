@@ -1,0 +1,42 @@
+{
+  "uid" : "AART-DTAP-6",
+  "testPlanId" : "69d68785e4b00d04c452bb99",
+  "testPlanName" : "AIRA Test Cases for CDS v3",
+  "groupName" : "DTAP",
+  "title" : "Dose 5 at 4 years",
+  "patientSex" : "F",
+  "birthDate" : "2022-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2022-11-01",
+    "cvx" : "107",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2023-01-01",
+    "cvx" : "107",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2023-03-01",
+    "cvx" : "107",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2023-12-01",
+    "cvx" : "107",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "107",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "107",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2033-09-01",
+    "recommendedDate" : "2033-09-01"
+  } ]
+}

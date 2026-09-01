@@ -1,0 +1,37 @@
+{
+  "uid" : "2013-0155",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "DTAP",
+  "title" : "dose 3 to 4 Pentacel, interval 4 mo.",
+  "patientSex" : "F",
+  "birthDate" : "2025-07-29",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2025-09-29",
+    "cvx" : "120",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-01-29",
+    "cvx" : "120",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-04-29",
+    "cvx" : "120",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-08-29",
+    "cvx" : "120",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "107",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2029-07-29",
+    "recommendedDate" : "2029-07-29"
+  } ]
+}

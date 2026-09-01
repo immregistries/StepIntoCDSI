@@ -1,0 +1,42 @@
+{
+  "uid" : "2013-0086",
+  "testPlanId" : "675c41f8e4b089d2bdc0c483",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "DTAP",
+  "title" : "Kinrix at age 4 to child with appropriate DTaP=UTD until adolescence",
+  "patientSex" : "F",
+  "birthDate" : "2022-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2022-11-03",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2023-01-01",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2023-03-03",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2023-09-01",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "130",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "107",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2033-09-01",
+    "recommendedDate" : "2033-09-01"
+  } ]
+}

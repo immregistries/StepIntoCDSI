@@ -1,0 +1,22 @@
+{
+  "uid" : "AART-EXTRA-2",
+  "testPlanId" : "5925aa6aca7e8c78bc364506",
+  "testPlanName" : "Extra Test Cases",
+  "groupName" : "HepA",
+  "title" : "2 years 6 months old - 1 dose at 1 years 8 months",
+  "patientSex" : "F",
+  "birthDate" : "2024-03-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2025-11-01",
+    "cvx" : "85",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "85",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-05-01",
+    "recommendedDate" : "2026-05-01"
+  } ]
+}

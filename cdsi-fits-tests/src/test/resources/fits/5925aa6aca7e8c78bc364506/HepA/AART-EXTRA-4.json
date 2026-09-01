@@ -1,0 +1,17 @@
+{
+  "uid" : "AART-EXTRA-4",
+  "testPlanId" : "5925aa6aca7e8c78bc364506",
+  "testPlanName" : "Extra Test Cases",
+  "groupName" : "HepA",
+  "title" : "7 years - no doses administered",
+  "patientSex" : "F",
+  "birthDate" : "2019-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "85",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2020-09-01",
+    "recommendedDate" : "2020-09-01"
+  } ]
+}

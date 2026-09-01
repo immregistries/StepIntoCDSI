@@ -1,0 +1,22 @@
+{
+  "uid" : "2023-0029",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "RSV",
+  "title" : "Patient is a newborn and has received a dose of the RSV (Beyfortus) vaccine",
+  "patientSex" : "F",
+  "birthDate" : "2025-08-10",
+  "evalDate" : "2025-10-02",
+  "vaccinations" : [ {
+    "date" : "2025-10-02",
+    "cvx" : "306",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "304",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

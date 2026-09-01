@@ -1,0 +1,27 @@
+{
+  "uid" : "2013-0679",
+  "testPlanId" : "5eeca0522cc4517a96b0f417",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "POL",
+  "title" : "# 2 Pediarix at 7 yrs; # 1 ≥ 12 mo.",
+  "patientSex" : "F",
+  "birthDate" : "2019-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2020-10-01",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "89",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2027-03-01",
+    "recommendedDate" : "2027-03-01"
+  } ]
+}

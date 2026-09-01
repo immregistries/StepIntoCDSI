@@ -1,0 +1,22 @@
+{
+  "uid" : "2013-0366",
+  "testPlanId" : "67ae7323e4b0687c58791680",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HIB",
+  "title" : "# 1 Pentacel at 6 wks-4 days",
+  "patientSex" : "F",
+  "birthDate" : "2026-07-25",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-09-01",
+    "cvx" : "120",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "17",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-10-03",
+    "recommendedDate" : "2026-11-25"
+  } ]
+}

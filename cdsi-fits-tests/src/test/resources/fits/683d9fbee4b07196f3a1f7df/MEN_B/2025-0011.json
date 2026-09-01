@@ -1,0 +1,22 @@
+{
+  "uid" : "2025-0011",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "MEN B",
+  "title" : "Patient is 18 years and has been administered a dose of the MenB (Penmenvy) vaccine",
+  "patientSex" : "F",
+  "birthDate" : "2008-07-26",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-09-01",
+    "cvx" : "328",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "164",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2027-03-01",
+    "recommendedDate" : "2027-03-01"
+  } ]
+}

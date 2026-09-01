@@ -1,0 +1,32 @@
+{
+  "uid" : "2013-0661",
+  "testPlanId" : "67ae7323e4b0687c58791680",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "POL",
+  "title" : "Mixed OPV/IPV where # 3 is after age 4 and ≥ 6 months after previous dose. Patient Complete",
+  "patientSex" : "F",
+  "birthDate" : "2011-10-16",
+  "evalDate" : "2016-10-16",
+  "vaccinations" : [ {
+    "date" : "2011-12-16",
+    "cvx" : "02",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2012-02-16",
+    "cvx" : "02",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2016-10-16",
+    "cvx" : "10",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "89",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

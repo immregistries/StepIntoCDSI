@@ -1,0 +1,32 @@
+{
+  "uid" : "2025-0013",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "MEN B",
+  "title" : "Patient is 23 years and has been administered three doses of the MenB (2 Bexsero & Penmenvy) vaccine",
+  "patientSex" : "F",
+  "birthDate" : "2003-02-06",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-02-28",
+    "cvx" : "163",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-03-28",
+    "cvx" : "163",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-08-28",
+    "cvx" : "328",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "164",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

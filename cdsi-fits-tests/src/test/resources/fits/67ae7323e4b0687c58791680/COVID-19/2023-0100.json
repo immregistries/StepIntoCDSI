@@ -1,0 +1,27 @@
+{
+  "uid" : "2023-0100",
+  "testPlanId" : "67ae7323e4b0687c58791680",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "COVID-19",
+  "title" : "Patient is 57 years of age and has been administered a dose of the Moderna Fall 2024-2025 vaccine.",
+  "patientSex" : "F",
+  "birthDate" : "1967-03-02",
+  "evalDate" : "2024-08-23",
+  "vaccinations" : [ {
+    "date" : "2023-06-22",
+    "cvx" : "229",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2024-08-23",
+    "cvx" : "312",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "213",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

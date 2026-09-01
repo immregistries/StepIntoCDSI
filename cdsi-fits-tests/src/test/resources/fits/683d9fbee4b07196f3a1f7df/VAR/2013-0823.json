@@ -1,0 +1,27 @@
+{
+  "uid" : "2013-0823",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "VAR",
+  "title" : "Dose 1 to dose 2 MMRV interval 28-1 days",
+  "patientSex" : "F",
+  "birthDate" : "2022-07-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-07-26",
+    "cvx" : "94",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-08-22",
+    "cvx" : "94",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "21",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-11-14",
+    "recommendedDate" : "2026-11-14"
+  } ]
+}

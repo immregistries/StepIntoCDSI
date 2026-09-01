@@ -1,0 +1,17 @@
+{
+  "uid" : "2019-0010",
+  "testPlanId" : "5eeca0522cc4517a96b0f417",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HepA",
+  "title" : "No doses of Hep A vaccine at age 18 years",
+  "patientSex" : "F",
+  "birthDate" : "2008-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "85",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2009-09-01",
+    "recommendedDate" : "2009-09-01"
+  } ]
+}

@@ -1,0 +1,32 @@
+{
+  "uid" : "2013-0339",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HIB",
+  "title" : "#3 at 365 d -4 days (#1 at 7m, #2 at 8m)",
+  "patientSex" : "F",
+  "birthDate" : "2025-09-05",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-04-05",
+    "cvx" : "48",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-05-05",
+    "cvx" : "48",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "48",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "17",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

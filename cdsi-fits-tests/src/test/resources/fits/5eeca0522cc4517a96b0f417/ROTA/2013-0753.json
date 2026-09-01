@@ -1,0 +1,17 @@
+{
+  "uid" : "2013-0753",
+  "testPlanId" : "5eeca0522cc4517a96b0f417",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "ROTA",
+  "title" : "Newborn forecast",
+  "patientSex" : "F",
+  "birthDate" : "2026-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "122",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-10-13",
+    "recommendedDate" : "2026-11-01"
+  } ]
+}

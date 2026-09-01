@@ -1,0 +1,27 @@
+{
+  "uid" : "2016-0015",
+  "testPlanId" : "675c41f8e4b089d2bdc0c483",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HPV",
+  "title" : "Adolescent child with first dose of HPV vaccine at 13 years and second dose after 15 years of age. ",
+  "patientSex" : "F",
+  "birthDate" : "2011-08-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2024-08-15",
+    "cvx" : "165",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "165",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "137",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

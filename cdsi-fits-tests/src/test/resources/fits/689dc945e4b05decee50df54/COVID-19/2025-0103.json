@@ -1,0 +1,22 @@
+{
+  "uid" : "2025-0103",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "COVID-19",
+  "title" : " Patient is 65 years of age and has been administered a dose of the Fall Pfizer 2025-2026 Covid-19 vaccine",
+  "patientSex" : "F",
+  "birthDate" : "1961-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-09-01",
+    "cvx" : "309",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "213",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-10-27",
+    "recommendedDate" : "2027-03-01"
+  } ]
+}

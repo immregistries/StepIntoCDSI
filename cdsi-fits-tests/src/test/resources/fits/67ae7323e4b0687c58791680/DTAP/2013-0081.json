@@ -1,0 +1,37 @@
+{
+  "uid" : "2013-0081",
+  "testPlanId" : "67ae7323e4b0687c58791680",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "DTAP",
+  "title" : "Pentavalente (Mexico) DTaP/IPV/HIB counts as valid. ",
+  "patientSex" : "F",
+  "birthDate" : "2025-06-23",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2025-10-23",
+    "cvx" : "170",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2025-12-23",
+    "cvx" : "170",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-02-23",
+    "cvx" : "170",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "170",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "107",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2029-06-23",
+    "recommendedDate" : "2029-06-23"
+  } ]
+}

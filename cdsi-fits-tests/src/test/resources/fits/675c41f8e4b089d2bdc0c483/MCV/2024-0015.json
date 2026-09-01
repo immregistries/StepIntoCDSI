@@ -1,0 +1,27 @@
+{
+  "uid" : "2024-0015",
+  "testPlanId" : "675c41f8e4b089d2bdc0c483",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "MCV",
+  "title" : "Patient is 16 years of age and has been administered two doses of the Meningococcal vaccine (CVX 316) ",
+  "patientSex" : "F",
+  "birthDate" : "2010-07-28",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-06-28",
+    "cvx" : "316",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-08-23",
+    "cvx" : "316",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "108",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

@@ -1,0 +1,22 @@
+{
+  "uid" : "2013-0550",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "MMR",
+  "title" : "Dose 1 MMRV at 12 m-4 days",
+  "patientSex" : "F",
+  "birthDate" : "2025-09-05",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-09-01",
+    "cvx" : "94",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "03",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-10-05",
+    "recommendedDate" : "2029-09-05"
+  } ]
+}

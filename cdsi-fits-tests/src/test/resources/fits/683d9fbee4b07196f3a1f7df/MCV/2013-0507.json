@@ -1,0 +1,22 @@
+{
+  "uid" : "2013-0507",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "MCV",
+  "title" : "# 1 at age 11 years",
+  "patientSex" : "F",
+  "birthDate" : "2015-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-09-01",
+    "cvx" : "147",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "108",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2031-09-01",
+    "recommendedDate" : "2031-09-01"
+  } ]
+}

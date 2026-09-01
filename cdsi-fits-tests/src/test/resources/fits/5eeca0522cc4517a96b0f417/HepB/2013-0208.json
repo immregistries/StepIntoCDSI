@@ -1,0 +1,22 @@
+{
+  "uid" : "2013-0208",
+  "testPlanId" : "5eeca0522cc4517a96b0f417",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HepB",
+  "title" : "Recombivax Hep B ages 11-15.  Dose 2 recommended in 4-6 months. ",
+  "patientSex" : "F",
+  "birthDate" : "2014-02-12",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-09-01",
+    "cvx" : "43",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "45",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2027-01-01",
+    "recommendedDate" : "2027-01-01"
+  } ]
+}

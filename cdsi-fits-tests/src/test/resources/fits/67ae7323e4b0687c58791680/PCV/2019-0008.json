@@ -1,0 +1,17 @@
+{
+  "uid" : "2019-0008",
+  "testPlanId" : "67ae7323e4b0687c58791680",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "PCV",
+  "title" : "Adult Patient 65 years with no history of Pneumococcal vaccine",
+  "patientSex" : "F",
+  "birthDate" : "1961-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "152",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2011-09-01",
+    "recommendedDate" : "2011-09-01"
+  } ]
+}

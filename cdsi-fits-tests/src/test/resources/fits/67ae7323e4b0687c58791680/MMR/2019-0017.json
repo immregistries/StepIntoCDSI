@@ -1,0 +1,17 @@
+{
+  "uid" : "2019-0017",
+  "testPlanId" : "67ae7323e4b0687c58791680",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "MMR",
+  "title" : "Adult with no previous doses of the MMR vaccine",
+  "patientSex" : "F",
+  "birthDate" : "1991-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "03",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "1992-09-01",
+    "recommendedDate" : "1992-09-01"
+  } ]
+}

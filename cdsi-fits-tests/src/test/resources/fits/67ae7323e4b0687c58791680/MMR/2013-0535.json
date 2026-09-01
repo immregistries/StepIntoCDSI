@@ -1,0 +1,52 @@
+{
+  "uid" : "2013-0535",
+  "testPlanId" : "67ae7323e4b0687c58791680",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "MMR",
+  "title" : "7 single antigen doses: 2 Measles; 3 Mumps; 2 Rubella",
+  "patientSex" : "F",
+  "birthDate" : "2021-06-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2022-06-01",
+    "cvx" : "07",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2022-06-29",
+    "cvx" : "06",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2022-07-27",
+    "cvx" : "05",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-06-01",
+    "cvx" : "07",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-06-29",
+    "cvx" : "06",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-07-27",
+    "cvx" : "07",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "05",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "03",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

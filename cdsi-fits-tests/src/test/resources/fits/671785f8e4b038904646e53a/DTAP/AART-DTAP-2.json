@@ -1,0 +1,22 @@
+{
+  "uid" : "AART-DTAP-2",
+  "testPlanId" : "671785f8e4b038904646e53a",
+  "testPlanName" : "AIRA Test Cases for CDS v2",
+  "groupName" : "DTAP",
+  "title" : "Dose 1 at 2 months",
+  "patientSex" : "F",
+  "birthDate" : "2026-07-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-09-01",
+    "cvx" : "107",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "107",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-09-29",
+    "recommendedDate" : "2026-11-01"
+  } ]
+}

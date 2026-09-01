@@ -1,0 +1,32 @@
+{
+  "uid" : "2013-0701",
+  "testPlanId" : "67ae7323e4b0687c58791680",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "POL",
+  "title" : "dose 2 to 3 Pediarix, interval 28-5 days",
+  "patientSex" : "F",
+  "birthDate" : "2026-04-07",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-06-07",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-08-07",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-08-30",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "89",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-09-27",
+    "recommendedDate" : "2026-10-07"
+  } ]
+}

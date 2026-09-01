@@ -1,0 +1,27 @@
+{
+  "uid" : "2013-0503",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "MCV",
+  "title" : "Dose 1 to dose 2 interval 8 wks-5 days",
+  "patientSex" : "F",
+  "birthDate" : "2015-05-11",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-07-11",
+    "cvx" : "147",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-08-31",
+    "cvx" : "147",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "108",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2031-05-11",
+    "recommendedDate" : "2031-05-11"
+  } ]
+}

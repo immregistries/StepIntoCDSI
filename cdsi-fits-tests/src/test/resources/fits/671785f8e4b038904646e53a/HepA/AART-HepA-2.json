@@ -1,0 +1,22 @@
+{
+  "uid" : "AART-HepA-2",
+  "testPlanId" : "671785f8e4b038904646e53a",
+  "testPlanName" : "AIRA Test Cases for CDS v2",
+  "groupName" : "HepA",
+  "title" : "Dose 1 at 12 months",
+  "patientSex" : "F",
+  "birthDate" : "2025-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-09-01",
+    "cvx" : "85",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "85",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2027-03-01",
+    "recommendedDate" : "2027-03-01"
+  } ]
+}

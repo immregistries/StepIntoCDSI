@@ -1,0 +1,27 @@
+{
+  "uid" : "2016-0012",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "FLU",
+  "title" : "Child under 9 received one in previous season and one in current season",
+  "patientSex" : "F",
+  "birthDate" : "2024-06-01",
+  "evalDate" : "2025-09-01",
+  "vaccinations" : [ {
+    "date" : "2024-12-01",
+    "cvx" : "88",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2025-09-01",
+    "cvx" : "88",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "88",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2025-09-29",
+    "recommendedDate" : "2025-09-29"
+  } ]
+}

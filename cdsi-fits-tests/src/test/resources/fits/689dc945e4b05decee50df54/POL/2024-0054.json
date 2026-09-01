@@ -1,0 +1,32 @@
+{
+  "uid" : "2024-0054",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "POL",
+  "title" : "Patient is 19 months of age has been administered 2 doses of fIPV vaccine and 1 dose of IPV vaccine",
+  "patientSex" : "F",
+  "birthDate" : "2025-02-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2025-09-01",
+    "cvx" : "324",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-07-01",
+    "cvx" : "324",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-07-29",
+    "cvx" : "10",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "89",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-08-26",
+    "recommendedDate" : "2026-08-26"
+  } ]
+}

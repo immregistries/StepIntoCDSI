@@ -1,0 +1,22 @@
+{
+  "uid" : "2013-0423",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HPV",
+  "title" : "#1 @ 9 yrs - 4 days, male, Cervarix ",
+  "patientSex" : "F",
+  "birthDate" : "2002-05-01",
+  "evalDate" : "2011-04-28",
+  "vaccinations" : [ {
+    "date" : "2011-04-28",
+    "cvx" : "118",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "137",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2011-05-01",
+    "recommendedDate" : "2013-05-01"
+  } ]
+}

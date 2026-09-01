@@ -1,0 +1,17 @@
+{
+  "uid" : "2024-0055",
+  "testPlanId" : "675c41f8e4b089d2bdc0c483",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "RSV",
+  "title" : "Patient is almost 75 years of age and hasn't been administered any doses of the RSV vaccine",
+  "patientSex" : "F",
+  "birthDate" : "1951-10-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "304",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-10-01",
+    "recommendedDate" : "2026-10-01"
+  } ]
+}

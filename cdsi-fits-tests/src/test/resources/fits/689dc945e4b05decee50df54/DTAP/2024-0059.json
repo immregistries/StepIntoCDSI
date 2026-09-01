@@ -1,0 +1,42 @@
+{
+  "uid" : "2024-0059",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "DTAP",
+  "title" : "DT instead of DTaP for the 5th dose. Forecast dose at 7 years of age",
+  "patientSex" : "F",
+  "birthDate" : "2013-03-12",
+  "evalDate" : "2020-03-12",
+  "vaccinations" : [ {
+    "date" : "2013-07-12",
+    "cvx" : "20",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2013-09-17",
+    "cvx" : "20",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2013-11-21",
+    "cvx" : "20",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2016-04-21",
+    "cvx" : "20",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2018-05-01",
+    "cvx" : "28",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "107",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2020-03-12",
+    "recommendedDate" : "2020-03-12"
+  } ]
+}

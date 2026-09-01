@@ -1,0 +1,27 @@
+{
+  "uid" : "2018-0009",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "ZOSTER",
+  "title" : "Zoster: ZVL and RZV (Shingrix) vaccine doses administered on the same day/time",
+  "patientSex" : "F",
+  "birthDate" : "1969-02-14",
+  "evalDate" : "2019-05-12",
+  "vaccinations" : [ {
+    "date" : "2019-02-27",
+    "cvx" : "121",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2019-02-27",
+    "cvx" : "187",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "188",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2019-03-27",
+    "recommendedDate" : "2019-04-24"
+  } ]
+}

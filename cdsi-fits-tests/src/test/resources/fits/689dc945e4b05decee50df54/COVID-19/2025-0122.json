@@ -1,0 +1,27 @@
+{
+  "uid" : "2025-0122",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "COVID-19",
+  "title" : "Patient is 3 years of age and has been administered two doses of a 24-25 Covid-19 (Moderna and Novavax) vaccine",
+  "patientSex" : "F",
+  "birthDate" : "2022-04-08",
+  "evalDate" : "2025-10-29",
+  "vaccinations" : [ {
+    "date" : "2024-11-14",
+    "cvx" : "311",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2024-12-12",
+    "cvx" : "313",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "213",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2025-08-27",
+    "recommendedDate" : "2025-08-27"
+  } ]
+}

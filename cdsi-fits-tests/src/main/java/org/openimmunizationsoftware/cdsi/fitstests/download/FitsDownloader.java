@@ -67,7 +67,7 @@ public final class FitsDownloader {
     String url = requireEnv("NIST_FITS_URL");
     String username = requireEnv("NIST_FITS_USERNAME");
     String password = requireEnv("NIST_FITS_PASSWORD");
-    File outputRoot = new File(args.length > 0 ? args[0] : "src/test/resources/fits");
+    File outputRoot = new File(args.length > 0 ? args[0] : defaultOutputDir());
 
     SSLFITSClient client = new SSLFITSClient(url, username, password);
     java.util.List<TestPlan> testPlans = client.getTestPlans().getBody();
@@ -95,6 +95,22 @@ public final class FitsDownloader {
     }
     System.out.println("Wrote " + written + " fixtures to " + outputRoot.getAbsolutePath()
         + " (" + skipped + " test cases skipped - see stderr for reasons)");
+  }
+
+  /**
+   * exec:java runs with the working directory of whatever process invoked
+   * Maven, not the module's basedir - that's the root of the reactor when run
+   * as `mvn -pl cdsi-fits-tests exec:java` from the project root (the
+   * documented, normal way to run this), but plain `src/test/resources/fits`
+   * from the module directory if run directly inside cdsi-fits-tests. Handle
+   * both without requiring an explicit argument every time.
+   */
+  private static String defaultOutputDir() {
+    File fromRoot = new File("cdsi-fits-tests/src/test/resources/fits");
+    if (fromRoot.isDirectory()) {
+      return fromRoot.getPath();
+    }
+    return "src/test/resources/fits";
   }
 
   private static String requireEnv(String name) {

@@ -1,0 +1,37 @@
+{
+  "uid" : "2025-0091",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "COVID-19",
+  "title" : "Patient is 2 years old and was administered three doses of the 2024-2025 Pfizer Covid-19 vaccine and one dose of the 2025-2026 Moderna Covid-19 vaccine",
+  "patientSex" : "F",
+  "birthDate" : "2023-07-14",
+  "evalDate" : "2025-10-03",
+  "vaccinations" : [ {
+    "date" : "2024-01-11",
+    "cvx" : "310",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2024-02-08",
+    "cvx" : "310",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2024-05-01",
+    "cvx" : "308",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2025-10-03",
+    "cvx" : "311",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "213",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

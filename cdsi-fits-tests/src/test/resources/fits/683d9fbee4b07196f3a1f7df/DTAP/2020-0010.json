@@ -1,0 +1,32 @@
+{
+  "uid" : "2020-0010",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "DTAP",
+  "title" : "Adult patient with dose #3 of Td at 6 mos - 5 days",
+  "patientSex" : "F",
+  "birthDate" : "1995-02-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-02-01",
+    "cvx" : "115",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-03-01",
+    "cvx" : "139",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-08-27",
+    "cvx" : "139",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "107",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2027-02-27",
+    "recommendedDate" : "2027-02-27"
+  } ]
+}

@@ -1,0 +1,17 @@
+{
+  "uid" : "2015-0016",
+  "testPlanId" : "5eeca0522cc4517a96b0f417",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "ZOSTER",
+  "title" : "Zoster: Patient is overdue at 62 years of age for Zoster dose ",
+  "patientSex" : "F",
+  "birthDate" : "1964-08-16",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "188",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2014-08-16",
+    "recommendedDate" : "2014-08-16"
+  } ]
+}

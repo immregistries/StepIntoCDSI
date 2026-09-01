@@ -1,0 +1,32 @@
+{
+  "uid" : "2013-0737",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "POL",
+  "title" : "dose 2 to 3 Pentacel, interval 28-4 days",
+  "patientSex" : "F",
+  "birthDate" : "2026-04-08",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-06-08",
+    "cvx" : "120",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-08-08",
+    "cvx" : "120",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "120",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "89",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2030-04-08",
+    "recommendedDate" : "2030-04-08"
+  } ]
+}

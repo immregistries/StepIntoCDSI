@@ -1,0 +1,27 @@
+{
+  "uid" : "2018-0013",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "ZOSTER",
+  "title" : "Zoster: Dose #1 of RZV administered 8 weeks after previous dose of ZVL",
+  "patientSex" : "F",
+  "birthDate" : "1968-07-12",
+  "evalDate" : "2019-09-24",
+  "vaccinations" : [ {
+    "date" : "2019-07-30",
+    "cvx" : "121",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2019-09-24",
+    "cvx" : "187",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "188",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2019-10-22",
+    "recommendedDate" : "2019-11-19"
+  } ]
+}

@@ -1,0 +1,27 @@
+{
+  "uid" : "2024-0071",
+  "testPlanId" : "67ae7323e4b0687c58791680",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "POL",
+  "title" : "OPV bivalent administered after April 2016",
+  "patientSex" : "F",
+  "birthDate" : "2015-09-13",
+  "evalDate" : "2016-05-06",
+  "vaccinations" : [ {
+    "date" : "2016-02-06",
+    "cvx" : "02",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2016-05-06",
+    "cvx" : "178",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "89",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2016-05-06",
+    "recommendedDate" : "2016-05-06"
+  } ]
+}

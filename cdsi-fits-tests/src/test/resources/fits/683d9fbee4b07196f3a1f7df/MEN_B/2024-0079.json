@@ -1,0 +1,27 @@
+{
+  "uid" : "2024-0079",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "MEN B",
+  "title" : "Patient is 22 years of age and has been administered a second dose of the Men B vaccine at 6 months - 5 days",
+  "patientSex" : "F",
+  "birthDate" : "2004-03-06",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-03-06",
+    "cvx" : "163",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "163",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "163",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2027-01-01",
+    "recommendedDate" : "2027-01-01"
+  } ]
+}

@@ -1,0 +1,37 @@
+{
+  "uid" : "2023-0082",
+  "testPlanId" : "67ae7323e4b0687c58791680",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "COVID-19",
+  "title" : "Patient is 36 years with four previous doses of the Novavax Covid-19 vaccine",
+  "patientSex" : "F",
+  "birthDate" : "1988-07-05",
+  "evalDate" : "2024-08-22",
+  "vaccinations" : [ {
+    "date" : "2022-12-27",
+    "cvx" : "211",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2023-01-17",
+    "cvx" : "211",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2023-08-07",
+    "cvx" : "211",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2023-10-02",
+    "cvx" : "313",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "213",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2024-08-22",
+    "recommendedDate" : "2024-08-22"
+  } ]
+}

@@ -1,0 +1,32 @@
+{
+  "uid" : "2013-0594",
+  "testPlanId" : "67ae7323e4b0687c58791680",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "PCV",
+  "title" : "Mixed vaccines: dose # 1 PCV 7 at 6 mo; # 2 PCV 13 at 8 mo; # 3 PCV 13 at 12 months.  Series complete. ",
+  "patientSex" : "F",
+  "birthDate" : "2010-03-04",
+  "evalDate" : "2011-03-04",
+  "vaccinations" : [ {
+    "date" : "2010-09-04",
+    "cvx" : "100",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2010-11-04",
+    "cvx" : "133",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2011-03-04",
+    "cvx" : "133",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "152",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

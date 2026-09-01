@@ -1,0 +1,17 @@
+{
+  "uid" : "AART-HIB-1",
+  "testPlanId" : "69d68785e4b00d04c452bb99",
+  "testPlanName" : "AIRA Test Cases for CDS v3",
+  "groupName" : "HIB",
+  "title" : "No doses",
+  "patientSex" : "F",
+  "birthDate" : "2026-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "17",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-10-13",
+    "recommendedDate" : "2026-11-01"
+  } ]
+}

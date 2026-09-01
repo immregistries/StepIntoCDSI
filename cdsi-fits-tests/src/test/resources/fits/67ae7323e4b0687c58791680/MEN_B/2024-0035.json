@@ -1,0 +1,27 @@
+{
+  "uid" : "2024-0035",
+  "testPlanId" : "67ae7323e4b0687c58791680",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "MEN B",
+  "title" : "Patient is 18 years of age with two doses of the MenB (Bexsero) vaccine 4 weeks - 4 days  a part.",
+  "patientSex" : "F",
+  "birthDate" : "2008-08-04",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-08-04",
+    "cvx" : "163",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-08-28",
+    "cvx" : "163",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "163",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2027-02-04",
+    "recommendedDate" : "2027-02-04"
+  } ]
+}

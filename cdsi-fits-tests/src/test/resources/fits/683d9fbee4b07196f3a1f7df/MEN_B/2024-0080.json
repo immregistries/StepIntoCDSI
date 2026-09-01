@@ -1,0 +1,32 @@
+{
+  "uid" : "2024-0080",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "MEN B",
+  "title" : "Patient is 21 years of age and has been administered three doses of the Meningococcal vaccine (Trumemba)",
+  "patientSex" : "F",
+  "birthDate" : "2005-03-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-03-01",
+    "cvx" : "162",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-03-29",
+    "cvx" : "162",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "162",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "164",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

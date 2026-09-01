@@ -1,0 +1,17 @@
+{
+  "uid" : "2023-0032",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "RSV",
+  "title" : "Patient is an infant born in June with an assessment date in November and hasn't received a RSV vaccine",
+  "patientSex" : "F",
+  "birthDate" : "2025-06-01",
+  "evalDate" : "2025-11-01",
+  "vaccinations" : [ ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "304",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2025-10-01",
+    "recommendedDate" : "2025-10-01"
+  } ]
+}

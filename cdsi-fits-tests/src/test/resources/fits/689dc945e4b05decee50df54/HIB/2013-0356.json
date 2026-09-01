@@ -1,0 +1,27 @@
+{
+  "uid" : "2013-0356",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HIB",
+  "title" : "# 2 Pentacel at 6 yrs 11.5 mo.",
+  "patientSex" : "F",
+  "birthDate" : "2019-09-18",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2022-06-08",
+    "cvx" : "120",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "120",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "17",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

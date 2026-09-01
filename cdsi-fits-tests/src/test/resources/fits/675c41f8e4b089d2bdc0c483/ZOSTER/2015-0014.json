@@ -1,0 +1,22 @@
+{
+  "uid" : "2015-0014",
+  "testPlanId" : "675c41f8e4b089d2bdc0c483",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "ZOSTER",
+  "title" : "Zoster Dose administered at 60 years of age",
+  "patientSex" : "F",
+  "birthDate" : "1959-02-05",
+  "evalDate" : "2019-03-01",
+  "vaccinations" : [ {
+    "date" : "2019-03-01",
+    "cvx" : "121",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "188",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2019-04-26",
+    "recommendedDate" : "2019-04-26"
+  } ]
+}

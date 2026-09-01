@@ -1,0 +1,32 @@
+{
+  "uid" : "2018-0011",
+  "testPlanId" : "5eeca0522cc4517a96b0f417",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "ZOSTER",
+  "title" : "Zoster: Dose #1 of Shingrix 8 weeks after Dose #2 of Varicella vaccine",
+  "patientSex" : "F",
+  "birthDate" : "1976-08-06",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2023-07-06",
+    "cvx" : "21",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-07-06",
+    "cvx" : "21",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-08-31",
+    "cvx" : "187",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "188",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-10-26",
+    "recommendedDate" : "2026-10-26"
+  } ]
+}

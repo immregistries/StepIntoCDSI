@@ -1,0 +1,17 @@
+{
+  "uid" : "2023-0028",
+  "testPlanId" : "675c41f8e4b089d2bdc0c483",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "RSV",
+  "title" : "Patient is a newborn/infant and hasn't been administered any doses of the RSV vaccine",
+  "patientSex" : "F",
+  "birthDate" : "2024-08-21",
+  "evalDate" : "2024-08-21",
+  "vaccinations" : [ ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "304",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2024-10-01",
+    "recommendedDate" : "2024-10-01"
+  } ]
+}

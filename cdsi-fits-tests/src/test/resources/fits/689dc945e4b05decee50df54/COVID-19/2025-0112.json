@@ -1,0 +1,32 @@
+{
+  "uid" : "2025-0112",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "COVID-19",
+  "title" : "Patient is 16 months of age and has been administered a 2025-2026 Covid-19 vaccine at an interval of 8 weeks - 5 days",
+  "patientSex" : "F",
+  "birthDate" : "2024-05-04",
+  "evalDate" : "2025-09-24",
+  "vaccinations" : [ {
+    "date" : "2025-07-04",
+    "cvx" : "308",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2025-08-04",
+    "cvx" : "308",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2025-09-24",
+    "cvx" : "311",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "213",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2025-11-19",
+    "recommendedDate" : "2025-11-19"
+  } ]
+}

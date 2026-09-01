@@ -1,0 +1,22 @@
+{
+  "uid" : "2025-0008",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "RSV",
+  "title" : "Patient is a one-month-old infant who has been administered a dose of RSV (Clesrovimab) vaccine",
+  "patientSex" : "F",
+  "birthDate" : "2025-10-02",
+  "evalDate" : "2025-11-02",
+  "vaccinations" : [ {
+    "date" : "2025-11-02",
+    "cvx" : "332",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "304",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

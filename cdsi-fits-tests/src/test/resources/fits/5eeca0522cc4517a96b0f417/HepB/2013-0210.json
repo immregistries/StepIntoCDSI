@@ -1,0 +1,27 @@
+{
+  "uid" : "2013-0210",
+  "testPlanId" : "5eeca0522cc4517a96b0f417",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HepB",
+  "title" : "Doses 1 and 2 of Recombvx at ages 11-15 years with ≥ 4 mo interval = series complete. ",
+  "patientSex" : "F",
+  "birthDate" : "2013-10-26",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-05-02",
+    "cvx" : "43",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-02",
+    "cvx" : "43",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "45",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

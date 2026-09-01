@@ -1,0 +1,37 @@
+{
+  "uid" : "2013-0660",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "POL",
+  "title" : "Invalid dose 3 (interval) in midst of others makes no difference in forecasting if # 4 is ≥ 4 years old and ≥ 6 months after previous dose.  Series complete.",
+  "patientSex" : "F",
+  "birthDate" : "2022-08-30",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2022-10-30",
+    "cvx" : "10",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2022-12-30",
+    "cvx" : "10",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2023-01-22",
+    "cvx" : "10",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "10",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "89",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

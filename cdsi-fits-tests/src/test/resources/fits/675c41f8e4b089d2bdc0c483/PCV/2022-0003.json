@@ -1,0 +1,22 @@
+{
+  "uid" : "2022-0003",
+  "testPlanId" : "675c41f8e4b089d2bdc0c483",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "PCV",
+  "title" : " Adult Patient 65 years has received PCV15",
+  "patientSex" : "F",
+  "birthDate" : "1961-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-09-01",
+    "cvx" : "215",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "33",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2027-09-01",
+    "recommendedDate" : "2027-09-01"
+  } ]
+}

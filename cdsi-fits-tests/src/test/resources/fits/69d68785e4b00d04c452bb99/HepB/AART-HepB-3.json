@@ -1,0 +1,27 @@
+{
+  "uid" : "AART-HepB-3",
+  "testPlanId" : "69d68785e4b00d04c452bb99",
+  "testPlanName" : "AIRA Test Cases for CDS v3",
+  "groupName" : "HepB",
+  "title" : "Dose 2 at 2 months",
+  "patientSex" : "F",
+  "birthDate" : "2026-07-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-07-01",
+    "cvx" : "45",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "45",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "45",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-12-16",
+    "recommendedDate" : "2027-01-01"
+  } ]
+}

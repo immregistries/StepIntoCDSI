@@ -1,0 +1,27 @@
+{
+  "uid" : "2025-0006",
+  "testPlanId" : "67ae7323e4b0687c58791680",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "COVID-19",
+  "title" : "Patient is 12 years old and was administered a Novavax 2024-2025 Covid-19 vaccine at 11 years and then another one at one month later (12 years of age)",
+  "patientSex" : "F",
+  "birthDate" : "2014-08-11",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-07-26",
+    "cvx" : "313",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-08-26",
+    "cvx" : "313",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "213",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

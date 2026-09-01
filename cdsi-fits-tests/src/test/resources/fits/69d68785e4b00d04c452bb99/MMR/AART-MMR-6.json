@@ -1,0 +1,22 @@
+{
+  "uid" : "AART-MMR-6",
+  "testPlanId" : "69d68785e4b00d04c452bb99",
+  "testPlanName" : "AIRA Test Cases for CDS v3",
+  "groupName" : "MMR",
+  "title" : "Adult with one dose of MMR at age 10",
+  "patientSex" : "F",
+  "birthDate" : "2001-09-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2011-09-01",
+    "cvx" : "03",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "03",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

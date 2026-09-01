@@ -1,0 +1,32 @@
+{
+  "uid" : "2013-0445",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HPV",
+  "title" : "#3 with interval of 12 weeks - 4 days from #2",
+  "patientSex" : "F",
+  "birthDate" : "2000-05-01",
+  "evalDate" : "2011-08-25",
+  "vaccinations" : [ {
+    "date" : "2011-05-01",
+    "cvx" : "137",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2011-06-06",
+    "cvx" : "137",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2011-08-25",
+    "cvx" : "137",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "137",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

@@ -1,0 +1,32 @@
+{
+  "uid" : "2013-0219",
+  "testPlanId" : "5eeca0522cc4517a96b0f417",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HepB",
+  "title" : "Hep B at birth. Comvax at 5 mo and 8 wks-4 days later.  Series complete for Hep B. ",
+  "patientSex" : "F",
+  "birthDate" : "2006-05-05",
+  "evalDate" : "2006-11-26",
+  "vaccinations" : [ {
+    "date" : "2006-05-05",
+    "cvx" : "08",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2006-10-05",
+    "cvx" : "51",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2006-11-26",
+    "cvx" : "51",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "45",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

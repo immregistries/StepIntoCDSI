@@ -1,0 +1,37 @@
+{
+  "uid" : "2013-0074",
+  "testPlanId" : "5eeca0522cc4517a96b0f417",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "DTAP",
+  "title" : "4 doses of Tetramune to child",
+  "patientSex" : "F",
+  "birthDate" : "1995-05-05",
+  "evalDate" : "2002-05-05",
+  "vaccinations" : [ {
+    "date" : "1995-07-05",
+    "cvx" : "22",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "1995-09-05",
+    "cvx" : "22",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "1995-11-05",
+    "cvx" : "22",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "1996-10-05",
+    "cvx" : "22",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "107",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2002-05-05",
+    "recommendedDate" : "2002-05-05"
+  } ]
+}

@@ -1,0 +1,27 @@
+{
+  "uid" : "2013-0270",
+  "testPlanId" : "683d9fbee4b07196f3a1f7df",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HepB",
+  "title" : "# 2 Pediarix at 10 wks-4 days",
+  "patientSex" : "F",
+  "birthDate" : "2026-06-27",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-07-27",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-09-01",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "08",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-12-12",
+    "recommendedDate" : "2026-12-27"
+  } ]
+}

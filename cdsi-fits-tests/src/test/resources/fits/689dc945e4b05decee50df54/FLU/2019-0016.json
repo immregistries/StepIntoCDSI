@@ -1,0 +1,22 @@
+{
+  "uid" : "2019-0016",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "FLU",
+  "title" : "Adult with a dose of the influenza vaccine",
+  "patientSex" : "F",
+  "birthDate" : "1988-09-01",
+  "evalDate" : "2025-09-01",
+  "vaccinations" : [ {
+    "date" : "2025-09-01",
+    "cvx" : "140",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "88",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

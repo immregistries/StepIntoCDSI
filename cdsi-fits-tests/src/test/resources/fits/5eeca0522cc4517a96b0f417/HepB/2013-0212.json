@@ -1,0 +1,32 @@
+{
+  "uid" : "2013-0212",
+  "testPlanId" : "5eeca0522cc4517a96b0f417",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HepB",
+  "title" : "Dose 2 to dose 3 interval 8 wks-5 days in adolescent with two Recombivax not meeting rules for two dose adoles. 4th dose needed",
+  "patientSex" : "F",
+  "birthDate" : "2012-12-01",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-04-01",
+    "cvx" : "43",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-07-01",
+    "cvx" : "43",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-08-21",
+    "cvx" : "08",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "45",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-08-26",
+    "recommendedDate" : "2026-08-26"
+  } ]
+}

@@ -1,0 +1,37 @@
+{
+  "uid" : "2023-0083",
+  "testPlanId" : "67ae7323e4b0687c58791680",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "COVID-19",
+  "title" : "Patient is 45 years and has been previously administered three WHO Approved Covid-19 Vaccine and a previous U.S. Fall Covid-19 vaccine",
+  "patientSex" : "F",
+  "birthDate" : "1979-07-20",
+  "evalDate" : "2024-08-22",
+  "vaccinations" : [ {
+    "date" : "2022-11-27",
+    "cvx" : "502",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2022-12-25",
+    "cvx" : "502",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2023-03-22",
+    "cvx" : "519",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2023-09-18",
+    "cvx" : "312",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "213",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2024-08-22",
+    "recommendedDate" : "2024-08-22"
+  } ]
+}

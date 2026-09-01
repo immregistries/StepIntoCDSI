@@ -1,0 +1,22 @@
+{
+  "uid" : "2024-0045",
+  "testPlanId" : "67ae7323e4b0687c58791680",
+  "testPlanName" : "HISTORICAL: CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HepB",
+  "title" : "Patient is an adult who has been administered the first dose of a HepB (CVX 104) vaccine",
+  "patientSex" : "F",
+  "birthDate" : "1992-08-25",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2026-08-25",
+    "cvx" : "104",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "45",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-09-22",
+    "recommendedDate" : "2026-09-22"
+  } ]
+}

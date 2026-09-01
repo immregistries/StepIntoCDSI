@@ -1,0 +1,42 @@
+{
+  "uid" : "2013-0080",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "DTAP",
+  "title" : "TriHibit as valid dose 5 of DTaP",
+  "patientSex" : "F",
+  "birthDate" : "2006-10-08",
+  "evalDate" : "2010-10-09",
+  "vaccinations" : [ {
+    "date" : "2006-11-29",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2007-01-29",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2007-03-29",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2008-02-02",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2010-10-09",
+    "cvx" : "50",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "107",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2017-10-08",
+    "recommendedDate" : "2017-10-08"
+  } ]
+}

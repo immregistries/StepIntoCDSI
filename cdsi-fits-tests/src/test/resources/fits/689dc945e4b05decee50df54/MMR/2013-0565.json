@@ -1,0 +1,37 @@
+{
+  "uid" : "2013-0565",
+  "testPlanId" : "689dc945e4b05decee50df54",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "MMR",
+  "title" : "Correctly administered single antigen M, M and R followed by MMR=series complete",
+  "patientSex" : "F",
+  "birthDate" : "2023-08-23",
+  "evalDate" : "2026-09-01",
+  "vaccinations" : [ {
+    "date" : "2024-10-29",
+    "cvx" : "07",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2024-12-29",
+    "cvx" : "06",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2025-08-29",
+    "cvx" : "05",
+    "mvx" : "",
+    "doseCondition" : null
+  }, {
+    "date" : "2026-08-29",
+    "cvx" : "03",
+    "mvx" : "",
+    "doseCondition" : null
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "03",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}
