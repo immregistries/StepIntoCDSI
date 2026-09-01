@@ -1,0 +1,73 @@
+loop: "chapter-6-to-7-evaluate-and-forecast"
+description: >
+  4.4 (EvaluateAndForecastAllPatientSeries) is the driver: for one patient
+  series, it pairs target doses against administered antigen records
+  (AARs) and delegates each pairing to the Chapter 6 chain (evaluation);
+  once evaluation stops on an unsatisfied target dose, it delegates to the
+  Chapter 7 chain (forecasting) instead. Every transition below is copied
+  verbatim from the corresponding step package's own verified
+  transitions.yaml; Chapter 6's own internal chain is collapsed to a
+  single round-trip here - see the chapter-6-dose-evaluation loop for that
+  detail.
+steps:
+  - from: "4.4"
+    transitions:
+      - condition: "current patient series still has target doses AND AARs left to evaluate"
+        to: "6.1"
+        source: "steps/04-04-evaluate-and-forecast-all-relevant-patient-series/transitions.yaml"
+      - condition: "evaluation for the current patient series just finished (target doses or AARs exhausted) - forecasting begins"
+        to: "7.1"
+        source: "steps/04-04-evaluate-and-forecast-all-relevant-patient-series/transitions.yaml"
+      - condition: "a patient series' forecast neighborhood still has a target dose to forecast"
+        to: "7.1"
+        source: "steps/04-04-evaluate-and-forecast-all-relevant-patient-series/transitions.yaml"
+      - condition: "no more relevant patient series remain to evaluate/forecast"
+        to: "4.5"
+        source: "steps/04-04-evaluate-and-forecast-all-relevant-patient-series/transitions.yaml"
+      - condition: "IMPLEMENTATION-ONLY, no spec basis: total cycle count exceeds 1000, or the same loop state repeats more than 200 times"
+        to: "4.5"
+        source: "steps/04-04-evaluate-and-forecast-all-relevant-patient-series/transitions.yaml"
+      - condition: "IMPLEMENTATION-ONLY, no spec basis: currentPatientSeries unexpectedly null (defensive check)"
+        to: "end-error"
+        source: "steps/04-04-evaluate-and-forecast-all-relevant-patient-series/transitions.yaml"
+  - from: "6.1..6.10"
+    transitions:
+      - condition: "every path through the Chapter 6 chain ends here - see chapter-6-dose-evaluation loop for the internal branching"
+        to: "4.4"
+        source: "steps/06-10-satisfy-target-dose/transitions.yaml"
+  - from: "7.1"
+    transitions:
+      - condition: "conditional skip set is met"
+        to: "4.4"
+        source: "steps/07-01-evaluate-conditional-skip/transitions.yaml"
+      - condition: "conditional skip set is not met"
+        to: "7.2"
+        source: "steps/07-01-evaluate-conditional-skip/transitions.yaml"
+  - from: "7.2"
+    transitions:
+      - condition: "always"
+        to: "7.3"
+        source: "steps/07-02-determine-evidence-of-immunity/transitions.yaml"
+  - from: "7.3"
+    transitions:
+      - condition: "always (no decision logic currently runs in this step - see its Review Findings)"
+        to: "7.4"
+        source: "steps/07-03-determine-contraindications/transitions.yaml"
+  - from: "7.4"
+    transitions:
+      - condition: "Rule 1 (patient should receive another dose)"
+        to: "7.5"
+        source: "steps/07-04-determine-forecast-need/transitions.yaml"
+      - condition: "Rules 2-8 (should not receive another dose: complete, not recommended, immune, contraindicated, season ended, aged out)"
+        to: "4.4"
+        source: "steps/07-04-determine-forecast-need/transitions.yaml"
+  - from: "7.5"
+    transitions:
+      - condition: "always"
+        to: "7.6"
+        source: "steps/07-05-generate-forecast-dates-and-recommended-vaccines/transitions.yaml"
+  - from: "7.6"
+    transitions:
+      - condition: "always (the overridden process() never evaluates its inherited conditional-skip decision - see its Review Findings)"
+        to: "4.4"
+        source: "steps/07-06-validate-recommendation/transitions.yaml"

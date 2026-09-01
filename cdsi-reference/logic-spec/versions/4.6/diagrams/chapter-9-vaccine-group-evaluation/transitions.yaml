@@ -1,0 +1,37 @@
+loop: "chapter-9-vaccine-group-evaluation"
+description: >
+  "9" (IdentifyAndEvaluateVaccineGroup) is the outermost driver of the whole
+  engine run: while vaccine groups remain to process, it dispatches to 9.1;
+  once none remain, it ends the run entirely. Every transition below is
+  copied verbatim from the corresponding step package's own verified
+  transitions.yaml. Note that chapter-04-index.md's step "4.6" and this
+  loop's "9" both name the same class, IdentifyAndEvaluateVaccineGroup - see
+  overall-chapter-4-flow's diagram for that handoff; this diagram covers
+  only the internal 9/9.1/9.2/9.3 cycle.
+steps:
+  - from: "9"
+    transitions:
+      - condition: "one or more vaccine groups remain to be processed"
+        to: "9.1"
+        source: "steps/09-01-apply-general-vaccine-group-rules/transitions.yaml"
+      - condition: "no vaccine groups remain"
+        to: "END"
+        source: "steps/09-01-apply-general-vaccine-group-rules/transitions.yaml"
+  - from: "9.1"
+    transitions:
+      - condition: "VACCINEGROUP-1 (vaccine group has exactly one antigen)"
+        to: "9.2"
+        source: "steps/09-01-apply-general-vaccine-group-rules/transitions.yaml"
+      - condition: "VACCINEGROUP-2 (vaccine group has more than one antigen)"
+        to: "9.3"
+        source: "steps/09-01-apply-general-vaccine-group-rules/transitions.yaml"
+  - from: "9.2"
+    transitions:
+      - condition: "always"
+        to: "9"
+        source: "steps/09-02-single-antigen-vaccine-group/transitions.yaml"
+  - from: "9.3"
+    transitions:
+      - condition: "always, regardless of which Table 9-4 rule (if any) matched - all seven LogicOutcomes in this step target the same next step"
+        to: "9"
+        source: "steps/09-03-multiple-antigen-vaccine-group/transitions.yaml"

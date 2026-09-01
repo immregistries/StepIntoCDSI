@@ -1,0 +1,58 @@
+loop: "chapter-8-series-selection"
+description: >
+  Chapter 8's internal branching/looping for one series group, within one
+  antigen. Every transition below is copied verbatim from the
+  corresponding step package's own verified transitions.yaml. 8.8's exit
+  to 4.5 (the OUTER antigen loop from overall-chapter-4-flow) is included
+  for completeness but not re-diagrammed in detail here - see that loop's
+  own diagram.
+steps:
+  - from: "8.1"
+    transitions:
+      - condition: "always"
+        to: "8.2"
+        source: "steps/08-01-pre-filter-patient-series/transitions.yaml"
+  - from: "8.2"
+    transitions:
+      - condition: "Table 8-3 default outcome (no single prioritized series identified)"
+        to: "8.3"
+        source: "steps/08-02-identify-one-prioritized-patient-series/transitions.yaml"
+      - condition: "Table 8-3 rules 1-5 (a single series was identified) - skips scoring entirely"
+        to: "8.8"
+        source: "steps/08-02-identify-one-prioritized-patient-series/transitions.yaml"
+  - from: "8.3"
+    transitions:
+      - condition: "Table 8-5 rule 1 (2+ complete patient series in the group)"
+        to: "8.4"
+        source: "steps/08-03-classify-scorable-patient-series/transitions.yaml"
+      - condition: "Table 8-5 rule 2 (2+ in-process series, 0 complete)"
+        to: "8.5"
+        source: "steps/08-03-classify-scorable-patient-series/transitions.yaml"
+      - condition: "Table 8-5 rule 3 (0 valid doses across all scorable series)"
+        to: "8.6"
+        source: "steps/08-03-classify-scorable-patient-series/transitions.yaml"
+  - from: "8.4"
+    transitions:
+      - condition: "always"
+        to: "8.7"
+        source: "steps/08-04-complete-patient-series/transitions.yaml"
+  - from: "8.5"
+    transitions:
+      - condition: "always"
+        to: "8.7"
+        source: "steps/08-05-in-process-patient-series/transitions.yaml"
+  - from: "8.6"
+    transitions:
+      - condition: "always"
+        to: "8.7"
+        source: "steps/08-06-no-valid-doses/transitions.yaml"
+  - from: "8.7"
+    transitions:
+      - condition: "always"
+        to: "8.8"
+        source: "steps/08-07-select-prioritized-patient-series/transitions.yaml"
+  - from: "8.8"
+    transitions:
+      - condition: "always, after evaluating Table 8-14 for every prioritized series - NOT back into Chapter 8; exits to the outer antigen loop (see overall-chapter-4-flow)"
+        to: "4.5"
+        source: "steps/08-08-determine-best-patient-series/transitions.yaml"

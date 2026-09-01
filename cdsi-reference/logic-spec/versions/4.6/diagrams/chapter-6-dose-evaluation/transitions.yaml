@@ -1,0 +1,68 @@
+loop: "chapter-6-dose-evaluation"
+description: >
+  The Chapter 6 chain for evaluating one target dose against one
+  administered record (AAR). Every transition below is copied verbatim
+  from the corresponding step package's own verified transitions.yaml.
+steps:
+  - from: "6.1"
+    transitions:
+      - condition: "dose rejected (lot expired, or dose condition flag 'Y')"
+        to: "4.4"
+        source: "steps/06-01-evaluate-dose-administered-condition/transitions.yaml"
+      - condition: "dose can be evaluated"
+        to: "6.2"
+        source: "steps/06-01-evaluate-dose-administered-condition/transitions.yaml"
+  - from: "6.2"
+    transitions:
+      - condition: "target dose can be skipped (Table 6-11 'Yes')"
+        to: "4.4"
+        source: "steps/06-02-evaluate-conditional-skip/transitions.yaml"
+      - condition: "target dose cannot be skipped, or no Conditional Skip is defined"
+        to: "6.3"
+        source: "steps/06-02-evaluate-conditional-skip/transitions.yaml"
+  - from: "6.3"
+    transitions:
+      - condition: "vaccine is an inadvertent administration for the target dose"
+        to: "4.4"
+        source: "steps/06-03-evaluate-for-inadvertent-vaccine/transitions.yaml"
+      - condition: "not an inadvertent administration"
+        to: "6.4"
+        source: "steps/06-03-evaluate-for-inadvertent-vaccine/transitions.yaml"
+  - from: "6.4"
+    transitions:
+      - condition: "always (all four Table 6-15 outcomes proceed identically - they set evaluation status/reason, not control flow)"
+        to: "6.5"
+        source: "steps/06-04-evaluate-age/transitions.yaml"
+  - from: "6.5"
+    transitions:
+      - condition: "always (interval satisfied or not - recorded, not branched on)"
+        to: "6.6"
+        source: "steps/06-05-evaluate-preferable-interval/transitions.yaml"
+  - from: "6.6"
+    transitions:
+      - condition: "always"
+        to: "6.7"
+        source: "steps/06-06-evaluate-allowable-interval/transitions.yaml"
+  - from: "6.7"
+    transitions:
+      - condition: "always"
+        to: "6.8"
+        source: "steps/06-07-evaluate-vaccine-conflict/transitions.yaml"
+  - from: "6.8"
+    transitions:
+      - condition: "at least one preferable vaccine matched"
+        to: "6.10"
+        source: "steps/06-08-evaluate-for-preferable-vaccine/transitions.yaml"
+      - condition: "no preferable vaccine matched (or none defined)"
+        to: "6.9"
+        source: "steps/06-08-evaluate-for-preferable-vaccine/transitions.yaml"
+  - from: "6.9"
+    transitions:
+      - condition: "always (allowable vaccine matched or not - recorded, not branched on)"
+        to: "6.10"
+        source: "steps/06-09-evaluate-for-allowable-vaccine/transitions.yaml"
+  - from: "6.10"
+    transitions:
+      - condition: "always, regardless of Table 6-31's outcome (satisfied, extraneous, or not satisfied) - this is the chain's own loop-closing step"
+        to: "4.4"
+        source: "steps/06-10-satisfy-target-dose/transitions.yaml"

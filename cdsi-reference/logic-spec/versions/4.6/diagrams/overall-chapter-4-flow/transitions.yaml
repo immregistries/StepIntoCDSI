@@ -1,0 +1,57 @@
+loop: "overall-chapter-4-flow"
+description: >
+  The top-level backbone of the entire engine: Chapter 4's six activities,
+  where 4.3 and 4.5 are themselves loop drivers around Chapter 5's and
+  Chapter 8's decision logic (the "antigen loop"). 4.4's own internal
+  target-dose/AAR loop into Chapters 6-7 is collapsed here to a single
+  node - see the chapter-6-to-7-evaluate-and-forecast loop for that
+  detail. Chapter 8's internal branching is likewise collapsed - see the
+  chapter-8-series-selection loop. Every transition below is copied
+  verbatim from the cited step package's own verified transitions.yaml.
+steps:
+  - from: "4.1"
+    transitions:
+      - condition: "always"
+        to: "4.2"
+        source: "steps/04-01-gather-necessary-data/transitions.yaml"
+  - from: "4.2"
+    transitions:
+      - condition: "always"
+        to: "4.3"
+        source: "steps/04-02-organize-immunization-history/transitions.yaml"
+  - from: "4.3"
+    transitions:
+      - condition: "antigens remain to iterate"
+        to: "5.1"
+        source: "steps/04-03-create-relevant-patient-series/transitions.yaml"
+      - condition: "all antigens have been iterated"
+        to: "4.4"
+        source: "steps/04-03-create-relevant-patient-series/transitions.yaml"
+  - from: "5.1"
+    transitions:
+      - condition: "always (after evaluating all antigen series/indications for the current antigen - see the relevant-patient-series-selection loop)"
+        to: "4.3"
+        source: "steps/05-01-select-relevant-patient-series/transitions.yaml"
+  - from: "4.4"
+    transitions:
+      - condition: "evaluation/forecasting for the current antigen's patient series is complete (see chapter-6-to-7-evaluate-and-forecast loop for what happens inside)"
+        to: "4.5"
+        source: "steps/04-04-evaluate-and-forecast-all-relevant-patient-series/transitions.yaml"
+  - from: "4.5"
+    transitions:
+      - condition: "antigens remain to select a best series for"
+        to: "8.1"
+        source: "steps/04-05-select-best-patient-series/transitions.yaml"
+      - condition: "all antigens processed"
+        to: "4.6"
+        source: "steps/04-05-select-best-patient-series/transitions.yaml"
+  - from: "8.1..8.8"
+    transitions:
+      - condition: "8.8 always exits here regardless of outcome (see chapter-8-series-selection loop for the internal branching)"
+        to: "4.5"
+        source: "steps/08-08-determine-best-patient-series/transitions.yaml"
+  - from: "4.6"
+    transitions:
+      - condition: "hands off to Chapter 9's own loop driver (same implementation class, IdentifyAndEvaluateVaccineGroup - see chapter-9-vaccine-group-evaluation loop)"
+        to: "9"
+        source: "steps/04-06-identify-and-evaluate-vaccine-group/transitions.yaml"

@@ -1,0 +1,33 @@
+loop: "relevant-patient-series-selection"
+description: >
+  Unlike the other five loops in this directory, this is NOT a sequence
+  of step-to-step transitions verified via setNextLogicStepType - it is a
+  loop INTERNAL to a single call of 5.1's own process() method, verified
+  directly in SelectRelevantPatientSeries.java (two nested `for` loops).
+  5.1's own external transition (always, unconditional, back to 4.3) is
+  unaffected by how many antigen series/indications it iterated
+  internally - see steps/05-01-select-relevant-patient-series/transitions.yaml
+  for that external edge. This file describes the internal iteration
+  instead, since that's what the plan's Phase 7 asks this loop to model.
+internal_iteration:
+  outer:
+    over: "every AntigenSeries in dataModel.getAntigenSeriesList() for the current antigen"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.SelectRelevantPatientSeries#process, line: for (AntigenSeries antigenSeries : dataModel.getAntigenSeriesList())"
+  inner:
+    over: "every Indication in antigenSeries.getIndicationList(), for the current antigen series"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.SelectRelevantPatientSeries#process, line: for (Indication indication : antigenSeries.getIndicationList())"
+  per_indication:
+    action: "evaluate one LT54 (Table 5-4) decision table - does this indication apply to the patient?"
+  per_antigen_series:
+    action: >
+      after all of that series' indications have been evaluated, evaluate
+      one LT55 (Table 5-5) decision table, whose third condition reads
+      the aggregate result across all of that series' LT54 children -
+      does this antigen series count as a relevant patient series?
+    outcome: "relevant series become a new PatientSeries, added to dataModel.getPatientSeriesStepper()"
+external_transition:
+  from: "5.1"
+  transitions:
+    - condition: "always (unconditional, after the full nested iteration above completes for every antigen series on the current antigen)"
+      to: "4.3"
+      source: "steps/05-01-select-relevant-patient-series/transitions.yaml"
