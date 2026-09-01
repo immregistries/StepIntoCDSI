@@ -1,0 +1,22 @@
+spec_version: "4.6"
+section: "8.6"
+title: "No Valid Doses"
+source_pages: [91]
+figures: []
+tables:
+  - "Table 8-11"
+  - "Table 8-12"
+business_rules:
+  - "SELECTB-3"
+  - "SELECTB-12"
+  - "SELECTB-14"
+  - "SELECTB-23"
+implementation:
+  module: "cdsi-engine"
+  classes:
+    - "org.openimmunizationsoftware.cdsi.core.logic.NoValidDoses"
+  logic_step_type: "NO_VALID_DOSES"
+tests:
+  - status: "test-gap"
+    note: "No dedicated unit test. See Review Findings for a verified always-increments bug and unspecified extra scoring conditions."
+review_status: "draft"

@@ -1,0 +1,9 @@
+from: "8.1"
+spec_defines_transition: false
+note: >
+  Verified against PreFilterPatientSeries.process(), which sets its next
+  step unconditionally at the end after building the scorable-series list.
+transitions:
+  - condition: "always"
+    to: "8.2"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.PreFilterPatientSeries#process"

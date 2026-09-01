@@ -1,0 +1,16 @@
+from: "8.2"
+spec_defines_transition: false
+note: >
+  This step BRANCHES, not proceeds linearly - verified directly in
+  IdentifyOnePrioritizedPatientSeries$LT's five setLogicOutcome bodies plus
+  its setLogicOutcomeDefault. Table 8-3's default ("no single prioritized
+  series") is the only outcome that continues into the 8.3-8.7 scoring
+  family; all five "yes, found exactly one" outcomes skip straight to 8.8,
+  bypassing scoring entirely for that series group.
+transitions:
+  - condition: "Table 8-3 default outcome (no single prioritized patient series identified)"
+    to: "8.3"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.IdentifyOnePrioritizedPatientSeries$LT (setLogicOutcomeDefault)"
+  - condition: "Table 8-3 rules 1-5 (a single default/scorable/complete/in-process/default series was identified)"
+    to: "8.8"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.IdentifyOnePrioritizedPatientSeries$LT (setLogicOutcome 0-4)"

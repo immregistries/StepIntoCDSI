@@ -1,9 +1,9 @@
 # Specification-to-code mapping (Phase 8 of the reference-module plan).
 #
-# Chapters 4, 5, 6, and 7, plus the pilot sections (4.1, 6.4), are populated
-# so far - see the "Logic Specification Milestone" in the plan for extending
-# this to Chapters 8-9. Every class name here has been read directly from
-# cdsi-engine's source, not guessed.
+# Chapters 4, 5, 6, 7, and 8, plus the pilot sections (4.1, 6.4), are
+# populated so far - see the "Logic Specification Milestone" in the plan for
+# extending this to Chapter 9. Every class name here has been read directly
+# from cdsi-engine's source, not guessed.
 spec_version: "4.6"
 sections:
   "4.1":
@@ -215,4 +215,76 @@ sections:
         - "org.openimmunizationsoftware.cdsi.core.logic.ValidateRecommendation"
     tests:
       - "test-gap: no dedicated unit test; the class currently performs no validation at all (see 07-06's Review Findings)"
+    mapping_status: "draft"
+  "8.1":
+    title: "Pre-filter Patient Series"
+    implementation:
+      module: "cdsi-engine"
+      classes:
+        - "org.openimmunizationsoftware.cdsi.core.logic.PreFilterPatientSeries"
+    tests:
+      - "test-gap: no dedicated unit test"
+    mapping_status: "draft"
+  "8.2":
+    title: "Identify One Prioritized Patient Series"
+    implementation:
+      module: "cdsi-engine"
+      classes:
+        - "org.openimmunizationsoftware.cdsi.core.logic.IdentifyOnePrioritizedPatientSeries"
+    tests:
+      - "test-gap: no dedicated unit test"
+    mapping_status: "draft"
+  "8.3":
+    title: "Classify Scorable Patient Series"
+    implementation:
+      module: "cdsi-engine"
+      classes:
+        - "org.openimmunizationsoftware.cdsi.core.logic.ClassifyScorablePatientSeries"
+    tests:
+      - "test-gap: no dedicated unit test"
+    mapping_status: "draft"
+  "8.4":
+    title: "Complete Patient Series"
+    implementation:
+      module: "cdsi-engine"
+      classes:
+        - "org.openimmunizationsoftware.cdsi.core.logic.CompletePatientSeries"
+    tests:
+      - "test-gap: no dedicated unit test; verified tie-handling bug in its only scoring condition, see 08-04's Review Findings"
+    mapping_status: "draft"
+  "8.5":
+    title: "In-process Patient Series"
+    implementation:
+      module: "cdsi-engine"
+      classes:
+        - "org.openimmunizationsoftware.cdsi.core.logic.InProcessPatientSeries"
+    tests:
+      - "test-gap: no dedicated unit test; verified Date reference-equality bug in one scoring condition, see 08-05's Review Findings"
+    mapping_status: "draft"
+  "8.6":
+    title: "No Valid Doses"
+    implementation:
+      module: "cdsi-engine"
+      classes:
+        - "org.openimmunizationsoftware.cdsi.core.logic.NoValidDoses"
+    tests:
+      - "test-gap: no dedicated unit test; verified always-increments bug and undocumented extra scoring conditions, see 08-06's Review Findings"
+    mapping_status: "draft"
+  "8.7":
+    title: "Select Prioritized Patient Series"
+    implementation:
+      module: "cdsi-engine"
+      classes:
+        - "org.openimmunizationsoftware.cdsi.core.logic.SelectPrioritizedPatientSeries"
+    tests:
+      - "test-gap: no dedicated unit test"
+    mapping_status: "draft"
+  "8.8":
+    title: "Determine Best Patient Series"
+    implementation:
+      module: "cdsi-engine"
+      classes:
+        - "org.openimmunizationsoftware.cdsi.core.logic.DetermineBestPatientSeries"
+    tests:
+      - "test-gap: no dedicated unit test"
     mapping_status: "draft"

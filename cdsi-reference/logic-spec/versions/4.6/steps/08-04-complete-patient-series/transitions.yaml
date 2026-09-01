@@ -1,0 +1,9 @@
+from: "8.4"
+spec_defines_transition: false
+note: >
+  Verified against CompletePatientSeries.process(), which sets its next
+  step unconditionally after scoring.
+transitions:
+  - condition: "always"
+    to: "8.7"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.CompletePatientSeries#process"

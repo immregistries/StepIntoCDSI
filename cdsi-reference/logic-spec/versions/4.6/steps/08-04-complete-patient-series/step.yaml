@@ -1,0 +1,20 @@
+spec_version: "4.6"
+section: "8.4"
+title: "Complete Patient Series"
+source_pages: [89, 90]
+figures: []
+tables:
+  - "Table 8-7"
+  - "Table 8-8"
+business_rules:
+  - "SELECTB-6"
+  - "SELECTB-19"
+implementation:
+  module: "cdsi-engine"
+  classes:
+    - "org.openimmunizationsoftware.cdsi.core.logic.CompletePatientSeries"
+  logic_step_type: "COMPLETE_PATIENT_SERIES"
+tests:
+  - status: "test-gap"
+    note: "No dedicated unit test. See Review Findings for a verified tie-handling gap in this class's only scoring condition."
+review_status: "draft"

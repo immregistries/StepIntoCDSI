@@ -1,0 +1,16 @@
+from: "8.8"
+spec_defines_transition: false
+note: >
+  Verified against DetermineBestPatientSeries.process(), which evaluates
+  one Table 8-14 LogicTable per prioritized series (one per series group
+  for the current antigen) and then unconditionally transitions to 4.5 -
+  the antigen-loop driver, NOT the next section in Chapter 8's own
+  numbering. 4.5 (SelectBestPatientSeries.java) either advances to the
+  next antigen (looping back to 8.1, PRE_FILTER_PATIENT_SERIES) or, once
+  every antigen has been processed, proceeds to 4.6
+  (IDENTIFY_AND_EVALUATE_VACCINE_GROUP) - verified directly in
+  SelectBestPatientSeries.process().
+transitions:
+  - condition: "always, after evaluating Table 8-14 for every prioritized series"
+    to: "4.5"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.DetermineBestPatientSeries#process"

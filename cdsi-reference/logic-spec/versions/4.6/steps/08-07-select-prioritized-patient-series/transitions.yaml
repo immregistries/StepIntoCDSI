@@ -1,0 +1,9 @@
+from: "8.7"
+spec_defines_transition: false
+note: >
+  Verified against SelectPrioritizedPatientSeries.process(), which sets its
+  next step unconditionally after selecting the prioritized series.
+transitions:
+  - condition: "always"
+    to: "8.8"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.SelectPrioritizedPatientSeries#process"

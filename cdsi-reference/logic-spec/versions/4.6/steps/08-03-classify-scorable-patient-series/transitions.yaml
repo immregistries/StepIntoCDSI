@@ -1,0 +1,16 @@
+from: "8.3"
+spec_defines_transition: true
+note: >
+  A real 3-way branch, verified directly in ClassifyScorablePatientSeries$LT's
+  three setLogicOutcome bodies - each routes to a DIFFERENT one of the three
+  scoring steps depending on which patient-series shape dominates the group.
+transitions:
+  - condition: "Table 8-5 rule 1 (2+ complete patient series in the group)"
+    to: "8.4"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.ClassifyScorablePatientSeries$LT (setLogicOutcome 0)"
+  - condition: "Table 8-5 rule 2 (2+ in-process series, 0 complete series)"
+    to: "8.5"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.ClassifyScorablePatientSeries$LT (setLogicOutcome 1)"
+  - condition: "Table 8-5 rule 3 (0 valid doses across all scorable series in the group)"
+    to: "8.6"
+    verified_in: "org.openimmunizationsoftware.cdsi.core.logic.ClassifyScorablePatientSeries$LT (setLogicOutcome 2)"
