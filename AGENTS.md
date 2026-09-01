@@ -1,10 +1,10 @@
 # StepIntoCDSI - Developer Guide
 
 ## Build Commands
-- `mvn clean install` - Full reactor build (both modules) with tests
+- `mvn clean install` - Full reactor build (all modules) with tests
 - `mvn test` - Run tests only
-- `mvn package` - Build both modules' artifacts (`cdsi-engine.jar`, `cdsi-web/target/step.war`)
-- `mvn -pl cdsi-engine -am install` / `mvn -pl cdsi-web -am install` - Build just one module (and whatever it depends on)
+- `mvn package` - Build all modules' artifacts (`cdsi-engine.jar`, `cdsi-web/target/step.war`, `cdsi-fits-tests.jar`)
+- `mvn -pl <module> -am install` - Build just one module (and whatever it depends on)
 
 ## Requirements
 - Java 17
@@ -27,6 +27,16 @@ dependency and a web module built on it:
     operations, HTML rendering for the interactive step UI)
   - `src/main/java/org/openimmunizationsoftware/cdsi/auth/` - authentication
   - `src/main/webapp/` - web.xml, static assets, spec figures
+- `cdsi-fits-tests/` - Runs the NIST FITS conformance suite against
+  `cdsi-engine` directly, offline (no servlet container, no live NIST
+  connection). This is the FITS regression check for local dev and for an
+  AI agent debugging a failure: `mvn -pl cdsi-fits-tests test`.
+  - `src/test/resources/fits/` - one JSON fixture per FITS test case (see the
+    README.md there); a fresh checkout has none until `FitsDownloader` is run
+  - `src/main/java/.../fitstests/download/FitsDownloader.java` - the
+    dev-time tool that refreshes those fixtures from a live NIST FITS
+    account (needs `NIST_FITS_URL`/`NIST_FITS_USERNAME`/`NIST_FITS_PASSWORD`
+    env vars - see its class Javadoc)
 - `docs/` - Logic documentation and ACIP specification
 
 ## Running
@@ -38,7 +48,8 @@ dependency and a web module built on it:
   folder (local Maven repo) at the project root
 
 ## Testing
-- Uses JUnit 4
+- `cdsi-engine`/`cdsi-web` use JUnit 4; `cdsi-fits-tests` uses JUnit 5 (its
+  FITS suite is a `@TestFactory` generating one dynamic test per fixture)
 - `cdsi-engine` tests load supporting data from its own `src/main/resources/`
   (bundled zips and XML files)
 - Tests verify logic table evaluation results

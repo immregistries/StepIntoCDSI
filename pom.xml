@@ -23,6 +23,7 @@
 	<modules>
 		<module>cdsi-engine</module>
 		<module>cdsi-web</module>
+		<module>cdsi-fits-tests</module>
 	</modules>
 
 	<licenses>

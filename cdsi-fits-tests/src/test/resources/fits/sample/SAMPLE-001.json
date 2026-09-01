@@ -1,0 +1,25 @@
+{
+  "uid" : "SAMPLE-001",
+  "testPlanId" : "sample",
+  "testPlanName" : "Sample (not a NIST FITS case - see README.md in this directory)",
+  "groupName" : "Polio",
+  "title" : "Single IPV dose forecasts dose 2 due date",
+  "patientSex" : "F",
+  "birthDate" : "2019-01-15",
+  "evalDate" : "2026-06-08",
+  "vaccinations" : [
+    {
+      "date" : "2020-01-10",
+      "cvx" : "10",
+      "mvx" : "PMC"
+    }
+  ],
+  "expectedForecasts" : [
+    {
+      "vaccineCvx" : "89",
+      "serieStatus" : "NOT_COMPLETE",
+      "earliestDate" : "2020-02-07",
+      "recommendedDate" : "2020-02-07"
+    }
+  ]
+}
