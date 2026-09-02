@@ -21,11 +21,16 @@
     },
     "category": {
       "type": "string",
+      "description": "One taxonomy for both documentation-time findings and FITS case-level investigations (see Phase 9's Amendment in the plan document) - never a second, parallel one.",
       "enum": [
         "IMPLEMENTATION_MISMATCH",
         "SPECIFICATION_AMBIGUITY",
         "SUPPORTING_DATA_CONFLICT",
-        "FITS_DIFFERENCE"
+        "FITS_DIFFERENCE",
+        "SPECIFICATION_DEFECT",
+        "FIXTURE_IMPORT_DEFECT",
+        "UNDETERMINED",
+        "NOT_REPRODUCIBLE"
       ]
     },
     "spec_sections": { "type": "array", "items": { "type": "string" } },

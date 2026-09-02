@@ -42,7 +42,7 @@ dependency and a web module built on it:
   classes/tests. NOT a Maven module and never a runtime dependency of the
   other three. See `cdsi-reference/README.md` and its own `AGENTS.md`
   before touching clinical logic anywhere in this repository - read the
-  relevant step package first. Status and full 24-phase design:
+  relevant step package first. Status and full 20-phase design:
   `StepIntoCDSi-Specification-Reference-Module-Plan.md` at the repository root.
 - `docs/` - Logic documentation and ACIP specification
 

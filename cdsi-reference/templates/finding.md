@@ -5,11 +5,16 @@ source_pages, tables, business_rules, code_locations, fits_cases, summary,
 evidence, interpretation). This Markdown file is the human-readable
 narrative; finding.yaml is the machine-readable record.
 
-category must be one of:
+category must be one of (one taxonomy for both documentation-time findings
+and FITS case-level investigations - see Phase 9's Amendment in the plan):
   IMPLEMENTATION_MISMATCH   - StepIntoCDSi appears inconsistent with the spec.
   SPECIFICATION_AMBIGUITY   - the spec doesn't establish a clear result.
   SUPPORTING_DATA_CONFLICT  - Logic Spec and Supporting Data disagree.
   FITS_DIFFERENCE           - FITS expectations disagree with another source.
+  SPECIFICATION_DEFECT      - the spec is clear but appears to be wrong; report to CDC/CDSi.
+  FIXTURE_IMPORT_DEFECT     - our own FitsDownloader captured/converted a fixture incorrectly.
+  UNDETERMINED              - investigated, but no root cause could be established.
+  NOT_REPRODUCIBLE          - the failure does not reliably reproduce.
 
 A finding stays "draft"/"open" until a human (or a reviewed process)
 confirms it. Do not let a failing FITS case alone justify "confirmed."

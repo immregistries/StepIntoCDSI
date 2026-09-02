@@ -486,6 +486,19 @@ interpretation: "<clearly labeled analysis>"
 
 An agent may propose a finding, but the finding remains draft until reviewed. A failing FITS test does not by itself prove that engine code is wrong.
 
+### Amendment (adopted during Phase 17 review): one finding system, not two
+
+The original design for Phase 21 ("Add Investigation Records") specified a second, parallel taxonomy and a separate `cdsi-fits-tests/investigations/<case-id>/` directory for conclusions reached while investigating a failing FITS case. That phase has been folded into this one instead: **there is one finding format and one taxonomy**, used both for issues found while documenting the specification and for issues found while investigating a FITS case. A FITS-case investigation either links the case's id into an existing finding's `fits_cases` list, or creates a new finding if the root cause is novel - it never creates a second kind of record.
+
+Four categories are added to the four above, covering investigation outcomes that documentation-time review didn't need:
+
+- `SPECIFICATION_DEFECT`: the specification's own text or table is clear, but appears to be a genuine error, not merely ambiguous - report this back to CDC/CDSi rather than working around it silently.
+- `FIXTURE_IMPORT_DEFECT`: the FITS fixture itself was captured or converted incorrectly by this project's own tooling (`FitsDownloader`), not a defect in FITS, the specification, or the engine.
+- `UNDETERMINED`: investigated with the available evidence, but a root cause could not be established. Not the same as `SPECIFICATION_AMBIGUITY` (that means the specification itself is unclear); this means the investigation was inconclusive.
+- `NOT_REPRODUCIBLE`: the failure does not reliably reproduce (for example, it depends on the current date, or was a transient environment issue).
+
+The original design's `ENGINE_DEFECT`, `SUPPORTING_DATA_DEFECT`, and `FITS_EXPECTATION_DEFECT` are not added as separate categories - they are `IMPLEMENTATION_MISMATCH`, `SUPPORTING_DATA_CONFLICT`, and `FITS_DIFFERENCE` respectively, under the names already in use.
+
 ## Phase 10: Build Version Comparison
 
 The specification update workflow must create a new version rather than editing the prior snapshot.
@@ -764,34 +777,15 @@ Each entry in `results.jsonl` must include:
 
 The normal local output is disposable and must not be committed automatically.
 
-## Phase 18: Improve Structured Engine Tracing
+## Phase 18: Extend Structured Tracing for Diagnostics
 
-Ensure the trace returned by `cdsi-engine` is sufficient for an agent to locate the earliest meaningful divergence. Extend existing structured events rather than creating a second unrelated logging system.
+**Revised after the Phase 17 review** (see the "Revision history" note at the end of this document): scaled back from a ground-up structured-event redesign, because most of it already exists. `cdsi-engine`'s `LogicStepSink`/`LogEvent` already captures a sequenced, leveled log per `LogicStep` instance, and log messages already cite business rule IDs and calculated values. What's actually missing is smaller:
 
-Where applicable, each event should include:
+1. Tag each `LogEvent` with the `LogicStepType` it was logged from (and, when `mappings/spec-to-code.yaml` maps that type, the specification section) - a step type isn't currently recorded on the event itself.
+2. Walk the full chain of `LogicStep` instances one forecast run actually passed through (`dataModel.getLogicStep()` at each iteration of `FitsEngineRunner`'s loop) and assemble their event lists, in order, into one run-level trace - today each step's `LogicStepSink` is scoped to that one step alone.
+3. Write that assembled trace into `trace.jsonl`, one line per event, inside `cdsi-fits-tests`'s Phase 17 diagnostic bundle - the file that bundle's design already reserved a slot for but never populated.
 
-```yaml
-sequence: 145
-step: "6.4"
-spec_section: "6.4"
-table: "Table 6-15"
-business_rule: "CALCDTAGE-1"
-event_type: "DECISION"
-inputs: {}
-outcome: "<selected outcome>"
-state_changes: {}
-```
-
-Not every event requires every field. Do not fabricate rule or table identifiers. Add mappings only when verified.
-
-The diagnostic bundle should make it possible to identify:
-
-- The last step where actual and expected behavior still agree.
-- The first step with a materially different decision or state.
-- The input and Supporting Data values used by that decision.
-- The specification section and code location responsible for it.
-
-Preserve human-readable reasoning text, but do not rely on prose alone for automated comparison.
+Do not fabricate a rule, table, or section identifier for an event that doesn't already cite one - a missing field is more honest than a guessed one. The result should let an agent find, from `trace.jsonl` alone: the last step where the trace looks unremarkable, and the first step whose outcome plausibly explains the case's actual-vs-expected divergence.
 
 ## Phase 19: Establish the Case-Level Regression Baseline
 
@@ -808,10 +802,11 @@ case_id: "<case-id>"
 group: "<group>"
 baseline_status: "failed"
 result_hash: "<normalized result hash>"
-classification: "uninvestigated"
-first_observed_commit: "<commit>"
+finding_id: null
 reference_set: "<reference-set-id>"
 ```
+
+`case_id` is `<testPlanId>-<groupName>-<uid>`, matching Phase 17's `FitsRunRecorder` - `<groupName>-<uid>` alone collides for real across different NIST test plans (confirmed: 1053 of 4896 real fixtures). `finding_id` is null until investigated, then names the Phase 9 finding (extended per that phase's Amendment) that explains this case. There is no separate classification taxonomy here - a case's classification *is* whichever finding, if any, lists it in that finding's `fits_cases`. A case with no `finding_id` is uninvestigated, full stop.
 
 Define regression behavior precisely:
 
@@ -826,116 +821,25 @@ Do not use total pass percentage as the regression oracle. One newly fixed case 
 
 Provide a reviewed command for intentionally updating the baseline. Normal test execution must never rewrite it automatically.
 
-## Phase 20: Add Promoted Historical Runs
-
-Create a compact, checked-in history of meaningful checkpoints:
-
-```text
-cdsi-fits-tests/history/
-├── baseline.yaml
-├── history.csv
-├── charts/
-└── runs/
-    └── <run-id>/
-        ├── run.json
-        ├── summary.json
-        ├── results.jsonl.gz
-        └── changed-cases.json
-```
-
-Promote a run when:
-
-- A clinical-logic correction is merged into the primary integration branch.
-- A Supporting Data release is adopted.
-- FITS fixtures are updated.
-- A Logic Specification version is adopted.
-- A defined project milestone is reached.
-
-Do not commit every intermediate agent attempt. CI may retain complete disposable runs as build artifacts, while Git retains promoted checkpoints and reviewed investigation records.
-
-The promotion command must refuse or warn when:
-
-- The working tree is dirty.
-- Required checksums are missing.
-- The run did not execute the intended complete suite.
-- The run contains unexplained new regressions.
-- The run references uncommitted fixtures or reference data.
-
-Compression must be deterministic so repeated promotion of identical content does not create needless binary differences.
-
-## Phase 21: Add Investigation Records
-
-Create permanent records only for cases that are actively investigated:
-
-```text
-cdsi-fits-tests/investigations/<case-id>/
-├── README.md
-├── finding.yaml
-├── before.json
-├── after.json
-└── trace-diff.json
-```
-
-Use a fixed conclusion taxonomy:
-
-- `ENGINE_DEFECT`
-- `SUPPORTING_DATA_DEFECT`
-- `SPECIFICATION_AMBIGUITY`
-- `SPECIFICATION_DEFECT`
-- `FITS_EXPECTATION_DEFECT`
-- `FIXTURE_IMPORT_DEFECT`
-- `INSUFFICIENT_EVIDENCE`
-- `NOT_REPRODUCIBLE`
-
-The investigation README should document:
-
-- Root cause or unresolved question.
-- Specification, Supporting Data, FITS, and code evidence consulted.
-- Earliest trace divergence.
-- Code and tests changed.
-- Other cases affected.
-- Before-and-after results.
-- Full-suite regression outcome.
-- Final classification and review status.
-
-An agent may draft an investigation record, but findings involving clinical interpretation, specification defects, Supporting Data defects, or FITS defects remain unconfirmed until reviewed.
-
-## Phase 22: Generate Historical Charts
-
-Generate charts from promoted run summaries. Do not maintain chart values manually.
-
-At minimum produce:
-
-- Passed, failed, error, and skipped counts over time.
-- Pass rate with total test-corpus size shown alongside it.
-- Newly passing cases per promoted run.
-- New regressions per promoted run.
-- Known unresolved failures by classification.
-- Results by FITS or vaccine group when group identifiers are stable.
-
-Store source data in `history.csv` or an equivalent append-only structured index. Generated charts may be committed when they are deterministic and useful in the repository README. Otherwise generate them during CI and publish them as build artifacts.
-
-Graph both counts and percentages. A rising pass count can be misleading if the test corpus also grows.
-
-## Phase 23: Define the Agent Repair Workflow
+## Phase 20: Define the Agent Repair Workflow
 
 Add a runbook to `cdsi-fits-tests/AGENTS.md` directing an agent to:
 
-1. Confirm a clean repository and valid reference set.
-2. Run the complete suite or load the latest promoted baseline.
+1. Confirm a clean repository and a valid reference set (Phase 16).
+2. Run the complete suite, or load the case-level baseline (Phase 19) to see what's already known.
 3. Select one failing case for diagnosis.
 4. Reproduce it without code changes.
-5. Read its input, expected result, actual result, field-level difference, and structured trace.
+5. Read its input, expected result, actual result, and field-level difference (Phase 17's bundle) and its structured trace (Phase 18's `trace.jsonl`).
 6. Identify the earliest meaningful divergence.
-7. Read the mapped Logic Specification step, original source citations, normalized Supporting Data, and mapped engine code.
-8. Classify the likely discrepancy before editing.
+7. Read the mapped Logic Specification step, original source citations, normalized Supporting Data, and mapped engine code (`mappings/spec-to-code.yaml`).
+8. Classify the likely discrepancy before editing, using the one finding taxonomy (Phase 9, as amended) - never a second, ad hoc one.
 9. Add a focused unit test when the defect can be isolated below the FITS level.
 10. Make the smallest general correction; never special-case a FITS identifier.
 11. Run the focused test and selected FITS case.
 12. Run the related FITS group.
 13. Run all engine and FITS tests.
 14. Compare the complete results with the case-level baseline.
-15. Record the investigation and either commit the justified fix or document the blocker.
+15. Record the finding (create a new one, or add this case's id to an existing finding's `fits_cases`) and stop for the project owner's review before committing a clinical-logic change - this workflow is agent-assisted with a human in the loop, not autonomous CI that merges on green. Document-only changes (a finding, a baseline update) may proceed without waiting.
 
 The agent must not:
 
@@ -945,26 +849,11 @@ The agent must not:
 - Treat a failure as isolated without checking other cases changed by the fix.
 - Accept an unchanged total pass rate as proof that no regression occurred.
 - Continue making speculative changes when clinical or specification authority is required.
+- Commit a clinical-logic fix without the project owner's review, even when every test the agent can run passes.
 
 Define stop conditions for source conflicts, missing data, non-reproducible behavior, unresolved clinical interpretation, or unexplained regressions.
 
 One case at a time is a diagnostic selection strategy, not an assumption that every case has a separate root cause. When one correction changes multiple cases, treat them as a related cluster and review every changed outcome.
-
-## Phase 24: Integrate Validation and CI
-
-Extend repository validation so it can run without network access or an LLM:
-
-- Validate Logic Specification sources, extraction, schemas, and code mappings.
-- Validate Supporting Data sources, schemas, normalization, and diffs.
-- Validate reference-set identifiers and checksums.
-- Run engine unit and integration tests.
-- Run FITS fixtures against the selected reference set.
-- Compare case-level results with the baseline.
-- Fail on unexplained new regressions.
-- Produce disposable diagnostic bundles.
-- Retain CI artifacts according to the project's retention policy.
-
-Network-based Logic Specification, Supporting Data, or FITS retrieval must be explicit maintenance work, never part of the normal build.
 
 ## Suggested Commit Sequence
 
@@ -988,13 +877,9 @@ Keep the work reviewable through a series of focused commits:
 16. Add Supporting Data semantic comparison and documentation.
 17. Add immutable reference sets.
 18. Add complete disposable FITS run bundles.
-19. Add structured trace enrichment and diagnostic differences.
+19. Extend structured tracing and wire it into the diagnostic bundle.
 20. Establish the case-level regression baseline.
-21. Add promoted historical runs and promotion safeguards.
-22. Add investigation records and discrepancy classifications.
-23. Add generated historical charts.
-24. Add the agent repair runbook.
-25. Integrate complete offline reference and regression validation into CI.
+21. Add the agent repair runbook.
 
 Do not combine all generated content, tooling, manual interpretation, code annotations, historical results, and engine fixes into one commit. Complete and commit the Logic Specification milestone before beginning Supporting Data normalization and test-history work.
 
@@ -1012,7 +897,7 @@ The complete reference and diagnostic system is ready for agent-assisted repair 
 - Each step retains page, figure, table, and business-rule provenance.
 - Specification statements, project interpretations, and implementation observations are visibly distinguished.
 - A specification-to-code mapping connects steps to `cdsi-engine` classes and relevant tests.
-- Findings can distinguish implementation, specification, Supporting Data, and FITS discrepancies.
+- Findings can distinguish implementation, specification, Supporting Data, and FITS discrepancies - and the same finding format and taxonomy is used for issues found during documentation and issues found while investigating a failing FITS case, never two parallel systems.
 - A future specification version can be added without overwriting 4.6.
 - The comparison tool can identify changed sections and affected code mappings.
 - At least one Supporting Data release is preserved with source files and checksums.
@@ -1022,13 +907,11 @@ The complete reference and diagnostic system is ready for agent-assisted repair 
 - Reference sets bind exact Logic Specification, Supporting Data, and FITS fixture versions.
 - Every FITS run records its reference set and engine commit.
 - A normal run creates per-case structured results and diagnostic bundles without committing them.
-- A case-level baseline distinguishes regressions, improvements, changed known failures, and corpus changes.
-- Meaningful checkpoints can be promoted into compact checked-in run history.
-- Historical charts are generated from promoted structured results.
-- Investigation records use the fixed discrepancy taxonomy and retain before-and-after evidence.
-- The agent runbook enforces focused diagnosis, minimal general fixes, related-group tests, and full-suite regression verification.
-- Automated reference and regression validation runs locally and in CI without network access.
-- An agent can navigate from a failing test to its historical behavior, engine trace, relevant engine class, step documentation, original specification evidence, normalized Supporting Data, and recorded findings.
+- Each case's structured trace identifies the earliest step where its actual and expected behavior diverge.
+- A case-level baseline distinguishes regressions, improvements, changed known failures, and corpus changes, and links investigated cases to the finding that explains them.
+- The agent runbook enforces focused diagnosis, minimal general fixes, related-group tests, full-suite regression verification, and a stop for the project owner's review before any clinical-logic fix is committed.
+- Reference and regression validation runs locally without network access, at the pace the project owner chooses to run it - not as unattended, automated CI.
+- An agent can navigate from a failing test to its structured trace, relevant engine class, step documentation, original specification evidence, normalized Supporting Data, and recorded findings.
 
 ## Non-Goals for the Initial Implementation
 
@@ -1047,5 +930,12 @@ Do not expand the first implementation to include:
 - Treating a total pass percentage as the regression baseline.
 - Changing FITS expectations automatically to match engine output.
 - Resolving all historical ambiguity before the module can be useful.
+- Building compressed or promoted historical run archives, or generated trend charts, before they are actually wanted - a checked-in case-level baseline (Phase 19) plus each run's disposable diagnostic bundle (Phase 17) already retain enough raw material to reconstruct either later, without carrying the archiving/promotion machinery in the meantime.
+- Running this system as unattended, fully automated CI. The intended workflow is agent-assisted with the project owner reviewing findings and fixes, not a pipeline that merges clinical-logic changes on green.
+- Maintaining two parallel discrepancy-taxonomy or record-keeping systems. One finding format and taxonomy (Phase 9, as amended) covers both specification-documentation findings and FITS case-level investigations.
 
 The objective is a dependable, traceable, versioned reference and diagnostic system. Clinical corrections, Supporting Data corrections, FITS feedback, and specification feedback should follow through separate reviewed work based on the evidence this system exposes.
+
+## Revision history
+
+- After Phase 17 (structured diagnostic bundles) was built and reviewed against the project owner's actual goal - giving an agent what it needs to close spec-vs-code gaps with the owner in the loop, not unattended CI - Phases 18 through 24 were reviewed, reduced, and renumbered to the 18-20 above. Removed entirely: the original Phase 20 (Add Promoted Historical Runs), Phase 22 (Generate Historical Charts), and Phase 24 (Integrate Validation and CI) - see the Non-Goals just above for why. The original Phase 21 (Add Investigation Records) was merged into Phase 9's finding format rather than kept as a second taxonomy - see Phase 9's Amendment. The original Phase 18 (Improve Structured Engine Tracing) was reduced in scope after finding that `cdsi-engine` already had most of the needed structure. The original Phase 23 (Define the Agent Repair Workflow) became the new Phase 20, adjusted to reference the systems actually built and to add an explicit human-review stop before any clinical-logic commit.
