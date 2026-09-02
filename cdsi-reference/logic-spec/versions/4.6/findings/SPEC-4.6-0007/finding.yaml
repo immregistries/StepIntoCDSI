@@ -34,3 +34,17 @@ interpretation: >
   versus a spec-literal implementation. Tracked, not fixed, per standing
   project direction. See SPEC-4.6-0005 for a second, unrelated bug in this
   same class (Date reference-equality breaking tie-detection).
+  UPDATE 2026-09-02: the always-increments defect was re-verified against
+  current source and bytecode, and a one-line fix (else branch calls
+  descPatientScoreSeries) plus a new focused unit test
+  (NoValidDosesCompletableTest) are implemented and AWAITING THE PROJECT
+  OWNER'S REVIEW - status stays "open" because no human has reviewed it
+  yet. The fix is provably behaviour-preserving on the current fixture
+  set: full FITS suite before and after is identical (3364 pass / 1531
+  fail / 1 error of 4896), with zero status changes and zero cases whose
+  engine output changed. Instrumented runs show this is not because the
+  code is dead - the corrected branch ran 1,236,735 times and changed
+  scores in 10,057 patient-series selections, 1,586 of which shifted
+  competing candidates by different amounts - but because the selected
+  patient series never differed in any of 112,750 selections. The other
+  two open questions in this finding were deliberately NOT touched.

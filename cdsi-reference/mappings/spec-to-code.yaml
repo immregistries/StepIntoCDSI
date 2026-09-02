@@ -271,7 +271,8 @@ sections:
       classes:
         - "org.openimmunizationsoftware.cdsi.core.logic.NoValidDoses"
     tests:
-      - "test-gap: no dedicated unit test; verified always-increments bug and undocumented extra scoring conditions, see 08-06's Review Findings"
+      - "org.openimmunizationsoftware.cdsi.core.logic.NoValidDosesCompletableTest - covers Table 8-11's 'is completable' condition only (added with the SPEC-4.6-0007 fix, awaiting review)"
+      - "test-gap: the other four scoring conditions have no dedicated unit test; undocumented extra scoring conditions still open, see 08-06's Review Findings"
     mapping_status: "draft"
   "8.7":
     title: "Select Prioritized Patient Series"

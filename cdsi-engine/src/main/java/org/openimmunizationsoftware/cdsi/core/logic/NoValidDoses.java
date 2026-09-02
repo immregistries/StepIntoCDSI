@@ -104,7 +104,7 @@ public class NoValidDoses extends LogicStep {
         if (finishDate != null && maximumAgeDate != null && finishDate.before(maximumAgeDate)) {
           patientSeries.incPatientScoreSeries();
         } else {
-          patientSeries.incPatientScoreSeries();
+          patientSeries.descPatientScoreSeries();
         }
       }
     }
