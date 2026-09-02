@@ -117,6 +117,24 @@ public class FitsTestCase {
     return groupName + " " + uid + " " + (title == null ? "" : title);
   }
 
+  /** testPlanId-groupName-uid, not just groupName-uid: the same group name
+   * (e.g. "HepA") and the same uid numbering scheme (e.g. "2013-0001")
+   * both recur across different NIST test plans, so groupName+uid alone
+   * collides for real - confirmed empirically (1053 of 4896 real fixtures
+   * collide on groupName+uid). Without testPlanId, failure bundles and
+   * allowlist entries for genuinely different cases would silently
+   * collide. This is the one place this id is computed - diagnostics
+   * (CaseRecord) and the regression allowlist (FitsFixtureTest) both call
+   * this rather than each recomputing it, so they can never drift apart. */
+  public String caseId() {
+    String raw = nullToEmpty(testPlanId) + "-" + nullToEmpty(groupName) + "-" + nullToEmpty(uid);
+    return raw.replaceAll("[^A-Za-z0-9._-]", "-");
+  }
+
+  private static String nullToEmpty(String s) {
+    return s == null ? "" : s;
+  }
+
   @Override
   public String toString() {
     return displayName();

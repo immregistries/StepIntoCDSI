@@ -22,18 +22,11 @@ final class CaseRecord {
     this.durationMs = durationMs;
   }
 
-  /** testPlanId-groupName-uid, not just groupName-uid: the same group name
-   * (e.g. "HepA") and the same uid numbering scheme (e.g. "2013-0001")
-   * both recur across different NIST test plans, so groupName+uid alone
-   * collides for real - confirmed empirically (1053 of 4896 real fixtures
-   * collide on groupName+uid; see FitsRunRecorderTest for the same
-   * scenario reproduced with two synthetic cases). Without testPlanId,
-   * failure bundles for genuinely different cases would silently
-   * overwrite each other under the same failures/&lt;case-id&gt;/ path. */
+  /** Delegates to FitsTestCase.caseId() - the single place this id is
+   * computed, so diagnostics and the regression allowlist can never
+   * drift apart on the sanitization/format rules. */
   String caseId() {
-    String raw = nullToEmpty(testCase.getTestPlanId()) + "-" + nullToEmpty(testCase.getGroupName())
-        + "-" + nullToEmpty(testCase.getUid());
-    return raw.replaceAll("[^A-Za-z0-9._-]", "-");
+    return testCase.caseId();
   }
 
   String status() {
@@ -147,7 +140,4 @@ final class CaseRecord {
     return entry;
   }
 
-  private static String nullToEmpty(String s) {
-    return s == null ? "" : s;
-  }
 }
