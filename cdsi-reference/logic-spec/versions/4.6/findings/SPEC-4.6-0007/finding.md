@@ -1,6 +1,6 @@
 # SPEC-4.6-0007: NoValidDoses's "is completable" score never decrements, and two undocumented conditions run
 
-**Status:** open (a fix for the first of the three issues below is implemented and awaiting the project owner's review - see "Fix proposed")
+**Status:** confirmed (the always-increments defect's fix - see "Fix merged" - was reviewed and merged by the project owner on 2026-09-03; the two undocumented scoring conditions remain an open question, see Interpretation)
 **Category:** IMPLEMENTATION_MISMATCH
 
 ## Evidence
@@ -21,7 +21,9 @@ As written, "is completable" always contributes +1 regardless of the actual fini
 
 The two extra scoring conditions are recorded as an open question, not resolved by guessing: this could be a deliberate, undocumented refinement to the spec-literal Table 8-11 logic, or a copy-forward from a different section's scoring logic that doesn't belong here. If real Supporting Data commonly has gender-restricted or near-max-age series competing under this scoring path, this materially changes the outcome versus a spec-literal implementation - worth checking against real FITS/Supporting Data cases before assuming either explanation. Tracked, not fixed, per standing project direction.
 
-## Fix proposed (awaiting review - not merged)
+## Fix merged
+
+Reviewed and merged by the project owner on 2026-09-03, commit `9fd975c` on `cdsi-reference` (cherry-picked from the investigating agent's `58a7e32`).
 
 Scope: **only** the always-increments defect. The `Date` reference-equality bug (SPEC-4.6-0005) and the two undocumented scoring conditions were deliberately left untouched; both remain open questions.
 

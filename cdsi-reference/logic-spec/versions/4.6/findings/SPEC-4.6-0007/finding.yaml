@@ -1,5 +1,5 @@
 id: "SPEC-4.6-0007"
-status: "open"
+status: "confirmed"
 category: "IMPLEMENTATION_MISMATCH"
 spec_sections: ["8.6"]
 source_pages: [91]
