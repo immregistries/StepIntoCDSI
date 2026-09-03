@@ -516,12 +516,96 @@ units:
       vocabulary so they stay independent of where that normalization should
       live. Considered fully covered for the decisions 5.1 itself documents.
   '6.1':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluateDoseAdministeredConditionTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      Unlike every other Phase 21 unit so far, a test class already existed here,
+      predating this initiative: a @RunWith(Parameterized.class) class extending
+      SectionTest with three hand-built DataModel scenarios, one per Table 6-3
+      rule. It passed 3/3 and asserted nothing. The subclass declared its own
+      `private List<TableInfo> tableInfo`, shadowing the protected field
+      SectionTest actually iterates, so the assertion loop in
+      testEvaluateLogicTables (`while (tablesIterator.hasNext() &&
+      tableInfoIterator.hasNext())`) never executed. Two further defects were
+      hidden behind that: all three scenarios set Date Administered and Dose
+      Condition Flag on the VaccineDoseAdministered, while 6.1 reads them from
+      the AntigenAdministeredRecord, so the three "different" scenarios
+      presented identical (all-null) inputs; and the nextStep constructor
+      argument was stored by SectionTest and never asserted at all.
+
+      Rewritten in the plain-JUnit4 style used by the other Phase 21 test
+      classes. The parameterized SectionTest harness can only compare condition
+      results and the encoded result grid - it has no way to express outcomes,
+      state changes or the next step, which is most of what Table 6-3 specifies.
+      Every scenario the three original cases were written to cover is preserved
+      as an explicit rule test, including the equal-dates boundary the third
+      scenario actually built. SectionTest itself is left in place, now unused.
+
+      15 test methods, 13 green and 2 red. Green: Table 6-2's three attributes
+      (types, names, initial values, and the 12/31/2999 assumed Lot Expiration
+      Date, which is also verified to actually be the value the condition uses);
+      the condition-attribute table name; Table 6-3's label, two condition
+      labels and both rule-grid rows; each of Rules 1, 2 and 3 end to end
+      (condition results, target dose status, evaluation status, next step);
+      Rule 1's '-' cell applying whatever the dose condition flag says; Rule 3
+      making no state change at all; the strictly-greater-than lot expiration
+      boundary across day-before / same-day / day-after; an absent lot
+      expiration date and an absent dose condition flag; the attributes arriving
+      through the real `new AntigenAdministeredRecord(vda, antigen)`
+      constructor; and the exhaustiveness claim transitions.yaml records, that
+      process()'s pre-evaluation default of 7.1
+      EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST is never the step actually
+      observed.
+
+      Both red tests are the same gap, one per rejecting rule
+      (ruleOneSetsEvaluationStatusSubStandardOnATargetDoseThatHasNoEvaluationYet,
+      ruleTwoSetsEvaluationStatusSubStandardOnATargetDoseThatHasNoEvaluationYet):
+      Table 6-3's Rule 1 and Rule 2 outcomes both require "Evaluation status is
+      'sub-standard'", and the code writes it with
+      `dataModel.getTargetDose().getEvaluation().setEvaluationStatus(...)` - but
+      4.4 builds each target dose as `new TargetDose(seriesDose)` with an empty
+      evaluation list, nothing between 4.4 and 6.1 calls
+      setEvaluationForCurrentTargetDose, and 6.4 EvaluateAge is the first step
+      that creates one (it asserts non-null only after its own table has run).
+      So on the first vaccine dose administered against a fresh target dose,
+      getEvaluation() returns null and both outcomes throw
+      NullPointerException. Expected sub-standard on an Evaluation the step
+      creates; actual NPE at EvaluateDoseAdministeredCondition lines 100 and
+      112. The same tests pass when an Evaluation is pre-attached, so the
+      "sub-standard" write itself is correct - this is only about the object it
+      writes to not existing yet. Not classified or recorded as a finding; that
+      is Role B's call, including whether the defect belongs to 6.1 or to 4.4.
+
+      Two review notes for whoever picks up Role B. First, the step package's
+      index.md "Review Findings" bullet claiming Table 6-3's "sub-standard"
+      outcome "doesn't obviously correspond to a setEvaluationStatus(...) call"
+      is stale - the current code does make that call on both rejecting
+      outcomes; what it does not do is ensure an Evaluation exists to receive
+      it. Second, neither rejecting rule is reachable in any current run:
+      nothing in cdsi-engine or cdsi-web ever calls Vaccine.setLotExpirationDate
+      and ForecastInput.VaccinationInput carries no lot expiration field, so the
+      assumed 12/31/2999 always applies and Rule 1 can never fire; and every one
+      of the FITS fixtures records `"doseCondition": null`, so Rule 2 never fires
+      either. That is why the NPE has never surfaced in the FITS suite.
+
+      Deliberately not covered: business rule CALCDTLOTEXP-1. The specification
+      section names it as the source of the Lot Expiration Date but does not
+      include the rule's calculation text (index.md confirms this), and the
+      class does not compute it - the code comment says so outright. There is
+      nothing unambiguous to assert about a calculation the spec section does
+      not state, so no test was forced; the attribute's declared type
+      ("Calculated date") is asserted instead, and the end-to-end
+      unreachability described above is recorded here for Role B rather than
+      pinned by a test that would really be testing ForecastInput's input
+      plumbing rather than this unit. Also not asserted: the behaviour when Date
+      Administered is absent. Table 6-2 gives it no assumed value and the
+      specification does not say what should happen; the code defensively
+      answers "No" to the first condition, which is a reasonable choice the spec
+      does not speak to, so it is left unpinned rather than guessed at.
   '6.2':
     test_status: not_started
     test_class: null
