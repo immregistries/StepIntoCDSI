@@ -56,12 +56,12 @@ def _save_status(status: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     ordered = {
         "spec_version": status["spec_version"],
-        "units": {uid: status["units"][uid] for uid in sorted(status["units"], key=_sort_key)},
+        "units": {uid: status["units"][uid] for uid in sorted(status["units"], key=sort_key)},
     }
     path.write_text(yaml.safe_dump(ordered, sort_keys=False, allow_unicode=True), encoding="utf-8")
 
 
-def _mapping_units(version: str) -> dict[str, dict]:
+def mapping_units(version: str) -> dict[str, dict]:
     """Every unit id mappings/spec-to-code.yaml knows about for this
     version: id -> {"title": ..., "classes": [...]}."""
     mapping_file = paths.mapping_path()
@@ -94,13 +94,13 @@ def sync_status(version: str) -> list[str]:
         status["spec_version"] = version
     status.setdefault("units", {})
     added = []
-    for unit_id in _mapping_units(version):
+    for unit_id in mapping_units(version):
         if unit_id not in status["units"]:
             status["units"][unit_id] = _default_unit()
             added.append(unit_id)
     if added:
         _save_status(status)
-    return sorted(added, key=_sort_key)
+    return sorted(added, key=sort_key)
 
 
 def validate_status(version: str) -> list[str]:
@@ -116,9 +116,9 @@ def validate_status(version: str) -> list[str]:
         return [f"step-tests: status.yaml does not satisfy step-test-status.schema.json: {e.message}"]
 
     units = status.get("units", {})
-    mapping_units = _mapping_units(version)
+    known_units = mapping_units(version)
     for unit_id, entry in units.items():
-        if unit_id not in mapping_units:
+        if unit_id not in known_units:
             problems.append(f"step-tests: status.yaml has unit {unit_id!r}, which is not in spec-to-code.yaml")
 
         fix_status = entry.get("fix_status")
@@ -145,7 +145,7 @@ def validate_status(version: str) -> list[str]:
         if test_status == "tests_written" and not entry.get("test_class"):
             problems.append(f"step-tests: unit {unit_id!r} has test_status tests_written but no test_class")
 
-    missing = sorted(set(mapping_units) - set(units), key=_sort_key)
+    missing = sorted(set(known_units) - set(units), key=sort_key)
     if missing:
         problems.append(
             f"step-tests: {len(missing)} unit(s) from spec-to-code.yaml missing from status.yaml "
@@ -158,7 +158,7 @@ def _surefire_report_path(test_class: str) -> Path:
     return cdsi_engine_root / "target" / "surefire-reports" / f"TEST-{test_class}.xml"
 
 
-def _read_surefire_counts(test_class: str) -> dict | None:
+def read_surefire_counts(test_class: str) -> dict | None:
     report = _surefire_report_path(test_class)
     if not report.exists():
         return None
@@ -175,7 +175,7 @@ def _read_surefire_counts(test_class: str) -> dict | None:
     }
 
 
-def _sort_key(unit_id: str):
+def sort_key(unit_id: str):
     # Numbered spec sections ("4.1", "8.6") sort numerically by
     # chapter.section; unmapped_classes enum names sort after all of them.
     parts = unit_id.split(".")
@@ -187,14 +187,14 @@ def _sort_key(unit_id: str):
 def render_status_table(version: str) -> str:
     status = load_status()
     units = status.get("units", {})
-    mapping_units = _mapping_units(version)
+    known_units = mapping_units(version)
     lines: list[str] = []
 
-    blocked = [(uid, units[uid]) for uid in sorted(units, key=_sort_key) if units[uid].get("fix_status") == "blocked"]
+    blocked = [(uid, units[uid]) for uid in sorted(units, key=sort_key) if units[uid].get("fix_status") == "blocked"]
     if blocked:
         lines.append("NEEDS YOUR ATTENTION (blocked):")
         for uid, entry in blocked:
-            title = mapping_units.get(uid, {}).get("title", "")
+            title = known_units.get(uid, {}).get("title", "")
             lines.append(f"  {uid} {title}")
             lines.append(f"      [{entry.get('blocked_category')}] {entry.get('blocked_reason')}")
             if entry.get("finding_ids"):
@@ -210,9 +210,9 @@ def render_status_table(version: str) -> str:
 
     written = 0
     merged = 0
-    for uid in sorted(units, key=_sort_key):
+    for uid in sorted(units, key=sort_key):
         entry = units[uid]
-        title = mapping_units.get(uid, {}).get("title", "")[:45]
+        title = known_units.get(uid, {}).get("title", "")[:45]
         test_status = entry.get("test_status", "not_started")
         fix_status = entry.get("fix_status", "not_started")
         if test_status == "tests_written":
@@ -221,7 +221,7 @@ def render_status_table(version: str) -> str:
             merged += 1
 
         test_class = entry.get("test_class")
-        counts = _read_surefire_counts(test_class) if test_class else None
+        counts = read_surefire_counts(test_class) if test_class else None
         if counts is None:
             counts_str = "-" if test_status == "not_started" else "not run"
         else:
@@ -229,7 +229,7 @@ def render_status_table(version: str) -> str:
 
         lines.append(f"{uid:<8} {title:<45} {test_status:<14} {counts_str:<19} {fix_status}")
 
-    missing = sorted(set(mapping_units) - set(units), key=_sort_key)
+    missing = sorted(set(known_units) - set(units), key=sort_key)
     lines.append("")
     if missing:
         lines.append(f"({len(missing)} unit(s) not yet synced from spec-to-code.yaml - run `step-tests sync`)")

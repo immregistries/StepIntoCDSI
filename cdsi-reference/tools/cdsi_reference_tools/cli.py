@@ -7,6 +7,7 @@
     python -m cdsi_reference_tools supporting-data list
     python -m cdsi_reference_tools step-tests sync --version 4.6
     python -m cdsi_reference_tools step-tests status --version 4.6
+    python -m cdsi_reference_tools step-tests dashboard --version 4.6
 """
 
 import argparse
@@ -18,6 +19,7 @@ from . import (
     extract,
     network_guard,
     reference_sets,
+    step_test_dashboard,
     step_test_status,
     supporting_data,
     supporting_data_compare,
@@ -185,6 +187,13 @@ def _cmd_step_tests_status(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_step_tests_dashboard(args: argparse.Namespace) -> int:
+    out = Path(args.out) if args.out else None
+    dest = step_test_dashboard.write_dashboard(args.version, out)
+    print(f"Wrote {dest}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="cdsi_reference_tools")
     subparsers = parser.add_subparsers(dest="resource", required=True)
@@ -263,9 +272,15 @@ def build_parser() -> argparse.ArgumentParser:
     p_st_sync.set_defaults(func=_cmd_step_tests_sync)
 
     p_st_status = step_tests_sub.add_parser(
-        "status", help="Render the per-step test/fix dashboard (run `mvn -pl cdsi-engine test` first for fresh counts)")
+        "status", help="Print the per-step test/fix dashboard as text (run `mvn -pl cdsi-engine test` first for fresh counts)")
     p_st_status.add_argument("--version", required=True)
     p_st_status.set_defaults(func=_cmd_step_tests_status)
+
+    p_st_dashboard = step_tests_sub.add_parser(
+        "dashboard", help="Write the per-step test/fix dashboard as a static HTML file")
+    p_st_dashboard.add_argument("--version", required=True)
+    p_st_dashboard.add_argument("--out", default=None, help="Defaults to step-tests/dashboard.html")
+    p_st_dashboard.set_defaults(func=_cmd_step_tests_dashboard)
 
     return parser
 

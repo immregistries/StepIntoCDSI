@@ -71,6 +71,10 @@ def step_test_status_path() -> Path:
     return step_tests_dir() / "status.yaml"
 
 
+def step_test_dashboard_path() -> Path:
+    return step_tests_dir() / "dashboard.html"
+
+
 # --- Supporting Data (Phase 13) - a separate versioned tree from
 # logic-spec/, since the two resources change on different schedules and
 # don't have a one-to-one version relationship. ---
