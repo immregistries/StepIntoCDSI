@@ -417,12 +417,104 @@ units:
       than a documented behaviour. Considered fully covered for what 4.6
       documents.
   '5.1':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.SelectRelevantPatientSeriesTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      Section 5.1 is the first Chapter 5 unit and, unlike the Chapter 4 loop
+      drivers, it carries real decision logic: Table 5-2's nine input attributes
+      with their assumed values, Table 5-3's two business rules (CALCDTIND-1 and
+      CALCDTIND-2), Table 5-4 "Does the indication apply to the patient?" (one
+      per indication of an antigen series) and Table 5-5 "Is an antigen series a
+      relevant patient series for a patient?" (one per antigen series, reading
+      the aggregate of that series' Table 5-4 answers as its third condition).
+      This is where an antigen series actually becomes a PatientSeries, which is
+      the scope 4.3's title shares but does not decide.
+
+      23 tests in one class, 16 green and 7 red. Every test hand-builds the
+      minimal DataModel - a patient, an assessment date, the antigen 4.3's loop
+      has made current, and one or more AntigenSeries - drives process()
+      directly, and inspects either the decision tables the step exposes through
+      getLogicTableList() or the PatientSeries objects left on the patient
+      series stepper. The step's inner tables (LTInnerSet, LT55) are
+      package-visible, so their condition attributes, their per-indication
+      "applies" flag and their encoded result grids are read directly rather
+      than reflectively; no Supporting Data release is loaded and no other
+      engine step runs.
+
+      Green: the nine Table 5-2 attributes and their assumed values ("Unknown",
+      the patient's own gender for an empty Required Gender, 01/01/1900,
+      12/31/2999, the current date); CALCDTIND-1 and CALCDTIND-2 as date of
+      birth plus the indication's begin/end age, and the fallback to the assumed
+      dates when an indication has no begin age and the empty <endAge/> the real
+      releases use; Table 5-4 Rule 2 (no matching active observation, window
+      open) and Rule 4 (window closed); the window's inclusive-begin,
+      exclusive-end boundary in all four directions; Table 5-5 Rule 1 for both
+      Standard and Evaluation Only series, Rule 4 for a Risk series with no
+      applying indication and for one with no indications at all, and a series
+      with no required genders being relevant for any patient; and the step's
+      scope and structure (only series whose target disease is the current
+      antigen, one Table 5-4 per indication and one Table 5-5 per series, every
+      relevant series becoming its own PatientSeries in antigen-series order,
+      and the unconditional return to 4.3 whether or not anything was found
+      relevant).
+
+      Red, seven tests over four distinct gaps, none of them classified or
+      recorded as findings - that is Role B's call. (1) Table 5-4's first
+      condition, "Does the indication describe any active patient
+      observations?", is a stub returning NO for every patient under a "logic
+      condition not yet implemented" comment; caActivePatientObservations is
+      populated from the patient's medical history and never read. Two tests are
+      red on it: the condition answers NO for a patient who has exactly the
+      observation the indication describes, and Table 5-4 Rule 1 therefore never
+      selects, so no indication can ever apply. (2) Following from (1), Table
+      5-5 Rule 3 is unreachable: a Risk series whose indication matches an
+      active observation inside its age window is judged not relevant, because
+      the third condition aggregates Table 5-4 answers that are always "does not
+      apply". Release 4.65 defines 84 Risk series across 25 antigens driven by
+      roughly 730 indications, so every one of them falls through to Rule 4
+      today. (3) Table 5-5's first condition is built on LT55's own
+      caGender/caRequiredGender, which the step populates only on the Table 5-4
+      objects, never on the Table 5-5 - both stay null and the condition takes
+      its "no required genders supplied" early return of YES for every patient,
+      so Rule 2 is unreachable and a series restricted to Male is relevant for a
+      Female patient. Series-level <requiredGender> elements appear in all 30
+      antigen files of release 4.65, including HPV series restricted to Female
+      (plus Unknown) and separate ones restricted to Male. (4) Two smaller
+      encoding/attribute mismatches: Table 5-4 Rule 3's first condition is
+      encoded as ANY where the specification says Unknown, which makes Rule 3 a
+      weaker copy of Rule 2 so both outcomes fire together and the "make the
+      Indication Text Description available to the clinician" notification is
+      raised for ordinary indications that resolved perfectly well; and Table
+      5-2's "Series type" attribute is populated from getSeriesName(), so it
+      carries the series' name rather than its Standard/Evaluation
+      Only/Risk classification (Table 5-5's second condition reads
+      getSeriesType() directly, so no decision turns on it today).
+
+      Deliberately not covered - (a) Table 5-4 Rule 3's positive case, an
+      indication whose relevance genuinely cannot be resolved: the first
+      condition never returns UNKNOWN from any input, so the only honest test is
+      the structural one on the encoded result grid plus the false-positive
+      test on the clinician notification, both of which are written; a test that
+      drove Rule 3's outcome would have to fabricate an Unknown answer the class
+      has no path to produce. (b) The Purpose's "a notification should be
+      available to a clinician" is pinned only as the DUMP-level outcome message
+      the class already logs - 5.1 exposes no other notification channel, and
+      asserting on a richer one would pin a design that does not exist. (c) Two
+      observations recorded here rather than tested, because their code lives
+      outside this unit and belongs to whoever owns it: DataModelLoader's
+      readAntigenSeries has no requiredGender branch, so
+      AntigenSeries.getRequiredGenderList() is empty for every series in
+      production even before gap (3) discards it - fixing LT55's attribute
+      wiring alone would therefore change no real forecast; and the patient's
+      gender arrives as ForecastInput's "F"/"M" while Supporting Data's required
+      genders are "Female"/"Male"/"Unknown", which Table 5-5's string-equality
+      comparison would not reconcile. The tests use the Supporting Data
+      vocabulary so they stay independent of where that normalization should
+      live. Considered fully covered for the decisions 5.1 itself documents.
   '6.1':
     test_status: not_started
     test_class: null
