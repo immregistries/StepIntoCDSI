@@ -11,7 +11,7 @@ import jsonschema
 import pymupdf as fitz
 import yaml
 
-from . import engine_index, extract, findings, paths
+from . import engine_index, extract, findings, paths, step_test_status
 
 
 class ValidationError(Exception):
@@ -136,16 +136,12 @@ def validate_step_packages(version: str) -> list[str]:
     return problems
 
 
-def _mapping_path() -> Path:
-    return paths.reference_root() / "mappings" / "spec-to-code.yaml"
-
-
 def validate_mappings(version: str) -> list[str]:
     """Phase 8: cross-checks mappings/spec-to-code.yaml against both the
     step packages on disk and cdsi-engine's actual source - never trusts
     either side alone. Reports the five categories the plan specifies."""
     problems: list[str] = []
-    mapping_file = _mapping_path()
+    mapping_file = paths.mapping_path()
     if not mapping_file.exists():
         return ["mappings/spec-to-code.yaml does not exist"]
     mapping = yaml.safe_load(mapping_file.read_text(encoding="utf-8")) or {}
@@ -221,7 +217,7 @@ def acknowledged_gaps(version: str) -> list[str]:
     recorded for classes deliberately excluded from that function's problem
     list, so `logic-spec validate` stays green without those gaps going
     silent."""
-    mapping_file = _mapping_path()
+    mapping_file = paths.mapping_path()
     if not mapping_file.exists():
         return []
     mapping = yaml.safe_load(mapping_file.read_text(encoding="utf-8")) or {}
@@ -318,4 +314,5 @@ def validate_version(version: str) -> list[str]:
     problems.extend(f"steps: {p}" for p in validate_step_packages(version))
     problems.extend(validate_mappings(version))
     problems.extend(f"findings: {p}" for p in validate_findings(version))
+    problems.extend(step_test_status.validate_status(version))
     return problems

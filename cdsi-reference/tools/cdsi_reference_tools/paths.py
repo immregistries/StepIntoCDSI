@@ -56,6 +56,21 @@ def schemas_dir() -> Path:
     return reference_root() / "schemas"
 
 
+def mapping_path() -> Path:
+    return reference_root() / "mappings" / "spec-to-code.yaml"
+
+
+# --- Per-step spec-conformance test tracking (Phase 21) ---
+
+
+def step_tests_dir() -> Path:
+    return reference_root() / "step-tests"
+
+
+def step_test_status_path() -> Path:
+    return step_tests_dir() / "status.yaml"
+
+
 # --- Supporting Data (Phase 13) - a separate versioned tree from
 # logic-spec/, since the two resources change on different schedules and
 # don't have a one-to-one version relationship. ---

@@ -5,6 +5,8 @@
     python -m cdsi_reference_tools logic-spec compare --from 4.6 --to 4.7
     python -m cdsi_reference_tools supporting-data import --source <zip-or-directory>
     python -m cdsi_reference_tools supporting-data list
+    python -m cdsi_reference_tools step-tests sync --version 4.6
+    python -m cdsi_reference_tools step-tests status --version 4.6
 """
 
 import argparse
@@ -16,6 +18,7 @@ from . import (
     extract,
     network_guard,
     reference_sets,
+    step_test_status,
     supporting_data,
     supporting_data_compare,
     supporting_data_normalize,
@@ -168,6 +171,20 @@ def _cmd_reference_set_export(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_step_tests_sync(args: argparse.Namespace) -> int:
+    added = step_test_status.sync_status(args.version)
+    if not added:
+        print("step-tests/status.yaml already covers every unit in spec-to-code.yaml.")
+    else:
+        print(f"Added {len(added)} unit(s) to step-tests/status.yaml: {', '.join(added)}")
+    return 0
+
+
+def _cmd_step_tests_status(args: argparse.Namespace) -> int:
+    print(step_test_status.render_status_table(args.version))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="cdsi_reference_tools")
     subparsers = parser.add_subparsers(dest="resource", required=True)
@@ -236,6 +253,19 @@ def build_parser() -> argparse.ArgumentParser:
     p_rs_export.add_argument("--id", required=True)
     p_rs_export.add_argument("--to", default=None, help="Defaults to cdsi-fits-tests/src/test/resources/reference-set.json")
     p_rs_export.set_defaults(func=_cmd_reference_set_export)
+
+    step_tests_parser = subparsers.add_parser("step-tests", help="Phase 21: per-step spec-conformance test tracking")
+    step_tests_sub = step_tests_parser.add_subparsers(dest="action", required=True)
+
+    p_st_sync = step_tests_sub.add_parser(
+        "sync", help="Add any unit from spec-to-code.yaml missing from step-tests/status.yaml")
+    p_st_sync.add_argument("--version", required=True)
+    p_st_sync.set_defaults(func=_cmd_step_tests_sync)
+
+    p_st_status = step_tests_sub.add_parser(
+        "status", help="Render the per-step test/fix dashboard (run `mvn -pl cdsi-engine test` first for fresh counts)")
+    p_st_status.add_argument("--version", required=True)
+    p_st_status.set_defaults(func=_cmd_step_tests_status)
 
     return parser
 

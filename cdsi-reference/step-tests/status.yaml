@@ -1,0 +1,260 @@
+spec_version: '4.6'
+units:
+  '4.1':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '4.2':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '4.3':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '4.4':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '4.5':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '4.6':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '5.1':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '6.1':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '6.2':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '6.3':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '6.4':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '6.5':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '6.6':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '6.7':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '6.8':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '6.9':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '6.10':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '7.1':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '7.2':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '7.3':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '7.4':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '7.5':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '7.6':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '8.1':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '8.2':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '8.3':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '8.4':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '8.5':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '8.6':
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.NoValidDosesCompletableTest
+    fix_status: merged
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: ["SPEC-4.6-0007"]
+    notes: >
+      NoValidDosesCompletableTest covers only the always-increments defect
+      (one condition of several this class scores) - not full coverage of
+      8.6 yet. Treat this unit as still open for a Role A pass that covers
+      the rest of NoValidDoses's scoring conditions, including the two
+      undocumented ones SPEC-4.6-0007 flags as a separate open question.
+  '8.7':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '8.8':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '9.1':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '9.2':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  '9.3':
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  EVALUATE_GENDER:
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []
+  FORECAST_DATES_AND_REASONS:
+    test_status: not_started
+    test_class: null
+    fix_status: not_started
+    blocked_category: null
+    blocked_reason: null
+    finding_ids: []

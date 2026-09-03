@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stepintocdsi/cdsi-reference/schemas/step-test-status.schema.json",
+  "title": "step-tests/status.yaml",
+  "description": "Per-step-unit workflow status for Phase 21's spec-conformance JUnit test coverage (see cdsi-engine/AGENTS.md). Pass/fail/error/skipped counts are never stored here - step_test_status.py always reads those live from cdsi-engine's surefire reports - so this file only ever holds what a test run can't tell you. Cross-field rules (blocked_category/blocked_reason required exactly when fix_status is blocked, test_class required exactly when test_status is tests_written) are enforced by step_test_status.validate_status, not by this schema.",
+  "type": "object",
+  "required": ["spec_version", "units"],
+  "properties": {
+    "spec_version": { "type": "string" },
+    "units": {
+      "type": "object",
+      "description": "Keyed the same way as mappings/spec-to-code.yaml: a spec section number (e.g. \"8.6\") or an unmapped_classes enum name (e.g. \"EVALUATE_GENDER\").",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["test_status", "test_class", "fix_status", "blocked_category", "blocked_reason", "finding_ids"],
+        "properties": {
+          "test_status": {
+            "type": "string",
+            "description": "not_started: Role A hasn't written this unit's spec-conformance test class yet. tests_written: it exists and is merged - red and green cases are both expected here, this tracks coverage, not correctness.",
+            "enum": ["not_started", "tests_written"]
+          },
+          "test_class": {
+            "type": ["string", "null"],
+            "description": "Fully-qualified JUnit test class name (e.g. \"org.openimmunizationsoftware.cdsi.core.logic.NoValidDosesCompletableTest\"). Null iff test_status is not_started."
+          },
+          "fix_status": {
+            "type": "string",
+            "description": "not_started/in_progress: Role B hasn't finished this round. fixed_pending_review: Role B believes every test in this unit's class is green with zero regressions elsewhere, awaiting the project owner's merge. merged: reviewed and merged. blocked: Role B stopped without committing a fix - see blocked_category/blocked_reason.",
+            "enum": ["not_started", "in_progress", "fixed_pending_review", "merged", "blocked"]
+          },
+          "blocked_category": {
+            "type": ["string", "null"],
+            "description": "Required (non-null) iff fix_status is blocked; null otherwise. would_regress_other_tests: making this unit's tests pass would break another currently-green JUnit test or an allowlisted FITS case. upstream_step_defect: the real defect appears to live in a different step's class (recorded in a finding's code_locations) - Role B must never fix another step's code itself, only report it. undetermined: ran out of evidence.",
+            "enum": ["would_regress_other_tests", "upstream_step_defect", "undetermined", null]
+          },
+          "blocked_reason": {
+            "type": ["string", "null"],
+            "description": "Required (non-null, non-empty) iff fix_status is blocked: what would break, or which upstream class is suspected and the evidence for it. Null otherwise."
+          },
+          "finding_ids": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "SPEC-<version>-NNNN findings raised while working this unit, including ones filed against a different unit's code_locations (see upstream_step_defect)."
+          },
+          "notes": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

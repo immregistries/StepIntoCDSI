@@ -14,7 +14,9 @@
 Multi-module Maven reactor, split into an engine module with no servlet/web
 dependency and a web module built on it:
 - `cdsi-engine/` - The CDSi calculation engine (jar). Runs headlessly - no
-  jakarta.servlet on its classpath at all.
+  jakarta.servlet on its classpath at all. See its own `AGENTS.md` before
+  writing or fixing a per-step spec-conformance JUnit test (Phase 21) -
+  a separate workflow from the FITS repair runbook below.
   - `src/main/java/org/openimmunizationsoftware/cdsi/core/` - domain model
     (`core.domain`), supporting-data loading (`core.data`), and the CDSi
     processing-model steps (`core.logic`, plus `items`/`concepts`/`businessRules`)
@@ -42,7 +44,7 @@ dependency and a web module built on it:
   classes/tests. NOT a Maven module and never a runtime dependency of the
   other three. See `cdsi-reference/README.md` and its own `AGENTS.md`
   before touching clinical logic anywhere in this repository - read the
-  relevant step package first. Status and full 20-phase design:
+  relevant step package first. Status and full 21-phase design:
   `StepIntoCDSi-Specification-Reference-Module-Plan.md` at the repository root.
 - `docs/` - Logic documentation and ACIP specification
 

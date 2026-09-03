@@ -855,6 +855,21 @@ Define stop conditions for source conflicts, missing data, non-reproducible beha
 
 One case at a time is a diagnostic selection strategy, not an assumption that every case has a separate root cause. When one correction changes multiple cases, treat them as a related cluster and review every changed outcome.
 
+## Phase 21: Per-Step Spec-Conformance Test Coverage
+
+Phase 20's runbook diagnoses one failing FITS case at a time - a real end-to-end scenario, tested against the whole engine. It says nothing about whether any individual step class, in isolation, actually does what its own specification section requires; a class can look fine because nothing in the current FITS fixture set happens to exercise its broken branch (as `SPEC-4.6-0007` demonstrated - a real, confirmed scoring defect with zero effect on any of 4,896 fixtures). Phase 21 is a separate, systematic pass that closes that gap directly: give every executable step class its own dedicated JUnit test, red or green, independent of what FITS currently proves or fails to prove.
+
+The unit of work is one entry in `mappings/spec-to-code.yaml` (Phase 8) - a numbered spec section with a step package, or an `unmapped_classes` entry. There are 36 such units for version 4.6. Each is worked in two separate passes, run as separate agent sessions on the project owner's own schedule (not automated, not batched):
+
+- **Role A - write the tests.** Reads the unit's step package and implementation class(es); writes one JUnit test per business rule / decision-table row, asserting the specification directly; touches no production code. A red result here is an expected, useful outcome - it is the first honest evidence that a step doesn't do what its spec says, something FITS alone may never surface. Reports the initial red/green count and stops.
+- **Role B - fix the step.** Runs later, only after Role A's test class is reviewed and merged. Classifies each red test with the one finding taxonomy (Phase 9, as amended) before touching code, makes the smallest fix, and explicitly does not chase FITS pass-rate movement this round - `known-passing-cases.txt` (see cdsi-fits-tests's allowlist) is not touched or regenerated during this workflow. Runs the full `cdsi-engine` suite and the full FITS suite before and after; any regression anywhere is an automatic stop, not a judgment call.
+
+**Cross-step escalation.** Before accepting a red test as a defect in the assigned step's own class, Role B checks whether the actual cause is upstream or downstream - another step populating or consuming shared state (a `PatientSeries` field, a loop-control flag, an orchestration handoff) incorrectly, using the step's own documented State Changes and `LogicStepFactory`'s dispatch order to trace it. If the evidence points at a different step's class, the agent must not fix it there - that decision, and its own before/after regression check, belongs to whoever later runs that other step's own Role B session. Instead it records a finding whose `code_locations` names the other class, with the evidence and a recommendation, and marks its own unit blocked. This is how a step is allowed to say "I can't improve myself without breaking something else" without silently working around it or silently fixing something out of scope.
+
+**Tracking.** `cdsi-reference/step-tests/status.yaml` (schema: `schemas/step-test-status.schema.json`) holds exactly what a test run can't tell you for each unit: `test_status` (`not_started`/`tests_written`), `fix_status` (`not_started`/`in_progress`/`fixed_pending_review`/`merged`/`blocked`), and - only when blocked - `blocked_category` (`would_regress_other_tests`/`upstream_step_defect`/`undetermined`) and `blocked_reason`, plus any `finding_ids` raised. Pass/fail/error/skipped counts are never cached there; the `step-tests status` CLI command (`python -m cdsi_reference_tools step-tests status --version 4.6`) always reads those live from `cdsi-engine`'s own surefire reports and renders one table, with blocked units surfaced first so the project owner sees what needs a decision before the full per-unit list. `step-tests sync` adds any unit the mapping has that the status file doesn't yet, without touching existing entries. `logic-spec validate` cross-checks `status.yaml` against the schema and against `spec-to-code.yaml` (every unit accounted for, `blocked_category`/`blocked_reason`/`test_class` present exactly when the corresponding status requires them).
+
+The full two-role workflow, including the "must not" list, lives in `cdsi-engine/AGENTS.md` - this section is the plan-level summary, not a duplicate of the runbook itself.
+
 ## Suggested Commit Sequence
 
 Keep the work reviewable through a series of focused commits:
@@ -880,6 +895,7 @@ Keep the work reviewable through a series of focused commits:
 19. Extend structured tracing and wire it into the diagnostic bundle.
 20. Establish the case-level regression baseline.
 21. Add the agent repair runbook.
+22. Add per-step spec-conformance test tracking (`step-tests/status.yaml`, its schema, and the `step-tests` CLI commands) and the `cdsi-engine/AGENTS.md` two-role runbook.
 
 Do not combine all generated content, tooling, manual interpretation, code annotations, historical results, and engine fixes into one commit. Complete and commit the Logic Specification milestone before beginning Supporting Data normalization and test-history work.
 
@@ -912,6 +928,9 @@ The complete reference and diagnostic system is ready for agent-assisted repair 
 - The agent runbook enforces focused diagnosis, minimal general fixes, related-group tests, full-suite regression verification, and a stop for the project owner's review before any clinical-logic fix is committed.
 - Reference and regression validation runs locally without network access, at the pace the project owner chooses to run it - not as unattended, automated CI.
 - An agent can navigate from a failing test to its structured trace, relevant engine class, step documentation, original specification evidence, normalized Supporting Data, and recorded findings.
+- Every executable step class has, or has a tracked plan to get, its own dedicated spec-conformance JUnit test - written independently of whether any FITS case currently exercises the gap it covers.
+- A step found to need a fix that would regress another step's tests, or another currently-allowlisted FITS case, is never fixed unilaterally to force a green result - it's recorded as blocked, with the specific conflict named, for the project owner to resolve.
+- A step whose real defect appears to lie in a different step's shared-state contract is never patched at the point it was noticed - it's recorded as a finding against the actual class and elevated, leaving the assigned step's own status honestly blocked.
 
 ## Non-Goals for the Initial Implementation
 
@@ -933,9 +952,12 @@ Do not expand the first implementation to include:
 - Building compressed or promoted historical run archives, or generated trend charts, before they are actually wanted - a checked-in case-level baseline (Phase 19) plus each run's disposable diagnostic bundle (Phase 17) already retain enough raw material to reconstruct either later, without carrying the archiving/promotion machinery in the meantime.
 - Running this system as unattended, fully automated CI. The intended workflow is agent-assisted with the project owner reviewing findings and fixes, not a pipeline that merges clinical-logic changes on green.
 - Maintaining two parallel discrepancy-taxonomy or record-keeping systems. One finding format and taxonomy (Phase 9, as amended) covers both specification-documentation findings and FITS case-level investigations.
+- Treating FITS pass-rate movement as a goal or a success measure of Phase 21's per-step test work. That phase's target is spec-conformance coverage for its own sake; any FITS effect is incidental and not to be chased.
+- Letting an agent fix a step class other than the one it was assigned in Phase 21, even when it's confident and the fix looks small - a suspected cross-step defect is recorded and elevated, never patched at the point it was noticed.
 
 The objective is a dependable, traceable, versioned reference and diagnostic system. Clinical corrections, Supporting Data corrections, FITS feedback, and specification feedback should follow through separate reviewed work based on the evidence this system exposes.
 
 ## Revision history
 
 - After Phase 17 (structured diagnostic bundles) was built and reviewed against the project owner's actual goal - giving an agent what it needs to close spec-vs-code gaps with the owner in the loop, not unattended CI - Phases 18 through 24 were reviewed, reduced, and renumbered to the 18-20 above. Removed entirely: the original Phase 20 (Add Promoted Historical Runs), Phase 22 (Generate Historical Charts), and Phase 24 (Integrate Validation and CI) - see the Non-Goals just above for why. The original Phase 21 (Add Investigation Records) was merged into Phase 9's finding format rather than kept as a second taxonomy - see Phase 9's Amendment. The original Phase 18 (Improve Structured Engine Tracing) was reduced in scope after finding that `cdsi-engine` already had most of the needed structure. The original Phase 23 (Define the Agent Repair Workflow) became the new Phase 20, adjusted to reference the systems actually built and to add an explicit human-review stop before any clinical-logic commit.
+- After Phase 20's first real run (`SPEC-4.6-0007`) turned up a confirmed, fixable defect with zero effect on any FITS case - proving a step class can be wrong in a way the current fixture set simply never exercises - Phase 21 (Per-Step Spec-Conformance Test Coverage) was added: a systematic, two-role (write tests / fix step), one-unit-at-a-time pass over every step class in `mappings/spec-to-code.yaml`, explicitly independent of FITS pass-rate movement, with a cross-step escalation path (a step found to depend on another step's broken contract is recorded and elevated, never fixed out of scope) and its own lightweight status tracking (`step-tests/status.yaml`) rather than folding workflow state into `spec-to-code.yaml` itself.
