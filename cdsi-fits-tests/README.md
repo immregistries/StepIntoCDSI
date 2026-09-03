@@ -58,6 +58,8 @@ Two categories the plan's design for this bundle describes aren't available yet,
 - **Baseline-relative fields** (`knownFailures`, `newRegressions`, `newlyPassingCases`, `changedKnownFailures` in `summary.json`, and each case's `baselineComparison` in `results.jsonl`) depend on a reviewed case-level regression baseline - Phase 19 of the reference-module plan, not built yet. `changed-cases.json`'s comparison against the previous local run is a same-machine convenience in the meantime, not a substitute for one.
 - **`trace.jsonl`** (a structured, per-decision engine trace for each failure) depends on Phase 18 ("Improve Structured Engine Tracing"), not built yet. It is not written at all right now, rather than written empty - an absent file says "this capability doesn't exist yet," where an empty one would misleadingly say "the engine made no decisions."
 
+For a shareable summary of the latest bundle - overall pass rate, a breakdown by vaccine group, and every non-passing case's field-level difference - run `python -m cdsi_reference_tools fits-tests dashboard` from `cdsi-reference/`; see its README's "FITS results dashboard" section.
+
 ## Known-passing allowlist
 
 `cdsi-engine` does not pass every FITS case today, and closing that gap is exactly what `cdsi-reference` and this suite's diagnostic bundles exist to support (see `AGENTS.md`, the agent repair workflow) - but that's not a reason to fail the whole build on every not-yet-investigated case, nor to skip every case and quietly hope they all pass "one day." Some of the current gaps may turn out to be genuine CDSi specification or fixture defects that can never be "fixed" in this engine at all, so a plan that assumes 100% is eventually reachable isn't one to build the build around.

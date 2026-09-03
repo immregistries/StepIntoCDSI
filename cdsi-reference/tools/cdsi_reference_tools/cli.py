@@ -8,6 +8,7 @@
     python -m cdsi_reference_tools step-tests sync --version 4.6
     python -m cdsi_reference_tools step-tests status --version 4.6
     python -m cdsi_reference_tools step-tests dashboard --version 4.6
+    python -m cdsi_reference_tools fits-tests dashboard
 """
 
 import argparse
@@ -17,6 +18,7 @@ from pathlib import Path
 from . import (
     compare_versions,
     extract,
+    fits_dashboard,
     network_guard,
     reference_sets,
     step_test_dashboard,
@@ -194,6 +196,17 @@ def _cmd_step_tests_dashboard(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_fits_tests_dashboard(args: argparse.Namespace) -> int:
+    out = Path(args.out) if args.out else None
+    try:
+        dest = fits_dashboard.write_dashboard(out)
+    except FileNotFoundError as e:
+        print(f"ERROR: {e}", file=sys.stderr)
+        return 1
+    print(f"Wrote {dest}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="cdsi_reference_tools")
     subparsers = parser.add_subparsers(dest="resource", required=True)
@@ -281,6 +294,14 @@ def build_parser() -> argparse.ArgumentParser:
     p_st_dashboard.add_argument("--version", required=True)
     p_st_dashboard.add_argument("--out", default=None, help="Defaults to step-tests/dashboard.html")
     p_st_dashboard.set_defaults(func=_cmd_step_tests_dashboard)
+
+    fits_tests_parser = subparsers.add_parser("fits-tests", help="Shareable snapshot of the latest FITS run")
+    fits_tests_sub = fits_tests_parser.add_subparsers(dest="action", required=True)
+
+    p_fits_dashboard = fits_tests_sub.add_parser(
+        "dashboard", help="Write the latest FITS diagnostic bundle as a static HTML file, by group")
+    p_fits_dashboard.add_argument("--out", default=None, help="Defaults to dashboards/fits-results.html")
+    p_fits_dashboard.set_defaults(func=_cmd_fits_tests_dashboard)
 
     return parser
 

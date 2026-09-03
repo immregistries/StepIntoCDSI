@@ -71,8 +71,23 @@ def step_test_status_path() -> Path:
     return step_tests_dir() / "status.yaml"
 
 
+# --- Committed, shareable HTML snapshots ---
+
+
+def dashboards_dir() -> Path:
+    return reference_root() / "dashboards"
+
+
 def step_test_dashboard_path() -> Path:
-    return step_tests_dir() / "dashboard.html"
+    return dashboards_dir() / "step-tests.html"
+
+
+def fits_dashboard_path() -> Path:
+    return dashboards_dir() / "fits-results.html"
+
+
+def fits_runs_dir() -> Path:
+    return reference_root().parent / "cdsi-fits-tests" / "target" / "fits-runs"
 
 
 # --- Supporting Data (Phase 13) - a separate versioned tree from

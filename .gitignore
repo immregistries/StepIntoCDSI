@@ -1,8 +1,5 @@
 target/
 /bin/
-# Generated static view of step-tests/status.yaml + live surefire results
-# (Phase 21) - regenerate with `step-tests dashboard`, never hand-edit.
-cdsi-reference/step-tests/dashboard.html
 .metadata/
 .classpath
 .project
