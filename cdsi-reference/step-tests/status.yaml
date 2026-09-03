@@ -255,12 +255,84 @@ units:
       to completion, which would need a stand-in for every Chapter 6/7 step and
       would be an engine test rather than a 4.4 test.
   '4.5':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.SelectBestPatientSeriesTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      Section 4.5 declares no inputs, no business rules and no decision tables -
+      it says outright that selecting the best patient series "at the highest
+      level is a simple iterative process which loops through each antigen and
+      applies the business rules found in Chapter 8 to each antigen", and all
+      the scoring and prioritization logic lives in 8.1 through 8.9. Like 4.3,
+      the class named for the chapter-4 summary is the outer loop. What is
+      normative is Figure 4-7, a small concrete state machine - Get first
+      antigen, then a loop of Select Best Patient Series (Chapter 8) followed by
+      the decision "Is there another antigen to process?", Yes leading to Get
+      next antigen and back into Chapter 8, No ending the process - plus one
+      prose claim with real consequences for state: "multiple best patient
+      series may be selected for a patient", which requires the
+      bestPatientSeriesList to accumulate across the loop rather than reset per
+      antigen.
+
+      19 tests, all 19 green. They cover Figure 4-7 end to end (first call
+      selects the first antigen and delegates to 8.1; each re-entry advances one
+      antigen; every antigen is handed to Chapter 8 exactly once, in the
+      antigen-selected list's order; the loop ends at 4.6; calling again after
+      the loop has ended stays at 4.6; no antigens at all goes straight to 4.6),
+      the documented State Changes (antigenSeriesSelectedList filtered from the
+      full Supporting Data antigen series list to the current antigen and
+      rebuilt each iteration; selectedPatientSeriesList filtered from the
+      patient series stepper to the current antigen and rebuilt each iteration;
+      an antigen with no patient series still gets its turn with an empty list;
+      antigen matching is by Antigen.equals, i.e. by name not instance identity;
+      the prioritized patient series list emptied in place before each antigen
+      reaches Chapter 8; the best patient series list created before the first
+      antigen reaches 8.9, which adds to it with no null guard of its own, and
+      never replaced afterwards), the accumulation claim from the Purpose (two
+      antigens' best series both survive to 4.6), and the negative claim that
+      4.5 selects, prioritizes and pre-filters nothing itself.
+
+      One observation for review, deliberately pinned as actual behaviour rather
+      than asserted as a defect. The step package's State Changes says that once
+      the antigens are exhausted the step "clears per-antigen state"; the code
+      nulls dataModel.antigen and antigenSeriesSelectedList but leaves
+      selectedPatientSeriesList holding the last antigen's patient series.
+      Section 4.5 itself says nothing about state, and nothing in cdsi-engine
+      reads selectedPatientSeriesList after the loop ends (its only readers,
+      SelectPrioritizedPatientSeries and CompletePatientSeries, are Chapter 8
+      steps that no longer run), so this is read as an imprecision in the
+      step package's wording rather than a code defect - following the same
+      precedent as 4.3's "all antigens the patient has data for" nit. It is not
+      purely theoretical though:
+      LogicStepRenderer.printSelectBestPatientSeriesPost prints "Done checking
+      Antigens" and then lists that very list, so the cdsi-web step view shows
+      the last antigen's patient series under a heading implying none is
+      current. Recorded as observation only - no finding filed, no
+      classification attempted. A second, smaller observation: 4.5 is the only
+      writer of antigenSeriesSelectedList and nothing in cdsi-engine or cdsi-web
+      reads it, so that documented State Change is currently inert; the tests
+      pin it anyway so it is visible if someone starts reading it.
+
+      Deliberately not covered - (a) everything the Purpose says about Series
+      Groups and Equivalent Series Groups ("a best patient series will be
+      selected for each Series Group ... some antigen series define Equivalent
+      Series Groups which allow a single best series to be selected from across
+      multiple Series Groups"): 4.5 loops by antigen only and never touches a
+      series group, and the series-group reasoning lives entirely in Table 8-14
+      inside DetermineBestPatientSeries, so testing it here would be testing
+      8.9's class under 4.5's name; (b) the emergency entries into 4.5 from
+      EvaluateAndForecastAllPatientSeries' two loop guards and
+      ForecastDatesAndReasons' cycle guard, which can start 4.5's antigen loop
+      before 4.4 has finished: those transitions have no basis in 4.5's own
+      specification text and belong to 4.4's and 7.x's units, which already pin
+      them from their own side; (c) any assertion involving a real Supporting
+      Data release - the step reads only 4.3's antigen-selected list, the
+      antigen series list and the patient series stepper, all of which are
+      cheaper and clearer to hand-build, and nothing in 4.5 depends on the
+      content of a release. Considered fully covered for what 4.5 documents.
   '4.6':
     test_status: not_started
     test_class: null
