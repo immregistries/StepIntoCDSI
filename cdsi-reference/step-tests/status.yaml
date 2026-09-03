@@ -334,12 +334,88 @@ units:
       cheaper and clearer to hand-build, and nothing in 4.5 depends on the
       content of a release. Considered fully covered for what 4.5 documents.
   '4.6':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.IdentifyAndEvaluateVaccineGroupTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      Section 4.6 declares no inputs, no business rules and no decision tables,
+      and says so outright: "The process of identifying and evaluating a vaccine
+      group at the highest level is a simple iterative process which loops
+      through each vaccine group and applies the business rules defined in
+      Chapter 9 to each vaccine group." Every rule that actually merges
+      antigen-level forecasts into a vaccine-group forecast lives in Chapter 9 -
+      9.1's Table 9-2, 9.2, and 9.3's Table 9-4. So this is the same shape as 4.3
+      and 4.5: the class named for the chapter-4 summary is really the outer
+      loop, and here it is the outermost loop of the whole engine, the only one
+      whose exit is the end of the run rather than a handoff to another loop.
+      What is normative is Figure 4-8's looping structure, plus the step
+      package's documented State Changes.
+
+      18 tests, all 18 green. They cover Figure 4-8 end to end (first call
+      selects the first vaccine group and delegates to 9.1; each re-entry
+      advances vaccineGroupPos by exactly one; every vaccine group is handed to
+      Chapter 9 exactly once, in the vaccine group list's order; after the last
+      group the run ends at END; the End step returned there really terminates
+      the run, its process() returning null; no vaccine groups at all goes
+      straight to END with no group ever made current; calling again after the
+      loop has finished keeps ending the run rather than wrapping around, which
+      matters because 9.2 and 9.3 return to 4.6 on every path they take), what
+      4.6 delegates rather than decides (a multi-antigen group such as MMR is
+      handed to 9.1 exactly like a single-antigen one instead of short-circuiting
+      Table 9-2's single-vs-multiple decision; a group with no antigens and a
+      group with no best patient series are both still visited; the loop creates
+      no vaccine group forecast of its own and attaches none to the group; the
+      best patient series list is passed through to Chapter 9 untouched, same
+      instance and same contents, so the last group still has something to
+      merge), and the State Changes as they actually behave (the last vaccine
+      group stays current after the loop ends, since 4.6 clears no per-iteration
+      state - unlike 4.5 - and nothing runs after it; the set of vaccine groups
+      is fixed the first time the list is read, because DataModel materializes
+      and caches it from the vaccine group map, so a group registered mid-loop is
+      never visited; with no list explicitly set the loop iterates that map,
+      which is the only path the real pipeline takes since nothing in cdsi-engine
+      calls setVaccineGroupList). Two of the 18 run against a bundled CDC
+      Supporting Data release and confirm the loop's real-world shape: it visits
+      every vaccine group the release defines exactly once, including the
+      multi-antigen groups the Purpose names, and the Chapter 9 invocation count
+      per run follows the schedule rather than the patient.
+
+      Two observations for review, both pinned as actual behaviour rather than
+      asserted as defects, and neither classified. First, 4.6 applies no filter
+      of its own: with the bundled release loaded, all 26 of the schedule's
+      vaccine groups are handed to Chapter 9 whether or not the patient has any
+      best patient series in them, and 9.2 raises its ALERT.SPECGAP "No matching
+      forecast found for vaccine group" for each of the ones that are empty for
+      this patient. Section 4.6 says "loops through each vaccine group" without
+      qualifying which, and no business rule narrows it, so this reads as
+      faithful to the text - but the alert volume it produces is worth a human
+      eye, and if it is wrong the fix belongs to Chapter 9's units, not here.
+      Second, the step's guard against a null vaccine group list is dead code:
+      DataModel.getVaccineGroupList() re-materializes the list from the vaccine
+      group map whenever the field is null, so the guarded branch and its
+      vaccineGroupList_isNull log field can never be observed. A test pins that
+      so the assumption is visible if DataModel's lazy initialization ever
+      changes.
+
+      Deliberately not covered - (a) the Purpose's claim that "for vaccine groups
+      which contain non-equivalent series groups, it is important to only blend
+      best patient series of the same series type (e.g., risk with risk and
+      standard with standard)": 4.6 does no blending and never inspects a series
+      type or series group, so testing it here would be testing 9.3's class under
+      4.6's name, and Table 9-4 is where it belongs; (b) the order in which
+      vaccine groups are visited when no list was explicitly set - it comes from
+      HashMap.values() on the vaccine group map, so it is arbitrary though stable
+      for a given key set, and neither section 4.6 nor Figure 4-8 states an
+      order, so the tests assert set membership and visit counts there rather
+      than a sequence; (c) a null entry inside the vaccine group list, which 4.6
+      would make current and hand to 9.1 where Table 9-2 would dereference it -
+      it cannot arise from getOrCreateVaccineGroup or from DataModelLoader, has
+      no basis in 4.6's text, and a test for it would pin a hypothetical rather
+      than a documented behaviour. Considered fully covered for what 4.6
+      documents.
   '5.1':
     test_status: not_started
     test_class: null
