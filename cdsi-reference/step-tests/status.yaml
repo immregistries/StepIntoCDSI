@@ -179,12 +179,81 @@ units:
       the behaviour is recorded before anyone starts reading that field; not
       classified, per Role A scope.
   '4.4':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: >-
+      org.openimmunizationsoftware.cdsi.core.logic.EvaluateAndForecastAllPatientSeriesTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      Section 4.4 declares no business rules and no decision tables of its own -
+      the clinical logic it orchestrates is Chapters 6 and 7 - but unlike 4.1 and
+      4.3 it is not rule-free: Figures 4-5 and 4-6 define a state machine, and
+      that is what the 21 tests pin. Covered: Figure 4-6's setup (one target dose
+      per series dose in series order, starting on the first target dose and the
+      first antigen administered record, with the record list filtered to the
+      series' own antigen); the "if no antigen administered records exist" branch
+      straight to forecasting; not-satisfied keeping the target dose and
+      advancing the record; not-satisfied with no records left ending evaluation
+      and beginning forecasting for the target dose evaluation stopped on;
+      satisfied advancing both collections; the recurring-dose branch creating a
+      duplicate target dose that tracks the same series dose and continues the
+      walk; the terminal "set evaluation status to Extraneous for any
+      un-evaluated antigen administered records" box; the Purpose's "each
+      relevant patient series will have ... a forecast"; Figure 4-5's outer loop
+      (next relevant patient series set up from scratch, then 4.5 with the
+      per-series working state cleared, plus the no-series-at-all degenerate
+      case). Also pinned, each labelled in the test javadoc as having no
+      specification counterpart: the SKIPPED/SUBSTITUTED/UNNECESSARY arms of the
+      TargetDoseStatus switch, the SKIPPED-in-forecast transition from
+      transitions.yaml, the "don't advance the record until Chapter 6 has
+      recorded an evaluation" guard, and the two loop guards (>1000 cycles,
+      >200 repeated states) the step package's Review Findings flags.
+
+      18 green, 3 red. (1)
+      everyRecordLeftUnevaluatedWhenTargetDosesRunOutIsMarkedExtraneous -
+      expected both records left un-evaluated to be EXTRANEOUS, actual only the
+      last one: markRestAsExtraneous() loops from aarPos + 1, but aarPos already
+      points at the first un-evaluated record because the SATISFIED arm
+      incremented it before calling moveToNextTargetDoseIfAvailable(), so the
+      first leftover record is skipped. (2)
+      anExplicitlyNonRecurringLastTargetDoseAlsoMarksTheRestExtraneous -
+      expected the two leftover records to be EXTRANEOUS, actual none at all:
+      moveToNextTargetDoseIfAvailable() only calls markRestAsExtraneous() when
+      the series dose has no RecurringDose object at all; an explicit
+      recurringDose of "No" returns false without marking anything. Every
+      seriesDose in the bundled Supporting Data releases carries a recurringDose
+      element (62 of 62 in HepB) and DomUtils maps "No" to YesNo.NO, so in
+      production the marking path is never reached and no record is ever set
+      EXTRANEOUS by this step. (3)
+      satisfyingARecurringMidSeriesTargetDoseAlsoCreatesAnotherOne - expected a
+      satisfied recurring target dose to create another target dose (Figure 4-6
+      asks "is this target dose a recurring target dose?" of every satisfied
+      dose, and only the No branch reaches "is there another target dose to
+      process?"), actual no duplicate is created unless the target dose list is
+      already exhausted, and the recurring flag consulted at that point is the
+      last dose's rather than the recurring one's. Not hypothetical: the bundled
+      releases contain nine non-final series doses with recurringDose Yes (all
+      COVID-19). The assertion is deliberately position-agnostic - it asserts
+      only that the duplicate exists - because Figure 4-6 does not say where
+      "another target dose" goes, and this step package's State Changes
+      ("inserted immediately after it") and the implementation (appended at the
+      end) read that differently; the placement question is the ambiguous part
+      and is left untested.
+
+      Deliberately not covered: (a) the ALERT.MISSING "currentPatientSeries is
+      null" -> END transition, which is unreachable through the public API -
+      process() increments the stepper whenever it is unstarted, so hasCurrent()
+      true implies getCurrent() non-null, and forcing it would mean reaching into
+      Stepper's private position rather than testing 4.4; (b) the ALERT.INVARIANT
+      out-of-range aarIndex and empty-target-dose-list alerts, which are log-only
+      and similarly unreachable without corrupting the data model by hand; (c)
+      what Chapters 6 and 7 do once dispatched to - the tests assert only which
+      step 4.4 hands off to and what state it leaves behind, and never call
+      process() on the returned step; (d) a full multi-series drive of the loop
+      to completion, which would need a stand-in for every Chapter 6/7 step and
+      would be an engine test rather than a 4.4 test.
   '4.5':
     test_status: not_started
     test_class: null
