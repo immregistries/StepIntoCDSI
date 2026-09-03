@@ -54,6 +54,18 @@ def _badge(label: str, css_class: str) -> str:
     return f'<span class="badge badge-{css_class}">{_esc(label)}</span>'
 
 
+def _notes_html(notes: str) -> str:
+    """One <p> per paragraph break in the source, not a single run-on line.
+    A unit's notes come from a YAML folded (`>`) block scalar, which joins an
+    ordinary line wrap into a space but keeps a blank line in the source as
+    one literal newline in the parsed string - so every remaining "\\n" here
+    is a real, intentional paragraph break, never an arbitrary wrap point."""
+    if not notes:
+        return ""
+    paragraphs = [p.strip() for p in notes.split("\n") if p.strip()]
+    return "".join(f"<p>{_esc(p)}</p>" for p in paragraphs)
+
+
 def _counts_cell(counts: dict | None, test_status: str) -> str:
     if counts is None:
         return "<span class=\"muted\">-</span>" if test_status == "not_started" else "<span class=\"muted\">not run</span>"
@@ -105,17 +117,33 @@ def render_dashboard(version: str) -> str:
             )
 
         findings_cell = _esc(", ".join(finding_ids)) if finding_ids else "<span class=\"muted\">-</span>"
-        rows_html.append(
-            "<tr>"
+
+        if notes:
+            notes_cell = '<button class="notes-toggle" type="button" aria-expanded="false">Show notes</button>'
+            detail_row = (
+                "<tr class=\"notes-row\" hidden>"
+                f"<td colspan=\"7\"><div class=\"notes-text\">{_notes_html(notes)}</div></td>"
+                "</tr>"
+            )
+        else:
+            notes_cell = '<span class="muted">-</span>'
+            detail_row = ""
+
+        main_row = (
+            "<tr class=\"main-row\">"
             f"<td class=\"unit-id\">{_esc(uid)}</td>"
             f"<td>{_esc(title)}</td>"
             f"<td>{_badge(_TEST_STATUS_LABEL.get(test_status, test_status), _TEST_STATUS_CLASS.get(test_status, 'gray'))}</td>"
             f"<td>{_counts_cell(counts, test_status)}</td>"
             f"<td>{_badge(_FIX_STATUS_LABEL.get(fix_status, fix_status), _FIX_STATUS_CLASS.get(fix_status, 'gray'))}</td>"
             f"<td>{findings_cell}</td>"
-            f"<td class=\"notes\">{_esc(notes)}</td>"
+            f"<td>{notes_cell}</td>"
             "</tr>"
         )
+        # Each unit is its own <tbody> (main row + optional hidden notes row) so
+        # sorting can move the pair together with one appendChild, rather than
+        # having to track which lone <tr> a notes row belongs to.
+        rows_html.append(f'<tbody class="unit-group">{main_row}{detail_row}</tbody>')
 
     total = len(units) or 1
     written_pct = round(100 * written / total)
@@ -174,7 +202,13 @@ def render_dashboard(version: str) -> str:
   th {{ font-size: 11px; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); cursor: pointer; user-select: none; }}
   th:hover {{ color: var(--fg); }}
   td.unit-id {{ font-variant-numeric: tabular-nums; white-space: nowrap; }}
-  td.notes {{ color: var(--muted); font-size: 13px; max-width: 320px; }}
+  .notes-toggle {{ background: none; border: 1px solid var(--border); border-radius: 5px; cursor: pointer;
+                    color: var(--fg); font-size: 12px; padding: 3px 9px; white-space: nowrap; }}
+  .notes-toggle:hover {{ border-color: var(--blue); color: var(--blue); }}
+  tr.notes-row td {{ background: var(--bg); border-bottom: 2px solid var(--border); }}
+  .notes-text {{ font-size: 13px; line-height: 1.5; padding: 4px 8px; }}
+  .notes-text p {{ margin: 0 0 10px; }}
+  .notes-text p:last-child {{ margin-bottom: 0; }}
   .muted {{ color: var(--muted); }}
   .badge {{ display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600;
             color: #fff; white-space: nowrap; }}
@@ -238,25 +272,37 @@ def render_dashboard(version: str) -> str:
         <th>Notes</th>
       </tr>
     </thead>
-    <tbody>
-      {"".join(rows_html)}
-    </tbody>
+    {"".join(rows_html)}
   </table>
 </section>
 
 <script>
-  // Client-side only, no external libraries: a text filter and click-to-sort
-  // on a static table that never re-fetches anything - this page is a
-  // snapshot, not a live view.
+  // Client-side only, no external libraries: a text filter, click-to-sort,
+  // and per-row notes expansion on a static table that never re-fetches
+  // anything - this page is a snapshot, not a live view.
+  //
+  // Each unit is its own <tbody> (a main row plus an optional hidden notes
+  // row) specifically so sorting can move the pair together with one
+  // appendChild of the <tbody>, rather than re-pairing loose <tr> elements.
   (function () {{
     var filterInput = document.getElementById('filter');
     var table = document.getElementById('unit-table');
-    var rows = Array.prototype.slice.call(table.tBodies[0].rows);
+    var groups = Array.prototype.slice.call(table.tBodies);
 
     filterInput.addEventListener('input', function () {{
       var q = filterInput.value.toLowerCase();
-      rows.forEach(function (row) {{
-        row.style.display = row.textContent.toLowerCase().indexOf(q) === -1 ? 'none' : '';
+      groups.forEach(function (tbody) {{
+        tbody.style.display = tbody.textContent.toLowerCase().indexOf(q) === -1 ? 'none' : '';
+      }});
+    }});
+
+    Array.prototype.forEach.call(table.querySelectorAll('.notes-toggle'), function (button) {{
+      button.addEventListener('click', function () {{
+        var notesRow = button.closest('tr').nextElementSibling;
+        var expanded = button.getAttribute('aria-expanded') === 'true';
+        notesRow.hidden = expanded;
+        button.setAttribute('aria-expanded', String(!expanded));
+        button.textContent = expanded ? 'Show notes' : 'Hide notes';
       }});
     }});
 
@@ -267,14 +313,13 @@ def render_dashboard(version: str) -> str:
         var asc = !sortState[colIndex];
         sortState = {{}};
         sortState[colIndex] = asc;
-        var sorted = rows.slice().sort(function (a, b) {{
-          var av = a.cells[colIndex].textContent.trim();
-          var bv = b.cells[colIndex].textContent.trim();
+        var sorted = groups.slice().sort(function (a, b) {{
+          var av = a.rows[0].cells[colIndex].textContent.trim();
+          var bv = b.rows[0].cells[colIndex].textContent.trim();
           return asc ? av.localeCompare(bv) : bv.localeCompare(av);
         }});
-        var tbody = table.tBodies[0];
-        sorted.forEach(function (row) {{ tbody.appendChild(row); }});
-        rows = sorted;
+        sorted.forEach(function (tbody) {{ table.appendChild(tbody); }});
+        groups = sorted;
       }});
     }});
   }})();
