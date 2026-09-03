@@ -26,7 +26,7 @@ def default_output_path() -> Path:
     return paths.fits_dashboard_path()
 
 
-def _latest_run_dir() -> Optional[Path]:
+def latest_run_dir() -> Optional[Path]:
     root = paths.fits_runs_dir()
     if not root.exists():
         return None
@@ -36,7 +36,7 @@ def _latest_run_dir() -> Optional[Path]:
     return sorted(run_dirs, key=lambda d: d.name)[-1]
 
 
-def _load_run(run_dir: Path) -> dict:
+def load_run(run_dir: Path) -> dict:
     run_info = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
     summary = json.loads((run_dir / "summary.json").read_text(encoding="utf-8"))
     cases = []
@@ -76,12 +76,12 @@ def _case_diff_line(case: dict) -> str:
 
 
 def render_dashboard() -> str:
-    run_dir = _latest_run_dir()
+    run_dir = latest_run_dir()
     if run_dir is None:
         raise FileNotFoundError(
             "No FITS run bundle found under cdsi-fits-tests/target/fits-runs/ - "
             "run `mvn -pl cdsi-fits-tests test -Dtest=FitsFixtureTest` first.")
-    data = _load_run(run_dir)
+    data = load_run(run_dir)
     run = data["run"]
     summary = data["summary"]
     cases = data["cases"]

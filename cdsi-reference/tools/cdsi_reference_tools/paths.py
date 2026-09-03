@@ -86,6 +86,10 @@ def fits_dashboard_path() -> Path:
     return dashboards_dir() / "fits-results.html"
 
 
+def dashboard_index_path() -> Path:
+    return dashboards_dir() / "index.html"
+
+
 def fits_runs_dir() -> Path:
     return reference_root().parent / "cdsi-fits-tests" / "target" / "fits-runs"
 

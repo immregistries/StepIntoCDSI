@@ -9,6 +9,7 @@
     python -m cdsi_reference_tools step-tests status --version 4.6
     python -m cdsi_reference_tools step-tests dashboard --version 4.6
     python -m cdsi_reference_tools fits-tests dashboard
+    python -m cdsi_reference_tools dashboards index
 """
 
 import argparse
@@ -17,6 +18,7 @@ from pathlib import Path
 
 from . import (
     compare_versions,
+    dashboard_index,
     extract,
     fits_dashboard,
     network_guard,
@@ -207,6 +209,13 @@ def _cmd_fits_tests_dashboard(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_dashboards_index(args: argparse.Namespace) -> int:
+    out = Path(args.out) if args.out else None
+    dest = dashboard_index.write_index(out)
+    print(f"Wrote {dest}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="cdsi_reference_tools")
     subparsers = parser.add_subparsers(dest="resource", required=True)
@@ -302,6 +311,14 @@ def build_parser() -> argparse.ArgumentParser:
         "dashboard", help="Write the latest FITS diagnostic bundle as a static HTML file, by group")
     p_fits_dashboard.add_argument("--out", default=None, help="Defaults to dashboards/fits-results.html")
     p_fits_dashboard.set_defaults(func=_cmd_fits_tests_dashboard)
+
+    dashboards_parser = subparsers.add_parser("dashboards", help="Cross-dashboard commands")
+    dashboards_sub = dashboards_parser.add_subparsers(dest="action", required=True)
+
+    p_dash_index = dashboards_sub.add_parser(
+        "index", help="Write a landing page linking step-tests.html and fits-results.html, with live headline numbers")
+    p_dash_index.add_argument("--out", default=None, help="Defaults to dashboards/index.html")
+    p_dash_index.set_defaults(func=_cmd_dashboards_index)
 
     return parser
 
