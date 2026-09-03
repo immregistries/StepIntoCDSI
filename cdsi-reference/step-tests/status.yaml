@@ -1,12 +1,48 @@
 spec_version: '4.6'
 units:
   '4.1':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.GatherNecessaryDataTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      Section 4.1 defines no business rules and no decision tables - the
+      specification explicitly puts this step "outside of the purview of this
+      document" - so there is no normative rule to test against. The 13 tests
+      cover the step package's documented State Changes and Next Steps instead:
+      Patient (dob/gender) populated from ForecastInput; ImmunizationHistory
+      created and cross-linked with the patient's MedicalHistory; one
+      VaccineDoseAdministered per input vaccination, in input order, with the
+      CVX resolved to the Supporting Data VaccineType instance and the MVX as
+      manufacturer; IllegalArgumentException for an unrecognized CVX code;
+      optional dose condition carried through and not defaulted when omitted;
+      PatientObservation built from a resolved observation code, with the same
+      rejection behaviour for an unrecognized code; unconditional transition to
+      4.2. Considered fully covered for what 4.1 documents.
+
+      Deliberately not covered - (a) the specification's "Evaluation and
+      forecasting data" list (Schedule, Antigen Series, Series Dose, Vaccine
+      Group, Antigen, Vaccine): this is Supporting Data loaded once by
+      DataModelLoader.createDataModel, not by this step, and the step package
+      records as an unresolved question whether 4.1 even intends it to be
+      gathered per request - only the negative is asserted (4.1 leaves
+      scheduleList/antigenSeriesList/antigenAdministeredRecordList untouched);
+      (b) Adverse Reaction, listed by the specification as patient-related data
+      but absent from ForecastInput entirely, so there is nothing to unit-test
+      without inventing an input shape; (c) real CVX/observation resolution
+      against an actually loaded Supporting Data release - the tests use a
+      two-entry stub cvxMap/observationMap, since loading the real release is
+      DataModelLoaderTest's job and would make these tests a Supporting Data
+      test rather than a 4.1 test.
+
+      Two documentation observations for Role B, neither a code defect - the
+      step package's State Changes list omits that process() also copies the
+      assessment date onto the DataModel (tested here anyway), and it does not
+      mention that a null/empty observation code is skipped rather than
+      rejected (also tested, and flagged in the test as implementation
+      behaviour with no specification basis).
   '4.2':
     test_status: not_started
     test_class: null
