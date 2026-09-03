@@ -44,12 +44,64 @@ units:
       rejected (also tested, and flagged in the test as implementation
       behaviour with no specification basis).
   '4.2':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.OrganizeImmunizationHistoryTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      Section 4.2 declares no business rules and no decision tables - it is "a
+      fairly simple iterative process" of three numbered steps around Figure
+      4-3, with Tables 4-2/4-3 as a worked before/after example. The 11 tests
+      cover all three numbered steps plus the two explanatory notes: a
+      combination product expanded into one antigen administered record per
+      antigen it contains (all sharing the dose's date and pointing back at it);
+      a single-antigen product producing exactly one record; the record carrying
+      the source dose's data elements (date administered, vaccine type,
+      manufacturer, trade name, amount, lot expiration date, dose condition -
+      note 2b); sorting by antigen; sorting by ascending date within an antigen;
+      the whole Table 4-2 history organizing into all 19 Table 4-3 rows in
+      Table 4-3's stated order; an empty history and an antigen-less product
+      each producing no records; the unconditional transition to 4.3; and note
+      2a's age-based CVX-to-antigen association, from both sides.
+
+      9 green, 2 red. Both red tests are note 2a and fail for the same single
+      reason - zosterLiveGivenBelowFiftyYearsIsAssociatedWithVaricellaOnly
+      (expected [Varicella], actual [Varicella, Zoster]) and
+      zosterLiveGivenAtOrAboveFiftyYearsIsAssociatedWithZosterOnly (expected
+      [Zoster], actual [Varicella, Zoster]). Note 2a requires the CVX to Antigen
+      Supporting Data's Association Begin Age / Association End Age to select
+      the antigen by the patient's age at administration ("a Zoster vaccine
+      administered below 50 years should be associated with Varicella"), and
+      CVX 121 in the bundled releases does carry those attributes (Varicella
+      [0 days, 50 years), Zoster [50 years, -)). OrganizeImmunizationHistory
+      creates a record for every antigen in
+      vda.getVaccine().getVaccineType().getAntigenList() with no age filter, so
+      one CVX 121 dose always yields both records at any age. For Role B: the
+      cause is not confined to this step's class - DataModelLoader.readCvx
+      reads only the <antigen> child of each <association> and discards
+      associationBeginAge/associationEndAge, and VaccineType holds a plain
+      List<Antigen> with nowhere to put them, so the association ages never
+      reach this step at all. Role A records this as observation only, with no
+      finding filed and no classification attempted.
+
+      Deliberately not covered - (a) Figure 4-3's own activity-diagram data
+      element list: both extracted copies of the figure image are blank, so the
+      record's contents are tested against note 2b's prose and what the
+      AntigenAdministeredRecord(vda, antigen) constructor documents rather than
+      against the diagram; (b) the comparator's case sensitivity (it compares
+      names with equalsIgnoreCase for equality but case-sensitive compareTo for
+      ordering, and is technically inconsistent when an antigen is null) - the
+      specification says nothing about either, and no real Supporting Data
+      antigen name exercises them; (c) null immunization history / null
+      administration date, which NPE - not behaviour 4.2 documents.
+
+      The two note-2a tests are the only ones that load a bundled CDC
+      supporting data release (the way DataModelLoaderTest does); everything
+      else uses hand-built domain objects. That load is unavoidable there,
+      since the Association Begin/End Age attributes exist only in the release
+      XML and in no hand-buildable domain object.
   '4.3':
     test_status: not_started
     test_class: null
