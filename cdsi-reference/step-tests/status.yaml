@@ -1493,12 +1493,91 @@ units:
       shape and its grid are pinned. (6) The structured log events, for the same
       reason 6.3 through 6.8 left theirs alone.
   '6.10':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.SatisfyTargetDoseTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      25 tests, 22 green and 3 red. Covered: the step's identity
+      (SATISFY_TARGET_DOSE, chapter "6.10"); that it publishes no attribute table
+      and no business rules, as the specification records for this section; Table
+      6-31's identity, its four-condition six-rule shape and its full
+      condition/rule grid transcribed from the specification; all six of its
+      rules - Rule 1's Satisfied/Valid outcome together with the
+      satisfiedByVaccineDoseAdministered linkage and the reverse link from the
+      dose back to the target dose that only Rule 1 records, Rule 2's
+      Extraneous, Rule 3's Not Valid (including that a SUB_STANDARD evaluation
+      status is a first-condition answer of No), and Rules 4, 5 and 6's Not
+      Valid from each of the three status cause markers; how the accumulated
+      status cause is read (order independence, duplicate tolerance, all three
+      markers at once); that process() clears the status cause back to "" only
+      after Table 6-31 has read it; the unconditional loop back to 4.4 on
+      satisfied, extraneous and not-satisfied outcomes, as this step package's
+      transitions.yaml records; and that constructing the step decides nothing.
+
+      What the unit found about the upstream status-cause markers. Across the
+      whole of cdsi-engine there are exactly four writers of TargetDose's
+      statusCause, and only three of them are ones 6.10 reads:
+      EvaluateAllowableInterval (6.6) appends "Interval",
+      EvaluateVaccineConflict (6.7) appends "VirusConflict",
+      EvaluateForAllowableVaccine (6.9) appends "Vaccine", and EvaluateGender
+      appends "Gender", which 6.10 ignores. Contrary to this step package's
+      Inputs and Attributes prose, 6.5 Evaluate Preferable Interval and 6.8
+      Evaluate for Preferable Vaccine write nothing at all - a preferable miss
+      routes on to the allowable fallback, and only that fallback failing
+      records a marker. That is exactly what Table 6-31's second and fourth
+      conditions ask for ("all preferable intervals or all allowable intervals",
+      "a preferable vaccine or an allowable vaccine"), so the narrower marker
+      set is correct, not a gap; the index.md sentence naming 6.5 and 6.8 as
+      writers is what is wrong. Because all three conditions are String.contains
+      tests on one concatenated string, they are order-independent and
+      duplicate-tolerant, so 6.7's ability to append "VirusConflict" twice in a
+      single pass cannot change what 6.10 decides - pinned green - and 6.6's and
+      6.9's markers reach 6.10 intact. 6.10 does not read the calculated dates
+      6.6 was found to overwrite, so that gap is not observable here either. The
+      one marker-related risk this unit does surface is not a marker defect at
+      all but a rule-ordering one, below.
+
+      The three red tests share a single root cause and are the same assertion
+      against three different overlaps: an EXTRANEOUS evaluation from 6.4
+      combined with, respectively, an "Interval", a "VirusConflict" and a
+      "Vaccine" marker. Expected Table 6-31 Rule 2's evaluation status
+      EXTRANEOUS in each case; actual NOT_VALID in each case. LogicTable.evaluate
+      performs every matching rule column rather than stopping at the first, and
+      Rules 4, 5 and 6 all match on a dash for the age condition, so their
+      NOT_VALID overwrites Rule 2's EXTRANEOUS. The overlap is reachable rather
+      than theoretical: EvaluateAge.process routes unconditionally on to 6.5
+      whatever its own table decided, so a too-old dose still passes through 6.5
+      to 6.9 and can collect any of their markers; and on the bundled Supporting
+      Data release 4.65-508, of 506 series doses, 92 carry a non-empty maxAge
+      and so can make 6.4 answer Extraneous at all, of which 91 also define at
+      least one allowableVaccine and 59 also define an interval or an allowable
+      interval. The FITS suite cannot see the difference - its 4,896 cases
+      record 11,126 administered vaccinations and no expected per-dose
+      evaluation status, only expected forecasts - which is consistent with this
+      never having surfaced there. No finding is recorded and no classification
+      is attempted; that is Role B's call.
+
+      Deliberately not covered. (1) Figure 6-23's process model, which draws the
+      same four questions Table 6-31 tabulates and adds no rule of its own.
+      (2) The wording of Table 6-31's four condition rows, following 6.4 through
+      6.9's precedent - the step package transcribes them in abbreviated form
+      while the implementation carries the specification's longer prose, so
+      asserting either against the other would pin a transcription difference;
+      only the table number, its shape and its grid are pinned. (3) A null
+      Evaluation. Condition 1 handles it explicitly (returning No), but Rules 3
+      to 6's outcomes all call getEvaluation().setEvaluationStatus unguarded and
+      would throw instead of producing a Table 6-31 outcome. It is unreachable
+      in the pipeline - EvaluateAge.process throws a NullPointerException of its
+      own if it has not recorded an evaluation before handing off - and the
+      specification says nothing about the case, so pinning an interpretation of
+      it would be guessing rather than testing. (4) The SKIPPED branch of
+      process()'s control log: Table 6-31 has no skipped outcome and none of its
+      six outcomes sets SKIPPED, so the branch only reports a status some other
+      step set and there is nothing of 6.10's own to pin. (5) The structured log
+      events, for the same reason 6.3 through 6.9 left theirs alone.
   '7.1':
     test_status: not_started
     test_class: null
