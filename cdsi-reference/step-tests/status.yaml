@@ -1579,12 +1579,124 @@ units:
       step set and there is nothing of 6.10's own to pin. (5) The structured log
       events, for the same reason 6.3 through 6.9 left theirs alone.
   '7.1':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkipForForecastTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      11 test methods in one class, 10 green and 1 red. This is deliberately a
+      much smaller class than 6.2's 44, and the reason is structural rather than
+      a coverage gap. 7.1 has no attribute table, no business rules and no
+      decision tables of its own - the specification says outright that "the
+      process model, attribute table, business rules, and decision tables used
+      to determine if the target dose can be skipped is the same as described in
+      Chapter 6.2" - and spec-to-code.yaml maps 7.1 onto
+      EvaluateConditionalSkipForForecast (a two-line subclass) plus the very
+      same shared EvaluateConditionalSkip base class that 6.2 already drives.
+      EvaluateConditionalSkipForEvaluationTest covers all of that base class's
+      context-independent behaviour, and none of it is re-tested here: Table
+      6-4's top-level and per-condition attributes, CALCDTSKIP-3/-4/-5, all four
+      criteria of CONDSKIP-1, the encoding and every rule of Tables 6-6 through
+      6-9, Tables 6-10 and 6-11's AND/OR roll-ups, and Figure 6-3's nesting.
+      Re-asserting any of it under 7.1's name would duplicate 6.2's work under a
+      different unit number without exercising one additional line of code. The
+      unit is considered fully covered for what is actually 7.1's own.
+
+      Covered - what is genuinely 7.1's. (a) The FORECAST arm of the shared
+      constructor's single context switch: CONDSKIP-2's Conditional Skip
+      Reference Date is the Assessment Date when determining a forecast (6.2's
+      arm takes the Date Administered instead), including the case where no
+      assessment date is supplied and Table 6-4's assumed current date is what
+      CONDSKIP-2 falls back to - a fallback 6.2's arm never consults - and the
+      case where there is no current vaccine dose administered at all, which is
+      normal during forecasting and would leave the evaluating arm's reference
+      date null. (b) What that substitution does to the decision, rather than
+      just to the attribute: Table 6-6's age window is measured against the
+      assessment date, so the same patient (born 01/01/2015, dose administered
+      06/01/2016, assessed 06/01/2021) is skippable under a 5-to-10-year window
+      and not under a 1-to-4-year one - the opposite of what 6.2 would answer
+      for both; and Table 6-8's interval condition reads the same reference
+      date, pinned with a conditional skip interval date that falls between the
+      two candidate reference dates. (c) The class's own construction and
+      identity: EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST, chapter "7.1", Table
+      6-4 as its attribute table, and that both LogicStepFactory overloads build
+      this class for 7.1 (the engine never constructs it directly - 4.4, 6.1 and
+      ForecastDatesAndReasons all dispatch through the factory). (d) Its two
+      destinations, which are confirmed from the source and are not 6.2's: no
+      skip goes to 7.2 DETERMINE_EVIDENCE_OF_IMMUNITY where 6.2 goes to 6.3, and
+      that destination also stands when the series dose defines no conditional
+      skip at all; skip sets TargetDoseStatus.SKIPPED and returns to 4.4, which
+      happens to be the same loop-back 6.2 uses.
+
+      The 1 red test, expected vs actual.
+      aConditionalSkipInstanceCarriesTheContextThatDecidesWhetherSevenOneMayUseIt
+      - expected ConditionalSkip to carry the context 7.1's entry condition
+      turns on ("Only Conditional Skip Instances with a context of Forecast or
+      Both apply here"); actual, the class has no context field at all, so the
+      entry condition cannot even be expressed. This is the same domain-model
+      gap 6.2's red (1) found, and it is asserted here rather than inherited
+      because 7.1's entry condition is its own and, more importantly, because
+      the consequence on this side is different in kind - see the next
+      paragraph. The gap lives in ConditionalSkip and DataModelLoader, not in
+      EvaluateConditionalSkip, so per cdsi-engine/AGENTS.md it is likely
+      upstream_step_defect territory rather than an edit to this unit's class;
+      that classification is Role B's call and nothing here has been recorded as
+      a finding yet.
+
+      7.1's side of the ConditionalSkip context problem, checked against the
+      Supporting Data release bundled in cdsi-engine/src/main/resources. 484
+      <seriesDose> elements carry a <conditionalSkip> element, but 287 of those
+      are empty placeholders that DataModelLoader's `populated` guard correctly
+      discards (so they never overwrite anything, and no series dose mixes an
+      empty element with a real one). That leaves 264 real instances - 140
+      "Both", 57 "Evaluation", 67 "Forecast" - across 197 series doses: 127 with
+      a single "Both" instance, 54 Evaluation-then-Forecast, 13
+      Both-then-Forecast, and 3 with a single "Evaluation" instance. Because
+      SeriesDose holds exactly one ConditionalSkip and setConditionalSkip is
+      called once per element, the last one parsed wins. The result is
+      asymmetric, not a mirror image of 6.2's: in all 67 two-instance cases the
+      retained instance is the Forecast one, which is exactly the instance 7.1
+      is required to use - so 7.1 gets the right instance by the accident of
+      document order, with no filtering involved, in every case where 6.2 loses
+      the one it needed. What 7.1 loses instead is the opposite kind of error
+      and much smaller: the 3 Evaluation-only series doses, where 7.1 applies a
+      conditional skip whose context excludes it. So 6.2's symptom is
+      under-application (67 doses) and 7.1's is over-application (3 doses), from
+      one shared cause. The sequencing consequence matters for Role B and is
+      recorded in cross-cutting-notes.md's existing ConditionalSkip entry, which
+      was updated in place rather than duplicated: a loader-only "keep the
+      first instance instead of the last" fix would repair 6.2's 67 cases and
+      simultaneously break 7.1's 67, because the two units want different
+      instances from the same list. Only giving ConditionalSkip a context,
+      accumulating every instance in the loader, and filtering at use time fixes
+      both sides.
+
+      Deliberately not covered. (a) Everything context-independent in the shared
+      base class, per the scoping paragraph above - that is 6.2's coverage and
+      re-testing it here would measure nothing new. All eight of 6.2's red tests
+      describe defects in that shared code and therefore apply to 7.1 verbatim,
+      including LT67's "Completed Series" condition hardcoded to
+      LogicResult.NO, Table 6-9's unreachable "Equal" row, and both off-by-one
+      boundary comparisons; the tests here avoid boundary dates deliberately so
+      they fail or pass on 7.1's own reference-date question rather than on
+      6.2's known boundary bugs. (b) SkipTargetDoseForForecast - a separate
+      class that carries LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST
+      (7.1's step type) and unconditionally advances to 7.2, doing no
+      conditional-skip work at all. It is dead code: neither LogicStepFactory
+      overload ever constructs it, and its only remaining references are in
+      cdsi-web's LogicStepRenderer. It is not in spec-to-code.yaml's 7.1 entry,
+      so it is left alone here; worth noting for whoever eventually reconciles
+      the class list, since a second class sharing a step type is the kind of
+      thing that quietly diverges. (c) ValidateRecommendation, the third
+      subclass of the same base class (VALIDATING context, reference date
+      01/01/1900): outside 6.2 and 7.1 both, and untouched. (d) 7.1's place in
+      the chapter 7 sequence beyond its immediate transitions - the step
+      package records that the specification never states the skip branch as a
+      transition rule, so only what the constructor demonstrably does is
+      asserted. (e) The structured log events, for the same reason 6.2 through
+      6.10 left theirs alone.
   '7.2':
     test_status: not_started
     test_class: null
