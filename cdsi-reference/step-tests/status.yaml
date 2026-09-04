@@ -719,12 +719,90 @@ units:
       using the VALIDATING context - is outside 6.2 and 7.1 both, and is
       untouched here.
   '6.3':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluateForInadvertentVaccineTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      11 test methods in one class, 8 green and 3 red. 6.3 is a small step - one
+      attribute table (6-12), one decision table (6-13) with a single condition
+      and two rules, no business rules - so the unit is fully covered apart from
+      the two items listed at the end.
+
+      Covered. The step's identity (EVALUATE_FOR_INADVERTENT_VACCINE, chapter
+      "6.3") and its Table 6-12 attribute table name; both Table 6-12 attributes
+      being registered and the first carrying the vaccine dose administered 4.4
+      has made current; Table 6-13's encoding (label, one condition, two rules,
+      Yes/No grid); Rule 1's three documented state changes (target dose status
+      'Not Satisfied', evaluation status 'Not Valid', evaluation reason
+      'Inadvertent Administration') and its transition back to 4.4; Rule 1
+      matching any one of several inadvertent vaccine types, and matching by CVX
+      code rather than object identity; Rule 2 making no state change at all and
+      continuing to 6.4 Evaluate Age; and a target dose with no inadvertent
+      vaccine types never taking Rule 1.
+
+      The 3 red tests, expected vs actual. (1)
+      theSupportingDatasInadvertentVaccineTypesReachTheTargetDose - expected a
+      series dose loaded from the Supporting Data's own markup to carry the three
+      inadvertent vaccine types it declares; actual 0, because
+      DataModelLoader.readSeriesDose has no branch for the <inadvertentVaccine>
+      element (it handles doseNumber, age, interval, allowableInterval,
+      preferableVaccine, allowableVaccine, conditionalSkip, recurringDose,
+      conditionalNeed, seasonalRecommendation, substituteDose and
+      requiredGender, and drops the rest) and
+      SeriesDose.setInadvertentVaccineList is called from nowhere in the engine.
+      (2) tableSixTwelveSupportingDataAttributeCarriesTheInadvertentVaccineType -
+      expected Table 6-12's second attribute ("Supporting Data (inadvertent
+      vaccine)" / "Vaccine Type") to carry a value; actual null, because
+      caInadvertentVaccine is constructed and registered but never assigned, and
+      the caInadvertentVaccineList field that would hold the list is initialised
+      empty and never read or written - the decision table reaches past both to
+      targetDose.getTrackedSeriesDose().getInadvertentVaccineList() directly, so
+      the attribute the step publishes and renders is always blank. (3)
+      ruleOneRecordsItsEvaluationOnATargetDoseThatHasNoEvaluationYet - expected
+      Rule 1 to record evaluation status 'Not Valid' and reason 'Inadvertent
+      Administration'; actual NullPointerException, because the outcome writes to
+      dataModel.getTargetDose().getEvaluation() and no evaluation exists yet on
+      the path that reaches 6.3 (TargetDose starts with an empty evaluation list,
+      4.4 dispatches to 6.1 without creating one, 6.1's Rule 3 and 6.2's
+      cannot-be-skipped outcome record nothing, and 6.4 is the first step to call
+      DataModel.setEvaluationForCurrentTargetDose). This is the same shape as the
+      two reds 6.1's unit found in Table 6-3.
+
+      Materiality of red (1), checked against the Supporting Data release bundled
+      in cdsi-engine/src/main/resources. The release defines 307
+      <inadvertentVaccine> entries carrying a CVX code, over 26 distinct vaccine
+      types, on 115 of its 484 series doses, across 8 antigens: COVID-19 (90
+      entries on 37 series doses), Polio (78 on 26 - every series dose it
+      defines), Tetanus (36 on 6), Diphtheria (36 on 6), RSV (34 on 7 - every
+      one), Pneumococcal (15 on 15), HPV (12 on 12) and Pertussis (6 on 6). All
+      307 are discarded at load time, so Table 6-13's Rule 1 is unreachable in
+      the running engine and every inadvertent administration the CDC data
+      describes is currently evaluated as if it were not one. Red (1) is in
+      DataModelLoader and red (3) would need either the outcome or an upstream
+      step to create the Evaluation, so both are likely upstream_step_defect
+      territory under cdsi-engine/AGENTS.md rather than edits to this unit's own
+      class; that classification is Role B's call and nothing here has been
+      recorded as a finding. Note also that reds (1) and (3) mask each other in
+      production today: because no inadvertent vaccine type ever loads, Rule 1
+      never fires and the NullPointerException is never reached, so fixing the
+      loader alone would turn a silent miss into a crash.
+
+      Deliberately not covered. The wording of Table 6-13's single condition: the
+      specification's table cell and the implementation's condition label ask the
+      same question in different words ("... one of the target dose's inadvertent
+      vaccine types?" against "... one of the vaccine types of an inadvertent
+      vaccine for the target dose?") and neither is a transcription of the other,
+      so pinning either string would assert a paraphrase rather than a behaviour;
+      the table's own title, which the step write-up quotes verbatim, is pinned
+      instead. Also not pinned: the step's behaviour when the current
+      AntigenAdministeredRecord has no VaccineDoseAdministered, or when the
+      target dose has no tracked series dose - the condition dereferences both
+      without a guard, but neither state is described by section 6.3 and both are
+      the responsibility of the steps that populate them, so no test asserts an
+      interpretation the specification does not state.
   '6.4':
     test_status: not_started
     test_class: null
