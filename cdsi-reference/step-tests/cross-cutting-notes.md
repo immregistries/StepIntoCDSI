@@ -74,17 +74,70 @@ it parses correctly;
 nowhere 7.2 can see. Not observable via FITS, which asserts forecast output
 rather than per-series immunity status.
 
-**Suspected but not checked - 7.3 has the same shape:**
-`DetermineContraindications` carries a commented-out
+**Updated 2026-09-04, from 7.3's side (`DetermineContraindicationsTest`).** The
+prediction that 7.3 "has the same shape" **holds for the routing and only for
+the routing** - and where it differs, it differs in the direction of being
+worse, so the two sides should not be treated as one symmetric problem the way
+6.2/7.1's ConditionalSkip entry can be. What is the same: `readContraindications`
+writes each parsed `Contraindication` onto `schedule.getContraindicationList()`
+and nowhere else, `DataModel.setContraindicationList` is never called by
+anything, and `DetermineContraindications` carries the commented-out
 `caContraindicationElements.setInitialValue(dataModel.getContraindicationList().get(0));`
-with a comment saying the attribute "cannot be set correctly" yet, and the
-contraindications it needs are on `Schedule` for the same reason. 7.3's Role A
-session should check this deliberately rather than re-derive it. Whether 7.4 or
-any Chapter 8 step depends on schedule-level data has not been looked at.
+exactly as quoted. Three ways it is **not** the same:
+
+1. **It would not even compile.** `DataModel.contraindicationList` is declared
+   `List<Contraindication_TO_BE_REMOVED>`, a different class from the
+   `domain.Contraindication` the loader instantiates. That is what the source
+   comment means by "cannot be set correctly until 'Contraindication_TO_BE_REMOVED'
+   get[s] replaced with 'Contraindication'". So on the contraindication side the
+   two parallel fields are not merely one populated and one empty, as with
+   immunity - they hold incompatible types, and an unfinished migration sits
+   between them. `MedicalHistory.contraindicationSet` (which 7.4's condition 3
+   reads) is the same `_TO_BE_REMOVED` type and is likewise never populated.
+2. **The loader is lossy, not just misrouted.** `readImmunity` parses its element
+   faithfully and only puts it in the wrong place; `readContraindications` reads
+   exactly two fields per contraindication - `observationCode` and
+   `observationTitle` - and discards `contraindicationText`,
+   `contraindicationGuidance`, `beginAge`, `endAge` and the entire
+   `<contraindicatedVaccine>` subtree. It also flattens the Supporting Data's
+   own `<vaccineGroup>`/`<vaccine>` split into one undifferentiated
+   `List<Contraindication>`; the `AntigenContraindication` and
+   `VaccineContraindication` subclasses exist in the domain model but are empty
+   and never instantiated. Table 7-7 has to tell the two levels apart, Table 7-6's
+   fourth condition needs the contraindicated CVX list, and Tables 7-5/7-6's
+   undetermined outcomes need the Contraindication Text Description - none of
+   which survive loading. So fixing the routing alone would not give 7.3 usable
+   data.
+3. **The routing is not currently 7.3's binding constraint.** 7.2's decision
+   table exists and is starved; 7.3 has no decision table at all
+   (`logicTableList` is empty, the class carries a "Write the logic for logic
+   tables 7-5 to 7-7" note), so nothing in 7.3 would consume the data even if it
+   arrived. Consequently only 6 of `DetermineContraindicationsTest`'s 16 reds are
+   attributable to this entry; the rest are the missing decision logic and a
+   separate Table 7-4 defect (the assumed Contraindication Begin/End Age Date
+   values are swapped - `FUTURE` on begin, `PAST` on end, against the
+   specification's 01/01/1900 and 12/31/2999 - which makes the age window empty
+   rather than universal for the 387 of 392 release contraindications that
+   define no age).
+
+Volume, for sequencing: contraindication data is far more abundant than immunity
+data. All 30 antigen files in the bundled 4.65-508 release ship a
+`<contraindications>` element, totalling 392 contraindications (250 antigen-level
+under `<vaccineGroup>`, 142 vaccine-level under `<vaccine>`, with 329
+`<contraindicatedVaccine>` entries between them, every one carrying a `<cvx>`),
+against 6 antigens with an `<immunity>` element. Whether 7.4 or any Chapter 8
+step depends on schedule-level data has still not been looked at.
 
 **Known affected units:** 7.2 (confirmed, 2 of its 6 red tests -
 `theParsedImmunityElementReachesWhereSevenTwoLooksForIt` and, downstream of the
-same wiring, `theImmunityElementUsedIsTheOneForThisPatientSeriesTargetDisease`).
+same wiring, `theImmunityElementUsedIsTheOneForThisPatientSeriesTargetDisease`)
+and **7.3** (confirmed, 6 of its 16 red tests -
+`theParsedContraindicationsReachWhereSevenThreeLooksForThem`,
+`aParsedContraindicationCarriesTheTextDescriptionShownToTheClinician`,
+`aParsedAntigenContraindicationCarriesTheAgesCalcdtciNeeds`,
+`aParsedVaccineContraindicationCarriesItsContraindicatedVaccineTypes`,
+`antigenAndVaccineContraindicationsStayDistinguishableAfterLoading`, and
+`tableSevenFoursContraindicationElementsAttributeIsFilledFromSupportingData`).
 
 **Suggested handling:** the fix belongs in the loader and the domain model, not
 in `DetermineEvidenceOfImmunity` - and the routing choice matters, because 7.2's
@@ -96,9 +149,20 @@ present at load time. Fixing only the immunity side would leave 7.3 to
 rediscover the same thing, so it is worth deciding the routing once for both.
 Note that a narrow "populate `DataModel.immunityList`" fix would make 7.2's
 schedule-wide reads start working while cementing the wrong scoping - one
-antigen's cutoff applied to every series.
+antigen's cutoff applied to every series. On the contraindication side, per the
+2026-09-04 update above, a routing fix alone would not be enough and cannot be
+done without also deciding what happens to `Contraindication_TO_BE_REMOVED`:
+`readContraindications` has to stop discarding most of each element, and it has
+to preserve the antigen/vaccine distinction the Supporting Data already encodes.
+Sequencing consequence: the immunity side is a routing fix, the contraindication
+side is a routing fix plus a loader rewrite plus a type migration - so they are
+worth deciding together but are not the same size of job, and 7.3's own missing
+decision tables would still have to be written before any of it changes 7.3's
+behaviour.
 
-**Status:** open, not yet fixed, not yet a formal finding.
+**Status:** open, not yet fixed, not yet a formal finding. Confirmed from the
+immunity (2026-09-04) and contraindication (2026-09-04) sides; the two are the
+same routing cause with materially different remedies.
 
 ---
 

@@ -1827,12 +1827,148 @@ units:
       guessing. (d) The structured log events, for the same reason units 6.2
       through 7.1 left theirs alone.
   '7.3':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.DetermineContraindicationsTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      24 test methods in one class, 8 green and 16 red. 7.3 is Table 7-4 (six
+      attributes), three decision tables - 7-5 (antigen contraindication
+      applies?), 7-6 (vaccine contraindication applies?), 7-7 (is the relevant
+      patient series contraindicated?) - Table 7-8's two date business rules
+      CALCDTCI-1/CALCDTCI-2, and one state change (patient series status
+      Contraindicated, read back by 7.4's own condition 3). Every fixture is a
+      contraindication the bundled 4.65-508 release actually ships: RSV's
+      observation 278 "Birth mother received RSV vaccine during pregnancy" for
+      the antigen level (the release's only antigen-level contraindication with
+      a real age window, "0 days" to "8 months") and Influenza's observation 003
+      "Immunocompromised" for the vaccine level (contraindicating CVX 111 and
+      CVX 333).
+
+      Covered and green. (a) Identity and dispatch: both LogicStepFactory
+      overloads build DetermineContraindications for
+      DETERMINE_CONTRAINDICATIONS, chapter "7.3", Table 7-4 named as the
+      attribute table. (b) All six Table 7-4 attributes are created and
+      registered on the printed attribute list. (c) The Assessment Date
+      attribute carries the assessment date it was handed. (d) CALCDTCI-1 and
+      CALCDTCI-2 themselves, invoked directly as DateRules with a
+      contraindication in hand, correctly return date of birth plus begin age
+      (01/15/2025) and date of birth plus end age (09/15/2025) - the two rules
+      are the only part of this section that is genuinely implemented, exactly
+      as the step package says. (e) Table 7-7 Rule 3 (no applying
+      contraindication, series stays forecastable) - green vacuously, since
+      nothing is ever contraindicated. (f) That 7.3 is not a branch point: both
+      a contraindicated and a not-contraindicated fixture continue to 7.4
+      DETERMINE_FORECAST_NEED. (g) That DataModelLoader does read the release's
+      <contraindications> element at all - the RSV markup copied verbatim, fed
+      to the loader's own private readContraindications reflectively, yields
+      observation code 278 and its title.
+
+      The 16 red tests fall into four groups, all four already anticipated by
+      the step package's Review Findings. Group 1 - no decision logic exists (3
+      reds): tableSevenFive/SevenSix/SevenSevenIsEncodedExactlyAsTheSpecification
+      PrintsIt each expect the step to build their table with the printed
+      condition-by-rule grid; actual logicTableList is empty (0 tables), the
+      class carrying a commented-out sketch of an eventual LT75 and a top-of-file
+      note "Write the logic for logic tables 7-5 to 7-7". Group 2 - the state
+      change never happens (2 reds): tableSevenSevenRuleOne... expects an
+      applying antigen contraindication (patient has observation 278, assessed
+      inside its window) to set PatientSeriesStatus.CONTRAINDICATED, and
+      tableSevenSevenRuleTwo... expects the same when the series' only
+      preferable vaccine (CVX 111) has an applying vaccine contraindication;
+      actual status stays null in both, and grep confirms nothing anywhere in
+      cdsi-engine ever sets PatientSeriesStatus.CONTRAINDICATED except 7.4, off
+      a MedicalHistory.contraindicationSet nothing populates. Group 3 - Table
+      7-4's own attributes (5 reds):
+      tableSevenFoursAssumedContraindicationBeginAgeDateIsInThePast expects
+      01/01/1900 but gets 12/31/2999, and ...EndAgeDateIsInTheFuture expects
+      12/31/2999 but gets 01/01/1900 - the two assumed values are simply swapped
+      in the constructor (setAssumedValue(FUTURE) on begin, PAST on end);
+      theAssumedContraindicationAgeWindowContainsTheAssessmentDate is that
+      swap's consequence, expecting begin <= assessment < end to hold under the
+      assumed values and finding an empty window instead;
+      tableSevenFoursContraindicationElementsAttributeIsFilledFromSupportingData
+      expects the attribute Table 7-4 gives no assumed value to be filled from
+      the Supporting Data and finds it null (its setInitialValue line is
+      commented out); and theStepsContraindicationBegin/EndAgeDateIsComputed
+      FromTheContraindicationInHand (2 of the 5) expect the published dates to be
+      CALCDTCI-1/2 applied to the loaded RSV contraindication (01/15/2025 and
+      09/15/2025) and get the assumed values instead, because the rules are
+      evaluated against a null contraindication. Group 4 - the loader never
+      delivers the data (6 reds), detailed below.
+
+      Group 4 in detail, checked against the bundled 4.65-508 release. All 30
+      antigen files ship a <contraindications> element; across the release there
+      are 392 contraindications - 250 antigen-level under <vaccineGroup> and 142
+      vaccine-level under <vaccine>, the latter carrying 329
+      <contraindicatedVaccine> entries, every one with a <cvx>. So unlike 7.2's
+      immunity element (6 antigens), 7.3's Supporting Data is present in bulk.
+      DataModelLoader.readContraindications reads exactly two fields per
+      contraindication - observationCode and observationTitle - and drops
+      everything else. The reds: theParsedContraindicationsReachWhereSevenThree
+      LooksForThem expects dataModel.getContraindicationList() to be non-empty
+      after the loader has parsed a release contraindication and finds it empty
+      (the loader writes only to Schedule.contraindicationList, which no logic
+      step reads); aParsedContraindicationCarriesTheTextDescriptionShownToThe
+      Clinician expects the <contraindicationText> that Table 7-5 Rule 4 and
+      Table 7-6 Rule 7 say must be "made available to the clinician for manual
+      determination" and gets the empty string (all 392 carry one in the
+      release); aParsedAntigenContraindicationCarriesTheAgesCalcdtciNeeds
+      expects RSV 278's <beginAge>/<endAge> that CALCDTCI-1/2 compute from and
+      gets null for both; aParsedVaccineContraindicationCarriesIts
+      ContraindicatedVaccineTypes expects the CVX list Table 7-6's fourth
+      condition needs and finds the whole <contraindicatedVaccine> subtree
+      discarded; and antigenAndVaccineContraindicationsStayDistinguishableAfter
+      Loading expects Table 7-7's two conditions to be able to tell antigen-level
+      from vaccine-level contraindications and finds both flattened into one
+      List<Contraindication> with the AntigenContraindication and
+      VaccineContraindication subclasses (which exist, empty, in the domain
+      model) never instantiated. Materiality of the age reds is small on its own
+      - only 5 of the 392 carry any age (RSV 278, plus 4 <contraindicatedVaccine>
+      entries under 2 Influenza contraindications) - but that is exactly why
+      Table 7-4's two assumed values matter so much: the other 387 rely on them
+      entirely, and with the swap in place their window is empty rather than
+      universal.
+
+      On 7.2's prediction about this unit. The 2026-09-04 cross-cutting note
+      predicted 7.3 has "the identical shape" as 7.2's Schedule-routing defect.
+      It holds for the routing (readContraindications writes only to Schedule;
+      DataModel.contraindicationList is never populated) but it is worse and
+      structurally different in three ways, all now recorded in that note:
+      DataModel.contraindicationList is typed List<Contraindication_TO_BE_REMOVED>,
+      a different class from the domain.Contraindication the loader creates, so
+      the commented-out line in DetermineContraindications would not compile
+      even if the list were populated; the loader discards most of each element's
+      content rather than parsing it faithfully as readImmunity does; and the
+      routing gap is not currently the binding constraint here at all, because
+      7.3 has no decision tables to be starved of data in the first place. The
+      note's entry was updated in place rather than duplicated, per that file's
+      conventions.
+
+      Deliberately not covered. (a) Rule-by-rule outcome tests for Tables 7-5
+      and 7-6 individually. Neither table's outcome has any representation in
+      the domain model - there is no field, flag or collection anywhere that
+      records "this antigen contraindication applies to this patient" - so 12
+      further tests would all fail identically at "no decision table exists"
+      while asserting nothing the three encoding tests do not already pin. The
+      two tables are covered as printed grids, and their combined effect is
+      covered through Table 7-7's outcomes, which do have an observable
+      representation. (b) The "Unknown" condition results of Table 7-5 Rule 4
+      and Table 7-6 Rule 7 as evaluated results. LogicResult.UNKNOWN is asserted
+      in the printed grids, but driving a condition to answer Unknown needs the
+      condition to exist first; the clinician-notification half of those rules
+      is covered instead through the Contraindication Text Description red,
+      which is the concrete precondition for it. (c) Table 7-4's "Adverse
+      Reactions" attribute beyond its presence: the domain class
+      AdverseReaction is a completely empty stub ("// Needs to be written"),
+      nothing in cdsi-engine ever adds one to an ImmunizationHistory, and the
+      Supporting Data has no adverse-reaction markup, so Tables 7-5/7-6's second
+      condition cannot be expressed at all today. Asserting anything about it
+      beyond the attribute existing would be asserting against an empty class.
+      (d) The structured log events, for the same reason units 6.2 through 7.2
+      left theirs alone.
   '7.4':
     test_status: not_started
     test_class: null
