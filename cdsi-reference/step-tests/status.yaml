@@ -1393,12 +1393,105 @@ units:
       and Table 6-26 never consults. (7) The structured log events, for the same
       reason 6.3 through 6.7 left theirs alone.
   '6.9':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluateForAllowableVaccineTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      31 tests, 29 green and 2 red. Covered: the step's identity
+      (EVALUATE_FOR_ALLOWABLE_VACCINE, chapter "6.9"); Figure 6-22's loop shape -
+      one Table 6-29 decision table and one block of Table 6-28's five attributes
+      per allowable vaccine defined on the target dose, and none at all when the
+      target dose defines none; Table 6-29's identity, its two-condition
+      three-rule shape and its full condition/rule grid transcribed from the
+      specification; all five Table 6-28 rows, their attribute names, their values
+      off the vaccine dose administered and the Supporting Data allowable vaccine,
+      the attribute table's own "Table 6-28" name, and both assumed values
+      (01/01/1900 and 12/31/2999); CALCDTALLOW-1 and CALCDTALLOW-2; all three of
+      Table 6-29's rules - Rule 1 including both ends of the age window and an
+      allowable vaccine with no age window at all, Rule 2's vaccine type mismatch
+      (including a target dose with no allowable vaccines and an entirely empty
+      allowableVaccine element), and Rule 3's out-of-age-range outcome at both
+      boundaries; that Table 6-29 records no evaluation reason and no evaluation
+      status, leaving both to 6.10; the roll-up across the loop in both directions
+      (one match among three is enough, three misses record one status cause); the
+      unconditional transition to 6.10 Satisfy Target Dose on both branches, as
+      this step package's transitions.yaml records; that constructing the step
+      records nothing; and, through DataModelLoader.readVaccine on the bundled
+      release's own Diphtheria Dose 1 DTaP markup, that every attribute Table
+      6-29's two conditions consult - CVX, begin age and end age - actually lands
+      on the domain object.
+
+      The boundary-condition question carried over from 6.8, answered: 6.9 does
+      NOT repeat 6.8's bug. Table 6-29's second condition is "Is the allowable
+      vaccine type begin age date <= date administered < allowable vaccine type
+      end age date?", and EvaluateForAllowableVaccine implements exactly that -
+      "dateAdministered.before(endAgeDate) && !dateAdministered.before(beginAgeDate)"
+      - inclusive at the begin-age boundary, exclusive at the end-age boundary.
+      Both boundary tests are green: ruleOneIncludesTheBeginAgeDateItself (a DTaP
+      dose on its 02/08/2015 begin age date is allowable) and
+      aDoseAdministeredOnTheDateOfBirthIsInsideAZeroDaysBeginAgeWindow (a Hep B
+      birth dose is inside a "0 days" window), as are the two end-age boundary
+      tests. This is a different expression from 6.8's, written independently,
+      rather than the same expression reused; the bug is 6.8's alone.
+
+      The 2 red tests, expected vs actual. (1) sameVaccineTypeMeansTheSameCvxCode
+      - Table 6-29's first condition asks whether the vaccine type of the dose
+      administered is "the same as" the vaccine type of an allowable vaccine, and
+      VaccineType defines that itself by CVX code equality; expected YES for two
+      distinct CVX 20 instances, actual NO, because the condition is a Java
+      reference comparison (vt == av.getVaccineType()) rather than the CVX
+      comparison 6.8's equivalent condition uses. (2)
+      tableSixTwentyEightLabelsTheCalculatedDateRowsAsTheSpecificationDoes -
+      Table 6-28 rows 4 and 5 carry the attribute type "Calculated date
+      (CALCDTALLOW-1)" / "Calculated date (CALCDTALLOW-2)"; expected "Calculated
+      date", actual "Calculated data" / "Calculated Data". The row names and the
+      calculated values themselves are correct - CALCDTALLOW-1 and CALCDTALLOW-2
+      are both green - so this is a presentation defect, not a behavioural one,
+      and the parallel of the label defect 6.8 found in its own Table 6-25.
+
+      Materiality against the bundled Supporting Data release, which carries 3709
+      allowableVaccine entries across 484 series doses in its 30 antigen files.
+      The correctly-handled begin-age boundary applies to 3703 of those 3709 (all
+      but the six carrying no usable begin age): the most common begin age is "6
+      weeks - 4 days" (1623 entries) and the second is "0 days" (1035 entries,
+      including all fourteen of HepB Dose 1's, where the routine birth dose lands
+      exactly on the boundary 6.8 wrongly excludes). 3159 of the 3709 have an
+      empty endAge and so fall back to Table 6-28's assumed 12/31/2999; three -
+      all RSV Dose 1 - have an empty beginAge as well and fall back to the assumed
+      01/01/1900; three more are entirely empty allowableVaccine elements (HepB
+      Dose 1, HepB Dose 2, Pertussis Dose 1) and are covered by their own test. By
+      contrast the reference-comparison red test has no material effect today:
+      DataModelLoader and GatherNecessaryData both take every VaccineType out of
+      the shared cvxMap, so all 3709 allowable vaccine entries and every
+      administered dose already share one instance per CVX code. It is a latent
+      divergence from the domain model's own definition of "same vaccine type",
+      recorded because the specification's wording is what the test pins, not an
+      observable defect against this release.
+
+      Deliberately not covered. (1) Figure 6-22's loop exit, for the same reason
+      6.8 left its own alone: process() evaluates every allowable vaccine's table
+      and only then aggregates, while the process model leaves the loop on the
+      first match. The difference is observable only when one dose can match two
+      of a target dose's allowable vaccines with different outcomes, and it cannot
+      on the bundled release - not one of its 484 series doses lists the same CVX
+      twice among its allowable vaccines (0 duplicates, checked across all 3709
+      entries). (2) Whether Table 6-29's Rule 3 ought to record an evaluation
+      reason for "out of the recommended age range". The step package's own review
+      findings raise it as a low-confidence reading of the outcome text; Table
+      6-29 names no state change, and 6.8's equivalent rule sets no reason either,
+      so pinning an interpretation the specification does not state would be
+      guessing. ruleThreeRecordsNoEvaluationReason pins only what the tables
+      actually say - that 6.9 leaves the evaluation untouched - and the open
+      question is left here for a reviewer. (3) The evaluation status, which
+      section 6.10 Satisfy Target Dose decides from the status cause. (4) Figures
+      6-20 and 6-21, which illustrate two patients rather than adding a rule.
+      (5) The wording of Table 6-29's two condition rows and of its title
+      question, following 6.4 through 6.8's precedent - only the table number, its
+      shape and its grid are pinned. (6) The structured log events, for the same
+      reason 6.3 through 6.8 left theirs alone.
   '6.10':
     test_status: not_started
     test_class: null
