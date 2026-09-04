@@ -1698,12 +1698,134 @@ units:
       asserted. (e) The structured log events, for the same reason 6.2 through
       6.10 left theirs alone.
   '7.2':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.DetermineEvidenceOfImmunityTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      16 test methods in one class, 10 green and 6 red. 7.2 has no business
+      rules of its own; its whole content is Table 7-2 (four immunity
+      attributes), Table 7-3 (five rules, four conditions) and the state change
+      the two "Immune" rules make, so every test below is one attribute, one
+      Table 7-3 rule, one condition's subject, or one state change. Every
+      fixture is built from the immunity element the bundled 4.65-508 release
+      actually ships for Measles - guideline 020, immunity birth date
+      01/01/1957, an empty <birthCountry/>, exclusion 055 "Health care
+      personnel" - which is also the specification's own worked example, so the
+      dates and codes in this class are real rather than invented.
+
+      Covered and green. (a) Identity and dispatch: both LogicStepFactory
+      overloads build DetermineEvidenceOfImmunity for
+      DETERMINE_EVIDENCE_OF_IMMUNITY, chapter "7.2", Table 7-2 as the attribute
+      table. (b) Table 7-2's Supporting Data attribute is sourced from this
+      patient series' own target disease (the forecast antigen's immunity
+      list), which is what "for the given target disease" requires. (c) The
+      constructor's state change nothing else in Chapter 7 works without: it
+      creates the Forecast, attaches it to the current patient series, and sets
+      its antigen to the series' target disease and its target dose to the one
+      under consideration. (d) Table 7-3's encoding, all four condition rows
+      against all five rule columns, matching the printed grid exactly. (e)
+      Table 7-3 Rules 2, 4 and 5, each driven to its own single matching column
+      and asserted on both the condition results and the outcome: Rule 2
+      (born 06/15/1950, before 01/01/1957, but health care personnel - not
+      immune), Rule 4 (born before the cutoff, no exclusion, but born in Canada
+      rather than the immunity country of birth - not immune), Rule 5 (born
+      06/15/1990, after the cutoff - not immune). (f) Rule 3, the birth-date
+      path proper (born before the cutoff, no exclusion, matching country of
+      birth), asserting PatientSeriesStatus.IMMUNE and the forecast reason
+      "Patient has evidence of immunity". (g) That 7.2 is not a branch point:
+      an immune outcome and a not-immune outcome both continue to 7.3
+      DETERMINE_CONTRAINDICATIONS, the status being state carried forward for
+      7.4 to read. (h) That DataModelLoader really does parse the release's
+      <immunity> element correctly - the Measles element copied verbatim from
+      AntigenSupportingData- Measles-508.xml, fed to the loader's own private
+      readImmunity reflectively, yields guideline 020, birth date 01/01/1957,
+      empty birth country and exclusion 055.
+
+      The 6 red tests, expected vs actual. (1)
+      ruleOneAPatientWhoseHistoryContainsAnImmunityGuidelineIsImmune - expected
+      Table 7-3 condition 1 to answer Yes for a patient whose history contains
+      an immunity guideline, and the series to be IMMUNE; actual condition 1's
+      evaluateInternal is a placeholder that returns NO unconditionally (it
+      carries its own comment block sketching the traversal it was meant to
+      do), so Rule 1 can never fire and the entire clinical-history half of the
+      section's stated purpose is inert. The step package's Review Findings
+      already records this as a draft IMPLEMENTATION_MISMATCH. (2)
+      theExclusionConditionIsAskedOfThePatientNotOfTheSupportingData - expected
+      condition 3 ("Does this patient have an immunity exclusion condition?")
+      to be No for a patient with no such condition recorded, leaving them on
+      Rule 3 and immune; actual it returns Yes whenever the Supporting Data
+      element defines any exclusion at all, without ever looking at the
+      patient, so Rule 2 fires instead. (3)
+      theImmunityElementUsedIsTheOneForThisPatientSeriesTargetDisease -
+      expected the immunity element on this series' own antigen (Measles,
+      01/01/1957) to answer condition 2 Yes for a patient born 06/15/1950;
+      actual all three implemented conditions read
+      dataModel.getImmunityList().get(0) - a single schedule-wide element,
+      ignoring the per-antigen attribute Table 7-2 declares and the constructor
+      populates - so the antigen's own element is never consulted. (4)
+      theParsedImmunityElementReachesWhereSevenTwoLooksForIt - expected the
+      element the loader has just parsed to be reachable from where Table 7-3
+      looks; actual readImmunity stores it only on a Schedule object, and
+      DataModel.immunityList (and Antigen.immunityList) are never populated by
+      anything, so dataModel.getImmunityList() is empty in every real run. (5)
+      tableSevenTwoRegistersEveryAttributeItPrints - expected all four Table
+      7-2 attributes on the step's attribute list; actual the Supporting Data
+      "Immunity Elements" attribute is created and given an initial value but
+      never added to conditionAttributesList, so the printed table shows three
+      of four. (6) aPatientWithNoRecordedCountryOfBirthStillGetsAnAnswer -
+      expected 7.2 to answer for a patient with no recorded country of birth;
+      actual condition 4 dereferences caCountryofBirth.getFinalValue()
+      .toString() before its own null guard runs, so it throws
+      NullPointerException and the guard is dead code. This one is latent
+      rather than live: Patient.countryOfBirth defaults to "" and nothing in
+      cdsi-engine or cdsi-fits-tests ever sets it to null, so no current input
+      path reaches it - it is recorded because Table 7-2 lists country of birth
+      as an input without marking it required, and because the condition itself
+      declares the guard.
+
+      What reds (3) and (4) mean together, checked against the bundled
+      4.65-508 release. Six antigens ship a populated <immunity> element: HepA
+      and HepB with clinical history only, and Measles, Mumps, Rubella
+      (01/01/1957) and Varicella (01/01/1980) with a birth date as well. Every
+      one of the four birth-date elements defines at least one exclusion -
+      Measles/Mumps/Rubella one each (055 Health care personnel), Varicella
+      three (055, 007 Pregnant, 003 Immunocompromised) - so red (2) alone would
+      make Rule 3 unreachable for every antigen in the release. Red (4) is
+      prior to all of that: because DataModel.immunityList is never populated,
+      all four Table 7-3 conditions answer No for every patient in every run,
+      only Rule 5's column can ever match, and 7.2 currently returns "not
+      immune" universally. That is a loader/domain-wiring gap rather than a
+      defect in DetermineEvidenceOfImmunity itself, and the same wiring shape
+      affects 7.3 (readContraindications likewise stores onto Schedule, and
+      DetermineContraindications carries a commented-out
+      dataModel.getContraindicationList() line saying as much), so it has been
+      added to cross-cutting-notes.md rather than left in this unit alone. Note
+      also that the two "Immune" outcomes write slightly different forecast
+      reason strings - outcome 0 "Patient has Evidence of immunity", outcome 2
+      "Patient has evidence of immunity"; only outcome 2 is reachable today, so
+      no separate test pins the discrepancy.
+
+      Deliberately not covered. (a) Whether an IMMUNE patient series actually
+      stops producing a forecast date - the Plain-Language Walkthrough says
+      forecasting "stops without ever reaching a due date", but 7.2 only sets
+      the status; the decision is made in 7.4 DetermineForecastNeed, which
+      reads PatientSeriesStatus.IMMUNE back. That belongs to 7.4's own unit,
+      and asserting it here would need the whole Chapter 7 chain. (b) The
+      cross-antigen contamination direction of red (3) - a Varicella element
+      (01/01/1980) making a patient born in 1970 "immune" to measles, whose
+      cutoff is 1957. Same root cause and same fix as red (3), so it is
+      described in that test's javadoc rather than duplicated as a second red
+      test. (c) Whether Table 7-3's four conditions should be answered against
+      one and the same BirthDateImmunity instance or independently across the
+      list - the implementation ORs each condition across the whole list
+      separately, which would matter for an antigen shipping more than one
+      <dateOfBirth> element, but no antigen in 4.65-508 does and the
+      specification does not say, so pinning an interpretation would be
+      guessing. (d) The structured log events, for the same reason units 6.2
+      through 7.1 left theirs alone.
   '7.3':
     test_status: not_started
     test_class: null

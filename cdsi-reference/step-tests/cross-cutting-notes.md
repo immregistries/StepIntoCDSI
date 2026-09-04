@@ -33,6 +33,75 @@ single-unit fixes after. That sequencing decision itself isn't written yet
 
 ---
 
+## 2026-09-04 - Schedule-level Supporting Data is parsed onto `Schedule`, which no logic step reads
+
+**Discovered while testing:** 7.2 Determine Evidence of Immunity
+(`DetermineEvidenceOfImmunityTest`)
+
+**Affected component:**
+`cdsi-engine/src/main/java/org/openimmunizationsoftware/cdsi/core/data/DataModelLoader.java`
+(`readImmunity`, `readContraindications`), `domain/Schedule.java`, and the
+never-populated parallel fields `DataModel.immunityList` and
+`DataModel.contraindicationList` (plus `Antigen.immunityList`). Not something
+specific to 7.2.
+
+**What's wrong:** the loader creates one `Schedule` per
+`AntigenSupportingData-*.xml` file and parses each file's `<immunity>` and
+`<contraindications>` elements onto it (`schedule.setImmunity(...)`,
+`schedule.getContraindicationList().add(...)`). Nothing in
+`cdsi-engine/.../logic/` ever reads a `Schedule` - the only readers of
+`getScheduleList()`, `Schedule.getImmunity()` and
+`Schedule.getContraindicationList()` are `cdsi-web`'s data-model viewer
+servlets (`AntigenServlet`, `ScheduleServlet`). Meanwhile `DataModel` exposes
+its own `immunityList` and `contraindicationList`, and `Antigen` its own
+`immunityList`; `setImmunityList`/`setContraindicationList` are never called by
+anything, so all three are permanently empty. The steps that need this data
+read the empty ones.
+
+**Confirmed live in 7.2:** all three implemented conditions of Table 7-3 read
+`dataModel.getImmunityList().get(0)` and guard on `size() == 0`, so every
+condition answers `NO` for every patient in every run, only Rule 5's column can
+match, and 7.2 returns "not immune" universally - the birth-date half of the
+section is as inert as the clinical-history half that is hardcoded to `NO`. The
+data is genuinely present in the release and genuinely parsed: six antigens in
+the bundled 4.65-508 release ship a populated `<immunity>` element (HepA and
+HepB clinical-history only; Measles, Mumps, Rubella at 01/01/1957 and Varicella
+at 01/01/1980 with a birth date as well, each with one to three exclusions).
+`DetermineEvidenceOfImmunityTest.theReleasesImmunityElementIsParsedByTheLoader`
+(green) invokes `readImmunity` reflectively on the real Measles markup and shows
+it parses correctly;
+`theParsedImmunityElementReachesWhereSevenTwoLooksForIt` (red) shows it lands
+nowhere 7.2 can see. Not observable via FITS, which asserts forecast output
+rather than per-series immunity status.
+
+**Suspected but not checked - 7.3 has the same shape:**
+`DetermineContraindications` carries a commented-out
+`caContraindicationElements.setInitialValue(dataModel.getContraindicationList().get(0));`
+with a comment saying the attribute "cannot be set correctly" yet, and the
+contraindications it needs are on `Schedule` for the same reason. 7.3's Role A
+session should check this deliberately rather than re-derive it. Whether 7.4 or
+any Chapter 8 step depends on schedule-level data has not been looked at.
+
+**Known affected units:** 7.2 (confirmed, 2 of its 6 red tests -
+`theParsedImmunityElementReachesWhereSevenTwoLooksForIt` and, downstream of the
+same wiring, `theImmunityElementUsedIsTheOneForThisPatientSeriesTargetDisease`).
+
+**Suggested handling:** the fix belongs in the loader and the domain model, not
+in `DetermineEvidenceOfImmunity` - and the routing choice matters, because 7.2's
+own Table 7-2 declares the immunity element as *per target disease* ("for the
+given target disease"), which `Antigen.immunityList` models correctly and
+`DataModel.immunityList` does not. Since each `Schedule` is already named after
+its antigen, the data needed to attach each `Immunity` to its `Antigen` is
+present at load time. Fixing only the immunity side would leave 7.3 to
+rediscover the same thing, so it is worth deciding the routing once for both.
+Note that a narrow "populate `DataModel.immunityList`" fix would make 7.2's
+schedule-wide reads start working while cementing the wrong scoping - one
+antigen's cutoff applied to every series.
+
+**Status:** open, not yet fixed, not yet a formal finding.
+
+---
+
 ## 2026-09-04 - `LogicTable.evaluate()` does not stop at the first matching rule column
 
 **Discovered while testing:** 6.10 Satisfy Target Dose (`SatisfyTargetDoseTest`, commit `e7d88bd`)
