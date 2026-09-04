@@ -1044,12 +1044,107 @@ units:
       Supporting Data", not 6.5, is where that belongs. (6) The structured log
       events, for the same reason 6.3 and 6.4 left theirs alone.
   '6.6':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluateAllowableIntervalTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      25 tests, 23 green and 2 red. Covered: the step's identity
+      (EVALUATE_ALLOWABLE_INTERVAL, chapter "6.6") and its Table 6-20 attribute
+      table name; Table 6-20's three attributes - exactly three, not 6.5's four,
+      since 6.6 has no Minimum Interval Date row - with their types, their values
+      (the date administered 4.4 has made current and the AllowableInterval being
+      checked) and their names; Table 6-20's assumed 01/01/1900 for the one
+      calculated date; Table 6-21's encoding (table number, one condition, two
+      rules, the Yes/No grid); both of Table 6-21's rules - Rule 1 reporting the
+      interval as not satisfied, recording 'Too soon' and appending "Interval" to
+      the target dose's status cause rather than replacing it, Rule 2 recording
+      neither a reason nor a failure - and both sides of the single boundary (the
+      absolute minimum interval date itself satisfies, the day before it is too
+      soon); section 6.6's "not valid" fallback for a target dose that specifies
+      no allowable interval attributes at all, which is the opposite default from
+      6.5's "considered valid"; all three of Table 6-22's business rules -
+      CALCDTINT-3's date arithmetic and the two reference dose date rules
+      CALCDTINT-1 (including its 'Not Valid' allowance and its
+      inadvertent-administration exclusion) and CALCDTINT-2; the unconditional
+      transition to 6.7 Evaluate Vaccine Conflict on all three outcomes
+      (satisfied, not satisfied, no interval defined), which matches this step
+      package's transitions.yaml; and, through DataModelLoader.readSeriesDose,
+      that the bundled release's own allowableInterval markup reaches the series
+      dose with all three elements 6.6 reads, and that a bare allowableInterval
+      element loads as no allowable interval at all.
+
+      The 2 red tests, expected vs actual. (1)
+      theStepNamesTableSixTwentyAsItsAttributeTable - expected "Table 6-20
+      Allowable Interval Attributes", the way 6.3 and 6.4 name theirs; actual the
+      placeholder "Table ", the same shape as 6.5's equivalent red. (2)
+      eachAllowableIntervalIsCheckedAgainstItsOwnAbsoluteMinimumIntervalDate -
+      expected an allowable interval the dose does not satisfy to be reported as
+      an interval failure even when a second one is satisfied (two intervals from
+      the immediate previous dose administered, 2 years and 4 weeks from
+      01/01/2016, with the dose given 02/15/2016); actual no interval failure
+      recorded, because EvaluateAllowableInterval declares its three Table 6-20
+      ConditionAttribute objects once on the step and overwrites them inside the
+      per-interval loop, so all of its Table 6-21 instances answer against the
+      last interval's absolute minimum interval date. 6.5 avoids this by giving
+      each of its tables its own attribute objects.
+
+      Materiality of red (2), checked against the Supporting Data release bundled
+      in cdsi-engine/src/main/resources. Its 30 antigen files hold 484 seriesDose
+      elements carrying exactly one allowableInterval element each; 465 of those
+      are the bare self-closing form and only 19 are populated, and all 19 sit on
+      distinct series doses. No series dose in the release carries more than one
+      populated allowable interval, so red (2) has no effect on the bundled data
+      as it stands - it is a latent defect, not a live one. The 19 populated
+      intervals split 7 CALCDTINT-1 (Diphtheria, Pertussis and Tetanus Dose 4 at
+      "4 months - 4 days", Varicella Dose 2 at "4 weeks") and 12 CALCDTINT-2
+      (HepB 6, Meningococcal B 4, HepA 2), all with a non-empty absMinInt, and
+      both of those rules are green here. The 465 empty ones make section 6.6's
+      "not valid" fallback the path 96% of series doses take, and the
+      implementation matches the specification on it.
+
+      On the 6.5-vs-6.6 "too soon" comparison. 6.6's own tests corroborate it
+      without complicating it. ruleOneRecordsEvaluationReasonTooSoon is green:
+      Table 6-21 Rule 1 sets EvaluationReason.TOO_SOON, its log line says 'Too
+      soon', and the specification's Rule 1 outcome says "Evaluation Reason is
+      'Too soon'" - all three agree. The two steps are not quite symmetrical,
+      which strengthens rather than weakens the comparison: 6.6 has no
+      grace-period rule at all, so TOO_SOON is the only evaluation reason Table
+      6-21 names, and there is no competing value 6.6 could have been reaching
+      for. Nothing else in 6.6's handling of its too-soon case is off - the
+      condition is strictly "<" as the specification writes it, the boundary
+      falls on the satisfying side, the status cause marker is appended not
+      replaced, and the step continues to 6.7 either way.
+
+      Deliberately not covered, and why. (1) What evaluation reason, if any, the
+      "no allowable interval attributes" fallback should record. The section says
+      the allowable interval "should be considered 'not valid'" but Table 6-21's
+      Rule 1 never fires in that case, and the specification does not say whether
+      'Too soon' - the reason belonging to a dose that genuinely is early -
+      applies to a target dose that simply defines no interval. Only the recorded
+      interval failure itself is asserted. (2) Whether Rule 2 should clear an
+      evaluation reason 6.5 left behind, or whether Rule 1 should overwrite one.
+      Table 6-21's outcomes name only what 6.6 records, not what it preserves,
+      and 6.5's own reason handling is still under investigation in that unit.
+      (3) The evaluation status. Table 6-21 Rule 1 records a reason and a failed
+      interval; section 6.10 Evaluate Target Dose is where the status is decided
+      from statusCause, so asserting a status here would test the wrong section.
+      (4) The exact contents of the status cause. 6.6's process() ends by calling
+      next(), and EvaluateVaccineConflict's constructor evaluates its own Table
+      4-20 immediately, whose third rule appends a "VirusConflict" marker to the
+      same field before the test regains control. That is 6.7's behaviour to
+      justify or fix in its own unit, so these tests only assert the presence or
+      absence of 6.6's own "Interval" marker. Worth flagging for whoever takes
+      6.7: a step mutating shared state from its constructor rather than its
+      process() is what makes 6.6's state change hard to observe cleanly. (5) The
+      wording of Table 6-21's condition row and of its title question, following
+      6.4's and 6.5's precedent - only the table number is pinned. (6) The
+      allowable interval's effectiveDate and cessationDate, which the loader
+      reads but 6.6 never consults; selecting supporting data by date is section
+      3.3's subject. (7) The structured log events, for the same reason 6.3, 6.4
+      and 6.5 left theirs alone.
   '6.7':
     test_status: not_started
     test_class: null
