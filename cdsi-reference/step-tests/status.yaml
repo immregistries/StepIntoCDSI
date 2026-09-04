@@ -607,12 +607,117 @@ units:
       answers "No" to the first condition, which is a reasonable choice the spec
       does not speak to, so it is left unpinned rather than guessed at.
   '6.2':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkipForEvaluationTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      44 test methods in one class, 36 green and 8 red. 6.2 maps to two classes.
+      EvaluateConditionalSkipForEvaluation turned out to be a near-empty
+      subclass whose only content is a constructor passing
+      ConditionalSkipType.EVALUATE, its step type and its two destinations up to
+      EvaluateConditionalSkip; everything the specification describes lives in
+      that shared base class. The tests therefore drive the shared logic through
+      the evaluation subclass, which is how the running engine reaches it.
+
+      For 7.1's future Role A session - what is already covered here, so it does
+      not need re-litigating. The shared class branches on its context in
+      exactly one place, CONDSKIP-2's reference date (a constructor switch:
+      date administered when evaluating, assessment date when forecasting,
+      01/01/1900 when validating). Only the EVALUATE arm is exercised; the
+      FORECAST arm and the two forecast-side destinations
+      (DETERMINE_EVIDENCE_OF_IMMUNITY on no-skip, 4.4 on skip) are 7.1's, and
+      are deliberately untouched. Everything else covered below is
+      context-independent shared logic: Table 6-4's top-level and per-condition
+      attributes with their sources and assumed values; CALCDTSKIP-3, -4 and -5;
+      all four criteria of CONDSKIP-1 including both date-window boundaries and
+      both dose types; Tables 6-6, 6-7, 6-8 and 6-9 (encoding plus every rule);
+      Table 6-10's AND and OR roll-up across all four "all / at least one but
+      not all / none" cases; Table 6-11's AND and OR roll-up likewise, plus the
+      Skipped status it writes; and the Figure 6-3 nesting (one per-condition
+      table per condition, one Table 6-10 per set, one Table 6-11, evaluated in
+      that order). 7.1 should need only its own reference-date arm, its own two
+      destinations, and whatever chapter 7 says that chapter 6 does not.
+
+      The 8 red tests, expected vs actual. (1)
+      aConditionalSkipInstanceCarriesTheContextThatDecidesWhetherSixTwoMayUseIt
+      - expected ConditionalSkip to carry the context 6.2's entry condition
+      turns on ("Only Conditional Skip Instances with a context of Evaluation or
+      Both should be used"); actual, the class has no context at all. (2)
+      tableSixSevenIsMetWhenTheSeriesGroupHasACompleteRelevantPatientSeries -
+      expected the condition met when a series group holds a Complete relevant
+      patient series; actual, LT67's body is `return LogicResult.NO;`. (3)
+      tableSixNineEqualRowAsTheSupportingDataSpellsIt - expected Table 6-9's
+      Equal row to fire for dose count logic "equal to"; actual, LT69 matches
+      only the bare word "equal", so it falls through to No. (4)
+      theAgeWindowIsInclusiveOfItsBeginAgeDateAndExclusiveOfItsEndAgeDate -
+      expected Table 6-6's "End Age Date > Reference Date >= Begin Age Date" to
+      admit a reference date equal to the begin age date; actual, both
+      comparisons are written as Date.after(...), so the lower bound is
+      exclusive too. (5)
+      theIntervalConditionIsMetWhenTheReferenceDateEqualsTheIntervalDate -
+      expected Table 6-8's "Reference Date >= Interval Date" to admit equality;
+      actual, the code tests intervalDate.before(referenceDate), a strict
+      greater-than. (6) theAdministeredDoseCountComesFromThePatientImmunization
+      History - expected Table 6-4's Administered Dose Count (attribute type
+      "Patient Immunization History", and Table 6-8 asks whether a dose was
+      given "to the patient") to be 3 for a 3-dose history; actual 1, because it
+      is initialized from the per-antigen selected record list. (7)
+      tableSixFourRegistersTheEarliestDateAttributeItLists - expected Table 6-4's
+      "Runtime data / Earliest Date" attribute to be registered; actual,
+      caEarliestDate is declared, never constructed, and then added, so the
+      published attribute list contains a null entry. (8)
+      theAgeTableNamesItselfWithItsCurrentSpecificationNumber - expected the age
+      table's label to say Table 6-6; actual "Table 4-6", a stale chapter
+      number (LT68's own label is correct, so index.md's claim that both are
+      stale is slightly off).
+
+      Materiality of the reds, checked against the Supporting Data release
+      bundled in cdsi-engine/src/main/resources. Red (3) is the largest: all 69
+      equality conditions in that release are written "equal to", so Table 6-9's
+      Equal row is unreachable in every real forecast (the other 234 are
+      "greater than"/"Greater Than", which do match; "less than" never occurs).
+      Red (2) covers 25 COMPLETED_SERIES conditions across HepB, Pneumococcal
+      and Polio, every one inside an AND set where an always-No condition
+      defeats the whole set - and it is doubly blocked, because
+      ConditionalSkipCondition has no series group field and
+      DataModelLoader.readCondition ignores the <seriesGroups> element the data
+      supplies. Red (1) is bigger than it looks: every <conditionalSkip> element
+      in the release carries a <context> (140 Both, 57 Evaluation, 67 Forecast),
+      and 67 series doses carry two of them, an Evaluation-or-Both instance
+      followed by a Forecast one. SeriesDose holds exactly one and
+      DataModelLoader calls setConditionalSkip once per element, so in all 67
+      cases the Forecast-only instance is retained and the Evaluation-or-Both
+      one is discarded; 6.2 then evaluates a conditional skip it is told not to
+      use and never sees the one it must. Reds (1), (2) and (6) are wholly or
+      partly outside EvaluateConditionalSkip - in ConditionalSkip,
+      ConditionalSkipCondition, DataModelLoader and upstream steps - so per
+      cdsi-engine/AGENTS.md they are likely upstream_step_defect territory
+      rather than edits to this unit's own class; that classification is Role
+      B's call and nothing here has been recorded as a finding yet.
+
+      Deliberately not covered. CONDSKIP-1's exclusion of doses the engine has
+      not yet linked to a target dose (`if
+      (vaccineDoseAdministered.getTargetDose() == null) continue;`) and its
+      requirement that an Evaluation with a non-null status exist even when the
+      conditional skip dose type is 'Total': the specification says "Any status
+      when the conditional skip dose type is 'Total'", which can be read either
+      as "no status filter" or as "a status, any value". That is a genuine
+      SPECIFICATION_AMBIGUITY, so it was left unpinned rather than guessed at -
+      only the unambiguous half (Valid counts only Valid; Total counts VALID,
+      NOT_VALID and SUB_STANDARD alike) is tested. Also not pinned: LT610 and
+      LT611's handling of a condition/set logic value that is neither AND nor
+      OR. Table 6-10 and Table 6-11 define only those two rows, and the
+      implementation's fallbacks differ (LT610 requires every condition met,
+      LT611 consults only innerSetList.get(0)) - the difference is unobservable
+      in the bundled data, where "n/a" set logic never accompanies more than one
+      set, so no test asserts an interpretation the spec does not state; the
+      n/a-with-one-set path is exercised throughout as the ordinary case.
+      Finally, ValidateRecommendation - a third subclass of the same base class,
+      using the VALIDATING context - is outside 6.2 and 7.1 both, and is
+      untouched here.
   '6.3':
     test_status: not_started
     test_class: null
