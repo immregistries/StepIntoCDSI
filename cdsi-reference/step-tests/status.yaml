@@ -918,12 +918,131 @@ units:
       those are for, and asserting log strings now would pin wording rather than
       behaviour.
   '6.5':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluatePreferableIntervalTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      27 tests, 20 green and 7 red. Covered: the step's identity
+      (EVALUATE_PREFERABLE_INTERVAL, chapter "6.5") and its Table 6-17 attribute
+      table name; Table 6-17's four attributes being registered per interval,
+      with their types, their values (the date administered 4.4 has made current
+      and the Interval being checked) and their names; Table 6-17's assumed
+      01/01/1900 for both calculated dates, both when neither can be calculated
+      and when only the absolute minimum interval is undefined; Table 6-18's
+      encoding (table number, three conditions, three rules, the Yes/No grid);
+      each of Table 6-18's three rules - Rule 1 reporting the interval as not
+      satisfied and recording 'Too soon', Rule 2 recording 'Grace period', Rule 3
+      recording nothing - and both boundaries between the three zones (the
+      absolute minimum interval date begins the grace period, the minimum
+      interval date is the first plainly satisfied day); the Purpose's two extra
+      rules, that a target dose with no preferable interval attributes is
+      considered valid and that with several intervals every one must be
+      satisfied (both directions, plus one Table 6-18 check and one Table 6-17
+      attribute block per interval); and all six of Table 6-19's business rules -
+      CALCDTINT-3 and CALCDTINT-4's date arithmetic, and the four reference dose
+      date rules CALCDTINT-1 (including its 'Not Valid' allowance and its
+      inadvertent-administration exclusion), CALCDTINT-2, CALCDTINT-8 and
+      CALCDTINT-9. Table 6-19's reference date rules are not invoked by
+      EvaluatePreferableInterval directly; they live in
+      Interval.getPatientReferenceDoseDate, which CALCDTINT_3/CALCDTINT_4 call,
+      so they are reached here through the step under test. That resolves the
+      "not verified as implemented anywhere by this pass" item in the step
+      package's Review Findings.
+
+      The 7 red tests, expected vs actual. (1) ruleOneRecordsEvaluationReasonTooSoon
+      - expected Table 6-18 Rule 1's documented reason 'Too soon'; actual
+      GRACE_PERIOD, because outcome 0 sets EvaluationReason.GRACE_PERIOD while
+      its own log line says "Evaluation reason is 'Too Soon'" (6.6's equivalent
+      single-condition case sets TOO_SOON correctly). (2)
+      calcdtintEightMeasuresFromTheMostRecentDoseOfANamedVaccineType - expected
+      the absolute minimum interval date measured from the most recent dose of
+      the named vaccine type (PCV13 03/01/2016 + 8 weeks = 04/26/2016); actual
+      the assumed 01/01/1900, because the CALCDTINT-8 branch evaluates
+      !previousVdaEvaluation.getEvaluationReason().equals(INADVERTENT_ADMINISTRATION)
+      without a null check, and a plainly-valid previous dose (6.4 Table 6-15
+      Rule 3) has no evaluation reason, so it throws NullPointerException into
+      the method's own catch block and leaves the reference dose date null. (3)
+      calcdtintNineMeasuresFromTheMostRecentMatchingPatientObservation - expected
+      the reference dose date to be the matching patient observation's date
+      (onset of pregnancy 01/10/2016, so 0 days and 27 weeks give 01/10/2016 and
+      07/17/2016); actual the assumed 01/01/1900 for both, because the
+      CALCDTINT-9 branch only logs "REASONING: Using CALCDTINT-9" and never
+      assigns a date. (4) theSupportingDatasFromMostRecentVaccineTypeReachesTheInterval
+      and (5) theSupportingDatasFromRelevantObservationCodeReachesTheInterval -
+      expected an Interval loaded from the Supporting Data's own markup to carry
+      its from most recent vaccine type and its from relevant observation code;
+      actual null for both, because DataModelLoader.readSeriesDose's interval
+      branch has no case for the <fromMostRecent> or <fromRelevantObs> elements
+      (it handles fromPrevious, fromTargetDose, absMinInt, minInt, earliestRecInt,
+      latestRecInt and intervalPriority, and drops the rest), and neither
+      Interval.setFromMostRecentVaccineType nor
+      Interval.setFromRelevantObservation is called from anywhere in the engine.
+      So CALCDTINT-8 and CALCDTINT-9 are each blocked twice over - once in the
+      loader, once in the rule body. (6)
+      theStepNamesTableSixSeventeenAsItsAttributeTable - expected "Table 6-17
+      Preferable Interval Attributes", the way 6.3 and 6.4 name theirs; actual
+      the placeholder "Table ". (7)
+      tableSixSeventeenNamesItsAttributesAsTheSpecificationDoes - expected Table
+      6-17 row 4's name "Minimum Interval Date"; actual "Mimium Interval Date", a
+      misspelling in the published attribute name.
+
+      Materiality of reds (2)-(5), checked against the Supporting Data release
+      bundled in cdsi-engine/src/main/resources. Its 30 antigen files hold 597
+      <interval> elements, 107 of them empty and 490 populated. Of those 490, 388
+      measure from the immediate previous dose administered (CALCDTINT-1, which
+      works), 41 from a named target dose number (CALCDTINT-2, which works: HepB
+      17, HPV 12, Meningococcal B 6, HepA 4, Pneumococcal 2), 55 from a most
+      recent vaccine type (CALCDTINT-8: COVID-19 31, Pneumococcal 14, Pertussis
+      4, Zoster 4, Meningococcal 2) and 6 from a relevant observation code
+      (CALCDTINT-9: one each in Hib, Measles, Mumps, Pertussis, RSV and Rubella,
+      all on Dose 1, using observation codes 171 "Date of hematopoietic stem cell
+      transplant", 120 "Begin Date of antiviral therapy [ART]" and 170 "Onset of
+      pregnancy" - the last being the Pertussis example section 6.5's own text
+      names). All 61 of those intervals silently fall back to Table 6-17's
+      assumed 01/01/1900 for both calculated dates, which makes Table 6-18 Rule 3
+      true for every date administered - the interval is always reported as
+      satisfied, and the spacing those 61 rows exist to enforce is never applied.
+
+      Deliberately not covered, and why. (1) Which step 6.5 hands off to when the
+      preferable interval IS satisfied. process() routes a satisfied interval to
+      6.7 Evaluate Vaccine Conflict and only a failed one to 6.6 Evaluate
+      Allowable Interval, while this step package's transitions.yaml records an
+      unconditional transition to 6.6 and cites this same method as having
+      verified it. Neither 6.5's nor 6.6's specification text settles the
+      ordering - it lives only in Figures 6-11 and 6-14, which are images, and
+      transitions.yaml itself records spec_defines_transition: false - so only
+      the not-satisfied direction, which both documents agree on, is asserted.
+      The transitions.yaml entry looks stale and is worth a separate look. (2)
+      The wording of Table 6-18's three condition rows and of its title question;
+      the step labels its table "Table 6 - 18 Did the vaccine dose administered
+      satisfy the defined interval?" against the specification's "... satisfy the
+      preferable interval for the target dose?". Pinning either would assert a
+      transcription rather than behaviour, so only the table number is pinned,
+      following 6.4's precedent. (3) Table 6-18's behaviour when the absolute
+      minimum interval date falls after the minimum interval date. As encoded the
+      three conditions are exhaustive only while absolute minimum <= minimum;
+      reversed, a dose before both answers Yes to conditions 1 and 3 at once, no
+      rule column matches, no outcome runs and the interval is silently treated
+      as satisfied - the same non-exhaustive shape 6.4 found in Table 6-15. It is
+      left untested because the specification does not describe the case and the
+      bundled release does not produce it: of the 490 populated intervals, 489
+      give both absMinInt and minInt and 1 gives minInt only (RSV Dose 1), and
+      none gives absMinInt without minInt, which is the only shape that would put
+      the assumed 01/01/1900 minimum interval date before a calculated absolute
+      minimum interval date. (4) Two secondary observations inside
+      Interval.getPatientReferenceDoseDate, noted rather than asserted because
+      they are masked by the reds above and the specification does not describe
+      them: the method returns null outright when dataModel.getPreviousTargetDose()
+      is null, which would block CALCDTINT-9 even once implemented, since all 6 of
+      its Supporting Data intervals sit on Dose 1; and CALCDTINT-8's loop takes
+      the last matching antigen administered record in list order rather than the
+      one with the latest date administered. (5) The interval's effectiveDate and
+      cessationDate, which the loader also drops - section 3.3 "Selecting
+      Supporting Data", not 6.5, is where that belongs. (6) The structured log
+      events, for the same reason 6.3 and 6.4 left theirs alone.
   '6.6':
     test_status: not_started
     test_class: null
