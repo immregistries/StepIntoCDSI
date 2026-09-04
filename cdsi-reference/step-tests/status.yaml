@@ -1970,12 +1970,122 @@ units:
       (d) The structured log events, for the same reason units 6.2 through 7.2
       left theirs alone.
   '7.4':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.DetermineForecastNeedTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >
+      Role A, 2026-09-04. 22 tests: 16 green, 6 red. Coverage is
+      Table 7-9's attribute list and its assumed values, Table 7-11's two
+      business rules (CALCDTAGE-1 and FORECASTDTCAN-1), Table 7-10's printed
+      seven-condition-by-eight-rule grid, and one outcome test per rule of Table
+      7-10 - each asserting the patient series status the rule sets, the
+      forecast reason it writes, and where it goes next (7.5 for Rule 1, back to
+      4.4 for Rules 2 through 8). Every test hand-builds the minimal DataModel
+      and evaluates the decision table directly rather than calling process(),
+      which would construct the following step.
+
+
+      The headline result, and the question this unit was sent in to answer:
+      7.4's two reads of its upstream neighbours are not symmetric, and only one
+      of them is 7.4's own problem. Condition 3 ("does the patient have evidence
+      of immunity?") reads
+      dataModel.getPatientSeriesStepper().getCurrent().getPatientSeriesStatus()
+      == PatientSeriesStatus.IMMUNE - exactly the per-series status 7.2's Table
+      7-3 state change sets - and ruleFourEvidenceOfImmunityStopsTheForecast is
+      green: hand 7.4 an IMMUNE patient series and it produces the Immune
+      outcome, the reason "Patient has evidence of immunity" and the loop back
+      to 4.4, all correctly. So on the immunity side 7.4's own logic is correct
+      on its own terms and the gap is entirely upstream; there is no fourth
+      defect here. Condition 4 ("is the relevant patient series a
+      contraindicated patient series?") is different: it does not read the
+      patient series status at all, it reads
+      dataModel.getPatient().getMedicalHistory().getContraindicationSet()
+      .isEmpty(). That set is typed Set<Contraindication_TO_BE_REMOVED> and
+      nothing anywhere in cdsi-engine or cdsi-web ever adds to it (verified by
+      grep - the only readers are this condition and cdsi-web's
+      LogicStepRenderer), so condition 4 answers NO for every patient in every
+      run and Rule 5 is unreachable independently of 7.3's own two defects. It
+      is also patient-scoped where the specification is series-scoped. This is
+      7.4's own defect, not an inherited one, and it means a loader/type fix on
+      the 7.3 side alone would still leave Rule 5 dead. Recorded as a dated
+      update in place on the existing Schedule-routing entry in
+      cross-cutting-notes.md rather than as a new entry, since it is the same
+      underlying contraindication issue seen from the consuming end. Worth
+      noting downstream: PatientSeriesStatus.CONTRAINDICATED is set nowhere in
+      the engine except 7.4's Rule 5 outcome, and 8.1 PreFilterPatientSeries and
+      MultipleAntigenVaccineGroup both branch on it, so those Chapter 8
+      behaviours are dead until the whole chain is closed.
+
+
+      The 6 red tests, expected vs actual. (1)
+      theSevenTwoOutcomeAttributeCarriesItsAssumedNoEvidenceValue - Table 7-9
+      gives "Evidence of Immunity" the assumed value "no evidence", so the
+      attribute must carry a value; actual final value is null (caEvidenceOfImmunity
+      is created and registered but never given an initial or assumed value, and
+      condition 3 bypasses it to read the patient series status directly). (2)
+      theSevenThreeOutcomeAttributeCarriesItsAssumedNotContraindicatedValue -
+      same, for "Contraindicated Patient Series" and its assumed "not
+      contraindicated"; actual null. (3)
+      forecastdtcanOneIncludesTheSeasonalRecommendationStartDate - FORECASTDTCAN-1
+      names the seasonal recommendation start date as one of its six candidate
+      dates, so with a season opening 09/01/2030 the candidate earliest date must
+      be at least that; actual 01/15/2015 (the minimum age date), the seasonal
+      line being commented out in computeEarliestDate(). (4)
+      forecastdtcanOneIncludesTheMostRecentDateAdministered - FORECASTDTCAN-1's
+      sixth candidate date is the date administered of the most recent vaccine
+      dose administered, so with a dose given 03/10/2024 the candidate earliest
+      date must be at least that; actual 01/15/2015, that leg being absent from
+      7.4's computeEarliestDate() entirely (7.5's own copy of the same rule does
+      include it). (5)
+      ruleFiveAContraindicatedPatientSeriesStopsTheForecast - a patient series
+      7.3 marked CONTRAINDICATED must yield Rule 5's reason "Patient has
+      contraindication", status Contraindicated and a loop back to 4.4; actual
+      forecast reason "" and Rule 1 fires instead (status overwritten to Not
+      Complete, next step 7.5), because condition 4 never sees the status. (6)
+      theContraindicationConditionAsksAboutThisPatientSeriesNotThePatientAsAWhole
+      - the other direction: a contraindication recorded against the patient as
+      a whole (for a different antigen) is not 7.3's per-series outcome, so the
+      series must remain Not Complete; actual Contraindicated, i.e. one antigen's
+      patient-level record would silence every series.
+
+
+      Two green results are worth flagging because they contradict things a
+      reader might reasonably have expected. First, Table 7-10's grid is encoded
+      exactly as the specification prints it, all seven rows verified cell by
+      cell. Second, aPartlyCompletedSeriesStillNeedsItsRemainingDose is green:
+      an everyday two-dose series with dose 1 satisfied and dose 2 not satisfied
+      correctly yields Not Complete and proceeds to 7.5. This was written
+      expecting the LogicTable.evaluate() "last matching column wins" defect
+      recorded in cross-cutting-notes.md to bite here, but it does not - Rule 2
+      requires condition 1 to be No in the printed table, so Rules 1 and 2 are
+      genuinely mutually exclusive and no overlap arises. That cross-cutting
+      entry needs no update from this unit.
+
+
+      Deliberately not covered. (a) FORECASTDTCAN-1's third candidate date, the
+      latest of all forecast conflict end dates. 7.4's class has no attribute
+      for it at all (the commented-out line refers to a caLatestConflictEndInterval
+      Date that does not exist in this class), and producing a real one needs
+      6.7's live-virus-conflict machinery - a whole conflicting administered dose
+      plus its LiveVirusConflict supporting data - which is disproportionate
+      scaffolding for a leg the step package already flags as unverified. Its
+      omission is the same shape as the seasonal-start-date red that is covered,
+      so the evidence is on record either way. (b) FORECASTDTCAN-1's fifth
+      candidate date, the latest date administered of any inadvertent
+      administration. Nothing anywhere in cdsi-engine computes that set of dates,
+      so there is no structure to populate and a test would assert against a
+      concept with no representation. (c) Rule overlaps within Table 7-10 other
+      than the Rule 1 / Rule 2 pair. Several later rules genuinely can match
+      together as printed (a series that is both complete and immune matches
+      Rule 2 and Rule 4; an aged-out series past its season matches Rules 6 and
+      7), and the specification's table gives no precedence order to say which
+      should win - that is a genuine ambiguity in the printed table, not an
+      implementation question, so no interpretation was picked. (d) The
+      structured log events, for the same reason units 6.2 through 7.3 left
+      theirs alone.
   '7.5':
     test_status: not_started
     test_class: null

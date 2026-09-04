@@ -120,6 +120,45 @@ exactly as quoted. Three ways it is **not** the same:
    rather than universal for the 387 of 392 release contraindications that
    define no age).
 
+**Updated 2026-09-04, from 7.4's side (`DetermineForecastNeedTest`).** 7.4 is the
+step that consumes both outcomes, and its two sides turn out **not** to be
+symmetric either - which changes what "fix the routing" has to mean.
+
+- **Immunity: 7.4's read is correct.** Table 7-10's condition 3 ("does the
+  patient have evidence of immunity?") reads
+  `dataModel.getPatientSeriesStepper().getCurrent().getPatientSeriesStatus()
+  .equals(PatientSeriesStatus.IMMUNE)` - exactly the per-series status 7.2's
+  Table 7-3 state change sets. `ruleFourEvidenceOfImmunityStopsTheForecast` is
+  green: hand an `IMMUNE` patient series to 7.4 and it produces the Immune
+  outcome, the forecast reason and the loop back to 4.4, all correctly. So the
+  immunity half of the gap is **entirely upstream** - fixing 7.2's data routing
+  would make 7.4's Rule 5 counterpart work with no change to 7.4 at all.
+- **Contraindication: 7.4's read is at the wrong scope, in the wrong place.**
+  Table 7-10's condition 4 ("is the relevant patient series a contraindicated
+  patient series?") does *not* read the patient-series status; it reads
+  `dataModel.getPatient().getMedicalHistory().getContraindicationSet()
+  .isEmpty()`. That set is `Set<Contraindication_TO_BE_REMOVED>` and **nothing
+  anywhere in `cdsi-engine` or `cdsi-web` ever adds to it** (verified by grep:
+  the only readers are this condition and `LogicStepRenderer`), so condition 4
+  answers `NO` for every patient in every run and Rule 5 is unreachable -
+  independently of, and in addition to, 7.3's own two defects. It is also
+  patient-scoped where the specification is series-scoped, so populating it
+  naively would make one antigen's contraindication silence every other
+  antigen's series, contradicting 7.3's own "an antigen contraindication
+  prevents all relevant patient series *for that antigen*".
+
+Sequencing consequence: fixing the loader/type migration alone leaves 7.4's Rule
+5 dead, because 7.3 writes `PatientSeriesStatus.CONTRAINDICATED` (per its Table
+7-7) while 7.4 reads a different, patient-level structure. The contraindication
+side therefore needs a third change beyond the two already recorded above -
+7.4's condition 4 has to read the patient series status the way its condition 3
+already reads it - and that is a change to `DetermineForecastNeed`, i.e. to a
+different unit's class than the loader fix. Downstream matters too:
+`PatientSeriesStatus.CONTRAINDICATED` is set nowhere in the engine except 7.4's
+own Rule 5 outcome, and is read by 8.1 `PreFilterPatientSeries` (which excludes
+contraindicated series) and by `MultipleAntigenVaccineGroup`, so those Chapter 8
+behaviours are dead too until this chain is closed end to end.
+
 Volume, for sequencing: contraindication data is far more abundant than immunity
 data. All 30 antigen files in the bundled 4.65-508 release ship a
 `<contraindications>` element, totalling 392 contraindications (250 antigen-level
@@ -137,7 +176,11 @@ and **7.3** (confirmed, 6 of its 16 red tests -
 `aParsedAntigenContraindicationCarriesTheAgesCalcdtciNeeds`,
 `aParsedVaccineContraindicationCarriesItsContraindicatedVaccineTypes`,
 `antigenAndVaccineContraindicationsStayDistinguishableAfterLoading`, and
-`tableSevenFoursContraindicationElementsAttributeIsFilledFromSupportingData`).
+`tableSevenFoursContraindicationElementsAttributeIsFilledFromSupportingData`)
+and **7.4** (confirmed, 2 of its 6 red tests -
+`ruleFiveAContraindicatedPatientSeriesStopsTheForecast` and
+`theContraindicationConditionAsksAboutThisPatientSeriesNotThePatientAsAWhole`;
+7.4's immunity-side read is green and needs no change).
 
 **Suggested handling:** the fix belongs in the loader and the domain model, not
 in `DetermineEvidenceOfImmunity` - and the routing choice matters, because 7.2's
@@ -161,8 +204,10 @@ decision tables would still have to be written before any of it changes 7.3's
 behaviour.
 
 **Status:** open, not yet fixed, not yet a formal finding. Confirmed from the
-immunity (2026-09-04) and contraindication (2026-09-04) sides; the two are the
-same routing cause with materially different remedies.
+immunity (2026-09-04) and contraindication (2026-09-04) sides and from the
+consuming side in 7.4 (2026-09-04); the two are the same routing cause with
+materially different remedies, and the contraindication remedy additionally
+reaches into `DetermineForecastNeed`.
 
 ---
 
