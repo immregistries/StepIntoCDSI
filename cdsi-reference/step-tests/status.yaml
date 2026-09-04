@@ -1298,12 +1298,100 @@ units:
       Target Dose decides from the status cause. (6) The structured log events,
       for the same reason 6.3 through 6.6 left theirs alone.
   '6.8':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluateForPreferableVaccineTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      30 tests, 25 green and 5 red. Covered: the step's identity
+      (EVALUATE_FOR_PREFERABLE_VACCINE, chapter "6.8"); Figure 6-19's loop shape -
+      one Table 6-26 decision table and one group of Table 6-25 attributes per
+      preferable vaccine defined on the target dose, and none at all when the
+      target dose defines none; Table 6-26's identity, its four-condition
+      five-rule shape and its full condition/rule grid transcribed from the
+      specification; all six Table 6-25 rows, their attribute types and names,
+      their values off the vaccine dose administered and the Supporting Data
+      preferable vaccine, and both assumed values (01/01/1900 and 12/31/2999);
+      CALCDTPREF-1 and CALCDTPREF-2; all five of Table 6-26's rules - Rule 1
+      including the equal-volume case and both ends of the age window, Rule 2's
+      LESS_THAN_RECOMMENDED_VOLUME evaluation reason together with section 6.8's
+      "volume will not be used to evaluate the validity of a vaccine dose
+      administered" (an under-volume dose is still preferable), Rule 3's vaccine
+      type mismatch, Rule 4's out-of-age-range outcome at both boundaries, and
+      Rule 5's trade name mismatch; both transitions this step package's
+      transitions.yaml records (6.10 Satisfy Target Dose when at least one
+      preferable vaccine matched, 6.9 Evaluate for Allowable Vaccine when none
+      did, including the no-preferable-vaccines-defined case, and the aggregation
+      across several preferable vaccines); that constructing the step records
+      nothing; and, through DataModelLoader.readVaccine on the bundled release's
+      own ENGERIX-B ADULT markup, that every attribute Table 6-26's four
+      conditions consult - CVX, begin age, end age, trade name and volume -
+      actually lands on the domain object.
+
+      The 5 red tests, expected vs actual. (1) ruleOneIncludesTheBeginAgeDateItself
+      - Table 6-26's second condition is "Is the preferable vaccine type begin age
+      date <= date administered < preferable vaccine type end age date?", so a dose
+      administered on the begin age date itself is inside the window; expected YES,
+      actual NO, because the implementation compares with a strict
+      beginAgeDate.before(dateAdministered). (2)
+      aDoseAdministeredOnTheDateOfBirthIsInsideAZeroDayBeginAgeWindow - the same
+      defect at the boundary that matters most on real data: a "0 days" begin age
+      puts the begin age date on the date of birth, so a Hep B birth dose is inside
+      the window; expected YES, actual NO. These two share one root cause. (3)
+      ruleFiveEvaluatesTheTradeNameOfTheVaccineDoseAdministered - expected Table
+      6-26's third condition to answer NO for a RECOMBIVAX ADULT dose measured
+      against the release's ENGERIX-B ADULT preferable vaccine; actual YES, because
+      the condition is hardcoded to return YES. (4)
+      ruleFiveReportsNotPreferableWhenTheTradeNameDiffers - the outcome of the
+      same: expected Rule 5 and a route to 6.9 Evaluate for Allowable Vaccine;
+      actual Rule 1 and a route to 6.10 Satisfy Target Dose. (3) and (4) share one
+      root cause, already recorded in this step package's Review Findings as a
+      known, deliberate-looking limitation. (5)
+      tableSixTwentyFiveNamesTheCalculatedDatesAsTheSpecificationDoes - Table
+      6-25's last two rows are attribute type "Calculated date (CALCDTPREF-1/2)"
+      with names "Preferable Vaccine Type Begin/End Age Date"; actual the type and
+      the name are swapped and the name has lost its "Preferable" prefix. The
+      values themselves are correct - CALCDTPREF-1 and CALCDTPREF-2 are both green
+      - so this is a presentation defect, not a behavioural one.
+
+      Materiality against the bundled Supporting Data release, which carries 1089
+      preferableVaccine entries across its 30 antigen files. The begin-age boundary
+      applies to all 1089: every one defines a begin age, the most common being "6
+      weeks" (394 entries), and 53 use "0 days" - 19 of them HepB, 24 Rabies, 8
+      RSV, 2 Orthopoxvirus - where the begin age date is the date of birth itself
+      and a birth dose lands exactly on the excluded boundary. The trade-name
+      condition is narrower: 16 of the 1089 entries carry a non-empty trade name
+      (ENGERIX-B ADULT 6, RECOMBIVAX ADULT 2, and four trivalent influenza brands
+      under CVX 140 at 2 each), and those are exactly the entries where the
+      condition could ever matter. The four CVX 140 influenza entries are the
+      sharpest case: they share a series dose, a CVX, a begin age and a volume, so
+      trade name is the only attribute that distinguishes them, and with the
+      condition hardcoded to YES all four collapse into a single undifferentiated
+      match.
+
+      Deliberately not covered. (1) Figure 6-19's loop exit. The process model
+      leaves the loop as soon as one preferable vaccine matches, while process()
+      evaluates every preferable vaccine's table and only then aggregates. The
+      difference is observable only when one dose can reach two different
+      Rule 1/Rule 2 outcomes on the same target dose, and it cannot on the bundled
+      release: only 9 of its 484 series doses list the same CVX twice among their
+      preferable vaccines, and in each of those the repeated entries either have
+      disjoint age windows (cholera CVX 174, JE CVX 134) or identical volumes (the
+      four influenza CVX 140 brands). Asserting an ordering nothing can observe
+      would be a brittle test rather than a behaviour, so it is recorded here
+      instead. (2) The evaluation status, which section 6.10 Satisfy Target Dose
+      decides. (3) The target dose's status cause - 6.8 never writes to it, and
+      process() ends by calling next(), which constructs the following step. (4)
+      Whether a Rule 1 match should clear an evaluation reason an earlier chapter-6
+      step left behind; Table 6-26's outcomes name only what 6.8 records, never
+      what it preserves. (5) The wording of Table 6-26's four condition rows and of
+      its title question, following 6.4, 6.5 and 6.6's precedent - only the table
+      number, its shape and its grid are pinned. (6) forecastVaccineType and mvx,
+      which the loader reads onto a preferable vaccine but Table 6-25 does not list
+      and Table 6-26 never consults. (7) The structured log events, for the same
+      reason 6.3 through 6.7 left theirs alone.
   '6.9':
     test_status: not_started
     test_class: null
