@@ -804,12 +804,119 @@ units:
       the responsibility of the steps that populate them, so no test asserts an
       interpretation the specification does not state.
   '6.4':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluateAgeTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      20 tests, 19 green and 1 red. The step class is isolated and invoked
+      directly: a hand-built DataModel supplies the patient date of birth, the
+      AntigenAdministeredRecord 4.4 has made current, and the target dose whose
+      SeriesDose carries the Supporting Data Age record. Ages are built the way
+      DataModelLoader.readSeriesDose builds them - all three TimePeriods always
+      assigned, an absent Supporting Data value becoming an unvalued TimePeriod
+      rather than a null one, which is what the bundled release's markup
+      produces (all 502 of its <age> elements carry absMinAge, minAge and
+      maxAge, valued or self-closed).
+
+      Covered. The step's identity (EVALUATE_AGE, chapter "6.4") and its Table
+      6-14 attribute table name; all five Table 6-14 attributes being
+      registered, with date of birth and date administered carrying their
+      inputs; Table 6-14's "Assumed Value if Empty" column (12/31/2999 maximum
+      age date, 01/01/1900 for both minimum age dates) when the target dose
+      defines no age attributes; Table 6-16's three business rules one test each
+      - CALCDTAGE-5 absolute minimum age date, CALCDTAGE-4 minimum age date,
+      CALCDTAGE-1 maximum age date, each as date of birth plus the corresponding
+      age; Table 6-15's encoding (label, four conditions, four rules, and all
+      four rows of the Yes/No grid); each of Table 6-15's four rules and its
+      documented State Change (Rule 1 Not Valid / 'Too young', Rule 2 Valid /
+      'Grace period', Rule 3 Valid with no reason, Rule 4 Extraneous / 'Too
+      old'); the three boundaries between those zones, which is where the
+      table's mix of < and <= actually decides something (the absolute minimum
+      age date itself begins the grace period, the minimum age date itself is
+      the first plainly valid day, the maximum age date itself is already
+      extraneous); the Purpose's fallback that a target dose specifying no age
+      attributes makes the age at administration valid, and the same fallback
+      applied to one attribute only (no absolute minimum age defined puts every
+      early dose in Rule 2's grace period); and the Next Steps claim that all
+      four outcomes continue to 6.5 Evaluate Preferable Interval regardless.
+
+      The 1 red test.
+      aDoseBeforeTheAbsoluteMinimumAgeIsTooYoungEvenWithNoMinimumAgeDefined -
+      expected Table 6-15 Rule 1's evaluation status 'Not Valid' and reason 'Too
+      young' for a dose administered before the absolute minimum age date;
+      actual NullPointerException("Evaluation should not be null at this point")
+      out of EvaluateAge.process(). When a target dose gives an absolute minimum
+      age but no minimum age, Table 6-14's assumed 01/01/1900 minimum age date
+      falls *before* the absolute minimum age date, so for a dose given before
+      the absolute minimum age both Table 6-15's first condition (date
+      administered < absolute minimum age date) and its third (minimum age date
+      <= date administered < maximum age date) answer Yes. No rule column
+      matches that combination, LogicTable performs no outcome, no evaluation is
+      recorded, and process()'s own guard throws. This is not a constructed
+      corner: the Supporting Data release bundled with cdsi-engine has exactly 5
+      series doses of that shape - <absMinAge>19 years</absMinAge> with an empty
+      <minAge/> and <maxAge/>, and a single <age> row so it is the one the step
+      reads - all Pneumococcal: Dose 3 of the two "Pneumococcal risk 19+ years
+      CSF Leaks or Cochlear Implants" series (PCV-PPSV and PPSV-PCV) and Dose 4
+      of the three "Pneumococcal risk 19+ years immunocompromised" series
+      (PCV-PPSV-PPSV, PPSV-PCV-PPSV, PPSV-PPSV-PCV). Any dose administered
+      before the patient's 19th birthday against one of those target doses
+      reaches this path. Across all 502 <age> elements in that release, 298 give
+      both an absolute minimum and a minimum age, 197 give neither, 2 give a
+      minimum age only, and these 5 give an absolute minimum age only. A
+      companion green test
+      (theSupportingDatasAbsoluteMinimumOnlyAgeShapeLoadsWithAnUnvaluedMinimumAge)
+      drives DataModelLoader.readSeriesDose reflectively on Pneumococcal Dose
+      3's own markup to confirm the red test's fixture is that real shape rather
+      than a hypothetical.
+
+      On the "does 6.4 create the first Evaluation object" question raised while
+      testing 6.1 and 6.3: confirmed, with a qualification. TargetDose's
+      evaluation list starts empty and TargetDose.setEvaluation appends;
+      DataModel.setEvaluationForCurrentTargetDose constructs a new Evaluation
+      every call, whereas 6.1 and 6.3 write through
+      dataModel.getTargetDose().getEvaluation().setEvaluationStatus(...), which
+      assumes one already exists. Grepping every Evaluation creation site in
+      cdsi-engine finds only two callers of setEvaluationForCurrentTargetDose:
+      all four of EvaluateAge's outcomes, and
+      EvaluateAndForecastAllPatientSeries.markRestAsExtraneous - and that 4.4
+      path builds its own fresh TargetDose objects for leftover antigen
+      administered records that never enter 6.1-6.4. So on the evaluation path
+      4.4 -> 6.1 -> 6.2 -> 6.3 -> 6.4, 6.4 is indeed the first step that brings
+      an Evaluation into existence, and 6.1's and 6.3's rejecting rules do fire
+      before it. The qualification: this is incidental, not a spec-grounded
+      responsibility of 6.4. Section 6.4's State Changes only say what evaluation
+      status and reason each rule records; 6.1 and 6.3 document recording
+      evaluation status and reason too, and nothing in the specification assigns
+      object creation to 6.4. It is an artifact of 6.4 alone using the DataModel
+      helper that constructs while 6.1 and 6.3 use the accessor that assumes.
+      The cross-step ordering fact is recorded here and in the test class's
+      javadoc (sixFourCreatesTheFirstEvaluationOnATargetDoseThatHasNoneYet);
+      no finding is filed and nothing was classified - that is Role B's call.
+
+      Deliberately not covered. (1) The wording of Table 6-15's four condition
+      rows and of Table 6-14's attribute *types* - the specification writes the
+      three calculated dates' type as "Calculated date (CALCDTAGE-1)" and so on
+      while the step writes "Calculated Date" for all three, so pinning either
+      would assert a transcription rather than a behaviour; the attribute names,
+      which both documents agree on, and the two table titles are pinned
+      instead. (2) Figure 6-5's "Decision Table 6-15 Columns 1 & 2 / 3 & 4 /
+      Column 5 / Column 6" labels - the step package records these as a
+      specification-internal inconsistency (Table 6-15 has four rule columns,
+      not six) and explicitly declines to resolve it, so no test takes a
+      position on it. (3) Selection among multiple <age> records for one series
+      dose - the step reads getAgeList().get(0) and section 6.4 says nothing
+      about choosing between several, nor about the effectiveDate /
+      cessationDate that would be the natural basis for choosing, so there is no
+      documented behaviour to assert; the case is real (502 <age> elements
+      across 484 series doses in the bundled release) but undocumented in this
+      section. (4) The structured log events listed under StepIntoCDSi
+      Implementation - the reference module's later tracing phases are what
+      those are for, and asserting log strings now would pin wording rather than
+      behaviour.
   '6.5':
     test_status: not_started
     test_class: null
