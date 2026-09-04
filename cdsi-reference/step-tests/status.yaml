@@ -1146,12 +1146,157 @@ units:
       3.3's subject. (7) The structured log events, for the same reason 6.3, 6.4
       and 6.5 left theirs alone.
   '6.7':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluateVaccineConflictTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      25 tests, 14 green and 11 red. 6.7 is the one chapter-6 evaluation step
+      with no decision table - version 4.4 restructured it "to be less process
+      driven and more business rule based" - so Table 6-24's three business rules
+      are the whole of what it normatively says, and the tests are organised
+      around them rather than around a rule grid. Covered: the step's identity
+      (EVALUATE_VACCINE_CONFLICT, chapter "6.7"); Table 6-23's first two rows,
+      their values and their names; CALCDTCONFLICT-1's conflict begin interval
+      date; both branches of CALCDTCONFLICT-2's conflict end interval date (the
+      minimum conflict end interval for a previous dose with no evaluation status
+      or one of 'Valid', the conflict end interval for one with a status that is
+      not 'Valid'); the structural claim that the two calculated dates must
+      differ; all four zones of CONFLICT-3's window (inside, the begin interval
+      date itself, before it, the end interval date itself, after it); section
+      6.7's "no vaccine Supporting Data for this vaccine type means no conflict"
+      rule, in three forms (a current type that is not an impacted type, no
+      conflict Supporting Data at all, and a previous type that is not a
+      conflicting type for this impacted type); the "nothing administered on or
+      before the current dose" case; the State Changes - the "VirusConflict"
+      marker appended to the target dose's status cause rather than replacing it,
+      and the status cause left untouched when there is no conflict; that
+      constructing the step records nothing; the unconditional transition to 6.8
+      on both outcomes, matching this step package's transitions.yaml; and,
+      through DataModelLoader.readLiveVirusConfict, that the bundled release's own
+      liveVirusConflict markup carries all three intervals the two CALCDTCONFLICT
+      rules name, as three distinct values.
+
+      The 11 red tests, expected vs actual. (1)
+      tableSixTwentyThreeNamesItsAttributesAsTheSpecificationDoes - expected Table
+      6-23 row 2's attribute type "Vaccine dose administered"; actual "Supporting
+      Data (Live Virus Conflict)", though the value it carries is correct. (2)
+      calcdtconflictOneCalculatesTheConflictBeginIntervalDate - expected a
+      published "Conflict Begin Interval Date" of 01/02/2016 (previous MMR dose
+      01/01/2016 plus the bundled conflict's 1 day); actual no such attribute
+      published at all. (3), (4) and (5)
+      calcdtconflictTwoUsesTheMinimumEndIntervalWhenThePreviousDoseHasNoEvaluationStatus,
+      ...WhenThePreviousDoseIsValid and
+      calcdtconflictTwoUsesTheConflictEndIntervalWhenThePreviousDoseIsNotValid -
+      expected a published "Conflict End Interval Date" of 01/25/2016, 01/25/2016
+      and 01/29/2016 respectively; actual no such attribute published at all. (6)
+      theConflictEndIntervalDateIsLaterThanTheConflictBeginIntervalDate - expected
+      the published end interval date to be later than the published begin
+      interval date; actual both are 02/02/2016, identical. (7)
+      conflictThreeReportsADoseInsideTheConflictWindow - expected a dose given
+      01/15/2016 inside the 01/02/2016-01/25/2016 window to record
+      "VirusConflict"; actual an empty status cause. (8)
+      conflictThreeIncludesTheConflictBeginIntervalDateItself - expected a dose
+      given on 01/02/2016, the begin interval date itself, to record
+      "VirusConflict"; actual an empty status cause. (9)
+      aDetectedConflictIsAppendedToTheExistingStatusCause - expected
+      "AgeVirusConflict"; actual "Age". (10)
+      constructingTheStepDoesNotRecordAnythingWhenThereIsNoPreviousDose - expected
+      constructing the step to leave the status cause at "Age"; actual
+      "AgeVirusConflict". (11)
+      noVaccineDoseAdministeredOnOrBeforeTheCurrentOneMeansNoConflict - expected
+      no conflict recorded when nothing was administered on or before the current
+      dose; actual "VirusConflictVirusConflict".
+
+      Reds (2) through (9) all trace to two things in the same class, both
+      observable from the tests without any classification of them. First, the
+      step's per-previous-dose loop runs from selectedAntigenAdministeredRecordPos
+      + 1 upward through a list 4.2 sorted ascending by date administered, so the
+      doses it inspects are the ones administered after the current dose, not the
+      "previous vaccine dose administered" all three business rules name; with a
+      spec-shaped history the loop body never executes and neither calculated date
+      is published. Second, where the loop does execute, the conflict end interval
+      date is computed from getConflictBeginInterval().getAmount() and
+      getConflictBeginInterval().getType() rather than from either of the two
+      intervals CALCDTCONFLICT-2 names, so the end date always equals the begin
+      date and CONFLICT-3's window is empty.
+
+      Materiality, checked against the Supporting Data release bundled in
+      cdsi-engine/src/main/resources. It holds 625 liveVirusConflict entries
+      across 25 impacted ("current") vaccine types. Every one of the 625 has a
+      conflictBeginInterval of "1 day" and end intervals between "24 days" and "30
+      days", so begin does not equal end in 625 of 625 - an empty CONFLICT-3
+      window for every conflict the release defines. 200 of the 625 have a
+      minConflictEndInterval that differs from their conflictEndInterval (the four
+      shapes are 24/28, 28/30, 26/30 and 24/30 days), so CALCDTCONFLICT-2's
+      Valid-versus-not-Valid branch changes the answer for 200 of them; the
+      implementation reads neither field and consults no previous dose's
+      evaluation status anywhere. All 25 impacted vaccine types carry more than
+      one distinct interval triple across their entries, and the step's
+      setIntervalDate matches on the impacted type only, ignoring the conflicting
+      type, so its last matching entry wins - latent behind the two defects above.
+      The loader itself is not the gap: it reads all three intervals onto separate
+      LiveVirusConflict fields, which the green loader test confirms on the
+      release's own MMR-after-MMR markup.
+
+      On the constructor side effect flagged by 6.6. Confirmed, with a
+      qualification. EvaluateVaccineConflict's constructor really does evaluate
+      its first internal table (the one labelled "Table 4-20") and run the whole
+      per-previous-dose loop before returning; process() only re-evaluates the
+      tables and then reads the YesNo the constructor already computed. That first
+      table's third outcome appends "VirusConflict" to the shared target dose
+      status cause, so constructing the step can mutate state - red (10) pins
+      exactly that. The qualification is that the outcome fires only when its
+      second condition, "is there at least one vaccine dose administered on or
+      before the current vaccine dose administered date?", is No, and that
+      condition scans dataModel.getAntigenAdministeredRecordList(), which in a
+      real pipeline run always contains the current dose itself. So in a full
+      engine run the condition is always Yes and no spurious marker is written -
+      the side effect is latent, not live. It becomes reachable from any caller
+      holding a DataModel whose antigenAdministeredRecordList is empty, which is
+      what 6.6's fixtures are: EvaluateAllowableIntervalTest never populates that
+      list, so every one of its runs that reaches next() does append a spurious
+      "VirusConflict" through 6.7's constructor. 6.6's tests are unaffected because
+      they only ever assert on their own "Interval" marker. Recorded here as a
+      fact for whoever runs 6.7's Role B, not as a cross-step problem to act on
+      now. The corresponding green test,
+      constructingTheStepDoesNotRecordAnythingWhenTheHistoryIsPopulated, pins the
+      ordinary case.
+
+      Two of the CONFLICT-3 boundary tests currently pass vacuously and say so in
+      their own javadoc: conflictThreeExcludesADoseBeforeTheConflictBeginIntervalDate
+      and conflictThreeExcludesTheConflictEndIntervalDateItself assert that no
+      conflict is recorded, which is true of every arrangement of every fixture
+      while the two defects above stand. They are kept because they pin both
+      boundaries for Role B, and CONFLICT-3's begin boundary is inclusive while
+      its end boundary is exclusive - the implementation's own condition is
+      strictly greater-than at both ends, so the begin boundary would still be
+      wrong after the interval defect alone were fixed. That third, smaller
+      discrepancy is what red (8) isolates.
+
+      Deliberately not covered, and why. (1) Any decision table number, label or
+      grid. Section 6.7 defines none; the implementation still carries three
+      internal LogicTables labelled "Table 4-20/4-21/4-22", stale leftovers from a
+      pre-4.6 chapter numbering that this step package already records as a
+      documentation-only finding. Pinning them would assert a transcription the
+      current specification does not contain. (2) Table 6-23's "Supporting Data /
+      Live Virus Conflicts" row, which the step reads straight off the DataModel
+      instead of publishing as a condition attribute - the same structural
+      difference the step package already notes for the two calculated dates.
+      Asserting it separately would restate a presentation gap rather than a
+      behaviour. (3) Non-live-virus vaccine conflicts. The Purpose says 6.7
+      "covers live virus vaccine conflicts as well as non-live virus vaccine
+      conflicts", but liveVirusConflicts is the only conflict Supporting Data the
+      specification defines and the only kind the loader reads, so there is no
+      separate behaviour to isolate. (4) Compound conflict intervals. The step
+      reads a TimePeriod's amount and type directly rather than through
+      getDateFrom, so a value like "4 weeks - 4 days" would lose its second term;
+      all 625 entries in the bundled release are single-term, so there is nothing
+      real to assert. (5) The evaluation status, which section 6.10 Evaluate
+      Target Dose decides from the status cause. (6) The structured log events,
+      for the same reason 6.3 through 6.6 left theirs alone.
   '6.8':
     test_status: not_started
     test_class: null
