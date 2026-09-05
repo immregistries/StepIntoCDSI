@@ -3281,12 +3281,143 @@ units:
       inventing a second one. If a later review decides SELECTB-14 means some
       other date, row 1's six tests need re-pointing, not re-writing.
   '8.7':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.SelectPrioritizedPatientSeriesTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      Role A pass 2026-09-05. 21 tests, 16 green, 5 red. 8.7 is the consumer end
+      of the 8.4/8.5/8.6 scoring family: it has no LogicTable of its own (Table
+      8-13 is a plain two-column business-rule table), all of its logic is the
+      one private method selectPrioritizedPatientSeries(), and it is the only
+      reader of PatientSeries.getScorePatientSeries() in the whole engine. Every
+      selection test invokes that private method reflectively on a hand-built
+      DataModel and reads the public getPrioritizedPatientSeries(); the State
+      Changes and Next Steps tests drive process(). Note for anyone extending
+      this class that the step captures dataModel.getSelectedPatientSeriesList()
+      in a field initializer, i.e. at construction time, so the fixture has to be
+      built before the step is.
+
+      Coverage is full for what 08-07 documents. SELECTBEST-1 is covered by four
+      tests (the score as a running sum of increments and decrements rather than
+      a count of positive awards; the per-selection reading of "all points
+      awarded to it"; the invariance of the selection under an accumulation
+      scaled equally across candidates; and that the selection reads the score
+      and not the dead numberOfValidDoses() helper the class carries). SELECTBEST-2
+      is covered by eight (highest score wins; wins from any position in the list;
+      a sole candidate; the series-preference tie-break; its independence from
+      list order; that it applies only among the series tied for the highest
+      score, not to the best-ranked series in the group; a three-way tie; and the
+      two halves of the empty-preference question below). The Purpose, State
+      Changes and Next Steps sections account for the remaining five. Nothing in
+      08-07 is left untested and nothing needed disproportionate scaffolding.
+
+      Red 1, selectbestOneTheScoreIsThePointsAwardedInThisSelectionNotOnesCarriedIn -
+      expected the series awarded +1 in this selection, actual the series awarded
+      nothing in this selection but carrying 5 points from earlier ones. This is
+      the test the long-standing 2026-09-02 cross-cutting entry on unreset scores
+      asked 8.7's Role A pass to produce, and it settles the mechanism half:
+      8.7 compares the raw accumulated integers with == and > against no baseline
+      of any kind, so carried-in points count exactly as much as freshly awarded
+      ones. See below for the materiality half, which is the more important
+      result and is now recorded in that entry.
+
+      Red 2, selectbestTwoAnEmptySeriesPreferenceIsNoPreferenceHoweverItWasBuilt -
+      expected a prioritized patient series to still be named, actual
+      NumberFormatException from Integer.parseInt(""). This closes the open
+      question in 08-07's own Review Findings, which flagged the tie-break guard's
+      `currentSeriesPreference != ""` reference comparison as "a real code smell,
+      but not confidently a bug ... this pass did not trace that far". Traced:
+      DataModelLoader sets the field from DomUtils.getInternalValue(), which
+      returns its own "" literal when the element has no child node, and
+      String.trim() returns the receiver unchanged when there is nothing to trim,
+      so all 12 self-closing <seriesPreference/> elements in the bundled 4.65-508
+      release do yield the interned literal and are handled correctly (pinned
+      green by selectbestTwoATieAmongSeriesThatDeclareNoPreferenceStillSelectsOne).
+      A whitespace-only element would not - trim() would return a fresh empty
+      String, != "" would answer "a preference is declared", and parseInt would
+      throw - and the release contains none. So: a latent defect, not a live one,
+      but a defect of the guard rather than of the data, since the guard tests
+      reference identity where it means to test emptiness. Role B should classify
+      it IMPLEMENTATION_MISMATCH and fix it with .equals("") (or isEmpty() plus a
+      null check - getSeriesPreference() can also be null, which the guard lets
+      through to parseInt for the same reason).
+
+      Reds 3-5 are the 2026-09-05 "Chapter 8 has no series group" cross-cutting
+      entry, confirmed from 8.7's side and recorded there.
+      theSelectionIsMadeOverTheScorablePatientSeriesEightOneProduced (expected the
+      priority-A Risk series 8.1 kept, actual the priority-B Risk series 8.1
+      dropped) is the stage half: 8.7 reads 4.5's pre-8.1 selectedPatientSeriesList,
+      so a series 8.1 deliberately excluded - and which 8.4/8.5/8.6 therefore never
+      scored - can be named the prioritized patient series outright. That is the
+      worst form this entry has taken across the chapter: in 8.4 a stray series
+      distorted a comparison, in 8.7 it becomes the answer 8.8 evaluates.
+      theStepProducesOnePrioritizedPatientSeriesPerSeriesGroup (expected 2 entries,
+      actual 1) and theSelectionComparesScoresWithinOneSeriesGroupNotAcrossGroups
+      (expected the Standard group's own winner, actual the higher-scoring
+      Increased Risk series) are the series-group half, which 8.7's own Purpose
+      sentence names explicitly - the rules "result in the prioritized patient
+      series for the series group". Neither is fixable inside 8.7: 4.5 calls
+      dataModel.getPrioritizedPatientSeriesList().clear() on every antigen pass and
+      8.8 builds one LogicTable per entry on that list, so a per-group loop has to
+      be introduced between 4.5 and 8.1 and 4.5's clear has to move with it.
+
+      On the antigen axis 8.7 is CORRECT, and that is worth recording as a green
+      result rather than an absence of a red one:
+      theSelectionIsMadeOverThePatientSeriesOfTheAntigenBeingProcessed shows a
+      Measles series carrying a score of 9 on the all-antigen stepper cannot take
+      the HepB pass's selection, because selectedPatientSeriesList is antigen-scoped.
+      8.7 and 8.4 are the two Chapter 8 steps already right on that axis.
+
+      MATERIALITY OF THE UNRESET SCORE - the key deliverable of this unit, now
+      recorded in full in the 2026-09-02 cross-cutting entry. Answer: under the
+      implementation as it stands, the accumulation CANNOT change which patient
+      series 8.7 selects. Four facts, each verifiable by reading source rather
+      than by a unit test (which always starts from 0 and so cannot settle it, as
+      8.6's update correctly said): (1) the score has exactly one reader in the
+      engine and it is 8.7 - getScorePatientSeries() appears twice, both in this
+      class, and addScore/setScorePatientSeriesScore are called by nothing - so no
+      condition anywhere reads the score and a series' per-pass delta is
+      independent of what it already carries; (2) every antigen pass presents
+      8.1-8.6 identical input, because 8.1 reads only the never-re-scoped
+      all-antigen stepper and never reads dataModel.getAntigen(), 8.3 filters
+      nowhere and so routes to the same one of 8.4/8.5/8.6 every time, 8.5/8.6
+      read that same stepper, and nothing in Chapter 8 mutates PatientSeriesStatus
+      or anything else those steps read; (3) therefore score_i = M * d_i, with d_i
+      the single-pass delta and M a single global pass count (global because 8.2
+      short-circuits a whole pass for everybody or nobody); (4) 8.7's comparison is
+      invariant under that scaling - multiplying every candidate by the same
+      positive M moves neither the maximum nor the tie set, so both SELECTBEST-2
+      clauses reach the same answer a single pass would.
+      selectbestOneAnAccumulationScaledEquallyAcrossCandidatesDoesNotChangeTheWinner
+      (green) pins step 4 on both a three-way ranking and a genuine tie; red 1
+      above pins the counterfactual.
+
+      The consequence is a sequencing constraint rather than a fix: this is
+      non-material ONLY because the Chapter 8 scoping defect makes every pass
+      identical, so the two open cross-cutting entries currently cancel each
+      other. Re-scoping 8.5/8.6 per antigen or per series group is safe (each
+      series would then be scored once). A PARTIAL fix is not: making 8.3's
+      counts antigen-scoped while leaving 8.5/8.6 on the stepper breaks fact 2,
+      different passes then route to different scoring steps, and since 8.4 reads
+      the antigen-scoped list while 8.5/8.6 read the stepper, one antigen's series
+      would carry one 8.4-shaped delta plus several 8.6-shaped deltas earned on
+      other antigens' passes - sums that are no longer a positive multiple of any
+      single ranking, at which point 8.7 starts selecting the wrong series. Fixing
+      the reset (or scoring into a per-selection map) makes the scope decision
+      free to sequence; on its own it changes no outcome and is not worth a FITS
+      regression on its own account.
+
+      Two further observations, neither worth a test on its own. 8.7 carries a
+      public numberOfValidDoses(PatientSeries) copied from 8.4/8.5 that nothing
+      calls (pinned dead by
+      selectbestOneTheSelectionReadsTheScoreNotTheNumberOfValidDoses), and its
+      constructor calls setConditionTableName("Table ") with a trailing space and
+      no table number, which is what LogicStepRenderer shows in cdsi-web. Both
+      cosmetic; mentioned so a Role B session recognises them as known rather than
+      as findings.
   '8.8':
     test_status: not_started
     test_class: null

@@ -316,12 +316,60 @@ makes every HepB series scored after it a product patient series. Three of 8.6's
 `theStepScoresThePatientSeriesOfOneSeriesGroup`, all expected +1 actual -1).
 8.6's other 15 reds are its own class's defects and are not this entry.
 
+**Updated 2026-09-05, from 8.7's side
+(`SelectPrioritizedPatientSeriesTest`).** 8.7 confirms the list-choice table
+above by test rather than by source reading - it does read
+`selectedPatientSeriesList` - and it is where the two halves of this entry
+diverge most sharply, because it is the step that *names the answer*.
+
+On the **antigen** axis 8.7 is **correct, and confirmed green**
+(`theSelectionIsMadeOverThePatientSeriesOfTheAntigenBeingProcessed`): a Measles
+series carrying a score of 9 on the all-antigen stepper cannot take the HepB
+pass's selection, because 4.5 rebuilds `selectedPatientSeriesList` per antigen.
+Together with 8.4 that makes two of the eight Chapter 8 steps already right on
+this axis, and it means the chapter-wide fix has two working examples to
+converge on, not zero.
+
+On the **stage** axis it is worse here than anywhere else in the chapter. The
+escalation this entry has been tracking - 8.1/8.2 a contaminated count, 8.3 a
+flipped branch, 8.4 a lost comparison, 8.5 a sticky boolean, 8.6 an unawardable
+outcome - ends at 8.7 with the stray series simply *winning*.
+`theSelectionIsMadeOverTheScorablePatientSeriesEightOneProduced` (red) puts two
+Risk series of one group on 4.5's pre-8.1 list and only the priority-A one on
+`scorablePatientSeriesList`, as SELECTSCORE-2 requires; the priority-B series
+8.1 deliberately dropped - a series that was never scored by 8.4/8.5/8.6 at all,
+and whose score is therefore whatever it happened to hold - is the one 8.7 names
+as the prioritized patient series, and 8.8 evaluates that. So on 8.7 the
+consequence of reading the wrong pipeline stage is not a distorted number
+feeding a later decision; it is the final answer being a series the pipeline had
+already excluded. That is the strongest case yet for 8.4's correction to this
+entry's remedy (name a *stage*, `scorablePatientSeriesList`, not just a scope).
+
+On the **series group** axis 8.7 is the one step where the gap is visible in the
+specification's own sentence about the step: 8.7's Purpose says the rules
+"result in the prioritized patient series **for the series group**", so its
+output is defined per group. Two reds show both sides of that.
+`theStepProducesOnePrioritizedPatientSeriesPerSeriesGroup` expects two entries
+on `prioritizedPatientSeriesList` for an antigen with a Standard and an Increased
+Risk group and gets one; `theSelectionComparesScoresWithinOneSeriesGroupNot
+AcrossGroups` shows why that one is also the wrong one - the Increased Risk
+series outscores the Standard group's own winner and takes the whole antigen's
+selection. Worth noting for whoever fixes this that the output side has a second
+obstacle beyond 8.7 itself: `SelectBestPatientSeries` (4.5) calls
+`dataModel.getPrioritizedPatientSeriesList().clear()` on every antigen pass, so
+even if 8.7 produced one winner per group the list could still only ever hold one
+antigen's worth, and 8.8's `LT` is built one table per entry on that list. The
+series-group loop this entry describes therefore has to be introduced between
+4.5 and 8.1 *and* 4.5's clear has to move with it; it cannot be retrofitted
+inside 8.7 alone.
+
 **Known affected units:** 8.1 (confirmed, 4 of its 8 red tests), 8.2 (confirmed,
 2 of its 5 red tests), 8.3 (confirmed, 2 of its 4 red tests), 8.4 (confirmed,
-2 of its 8 red tests), 8.5 (confirmed, 3 of its 18 red tests) and 8.6
-(confirmed, 3 of its 18 red tests). 8.7 and 8.8 have not had a Role A pass yet
-as of this note; the list-choice table above is from reading their source, not
-from tests.
+2 of its 8 red tests), 8.5 (confirmed, 3 of its 18 red tests), 8.6
+(confirmed, 3 of its 18 red tests) and **8.7** (confirmed 2026-09-05, 3 of its 5
+red tests - one stage, two series group; its antigen scope is correct and green).
+8.8 has not had a Role A pass yet as of this note; the list-choice table above is
+from reading its source, not from tests.
 4.5 is *not* affected - it does its half correctly, on the antigen axis, which is
 the only half it owns.
 
@@ -354,8 +402,13 @@ pre-filter back out of the loop for two more steps.
 **Status:** open, not yet fixed, not yet a formal finding. Confirmed from 8.1's
 side (2026-09-05), 8.2's side (2026-09-05), 8.3's side (2026-09-05), 8.4's
 side (2026-09-05, which corrects the suggested remedy), 8.5's side
-(2026-09-05, the first tested step that reads the stepper itself) and 8.6's side
-(2026-09-05, where a stray series makes the row's +1 unawardable to anyone).
+(2026-09-05, the first tested step that reads the stepper itself), 8.6's side
+(2026-09-05, where a stray series makes the row's +1 unawardable to anyone) and
+8.7's side (2026-09-05, where a stray series wins the selection outright, and
+where the antigen axis is confirmed already correct). **Note the sequencing
+constraint the score-accumulation entry below now places on this one: a partial
+fix here - re-scoping 8.3 without also re-scoping 8.5/8.6 - would activate that
+latent defect. See its 2026-09-05 update from 8.7's side.**
 
 ---
 
@@ -891,16 +944,105 @@ always starts from 0. Confirming the accumulation changes a real selection needs
 either 8.7 (`SelectPrioritizedPatientSeries`, which reads the score to pick a
 winner) or a whole-assessment run, neither of which is in 8.6's scope.
 
+**Updated 2026-09-05, from 8.7's side
+(`SelectPrioritizedPatientSeriesTest`) - materiality settled.** 8.5's and 8.6's
+passes both flagged 8.7 as the place to answer this, because 8.7 is the step
+that reads the score to pick a winner. It is answered here: **under the
+implementation as it stands, the unreset accumulation cannot change which
+patient series 8.7 selects.** The argument is not a unit test's word for it (a
+hand-built `DataModel` always starts at 0, exactly as 8.6 said) but a whole-loop
+one, assembled from four facts each verifiable by reading source:
+
+1. **The score has exactly one reader in the entire engine, and it is 8.7.**
+   `getScorePatientSeries()` appears twice in `cdsi-engine`/`cdsi-web`, both in
+   `SelectPrioritizedPatientSeries` (lines 35 and 47). `addScore(int)` and
+   `setScorePatientSeriesScore(int)` are declared on `PatientSeries` and called
+   by nothing at all - so the score is written only by 8.4/8.5/8.6's
+   `incPatientScoreSeries`/`descPatientScoreSeries`, and no *condition* anywhere
+   reads it. The per-pass delta a series receives is therefore independent of the
+   value it already carries.
+2. **Every antigen pass presents 8.1-8.6 identical input.** `PreFilterPatientSeries`
+   (8.1) reads only the never-re-scoped all-antigen stepper and per-series state
+   that Chapter 8 does not mutate (it never reads `dataModel.getAntigen()`), so
+   `scorablePatientSeriesList` is rebuilt to identical content on every pass;
+   `ClassifyScorablePatientSeries` (8.3) filters nowhere, so it routes to the
+   *same one* of 8.4/8.5/8.6 on every pass; and 8.5/8.6 read that same stepper,
+   so they award every series in it the same delta every time. Nothing in Chapter
+   8 writes `PatientSeriesStatus` (the only writers are 7.2, 7.4 and the vaccine
+   group steps, all of which run outside this loop) and 8.8 only appends to
+   `bestPatientSeriesList`.
+3. **Therefore `score_i = M · d_i`**, where `d_i` is series `i`'s single-pass
+   delta and `M` is one *global* count of how many antigen passes reached the
+   scoring step - global because on any given pass either every series in the
+   list is scored or none is (8.2 can short-circuit a whole pass to 8.8, which
+   skips scoring for everybody equally).
+4. **8.7's comparison is invariant under that scaling.** Multiplying every
+   candidate's delta by the same positive `M` moves neither the maximum nor the
+   tie set, so both SELECTBEST-2 clauses - "highest score" and the
+   series-preference tie-break that fires only on `==` - reach the same answer
+   they would after a single pass. (If `M` is 0 every candidate is on 0, which is
+   also what one unscored pass would give.)
+
+`selectbestOneAnAccumulationScaledEquallyAcrossCandidatesDoesNotChangeTheWinner`
+(green) pins step 4 as a regression test, on both a three-way ranking and a
+genuine tie. `selectbestOneTheScoreIsThePointsAwardedInThisSelectionNotOnesCarriedIn`
+(red) pins the counterfactual: 8.7 compares the raw accumulated integers with
+`==` and `>` against no baseline whatsoever, so the moment two candidates of one
+selection *do* carry different histories, the history decides - a series awarded
+nothing this selection but carrying 5 points beats one awarded +1.
+
+**So this is confirmed non-material today, and the reason is worth reading
+twice: it is non-material only because the Chapter 8 scoping defect makes every
+pass identical.** The two open entries in this file cancel each other out. That
+converts this entry from an open question into a **sequencing constraint on the
+other one**, which is the actionable part:
+
+- Re-scoping 8.5/8.6 to a per-antigen (or per-series-group) list, which is what
+  the "Chapter 8 has no series group" entry recommends, is **safe** on this axis:
+  each series would then be scored exactly once, and once is trivially uniform.
+- **A partial remediation is not safe.** Concretely: making 8.3's counts
+  antigen-scoped (a change that entry's 8.2 update already contemplates for a
+  neighbouring class) while leaving 8.5/8.6 on the stepper breaks fact 2 above -
+  different antigen passes would then route to different scoring steps, and since
+  8.4 reads the antigen-scoped `selectedPatientSeriesList` while 8.5/8.6 read the
+  all-antigen stepper, one antigen's series would accrue one 8.4-shaped delta
+  *plus* several 8.6-shaped deltas earned on other antigens' passes. Those sums
+  are no longer a positive multiple of any single ranking, and the foreign-pass
+  points can outvote the verdict of the step that was actually meant to score
+  that group. **At that point this entry becomes material and 8.7 starts
+  selecting the wrong series.**
+- The same is true of any future change that makes a *condition* read the score,
+  which would break fact 1.
+
+One loose end this pass also closes, from 8.6's update above: the worry that
+Table 8-11 row 1's literal "0" tie outcome is "indistinguishable from any prior
+state" does not bite in practice, because "0" contributes 0 to `d_i` and so stays
+0 under the scaling - the row is uniformly inert rather than unpredictably so.
+
 **Known affected units:** 8.5 and 8.6 (the increment/decrement behaviour is
-pinned green in both; neither confirms the accumulation changes an outcome).
-8.7 and 8.8 have not had a Role A pass yet as of this update.
+pinned green in both; neither confirms the accumulation changes an outcome) and
+**8.7** (confirmed 2026-09-05: the consumer's comparison is on raw accumulated
+totals - 1 red test - but the accumulation is provably uniform today, so no
+selection is changed - 1 green test pinning that). 8.8 has not had a Role A pass
+yet as of this update; it reads no score, so it is not expected to add anything.
 
-**Suggested handling:** unchanged - needs its own investigation to confirm
-materiality (does the accumulation actually change which patient series wins a
-selection in practice, the way SPEC-4.6-0007's own fix turned out not to) before
-deciding whether it's worth fixing at all. 8.7's Role A pass is the natural
-place, since 8.7 is the consumer. Note for whoever does it that 8.6's Table 8-11
-row 1 gives the question a concrete test case rather than a general worry.
+**Suggested handling:** no longer "needs its own investigation". Two things
+follow instead. First, **resetting the score is not urgently needed and should
+not be fixed on its own**: on today's code it changes no outcome, so a standalone
+reset would be a behaviour-neutral tidy-up with a FITS regression risk and no
+payoff. Second, and the part that matters, **it must be fixed at the same time as
+the Chapter 8 scope decision, or that decision must be taken in the safe
+direction described above** - because a partial scope fix is exactly what turns
+this latent problem into a live one. The cheapest way to make the whole question
+moot is to give `PatientSeries` a score reset at the top of each selection (or,
+equivalently, to have 8.4/8.5/8.6 score into a per-selection map rather than onto
+the series), which removes the dependency on every pass being identical and lets
+the scope fix be sequenced freely. Recommend recording that as a precondition of
+the "Chapter 8 has no series group" remedy rather than as a unit-local item, since
+no single unit's Role B session owns both classes.
 
-**Status:** open, behaviour confirmed 2026-09-05 from 8.6's side, materiality
-still unconfirmed, not yet a formal finding.
+**Status:** open, behaviour confirmed 2026-09-05 from 8.6's side; **materiality
+resolved 2026-09-05 from 8.7's side - confirmed non-material under the current
+implementation, and confirmed to become material under a partial fix of the
+Chapter 8 scope entry.** Not yet a formal finding. What remains is a sequencing
+decision, not an investigation.
