@@ -33,6 +33,57 @@ single-unit fixes after. That sequencing decision itself isn't written yet
 
 ---
 
+## 2026-09-05 - CVX-to-antigen association age is parsed nowhere, so one administered dose can be misassigned to the wrong antigen
+
+**Discovered while testing:** 4.2 Organize Immunization History
+(`OrganizeImmunizationHistoryTest`), confirmed against real Supporting Data
+while reviewing an outside strategy note (`docs/25-phase-b-strategy-second-opinion.md`)
+that independently flagged this as a likely foundational cluster.
+
+**Affected component:** `DataModelLoader.readCvx()` (the `cvxToAntigenMap`
+parser) and every downstream step that reads `VaccineType.getAntigenList()`/
+`Antigen.getCvxList()` without an age check - starting with
+`OrganizeImmunizationHistory` (4.2), which is the first place an administered
+dose is expanded into per-antigen records.
+
+**What's wrong:** the real Supporting Data (`ScheduleSupportingData.xml`)
+carries `<associationBeginAge>`/`<associationEndAge>` on each `<association>`
+inside a `<cvxMap>` - for example CVX 121 ("Zoster live") associates with
+Varicella for ages 0 days-50 years and with Zoster for ages 50 years and up.
+`readCvx()`'s loop over an `<association>`'s children checks only for the
+`antigen` child node; `associationBeginAge`/`associationEndAge` are never read
+by any code in `cdsi-engine` (confirmed by grep: zero references to either
+name anywhere in `src/main/java`). So `VaccineType.getAntigenList()` for CVX
+121 unconditionally contains both Varicella and Zoster, for every patient at
+every age, and `OrganizeImmunizationHistory` (4.2's own class, `line 22`:
+`for (Antigen antigen : vda.getVaccine().getVaccineType().getAntigenList())`)
+expands one Zoster-live administration into one antigen-administered record
+per antigen in that unfiltered list, regardless of the patient's age at
+administration.
+
+**Confirmed live in 4.2:** `OrganizeImmunizationHistoryTest`'s two red tests -
+`zosterLiveGivenBelowFiftyYearsIsAssociatedWithVaricellaOnly` (expected
+`[Varicella]`, actual `[Varicella, Zoster]`) and
+`zosterLiveGivenAtOrAboveFiftyYearsIsAssociatedWithZosterOnly` (expected
+`[Zoster]`, actual `[Varicella, Zoster]`) - both fail for this one reason.
+
+**Known affected units:** 4.2 (confirmed, both its red tests). Upstream of
+almost everything else: any step reasoning about a patient's Varicella or
+Zoster series (6.x evaluation, 7.x forecasting, 8.x series selection) sees an
+administered-record list containing a dose that shouldn't count toward that
+antigen at all, for the patient's actual age. Not yet checked against other
+CVX codes with more than one age-bounded association in the bundled release.
+
+**Suggested handling:** this is a loader/domain-model change (parse the two
+ages onto the association, and make the association age-aware at the point
+`AntigenAdministeredRecord`s are created), not a narrow 4.2 fix - flagged here
+so it's weighed as an early cluster during Role B sequencing rather than
+patched locally in `OrganizeImmunizationHistory` alone.
+
+**Status:** open, not yet fixed, not yet a formal finding.
+
+---
+
 ## 2026-09-05 - Chapter 8 has no series group, and its eight steps read three different "series in scope" lists
 
 **Discovered while testing:** 8.1 Pre-filter Patient Series
