@@ -172,10 +172,42 @@ Conditions`, `theStepCountsOnlyThePatientSeriesOfOneSeriesGroup`). 8.2's other
 three red tests are its own class's business-rule defects and are not this
 entry.
 
-**Known affected units:** 8.1 (confirmed, 4 of its 8 red tests) and 8.2
-(confirmed, 2 of its 5 red tests). 8.3-8.8 have not had their Role A pass yet as
-of this note; the list-choice table above is from reading their source, not from
-tests. 4.5 is *not* affected - it does its half correctly.
+**Updated 2026-09-05, from 8.3's side
+(`ClassifyScorablePatientSeriesTest`).** 8.3 reproduces both halves and adds two
+things neither 8.1 nor 8.2 could show. First, the "inconsistent *within* a class"
+observation from 8.2 does not generalise into an intent that could be read off
+the code: `ClassifyScorablePatientSeries` filters **nowhere at all**. None of its
+three `LT` conditions, and neither of its two counting helpers
+(`calculateCompletePatientSeriesCount`, `calculateCountOfPatientSeriesWithValid
+Doses`), reads `dataModel.getAntigen()` or any series group - they walk the whole
+of `scorablePatientSeriesList` unconditionally. So across the two consecutive
+steps that read the same list, 8.2 filters by antigen in 3 of 4 conditions and
+8.3 in 0 of 3; there is no consistent convention to preserve, and a chapter-wide
+decision cannot be implemented by "following what the neighbouring class already
+does".
+
+Second, and the reason this matters more in 8.3 than in 8.2: **8.3's output is a
+control-flow branch, not a count.** 8.2's contamination makes a shortcut rule
+fail to match, which merely costs the shortcut - the series still go on to be
+scored. 8.3's Table 8-5 decides *which chapter of scoring business rules the
+whole group is judged by* (8.4 complete / 8.5 in-process / 8.6 no valid doses),
+so two complete series belonging to a different antigen, or to a different series
+group of the same antigen, silently route this group's in-process series to the
+complete patient series scoring rules. `CompletePatientSeries` then scores every
+non-`COMPLETE` series *down* (`descPatientScoreSeries`, lines 83 and 89), so the
+group under selection is scored by rules that penalise every series in it. Both
+of 8.3's scoping tests (`theStepClassifiesOnlyThePatientSeriesOfOneSeriesGroup`,
+`theStepClassifiesOnlyThePatientSeriesOfTheAntigenBeingProcessed`) show exactly
+that: expected 8.5, actual 8.4. Note also that this is the first Chapter 8 step
+where the two halves of this entry are *equally* damaging - the series-group half
+is not a lesser version of the antigen half here, because both reach the branch
+through the same unfiltered count.
+
+**Known affected units:** 8.1 (confirmed, 4 of its 8 red tests), 8.2 (confirmed,
+2 of its 5 red tests) and 8.3 (confirmed, 2 of its 4 red tests). 8.4-8.8 have not
+had their Role A pass yet as of this note; the list-choice table above is from
+reading their source, not from tests. 4.5 is *not* affected - it does its half
+correctly.
 
 **Suggested handling:** this is a sequencing note. The two halves are different
 sizes: making the stepper-reading steps read `selectedPatientSeriesList` instead
@@ -187,13 +219,16 @@ chain has no place to put it today). Both would retroactively resolve red tests
 in units nobody has written yet, and per `cdsi-engine/AGENTS.md` neither can be
 decided inside 8.1's own Role B session, since six of the eight affected classes
 belong to other units. Worth deciding once, with 8.2-8.8's Role A results in
-hand, rather than four times. The 2026-09-05 update above adds a third, smaller
-piece of work that *is* unit-local: 8.2's condition 0 should be made consistent
-with its own other three conditions, whichever scope the chapter-wide decision
-picks.
+hand, rather than four times. The first 2026-09-05 update above adds a third,
+smaller piece of work that *is* unit-local: 8.2's condition 0 should be made
+consistent with its own other three conditions, whichever scope the chapter-wide
+decision picks. 8.3 adds no such unit-local piece - having no filter anywhere, it
+has nothing to make self-consistent - so 8.3's two scoping reds are resolvable
+*only* by the chapter-wide decision, which makes 8.3 a useful test of whatever
+that decision turns out to be.
 
 **Status:** open, not yet fixed, not yet a formal finding. Confirmed from 8.1's
-side (2026-09-05) and 8.2's side (2026-09-05).
+side (2026-09-05), 8.2's side (2026-09-05) and 8.3's side (2026-09-05).
 
 ---
 

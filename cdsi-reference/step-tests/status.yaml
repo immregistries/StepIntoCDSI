@@ -2643,12 +2643,143 @@ units:
       Recorded here rather than forced into a brittle test, per
       cdsi-engine/AGENTS.md Role A step 3.
   '8.3':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.ClassifyScorablePatientSeriesTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      Role A, 2026-09-05. 17 tests: 13 green, 4 red (4 failures, 0 errors). 8.3
+      is a pure router - Table 8-6's three business rules (SELECTB-6,
+      SELECTB-16, SELECTB-21) and Table 8-5's three rule columns - so its only
+      observable output is the next LogicStepType, and every test asserts
+      exactly that. Coverage is one test per business rule plus the negative
+      direction where the rule has one (SELECTB-6 has one, SELECTB-16 has three:
+      the satisfied-dose bullet, the 'Not Complete' bullet and the per-series
+      versus per-dose counting question, SELECTB-21 has its zero-target-doses
+      boundary), one per rule column, one per column boundary (Rule 1's two '-'
+      cells, Rule 2's "and no complete patient series" conjunction, Rule 3's
+      "for all"), one for the documented State Changes, and one for each of the
+      two scoping sentences the Purpose and all three of Table 8-5's conditions
+      state. Coverage is full for what Tables 8-5 and 8-6 state, with the two
+      deliberate exclusions noted at the end.
+
+      The step reads only getScorablePatientSeriesList() plus each series'
+      patientSeriesStatus and targetDoseList, so every test hand-builds that
+      shape and drives the public process() directly; no Supporting Data
+      release, no loader and no upstream step is involved, and the step object
+      process() returns is used only for its LogicStepType. The fixture also
+      supplies each series' tracked AntigenSeries and each Satisfied target
+      dose's tracked SeriesDose, which the step's logging dereferences.
+
+      Green (13). SELECTB-6 in both directions - two 'Complete' forecasts make
+      Rule 1 fire, and three Not Complete series with satisfied doses hold zero
+      complete series so Rule 1 does not. SELECTB-16's satisfied-dose bullet -
+      one series with a satisfied dose among three is not "2 or more
+      in-process". SELECTB-16 counted per patient series - one series with three
+      satisfied target doses is one in-process series, not three (8.3 breaks out
+      of its inner loop; 8.2's counterpart does not, which is one of 8.2's own
+      reds, so the two neighbouring classes disagree on this and 8.3 is the one
+      that is right). SELECTB-21 - a group whose every target dose is Not
+      Satisfied, and the boundary case of a group whose series carry no target
+      doses at all, both route to 8.6. Table 8-5 Rule 1 (2+ complete to 8.4),
+      Rule 1's '-' cells (2 complete series with no doses at all still go to
+      8.4, not 8.6), Rule 2 (2+ in-process and none complete to 8.5), Rule 2's
+      conjunction (one complete series alongside two in-process ones blocks the
+      in-process branch) and Rule 3 (zero valid doses everywhere to 8.6). The
+      State Changes claim - after a run, the scorable list, every patient series
+      status, every target dose status, every accumulated score and both the
+      selected and prioritized lists are untouched. And the single-antigen,
+      single-series-group control case the two scoping tests rest on.
+
+      Red (4), expected-vs-actual. (1)
+      selectbSixteenAnInProcessPatientSeriesForecastStatusMustBeNotComplete -
+      SELECTB-16 requires *all* of its bullets, the second being "the patient
+      series forecast ... has a patient series status of 'Not Complete'";
+      expected two AGED_OUT series carrying satisfied target doses not to be
+      counted as in-process patient series and so not to be routed to 8.5,
+      actual they are and it is. Cause: calculateCountOfPatientSeriesWith
+      ValidDoses counts any scorable series with at least one Satisfied target
+      dose and never reads the patient series status, so SELECTB-16's second
+      bullet is only ever approximated by the separate "and no complete patient
+      series" half of the same condition - which excludes COMPLETE but not
+      AGED_OUT, IMMUNE or NOT_RECOMMENDED. All three of those are set by 7.4
+      DetermineForecastNeed and none is filtered out by 8.1 (SELECTB-24 removes
+      only CONTRAINDICATED series), so they genuinely reach the scorable list.
+      Note that 08-03's index.md currently reads this method as "consistent with
+      SELECTB-16's definition of in-process"; this test is the evidence that it
+      is not, and 08-03's Business Rules section should be corrected during Role
+      B. (2) ruleThreeDoesNotFireWhenAScorablePatientSeriesHasAValidDose - Rule
+      3's condition is "= 0 for *all* scorable patient series in the series
+      group"; expected a group of one complete and one in-process series, each
+      with a satisfied target dose, not to have the no-valid-doses scoring rules
+      applied to it, actual it is routed to 8.6. Cause: this is exactly the gap
+      08-03's Review Findings records - such a group matches none of Table 8-5's
+      three columns (Rule 1 needs 2+ complete, Rule 2 needs 2+ in-process AND
+      zero complete, Rule 3 needs zero valid doses), the table has no default
+      column, and process() sets NO_VALID_DOSES as a pre-evaluation default
+      before evaluateLogicTables() runs, so the fall-through lands on 8.6. (3)
+      theStepClassifiesOnlyThePatientSeriesOfOneSeriesGroup - expected a run for
+      the Standard group (two in-process series) to route to 8.5, actual the
+      Increased Risk group's two complete series are counted with them, the
+      complete count is 2 and Rule 1 routes to 8.4. (4)
+      theStepClassifiesOnlyThePatientSeriesOfTheAntigenBeingProcessed - the same
+      shape across antigens: expected the HepB pass of 4.5's antigen loop to see
+      only HepB's two in-process series and route to 8.5, actual two Measles
+      series left in the scorable list are counted and Rule 1 routes to 8.4.
+
+      Reds 1 and 2 are 8.3's own class and are the whole of its unit-local Role
+      B work, and they pull in opposite directions, which is worth deciding
+      together rather than one at a time: red 1 says the in-process count is too
+      *permissive* (it counts series SELECTB-16 excludes), while red 2 says the
+      table as literally written is too *narrow* (it leaves a real group
+      matching no column at all). Tightening the count without settling the
+      fall-through would widen the gap red 2 exposes. Red 2 in particular is a
+      question for the project owner rather than a straightforward
+      IMPLEMENTATION_MISMATCH - the specification says nothing about what should
+      happen to a group matching no column, so the test asserts only the branch
+      the specification does rule out (not 8.6, because the group demonstrably
+      has valid doses) rather than naming a replacement; SPECIFICATION_AMBIGUITY
+      or SPECIFICATION_DEFECT is the likely classification. Neither red is
+      visible via FITS, which asserts the final forecast rather than which
+      scoring chapter produced it. Checked and not applicable here: the
+      2026-09-04 cross-cutting entry on LogicTable.evaluate() not stopping at
+      the first matching column - Table 8-5's three columns are pairwise
+      mutually exclusive (column 0 needs condition 0 YES while columns 1 and 2
+      need it NO; columns 1 and 2 disagree on condition 1), so at most one can
+      ever validate and the multi-column overwrite cannot arise.
+
+      Reds 3 and 4 are the 2026-09-05 "Chapter 8 has no series group" entry in
+      cross-cutting-notes.md, which was updated in place from 8.3's side rather
+      than duplicated. Two things 8.3 contributes that 8.1 and 8.2 could not.
+      First, ClassifyScorablePatientSeries filters nowhere at all - none of its
+      three conditions and neither of its two counting helpers reads
+      dataModel.getAntigen() or any series group - so across the two consecutive
+      steps that read the same list, 8.2 filters in 3 of 4 conditions and 8.3 in
+      0 of 3, and there is no existing convention a chapter-wide fix could
+      simply follow. Second, 8.3's output is a control-flow branch rather than a
+      count, so the contamination does not merely cost a shortcut as in 8.2: it
+      routes the whole group to a different scoring chapter, and
+      CompletePatientSeries then scores every non-COMPLETE series *down*, so the
+      group is judged by rules that penalise every series in it. Unlike 8.2,
+      8.3 has no unit-local correction available for these two - having no
+      filter anywhere, it has nothing to make self-consistent - so reds 3 and 4
+      are resolvable only by the chapter-wide decision.
+
+      Deliberately not covered, two things. (a) The entry condition ("runs only
+      when 8.2 did not find a single obvious prioritized series") is a property
+      of 8.2's transitions.yaml, already asserted from 8.2's side by
+      IdentifyOnePrioritizedPatientSeriesTest's rule-column tests; 8.3's class
+      has no entry guard of its own, so a test here would assert nothing about
+      8.3. (b) Table 8-5's outcome text says the series a column does not select
+      "are not scored and are dropped from consideration", which could be read
+      as a mutation 8.3 owes. 08-03's State Changes reads it as a downstream
+      responsibility, and 8.4 CompletePatientSeries does implement it (it scores
+      every non-COMPLETE series down rather than 8.3 having removed them), so
+      this is recorded here as a scope question for Role B rather than forced
+      into a red test that would presuppose the answer, per cdsi-engine/
+      AGENTS.md Role A step 3.
   '8.4':
     test_status: not_started
     test_class: null
