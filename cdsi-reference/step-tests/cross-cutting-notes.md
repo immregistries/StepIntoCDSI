@@ -33,6 +33,89 @@ single-unit fixes after. That sequencing decision itself isn't written yet
 
 ---
 
+## 2026-09-05 - Chapter 8 has no series group, and its eight steps read three different "series in scope" lists
+
+**Discovered while testing:** 8.1 Pre-filter Patient Series
+(`PreFilterPatientSeriesTest`)
+
+**Affected component:** `SelectPatientSeries.getSeriesGroup()` /
+`getSeriesGroupName()` (loaded, never read) and the scope each Chapter 8 step
+picks for "the patient series I am working on" - `PreFilterPatientSeries` (8.1),
+`InProcessPatientSeries` (8.5), `NoValidDoses` (8.6) and
+`DetermineBestPatientSeries` (8.8) read
+`dataModel.getPatientSeriesStepper().getList()`; `CompletePatientSeries` (8.4)
+and `SelectPrioritizedPatientSeries` (8.7) read
+`dataModel.getSelectedPatientSeriesList()`; `IdentifyOnePrioritizedPatient
+Series` (8.2) and `ClassifyScorablePatientSeries` (8.3) read
+`dataModel.getScorablePatientSeriesList()`. Not something confined to 8.1.
+
+**What's wrong:** the specification partitions Chapter 8 twice. Chapter 8's own
+overview says "Process steps 8.1 through 8.7 are repeated **for each series
+group** to identify one prioritized patient series per series group. Process
+step 8.8 is then used to determine which prioritized patient series are selected
+as a best patient series", and 4.5 / Figure 4-7 wrap all of that in a
+**per-antigen** loop. Neither partition exists in the implementation:
+
+1. **No series group loop, and no series group read.** `DataModelLoader` parses
+   `<seriesGroup>` and `<seriesGroupName>` onto `SelectPatientSeries`, and
+   grepping `cdsi-engine`/`cdsi-web` for `getSeriesGroup()` /
+   `getSeriesGroupName()` returns only their own declarations - nothing anywhere
+   reads either. So 8.1-8.7 run once per antigen rather than once per series
+   group, and every rule in Chapter 8 phrased "for the same series group" is
+   silently evaluated antigen-wide. This is the normal shape of the data, not a
+   corner case: 15 of the 30 antigens in the bundled 4.65-508 release define
+   more than one series group (Pneumococcal has three: Standard, Standard 50+,
+   Increased Risk; HepA has Standard, Increased Risk, and Increased Risk -
+   Pediatric Travel).
+2. **Three different lists for one concept, one of which is not even
+   antigen-scoped.** 4.5 does the per-antigen narrowing correctly, into
+   `selectedPatientSeriesList` (`SelectBestPatientSeriesTest` covers this and is
+   fully green). Only two of the eight Chapter 8 steps read it. Four read the
+   patient series stepper, which is 5.1's unfiltered list of *every* relevant
+   patient series for *every* antigen and is never re-scoped between antigens -
+   so on the HepB pass those steps also see Measles' series.
+
+**Confirmed live in 8.1:** four of `PreFilterPatientSeriesTest`'s eight red tests
+are this entry. `theStepExaminesOnlyThePatientSeriesOfTheAntigenBeingProcessed`
+builds a HepB series and a Measles series, sets `antigen`/
+`selectedPatientSeriesList` exactly as 4.5 leaves them, and gets both back in
+`scorablePatientSeriesList`. `theStepExaminesThePatientSeriesOfOnlyOneSeries
+Group` gets a scorable list spanning two series groups of one antigen.
+`selectscoreTwoRiskPrioritiesAreComparedWithinOneSeriesGroupNotAcrossGroups`
+shows the concrete clinical consequence: SELECTSCORE-2's Risk bullet keeps only
+the highest-priority Risk series "that belongs to the same series group", but
+`PreFilterPatientSeries` computes a single `highestRiskPriority` over everything
+it can see, so a priority-B Risk series that is the top of its own group is
+discarded because some other group (or, per the previous point, some other
+antigen entirely) has a priority-A Risk series.
+`selectbTwentyFourTheAllContraindicatedFallbackIsDecidedPerSeriesGroup` shows
+the same thing on SELECTB-24: the "keep the contraindicated series if they are
+*all* contraindicated" escape hatch is decided globally, so one healthy series
+anywhere suppresses a wholly-contraindicated group. Not observable via FITS,
+which asserts the final forecast rather than which series were in scope when it
+was chosen.
+
+**Known affected units:** 8.1 (confirmed, 4 of its 8 red tests). 8.2-8.8 have
+not had their Role A pass yet as of this note; the list-choice table above is
+from reading their source, not from tests. 4.5 is *not* affected - it does its
+half correctly.
+
+**Suggested handling:** this is a sequencing note. The two halves are different
+sizes: making the stepper-reading steps read `selectedPatientSeriesList` instead
+is a small, local change repeated in four classes, and would make Chapter 8
+antigen-scoped as Figure 4-7 already intends; introducing the series group loop
+is a structural change to the chapter's control flow that has no owner in any
+single unit (it belongs between 4.5 and 8.1, and `LogicStepFactory`'s dispatch
+chain has no place to put it today). Both would retroactively resolve red tests
+in units nobody has written yet, and per `cdsi-engine/AGENTS.md` neither can be
+decided inside 8.1's own Role B session, since six of the eight affected classes
+belong to other units. Worth deciding once, with 8.2-8.8's Role A results in
+hand, rather than four times.
+
+**Status:** open, not yet fixed, not yet a formal finding.
+
+---
+
 ## 2026-09-05 - Three units share one `EvaluateConditionalSkip`, and 7.6's whole remedy lands inside it
 
 **Discovered while testing:** 7.6 Validate Recommendation
@@ -292,7 +375,9 @@ Sequencing consequence: fixing the loader/type migration alone leaves 7.4's Rule
 side therefore needs a third change beyond the two already recorded above -
 7.4's condition 4 has to read the patient series status the way its condition 3
 already reads it - and that is a change to `DetermineForecastNeed`, i.e. to a
-different unit's class than the loader fix. Downstream matters too:
+different unit's class than the loader fix. (Confirmed 2026-09-05 that those
+three changes are also *enough* on 8.1's side - see the update below.)
+Downstream matters too:
 `PatientSeriesStatus.CONTRAINDICATED` is set nowhere in the engine except 7.4's
 own Rule 5 outcome, and is read by 8.1 `PreFilterPatientSeries` (which excludes
 contraindicated series) and by `MultipleAntigenVaccineGroup`, so those Chapter 8
@@ -305,6 +390,29 @@ under `<vaccineGroup>`, 142 vaccine-level under `<vaccine>`, with 329
 `<contraindicatedVaccine>` entries between them, every one carrying a `<cvx>`),
 against 6 antigens with an `<immunity>` element. Whether 7.4 or any Chapter 8
 step depends on schedule-level data has still not been looked at.
+
+**Updated 2026-09-05, from 8.1's side (`PreFilterPatientSeriesTest`).** The
+sentence above predicting that 8.1 `PreFilterPatientSeries` is "dead too until
+this chain is closed end to end" holds, and 8.1's Role A pass adds two things to
+it. First, the good news for sequencing: 8.1's *consumer* side is correct and
+needs no change of its own. Driving 8.1 with `PatientSeriesStatus
+.CONTRAINDICATED` hand-built onto the patient series - i.e. simulating the state
+7.4's Rule 5 would set once the chain closes - makes both simple halves of
+SELECTB-24 behave exactly as Table 8-2 says, and both are green
+(`selectbTwentyFourAContraindicatedSeriesIsNotACandidateWhenASiblingInItsGroup
+IsNot` and `selectbTwentyFourContraindicatedSeriesStayCandidatesWhenEverySeries
+InTheGroupIsContraindicated`). So the loader/type/`DetermineForecastNeed`
+remedy described above is sufficient to bring 8.1's contraindication filtering
+to life; no fourth change is needed in `PreFilterPatientSeries` to consume it.
+Second, the caveat: closing the chain would still not deliver all of SELECTB-24,
+because the rule's all-contraindicated escape hatch is scoped to one series
+group and 8.1 decides it globally. That is a second, entirely independent defect
+in the consumer, with its own cause and its own remedy - see the 2026-09-05
+entry on Chapter 8's missing series group - so it should not be folded into this
+entry's remedy or used to argue this entry's fix is incomplete. Note also that
+8.1 reads `CONTRAINDICATED` and nothing else: `IMMUNE`, `AGED_OUT` and
+`NOT_RECOMMENDED` are not part of SELECTB-24, so the immunity half of this entry
+has no 8.1-side consumer to wake up at all.
 
 **Known affected units:** 7.2 (confirmed, 2 of its 6 red tests -
 `theParsedImmunityElementReachesWhereSevenTwoLooksForIt` and, downstream of the
@@ -319,7 +427,10 @@ and **7.3** (confirmed, 6 of its 16 red tests -
 and **7.4** (confirmed, 2 of its 6 red tests -
 `ruleFiveAContraindicatedPatientSeriesStopsTheForecast` and
 `theContraindicationConditionAsksAboutThisPatientSeriesNotThePatientAsAWhole`;
-7.4's immunity-side read is green and needs no change).
+7.4's immunity-side read is green and needs no change). **8.1** is a confirmed
+downstream *consumer* but contributes **no** red tests of its own to this entry -
+its two SELECTB-24 tests are green once the status is supplied, which is the
+point of the 2026-09-05 update above.
 
 **Suggested handling:** the fix belongs in the loader and the domain model, not
 in `DetermineEvidenceOfImmunity` - and the routing choice matters, because 7.2's
@@ -343,10 +454,11 @@ decision tables would still have to be written before any of it changes 7.3's
 behaviour.
 
 **Status:** open, not yet fixed, not yet a formal finding. Confirmed from the
-immunity (2026-09-04) and contraindication (2026-09-04) sides and from the
-consuming side in 7.4 (2026-09-04); the two are the same routing cause with
-materially different remedies, and the contraindication remedy additionally
-reaches into `DetermineForecastNeed`.
+immunity (2026-09-04) and contraindication (2026-09-04) sides, from the
+consuming side in 7.4 (2026-09-04) and from the Chapter 8 consuming side in 8.1
+(2026-09-05, where the remedy is confirmed sufficient); the two are the same
+routing cause with materially different remedies, and the contraindication
+remedy additionally reaches into `DetermineForecastNeed`.
 
 ---
 

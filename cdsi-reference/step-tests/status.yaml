@@ -2396,12 +2396,136 @@ units:
       documentation-only, but the stated reason is wrong and should be corrected
       when 07-06's index.md is next revised.
   '8.1':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.PreFilterPatientSeriesTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      Role A, 2026-09-05. 24 tests: 16 green, 8 red (8 failures, 0 errors). 8.1
+      has no figure and no decision table - Table 8-2's two business rules,
+      SELECTB-24 and SELECTSCORE-2, are the whole section - so the shape of
+      coverage is one test per rule clause: SELECTB-24's two bullets plus its
+      series-group scoping and its null-status edge, SELECTSCORE-2's four
+      bullets and each of their sub-clauses, the Purpose sentence about series
+      group scope, and the documented State Changes and Next Steps. Every test
+      hand-builds the minimal DataModel the step actually reads (the patient
+      series stepper, each series' patientSeriesStatus/targetDoseList, and each
+      tracked AntigenSeries' seriesType and SelectPatientSeries) and drives the
+      public process() directly; no Supporting Data release, no loader and no
+      upstream step is involved, and the returned 8.2 step's process() is never
+      called. Coverage is full for what Table 8-2 states, with three deliberate
+      exclusions listed below.
+
+      Green (16), by rule. SELECTB-24 - a non-contraindicated series is a
+      candidate; a contraindicated series drops out while a non-contraindicated
+      sibling remains; all-contraindicated series are all kept.
+      SELECTSCORE-2 Risk bullet - the highest-priority Risk series of a group is
+      scorable, a lower-priority one is not, and a contraindicated Risk series
+      is still excluded because the bullet also requires candidacy.
+      SELECTSCORE-2 Standard/valid-dose bullet - a Standard series with a
+      satisfied target dose evaluating Valid is scorable; one whose only dose
+      evaluated Not Valid is not. SELECTSCORE-2 zero-valid-dose bullet - the
+      bullet does not apply when the group declares a default series, and it
+      requires zero valid doses across every series in the group, not just the
+      one being judged. SELECTSCORE-2 Evaluation Only bullet - a Complete
+      Evaluation Only series is scorable, an incomplete one is not. Plus a
+      series with no seriesType matches no bullet; the implementation's
+      end-of-method default-series fallback is pinned as characterization (see
+      the ambiguity note below); and State Changes / Next Steps - the step
+      builds scorablePatientSeriesList, transitions unconditionally to 8.2, and
+      replaces rather than appends to that list on a second run.
+
+      Red (8), expected-vs-actual. (1)
+      selectbTwentyFourTheAllContraindicatedFallbackIsDecidedPerSeriesGroup -
+      SELECTB-24's escape hatch asks whether every series "made for the same
+      series group" is Contraindicated; expected a wholly-contraindicated
+      Increased Risk group to keep its series as candidates, actual it is
+      suppressed by one healthy series in the Standard group because the
+      implementation decides the fallback over every series it can see. (2)
+      selectbTwentyFourASeriesWithNoPatientSeriesStatusIsStillNotContraindicated
+      - SELECTB-24's first bullet is negative ("does not have a patient series
+      status of 'Contraindicated'"); expected a series with a null status to be
+      a candidate, actual the implementation's status != null guard drops it
+      from both passes. Low materiality - DetermineForecastNeed sets a status on
+      every outcome path - but the guard is stricter than the rule text. (3)
+      selectscoreTwoRiskPriorityIsComparedAgainstEverySeriesInTheGroupNotOnlyThe
+      RiskOnes - the Risk bullet compares against "any relevant patient series"
+      in the group; expected a priority-B Risk series to lose to a priority-A
+      Standard series sharing its group, actual highestRiskPriority is computed
+      over Risk series only so the B series survives. (4)
+      selectscoreTwoRiskPrioritiesAreComparedWithinOneSeriesGroupNotAcrossGroups
+      - expected a priority-B Risk series that tops its own Pediatric Travel
+      group to stay scorable, actual it is discarded because a different group
+      holds a priority-A Risk series. (5)
+      selectscoreTwoAValidDoseMustHaveBeenAdministeredBeforeTheMaximumAgeToStart
+      Date - the Standard bullet's third clause; expected a series whose only
+      valid dose was given at age 10 against a 5-year maximum age to start not
+      to be scorable, actual it is, because the step reads neither the date
+      administered nor maxAgeToStart. (6)
+      selectscoreTwoAStandardSeriesIsScorableWhenItsGroupHasZeroValidDosesAndNo
+      DefaultSeries - the third bullet has no counterpart in the code at all;
+      expected both Standard series of a doseless, default-less group to be
+      scorable, actual the scorable list comes back empty, so such a group has
+      nothing for 8.2-8.8 to score. (7)
+      theStepExaminesThePatientSeriesOfOnlyOneSeriesGroup - expected one run's
+      scorable list to be drawn from a single series group, actual it spans two.
+      (8) theStepExaminesOnlyThePatientSeriesOfTheAntigenBeingProcessed -
+      expected only HepB's series on the HepB pass of 4.5's antigen loop, actual
+      Measles' series is pre-filtered alongside it, because the step reads the
+      patient series stepper rather than the per-antigen selectedPatientSeriesList
+      that 4.5 had just built.
+
+      Reds 1, 3, 4, 7 and 8 are one cross-cutting cause, recorded as its own
+      2026-09-05 entry in cross-cutting-notes.md: nothing in cdsi-engine ever
+      reads SelectPatientSeries.getSeriesGroup()/getSeriesGroupName(), so
+      Chapter 8's "8.1 through 8.7 are repeated for each series group"
+      partitioning does not exist; and the eight Chapter 8 steps disagree about
+      which list is "the series in scope" (8.1/8.5/8.6/8.8 read the all-antigen
+      stepper, 8.4/8.7 read selectedPatientSeriesList, 8.2/8.3 read
+      scorablePatientSeriesList). Six of the eight affected classes belong to
+      other units, so this is explicitly not 8.1's own Role B session to
+      resolve. Reds 5 and 6 are 8.1's own class and are the two halves of the
+      unconfirmed observation already in 08-01's Review Findings, now confirmed
+      by test. Red 2 is 8.1's own class and cosmetic.
+
+      Specification ambiguity, recorded rather than guessed at (per
+      cdsi-engine/AGENTS.md Role A step 3), so no test forces an
+      interpretation: SELECTSCORE-2 never says how a group's *default* series
+      becomes scorable. Its third bullet makes a Standard series scorable only
+      when there is no default series for the group, and no bullet mentions the
+      default series otherwise - so on a literal reading, a group that declares
+      a default series and has no valid doses yields no scorable series at all,
+      which cannot be the intent. The implementation resolves this with an
+      end-of-method fallback that adds the default Standard series when nothing
+      else qualified and no valid dose exists anywhere; that behaviour is pinned
+      by theDefaultSeriesFallbackAddsTheGroupsDefaultStandardSeriesWhenNothing
+      ElseQualified as characterization, not as conformance. Role B should
+      classify this as SPECIFICATION_AMBIGUITY rather than treat the fallback as
+      a defect.
+
+      Deliberately not covered - (a) the Standard bullet's "the *earliest*
+      vaccine dose administered with an evaluation status of 'Valid'" wording:
+      the step checks no date at all, so an earliest-versus-any test would
+      pass or fail identically to red 5 and adds no coverage; (b) the
+      Evaluation Only bullet is the only one that omits "It is a candidate
+      scorable patient series", but patientSeriesStatus holds a single value, so
+      a series cannot be both CONTRAINDICATED and COMPLETE and the omission is
+      not observable; (c) the implementation additionally requires
+      targetDoseStatus == SATISFIED before a VALID evaluation counts, which
+      Table 8-2 does not state - constructing a not-satisfied target dose that
+      nonetheless carries a VALID evaluation would be an unreachable state, so
+      it is recorded here rather than asserted as a red test.
+
+      One note on the existing 2026-09-04 cross-cutting entry, updated there
+      rather than duplicated: 8.1 was flagged as a downstream consumer of the
+      contraindication data that never arrives. That is confirmed, but 8.1
+      contributes no red test to it - hand-building CONTRAINDICATED status makes
+      both simple halves of SELECTB-24 behave exactly as specified, so the
+      loader/type/DetermineForecastNeed remedy already described there is
+      sufficient on 8.1's side and needs no fourth change in
+      PreFilterPatientSeries.
   '8.2':
     test_status: not_started
     test_class: null
