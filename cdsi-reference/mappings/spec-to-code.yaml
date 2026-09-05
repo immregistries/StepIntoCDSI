@@ -344,6 +344,23 @@ unmapped_classes:
       Tables 4-1 through 4-3) and logs "Setting next step: 4.10" where the
       real next step is 6.10. Tracked per standing instruction not to fix
       cdsi-engine logic until the documentation and testing system is complete.
+
+      Disposition guidance from the project owner (2026-09-05), for whenever
+      Phase 21's Role A pass reaches this unmapped class: treat it as
+      unmapped-engine-class inventory, not a normal numbered Logic
+      Specification step, and evaluate it enough to answer whether it is
+      reachable in the current processing flow, whether it duplicates logic
+      that now belongs in a numbered step, whether it contains behavior that
+      must be preserved elsewhere, and whether it can eventually be removed
+      or should instead be reclassified as non-spec infrastructure. Current
+      expectation, to be confirmed rather than assumed: this class is
+      probably leftover/dead logic, and gender handling, if still needed,
+      likely belongs under the documented series-relevance logic rather than
+      as its own pseudo-step. Long-term direction is one-for-one alignment
+      between documented Logic Specification steps and engine steps, so this
+      class should probably go away or be clearly separated from the
+      spec-step denominator rather than treated as a 37th unit to keep
+      forever.
   FORECAST_DATES_AND_REASONS:
     enum_name: "FORECAST_DATES_AND_REASONS"
     class: "org.openimmunizationsoftware.cdsi.core.logic.ForecastDatesAndReasons"
@@ -358,3 +375,21 @@ unmapped_classes:
       evaluate/forecast handoffs exceed that count, distinct from the two
       guards already documented in 4.4's step package. Worth cross-referencing
       from chapter-06-to-7-evaluate-and-forecast's loop diagram.
+
+      Disposition guidance from the project owner (2026-09-05), for whenever
+      Phase 21's Role A pass reaches this unmapped class: treat it as
+      unmapped-engine-class inventory, not a normal numbered Logic
+      Specification step, and evaluate it enough to answer whether it is
+      reachable in the current processing flow, whether it duplicates logic
+      that now belongs in a numbered step, whether it contains behavior that
+      must be preserved elsewhere, and whether it can eventually be removed
+      or should instead be reclassified as non-spec infrastructure. Current
+      expectation, to be confirmed rather than assumed: this class is
+      probably an old Chapter 7 routing shim; if its MAX_FORECAST_HANDOFF_CYCLES
+      loop guard still matters, that safeguard should be preserved or
+      relocated, but the bare chapter "7" label should not be treated as a
+      real spec step unless the document text actually supports it.
+      Long-term direction is one-for-one alignment between documented Logic
+      Specification steps and engine steps, so this class should probably go
+      away or be clearly separated from the spec-step denominator rather than
+      treated as a 37th unit to keep forever.
