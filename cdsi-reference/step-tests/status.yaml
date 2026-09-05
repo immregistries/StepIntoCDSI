@@ -2527,12 +2527,121 @@ units:
       sufficient on 8.1's side and needs no fourth change in
       PreFilterPatientSeries.
   '8.2':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.IdentifyOnePrioritizedPatientSeriesTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      Role A, 2026-09-05. 14 tests: 9 green, 5 red (5 failures, 0 errors). 8.2
+      is a small section - Table 8-4's three business rules (SELECTB-6,
+      SELECTB-7, SELECTB-16) and Table 8-3's five rule columns plus its default
+      outcome - so coverage is one test per business rule (with the negative
+      direction where the rule has one), one per rule column, one for the
+      default outcome, one for Rule 3's "exactly 1" boundary, and one for each
+      of the two scoping sentences in the Purpose. Every test also asserts both
+      halves of the documented State Changes and Next Steps in the same
+      assertion pair: what lands in prioritizedPatientSeriesList, and whether
+      the branch goes to 8.8 (a rule fired) or 8.3 (the default outcome). The
+      step reads only getScorablePatientSeriesList() and getAntigen() plus each
+      series' patientSeriesStatus, targetDoseList and tracked AntigenSeries, so
+      every test hand-builds that shape and drives the public process()
+      directly; no Supporting Data release, no loader and no upstream step is
+      involved, and the step object process() returns is used only for its
+      LogicStepType. Coverage is full for what Tables 8-3 and 8-4 state, with
+      the one deliberate exclusion noted at the end.
+
+      Green (9). SELECTB-6 - a Complete series that also has satisfied target
+      doses counts as complete rather than in-process, so Rule 3 fires and not
+      Rule 4. SELECTB-7 negative - a group whose every series carries the 'N'
+      flag has no default patient series, so Rule 5 cannot fire. SELECTB-16
+      negative - a Not Complete series whose only target dose is not satisfied
+      is not an in-process patient series. Table 8-3 Rule 2 (the single scorable
+      series is prioritized), Rule 3 (the single complete series), Rule 4 (the
+      single in-process series) and Rule 5 (the default series when nothing is
+      complete or in-process), each verified to add exactly that series and
+      branch to 8.8. Rule 3's boundary - two complete series match no rule. And
+      the default outcome - nothing is added to prioritizedPatientSeriesList and
+      control passes to 8.3.
+
+      Red (5), expected-vs-actual. (1)
+      ruleOneAGroupWithNoScorableSeriesButOneDefaultSeriesYieldsThatDefault
+      Series - Table 8-3 Rule 1 asks for 0 scorable patient series and 1 default
+      patient series; expected the group's default series to be prioritized and
+      the branch to go to 8.8, actual nothing is prioritized and the branch goes
+      to 8.3. Cause: the default count is computed by iterating
+      scorablePatientSeriesList, the very list whose emptiness is Rule 1's first
+      condition, so the two conditions contradict each other - whenever the
+      scorable count is 0 the default count is necessarily 0 too, never the 1
+      Rule 1 needs. Rule 1's column can never validate and its outcome body
+      (notably the only one of the five that does not filter by
+      dataModel.getAntigen()) is dead code. (2)
+      selectbSevenADefaultPatientSeriesNeedNotBeAScorablePatientSeries - the
+      same root cause seen through Rule 5 rather than Rule 1. SELECTB-7 defines
+      a default patient series over the *relevant* patient series, in explicit
+      contrast to SELECTB-6 and SELECTB-16 which both say *scorable* patient
+      series, and Rule 1's very existence proves a default patient series need
+      not be scorable; expected a relevant-but-not-scorable series flagged 'Y'
+      to be counted as the group's one default series and win Rule 5, actual it
+      is invisible to the count and no rule matches. Fixing the count to walk
+      the relevant patient series would resolve both reds at once. (3)
+      selectbSixteenCountsInProcessPatientSeriesNotSatisfiedTargetDoses -
+      SELECTB-16 makes the *patient series* in-process ("...if it has at least
+      one target dose with status 'Satisfied'"), and Table 8-3's third condition
+      then counts in-process *patient series*; expected one series with three
+      satisfied target doses to count as one in-process series and win Rule 4,
+      actual the implementation increments its counter once per satisfied target
+      dose inside the inner loop (no break), counts three, and matches no rule.
+      Consequence beyond the test: Rule 4 is reachable only for a series
+      satisfied by exactly one dose, and unreachable for every partially
+      completed multi-dose series past its first dose - which is the ordinary
+      case the rule exists to catch. (4)
+      theStepCountsOnlyThePatientSeriesOfOneSeriesGroup - Table 8-3's four
+      conditions all say "...are in the series group?"; expected a run for the
+      Standard group to see its one scorable series and fire Rule 2, actual the
+      Standard and Increased Risk groups are counted together, the scorable
+      count is 2, and no rule matches. (5)
+      theScorableSeriesCountIsScopedToTheAntigenBeingProcessedLikeTheOtherThree
+      Conditions - expected only HepB's series to be counted on the HepB pass of
+      4.5's antigen loop, actual a Measles series left in the scorable list is
+      counted by condition 0 (which has no antigen filter) while the other three
+      conditions do filter it out, so the counts disagree with each other and no
+      rule matches.
+
+      Reds 1, 2 and 3 are 8.2's own class and are the whole of its Role B work:
+      all three are counting defects in IdentifyOnePrioritizedPatientSeries$LT's
+      condition methods, none needs another step changed, and none is visible
+      via FITS (which asserts the final forecast, not which shortcut rule
+      identified the prioritized series). Note for Role B: reds 1 and 2 share
+      one fix, and the 2026-09-04 cross-cutting entry on LogicTable.evaluate()
+      not stopping at the first matching column was checked against Table 8-3
+      specifically and does *not* apply here - the five rule columns are
+      pairwise mutually exclusive (Rules 3/4/5 differ on complete ONE vs ZERO
+      and in-process ONE vs ZERO), so at most one can ever validate.
+
+      Reds 4 and 5 are the 2026-09-05 "Chapter 8 has no series group" entry in
+      cross-cutting-notes.md, which was updated in place from 8.2's side rather
+      than duplicated. The genuinely new information 8.2 contributes, and the
+      reason the update was worth making: the antigen scope is inconsistent
+      *inside one class*, not only between classes. Three of 8.2's four
+      conditions and four of its five outcome bodies already filter by
+      dataModel.getAntigen() - i.e. they assume the per-antigen loop Figure 4-7
+      describes - while condition 0, the scorable count that gates every rule
+      column, does not. Whichever way the chapter-wide scope question is
+      settled, one of those four conditions is wrong on its own terms, so 8.2
+      has a small unit-local correction to make in addition to the structural
+      decision, which is not 8.2's Role B session to take.
+
+      Deliberately not covered: SELECTB-16 says "at least one target dose with
+      status 'Satisfied'" while the implementation tests
+      getSatisfiedByVaccineDoseAdministered() != null. The only writer of either
+      is SatisfyTargetDose, which sets both on the same code path (lines 115 and
+      117), so a target dose that is SATISFIED without a satisfying vaccine dose
+      administered - or the reverse - is not a reachable state and a test
+      distinguishing the two readings would assert nothing about real behaviour.
+      Recorded here rather than forced into a brittle test, per
+      cdsi-engine/AGENTS.md Role A step 3.
   '8.3':
     test_status: not_started
     test_class: null

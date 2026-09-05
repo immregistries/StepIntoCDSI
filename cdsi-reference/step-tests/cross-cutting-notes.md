@@ -146,10 +146,36 @@ anywhere suppresses a wholly-contraindicated group. Not observable via FITS,
 which asserts the final forecast rather than which series were in scope when it
 was chosen.
 
-**Known affected units:** 8.1 (confirmed, 4 of its 8 red tests). 8.2-8.8 have
-not had their Role A pass yet as of this note; the list-choice table above is
-from reading their source, not from tests. 4.5 is *not* affected - it does its
-half correctly.
+**Updated 2026-09-05, from 8.2's side
+(`IdentifyOnePrioritizedPatientSeriesTest`).** 8.2 confirms both halves, and
+adds one thing 8.1's vantage point could not show: **the antigen scope is
+inconsistent *within a single class*, not just between classes.**
+`IdentifyOnePrioritizedPatientSeries$LT` has four conditions and five outcome
+bodies. Three of the four conditions (default, complete, in-process counts) and
+four of the five outcome bodies open with
+`if (!patientSeries.getTrackedAntigenSeries().getTargetDisease().equals(dataModel.getAntigen())) continue;`
+- i.e. they already assume Chapter 8 is per-antigen, agreeing with Figure 4-7
+and disagreeing with the all-antigen list 8.1 hands them. Condition 0, the
+scorable count that gates every rule column of Table 8-3, has no such filter,
+and neither does outcome 0. So a Measles series left in
+`scorablePatientSeriesList` on the HepB pass makes the scorable count 2 while
+the other three counts report 0, and Table 8-3 matches no rule at all rather
+than the Rule 2 it should. This is not inherited from 8.1: whichever way the
+scope question is settled globally, one of these four conditions is wrong on its
+own terms, so 8.2's Role B session has a small local correction to make in
+addition to whatever the chapter-wide decision turns out to be. The series-group
+half reproduces in 8.2 exactly as in 8.1 - a Standard-group series and an
+Increased Risk-group series counted together make Rule 2's "1 scorable series"
+unreachable for either group. Confirmed by 2 of 8.2's 5 red tests
+(`theScorableSeriesCountIsScopedToTheAntigenBeingProcessedLikeTheOtherThree
+Conditions`, `theStepCountsOnlyThePatientSeriesOfOneSeriesGroup`). 8.2's other
+three red tests are its own class's business-rule defects and are not this
+entry.
+
+**Known affected units:** 8.1 (confirmed, 4 of its 8 red tests) and 8.2
+(confirmed, 2 of its 5 red tests). 8.3-8.8 have not had their Role A pass yet as
+of this note; the list-choice table above is from reading their source, not from
+tests. 4.5 is *not* affected - it does its half correctly.
 
 **Suggested handling:** this is a sequencing note. The two halves are different
 sizes: making the stepper-reading steps read `selectedPatientSeriesList` instead
@@ -161,9 +187,13 @@ chain has no place to put it today). Both would retroactively resolve red tests
 in units nobody has written yet, and per `cdsi-engine/AGENTS.md` neither can be
 decided inside 8.1's own Role B session, since six of the eight affected classes
 belong to other units. Worth deciding once, with 8.2-8.8's Role A results in
-hand, rather than four times.
+hand, rather than four times. The 2026-09-05 update above adds a third, smaller
+piece of work that *is* unit-local: 8.2's condition 0 should be made consistent
+with its own other three conditions, whichever scope the chapter-wide decision
+picks.
 
-**Status:** open, not yet fixed, not yet a formal finding.
+**Status:** open, not yet fixed, not yet a formal finding. Confirmed from 8.1's
+side (2026-09-05) and 8.2's side (2026-09-05).
 
 ---
 
