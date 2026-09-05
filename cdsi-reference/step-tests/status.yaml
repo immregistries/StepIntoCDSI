@@ -3188,17 +3188,98 @@ units:
       if it were row 5.
   '8.6':
     test_status: tests_written
-    test_class: org.openimmunizationsoftware.cdsi.core.logic.NoValidDosesCompletableTest
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.NoValidDosesTest
     fix_status: merged
     blocked_category: null
     blocked_reason: null
     finding_ids: ["SPEC-4.6-0007"]
-    notes: >
-      NoValidDosesCompletableTest covers only the always-increments defect
-      (one condition of several this class scores) - not full coverage of
-      8.6 yet. Treat this unit as still open for a Role A pass that covers
-      the rest of NoValidDoses's scoring conditions, including the two
-      undocumented ones SPEC-4.6-0007 flags as a separate open question.
+    notes: >-
+      TWO test classes cover this unit; the schema allows only one test_class
+      string, so the second is named here. (a)
+      org.openimmunizationsoftware.cdsi.core.logic.NoValidDosesCompletableTest -
+      5 tests, all green, written alongside the SPEC-4.6-0007 fix (both branches
+      of the "is completable" row's if/else used to increment). fix_status
+      "merged" refers to that fix and to that class only. (b)
+      org.openimmunizationsoftware.cdsi.core.logic.NoValidDosesTest - the Role A
+      pass proper, added 2026-09-05, 26 tests, 18 red. test_class points at (b)
+      because it is the larger of the two and the one whose pass/fail counts the
+      dashboard should show; (a) is untouched and still fully green.
+
+      Coverage is now substantially complete for what 08-06 documents. Covered
+      by (b): all three rows of Table 8-11 with every outcome column the table
+      defines, including the tie column of row 1 and the "n/a" tie columns of
+      rows 2 and 3; the parts of SELECTB-3 and SELECTB-12 the completable row
+      rests on that (a) does not reach; SELECTB-14's start-earliest comparison
+      and its "with a start date" qualifier; SELECTB-23's product path flag; the
+      two scoring conditions the implementation runs that Table 8-11 does not
+      define at all; the antigen/series-group/pipeline-stage scope questions;
+      State Changes (the running score, and that nothing else is written); and
+      Next Steps (unconditional to 8.7).
+
+      The 18 red tests, grouped by cause. (1) Table 8-11's product row has its
+      signs inverted - the table reads "-1 | n/a | +1", being a product patient
+      series is a penalty in this table unlike 8.5's Table 8-9, and
+      evaluate_ACandidatePatientSeriesIsAProductPatientSeries() increments for
+      'Y' and decrements otherwise. This contradicts 08-06's Review Findings,
+      which currently assert the code "matches the spec's sign correctly"; that
+      sentence is wrong and should be corrected when this unit is next reviewed.
+      4 reds. (2) The same row's productPatientSeries boolean is declared
+      outside the per-series loop and never reset, so once one series sets it
+      every series scored after it inherits it - the byte-identical sibling of
+      8.5's Table 8-9 row 1 sticky-flag defect. 1 red
+      (theProductRowMustDiscriminateBetweenAProductSeriesAndOneThatIsNot, which
+      is deliberately sign-agnostic so the two product-row defects can be told
+      apart). (3) Row 1's tie counter numOfEarliestDates is order-dependent and
+      compares Dates with == : a strictly earlier date found later in the list
+      resets it to 0, which the loop can never bring back to the 1 the scoring
+      loop requires, so the +1 becomes unawardable to anyone; and two equal
+      start dates in two Date objects are not detected as a tie (the same group
+      sharing one Date object is, and that test is green - it is the control).
+      The row is also abandoned entirely, for every series, when the first
+      series in the list has no earliest date. 4 reds. (4) Two scoring
+      conditions run that Table 8-11 does not define - a gender-match bonus and
+      an exceeded-maximum-age penalty. SPEC-4.6-0007 records these as an open
+      question (deliberate undocumented refinement, or copy-forward from
+      elsewhere); the two tests take the specification at its word and are the
+      concrete evidence for whichever way it is settled. 2 reds, plus their
+      whole-step counterpart in (6). (5) SELECTB-3 and SELECTB-12 are read
+      wrongly by the completable row - it compares the adjusted past due date
+      (Table 7-12's due date for the next dose) rather than SELECTB-12's
+      earliest date plus the latest remaining minimum interval, and measures
+      against the maximum age of the forecast target dose rather than of the
+      last target dose; and findMaximumAgeDate()/addTimePeriodtotoDate() drop
+      the child term of a compound maximum age. 3 reds. The compound-age one
+      confirms live a prediction the cross-cutting notes had made from 8.5's
+      side and could not test there. (6) Scope: the step reads
+      dataModel.getPatientSeriesStepper().getList(), 5.1's unfiltered
+      all-antigen list, three pipeline stages before the scorable list every
+      Table 8-11 rule is phrased over. 3 reds; see the "Chapter 8 has no series
+      group" cross-cutting entry, updated from 8.6's side. (7) Two whole-step
+      State Changes tests that fail as the sum of the above - one asserting a
+      single all-conditions-true series scores +1 (+1 +1 -1) and gets +4, one
+      asserting a series losing every row scores -3 and gets 0. 2 reds. Totals:
+      4+1+4+2+3+3+2 = 19 attributions across 18 tests because
+      theWholeTableAwardsOnlyTheThreeConditionsTableEightElevenDefines is
+      counted under both (4) and (7).
+
+      Not covered, deliberately. (a) Whether the score accumulating across a
+      whole assessment changes a real selection - a unit test always starts the
+      score at 0, so materiality can only be shown from 8.7, the consumer; see
+      the 2026-09-02 cross-cutting entry, updated from 8.6's side. (b) The entry
+      condition itself - that 8.3's Table 8-5 routes a group here only when it
+      has no valid doses - which is 8.3's rule and is covered by
+      ClassifyScorablePatientSeriesTest, not re-asserted here. (c) 8.6 against a
+      real loaded Supporting Data release; every fixture is hand-built, as in
+      every other Chapter 8 unit.
+
+      One reading recorded rather than tested, per the "don't guess" discipline:
+      SELECTB-14 is phrased over "the start date" and the specification defines
+      no such attribute. The only date in the domain model that can mean "the
+      first day this patient series could be started" is the patient series
+      forecast's earliest date, which is what the implementation reads, so the
+      tests adopt that reading and say so in the class javadoc rather than
+      inventing a second one. If a later review decides SELECTB-14 means some
+      other date, row 1's six tests need re-pointing, not re-writing.
   '8.7':
     test_status: not_started
     test_class: null

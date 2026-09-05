@@ -277,11 +277,51 @@ actual -2 because a Measles series has more; `theStepScoresThePatientSeriesOf
 OneSeriesGroup`, expected +2 actual -2 because an Increased Risk series has
 more). 8.5's other 14 reds are its own class's defects and are not this entry.
 
+**Updated 2026-09-05, from 8.6's side (`NoValidDosesTest`).** 8.6 is the second
+tested step that reads the all-antigen stepper, and both halves reproduce
+exactly as in 8.5 - but the failure mode is worse than in any of the five
+earlier steps, and worth recording because it changes how much the wrong list
+costs rather than only who it costs. In 8.1/8.2 a stray series contaminates a
+count; in 8.3 it flips a branch; in 8.4 it wins a comparison; in 8.5 it sets a
+sticky boolean applied to other series' conditions. In 8.6 **a stray series
+makes the row's positive outcome unawardable to anybody at all.** All three of
+8.6's scoping reds fail through Table 8-11's "can start earliest" row, whose
+implementation seeds `earliestDate` from `patientSeriesList.get(0)` and, on
+finding a strictly earlier date later in the list, resets its tie counter
+`numOfEarliestDates` to 0 - a value the loop can never bring back to the 1 the
+scoring loop requires before it will award the +1. So a Measles series with an
+earlier start date sitting in the stepper does not take HepB's point: it leaves
+every HepB series on -1 and awards the +1 to no one, Measles included. The
+observed scores in `theStepScoresThePatientSeriesOfTheAntigenBeingProcessed` are
+-1 / -1 / 0 for a group whose winner should have had +1. That combination - the
+list-choice defect that is this entry's subject and 8.6's own order-dependent
+counter defect - is why 8.6's scoping reds cannot be resolved by the
+chapter-wide decision alone, unlike 8.3's; 8.6 needs its own row-1 fix as well,
+which puts it in the same shape as 8.2 (a unit-local correction *plus* the
+chapter-wide one) rather than 8.3.
+
+8.6 also carries the byte-identical sibling of 8.5's sticky-flag defect, in its
+product patient series row: `productPatientSeries` is declared outside the
+per-series loop and never reset, so once any series the step can see has a
+product path of 'Y', every series scored after it counts as a product patient
+series
+(`theProductRowMustDiscriminateBetweenAProductSeriesAndOneThatIsNot`, red -
+the two series scored 1 and 1). That defect belongs to 8.6's own class and is
+recorded in this unit's `status.yaml` notes; what belongs here is, as in 8.5,
+its blast radius - on the all-antigen stepper a Measles product series silently
+makes every HepB series scored after it a product patient series. Three of 8.6's
+18 red tests are this entry
+(`theStepScoresTheScorablePatientSeriesEightOneProducedNotEveryRelevantSeries`,
+`theStepScoresThePatientSeriesOfTheAntigenBeingProcessed`,
+`theStepScoresThePatientSeriesOfOneSeriesGroup`, all expected +1 actual -1).
+8.6's other 15 reds are its own class's defects and are not this entry.
+
 **Known affected units:** 8.1 (confirmed, 4 of its 8 red tests), 8.2 (confirmed,
 2 of its 5 red tests), 8.3 (confirmed, 2 of its 4 red tests), 8.4 (confirmed,
-2 of its 8 red tests) and 8.5 (confirmed, 3 of its 18 red tests). 8.6-8.8 have
-not had a full Role A pass yet as of this note; the list-choice table above is
-from reading their source, not from tests.
+2 of its 8 red tests), 8.5 (confirmed, 3 of its 18 red tests) and 8.6
+(confirmed, 3 of its 18 red tests). 8.7 and 8.8 have not had a Role A pass yet
+as of this note; the list-choice table above is from reading their source, not
+from tests.
 4.5 is *not* affected - it does its half correctly, on the antigen axis, which is
 the only half it owns.
 
@@ -313,8 +353,9 @@ pre-filter back out of the loop for two more steps.
 
 **Status:** open, not yet fixed, not yet a formal finding. Confirmed from 8.1's
 side (2026-09-05), 8.2's side (2026-09-05), 8.3's side (2026-09-05), 8.4's
-side (2026-09-05, which corrects the suggested remedy) and 8.5's side
-(2026-09-05, the first tested step that reads the stepper itself).
+side (2026-09-05, which corrects the suggested remedy), 8.5's side
+(2026-09-05, the first tested step that reads the stepper itself) and 8.6's side
+(2026-09-05, where a stray series makes the row's +1 unawardable to anyone).
 
 ---
 
@@ -366,11 +407,34 @@ actual -3 because the maximum age date is computed as 09/01/2020. Not observable
 via FITS, which asserts the final forecast rather than which series won a
 selection.
 
-**Known affected units:** 8.5 (confirmed, 1 of its 18 red tests). **8.6** holds
-a byte-identical copy of both methods and reads the identical rule, so it has
-the same defect; `NoValidDosesCompletableTest` does not cover it because that
-test class was written for one specific always-increments defect and uses a
-simple "5 years" maximum age throughout. 7.4 and 7.5 have differently-shaped
+**Confirmed live in 8.6 (2026-09-05, `NoValidDosesTest`):** the prediction below
+that 8.6 "has the same defect" is now confirmed by a test rather than by reading
+the source. `selectbThreeTheMaximumAgeDateIncludesEveryPartOfACompoundMaximumAge`
+(red) is the exact 8.5 fixture re-pointed at `NoValidDoses`: a patient born
+01/01/2020 with an "8 months + 1 day" maximum age and a series finishing
+09/01/2020 is completable (it ages out 09/02/2020), expected +1, actual -1
+because `NoValidDoses.addTimePeriodtotoDate()` computes the maximum age date as
+09/01/2020. The swing is 2 points here against 8.5's 6, exactly as predicted.
+Two further 8.6 reds are the same `findMaximumAgeDate()` method read
+differently and are *not* this entry - they are 8.6's own SELECTB-3/SELECTB-12
+defects (`selectbThreeCompletabilityIsMeasuredAgainstTheLastTargetDosesMaximumAge
+Date`, which reads the *forecast* target dose rather than the last one, and
+`selectbTwelveTheForecastFinishDateIsTheEarliestDatePlusTheLatestMinimumInterval
+Remaining`, which reads the adjusted past due date rather than SELECTB-12's
+calculation) - but they land in the same two methods, so a Role B session that
+routes the maximum age date through `TimePeriod.getDateFrom()` will be editing
+the same lines. One thing 8.6 adds to the remedy: `findMaximumAgeDate()` is
+called from **two** conditions in `NoValidDoses`, not one -
+`evaluate_ACandidatePatientSeriesIsCompletable()` and the undocumented
+`evaluate_ACandidatePatientSeriesHasExceededTheMaximumAge()` - so if the
+undocumented condition is kept rather than removed, the compound-age fix changes
+its answers too.
+
+**Known affected units:** 8.5 (confirmed, 1 of its 18 red tests) and **8.6**
+(confirmed 2026-09-05, 1 of its 18 red tests in `NoValidDosesTest`;
+`NoValidDosesCompletableTest` does not cover it because that test class was
+written for one specific always-increments defect and uses a simple "5 years"
+maximum age throughout). 7.4 and 7.5 have differently-shaped
 `findMaximumAgeDate()` methods that have not been checked against this.
 
 **Suggested handling:** the sequencing point is that 8.5's and 8.6's copies are
@@ -384,7 +448,8 @@ one behavioural caveat: `getDateFrom()` also applies CALCDT-5, so switching to
 it changes more than the compound-age cases and needs a FITS regression check
 even though neither 8.5 nor 8.6 is FITS-observable on its own.
 
-**Status:** open, not yet fixed, not yet a formal finding.
+**Status:** open, not yet fixed, not yet a formal finding. Predicted from 8.5's
+side (2026-09-05) and confirmed live from 8.6's side (2026-09-05).
 
 ---
 
@@ -804,8 +869,38 @@ the same question asked from the Validating side, with 7.1's filter).
 
 **What's wrong:** nothing in `cdsi-engine` ever resets a patient series' score between selections. It accumulates monotonically across all ~24,000 `NoValidDoses` invocations observed in one full-suite run, though Table 8-11 reads as describing a per-selection score. Flagged by the SPEC-4.6-0007 investigation as possibly mattering more than the always-increments defect it was actually sent to fix, but not itself investigated further at the time.
 
-**Known affected units:** none yet directly tested - Chapter 8 (8.1-8.9) hasn't had its Role A pass yet as of this note. Flagging now so whoever does 8.6, 8.7 (`SelectPrioritizedPatientSeries`, which reads the score to pick a winner) or 8.9 (`DetermineBestPatientSeries`) checks this deliberately rather than re-discovering it piecemeal.
+**Updated 2026-09-05, from 8.6's full Role A pass (`NoValidDosesTest`).** This
+entry asked whoever reached 8.6 to check it deliberately; here is what 8.6's own
+vantage point can and cannot settle. What it confirms: the increment/decrement
+shape is real and now pinned by a green test in both 8.5 and 8.6
+(`theScoreIsARunningTotalTheStepIncrementsOrDecrementsRatherThanSets` - a series
+carrying a score of 5 comes out of the completable row on 6, not on 1), so
+Table 8-11's outcomes are unambiguously applied to whatever the series already
+holds. What 8.6 adds that reading the field could not show: **the accumulation
+and the tie column interact.** Table 8-11's first row is the only row in the
+whole 8.4/8.5/8.6 family whose tie outcome is a literal "0", and the only way to
+implement "0" against a running total is to leave the series untouched - which
+is indistinguishable from "this row did not run", and, if the score did not
+start at a known value, indistinguishable from any prior state as well. So the
+question this entry raises is not merely cosmetic for 8.6: whether the +1/0/-1
+row means anything at all depends on where the score started.
 
-**Suggested handling:** needs its own investigation to confirm materiality (does the accumulation actually change which patient series wins a selection in practice, the way SPEC-4.6-0007's own fix turned out not to) before deciding whether it's worth fixing at all. Not yet confirmed as a real defect - recorded here as a flagged risk to check when Chapter 8's units are reached, not as an established fact the way the two entries above are.
+What 8.6 still cannot settle is materiality, for the reason this entry
+anticipated - a unit test hands the step a hand-built `DataModel` and therefore
+always starts from 0. Confirming the accumulation changes a real selection needs
+either 8.7 (`SelectPrioritizedPatientSeries`, which reads the score to pick a
+winner) or a whole-assessment run, neither of which is in 8.6's scope.
 
-**Status:** open, unconfirmed, not yet investigated further.
+**Known affected units:** 8.5 and 8.6 (the increment/decrement behaviour is
+pinned green in both; neither confirms the accumulation changes an outcome).
+8.7 and 8.8 have not had a Role A pass yet as of this update.
+
+**Suggested handling:** unchanged - needs its own investigation to confirm
+materiality (does the accumulation actually change which patient series wins a
+selection in practice, the way SPEC-4.6-0007's own fix turned out not to) before
+deciding whether it's worth fixing at all. 8.7's Role A pass is the natural
+place, since 8.7 is the consumer. Note for whoever does it that 8.6's Table 8-11
+row 1 gives the question a concrete test case rather than a general worry.
+
+**Status:** open, behaviour confirmed 2026-09-05 from 8.6's side, materiality
+still unconfirmed, not yet a formal finding.
