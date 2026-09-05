@@ -2948,12 +2948,244 @@ units:
       state 7.4 produces, so there is nothing in the specification to assert
       about it.
   '8.5':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.InProcessPatientSeriesTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      Role A, 2026-09-05. 37 tests: 19 green, 18 red (18 failures, 0 errors).
+      8.5 is the middle member of the 8.4/8.5/8.6 scoring family and carries the
+      largest rule set of the three - five independent conditions from Table 8-9
+      (+2/n/a/-2 product-and-all-valid-doses, +3/n/a/-3 completable, +2/0/-2 most
+      valid doses, +2/0/-2 closest to completion, +1/0/-1 can finish earliest)
+      resting on eight Table 8-10 business rules (SELECTB-2, 3, 5, 11, 12, 16, 19
+      and 23). Its only observable output is one integer per patient series,
+      PatientSeries.getScorePatientSeries(), which 8.7 later consumes, so every
+      scoring test asserts exactly that. Each of the five rows has its own private
+      method and process() calls all five in order, so testing one row through
+      process() would mean asserting a sum of five outcomes; every row test
+      therefore invokes its own method reflectively (the NoValidDosesCompletableTest
+      precedent) and only the State Changes and Next Steps tests drive the public
+      process(). Coverage is full for the decision table and for every business
+      rule that has an observable consequence in this class: one test per outcome
+      column of each of the five rows, one per business rule (plus the negative
+      direction where the rule has one), the strict-comparison boundary of
+      SELECTB-3, the three scoping questions the section's Purpose and Entry
+      Conditions raise, and the documented State Changes and Next Steps.
+
+      Correction to 08-05's Review Findings, which should be read before any Role B
+      session on this unit. That section says the "is closest to completion"
+      condition uses "the same tie-safe pattern as [has the most valid doses],
+      correctly implemented". It does not, and 8.4's Review Findings (and
+      SPEC-4.6-0006) cite this class as the correct reference implementation for
+      that pattern on the strength of the same claim. Only
+      evaluate_ACandidatePatientSeriesHasTheMostValidDoses() is correct - five green
+      tests confirm it, including both tie cases - and the reason
+      evaluate_ACandidatePatientSeriesIsClosestToCompletion() is not is a
+      two-statement ordering difference between two otherwise identical loops. In
+      the correct copy the "j > 0" comparison block precedes the "j == 0"
+      initialisation block; in the closest-to-completion copy they are the other way
+      round, so on the very first iteration the initialisation runs, sets j = 1, and
+      the comparison block then immediately compares the maximum against itself.
+      twoOrMore is therefore unconditionally true (the !twoOrMore branch is dead
+      code) and the maximum's index is added to greatestElementPosList twice. The
+      arithmetic happens to come out right for a lone winner (-2 globally, +2 twice
+      for the double entry, net +2) and for every non-winner (-2), which is why the
+      defect is invisible except in a tie: the first tied series is awarded +2 where
+      Table 8-9 says 0. So 8.5 has two tie-handling defects, not the one the step
+      package records, and the second one is a two-line fix in a method that already
+      contains its own correct counterpart nine lines above it.
+
+      Reds by Table 8-9 row. Row 1, product patient series and has all valid doses
+      (3 reds, all in evaluate_ACandidatePatientSeriesIsAProductPatientSeriesAndHas
+      AllValidDoses). (1)
+      tableEightNineAProductSeriesWhoseAdministeredDosesAreAllValidAwardsPlusTwo,
+      expected +2, actual -2. The method reads SELECTB-2's "all valid doses" as
+      "every target dose in the series has a status of Satisfied". TargetDose
+      defaults to NOT_SATISFIED and is never null, and SELECTB-16 makes a patient
+      series in-process precisely when it is not yet complete - so every genuine
+      in-process patient series has at least one not-satisfied target dose, and the
+      +2 column of a table about in-process patient series is unreachable by
+      construction under that reading. The reading that makes the column reachable
+      is the one about the doses that have actually been administered and evaluated
+      (every one of them Valid), which is also what the rule's own wording points
+      at. Role B should classify this deliberately: it is arguably
+      SPECIFICATION_AMBIGUITY on the wording of SELECTB-2 rather than a plain
+      IMPLEMENTATION_MISMATCH, but "this column can never be awarded" is strong
+      evidence for one reading over the other. (2)
+      selectbTwentyThreeTheProductPathFlagIsReadFromTheSeriesBeingScored, expected
+      -2 for the series whose product path is 'N', actual +2, and (3)
+      selectbTwoTheAllValidDosesConditionIsReadFromTheSeriesBeingScored, expected +2
+      for the series whose doses are all valid, actual -2. Both are the same defect:
+      the method declares productPatientSeries and hasAllValidDoses outside its
+      per-series loop and never resets either, so both flags are sticky - once any
+      series sets one, every series scored after it inherits it, in both directions.
+      This is a one-line fix (move the two declarations inside the loop) and it is
+      unit-local, but see the cross-cutting note below for why its blast radius is
+      not.
+
+      Row 2, is completable (4 reds). (4)
+      selectbThreeCompletabilityIsMeasuredAgainstTheLastTargetDosesMaximumAgeDate,
+      expected +3, actual -3. SELECTB-3 measures against the maximum age date of the
+      last target dose - the age past which the series can no longer be completed -
+      but findMaximumAgeDate() reads
+      patientSeries.getForecast().getTargetDose().getTrackedSeriesDose(), the dose
+      the forecast is recommending next. A series whose next dose ages out in 2024
+      but whose final dose may still be given until 2040 is completable and is
+      scored as if it were not. (5)
+      selectbTwelveTheForecastFinishDateIsTheEarliestDatePlusTheLatestMinimum
+      IntervalRemaining, expected +3, actual -3. SELECTB-12 defines the forecast
+      finish date as the forecast's earliest date plus the latest minimum interval
+      of the remaining doses; the method reads the forecast's adjusted past due
+      date, which is Table 7-12's due date for the next dose alone and is a
+      different quantity. Nothing anywhere in cdsi-engine computes SELECTB-12 as
+      written. (6)
+      selectbThreeTheMaximumAgeDateIncludesEveryPartOfACompoundMaximumAge, expected
+      +3, actual -3 - the class's private addTimePeriodtotoDate() reads only the
+      outermost amount and type of a TimePeriod and drops getChild(), so an
+      "8 months + 1 day" maximum age (8 of the 77 maxAge values in the bundled
+      4.65-508 release) computes a day early. See the cross-cutting note. (7)
+      aPatientSeriesWithNoForecastFallsInTheNotTrueColumnAndAwardsMinusThree,
+      expected -3, actual 0. Table 8-9's rows have three outcome columns and no
+      fourth "not scored" column, but the method's outer "if (getForecast() != null)"
+      guard silently skips the row for such a series. This is the weakest of the
+      eighteen reds - an in-process patient series always has a forecast in a real
+      run - and Role B may reasonably record it as a deliberate defensive guard
+      rather than a mismatch; it is asserted because the decision table has no
+      column for it, not because the state is expected to occur.
+
+      Row 4, is closest to completion (2 reds). (8)
+      tableEightNineATieForClosestToCompletionAwardsZeroToEachTiedSeries, expected 0
+      for each of two equally-placed series, actual +2 for the first and 0 for the
+      second - the ordering defect described in the correction above. (9)
+      selectbFiveClosestToCompletionIsTheFewestNotSatisfiedTargetDosesNotTheMost
+      ValidDoses, expected +2 for a three-dose series with one dose left, actual -2.
+      The method calls numberOfValidDoses() - the same helper row 3 uses - so rows 3
+      and 4 of Table 8-9 evaluate the identical condition and can never disagree,
+      which makes row 4 a duplicate of row 3 worth an extra 2 points rather than the
+      separate condition SELECTB-5 defines. SELECTB-5 counts not-satisfied target
+      doses, which differs from the valid dose count whenever the series being
+      compared have different numbers of target doses (here a five-dose series with
+      three in hand loses to a three-dose series with two in hand). Row 3 itself is
+      fully green.
+
+      Row 5, can finish earliest (5 reds, all in evaluate_ACandidatePatientSeries
+      CanFinishEarliest). (10)
+      tableEightNineATieForFinishingEarliestAwardsZeroToEachTiedSeries, expected 0
+      for each of two series finishing on the same day, actual +1 and -1 - the Date
+      reference-equality bug 08-05's Review Findings already records, confirmed
+      live. Its control,
+      theTieForFinishingEarliestIsDetectedWhenTwoSeriesShareOneDateObject, is green:
+      the identical fixture with one shared Date instance produces the correct 0/0,
+      which isolates "==" as the whole cause of red 10. (11)
+      tableEightNineCanFinishEarliestIsAwardedWhateverTheSeriesPositionInTheList,
+      expected +1, actual 0. This is a second, independent defect in the same method
+      and is not the reference-equality one: on finding a new earliest date the
+      scan sets j = 0 rather than j = 1, so the running "how many series share the
+      earliest date" count is one short, and the later "if (j == 1)" that awards the
+      +1 never fires. The consequence is that a group whose earliest-finishing series
+      is not first in the list has no winner at all - every series is scored 0 or -1.
+      Its control is tableEightNineCanFinishEarliestAloneAwardsPlusOne, the same
+      group in the other order, which is green. (12)
+      selectbElevenOnlyACompletableSeriesCanFinishEarliest, expected +1 for the only
+      completable series in the group, actual -1. SELECTB-11 has two clauses - "is a
+      completable patient series AND the finish date is on or before ..." - and the
+      method implements only the second, so a series that will age out before it can
+      finish still wins the comparison and takes the +1 from the series that can
+      actually finish. (13)
+      selectbTwelveTheFinishDateComparedIsTheForecastFinishDateNotTheForecastsLatest
+      Date, expected +1, actual -1. The method compares
+      forecast.getLatestDate() - Table 7-12's last day the next dose may be given -
+      where SELECTB-11 compares the SELECTB-12 finish date, the same quantity row 2
+      uses one row above. Note the two rows disagree with each other about what "the
+      finish date" is even before either is compared with the specification. (14)
+      theRowIsScoredForEverySeriesEvenWhenTheFirstSeriesHasNoLatestDate, expected +1
+      for the earliest-finishing series, actual -1. The method seeds its comparison
+      from patientSeriesList.get(0) and skips the whole comparison loop when that
+      one series has no latest date, so the scoring loop then runs with tmpDate
+      null: the first series is awarded 0 by falling into the equality branch and
+      every other series -1, whatever their dates. A forecast has a latest date only
+      where the series dose defines a maximum age, so this is ordinary data rather
+      than a corner case.
+
+      Scope (4 reds). (15)
+      selectbSixteenTheStepScoresTheInProcessPatientSeriesOfTheGroupOnly, expected 0
+      for a series with no valid doses, actual -2. Table 8-9 asks how many points
+      are awarded "to a Scorable Patient Series That Is an In-process Patient
+      Series" and 8.3's Table 8-5 Rule 2 applies its rules "to these scorable
+      patient series only", but no condition in this class reads SELECTB-16 or any
+      patient series status at all - a series with zero valid doses is scored by the
+      in-process rules like any other. This mirrors
+      CompletePatientSeriesTest#theStepScoresOnlyTheCompletePatientSeriesInTheGroup
+      and Role B should expect the same classification question there:
+      SPECIFICATION_AMBIGUITY is plausible, because Table 8-5's outcome text also
+      says the series a column does not select "are not scored and are dropped from
+      consideration" and descPatientScoreSeries() is an unusual but arguable reading
+      of "dropped". Reds 16-18
+      (theStepScoresTheScorablePatientSeriesEightOneProducedNotEveryRelevantSeries,
+      theStepScoresThePatientSeriesOfTheAntigenBeingProcessed,
+      theStepScoresThePatientSeriesOfOneSeriesGroup - each expected +2 for the
+      winner of the group actually under selection, each actual -2 because a series
+      outside it has more valid doses) are the 2026-09-05 "Chapter 8 has no series
+      group" entry in cross-cutting-notes.md, updated in place from 8.5's side
+      rather than duplicated. 8.5 is the first *tested* step confirmed to read
+      dataModel.getPatientSeriesStepper().getList() - the all-antigen, pre-8.1 list
+      - so unlike 8.4 it is wrong on both the antigen axis and the pipeline-stage
+      axis at once, which is direct support for 8.4's correction that the target
+      list is scorablePatientSeriesList rather than selectedPatientSeriesList. What
+      8.5 adds beyond more evidence is a third kind of consequence: in 8.1/8.2 a
+      stray series contaminates a count, in 8.3 it flips a branch, in 8.4 it wins a
+      comparison, and in 8.5 - because of the sticky flags behind reds 2 and 3 - it
+      can set a boolean that is then applied to a *different* series' own condition.
+      A Measles series with a product path of 'Y' makes every HepB series scored
+      after it a product patient series. Likewise red 14's
+      patientSeriesList.get(0) means whichever series happens to sit first in the
+      all-antigen stepper decides whether Table 8-9's last row is scored for anybody.
+
+      Second cross-cutting entry added, 2026-09-05: "SELECTB-3's maximum age date is
+      calculated three times outside the domain model, and every copy drops part of
+      a compound age" (red 6). InProcessPatientSeries and NoValidDoses hold
+      byte-identical private copies of addTimePeriodtotoDate()/findMaximumAgeDate(),
+      neither calls TimePeriod.getDateFrom(Date) which already does the calculation
+      correctly (compound periods and CALCDT-5 included), and 7.4 and 7.5 hold two
+      further same-named variants. 8.6 has the same defect and no test for it, so
+      fixing SELECTB-3 in 8.5's Role B session alone would leave the two steps
+      computing different maximum age dates from the same Supporting Data.
+
+      Not observable via FITS in any of the eighteen cases - FITS asserts the final
+      forecast, never the per-series scores 8.7 selects on. Checked and not
+      applicable here: the 2026-09-04 cross-cutting entry on LogicTable.evaluate()
+      not stopping at the first matching column - 8.5 builds no LogicTable at all
+      (its constructor sets a placeholder condition table name of "Table " and
+      logicTableList stays empty) and evaluates all five conditions in hand-written
+      Java. Related and deliberately not re-litigated: the 2026-09-02 entry on
+      scores accumulating across a whole assessment and never being reset. 8.5 is a
+      consumer of that field and
+      theScoreIsARunningTotalTheStepIncrementsOrDecrementsRatherThanSets pins the
+      increment semantics, but whether the accumulation itself is right is 8.7's and
+      8.8's question. It does bear on reds 8 and 10: because the score is a running
+      total, the tie column ("0") of rows 3 to 5 cannot be implemented by leaving a
+      tied series untouched, which is what row 5's j-counting effectively does.
+
+      Deliberately not covered - (a) the entry condition ("runs only when 8.3
+      classified the series group as having 2+ in-process patient series and no
+      complete patient series") is a property of 8.3's transitions, asserted from
+      8.3's side in ClassifyScorablePatientSeriesTest, and 8.5's class has no entry
+      guard of its own; (b) an empty patient series list, which throws
+      IndexOutOfBoundsException from rows 3, 4 and 5 (all three index get(0)
+      unguarded) - 8.3's Table 8-5 Rule 2 only routes here with two or more
+      in-process series, so there is no specification rule about an empty group to
+      assert, and asserting the exception would pin implementation detail rather
+      than a business rule; (c) rows 3 and 4's sortByComparator() helper, whose
+      HashMap-to-LinkedHashMap round trip and descending sort are internal
+      mechanics with no counterpart in Table 8-9 or Table 8-10 - the tie and
+      ordering behaviour it produces is asserted through the rows themselves
+      instead; (d) the copy-paste log messages in row 4, which say "can finish
+      earliest" where they mean "is closest to completion" - cosmetic, and worth
+      fixing alongside red 8 since the wrong text is what makes that method read as
+      if it were row 5.
   '8.6':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.NoValidDosesCompletableTest

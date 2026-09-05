@@ -237,10 +237,51 @@ and for the same reason it is worse here than in 8.3: a stray series does not
 merely join the group being scored, it wins the competition outright. 8.4's other
 six red tests are its own class's scoring defects and are not this entry.
 
+**Updated 2026-09-05, from 8.5's side (`InProcessPatientSeriesTest`).** 8.5 is
+the first *tested* step confirmed to read the all-antigen stepper (8.1-8.4 were
+read from the other two lists), so both halves reproduce here directly - and it
+adds a third kind of consequence the earlier four could not show. In 8.1 and 8.2
+a stray series contaminates a **count**; in 8.3 it flips a **branch**; in 8.4 it
+wins a **comparison**. In 8.5 it can set a **boolean that is then applied to a
+different series' own condition**. Table 8-9's first row
+(`evaluate_ACandidatePatientSeriesIsAProductPatientSeriesAndHasAllValidDoses`)
+declares `productPatientSeries` and `hasAllValidDoses` *outside* the per-series
+loop and never resets them, so once any series in the list it can see sets one,
+every series scored after it inherits it. That sticky-flag defect belongs to
+8.5's own class and is recorded in this unit's `status.yaml` notes as such - what
+belongs here is its blast radius, which is set entirely by which list the step
+reads: on the stepper, a Measles series with a product path of 'Y' makes every
+HepB series scored after it count as a product patient series, and a Measles
+series carrying one invalid dose makes every later HepB series count as not
+having all valid doses. The same is true of the fifth row: `evaluate_ACandidate
+PatientSeriesCanFinishEarliest()` seeds its comparison from
+`patientSeriesList.get(0)` and abandons the entire row when that first series has
+no forecast, so whichever series happens to sit first in the *all-antigen*
+stepper decides whether Table 8-9's last row is scored for anybody
+(`theRowIsScoredForEverySeriesEvenWhenTheFirstSeriesHasNoLatestDate`, red). None
+of that changes this entry's remedy; it raises how much the stage/scope decision
+is worth, because in 8.5 the wrong list does not merely distort a comparison
+between well-formed series, it corrupts individual series' own condition answers.
+
+8.5 also confirms 8.4's correction to the remedy from the opposite side. 8.4
+argued `scorablePatientSeriesList` is the right target because every rule in
+8.2-8.7 is phrased over scorable patient series; 8.5 is the case where reading
+the stepper is wrong on **both** axes at once - wrong antigen *and* wrong
+pipeline stage - so switching it to `selectedPatientSeriesList` would fix one and
+leave the other, exactly the half-fix 8.4 warned against. Three of 8.5's 18 red
+tests are this entry
+(`theStepScoresTheScorablePatientSeriesEightOneProducedNotEveryRelevantSeries`,
+expected +2 actual -2 because a priority-B Risk series 8.1 dropped has more valid
+doses; `theStepScoresThePatientSeriesOfTheAntigenBeingProcessed`, expected +2
+actual -2 because a Measles series has more; `theStepScoresThePatientSeriesOf
+OneSeriesGroup`, expected +2 actual -2 because an Increased Risk series has
+more). 8.5's other 14 reds are its own class's defects and are not this entry.
+
 **Known affected units:** 8.1 (confirmed, 4 of its 8 red tests), 8.2 (confirmed,
-2 of its 5 red tests), 8.3 (confirmed, 2 of its 4 red tests) and 8.4 (confirmed,
-2 of its 8 red tests). 8.5-8.8 have not had their Role A pass yet as of this
-note; the list-choice table above is from reading their source, not from tests.
+2 of its 5 red tests), 8.3 (confirmed, 2 of its 4 red tests), 8.4 (confirmed,
+2 of its 8 red tests) and 8.5 (confirmed, 3 of its 18 red tests). 8.6-8.8 have
+not had a full Role A pass yet as of this note; the list-choice table above is
+from reading their source, not from tests.
 4.5 is *not* affected - it does its half correctly, on the antigen axis, which is
 the only half it owns.
 
@@ -271,8 +312,79 @@ originally suggested, would fix their antigen scope while silently putting 8.1's
 pre-filter back out of the loop for two more steps.
 
 **Status:** open, not yet fixed, not yet a formal finding. Confirmed from 8.1's
-side (2026-09-05), 8.2's side (2026-09-05), 8.3's side (2026-09-05) and 8.4's
-side (2026-09-05, which corrects the suggested remedy).
+side (2026-09-05), 8.2's side (2026-09-05), 8.3's side (2026-09-05), 8.4's
+side (2026-09-05, which corrects the suggested remedy) and 8.5's side
+(2026-09-05, the first tested step that reads the stepper itself).
+
+---
+
+## 2026-09-05 - SELECTB-3's maximum age date is calculated three times outside the domain model, and every copy drops part of a compound age
+
+**Discovered while testing:** 8.5 In-process Patient Series
+(`InProcessPatientSeriesTest`)
+
+**Affected component:** `InProcessPatientSeries.addTimePeriodtotoDate()` /
+`findMaximumAgeDate()` and the byte-identical pair in `NoValidDoses`
+(8.6), plus the two same-named `findMaximumAgeDate()` methods in
+`DetermineForecastNeed` (7.4) and `GenerateForecastDatesAndRecommendedVaccines`
+(7.5) - measured against `TimePeriod.getDateFrom(Date)` in the domain model,
+which already does this calculation correctly and which none of them call.
+
+**What's wrong:** SELECTB-3 makes a patient series completable when its forecast
+finish date is before the maximum age date of the last target dose, so 8.5 and
+8.6 both need "the date this patient reaches a given maximum age". Both compute
+it with their own private copy of the same 20-line `switch`:
+
+```java
+switch (type) {
+  case DAY:   date = DateUtils.addDays(date, amount);   break;
+  case WEEK:  date = DateUtils.addWeeks(date, amount);  break;
+  ...
+}
+```
+
+which reads only `TimePeriod.getAmount()` and `TimePeriod.getType()` - the
+outermost term. A `TimePeriod` parsed from "8 months + 1 day" holds `8`/`MONTH`
+with the "1 day" in `getChild()`, and `getChild()` is never consulted, so the
+"+ 1 day" is silently dropped. `TimePeriod.getDateFrom(Date)` recurses into the
+child correctly, and additionally implements CALCDT-5 (roll a date past the end
+of a short month forward to the 1st), which none of the private copies do.
+
+**Volume:** the bundled 4.65-508 release defines 77 `<maxAge>` values, 8 of them
+"8 months + 1 day" - so roughly one in ten maximum age dates 8.5 and 8.6 compute
+is a day early. A one-day error only changes an outcome at the boundary, but
+SELECTB-3 *is* a boundary comparison, and it is a strict one ("before"), so a
+series that finishes on exactly the day it would otherwise age out flips from
+completable to not completable, worth 6 points of swing in 8.5's Table 8-9 (+3
+becomes -3) and 2 in 8.6's Table 8-11.
+
+**Confirmed live in 8.5:**
+`selectbThreeTheMaximumAgeDateIncludesEveryPartOfACompoundMaximumAge` (red) -
+a patient born 01/01/2020 with an "8 months + 1 day" maximum age and a series
+finishing 09/01/2020 is completable (it ages out 09/02/2020), expected +3,
+actual -3 because the maximum age date is computed as 09/01/2020. Not observable
+via FITS, which asserts the final forecast rather than which series won a
+selection.
+
+**Known affected units:** 8.5 (confirmed, 1 of its 18 red tests). **8.6** holds
+a byte-identical copy of both methods and reads the identical rule, so it has
+the same defect; `NoValidDosesCompletableTest` does not cover it because that
+test class was written for one specific always-increments defect and uses a
+simple "5 years" maximum age throughout. 7.4 and 7.5 have differently-shaped
+`findMaximumAgeDate()` methods that have not been checked against this.
+
+**Suggested handling:** the sequencing point is that 8.5's and 8.6's copies are
+identical, so fixing SELECTB-3 in 8.5's Role B session alone would leave 8.6
+computing a different maximum age date from the same Supporting Data - the same
+"implemented twice and the copies disagree" shape as the FORECASTDTCAN-1 entry
+above, except here a correct canonical implementation already exists and is
+simply not called. Recommend deciding 8.5's and 8.6's Role B sessions together,
+with the maximum age date read once from `TimePeriod.getDateFrom()`. Note the
+one behavioural caveat: `getDateFrom()` also applies CALCDT-5, so switching to
+it changes more than the compound-age cases and needs a FITS regression check
+even though neither 8.5 nor 8.6 is FITS-observable on its own.
+
+**Status:** open, not yet fixed, not yet a formal finding.
 
 ---
 
