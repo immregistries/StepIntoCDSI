@@ -203,16 +203,51 @@ where the two halves of this entry are *equally* damaging - the series-group hal
 is not a lesser version of the antigen half here, because both reach the branch
 through the same unfiltered count.
 
+**Updated 2026-09-05, from 8.4's side (`CompletePatientSeriesTest`).** 8.4 is the
+first tested Chapter 8 step that reads `selectedPatientSeriesList` rather than
+the stepper, and it changes this entry's *remedy*, not just its evidence. The
+description above - and the suggested handling below - treat
+`selectedPatientSeriesList` as the list the stepper-reading steps ought to be
+switched to, on the grounds that 4.5 narrows it to one antigen correctly. That is
+true on the antigen axis and misleading on every other: `selectedPatientSeriesList`
+is 4.5's **pre-8.1** list. `SelectBestPatientSeries` fills it with *every*
+relevant patient series of the current antigen (`SelectBestPatientSeries.java`,
+lines 33-39, an unfiltered copy of the stepper filtered only by
+`getTargetDisease().equals(antigen)`), and 8.1 `PreFilterPatientSeries` then
+narrows *that* into `scorablePatientSeriesList` - dropping contraindicated series
+per SELECTB-24, and all but the highest-priority Risk series of a group per
+SELECTSCORE-2. So there are not two lists on one axis (antigen-scoped vs not) but
+three on two axes: the stepper (all antigens, unfiltered), the selected list (one
+antigen, unfiltered) and the scorable list (all antigens, filtered). Every rule
+in 8.4 is phrased over *scorable* patient series - Table 8-7's own title is "How
+Many Points Are Awarded to a **Scorable** Patient Series That Is a Complete
+Patient Series?", and 8.3 counts the scorable list to decide that 8.4 should run
+at all - so 8.4 reads the wrong stage of the pipeline, not merely the wrong
+scope. The consequence is sharper than a contaminated count: 8.4's condition is a
+*comparison*, so a series 8.1 deliberately dropped from consideration still sets
+the maximum valid-dose count that every genuinely scorable series is measured
+against, and can push all of them to -1.
+`theStepScoresTheScorablePatientSeriesEightOneProducedNotEveryRelevantSeries`
+shows exactly that with two Increased Risk series: the priority-A series 8.1 kept
+has 2 valid doses, the priority-B series 8.1 dropped has 5, and the scorable
+winner is scored -1 instead of +1. The series-group half reproduces unchanged
+(`theStepScoresThePatientSeriesOfOneSeriesGroup`, expected +1 for the Standard
+group's winner, actual -1 because an Increased Risk series has more valid doses),
+and for the same reason it is worse here than in 8.3: a stray series does not
+merely join the group being scored, it wins the competition outright. 8.4's other
+six red tests are its own class's scoring defects and are not this entry.
+
 **Known affected units:** 8.1 (confirmed, 4 of its 8 red tests), 8.2 (confirmed,
-2 of its 5 red tests) and 8.3 (confirmed, 2 of its 4 red tests). 8.4-8.8 have not
-had their Role A pass yet as of this note; the list-choice table above is from
-reading their source, not from tests. 4.5 is *not* affected - it does its half
-correctly.
+2 of its 5 red tests), 8.3 (confirmed, 2 of its 4 red tests) and 8.4 (confirmed,
+2 of its 8 red tests). 8.5-8.8 have not had their Role A pass yet as of this
+note; the list-choice table above is from reading their source, not from tests.
+4.5 is *not* affected - it does its half correctly, on the antigen axis, which is
+the only half it owns.
 
 **Suggested handling:** this is a sequencing note. The two halves are different
-sizes: making the stepper-reading steps read `selectedPatientSeriesList` instead
-is a small, local change repeated in four classes, and would make Chapter 8
-antigen-scoped as Figure 4-7 already intends; introducing the series group loop
+sizes: making the stepper-reading steps read one shared list instead is a small,
+local change repeated in four classes, and would make Chapter 8 antigen-scoped as
+Figure 4-7 already intends; introducing the series group loop
 is a structural change to the chapter's control flow that has no owner in any
 single unit (it belongs between 4.5 and 8.1, and `LogicStepFactory`'s dispatch
 chain has no place to put it today). Both would retroactively resolve red tests
@@ -225,10 +260,19 @@ consistent with its own other three conditions, whichever scope the chapter-wide
 decision picks. 8.3 adds no such unit-local piece - having no filter anywhere, it
 has nothing to make self-consistent - so 8.3's two scoping reds are resolvable
 *only* by the chapter-wide decision, which makes 8.3 a useful test of whatever
-that decision turns out to be.
+that decision turns out to be. Per the 8.4 update above, the chapter-wide
+decision now has to name a *stage* as well as a scope, and the answer for 8.2
+onwards is almost certainly `scorablePatientSeriesList` (once 8.1 is made to
+build it per antigen and per series group), not `selectedPatientSeriesList` -
+8.1's whole purpose is to decide which series are scorable, and every rule in
+8.2-8.7 is phrased over scorable patient series. Switching the four
+stepper-reading classes to `selectedPatientSeriesList`, which this note
+originally suggested, would fix their antigen scope while silently putting 8.1's
+pre-filter back out of the loop for two more steps.
 
 **Status:** open, not yet fixed, not yet a formal finding. Confirmed from 8.1's
-side (2026-09-05), 8.2's side (2026-09-05) and 8.3's side (2026-09-05).
+side (2026-09-05), 8.2's side (2026-09-05), 8.3's side (2026-09-05) and 8.4's
+side (2026-09-05, which corrects the suggested remedy).
 
 ---
 

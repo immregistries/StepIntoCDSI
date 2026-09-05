@@ -2781,12 +2781,172 @@ units:
       into a red test that would presuppose the answer, per cdsi-engine/
       AGENTS.md Role A step 3.
   '8.4':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.CompletePatientSeriesTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids:
+      - SPEC-4.6-0006
+    notes: >-
+      Role A, 2026-09-05. 15 tests: 7 green, 8 red (8 failures, 0 errors). 8.4 is
+      the smallest member of the 8.4/8.5/8.6 scoring family - one condition ("has
+      the most valid doses", SELECTB-19) scored across Table 8-7's three outcome
+      columns (+1 alone / 0 for a tie / -1 otherwise), resting on two business
+      rules from Table 8-8 (SELECTB-6, SELECTB-19). Its only observable output is
+      one integer per patient series, PatientSeries.getScorePatientSeries(),
+      which 8.7 later consumes, so every scoring test asserts exactly that.
+      Coverage is one test per business rule plus the negative direction where
+      the rule has one, one per Table 8-7 outcome column, three column
+      boundaries (the tie applied to three series rather than two, the -1 for a
+      below-max series positioned after the winner, and a group where every
+      complete series has zero valid doses), the two scoping sentences the
+      Purpose and Entry Conditions state, the documented State Changes in two
+      parts (the score is a running total; nothing else is mutated), and the
+      unconditional transition to 8.7. Coverage is full for what Tables 8-7 and
+      8-8 state.
+
+      The step reads only getSelectedPatientSeriesList() plus each series'
+      patientSeriesStatus and targetDoseList, so every test hand-builds that
+      shape and drives the public process() directly; no Supporting Data
+      release, no loader and no upstream step is involved, and the step object
+      process() returns is used only for its LogicStepType. Unlike its
+      neighbours the class dereferences nothing else (its logging prints counts,
+      not series names), but the fixture supplies each series' tracked
+      AntigenSeries and each target dose's tracked SeriesDose anyway so the
+      shape matches what 4.5 and Chapter 7 actually leave behind. Several tests
+      build the same two-series group in both list orders and assert the same
+      outcome for each; that is deliberate, because Table 8-7 awards points on a
+      property of a series, not on its position in a list.
+
+      Green (7). SELECTB-6 - a Not Complete series with five valid doses does
+      not take the +1 from the complete series that genuinely has the most.
+      SELECTB-19's dependence on SELECTB-21's valid dose count - a series with
+      one satisfied and three not-satisfied target doses counts one valid dose,
+      not four, and loses to a series with two. Table 8-7's first column (a lone
+      winner is awarded +1) and third column (a below-max series is awarded -1),
+      both with the winner last in the list. The State Changes claim in both
+      parts - +1 and -1 are applied to a running score field (a series
+      pre-loaded with 5 comes out at 6 or 4, not 1 or -1), and after a run every
+      patient series status, every target dose and its status, the selected list
+      itself and both the prioritized and scorable lists are untouched. And the
+      unconditional transition to 8.7, asserted for an empty group, a lone
+      winner and a tie alike.
+
+      Red (8), expected-vs-actual. Six of the eight share one root cause, which
+      is worth stating once: evaluate_ACandidatePatientSeriesHasTheMostValid
+      Doses()'s second loop awards +1 to the first series it finds at the
+      maximum and then breaks out of the loop entirely, so every series after
+      that one in list order is never visited by any scoring branch at all. (1)
+      selectbNineteenTheMostValidDosesIsTieInclusiveSoNeitherTiedSeriesIsALone
+      Winner - SELECTB-19 defines "has the most" as >= every other scorable
+      series' count, so two series tied at two valid doses both have the most
+      and must score identically; expected equal scores, actual 1 and 0. (2)
+      tableEightSevenTrueForTwoOrMoreSeriesAwardsZeroToEachTiedSeries - expected
+      0 and 0, actual 1 and 0. (3) tableEightSevenTheTieOutcomeAppliesToEvery
+      TiedSeriesAndTheOthersStillLose - two series tied at two valid doses plus
+      one with one; expected 0, 0, -1, actual 1, 0, 0. (4) tableEightSevenA
+      CompleteSeriesGroupWhereNoSeriesHasAValidDoseIsATie - the boundary at
+      zero, reachable because 8.3's Table 8-5 Rule 1 has "-" in its other two
+      cells (ClassifyScorablePatientSeriesTest#ruleOneFiresWhateverTheOtherTwo
+      ConditionsAnswer is green); SELECTB-19 is a comparison, not a threshold,
+      so 0 = 0 is a tie; expected 0 and 0, actual 1 and 0. (5) tableEightSeven
+      TheMinusOneIsAwardedWhateverTheBelowMaxSeriesPositionInTheList - the same
+      group as the green third-column test in the other order; expected the
+      winner +1 and the loser -1, actual +1 and 0.
+
+      Red 5 is the piece 08-04's Review Findings and SPEC-4.6-0006 do not
+      currently record, and it should be added to both during Role B: those
+      documents describe the break as mishandling the *tie* column, but the
+      break sits after the +1 and before every later iteration, so it also
+      defeats the *third* column - a series with strictly fewer valid doses than
+      the winner is silently left unscored whenever it happens to sit after the
+      winner in the list. In a group of N complete series exactly one is ever
+      scored at all beyond the prefix that precedes the winner. The correct
+      reference implementation of the identical pattern is already in this
+      codebase - InProcessPatientSeries#evaluate_ACandidatePatientSeriesHasThe
+      MostValidDoses(), which collects every tied series into a
+      greatestElementPosList - so this is a fixable gap in 8.4 specifically, as
+      SPEC-4.6-0006 already says. Reds 1-5 are 8.4's own class and are the whole
+      of its unit-local Role B work; all five are one fix.
+
+      (6) theStepScoresOnlyTheCompletePatientSeriesInTheGroup - Table 8-7 asks
+      how many points are awarded "to a Scorable Patient Series That Is a
+      Complete Patient Series", and 8.3's Table 8-5 Rule 1, the only route into
+      this step, says to apply the complete patient series scoring business
+      rules "to these scorable patient series only"; expected a Not Complete
+      series sharing the group to come out of 8.4 with the score Chapter 7 and
+      8.1 left it holding, actual the scoring loop opens with an explicit
+      descPatientScoreSeries() for every non-complete series and it is scored
+      -1. This is the scope question ClassifyScorablePatientSeriesTest
+      deliberately left to this unit rather than forcing into a test of its own;
+      the test asserts only the half the specification settles (a table about
+      complete patient series does not penalise a series that is not one) and
+      takes no position on whether such series should be dropped from
+      consideration by some other means. Role B should expect
+      SPECIFICATION_AMBIGUITY here rather than a straightforward
+      IMPLEMENTATION_MISMATCH - Table 8-5's outcome text also says the series a
+      column does not select "are not scored and are dropped from
+      consideration", and 8.4's descPatientScoreSeries() is a plausible if
+      unusual reading of "dropped".
+
+      Reds 7 and 8 (theStepScoresTheScorablePatientSeriesEightOneProducedNot
+      EveryRelevantSeries, theStepScoresThePatientSeriesOfOneSeriesGroup) are
+      the 2026-09-05 "Chapter 8 has no series group" entry in
+      cross-cutting-notes.md, which was updated in place from 8.4's side rather
+      than duplicated. 8.4 is the first tested Chapter 8 step that reads
+      selectedPatientSeriesList rather than the stepper, and what it contributes
+      is a correction to that entry's suggested remedy, not just more evidence.
+      selectedPatientSeriesList is not simply "the antigen-scoped list" - it is
+      4.5's *pre-8.1* list, every relevant patient series of the current
+      antigen, which 8.1 then narrows into scorablePatientSeriesList by dropping
+      contraindicated series (SELECTB-24) and all but the highest-priority Risk
+      series of a group (SELECTSCORE-2). So there are three lists on two axes,
+      not two on one, and 8.4 reads the wrong *stage* of the pipeline as well as
+      the wrong scope: every rule in 8.4 is phrased over scorable patient
+      series, and 8.3 counts the scorable list to decide 8.4 should run at all.
+      Red 7 shows the consequence with two Increased Risk series - the
+      priority-A series 8.1 kept has 2 valid doses, the priority-B series 8.1
+      dropped has 5, and the scorable winner is scored -1 (expected +1) because
+      a series already out of consideration set the maximum. Red 8 is the
+      series-group half: expected the Standard group's two-valid-dose series to
+      win its own group's competition at +1, actual -1 because an Increased Risk
+      series of the same antigen has five. Because 8.4's condition is a
+      comparison rather than a count, a stray series does not merely join the
+      group being scored - it wins outright and pushes every series actually
+      under selection to -1, which makes this worse here than in 8.2 or 8.3.
+      Neither red is 8.4's own Role B session to resolve; both need the
+      chapter-wide decision, and per the cross-cutting entry that decision now
+      has to name a stage as well as a scope.
+
+      Not observable via FITS in any of the eight cases - FITS asserts the final
+      forecast, never the per-series scores 8.7 selects on. Checked and not
+      applicable here: the 2026-09-04 cross-cutting entry on
+      LogicTable.evaluate() not stopping at the first matching column - 8.4
+      builds no LogicTable at all and evaluates its single condition in
+      hand-written Java, so the shared decision-table engine is not involved.
+      Related and deliberately not re-litigated: the 2026-09-02 entry on scores
+      accumulating across a whole assessment and never being reset. 8.4 is a
+      consumer of that field and theScoreIsARunningTotalThatTheStepIncrementsOr
+      DecrementsRatherThanSets pins the increment semantics, but whether the
+      accumulation itself is right is 8.7's and 8.9's question, not 8.4's. It
+      does have one bearing on red 1-4 that Role B should note: because the
+      score is a running total, Table 8-7's tie column ("0") cannot be
+      implemented by leaving a tied series untouched, which is what the current
+      break does - the two coincide only when the score happens to start at 0.
+
+      Deliberately not covered - (a) the entry condition ("runs only when 8.3
+      classified the series group as having 2+ complete patient series") is a
+      property of 8.3's transitions, asserted from 8.3's side in
+      ClassifyScorablePatientSeriesTest, and 8.4's class has no entry guard of
+      its own to test; (b) numberOfValidDoses()'s null-targetDoseList branch,
+      which alerts and returns 0 - defensive code with no counterpart in Table
+      8-7 or Table 8-8, and a divergence from 8.5's silently-guarding copy of
+      the same helper rather than a specification rule; (c) a patient series
+      whose patientSeriesStatus is null, which both of the class's loops treat
+      as complete because each guards on "status != null && != COMPLETE" - not a
+      state 7.4 produces, so there is nothing in the specification to assert
+      about it.
   '8.5':
     test_status: not_started
     test_class: null
