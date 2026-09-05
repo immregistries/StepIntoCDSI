@@ -2087,12 +2087,154 @@ units:
       structured log events, for the same reason units 6.2 through 7.3 left
       theirs alone.
   '7.5':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.GenerateForecastDatesAndRecommendedVaccinesTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >
+      Role A, 2026-09-05. 39 tests: 30 green, 9 red (8 failures and 1 error).
+      7.5 has no decision table, so the unit of coverage is one test per
+      business rule, or per bullet where a rule prints a bulleted preference
+      order - which is the unit Table 7-13 actually states. Covered: the step's
+      identity and factory dispatch; Table 7-12's eleven attributes and both of
+      its assumed values (01/01/1900 for the seasonal recommendation start date,
+      'N' for the forecast vaccine type flag); the four CALCDTAGE dates the
+      attributes are built from; the "if an attribute value is empty, then the
+      date calculations will remain empty" promise; all six FORECASTDT rules
+      bullet by bullet (FORECASTDT-1 five ways, -2 three, -3 four, -4 two, -5
+      two, -6 three); one test each for FORECASTRECVAC-1, FORECASTDN-1 and
+      FORECASTGUIDANCE-1; and the step package's State Changes and its
+      unconditional transition to 7.6. Every test hand-builds the minimal
+      DataModel - a two-dose series with dose 1 satisfied by a dose administered
+      03/10/2024 and dose 2 the one being forecast - and invokes the compute
+      methods directly; computeLatestDate() and computeDates(Forecast) are
+      private and are reached reflectively, as NoValidDosesCompletableTest does.
+      Unlike 7.4, process() is safe to call here (its next() builds
+      ValidateRecommendation, which needs nothing this fixture does not already
+      provide), so the state changes are asserted against the real method.
+
+
+      Coverage is full for the six date rules and the attribute table, and
+      deliberately minimal for the section's other three rules - see "not
+      covered" below. The headline result: 7.5 implements the date half of its
+      own section and none of the vaccine/dose-number/guidance half. All four
+      compute methods for the FORECASTDT preference orders are present and, on
+      their first bullets, correct; what fails is the fallbacks, the two
+      attributes that feed the unimplemented half, and the three rules that have
+      no implementation at all.
+
+
+      The 9 red tests, expected vs actual. (1)
+      forecastdtOneTheEarliestDateIsTheSameCandidateEarliestDateSevenFourTested -
+      FORECASTDT-1 says the earliest date "must be the candidate earliest date",
+      a single value FORECASTDTCAN-1 produces once and 7.4 already holds as its
+      own Table 7-9 attribute; with a season opening 09/01/2030 the two steps
+      must agree, expected 09/01/2030 from both, actual 7.4 says 01/15/2015 and
+      7.5 says 09/01/2030, because each class carries its own separate copy of
+      FORECASTDTCAN-1 with a different subset of the six candidate dates. Added
+      as a new dated entry in cross-cutting-notes.md; the direction of the fix is
+      that 7.5's copy is the more complete one and 7.4's is the one already
+      recorded as omitting candidates, so this is not a defect in 7.5's own
+      class. (2) forecastdtTwoFallsBackToTheForecastsOwnEarliestDate -
+      FORECASTDT-2's third bullet says that with no earliest recommended age date
+      and no earliest recommended interval date the unadjusted recommended date
+      is "the earliest date of the patient series forecast"; expected 01/15/2016
+      (the fixture's own earliest date), actual today's date, because
+      computeUnadjustedRecommendedDate() reads the last element of
+      dataModel.getVaccineGroupForecastList() - a different patient series'
+      forecast, and one that is empty at this point in the pipeline - and then
+      returns "new Date()" when that yields nothing. This is the ordinary case
+      for the majority of series doses (no earliest recommended age, no earliest
+      recommended interval), and it makes the same patient's recommended date
+      change every day the engine is run. (3)
+      forecastdtThreeIsBlankWhenAnIntervalDefinesNoLatestRecommendedInterval -
+      FORECASTDT-3's third bullet says the unadjusted past due date is blank when
+      there is no latest recommended age date and no latest recommended interval
+      date; expected null, actual a NullPointerException, because
+      computeUnadjustedPastDueDate() calls
+      interval.getLatestRecommendedInterval().getDateFrom(...) without a null
+      check (the sibling findLatestRecommendedIntervalDate() in the same class
+      does guard it). Latent rather than live: DataModelLoader only assigns that
+      field when the <latestRecInt> element is present, and all 512 loaded
+      intervals in the bundled 4.65-508 release carry one, so no current input
+      reaches it. (4) theVaccineTypeAttributeCarriesThePreferableVaccinesCvx -
+      Table 7-12 sources Vaccine Type (CVX) from the Supporting Data preferable
+      vaccine; expected the series dose's preferable vaccine type, actual null,
+      because caVaccineType is constructed and registered but there is no
+      findVaccineType() and nothing ever sets it. (5)
+      theForecastVaccineTypeFlagCarriesThePreferableVaccinesValue - same for the
+      forecast vaccine type flag; expected YES from a preferable vaccine that
+      declares 'Y', actual NO, i.e. Table 7-12's assumed value is the only value
+      this attribute ever has. (6)
+      forecastrecvacOneIdentifiesTheRecommendedSeriesDoseVaccines -
+      FORECASTRECVAC-1 requires the forecast to identify its recommended series
+      dose vaccines; expected some accessor carrying them, actual none exists on
+      Forecast or on the step. (7) forecastdnOneIsTheCountOfSatisfiedTargetDoses
+      PlusOne - FORECASTDN-1 requires a forecast dose number (count of satisfied
+      target doses in the relevant patient series, plus 1); expected a dose
+      number accessor, actual Forecast has no dose number field at all - the
+      STATE log line labelled "Dose:" prints the tracked series dose's own dose
+      number, which is a different quantity. (8)
+      forecastguidanceOneIncludesAdministrativeGuidance - FORECASTGUIDANCE-1
+      requires administrative guidance in the forecast; expected a guidance
+      accessor, actual Forecast has no guidance field. (9)
+      computeDatesAlsoRecordsTheUnadjustedDates - FORECASTDT-2 and FORECASTDT-3
+      define the unadjusted recommended and unadjusted past due dates as dates
+      "of a patient series forecast" in their own right, Figure 7-7's timeline
+      prints both, and Forecast carries a field and accessor for each; expected
+      01/15/2019 and 01/14/2021 on the forecast, actual null for both, because
+      computeDates() assigns only the four adjusted/earliest/latest dates. The
+      distinction the two rules exist to draw - whether the date the patient is
+      given is the schedule's own or one pulled forward because they are behind -
+      is computed and then discarded.
+
+
+      Reds 4 through 8 are one story, not five: the section is titled "Generate
+      Forecast Dates and Recommended Vaccines" and only the first half of that
+      title is implemented. The step package already recorded FORECASTRECVAC-1,
+      FORECASTDN-1 and FORECASTGUIDANCE-1 as "not found implemented in this
+      class ... not confirmed missing, only unverified"; this pass confirms them
+      missing from the class, and additionally confirms that the Forecast domain
+      object has no field any of the three could be written to, so the fix is a
+      domain-model change plus new logic, not a wiring change. The two dead
+      Table 7-12 attributes (reds 4 and 5) are the same gap seen from the input
+      side. Not observable via FITS, whose fixtures assert forecast dates and
+      series status, not recommended CVXs or dose numbers.
+
+
+      Deliberately not covered. (a) FORECASTRECVAC-1's four bullets
+      individually, FORECASTDN-1's two alternative counts (including its seasonal
+      recommendation start date variant), and FORECASTGUIDANCE-1's three sources
+      of guidance. Each rule gets one test asserting that the artefact it
+      produces exists somewhere; the sub-conditions cannot be asserted against a
+      value the domain model has nowhere to hold, and writing them would mean
+      inventing the accessor under test. Whoever runs Role B for this unit should
+      expect to add those tests alongside the fix, not find them waiting. (b)
+      FORECASTDTCAN-1's fifth candidate date (inadvertent administrations) as a
+      distinct leg: 7.5's computeEarliestDate() already folds every dose
+      administered that has a target dose into one "latest date administered"
+      bucket without distinguishing inadvertent ones, so a test would pass for
+      the wrong reason. The same caveat 7.4 recorded applies - nothing in
+      cdsi-engine computes that set of dates as a set. (c) CALCDTLIVE-4's own
+      calculation. The conflict end interval date is exercised as an input to
+      FORECASTDT-1 by setting the Table 7-12 attribute directly; calculating it
+      from live virus conflict Supporting Data belongs to 6.7 and needs its
+      machinery. (d) The STATE-level log summary process() writes, for the same
+      reason units 6.2 through 7.4 left their log events alone.
+
+
+      One observation for whoever sequences Role B, recorded here rather than in
+      cross-cutting-notes.md because it stays inside this unit: 7.5 reads
+      nothing contraindication-related. FORECASTRECVAC-1's third bullet ("there
+      is no vaccine contraindication involving the vaccine type that is used for
+      the series dose vaccine") is the only place a contraindication would enter
+      this section, and since FORECASTRECVAC-1 is unimplemented, the
+      contraindication chain documented from 7.2/7.3/7.4 does not reach 7.5 at
+      all and none of the reds above depend on it. When that chain is eventually
+      closed, this bullet is a further consumer to wire up, but it adds no new
+      constraint on how it is closed.
   '7.6':
     test_status: not_started
     test_class: null

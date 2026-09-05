@@ -33,6 +33,79 @@ single-unit fixes after. That sequencing decision itself isn't written yet
 
 ---
 
+## 2026-09-05 - FORECASTDTCAN-1 is implemented twice, in two classes, with different candidate dates
+
+**Discovered while testing:** 7.5 Generate Forecast Dates and Recommended
+Vaccines (`GenerateForecastDatesAndRecommendedVaccinesTest`)
+
+**Affected component:** `DetermineForecastNeed.computeEarliestDate()` (private)
+and `GenerateForecastDatesAndRecommendedVaccines.computeEarliestDate()`
+(public) - two independent implementations of the same business rule, in two
+different step classes, neither reading the other's result.
+
+**What's wrong:** FORECASTDTCAN-1 defines *one* value, the candidate earliest
+date, as "the latest of the following dates" over six candidates. 7.4 holds it
+as a real Table 7-9 attribute ("Calculated date (FORECASTDTCAN-1) / Candidate
+Earliest Date") and its Table 7-10 Rule 8 gates the whole forecast on it. 7.5's
+FORECASTDT-1 then says the forecast's earliest date "must be the candidate
+earliest date" - the same date. Instead each class computes its own:
+
+| candidate (FORECASTDTCAN-1) | 7.4 | 7.5 |
+| --- | --- | --- |
+| minimum age date | yes | yes |
+| latest of all minimum interval dates | yes | yes |
+| latest of all forecast conflict end dates | no (commented out) | yes |
+| seasonal recommendation start date | no (commented out) | yes |
+| latest date administered of any inadvertent administration | no | folded into the row below, not distinguished |
+| date administered of the most recent vaccine dose administered | no | yes |
+
+So the divergence is not "one is behind the other": 7.4 implements two of six,
+7.5 implements four of six plus an undifferentiated version of a fifth, and the
+two commented-out lines in 7.4's copy are exactly the two 7.5's copy has. The
+consequence is that the gate 7.4 applies ("is the candidate earliest date before
+the maximum age date?", Table 7-10 Rule 8) is applied to a *different, earlier*
+date than the earliest date the patient is ultimately told. A series dose whose
+season opens after the patient ages out passes 7.4's gate and is then forecast by
+7.5 for a date past the maximum age - which is the precise outcome Rule 8 exists
+to prevent.
+
+**Confirmed live in 7.5:**
+`forecastdtOneTheEarliestDateIsTheSameCandidateEarliestDateSevenFourTested`
+(red) builds both steps from one `DataModel` and compares their two values
+directly: with a season opening 09/01/2030, 7.4's Candidate Earliest Date
+attribute reads 01/15/2015 and 7.5's `computeEarliestDate()` returns
+09/01/2030. Not observable via FITS, which asserts the reported forecast dates
+but never 7.4's gate input.
+
+**Known affected units:** 7.5 (confirmed, 1 red test) and 7.4 (already
+confirmed from its own side - `forecastdtcanOneIncludesTheSeasonalRecommendation
+StartDate` and `forecastdtcanOneIncludesTheMostRecentDateAdministered`, and see
+07-04's Review Findings). What is new here is not that either copy is
+incomplete, which both step packages already record, but that there are two
+copies at all and that they disagree with each other for the same patient.
+
+**Suggested handling:** the two red tests on the 7.4 side and the one on the 7.5
+side are the same fix, and fixing them independently in two Role B sessions would
+leave two implementations that merely happen to agree. FORECASTDTCAN-1 belongs in
+one place, and the place is already built: `DateRules` declares and constructs a
+`FORECASTDTCAN_1` rule object carrying the rule's full six-bullet text verbatim -
+but typed `DateRule<Contraindication>` and with `setLogicalComponent
+("Contraindication")`, evidently copied from the neighbouring `CALCDTCI_*`
+entries, its body a `return null` under the comment `// logic not correct`, and
+never invoked from anywhere (verified by grep: the only references are its own
+declaration and initialisation). So there are three artefacts for this one rule -
+two divergent working copies inside step classes and one correctly-documented,
+mistyped, dead stub in the shared rule registry. Recommend deciding 7.4's and 7.5's
+Role B sessions together, with the shared rule written once and both classes
+reading it, rather than in unit-number order. Note also that 7.5 does not
+distinguish the fifth candidate (inadvertent administrations) from the sixth; a
+single shared implementation would have to, and nothing in `cdsi-engine`
+currently computes that set of dates as a set.
+
+**Status:** open, not yet fixed, not yet a formal finding.
+
+---
+
 ## 2026-09-04 - Schedule-level Supporting Data is parsed onto `Schedule`, which no logic step reads
 
 **Discovered while testing:** 7.2 Determine Evidence of Immunity
