@@ -2236,12 +2236,165 @@ units:
       closed, this bullet is a further consumer to wire up, but it adds no new
       constraint on how it is closed.
   '7.6':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.ValidateRecommendationTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >
+      Role A, 2026-09-05. 15 tests: 6 green, 9 red (9 failures, 0 errors). 7.6
+      has no attribute table, no business rules and no decision tables of its
+      own - 7.6.1 says outright that "the process model, attribute table, and
+      decision table ... is the same as described in Chapter 6.2" - so the unit
+      of coverage is one test per sentence of 7.6.1 plus the Purpose's stated
+      outcome, not one test per decision-table row. Everything
+      context-independent in the shared EvaluateConditionalSkip base class
+      (Table 6-4's attributes, CALCDTSKIP-3/-4/-5, CONDSKIP-1, the encoding of
+      Tables 6-6 through 6-11 and their AND/OR roll-ups) is already covered by
+      EvaluateConditionalSkipForEvaluationTest under unit 6.2 and is
+      deliberately not re-tested here; re-asserting it under 7.6's number would
+      exercise no additional line of code. Coverage is full for what 7.6.1 and
+      the Purpose actually state; see "not covered" below for the two things
+      left out and why.
+
+
+      Covered: the step's identity and both LogicStepFactory overloads; the two
+      destinations its constructor wires (skip to 7.1 for re-forecasting,
+      no-skip to 4.4); 7.6.1's three sentences one test each (the
+      Forecast-or-Both context filter, "a target dose that does not specify
+      Conditional Skip attributes cannot be skipped", and "In CONDSKIP-2, the
+      Earliest Date is used"); Table 6-4's Earliest Date attribute; the effect
+      of the reference-date substitution on Table 6-6 and on Table 6-8; the
+      Table 6-11 "No" arm as a negative control; whether process() evaluates the
+      tables at all; both outcomes of the Purpose's validate/re-forecast
+      decision; and the specification's own Hib worked example asserted as a
+      scenario.
+
+
+      Every test hand-builds the minimal DataModel - a patient born 01/01/2015,
+      one dose administered 06/01/2016, an assessment date of 06/01/2021 and a
+      Forecast carrying an earliest date of 09/01/2023 on both the data model
+      and the current patient series, exactly as 7.5 leaves it. The three
+      candidate reference dates are kept distinct on purpose so no assertion can
+      pass by coincidence. Two entry points are used deliberately: run() calls
+      the real overridden process(), while evaluateInheritedTables() constructs
+      the step and calls the inherited protected evaluateLogicTables() directly.
+      Without that split the process() override would mask every other defect,
+      and the reference-date and bypass problems would be reported as one.
+
+
+      The headline result confirms and then enlarges the test-gap note in
+      spec-to-code.yaml and 07-06's Review Findings. The known part is true: the
+      class performs no validation, because process() is overridden to set the
+      next step and return without ever calling evaluateLogicTables(). What was
+      not previously recorded is that restoring the override alone would not
+      make the section work, because two of the three things 7.6 needs from the
+      shared base class are stubs - see reds 3, 4, 8 and 9 below and the
+      2026-09-05 cross-cutting-notes entry.
+
+
+      The 9 red tests, expected vs actual. (1)
+      aConditionalSkipInstanceCarriesTheContextThatDecidesWhetherSevenSixMayUseIt
+      - 7.6.1 requires only Conditional Skip instances with a context of
+      Forecast or Both; expected some way to read an instance's context, actual
+      ConditionalSkip has no context field at all and SeriesDose holds exactly
+      one instance. Already recorded from 6.2's and 7.1's sides in
+      cross-cutting-notes.md; that entry is updated in place from this side
+      rather than duplicated, and its claim that ValidateRecommendation "is not
+      in any numbered unit and has not been checked" is corrected there. 7.6
+      shares 7.1's filter exactly, so it inherits 7.1's asymmetric consequence
+      (the right instance retained by document order for the 67 two-instance
+      series doses; the 3 Evaluation-only ones over-applied), not 6.2's. (2)
+      processEvaluatesTheInheritedConditionalSkipDecisionTables - the Purpose
+      says "Conditional Skip is used to determine if a forecast is illogical";
+      expected Table 6-11's condition to carry a LogicResult after process(),
+      actual null, because the override never calls evaluateLogicTables(). (3)
+      condskipTwoUsesTheForecastedEarliestDateAsTheReferenceDateWhenValidating -
+      7.6.1's "In CONDSKIP-2, the Earliest Date is used"; expected 09/01/2023,
+      actual 01/01/1900, because the VALIDATING arm of the CONDSKIP-2 switch in
+      EvaluateConditionalSkip's constructor sets the reference date to the PAST
+      sentinel. The EVALUATE and FORECAST arms two lines above it are both
+      correct; only the third is a placeholder. (4)
+      theEarliestDateIsATableSixFourAttributeTheStepRegisters - Table 6-4 lists
+      the Earliest Date and 7.6 is the one context that reads it; expected a
+      registered attribute carrying 09/01/2023, actual no such attribute,
+      because caEarliestDate is declared and added to conditionAttributesList
+      but never constructed, leaving a literal null in the list. (5)
+      theAgeConditionIsAnsweredAgainstTheForecastedEarliestDate - Table 6-6's
+      window must be measured against the forecasted earliest date; expected the
+      01/01/2023-01/01/2025 window met and the two windows around the assessment
+      date and the date administered not met, actual none of the three met,
+      because 01/01/1900 is outside all of them. (6)
+      theIntervalConditionIsAnsweredAgainstTheForecastedEarliestDateToo - same
+      substitution through Table 6-8's second condition; expected the reference
+      date 09/01/2023 to have passed the CALCDTSKIP-5 interval date 01/15/2023
+      so the condition is met, actual reference date 01/01/1900 and not met.
+      CALCDTSKIP-5 itself computes 01/15/2023 correctly. (7)
+      anIllogicalRecommendationSetsTheTargetDoseSkipped - Table 6-11's "Yes"
+      outcome; expected TargetDoseStatus.SKIPPED, actual NOT_SATISFIED
+      (unchanged), because the tables never run. (8)
+      anIllogicalRecommendationTriggersReForecasting - "If the recommendation is
+      found to be invalid, re-forecasting for the next target dose is required";
+      expected EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST, actual
+      EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES, so the 7.1 destination the
+      constructor wires is unreachable dead code. (9)
+      theSpecificationsHibExampleIsCaughtAsAnIllogicalForecast - the section's
+      own worked example (born 01/01/2024, first dose 12/08/2024 at 11 months 1
+      week, catch-up recommended for 01/05/2025, conditional skip opening at 12
+      months); expected SKIPPED and re-forecasting, actual NOT_SATISFIED and
+      4.4. This is reds 2, 3 and 7 in one scenario and is the clearest single
+      demonstration that the section's stated purpose does not run.
+
+
+      Reds 2, 7, 8 and 9 are one cause (the process() override, in 7.6's own
+      class); reds 3, 4, 5 and 6 are a second, independent cause (two stubs in
+      the shared base class); red 1 is a third, already-recorded one in the
+      domain model and the loader. The ordering matters for Role B: fixing only
+      the override would give a step that runs its decision tables and still
+      never skips anything, because the reference date it would compare against
+      is 01/01/1900. Note also that 7.6's own class contains almost nothing -
+      deleting the override is the entire fix that lives inside
+      ValidateRecommendation.java, and everything else is in
+      EvaluateConditionalSkip, which units 6.2 and 7.1 also own. That scoping
+      constraint is why the second cause is recorded in cross-cutting-notes.md
+      as well as here.
+
+
+      The 6 green tests, for the record: the step's identity and chapter number;
+      both factory overloads; the constructor's two destinations (present, just
+      unreachable); "a target dose that does not specify Conditional Skip
+      attributes cannot be skipped", which is correct because no tables are
+      built at all; the Table 6-11 "No" arm; and a valid recommendation
+      continuing to 4.4. The last two deserve a caveat and carry it in the test
+      source: both would also be green with the CONDSKIP-2 defect present, since
+      the reference date the class actually uses falls outside the test's window
+      too. They pin the roll-up's "No" arm and the no-skip destination, not the
+      reference date, which is pinned by reds 3 through 6.
+
+
+      Deliberately not covered. (a) Tables 6-6 through 6-11 re-driven under the
+      VALIDATING context - their encoding, their per-condition rules and their
+      AND/OR roll-ups are 6.2's coverage and are context-independent by
+      construction; only what the context changes (the reference date, and what
+      it does to the two date-sensitive condition types) is asserted here. The
+      COMPLETED_SERIES and VACCINE_COUNT condition types are untouched by the
+      reference date, so they are left to 6.2 entirely. (b) The 7.5-to-7.6
+      handoff, which 7.5's own unit already asserts from its side as an
+      unconditional transition. (c) The STATE-level log events, for the same
+      reason units 6.2 through 7.5 left theirs alone.
+
+
+      One correction to the step package, not made in this pass because Role A
+      touches no files outside the test class and status.yaml: 07-06's index.md
+      says the commented-out reference to FORECAST_DATES_AND_REASONS in
+      process() names a LogicStepType that "doesn't appear to exist under that
+      name in the current LogicStepType enum". It does exist -
+      LogicStepType.java line 22, FORECAST_DATES_AND_REASONS("7", "Forecast
+      Dates and Reasons", true) - and LogicStepFactory builds ForecastDatesAndReasons
+      for it. The commented-out line is still dead code and still
+      documentation-only, but the stated reason is wrong and should be corrected
+      when 07-06's index.md is next revised.
   '8.1':
     test_status: not_started
     test_class: null

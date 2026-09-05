@@ -33,6 +33,72 @@ single-unit fixes after. That sequencing decision itself isn't written yet
 
 ---
 
+## 2026-09-05 - Three units share one `EvaluateConditionalSkip`, and 7.6's whole remedy lands inside it
+
+**Discovered while testing:** 7.6 Validate Recommendation
+(`ValidateRecommendationTest`)
+
+**Affected component:**
+`cdsi-engine/src/main/java/org/openimmunizationsoftware/cdsi/core/logic/EvaluateConditionalSkip.java`
+- the shared base class units 6.2, 7.1 and 7.6 all instantiate, specifically its
+`caEarliestDate` field and the `VALIDATING` arm of the CONDSKIP-2 `switch` in
+its constructor. Not something confined to `ValidateRecommendation`.
+
+**What's wrong:** `ValidateRecommendation` itself is nine lines - a constructor
+and a `process()` override - and the specification's whole section 7.6 is
+delegated to the shared base class. Two of the three things 7.6 needs from that
+base class are stubs, and both are in the base class rather than in 7.6's own
+file:
+
+1. `caEarliestDate` is declared, added to `conditionAttributesList`, and never
+   constructed - so `getConditionAttributeList()` carries a literal `null` where
+   Table 6-4's Earliest Date should be, in all three contexts.
+2. The CONDSKIP-2 `switch` reads
+   `case VALIDATING: lt.caConditionalSkipReferenceDate.setInitialValue(PAST);`,
+   where 7.6.1 says "In CONDSKIP-2, the Earliest Date is used". `PAST` is
+   01/01/1900, so every age window and every interval condition answers "No" on
+   the date rather than on the merits, for every patient. The `EVALUATE` and
+   `FORECAST` arms two lines above it are both correct and both read a real
+   date; only the third is a placeholder.
+
+The third thing - `process()` bypassing `evaluateLogicTables()` entirely - *is*
+in 7.6's own class and is already recorded in 07-06's Review Findings. The point
+of this entry is the other two: they are invisible today because the override
+means the tables never run, so fixing the override alone would take 7.6 from
+"never checks" to "checks against 01/01/1900 and always answers No", which is the
+same behaviour by a longer route.
+
+**Confirmed live in 7.6:** `condskipTwoUsesTheForecastedEarliestDateAsThe
+ReferenceDateWhenValidating` (red) reads 01/01/1900 where the fixture's forecast
+earliest date is 09/01/2023; `theEarliestDateIsATableSixFourAttributeTheStep
+Registers` (red) finds no attribute named "Earliest Date" registered at all; and
+`theAgeConditionIsAnsweredAgainstTheForecastedEarliestDate` /
+`theIntervalConditionIsAnsweredAgainstTheForecastedEarliestDateToo` (both red)
+show the consequence with the tables driven directly, independently of the
+`process()` override. Not observable via FITS, which asserts the forecast dates
+returned but never re-interrogates them.
+
+**Known affected units:** 7.6 (confirmed, 4 of its 9 red tests). 6.2 and 7.1 are
+affected only by (1), and only cosmetically - the null in the attribute list is
+already present in their runs, but neither context reads the Earliest Date, so
+neither has a red test for it.
+
+**Suggested handling:** this is a sequencing note more than a defect report. 7.6
+has no code of its own to fix beyond deleting a `process()` override; everything
+else it needs is in a class 6.2 and 7.1 own too, which is exactly the situation
+`cdsi-engine/AGENTS.md` tells a Role B session not to resolve unilaterally. The
+changes are confined to a branch and a field that only the VALIDATING context
+exercises, so they cannot regress 6.2 or 7.1 - but they are still edits to a
+shared class, so 7.6's Role B session should be scheduled knowing that, rather
+than discovering mid-session that its unit's fix is out of its own unit's scope.
+Note the ordering constraint within 7.6 itself: restoring the override without
+also fixing the CONDSKIP-2 arm produces a step that runs its tables and still
+never skips anything.
+
+**Status:** open, not yet fixed, not yet a formal finding.
+
+---
+
 ## 2026-09-05 - FORECASTDTCAN-1 is implemented twice, in two classes, with different candidate dates
 
 **Discovered while testing:** 7.5 Generate Forecast Dates and Recommended
@@ -314,11 +380,35 @@ reaches into `DetermineForecastNeed`.
 
 **Updated 2026-09-04, from 7.1's side (`EvaluateConditionalSkipForForecastTest`).** Full breakdown of the bundled 4.65-508 release, so both directions are on record: 484 `<seriesDose>` elements carry a `<conditionalSkip>` element, but 287 of those are empty placeholders that `DataModelLoader`'s `populated` guard correctly discards, leaving 264 real instances (140 "Both", 57 "Evaluation", 67 "Forecast") spread over 197 series doses. Those 197 break down as: 127 with a single "Both" instance (both units get a usable instance); 54 Evaluation-then-Forecast and 13 Both-then-Forecast (the Forecast instance is retained); and 3 with a single "Evaluation" instance. So the failure is **asymmetric**, not a mirror image. In all 67 two-instance cases the retained instance is the Forecast one, which is exactly the instance 7.1 is supposed to use - 7.1 gets the right instance for the wrong reason, purely by document order, with no filtering involved. What 7.1 loses instead is smaller and of the opposite kind: the 3 Evaluation-only series doses, where 7.1 *applies* a conditional skip whose context excludes it (over-application), rather than 6.2's 67 cases of *losing* one it was required to use (under-application). Both symptoms have the same single cause. Practical consequence for sequencing: the loader's document-order accident currently masks the problem on the Forecast side almost entirely, so a partial fix - e.g. making the loader keep the *first* instance instead of the last - would fix 6.2's 67 cases and break 7.1's 67 at the same time. Only accumulating both instances and filtering by context at use time fixes both.
 
-**Known affected units:** 6.2 (confirmed, part of its 8 red tests) and **7.1** (confirmed, its 1 red test - `aConditionalSkipInstanceCarriesTheContextThatDecidesWhetherSevenOneMayUseIt`, the same "can the entry condition even be expressed?" question asked from the Forecast side). `ValidateRecommendation`, the third subclass of the same base class (VALIDATING context), is not in any numbered unit and has not been checked.
+**Updated 2026-09-05, from 7.6's side (`ValidateRecommendationTest`).** The
+sentence below that said `ValidateRecommendation` "is not in any numbered unit
+and has not been checked" was wrong on both counts and is corrected here rather
+than left standing: it is unit **7.6 Validate Recommendation**, and it has now
+been checked. 7.6 is the third subclass of the same base class, and 7.6.1 gives
+it the *same* context filter as 7.1 - "Only Conditional Skip Instances with a
+context of Forecast or Both should be used" - so it inherits 7.1's version of
+the consequence exactly, not 6.2's: in the bundled 4.65-508 release the 67
+two-instance series doses retain the Forecast instance 7.6 is also supposed to
+use (right instance, by document order rather than by filtering), and the 3
+Evaluation-only series doses are applied here too even though their context
+excludes them. Nothing about the counts changes; what changes is that the
+over-application half of this defect now has two consumers, not one, so the
+"accumulate and filter at use time" remedy has to be reachable from three call
+sites rather than two. This is the smallest of 7.6's problems - see the separate
+2026-09-05 entry on `EvaluateConditionalSkip`'s VALIDATING arm - and it is the
+only one of them that is this entry's cause.
 
-**Suggested handling:** the fix belongs in the domain model (`ConditionalSkip` needs a context field) and the loader (accumulate rather than overwrite, then filter by context at use time), not in either `EvaluateConditionalSkipForEvaluation` or `EvaluateConditionalSkipForForecast` individually - and, per the asymmetry above, it cannot be done safely as a loader-only "keep the other one" change. Worth fixing once, before or alongside whichever of 6.2/7.1 is tackled first in Role B, rather than twice.
+**Known affected units:** 6.2 (confirmed, part of its 8 red tests), **7.1**
+(confirmed, its 1 red test -
+`aConditionalSkipInstanceCarriesTheContextThatDecidesWhetherSevenOneMayUseIt`,
+the same "can the entry condition even be expressed?" question asked from the
+Forecast side) and **7.6** (confirmed, 1 of its 9 red tests -
+`aConditionalSkipInstanceCarriesTheContextThatDecidesWhetherSevenSixMayUseIt`,
+the same question asked from the Validating side, with 7.1's filter).
 
-**Status:** open, not yet fixed, not yet a formal finding. Confirmed from both the Evaluation (2026-09-03) and Forecast (2026-09-04) sides.
+**Suggested handling:** the fix belongs in the domain model (`ConditionalSkip` needs a context field) and the loader (accumulate rather than overwrite, then filter by context at use time), not in `EvaluateConditionalSkipForEvaluation`, `EvaluateConditionalSkipForForecast` or `ValidateRecommendation` individually - and, per the asymmetry above, it cannot be done safely as a loader-only "keep the other one" change. Worth fixing once, before or alongside whichever of 6.2/7.1/7.6 is tackled first in Role B, rather than three times.
+
+**Status:** open, not yet fixed, not yet a formal finding. Confirmed from the Evaluation (2026-09-03), Forecast (2026-09-04) and Validating (2026-09-05) sides.
 
 ---
 
