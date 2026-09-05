@@ -1,10 +1,30 @@
-# FITS Suite Performance Review - Outside Note
+# FITS Suite Performance And Data Boundary Review - Outside Note
 
 This note is an outside performance review of the offline FITS JUnit harness.
 It is advisory only. It does not replace `cdsi-fits-tests/AGENTS.md`, and it is
-not a request to change clinical logic. The immediate concern is Phase B
-iteration speed: the full FITS suite is expected to be run many times, and the
-current run time is roughly 15-16 minutes.
+not a request to change clinical logic. The immediate concern is Phase B safety
+and iteration speed: the full FITS suite is expected to be run many times, and
+the current run time is roughly 15-16 minutes.
+
+The recommendation here is to make an explicit architectural boundary before
+Phase B logic repair begins:
+
+```text
+SupportingDataModel
+  static knowledge-base / schedule data
+  loaded once per selected Supporting Data set
+  not mutated during forecasting
+
+DataModel
+  one forecast run's mutable working state
+  created fresh per request or FITS case
+  discarded after the run
+```
+
+This should be treated as a non-functional refactor. It should not change
+clinical behavior, FITS expected/actual outcomes, known-passing case membership,
+or per-step logic semantics. Its purpose is to make the original intended design
+real: Supporting Data stays loaded, while each run gets fresh mutable state.
 
 ## Summary
 
@@ -99,10 +119,12 @@ Those possibilities are worth checking, but they do not change the main finding:
 the FITS harness should not need to reparse static Supporting Data thousands of
 times.
 
-## Important Design Constraint
+## Why The Current Boundary Is Risky
 
-Caching cannot safely mean "reuse the same `DataModel` instance for every case"
-unless the engine has a complete and well-tested reset boundary.
+The original design idea appears sound: for each forecast run, create fresh run
+state, while keeping Supporting Data loaded. The current implementation does not
+provide that boundary. It avoids state leakage by rebuilding everything for each
+case, but that makes FITS slow.
 
 `DataModel` currently mixes two categories of state:
 
@@ -113,78 +135,164 @@ unless the engine has a complete and well-tested reset boundary.
   loop guards, current logic step, previous/current target dose, and other
   traversal fields.
 
-The Phase B fixes themselves are also likely to add or modify fields in this
-area. Reusing the same mutable instance without a hard reset would risk
-cross-case contamination and false FITS results.
+This means there is no object that cleanly means "the loaded knowledge base" and
+no object that cleanly means "this one forecast run." A caller either reloads the
+entire ZIP into a new `DataModel`, or it would have to reuse a `DataModel` and
+manually clear every mutable field. The second path would be a kludge and should
+not be the primary strategy.
 
-The cleaner performance direction is to separate "loaded Supporting Data" from
-"one forecast run's mutable working state."
+The risk is not only that there are many fields to reset. It is also that the
+domain objects are mutable and many getters expose live mutable collections. For
+example, supporting-data structures such as antigens, vaccine types, antigen
+series, series doses, intervals, allowable vaccines, and preferable vaccines are
+all regular mutable domain objects. Runtime objects then point back to them:
 
-## Candidate Improvement Paths
+- a `PatientSeries` tracks an `AntigenSeries`;
+- a `TargetDose` tracks a `SeriesDose`;
+- a `Forecast` tracks a `TargetDose`;
+- a `VaccineDoseAdministered` references a loaded `VaccineType`.
 
-These are options for the main agent to consider, not instructions.
+That pointer structure is reasonable, but only if the loaded objects are treated
+as read-only during processing. The code does not currently enforce that. A
+shared cached `DataModel` could therefore leak accidental mutation from one FITS
+case into the next.
 
-### Option A: Cached Supporting Data Snapshot + Per-Case Working Copy
+So the problem is not "JUnit is slow." The problem is that the engine lacks a
+real static-data/runtime-state boundary. The performance issue is the symptom
+that makes the missing boundary expensive.
 
-Load the Supporting Data ZIP once per supporting-data set, cache the resulting
-static object graph, and create a fresh per-case `DataModel` from that cached
-snapshot.
+## Recommended Refactor
 
-This likely needs a clear API such as:
+The preferred direction is to introduce `SupportingDataModel` as the explicit
+home for static Supporting Data, then let `DataModel` own only the mutable state
+for one forecast run.
+
+This is not a CDSi Logic Specification concept. It is an implementation boundary
+the engine needs so the specification logic can be run repeatedly and safely.
+
+Conceptually:
 
 ```java
-LoadedSupportingData loaded = DataModelLoader.loadSupportingData(supportingDataSet);
-DataModel dataModel = loaded.newDataModel();
+SupportingDataModel supportingData =
+    DataModelLoader.loadSupportingData("supporting-data-4.65-508.zip");
+
+DataModel dataModel = new DataModel(supportingData);
+dataModel.setForecastInput(testCase.toForecastInput());
 ```
 
-or:
+or, if the loader owns the cache:
 
 ```java
-DataModel dataModel = DataModelLoader.createDataModelFromCachedSupportingData(supportingDataSet);
+DataModel dataModel = DataModelLoader.createDataModel(supportingDataSet);
 ```
 
-The hard part is deciding whether `newDataModel()` deep-copies static objects,
-shares immutable objects, or shares mutable-but-treated-as-read-only objects.
-Because the existing domain model was not designed around immutability, this
-should be verified carefully.
+where `createDataModel(...)` returns a fresh `DataModel` but attaches a cached
+`SupportingDataModel` internally instead of reparsing the ZIP every time.
 
-### Option B: Split `DataModel` Into Supporting Data And Runtime State
+For compatibility, `DataModel` can initially keep many of its existing
+supporting-data getters and delegate them to `SupportingDataModel`. That would
+avoid forcing every logic step to change at once:
 
-Introduce an explicit supporting-data holder that contains only schedule data,
-then let each `DataModel` reference that holder while owning all per-run state.
+```java
+public Map<String, VaccineType> getCvxMap() {
+  return supportingDataModel.getCvxMap();
+}
 
-This is architecturally cleaner and probably the long-term answer. It also has a
-larger blast radius because many existing getters on `DataModel` expose the
-supporting-data maps/lists directly.
+public List<AntigenSeries> getAntigenSeriesList() {
+  return supportingDataModel.getAntigenSeriesList();
+}
+```
 
-This may be worth doing if Phase B is already going to touch loader/domain
-representation for association ages, conditional skips, immunity, or
-contraindications.
+This allows the project to draw the boundary first, then migrate call sites more
+gradually if desired.
 
-### Option C: Reset-And-Reuse A DataModel
+## What Belongs In `SupportingDataModel`
 
-Add a reset method that clears only per-request state and keeps Supporting Data
-loaded.
+Candidate static Supporting Data fields:
 
-This is probably the fastest implementation, but it is also the riskiest unless
-there is strong test coverage proving every mutable per-run field is cleared and
-no static Supporting Data object was mutated during the previous run.
+- CVX map;
+- antigen map and derived antigen list;
+- vaccine-group map and derived vaccine-group list;
+- antigen series list;
+- schedule list;
+- live-virus conflict list;
+- observation map;
+- clinical guideline observation map, if it is loaded from Supporting Data;
+- future supporting-data-owned structures such as association-age metadata,
+  conditional-skip definitions, immunity definitions, and contraindication
+  definitions.
 
-Given the current number of traversal fields, steppers, lists, and loop guards,
-this option should be treated carefully. A missed field could make one FITS case
-depend on the previous case.
+These objects should be loaded once per selected data set and then treated as
+immutable for the duration of a forecast run and across FITS cases.
 
-### Option D: Add A Fast Regression Mode Before Refactoring The Loader
+## What Belongs In `DataModel`
 
-As an interim tool, the FITS harness could support modes:
+Candidate per-run mutable fields:
+
+- forecast input;
+- patient;
+- immunization history;
+- assessment date;
+- current logic step and previous logic step;
+- current antigen, vaccine group, target dose, previous target dose, current
+  forecast, and current antigen administered record;
+- selected antigen lists and position counters;
+- selected antigen administered record lists and position counters;
+- target dose lists and position counters;
+- patient series stepper;
+- selected, scorable, prioritized, and best patient-series lists;
+- forecast list and vaccine-group forecast list;
+- loop guards and orchestration state such as `Neighborhood`;
+- any log or trace state added later.
+
+These should be new for every request or FITS case.
+
+## Avoid Reset-And-Reuse As The Main Design
+
+Adding `DataModel.resetForNextRun()` and reusing one instance would probably be
+the fastest patch, but it is the wrong default shape for this project. It would
+depend on an exhaustive list of fields to clear, and that list is exactly what
+Phase B will continue to change.
+
+A missed field could contaminate the next test case. A field cleared too
+aggressively could erase loaded schedule data. Either error would undermine the
+FITS suite as a regression signal.
+
+The better design is fresh `DataModel`, shared `SupportingDataModel`.
+
+## Mutability Guardrails
+
+Because the existing domain model was not built as immutable, the first version
+of `SupportingDataModel` may need pragmatic guardrails rather than a full
+immutability rewrite.
+
+Possible guardrails:
+
+- expose unmodifiable maps/lists from `SupportingDataModel` where practical;
+- keep mutation methods package-private or loader-only where practical;
+- add tests that fingerprint the loaded Supporting Data before and after a run;
+- run two very different FITS cases back to back in both orders and assert the
+  results are identical by case id;
+- avoid sharing any object that is known to be mutated during processing;
+- document any shared mutable object that is intentionally treated as read-only.
+
+A full deep-copy of the entire supporting-data graph per case would be safer
+than sharing mutable objects, but it may erase the performance benefit. The
+right balance is likely to make the loaded graph read-only by convention and
+tests first, then tighten immutability over time.
+
+## Optional Runner Improvements
+
+After the data boundary exists, the FITS harness could still support faster
+developer modes:
 
 - full diagnostics: current behavior, all failure bundles;
 - fast regression: record only `results.jsonl` and summary, possibly omit
   pretty-printed per-failure files;
 - targeted group/case: run only a selected case or vaccine group.
 
-This would not solve the main Supporting Data reload cost, but it could improve
-Phase B ergonomics while the cache/split design is being reviewed.
+These are secondary. They do not solve the main Supporting Data reload cost or
+the architectural ambiguity by themselves.
 
 ## Parallelism
 
@@ -198,7 +306,7 @@ engine and domain thread-safety. If each case has its own fully independent
 across cases, then that graph must be treated as immutable or protected from
 mutation.
 
-Recommendation: establish the Supporting Data/runtime-state boundary before
+Recommendation: establish the `SupportingDataModel`/`DataModel` boundary before
 turning on broad parallelism. Otherwise parallelism may hide cross-case mutation
 bugs rather than reveal them.
 
@@ -216,18 +324,21 @@ experiment:
 
 The expected result is that Supporting Data loading accounts for a large share
 of the per-case duration. If that is confirmed, the first performance fix should
-be a cache/split of static Supporting Data, not test-runner micro-optimization.
+be the `SupportingDataModel` split, not test-runner micro-optimization.
 
 ## Recommendation
 
-Make FITS performance its own enabling work item before Phase B enters repeated
-full-suite repair cycles.
+Make the Supporting Data/runtime-state split its own enabling work item before
+Phase B enters repeated full-suite repair cycles.
 
 The target design should be:
 
 - load and verify the selected Supporting Data once per suite run;
-- create isolated per-case runtime state without reparsing the ZIP;
+- create a fresh per-case `DataModel` without reparsing the ZIP;
+- keep static schedule/knowledge-base content in `SupportingDataModel`;
+- make `DataModel` the mutable forecast-run context;
 - preserve deterministic results and diagnostic output;
+- preserve all existing clinical behavior;
 - prove no cross-case contamination with tests that run two very different cases
   back to back in both orders;
 - keep the existing full diagnostic mode available for investigations.
@@ -235,3 +346,24 @@ The target design should be:
 If successful, this could plausibly move full-suite FITS feedback much closer to
 the original servlet-era expectation and make Phase B substantially cheaper to
 run without weakening the regression guardrail.
+
+## Acceptance Criteria
+
+This refactor should be considered successful only if:
+
+- the FITS pass/fail/error counts are unchanged before and after the refactor;
+- previously passing engine tests do not regress;
+- previously known-passing FITS cases do not regress;
+- each FITS case/request receives a fresh mutable `DataModel`;
+- Supporting Data is loaded once per selected data set in a suite run;
+- the code makes it clear which fields are static Supporting Data and which are
+  per-run state;
+- tests demonstrate that running cases in different orders does not change their
+  results;
+- any remaining shared mutable Supporting Data objects are documented and
+  protected by tests from accidental mutation during forecasting.
+
+This should be done before clinical logic fixes because it makes later Phase B
+changes safer to reason about. The project should not have to wonder whether a
+logic fix changed the rule, changed the data, or leaked state from the previous
+run.
