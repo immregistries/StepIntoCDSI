@@ -3419,12 +3419,132 @@ units:
       cosmetic; mentioned so a Role B session recognises them as known rather than
       as findings.
   '8.8':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.DetermineBestPatientSeriesTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      Role A pass 2026-09-05. 23 tests, 17 green, 6 red. 8.8 is the last step of
+      Chapter 8 and the consumer end of 8.7: it reads
+      dataModel.getPrioritizedPatientSeriesList(), applies Table 8-14 once per
+      entry, and appends the survivors to dataModel.getBestPatientSeriesList()
+      for 4.6 and Chapter 9. It has no business rules of its own - the whole
+      section is one five-condition, three-rule decision table plus a default.
+      Unlike 8.5/8.6/8.7 there is no private method worth invoking reflectively:
+      the class builds its LogicTables in its constructor and evaluates them in
+      process(), so driving the public process() over a hand-built DataModel
+      exercises exactly one table per prioritized patient series and nothing
+      else. Two fixture notes for anyone extending the class: it captures
+      dataModel.getPatientSeriesStepper().getList() in a field initializer and
+      iterates the prioritized list in its constructor, so the fixture must be
+      built before the step is; and DataModel.bestPatientSeriesList defaults to
+      null and is created only by 4.5 (SelectBestPatientSeries.process(), "if
+      null"), so a fixture that omits it gets a NullPointerException from the
+      outcome bodies rather than a failed assertion. The tests use HepA's real
+      series group numbers, names and series names from the bundled 4.65-508
+      release throughout.
+
+      Coverage is full for what 08-08 documents. All three rule columns have a
+      positive test, the two dash cells that carry real meaning have their own
+      (Rule 1 decided by completeness alone with all four other conditions
+      answered against it; Rule 2 unaffected by the Risk-elsewhere condition, so
+      two Risk series in equivalent groups are both best), the default outcome
+      has one, and each of the five conditions is covered by at least one test
+      that isolates it. The Purpose ("one or more non-redundant best patient
+      series will remain"), Entry Conditions (one prioritized series per series
+      group), State Changes and Next Steps sections account for the rest.
+      Nothing in 08-08 is left untested and nothing needed disproportionate
+      scaffolding.
+
+      Reds 1-3 are a NEW cross-cutting entry, recorded 2026-09-05 as
+      "<equivalentSeriesGroups> is in every antigen series in the release, is
+      parsed nowhere". Two of Table 8-14's five conditions are defined entirely
+      over "an equivalent series group", and 4.5 defines that term as a declared
+      Supporting Data value ("some antigen series define Equivalent Series Groups
+      which allow a single best series to be selected from across multiple Series
+      Groups"), not as something to be inferred. Every one of the 143 <series>
+      elements in the bundled release carries an <equivalentSeriesGroups> element
+      - 54 populated (37 "2", 15 "1", 2 "3") across 10 antigens, 89 self-closing.
+      It is a direct child of <series>, a sibling of <seriesType>, so it belongs
+      on AntigenSeries and not on SelectPatientSeries where seriesGroup lives.
+      Grep finds zero references to the name in any .java file in cdsi-engine or
+      cdsi-web, and no domain class has a field for it - so unlike seriesGroup /
+      seriesGroupName, which are loaded and never read, this value never arrives
+      at all. theEquivalentSeriesGroupsTableEightFourteenTurnsOnAreCarriedByThe
+      DomainModel is the "can the condition even be expressed?" test (expected an
+      accessor mentioning "equivalent" on AntigenSeries or SelectPatientSeries,
+      actual none); theReleaseDeclaresTheEquivalentSeriesGroupsTableEightFourteen
+      Needs (green) is its companion evidence that the data is really there.
+      theCompleteSeriesConditionAnswersNoForASeriesThatDeclaresNoEquivalentSeries
+      Group (expected the pediatric travel series to be a best patient series by
+      Rule 2, actual only the Standard group's complete series) and theRisk
+      ElsewhereConditionAnswersNoForASeriesThatDeclaresNoEquivalentSeriesGroup
+      (expected it best by Rule 3, actual only the Increased Risk group's Risk
+      series) show the consequence in the majority shape: HepA's Increased Risk -
+      Pediatric Travel group declares an empty element and so is equivalent to
+      nothing, which means both conditions must answer No unconditionally for it,
+      and neither does. The suppression direction is the damaging one - a series
+      no other group is equivalent to gets dropped from the best patient series
+      list because some unrelated group has a complete or a Risk series.
+
+      Reds 4-6 are the 2026-09-05 "Chapter 8 has no series group" cross-cutting
+      entry, confirmed from 8.8's side and recorded there together with a closing
+      synthesis for the whole chapter now that all eight units are tested. The
+      shape 8.8 contributes that no earlier unit could: the two halves land on
+      different parts of the same class. The constructor's loop over the
+      prioritized list filters by
+      getTargetDisease().equals(dataModel.getAntigen()) and is CORRECT (pinned
+      green by theStepEvaluatesOnlyThePrioritizedPatientSeriesOfTheAntigenBeing
+      Processed), though dead in practice since 4.5 clears the prioritized list
+      every pass and 8.7 adds one entry; the conditions then scan
+      dataModel.getPatientSeriesStepper().getList() instead. And the two
+      outward-looking conditions do not agree with each other: condition 2
+      filters by antigen before checking completeness, condition 5 has no antigen
+      filter of any kind. theRiskElsewhereConditionAsksOnlyAboutThePatientSeries
+      OfTheAntigenBeingProcessed (expected the HepA Standard series to be a best
+      patient series, actual not - one Measles Risk series anywhere in the
+      assessment suppresses it) is the cleanest demonstration of the antigen half
+      in the whole chapter. theCompleteSeriesConditionAsksOnlyAboutPrioritized
+      PatientSeries and theRiskElsewhereConditionAsksOnlyAboutPrioritizedPatient
+      Series (both expected the prioritized Standard series to be best, actual
+      not) are the stage half, and 8.8 is where it needs no interpretation to
+      call: Table 8-14's conditions say "Is there a PRIORITIZED patient series
+      ..." in the specification's own words, so the right list here is
+      prioritizedPatientSeriesList - the one the class already iterates in its
+      constructor and then does not consult in its conditions - rather than
+      scorablePatientSeriesList, which is the answer for 8.2-8.7.
+
+      Checked and not a problem in 8.8, recorded so a Role B session does not
+      re-derive it. (a) The unreset patient series score: 8.8 reads no score at
+      all - Table 8-14's conditions read PatientSeriesStatus and SeriesType only,
+      and the class contains no reference to getScorePatientSeries - so the
+      2026-09-02 cross-cutting entry's prediction that 8.8 would add nothing to
+      it holds, and is noted there. (b) The contraindication chain: 8.8 reads
+      only PatientSeriesStatus.COMPLETE, never CONTRAINDICATED, so it is not a
+      consumer of the 2026-09-04 schedule-level Supporting Data entry; it is
+      upstream of MultipleAntigenVaccineGroup only by way of
+      bestPatientSeriesList. (c) LogicTable.evaluate()'s "does not stop at the
+      first matching rule column" defect does not bite here: Table 8-14's three
+      columns are mutually exclusive on condition 1 alone (Yes / No / No plus
+      differing condition 4), so at most one ever validates, and even if two did
+      the three outcome bodies are identical. (d) The best patient series list is
+      the one Chapter 8 output that outlives an antigen pass - 4.5 creates it
+      once and never clears it - and 8.8 correctly appends rather than replaces
+      (theBestPatientSeriesListAccumulatesAcrossAntigenPasses, green).
+
+      One documentation correction for 08-08's index.md, not worth a finding.
+      Its [IMPLEMENTATION] paragraph says the two equivalent-series-group
+      conditions "scan every OTHER patient series in
+      dataModel.getPatientSeriesStepper().getList()". They scan every patient
+      series including the prioritized one being judged; the word "OTHER" is
+      wrong. It happens not to change any outcome, because condition 2 only
+      matters on rule columns where condition 1 already answered "not complete"
+      and condition 5 only matters on Rule 3, which requires the series itself
+      not to be Risk - so in both cases the series cannot be its own answer. The
+      paragraph also does not mention that condition 5, unlike condition 2, has
+      no antigen filter.
   '9.1':
     test_status: not_started
     test_class: null

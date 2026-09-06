@@ -33,6 +33,99 @@ single-unit fixes after. That sequencing decision itself isn't written yet
 
 ---
 
+## 2026-09-05 - `<equivalentSeriesGroups>` is in every antigen series in the release, is parsed nowhere, and two of Table 8-14's five conditions are defined entirely over it
+
+**Discovered while testing:** 8.8 Determine Best Patient Series
+(`DetermineBestPatientSeriesTest`)
+
+**Affected component:** `DataModelLoader`'s `<series>` child loop (around lines
+447-481 - it handles `seriesName`, `targetDisease`, `seriesType`,
+`requiredGender` and `selectSeries`, and silently skips `equivalentSeriesGroups`),
+`domain/AntigenSeries.java` (the class that element belongs on - it is a direct
+child of `<series>`, a sibling of `<seriesType>`, **not** inside `<selectSeries>`
+where `seriesGroup`/`seriesGroupName` live), and the consumers of the concept:
+`DetermineBestPatientSeries` (8.8) and, per 4.6's own text, the vaccine group
+blending in 4.6/Chapter 9.
+
+**What's wrong:** the specification defines the term in 4.5 - "A best patient
+series will be selected for each Series Group, however, some antigen series
+define **Equivalent Series Groups** which allow a single best series to be
+selected from across multiple Series Groups" - and Chapter 8's overview repeats
+it ("the prioritized patient series from one series group may negate the need for
+the prioritized patient series from another **equivalent** series group"). It is
+not an inference to be made at runtime: it is a declared Supporting Data value.
+Every one of the 143 `<series>` elements in the bundled 4.65-508 release carries
+an `<equivalentSeriesGroups>` element naming the series group(s) its own group is
+interchangeable with. 54 are populated (37 hold "2", 15 hold "1", 2 hold "3") and
+89 are self-closing, i.e. equivalent to nothing. HepA is the clean illustration:
+the Standard group's series (series group 1) declares "2", the Increased Risk
+group's series (series group 2) declare "1" - each pointing at the other, so the
+two groups are equivalent - and the single Increased Risk - Pediatric Travel
+series (series group 3) declares an empty element and is equivalent to nothing.
+
+Nothing in `cdsi-engine` or `cdsi-web` mentions the name (verified by grep: zero
+hits for `equivalentSeriesGroups` in any `.java` file, against 1419 occurrences
+across the XML resources), and no domain class has a field for it. So the value
+is not merely unread, as `seriesGroup`/`seriesGroupName` are - it is never
+parsed, and there is nowhere to put it if it were.
+
+**Why that matters more than it looks:** two of Table 8-14's five conditions are
+defined *entirely* over this value - "Is there a prioritized patient series that
+is a complete patient series **in an equivalent series group**?" and "Is there a
+prioritized patient series with a series type of 'Risk' **in an equivalent series
+group**?" - and they are the only two conditions in the table that look outside
+the series being judged. `DetermineBestPatientSeries` answers them over the whole
+antigen (condition 2) or over the whole assessment (condition 5) instead, so for
+the 89 series that declare no equivalent series group at all - the majority of
+the release - both conditions should answer No unconditionally and neither ever
+does. This is the *suppression* direction, which is the damaging one: a series
+that no other group is equivalent to is dropped from the best patient series list
+because some unrelated group's series is complete, or is a Risk series. 4.6 needs
+the same value from the other end ("For vaccine groups which contain
+non-equivalent series groups, it is important to only blend best patient series
+of the same series type"), so this is not confined to 8.8.
+
+**Confirmed live in 8.8:** three of `DetermineBestPatientSeriesTest`'s six red
+tests. `theEquivalentSeriesGroupsTableEightFourteenTurnsOnAreCarriedByTheDomain
+Model` is the "can the condition even be expressed?" test (the same shape as
+6.2/7.1/7.6's conditional skip context): reflecting over `AntigenSeries` and
+`SelectPatientSeries` finds no accessor mentioning "equivalent" at all.
+`theCompleteSeriesConditionAnswersNoForASeriesThatDeclaresNoEquivalentSeries
+Group` and `theRiskElsewhereConditionAnswersNoForASeriesThatDeclaresNoEquivalent
+SeriesGroup` show the consequence with HepA's real group numbers: a prioritized
+patient series in the pediatric travel group (which is equivalent to nothing) is
+excluded from the best patient series list because the Standard group has a
+complete series, and again because the Increased Risk group has a Risk series.
+`theReleaseDeclaresTheEquivalentSeriesGroupsTableEightFourteenNeeds` (green) is
+the companion evidence that the data really is in the bundled release. Not
+observable via FITS, which asserts the final forecast rather than which series
+were selected as best.
+
+**Known affected units:** 8.8 (confirmed, 3 of its 6 red tests). 4.6 Identify and
+Evaluate Vaccine Group is a second consumer by its own section text and has not
+been checked against this.
+
+**Suggested handling:** this is a loader plus domain-model change (parse the
+element onto `AntigenSeries` as a list of series group identifiers, then have
+8.8's two conditions ask "is this other series' series group in my series'
+equivalent series groups?"), not a fix inside `DetermineBestPatientSeries`. It is
+closely related to, but **not the same as**, the "Chapter 8 has no series group"
+entry below: that one is about a missing loop and about `seriesGroup` being
+loaded and never read, while this is about a value that never arrives at all.
+They should be sequenced together, because the equivalence relation is meaningless
+without the series group it relates - but note the ordering, which is the useful
+part: introducing the series group loop *without* this value would make Chapter 8
+per-group and then leave 8.8 unable to ask either of its two cross-group
+questions, which is a worse state than today for the 10 of the release's 30
+antigens whose groups genuinely are equivalent (HepB with 16 populated elements,
+Pneumococcal 7, HepA/HPV/Hib 6 each, RSV 4, Meningococcal B and Zoster 3 each,
+COVID-19 2, Meningococcal 1). Both halves of the data are needed before either of
+Table 8-14's last two conditions can be right.
+
+**Status:** open, not yet fixed, not yet a formal finding.
+
+---
+
 ## 2026-09-05 - CVX-to-antigen association age is parsed nowhere, so one administered dose can be misassigned to the wrong antigen
 
 **Discovered while testing:** 4.2 Organize Immunization History
@@ -363,13 +456,95 @@ series-group loop this entry describes therefore has to be introduced between
 4.5 and 8.1 *and* 4.5's clear has to move with it; it cannot be retrofitted
 inside 8.7 alone.
 
+**Updated 2026-09-05, from 8.8's side (`DetermineBestPatientSeriesTest`) - the
+last unit of the chapter, so this update also closes the chapter out.** 8.8
+confirms the list-choice table above by test, and it splits this entry's two
+halves apart more cleanly than any earlier unit, because in 8.8 they land on
+*different parts of the same class*:
+
+- **The step's outer loop is correct on the antigen axis, and green.**
+  `theStepEvaluatesOnlyThePrioritizedPatientSeriesOfTheAntigenBeingProcessed`
+  passes: the constructor iterates `dataModel.getPrioritizedPatientSeriesList()`
+  and skips any entry whose `getTargetDisease()` is not `dataModel.getAntigen()`.
+  Worth noting that this filter is dead in practice - 4.5 clears the prioritized
+  list on every antigen pass and 8.7 adds exactly one entry to it, so it can never
+  have anything to exclude - but it is *correct*, which matters for the remedy
+  below. That makes **three** of the eight Chapter 8 steps already right on the
+  antigen axis (8.4, 8.7, 8.8), not two.
+- **Its conditions are not.** The class's field initializer captures
+  `dataModel.getPatientSeriesStepper().getList()`, and both of Table 8-14's
+  "equivalent series group" conditions scan it. This is 8.2's "inconsistent
+  *within* a class" observation in its sharpest form yet, and inconsistent in a
+  new way: 8.2 was inconsistent between conditions of one table, 8.8 is
+  inconsistent between the loop that *chooses what to judge* and the conditions
+  that *judge it*. Worse, the two conditions do not even agree with each other -
+  condition 2 filters `getTargetDisease().equals(dataModel.getAntigen())` before
+  looking at completeness, and condition 5 has **no antigen filter of any kind**,
+  so it answers Yes if any patient series anywhere in the assessment is a Risk
+  series. `theRiskElsewhereConditionAsksOnlyAboutThePatientSeriesOfTheAntigen
+  BeingProcessed` (red) is the cleanest single demonstration in the chapter: one
+  Measles Risk series on the stepper stops a HepA Standard series being a best
+  patient series.
+
+8.8 also adds a **stage** consequence the earlier units could not, because 8.8 is
+the only Chapter 8 step whose conditions ask about *prioritized* patient series
+by name. Table 8-14's conditions 2 and 5 both begin "Is there a **prioritized**
+patient series ..."; the implementation scans the stepper, which is 5.1's
+unfiltered list of every relevant patient series for every antigen. So a series
+8.1 excluded, or one that simply lost 8.7's selection for its group, still
+suppresses the winner - `theCompleteSeriesConditionAsksOnlyAboutPrioritized
+PatientSeries` and `theRiskElsewhereConditionAsksOnlyAboutPrioritizedPatient
+Series`, both red. This is the same wrong-pipeline-stage error 8.4 and 8.7 have,
+but 8.8 is where the specification names the right stage in the condition text
+itself, so it needs no interpretation to call it: the correct list here is not
+`scorablePatientSeriesList` either, it is `prioritizedPatientSeriesList` - the
+list 8.8 already iterates in its own constructor and then does not consult in its
+conditions.
+
+**Closing the chapter (all eight units now have a Role A pass).** Three things
+are worth recording now that the whole of Chapter 8 has been tested, which no
+single unit's update could say:
+
+1. **Every one of the eight steps is wrong about scope, and no two are wrong the
+   same way.** Not one of the eight is correct on all three axes. The tally: on
+   the *antigen* axis 8.4, 8.7 and 8.8's loop are right and 8.1, 8.2 (partly),
+   8.3, 8.5, 8.6 and 8.8's conditions are wrong; on the *stage* axis only 8.1 (the
+   step that builds the scorable list) is right by construction, and 8.4, 8.5,
+   8.6, 8.7 and 8.8 all read a list from the wrong stage of the pipeline; on the
+   *series group* axis all eight are wrong, because the loop does not exist. There
+   is no consistent convention anywhere in the chapter to preserve or extend -
+   8.2 filters in 3 of 4 conditions, 8.3 in 0 of 3, 8.8 in its loop but in only 1
+   of its 2 outward-looking conditions - which retires for good the idea that the
+   chapter-wide fix can be implemented by making each class agree with its
+   neighbours.
+2. **The severity escalates monotonically along the chapter, and the last step is
+   the worst place for it.** 8.1/8.2 a contaminated count; 8.3 a flipped branch;
+   8.4 a lost comparison; 8.5 a sticky boolean; 8.6 an outcome nobody can win;
+   8.7 a stray series winning outright; 8.8 a *correct* winner being suppressed by
+   a series that was never in the running. Every earlier step's damage is still
+   recoverable by a later step in principle; 8.8's is not, because
+   `bestPatientSeriesList` is what 4.6 and Chapter 9 consume and nothing revisits
+   it.
+3. **The remedy now has three parts, not two.** This entry has been tracking a
+   scope (antigen) and a stage (which list), and 8.4's update added that the fix
+   has to name a stage rather than only a scope. 8.8 adds the third: the series
+   group loop cannot be introduced on its own either, because two of Table 8-14's
+   five conditions are defined over *equivalent* series groups, and that value is
+   never parsed from the Supporting Data at all. See the separate 2026-09-05
+   entry on `<equivalentSeriesGroups>`. Sequencing consequence: introducing the
+   series group loop without also loading the equivalence data would make 8.8
+   unable to ask either of its cross-group questions, which is worse than today
+   for the 10 antigens whose groups genuinely are equivalent.
+
 **Known affected units:** 8.1 (confirmed, 4 of its 8 red tests), 8.2 (confirmed,
 2 of its 5 red tests), 8.3 (confirmed, 2 of its 4 red tests), 8.4 (confirmed,
 2 of its 8 red tests), 8.5 (confirmed, 3 of its 18 red tests), 8.6
-(confirmed, 3 of its 18 red tests) and **8.7** (confirmed 2026-09-05, 3 of its 5
-red tests - one stage, two series group; its antigen scope is correct and green).
-8.8 has not had a Role A pass yet as of this note; the list-choice table above is
-from reading its source, not from tests.
+(confirmed, 3 of its 18 red tests), **8.7** (confirmed 2026-09-05, 3 of its 5
+red tests - one stage, two series group; its antigen scope is correct and green)
+and **8.8** (confirmed 2026-09-05, 3 of its 6 red tests - one antigen, two stage;
+its outer loop's antigen scope is correct and green, its conditions' is not; its
+other 3 reds are the `<equivalentSeriesGroups>` entry above). All eight units of
+Chapter 8 have now had a Role A pass.
 4.5 is *not* affected - it does its half correctly, on the antigen axis, which is
 the only half it owns.
 
@@ -403,9 +578,11 @@ pre-filter back out of the loop for two more steps.
 side (2026-09-05), 8.2's side (2026-09-05), 8.3's side (2026-09-05), 8.4's
 side (2026-09-05, which corrects the suggested remedy), 8.5's side
 (2026-09-05, the first tested step that reads the stepper itself), 8.6's side
-(2026-09-05, where a stray series makes the row's +1 unawardable to anyone) and
+(2026-09-05, where a stray series makes the row's +1 unawardable to anyone),
 8.7's side (2026-09-05, where a stray series wins the selection outright, and
-where the antigen axis is confirmed already correct). **Note the sequencing
+where the antigen axis is confirmed already correct) and 8.8's side
+(2026-09-05, where one class is correct in its loop and wrong in its conditions,
+and which closes out the chapter - see the closing synthesis above). **Note the sequencing
 constraint the score-accumulation entry below now places on this one: a partial
 fix here - re-scoping 8.3 without also re-scoping 8.5/8.6 - would activate that
 latent defect. See its 2026-09-05 update from 8.7's side.**
@@ -1023,8 +1200,15 @@ state" does not bite in practice, because "0" contributes 0 to `d_i` and so stay
 pinned green in both; neither confirms the accumulation changes an outcome) and
 **8.7** (confirmed 2026-09-05: the consumer's comparison is on raw accumulated
 totals - 1 red test - but the accumulation is provably uniform today, so no
-selection is changed - 1 green test pinning that). 8.8 has not had a Role A pass
-yet as of this update; it reads no score, so it is not expected to add anything.
+selection is changed - 1 green test pinning that). **8.8** had its Role A pass on
+2026-09-05 and the prediction above holds exactly: `DetermineBestPatientSeries`
+reads no score at all (Table 8-14's five conditions read `PatientSeriesStatus`
+and `SeriesType` only, and the class contains no reference to
+`getScorePatientSeries`), so it contributes no red or green test here and adds
+nothing to this entry. That also confirms fact 1 of the materiality argument
+above from the last remaining direction: with all eight Chapter 8 units now
+tested, 8.7 really is the only reader of the score in the chapter, and no
+*condition* anywhere reads it.
 
 **Suggested handling:** no longer "needs its own investigation". Two things
 follow instead. First, **resetting the score is not urgently needed and should
