@@ -1,0 +1,21 @@
+id: acip-4.6-sd-4.65-fits-222cc1c7
+logic_spec:
+  version: '4.6'
+  source_sha256: 9b00d92d90629832d82fc41855847b03c8548d9564480cab68cc391a7b824a9e
+supporting_data:
+  release_id: '4.65'
+  source_filename: supporting-data-4.65-508.zip
+  bundle_sha256: 741b8fd21c77887c4d2dc9ce1119a58d2659152007bda6791ffc57fdc098ce3d
+fits_fixture_set:
+  sha256: 222cc1c7c2857987711895f2af8de0074b45fc85d6f784dae47ad00aa42cce1d
+  case_count: 4896
+created_at: '2026-09-07T16:08:35Z'
+status: active
+notes: 'Supersedes acip-4.6-sd-4.65-fits-8183b45d: that reference set''s recorded
+  FITS fixture checksum no longer matches the committed fixture content (case count
+  unchanged at 4896, so no fixtures were added/removed - the byte-level drift traces
+  to the fixture files being checked out with CRLF line endings under core.autocrlf=true
+  while the recorded checksum predates the .gitattributes ''binary'' rule added to
+  prevent that; the root discrepancy against the original 8183b45d hash predates this
+  investigation and could not be further reconstructed). Regenerated 2026-09-07 while
+  establishing a Phase 22 (SupportingDataModel/DataModel split) before/after baseline.'
