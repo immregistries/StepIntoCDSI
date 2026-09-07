@@ -1,0 +1,41 @@
+id: "2026-09-07-phase-22-supporting-data-model-split"
+date: "2026-09-07"
+phase: 22
+title: "Separate Static Supporting Data From Per-Run Forecast State"
+before:
+  commit: "b9f3f4f"
+  engine_tests:
+    total: 764
+    failures: 192
+    errors: 1
+  fits:
+    total_cases: 4896
+    passed: 3364
+    failed_assertions: 1531
+    execution_errors: 1
+  fits_runtime_seconds: 457.5
+after:
+  commit: "9ccbf22"
+  engine_tests:
+    total: 767
+    failures: 192
+    errors: 1
+  fits:
+    total_cases: 4896
+    passed: 3364
+    failed_assertions: 1531
+    execution_errors: 1
+  fits_runtime_seconds: 39.9
+summary: >-
+  Split DataModel into a shared, cached SupportingDataModel (static
+  Supporting Data, loaded once) and a slimmed DataModel (per-run mutable
+  state only), so DataModelLoader.createDataModel no longer re-parses the
+  Supporting Data ZIP on every FITS case. Every cdsi-engine test and every
+  FITS case (3,364 passed / 1,531 failed-assertion / 1 execution-error, on
+  both sides) is byte-for-byte identical before and after - the three new
+  engine_tests total came from three added regression tests, not a
+  behavior change. Full FITS suite runtime dropped 11.5x, from 457.5s to
+  39.9s.
+details_doc: "docs/29-phase-22-before-after.md"
+finding_ids: []
+status: reviewed

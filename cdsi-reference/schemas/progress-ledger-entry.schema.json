@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stepintocdsi/cdsi-reference/schemas/progress-ledger-entry.schema.json",
+  "title": "progress-ledger/entries/<id>.yaml",
+  "description": "Phase 23: a reviewed before/after record for one Phase B round - the SupportingDataModel/DataModel split (Phase 22), or later a clinical-logic repair round. Immutable once created, like reference-sets/<id>.yaml - a round that needs correcting gets a new entry, not an edit to an old one. This is not a substitute for a unit's own status.yaml notes, a finding, or a docs/NN-*.md narrative (details_doc points at that) - it exists only to hold the small set of numbers a dashboard needs to render a timeline, so those don't have to be re-parsed out of prose.",
+  "type": "object",
+  "required": ["id", "date", "phase", "title", "before", "after", "summary", "status"],
+  "properties": {
+    "id": { "type": "string", "description": "Must match the filename stem (entries/<id>.yaml)." },
+    "date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "phase": { "type": "integer", "minimum": 1, "description": "The reference-module plan phase this round belongs to, e.g. 22." },
+    "title": { "type": "string" },
+    "before": { "$ref": "#/$defs/snapshot" },
+    "after": { "$ref": "#/$defs/snapshot" },
+    "summary": { "type": "string", "description": "2-3 reviewer-facing sentences: what changed and why the before/after comparison shows it's safe (or, for a round that isn't, what regressed and what's being done about it)." },
+    "details_doc": { "type": ["string", "null"], "description": "Repo-relative path to the full prose record this entry summarizes, e.g. docs/29-phase-22-before-after.md. Null only for a round with no separate narrative doc." },
+    "finding_ids": { "type": "array", "items": { "type": "string" }, "description": "SPEC-<version>-NNNN findings this round resolved or is otherwise related to, if any." },
+    "status": {
+      "type": "string",
+      "enum": ["reviewed", "pending_review"],
+      "description": "pending_review: recorded but the project owner hasn't signed off yet. reviewed: the project owner has reviewed this entry's before/after and summary."
+    }
+  },
+  "$defs": {
+    "snapshot": {
+      "type": "object",
+      "required": ["commit", "engine_tests", "fits"],
+      "properties": {
+        "commit": { "type": "string", "description": "Short git commit hash this snapshot was measured at." },
+        "engine_tests": {
+          "type": "object",
+          "required": ["total", "failures", "errors"],
+          "properties": {
+            "total": { "type": "integer", "minimum": 0 },
+            "failures": { "type": "integer", "minimum": 0 },
+            "errors": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        "fits": {
+          "type": "object",
+          "required": ["total_cases", "passed", "failed_assertions", "execution_errors"],
+          "properties": {
+            "total_cases": { "type": "integer", "minimum": 0 },
+            "passed": { "type": "integer", "minimum": 0 },
+            "failed_assertions": { "type": "integer", "minimum": 0 },
+            "execution_errors": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        "fits_runtime_seconds": { "type": ["number", "null"], "description": "Full FitsFixtureTest run.json elapsed time, null if not measured for this round." }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -9,7 +9,7 @@ import html
 from pathlib import Path
 from typing import Optional
 
-from . import fits_dashboard, paths, step_test_status
+from . import fits_dashboard, paths, progress_ledger, step_test_status
 
 
 def default_output_path() -> Path:
@@ -47,16 +47,44 @@ def _fits_summary() -> Optional[dict]:
     }
 
 
+def _progress_ledger_summary() -> Optional[dict]:
+    entries = progress_ledger.load_all_entries()
+    if not entries:
+        return None
+    latest = entries[-1]
+    started_runtime = entries[0]["before"].get("fits_runtime_seconds")
+    now_runtime = latest["after"].get("fits_runtime_seconds")
+    reduction_pct = None
+    if started_runtime and now_runtime and started_runtime > 0:
+        reduction_pct = round(100 * (1 - now_runtime / started_runtime), 1)
+    return {
+        "entries": len(entries),
+        "latest_title": latest.get("title"),
+        "reduction_pct": reduction_pct,
+    }
+
+
 def render_index() -> str:
     generated_at = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     step = _step_tests_summary()
     fits = _fits_summary()
+    ledger = _progress_ledger_summary()
 
     if fits:
         fits_stat = f"""<div class="stat">{fits['pass_pct']}%</div>
     <div class="stat-label">{fits['passed']}/{fits['total']} FITS cases passing - reference set {_esc(fits['reference_set'])}</div>"""
     else:
         fits_stat = '<p class="muted">No FITS run bundle found yet.</p>'
+
+    if ledger:
+        reduction_line = (
+            f" - {ledger['reduction_pct']}% FITS runtime reduction since the start"
+            if ledger["reduction_pct"] is not None else ""
+        )
+        ledger_stat = f"""<div class="stat">{ledger['entries']}</div>
+    <div class="stat-label">reviewed round{"s" if ledger['entries'] != 1 else ""}{reduction_line} - latest: {_esc(ledger['latest_title'])}</div>"""
+    else:
+        ledger_stat = '<p class="muted">No reviewed rounds recorded yet.</p>'
 
     return f"""<!doctype html>
 <html lang="en">
@@ -107,6 +135,11 @@ def render_index() -> str:
     <h2>FITS Conformance (Phase 17)</h2>
     <p class="desc">The NIST FITS end-to-end conformance suite, broken down by vaccine group.</p>
     {fits_stat}
+  </a>
+  <a class="tile" href="progress-ledger.html">
+    <h2>Phase B Progress Ledger (Phase 23)</h2>
+    <p class="desc">Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.</p>
+    {ledger_stat}
   </a>
 </div>
 

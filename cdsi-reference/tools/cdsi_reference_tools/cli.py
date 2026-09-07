@@ -9,6 +9,9 @@
     python -m cdsi_reference_tools step-tests status --version 4.6
     python -m cdsi_reference_tools step-tests dashboard --version 4.6
     python -m cdsi_reference_tools fits-tests dashboard
+    python -m cdsi_reference_tools progress-ledger list
+    python -m cdsi_reference_tools progress-ledger validate
+    python -m cdsi_reference_tools progress-ledger dashboard
     python -m cdsi_reference_tools dashboards index
 """
 
@@ -22,6 +25,7 @@ from . import (
     extract,
     fits_dashboard,
     network_guard,
+    progress_ledger,
     reference_sets,
     step_test_dashboard,
     step_test_status,
@@ -209,6 +213,29 @@ def _cmd_fits_tests_dashboard(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_progress_ledger_list(args: argparse.Namespace) -> int:
+    print(progress_ledger.render_ledger_table())
+    return 0
+
+
+def _cmd_progress_ledger_validate(args: argparse.Namespace) -> int:
+    problems = progress_ledger.validate_entries()
+    if not problems:
+        print("Progress ledger: valid.")
+        return 0
+    print(f"Progress ledger: {len(problems)} problem(s):")
+    for p in problems:
+        print(f"  - {p}")
+    return 1
+
+
+def _cmd_progress_ledger_dashboard(args: argparse.Namespace) -> int:
+    out = Path(args.out) if args.out else None
+    dest = progress_ledger.write_dashboard(out)
+    print(f"Wrote {dest}")
+    return 0
+
+
 def _cmd_dashboards_index(args: argparse.Namespace) -> int:
     out = Path(args.out) if args.out else None
     dest = dashboard_index.write_index(out)
@@ -311,6 +338,22 @@ def build_parser() -> argparse.ArgumentParser:
         "dashboard", help="Write the latest FITS diagnostic bundle as a static HTML file, by group")
     p_fits_dashboard.add_argument("--out", default=None, help="Defaults to dashboards/fits-results.html")
     p_fits_dashboard.set_defaults(func=_cmd_fits_tests_dashboard)
+
+    progress_ledger_parser = subparsers.add_parser(
+        "progress-ledger", help="Phase 23: reviewed before/after record of each Phase B round")
+    progress_ledger_sub = progress_ledger_parser.add_subparsers(dest="action", required=True)
+
+    p_pl_list = progress_ledger_sub.add_parser("list", help="Text table of every reviewed round")
+    p_pl_list.set_defaults(func=_cmd_progress_ledger_list)
+
+    p_pl_validate = progress_ledger_sub.add_parser(
+        "validate", help="Check every entry against the schema and its filename")
+    p_pl_validate.set_defaults(func=_cmd_progress_ledger_validate)
+
+    p_pl_dashboard = progress_ledger_sub.add_parser(
+        "dashboard", help="Write the progress ledger timeline as a static HTML file")
+    p_pl_dashboard.add_argument("--out", default=None, help="Defaults to dashboards/progress-ledger.html")
+    p_pl_dashboard.set_defaults(func=_cmd_progress_ledger_dashboard)
 
     dashboards_parser = subparsers.add_parser("dashboards", help="Cross-dashboard commands")
     dashboards_sub = dashboards_parser.add_subparsers(dest="action", required=True)
