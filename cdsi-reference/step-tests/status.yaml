@@ -3764,12 +3764,167 @@ units:
       fully covered for both of Table 9-3's named rules and for all eight of the
       class's own additional labels.
   '9.3':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.MultipleAntigenVaccineGroupTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      34 tests, 25 green and 9 red. The section owns one decision table and two
+      business rules: Table 9-4 (a six-condition cascade deciding the vaccine
+      group status), MULTIANTVG-1 (the earliest date) and FORECASTPRIORITY-1
+      (which contained forecasts are priority patient series forecasts). There is
+      one test per Table 9-4 rule column plus a cascade-precedence test and a
+      both-status-fields test; three tests for MULTIANTVG-1 (its two branches and
+      the priority branch's second term); three for FORECASTPRIORITY-1 (its "at
+      least one preferable interval" and "every preferable interval" clauses, and
+      the no-interval case). Beyond the section's own two rules, 9.3's State
+      Changes record that this class is where 9.1's Table 9-2 aggregation
+      actually runs, so there is also one test per FORECASTVG-2 through
+      FORECASTVG-9 rule (labelled MULTIANTVG_2()..MULTIANTVG_9 in code, labels
+      the specification does not define), the FORECASTVG-1 containment and
+      FORECASTDN-2 probes, and the section's Entry Conditions, State Changes
+      scope and unconditional Next Step. Isolation is a hand-built DataModel - an
+      MMR vaccine group classifying Measles/Mumps/Rubella plus a best patient
+      series list - with the constructor and process() called directly; no
+      Supporting Data release is loaded, because 9.3 reads none.
+
+      Green - all six of Table 9-4's rule columns, its cascade precedence at each
+      of the four "any" boundaries, and both status fields agreeing for every
+      outcome (this table extracts and implements cleanly, confirming 9.3's
+      Review Findings, and it is also the direct confirmation that this class
+      really is a downstream consumer of PatientSeriesStatus.CONTRAINDICATED as
+      the 2026-09-04 schedule-level Supporting Data entry says); MULTIANTVG-1's
+      non-priority branch (the latest earliest date of all contained forecasts);
+      FORECASTPRIORITY-1's no-preferable-interval case; FORECASTVG-2 and
+      FORECASTVG-3 in both of their terms (the minimum across contained
+      forecasts, and the floor at the vaccine group forecast's own earliest
+      date); FORECASTVG-4, 5 and 6; FORECASTVG-7's "every distinct reason
+      survives"; FORECASTVG-8 in the ordinary Not Complete case; the forecast
+      being attributed to the current vaccine group and recording all three
+      contributing antigens; a best patient series for an antigen the group does
+      not classify contributing neither status, date nor antigen; one run
+      producing exactly one vaccine group forecast; the unconditional return to
+      section 9 on all three paths (Not Complete, Complete, and no matching
+      series); and the six-condition/six-outcome shape of the table itself.
+
+      Red, and why - (1)
+      multiantvgOneOnePriorityForecastMakesTheEarliestDateTheEarliestOfAllContainedForecasts:
+      expected 03/01/2024, actual 06/01/2024. MULTIANTVG-1 is a two-branch rule
+      chosen once for the whole group ("if ANY contained forecast is a priority
+      patient series forecast"), and its priority branch takes the earliest date
+      of ALL contained forecasts. MULTIANTVG_1() instead seeds from the first
+      contained forecast and then decides per element, taking the minimum only
+      for elements that are themselves priority and the maximum otherwise - so a
+      non-priority forecast can still pull the group's earliest date later even
+      though a priority forecast is present, and the answer depends on the order
+      of bestPatientSeriesList. (2)
+      multiantvgOneThePriorityBranchIsNoEarlierThanTheLatestDoseAdministeredInTheVaccineGroup:
+      expected 12/01/2024, actual 06/01/2024. The priority branch is "the LATER
+      of (the earliest date of all contained patient series forecasts; the latest
+      date administered of any vaccine dose administered belonging to the vaccine
+      group)" and MULTIANTVG_1() never reads a vaccine dose administered at all -
+      it touches neither dataModel.getImmunizationHistory() nor
+      VaccineGroup.getVaccineList(). This resolves the "not fully re-derived"
+      item in 9.3's own Review Findings: the clause is not incorporated. (3)
+      forecastpriorityOneATargetDoseWhosePreferableIntervalHasThePriorityFlagIsAPriorityForecast:
+      expected 06/01/2024, actual 09/01/2024, and (4)
+      forecastpriorityOneOneUnflaggedPreferableIntervalMeansTheForecastIsNotAPriorityForecast:
+      expected 09/01/2024, actual 06/01/2024. FORECASTPRIORITY-1 is defined over
+      the TARGET DOSE's preferable intervals - "its target dose has at least one
+      preferable interval, and EVERY preferable interval for that target dose has
+      an interval priority flag of 'Y'" - i.e. a universal quantifier over
+      targetDose.getTrackedSeriesDose().getIntervalList(). MULTIANTVG_1() instead
+      reads the single Forecast.getInterval().getIntervalPriority(), so it misses
+      a priority target dose whose forecast carries no interval (test 3) and
+      treats a target dose with one flagged and one unflagged preferable interval
+      as priority when the rule says it is not (test 4). Both reds are in the
+      same three lines of MULTIANTVG_1() as reds 1 and 2; the four together are
+      one rewrite, not four fixes. Note for whoever does it that the release
+      spells the flag "override", not the specification's 'Y' - 90 of the 1492
+      intervalPriority elements in the bundled 4.65-508 release are populated and
+      all 90 hold that one value, which DataModelLoader maps to
+      IntervalPriority.OVERRIDE, the enum's only constant. (5)
+      forecastvgSevenAReasonSharedByTwoContainedForecastsAppearsOnceInTheUnion:
+      expected "Due Now", actual "Due NowDue Now". FORECASTVG-7 says the forecast
+      reasons are the UNION of the contained forecasts' reasons; MULTIANTVG_7()
+      concatenates the raw strings with no separator and no de-duplication. In a
+      multiple antigen group this is the common case rather than a corner case -
+      MMR's antigens are forecast from one combined vaccine and routinely become
+      due for the same reason at the same time. The missing separator is the same
+      defect seen from the other side: two distinct reasons also run together
+      into one unparseable string, which the union test above cannot catch
+      because it asserts containment. (6)
+      forecastvgEightTheAntigensNeededAreComputedWhateverTheVaccineGroupStatusIs:
+      expected [Mumps], actual []. FORECASTVG-8 asks about each CONTAINED
+      forecast's status, not the group's, but process() calls MULTIANTVG_1()
+      through MULTIANTVG_8() only inside "if (vgf.getVaccineGroupStatus() ==
+      NOT_COMPLETE)"; every other Table 9-4 outcome takes an else branch that
+      runs no aggregation. So a Contraindicated MMR group reports no recommended
+      antigens even when one component is still Not Complete - the case where a
+      monovalent recommendation would be based on it. The same gate suppresses
+      MULTIANTVG-1 and FORECASTVG-2..7, none of which carry a status
+      precondition in their own text either. (7)
+      theContainedPatientSeriesForecastsAreRecordedOnTheVaccineGroupForecast:
+      expected the two contributing Forecasts, actual []. FORECASTVG-1's
+      containment relation - VaccineGroupForecast.forecastList exists with a
+      getter and a setter and no code anywhere writes it; 9.3 assembles its own
+      selectedList of PatientSeries in the constructor instead. (8)
+      forecastvgNineAVaccineGroupForecastCanCarryItsRecommendedSeriesDoseVaccines
+      and (9) forecastdnTwoAVaccineGroupForecastCanCarryAForecastDoseNumber: the
+      "can the rule even be expressed?" probes used in 6.2/7.1/7.5/7.6/8.8/9.1/9.2,
+      red because VaccineGroupForecast carries neither a recommended-vaccine list
+      nor a dose number. Reds 6, 7, 8 and 9 are the 2026-09-07 cross-cutting
+      entry, which this pass updated in place from 9.3's side; it had predicted
+      exactly this (red on FORECASTVG-1 and FORECASTVG-9, green on FORECASTVG-8)
+      and all four predictions held. Reds 1-5 are this class's own defects.
+
+      Two new details recorded in that cross-cutting entry rather than only here,
+      because they cross the two branch classes. First, the NOT_COMPLETE gate
+      behind red 6 is a disagreement between siblings: SingleAntigenVaccineGroup
+      copies SINGLEANTVG-1..8 unconditionally for all six statuses, so a
+      Contraindicated HepB group reports its dates and reason and a
+      Contraindicated MMR group reports neither, from the same Table 9-2 rules -
+      whichever way that is settled has to be settled for both classes at once.
+      Second, 9.3 is not silent on FORECASTVG-9 the way the entry originally
+      said: the MULTIANTVG-9 block in process() builds a local
+      List<VaccineGroup> from each contained forecast's own
+      getVaccineGroupForecast().getVaccineGroup() and never reads or assigns it -
+      live dead code collecting the wrong type (vaccine groups, not series dose
+      vaccines), so it should be deleted rather than completed.
+
+      Checked and not a problem in 9.3, recorded so a Role B session does not
+      re-derive it. The contraindication chain: 9.3 does read
+      PatientSeriesStatus.CONTRAINDICATED (Table 9-4's first condition), so it is
+      the Chapter 9 consumer the 2026-09-04 entry names - but its consumer side
+      is correct and green once the status is supplied, exactly as 8.1's is, so
+      it contributes no red test to that entry and needs no change of its own for
+      it.
+
+      Deliberately not covered - (a) a multiple antigen vaccine group with no
+      contained forecast at all: Table 9-4's conditions 5 and 6 are "all"
+      questions that a mathematician would answer Yes vacuously and the class
+      answers No explicitly, after which no rule column matches and the field's
+      NOT_COMPLETE initializer stands. Table 9-4 defines no outcome for this
+      case, so it is a genuine SPECIFICATION_AMBIGUITY and is recorded here
+      rather than forced into a red test; the class does produce no forecast for
+      such a group, which is at least self-consistent. (b) The class's own table
+      label, "Table 9 - 3 WHAT IS THE VACCINE GROUP STATUS OF A MULTIPLE VACCINE
+      GROUP?" - the specification's number for it is 9-4 and 9-3 belongs to 9.2's
+      prose rules, so LogicStepRenderer prints a heading pointing a reader at the
+      wrong table. The same cosmetic shape as 9.1's red
+      theDecisionTableCitesTableNineTwo; not duplicated as a test here, noted so
+      a Role B session fixes both strings together. (c) FORECASTDN-2's
+      administerFullVaccineGroup branch selection: 9.1's unit already owns the
+      evidence that the flag is parsed, populated for exactly the two multiple
+      antigen groups, and read by nothing, and there is no dose number for it to
+      choose between. (d) vgf.setAntigen(antigenList.get(0)), the "primary
+      antigen" the class picks for a group that by definition classifies several
+      - no rule in Table 9-2, 9-4 or 9-5 says a multiple antigen vaccine group
+      forecast has one antigen, so there is nothing to assert against. Considered
+      fully covered for Table 9-4, MULTIANTVG-1 and FORECASTPRIORITY-1, and for
+      all of Table 9-2's rules this class carries.
   EVALUATE_GENDER:
     test_status: not_started
     test_class: null

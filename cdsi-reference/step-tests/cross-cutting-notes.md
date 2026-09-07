@@ -159,13 +159,78 @@ and eight implemented on both branches (FORECASTVG-2..7 plus VACCINEGROUP-1/2).
 9.2's other two reds are its own class's defects, not this entry, and are
 recorded in that unit's `status.yaml` notes.
 
+**Updated 2026-09-07, from 9.3's side (`MultipleAntigenVaccineGroupTest`) - the
+last of the three Chapter 9 units, so this update closes the entry's open
+predictions out.** All four predictions above hold exactly as stated, and 9.3
+adds one qualification and one new detail:
+
+1. **FORECASTVG-1: red, as predicted.** `MultipleAntigenVaccineGroup` assembles
+   its own `selectedList` of `PatientSeries` in the constructor and never
+   records which forecasts the group forecast was built from, so
+   `VaccineGroupForecast.forecastList` is empty on this branch too.
+   `theContainedPatientSeriesForecastsAreRecordedOnTheVaccineGroupForecast`
+   (expected the two contributing `Forecast`s, actual `[]`). With both branch
+   classes now tested, the claim "grep finds no writer anywhere" is confirmed by
+   test from both sides: nothing in the engine ever populates the containment
+   relation the whole chapter is written over.
+2. **FORECASTVG-9: red, as predicted - and it was attempted here too.** The
+   probe (`forecastvgNineAVaccineGroupForecastCanCarryItsRecommendedSeriesDose
+   Vaccines`) reports the same missing accessor as 9.1's and 9.2's. What is new
+   is that 9.3 is not silent about the rule the way the entry above implies
+   ("9.3's `MULTIANTVG_1()` through `MULTIANTVG_8()` never mention it"): the
+   `MULTIANTVG-9` block in `process()` (lines ~85-90) builds a local
+   `List<VaccineGroup> recommendedVaccines` from each contained forecast's own
+   `getVaccineGroupForecast().getVaccineGroup()` and then never reads or assigns
+   it. So both branch classes carry an abandoned FORECASTVG-9 - 9.2 as a comment
+   with the statement commented out, 9.3 as live dead code - and 9.3's version
+   additionally collects the wrong type (vaccine groups, not series dose
+   vaccines), which is worth knowing before anyone treats it as a partial
+   implementation to finish rather than delete.
+3. **FORECASTDN-2: red, as predicted**
+   (`forecastdnTwoAVaccineGroupForecastCanCarryAForecastDoseNumber`). Worth
+   recording that 9.3 is the step where this rule actually bites: both of the
+   flag's populated values in the release belong to multiple antigen groups, so
+   `SingleAntigenVaccineGroup` could never need either branch and
+   `MultipleAntigenVaccineGroup` needs both.
+4. **FORECASTVG-8: green, as predicted - but only for one of Table 9-4's six
+   outcomes.** `MULTIANTVG_8()` does exactly what the rule says
+   (`forecastvgEightTheAntigensNeededAreTheNotCompleteContainedForecastsTarget
+   Diseases`, green: a Not Complete Measles and a Not Complete Rubella in a
+   Complete-Mumps MMR group produce `[Measles, Rubella]`). The qualification is
+   that `process()` calls `MULTIANTVG_1()` through `MULTIANTVG_8()` **only**
+   inside `if (vgf.getVaccineGroupStatus() == VaccineGroupStatus.NOT_COMPLETE)`;
+   every other Table 9-4 outcome takes an `else` branch that builds the antigen
+   list and adds the forecast but runs no aggregation at all. FORECASTVG-8 is
+   defined over each *contained forecast's* status, not the group's, so an MMR
+   group that Table 9-4 Rule 1 makes Contraindicated because one component is
+   contraindicated reports no recommended antigens even when another component
+   is still Not Complete - which is precisely the case where a monovalent
+   recommendation would be based on it
+   (`forecastvgEightTheAntigensNeededAreComputedWhateverTheVaccineGroupStatusIs`,
+   expected `[Mumps]`, actual `[]`). The same gate suppresses MULTIANTVG-1 and
+   FORECASTVG-2..7, none of which carry a status precondition in their own text
+   either.
+
+That gate is why this belongs here rather than only in 9.3's notes: **the two
+branch classes disagree about it.** `SingleAntigenVaccineGroup` copies all of
+SINGLEANTVG-1..8 unconditionally, for every one of the six statuses (9.2's
+`singleantvgOneTheVaccineGroupStatusIsThePatientSeriesStatusOfTheContained
+Forecast` drives all six and is green); `MultipleAntigenVaccineGroup` runs its
+eight equivalents for one status only. So a Contraindicated HepB group reports
+its dates and reason and a Contraindicated MMR group reports neither, from the
+same Table 9-2 rules. Whichever way that is settled it has to be settled for
+both classes at once, which no single unit's Role B session can do - the same
+shape as the FORECASTVG-1 containment fix, and unlike it, not blocked on 7.5.
+
 **Known affected units:** 9.1 (confirmed, 2 of its 3 red tests), 7.5
 (confirmed from its own side earlier, 2 of its reds, recorded in that unit's
-notes) and **9.2** (confirmed 2026-09-07, 3 of its 6 red tests - SINGLEANTVG-10
+notes), **9.2** (confirmed 2026-09-07, 3 of its 6 red tests - SINGLEANTVG-10
 for FORECASTVG-9, plus the two corrections above for FORECASTVG-1 and
-FORECASTVG-8). 9.3 has not had a Role A pass yet; it is predicted to contribute
-a red on FORECASTVG-1 (it does not populate `forecastList` either) and on
-FORECASTVG-9, and to be green on FORECASTVG-8.
+FORECASTVG-8) and **9.3** (confirmed 2026-09-07, 4 of its 9 red tests -
+FORECASTVG-1, FORECASTVG-9, FORECASTDN-2 and the status-gated half of
+FORECASTVG-8). All three Chapter 9 units have now had a Role A pass; 9.3's other
+five reds are MULTIANTVG-1 and FORECASTPRIORITY-1 defects in its own class and
+are recorded in that unit's `status.yaml` notes.
 
 **Suggested handling:** one domain-model change, sequenced with 7.5 rather than
 with 9.1. `Forecast` needs a forecast dose number and a recommended series dose
@@ -182,11 +247,23 @@ FORECASTVG-8's single-antigen half is a one-line fix inside
 `SingleAntigenVaccineGroup`, and FORECASTVG-1's containment needs only that 9.2
 and 9.3 each add their contributing forecasts to the `forecastList` that is
 already on `VaccineGroupForecast`. Both are unit-local and can be done in 9.2's
-and 9.3's own Role B sessions.
+and 9.3's own Role B sessions. Per the 9.3 update above, a third piece now sits
+between the two sizes: the `NOT_COMPLETE` gate on 9.3's aggregation is a
+one-line change in `MultipleAntigenVaccineGroup`, but deciding *whether* to make
+it is a two-class decision, because `SingleAntigenVaccineGroup` already does the
+opposite. Sequence it with the FORECASTVG-8 one-liner - both are about the same
+rule, on the two halves of the same chapter - rather than with the 7.5 domain
+model work. Delete rather than complete 9.3's dead `MULTIANTVG-9` block when
+FORECASTVG-9 is finally implemented; it collects vaccine groups, not series dose
+vaccines.
 
 **Status:** open, not yet fixed, not yet a formal finding. Confirmed from 9.1's
-side (2026-09-07) and 9.2's side (2026-09-07, which corrects the rule count -
-see that update).
+side (2026-09-07), 9.2's side (2026-09-07, which corrects the rule count - see
+that update) and 9.3's side (2026-09-07, which closes out the entry's four open
+predictions - all held - and adds the `NOT_COMPLETE` gate as a two-class
+decision). All three Chapter 9 units have had a Role A pass, so no further
+confirmation of this entry is pending from Chapter 9; what remains open is
+7.5's half of the domain-model change.
 
 ---
 
