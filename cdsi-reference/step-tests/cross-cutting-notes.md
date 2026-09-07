@@ -107,11 +107,65 @@ FORECASTVG-9 takes the union of the lists FORECASTRECVAC-1 produces, so the
 vaccine group half cannot be fixed before the patient series half and there is no
 reason to fix them in two passes.
 
-**Known affected units:** 9.1 (confirmed, 2 of its 3 red tests) and 7.5
+**Updated 2026-09-07, from 9.2's side (`SingleAntigenVaccineGroupTest`).** 9.2
+confirms the `SINGLEANTVG-10`/FORECASTVG-9 half directly - its
+`singleantvgTenTheVaccineGroupForecastCanCarryItsRecommendedSeriesDoseVaccines`
+is 9.1's probe re-pointed at 9.2 and reports the same missing accessor - and it
+confirms 9.1's characterisation of `SINGLEANTVG-3` through `SINGLEANTVG-8`:
+they really are six plain single-field copies (adjusted recommended, adjusted
+past due, latest, unadjusted recommended, unadjusted past due, forecast reason),
+one statement each, and all six are green. But it also **corrects this entry's
+central count in two ways, and both corrections make the gap wider than "two
+rules have nowhere to write":**
+
+1. **A third rule of Table 9-2 is written by nobody, and this one is not for
+   want of a field.** `FORECASTVG-1` defines what it means for a patient series
+   forecast to be *contained in* a vaccine group forecast - and it is the input
+   clause of eight other rules, including **both** of Table 9-3's
+   (`SINGLEANTVG-1` and `SINGLEANTVG-2` are each phrased over "the patient
+   series forecast[s] contained in the vaccine group forecast").
+   `VaccineGroupForecast` has a `forecastList` for exactly this, with a getter
+   and a setter, and grep finds no writer anywhere in `cdsi-engine` or
+   `cdsi-web`: neither 9.2 nor 9.3 records which patient series forecasts its
+   vaccine group forecast was assembled from. So the containment relation the
+   chapter is written over exists in the domain model and is empty at runtime,
+   which also means nothing downstream (the step viewer, `ForecastServlet`, a
+   future FORECASTDN-2) can recover it. Confirmed by
+   `theContainedPatientSeriesForecastIsRecordedOnTheVaccineGroupForecast` (red,
+   expected the one contributing `Forecast`, actual `[]`).
+2. **FORECASTVG-8 is implemented on one branch and commented out on the other.**
+   The entry above says the `FORECASTVG-1..8` behaviour "is implemented" in both
+   branch classes. That holds for 1 through 7; FORECASTVG-8 (an antigen is a
+   recommended antigen if its best patient series is the basis of a contained
+   forecast with status 'Not Complete') is `MULTIANTVG_8()` in
+   `MultipleAntigenVaccineGroup` - which builds the list and calls
+   `vgf.setAntigensNeededList(...)` at line 145 - and in
+   `SingleAntigenVaccineGroup` it is the `SINGLEANTVG-9` comment with its one
+   statement **commented out** (`// vgf.setAntigensNeededList(forecast.getAntigen());`,
+   line 131), apparently abandoned over the type mismatch between the single
+   `Antigen` to hand and the `List<Antigen>` the setter takes. This is a
+   different shape from the other two and should be sequenced differently: it
+   needs no domain-model change at all, only the one-line list wrap, so it is
+   fixable inside 9.2's own Role B session without waiting on 7.5. Confirmed by
+   `singleantvgNineTheAntigensNeededAreTheContainedPatientSeriesTargetDisease`
+   (red, expected `[Hepatitis B]`, actual `[]`). Worth noting the asymmetry it
+   causes today: a Not Complete MMR group reports the antigens it needs and a
+   Not Complete HepB group reports none.
+
+So of Table 9-2's twelve rules the tally is now: two with nowhere to write
+(FORECASTDN-2, FORECASTVG-9), one with somewhere to write that nobody writes
+(FORECASTVG-1), one written on the multiple-antigen branch only (FORECASTVG-8),
+and eight implemented on both branches (FORECASTVG-2..7 plus VACCINEGROUP-1/2).
+9.2's other two reds are its own class's defects, not this entry, and are
+recorded in that unit's `status.yaml` notes.
+
+**Known affected units:** 9.1 (confirmed, 2 of its 3 red tests), 7.5
 (confirmed from its own side earlier, 2 of its reds, recorded in that unit's
-notes). 9.2 and 9.3 have not had a Role A pass yet; both are predicted to
-contribute reds here rather than resolve them, since the fields they would copy
-or merge do not exist.
+notes) and **9.2** (confirmed 2026-09-07, 3 of its 6 red tests - SINGLEANTVG-10
+for FORECASTVG-9, plus the two corrections above for FORECASTVG-1 and
+FORECASTVG-8). 9.3 has not had a Role A pass yet; it is predicted to contribute
+a red on FORECASTVG-1 (it does not populate `forecastList` either) and on
+FORECASTVG-9, and to be green on FORECASTVG-8.
 
 **Suggested handling:** one domain-model change, sequenced with 7.5 rather than
 with 9.1. `Forecast` needs a forecast dose number and a recommended series dose
@@ -122,9 +176,17 @@ between minimum and maximum. Nothing about this can be fixed inside
 `ApplyGeneralVaccineGroupRules`: 9.1's whole implementation is the
 VACCINEGROUP-1/2 classification, and the rules it nominally owns have no code in
 it to correct. Worth deciding once, with 7.5's, 9.2's and 9.3's Role B sessions
-in view.
+in view. Per the 9.2 update above, two of the four affected rules are **not**
+part of that domain-model change and should not be sequenced behind it:
+FORECASTVG-8's single-antigen half is a one-line fix inside
+`SingleAntigenVaccineGroup`, and FORECASTVG-1's containment needs only that 9.2
+and 9.3 each add their contributing forecasts to the `forecastList` that is
+already on `VaccineGroupForecast`. Both are unit-local and can be done in 9.2's
+and 9.3's own Role B sessions.
 
-**Status:** open, not yet fixed, not yet a formal finding.
+**Status:** open, not yet fixed, not yet a formal finding. Confirmed from 9.1's
+side (2026-09-07) and 9.2's side (2026-09-07, which corrects the rule count -
+see that update).
 
 ---
 

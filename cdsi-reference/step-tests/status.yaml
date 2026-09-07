@@ -3670,12 +3670,99 @@ units:
       this class implements, and deliberately partial for what section 9.1
       documents.
   '9.2':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.SingleAntigenVaccineGroupTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      22 tests, 16 green and 6 red. Table 9-3 names only SINGLEANTVG-1 (the
+      vaccine group status is the patient series status of the contained patient
+      series forecast) and SINGLEANTVG-2 (the earliest date is the earliest date
+      of all the contained patient series forecasts); the class implements those
+      two and then copies every remaining forecast field under its own
+      SINGLEANTVG-3 through SINGLEANTVG-10 comment labels, each of which is the
+      single-antigen case of a Table 9-2 FORECASTVG-* rule 9.1 owns and delegates
+      here. There is one test method per label, plus the section's Entry
+      Conditions, both documented State Changes fallbacks, its unconditional Next
+      Step, and its "Decision Tables: none".
+
+      Green - SINGLEANTVG-1 across all six PatientSeriesStatus values and its
+      patient-series-status half; SINGLEANTVG-2 for a single contained forecast;
+      SINGLEANTVG-3 through SINGLEANTVG-8, which really are six plain
+      single-field copies (adjusted recommended date, adjusted past due date,
+      latest date, unadjusted recommended date, unadjusted past due date,
+      forecast reason), one statement each; the vaccine group forecast being
+      attributed to the current vaccine group and its one classified antigen; a
+      best patient series for another antigen contributing neither its status nor
+      its earlier earliest date; the ALERT.MISSING/NOT_COMPLETE fallback for a
+      null patient series status; the ALERT.SPECGAP no-match fallback; the
+      ALERT.MISSING no-classified-antigen early exit; the unconditional return to
+      section 9 on all three paths; and the empty 0x0 placeholder LogicTable the
+      constructor registers (pinned as behaviour - Table 9-3 is prose, so there
+      is no decision grid to reproduce, but the step viewer still renders that
+      placeholder, labelled "Table ?-?", instead of citing Table 9-3).
+
+      Red, and why - (1)
+      singleantvgTwoTheEarliestDateIsTheEarliestOfAllContainedPatientSeriesForecasts:
+      expected 01/01/2024, actual 06/01/2024. SINGLEANTVG-2 says "the earliest
+      date of ALL the patient series forecasts contained", i.e. a minimum, and a
+      single antigen vaccine group can genuinely contain several (8.8 selects a
+      best patient series per series group, and HepB alone has Standard and
+      Increased Risk groups in the bundled release). process() builds one
+      VaccineGroupForecast before its loop and overwrites every field on each
+      match, so the last matching series wins rather than the earliest. (2)
+      oneRunProducesAtMostOneVaccineGroupForecastForTheVaccineGroup: expected 1,
+      actual 2 - the same root cause seen from the list side, since that one
+      VaccineGroupForecast instance is add()ed once per match, so the list holds
+      the same object twice. These two are the unit's own defect and are the main
+      thing a Role B session here has to decide, because the fix is not just
+      "hoist the add" - it has to choose a minimum over the contained forecasts
+      for the dates, which is FORECASTVG-2..6's aggregation, i.e. exactly what
+      9.3 does. (3)
+      aMissingPatientSeriesStatusFallsBackConsistentlyAcrossBothStatusFields:
+      expected NOT_COMPLETE, actual null. The documented NOT_COMPLETE default is
+      applied by VaccineGroupForecast.setVaccineGroupStatus(PatientSeriesStatus),
+      which substitutes it silently, while the sibling setPatientSeriesStatus is
+      a plain field assignment that takes the null - so one vaccine group
+      forecast describes its own single contained forecast two ways at once.
+      Small, and unit-local. (4)
+      theContainedPatientSeriesForecastIsRecordedOnTheVaccineGroupForecast:
+      expected the one contributing Forecast, actual []. Both of Table 9-3's
+      rules are phrased over "the patient series forecast[s] contained in the
+      vaccine group forecast" - FORECASTVG-1 - and VaccineGroupForecast has a
+      forecastList for exactly that which no code anywhere writes. (5)
+      singleantvgNineTheAntigensNeededAreTheContainedPatientSeriesTargetDisease:
+      expected [Hepatitis B], actual []. SINGLEANTVG-9 / FORECASTVG-8 has
+      somewhere to go - setAntigensNeededList exists, and
+      MultipleAntigenVaccineGroup.MULTIANTVG_8() calls it - but 9.2's one
+      statement is commented out, apparently over the type mismatch between the
+      single Antigen to hand and the List<Antigen> the setter takes. (6)
+      singleantvgTenTheVaccineGroupForecastCanCarryItsRecommendedSeriesDoseVaccines:
+      the "can the rule even be expressed?" probe, red because neither
+      VaccineGroupForecast nor the Forecast it extends carries a
+      recommended-vaccine list at all. Reds 4, 5 and 6 are the 2026-09-07
+      cross-cutting entry, which this pass updated in place from 9.2's side -
+      reds 4 and 5 correct its rule count (FORECASTVG-1 has a field nobody
+      writes; FORECASTVG-8 is written on the multiple-antigen branch only), and
+      both are unit-local fixes that should not be sequenced behind the
+      domain-model change reds 6 and FORECASTDN-2 need.
+
+      Deliberately not covered - (a) the higher SINGLEANTVG labels' status as
+      specification citations: this unit's Review Findings already record that
+      Table 9-3 names only SINGLEANTVG-1 and SINGLEANTVG-2 and that 3 through 10
+      are the original developer extending the pattern by analogy. The tests
+      assert the field copies each label describes (they are the single-antigen
+      case of a real Table 9-2 rule either way) without asserting the labels are
+      spec-sanctioned. (b) FORECASTDN-2: 9.2 makes no attempt at a forecast dose
+      number and 9.1's unit already owns that probe. (c) The back-reference
+      VaccineGroup.setVaccineGroupForecast, which 9.2 never sets - no rule in
+      Table 9-2 or 9-3 requires it and nothing in cdsi-engine reads it. (d)
+      Anything requiring a Supporting Data release: 9.2 reads none, only 4.6's
+      current vaccine group and Chapter 8's best patient series list. Considered
+      fully covered for both of Table 9-3's named rules and for all eight of the
+      class's own additional labels.
   '9.3':
     test_status: not_started
     test_class: null
