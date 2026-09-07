@@ -3932,6 +3932,18 @@ units:
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      Project owner decision, 2026-09-07: deliberately excluded from Phase 21's
+      Role A pass, not merely unscheduled. All 34 numbered units (4.1 through
+      9.3) have a completed Role A pass as of this date; this class and
+      FORECAST_DATES_AND_REASONS are the only two remaining spec-to-code.yaml
+      units, and both carry disposition guidance (added 2026-09-05, see that
+      file's unmapped_classes notes) expecting them to be removed or
+      reclassified as non-spec infrastructure rather than kept as permanent
+      Logic Specification steps. Writing spec-conformance tests for logic
+      likely headed for deletion was judged not worth the effort. If a future
+      disposition review decides to keep this class as a real step (rather than
+      remove or relocate its behavior), revisit this decision then.
   FORECAST_DATES_AND_REASONS:
     test_status: not_started
     test_class: null
@@ -3939,3 +3951,10 @@ units:
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      Project owner decision, 2026-09-07: deliberately excluded from Phase 21's
+      Role A pass, not merely unscheduled - see EVALUATE_GENDER's identical note
+      above for the full reasoning. This class's own disposition guidance
+      (spec-to-code.yaml, added 2026-09-05) additionally flags its
+      MAX_FORECAST_HANDOFF_CYCLES loop guard as behavior that must be preserved
+      or relocated even if the class itself is removed.
