@@ -33,6 +33,101 @@ single-unit fixes after. That sequencing decision itself isn't written yet
 
 ---
 
+## 2026-09-07 - Two of Table 9-2's rules have no output to write to, and the Supporting Data flag one of them switches on is parsed and read nowhere
+
+**Discovered while testing:** 9.1 Apply General Vaccine Group Rules
+(`ApplyGeneralVaccineGroupRulesTest`)
+
+**Affected component:** `domain/Forecast.java` and the
+`domain/VaccineGroupForecast.java` that extends it (neither carries a forecast
+dose number or a recommended-vaccine list), `domain/VaccineGroup.java`'s
+`administerFullVaccineGroup` field together with
+`DataModelLoader.readVaccineGroups()` which populates it, and the three Chapter 9
+classes that would have to consume all of this - `ApplyGeneralVaccineGroupRules`
+(9.1), `SingleAntigenVaccineGroup` (9.2) and `MultipleAntigenVaccineGroup` (9.3).
+Not confined to 9.1, which computes none of it.
+
+**What's wrong:** 09-01's Review Findings already record that none of Table 9-2's
+`FORECASTVG-*`/`FORECASTDN-2` rule IDs appear anywhere in the codebase (still
+true - grep finds zero hits in `cdsi-engine`/`cdsi-web` main source), while
+saying that the *behavior* each rule describes "is implemented, in
+`MultipleAntigenVaccineGroup`" and, for the single-antigen case, in
+`SingleAntigenVaccineGroup` under `SINGLEANTVG-*` labels. That is right for
+FORECASTVG-1 through FORECASTVG-8 and needs one correction: **two of the twelve
+rules are implemented in neither branch class, because the domain model has
+nowhere to put their output.**
+
+1. **FORECASTDN-2** - "the forecast dose number for a vaccine group forecast must
+   be ... the minimum of the forecast dose numbers of the patient series
+   forecasts contained in the vaccine group forecast if the administer full
+   vaccine group flag is 'Y' ... the maximum ... if [it] is 'N'".
+   `VaccineGroupForecast` has no dose number at all (its full accessor list is
+   dates, a forecast reason, an antigen, a target dose, a status and two lists),
+   so neither the minimum nor the maximum has anywhere to be written.
+2. **FORECASTVG-9** - the union of the contained forecasts' recommended series
+   dose vaccines. Same shape: no recommended-vaccine list on `Forecast` or
+   `VaccineGroupForecast`. 9.2's code carries a `SINGLEANTVG-10` comment naming
+   exactly this copy with no statement under it; 9.3's `MULTIANTVG_1()` through
+   `MULTIANTVG_8()` never mention it.
+
+**The flag, separately.** `administerFullVaccineGroup` - the only input
+FORECASTDN-2 has other than the contained dose numbers - *is* parsed
+(`readVaccineGroups`, lines ~872-880, into `YesNo`) and is read by nothing: the
+only references to `getAdministerFullVaccineGroup()` in `cdsi-engine`/`cdsi-web`
+are its own declaration. This is the `seriesGroup`/`seriesGroupName` shape from
+the Chapter 8 entry rather than the `<equivalentSeriesGroups>` shape - the value
+arrives correctly and is then never consulted. What makes it worth recording is
+*where* it is populated: of the bundled 4.65-508 release's 26 vaccine groups,
+exactly two carry a populated element - MMR is 'Yes' and DTaP/Tdap/Td is 'No' -
+and those two are precisely the two groups VACCINEGROUP-2 classifies as multiple
+antigen, i.e. the only groups where a minimum and a maximum over several
+contained forecasts could differ at all. The data is populated exactly where the
+rule bites, and read nowhere.
+
+**Confirmed live in 9.1:** two of `ApplyGeneralVaccineGroupRulesTest`'s three red
+tests are this entry - `forecastdnTwoAVaccineGroupForecastCanCarryAForecastDose
+Number` and `forecastvgNineAVaccineGroupForecastCanCarryItsRecommendedSeriesDose
+Vaccines`, both the "can the rule even be expressed?" probe used in 6.2, 7.1, 7.6
+and 8.8, and both reporting that no such accessor exists on
+`VaccineGroupForecast`. `forecastdnTwoTheAdministerFullVaccineGroupFlagIs
+PopulatedForTheMultipleAntigenGroups` (green) is the companion evidence that the
+flag really is in the release and really is populated only for the two
+multiple-antigen groups. Not observable via FITS on the FORECASTVG-9 side (no
+recommended-vaccine list is reported at all); the dose number side would be, if
+anything produced one.
+
+**Relationship to the 7.5 reds:** this is the vaccine group end of a gap already
+red at the patient series end. `GenerateForecastDatesAndRecommendedVaccinesTest`
+(7.5) has `forecastdnOneIsTheCountOfSatisfiedTargetDosesPlusOne` (FORECASTDN-1)
+and `forecastrecvacOneIdentifiesTheRecommendedSeriesDoseVaccines`
+(FORECASTRECVAC-1) failing on the *same two missing fields* of the same
+`Forecast` class. That matters for sequencing rather than for blame: FORECASTDN-2
+takes the minimum or maximum of the numbers FORECASTDN-1 produces, and
+FORECASTVG-9 takes the union of the lists FORECASTRECVAC-1 produces, so the
+vaccine group half cannot be fixed before the patient series half and there is no
+reason to fix them in two passes.
+
+**Known affected units:** 9.1 (confirmed, 2 of its 3 red tests) and 7.5
+(confirmed from its own side earlier, 2 of its reds, recorded in that unit's
+notes). 9.2 and 9.3 have not had a Role A pass yet; both are predicted to
+contribute reds here rather than resolve them, since the fields they would copy
+or merge do not exist.
+
+**Suggested handling:** one domain-model change, sequenced with 7.5 rather than
+with 9.1. `Forecast` needs a forecast dose number and a recommended series dose
+vaccine list; once it has them, FORECASTDN-1/FORECASTRECVAC-1 can fill them in
+7.5 and FORECASTDN-2/FORECASTVG-9 can aggregate them in 9.2/9.3, with
+`getAdministerFullVaccineGroup()` finally read at the point FORECASTDN-2 chooses
+between minimum and maximum. Nothing about this can be fixed inside
+`ApplyGeneralVaccineGroupRules`: 9.1's whole implementation is the
+VACCINEGROUP-1/2 classification, and the rules it nominally owns have no code in
+it to correct. Worth deciding once, with 7.5's, 9.2's and 9.3's Role B sessions
+in view.
+
+**Status:** open, not yet fixed, not yet a formal finding.
+
+---
+
 ## 2026-09-05 - `<equivalentSeriesGroups>` is in every antigen series in the release, is parsed nowhere, and two of Table 8-14's five conditions are defined entirely over it
 
 **Discovered while testing:** 8.8 Determine Best Patient Series

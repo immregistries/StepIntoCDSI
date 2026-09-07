@@ -3546,12 +3546,129 @@ units:
       paragraph also does not mention that condition 5, unlike condition 2, has
       no antigen filter.
   '9.1':
-    test_status: not_started
-    test_class: null
+    test_status: tests_written
+    test_class: org.openimmunizationsoftware.cdsi.core.logic.ApplyGeneralVaccineGroupRulesTest
     fix_status: not_started
     blocked_category: null
     blocked_reason: null
     finding_ids: []
+    notes: >-
+      Role A pass 2026-09-07. 17 tests, 14 green, 3 red. Read this unit's
+      coverage with its central fact in mind: Table 9-2 assigns twelve business
+      rules to section 9.1, and the class mapped to it implements exactly two of
+      them. ApplyGeneralVaccineGroupRules is one LogicTable asking one question,
+      "Does the vaccine group contain exactly 1 antigen?", branching to 9.2 or
+      9.3 - that is VACCINEGROUP-1 and VACCINEGROUP-2 and nothing else. The other
+      ten rules (FORECASTVG-1 through 9, FORECASTDN-2) describe how contained
+      patient series forecasts are aggregated into one vaccine group forecast,
+      and none of those rule IDs appears anywhere in cdsi-engine or cdsi-web
+      (re-verified by grep this pass; the only hits in the repository are 7.5's
+      own test class citing FORECASTDN-1). So "full coverage of 9.1's class" and
+      "full coverage of section 9.1" are different claims here, and only the
+      first is met.
+
+      Where the other ten actually live, checked directly rather than taken from
+      09-01's Review Findings. FORECASTVG-1's containment test is approximated
+      twice - MultipleAntigenVaccineGroup's constructor filters
+      bestPatientSeriesList by the vaccine group's antigen list, and
+      SingleAntigenVaccineGroup matches each best patient series' forecast
+      antigen against the group's one antigen; both check "best patient series"
+      and "antigen classified by the group" and neither checks the series group
+      or the regimen the rule's other two bullets name. FORECASTVG-2 through
+      FORECASTVG-7 run in MultipleAntigenVaccineGroup as MULTIANTVG_2()..
+      MULTIANTVG_7() and in SingleAntigenVaccineGroup as the SINGLEANTVG-3..8
+      field copies. FORECASTVG-8 runs in 9.3 only (MULTIANTVG_8() builds
+      antigensNeededList; 9.2's SINGLEANTVG-9 line is commented out).
+      FORECASTVG-9 and FORECASTDN-2 run nowhere at all - see below. Those are
+      9.2's and 9.3's classes, so their Role A sessions own them; nothing in this
+      test class tests them, by design.
+
+      What the 14 green tests cover. VACCINEGROUP-1: a group classifying exactly
+      one antigen is a single antigen vaccine group; the count is of classified
+      antigens, not of the vaccine products in the group; the handoff really
+      reaches SingleAntigenVaccineGroup. VACCINEGROUP-2: two antigens is already
+      "more than one", MMR's three likewise, and the handoff reaches
+      MultipleAntigenVaccineGroup. Both together: the classification is remade
+      for whichever group 4.6 has made current (MMR then HepB in one fixture);
+      exactly one of the two outcomes fires, pinned on the outcomes' own log
+      lists because LogicTable.evaluate() performs every validating column rather
+      than stopping at the first (2026-09-04 cross-cutting entry) - mutual
+      exclusivity here is a property of this table's conditions, not of the
+      engine. State and scope: 9.1 creates no vaccine group forecast, attaches
+      none to the group, adds nothing to its antigen list, does not advance the
+      vaccine group loop and passes Chapter 8's output through untouched; and the
+      classification is independent of the best patient series list in all three
+      of its states (unset, empty, and holding a foreign antigen's series).
+      Structure: one condition, two outcomes. Two tests run against a bundled CDC
+      Supporting Data release: every one of the 26 vaccine groups is classified
+      by its mapped antigen count, and the two that come out multiple antigen are
+      exactly MMR and DTaP/Tdap/Td.
+
+      Two behaviours pinned as observed rather than asserted as rules. (a) A
+      vaccine group classifying no antigen is matched by neither VACCINEGROUP-1
+      ("exactly one") nor VACCINEGROUP-2 ("more than one") and the specification
+      says nothing further; the implementation's single "exactly 1?" question
+      sends it down the multiple antigen branch. Unreachable from the bundled
+      release (all 26 groups map at least one antigen) but reachable in
+      principle, since 4.6 delegates every group without checking - and worth a
+      human eye because 9.2's class carries an explicit "primary antigen missing"
+      guard, suggesting its author expected the empty group to arrive there
+      instead. Recorded as a SPECIFICATION_AMBIGUITY candidate rather than
+      forced into a red test. (b) 9.1's constructor never calls setLogicStepSink
+      on its logic table, unlike both classes it branches to, so the
+      classification message its outcome records never reaches the step's own log
+      and the cdsi-web step viewer shows no reasoning for 9.1. No forecast
+      changes; pinned so it is visible.
+
+      The 3 red tests. (1)
+      forecastdnTwoAVaccineGroupForecastCanCarryAForecastDoseNumber - expected
+      VaccineGroupForecast to expose a forecast dose number for FORECASTDN-2's
+      minimum-or-maximum to be written to, actual no such accessor exists on it
+      or on the Forecast it extends. (2)
+      forecastvgNineAVaccineGroupForecastCanCarryItsRecommendedSeriesDoseVaccines
+      - expected a recommended series dose vaccine list for FORECASTVG-9's union,
+      actual none exists. Both are the "can the rule even be expressed?" probe
+      used in 6.2/7.1/7.6/8.8, and both are the 2026-09-07 cross-cutting entry:
+      these two rules are implemented in neither 9.2 nor 9.3, which corrects
+      09-01's Review Findings claim that the behaviour of all ten "exists, but
+      elsewhere" - eight do, two have nowhere to land. The same two missing
+      Forecast fields are already red at the patient series end in 7.5
+      (FORECASTDN-1, FORECASTRECVAC-1), so the fix is one domain-model change
+      sequenced with 7.5's Role B, not a 9.1 change; 9.1 has no code for either
+      rule to correct. The entry also records that
+      VaccineGroup.administerFullVaccineGroup - FORECASTDN-2's only other input -
+      is parsed by DataModelLoader and read by nothing, and that the only two
+      groups in the release with a populated flag (MMR 'Yes', DTaP/Tdap/Td 'No')
+      are exactly the two multiple antigen groups, i.e. the only ones where a
+      minimum and a maximum could differ. (3) theDecisionTableCitesTableNineTwo -
+      expected the table label to cite Table 9-2, actual "TABLE 7 - 2 WHAT IS THE
+      VACCINE GROUP TYPE?", a leftover from an earlier chapter numbering that
+      points a reader at Chapter 7's Table 7-2 instead. Changes no forecast, but
+      LogicStepRenderer prints the label as the h2 heading of this step's table
+      in the step viewer, so it is the only specification reference 9.1 displays.
+      A one-string fix in 9.1's own class, unlike the other two reds.
+
+      Checked and not a problem in 9.1, recorded so a Role B session does not
+      re-derive it. (a) The contraindication chain: 9.1 reads no
+      PatientSeriesStatus at all, so the 2026-09-04 schedule-level Supporting
+      Data entry's Chapter 9 consumer is MultipleAntigenVaccineGroup (9.3) and
+      not this unit. (b) bestPatientSeriesList and the equivalent-series-groups
+      gap: 9.1 never reads the best patient series list - pinned green by
+      theClassificationDoesNotDependOnChapterEightsBestPatientSeries, which
+      classifies correctly with that list still null - so Chapter 8's closing
+      synthesis reaches Chapter 9 through 9.2 and 9.3, not through 9.1. (c) The
+      unreset patient series score: 9.1 reads no score.
+
+      Deliberately not covered - (a) FORECASTVG-1 through FORECASTVG-8: their
+      behaviour is implemented in 9.2's and 9.3's classes and testing it here
+      would be testing those classes under 9.1's name, which is what
+      cdsi-engine/AGENTS.md rules out; the two exceptions above are in scope only
+      because they are implemented in no class at all. (b) A null current vaccine
+      group, which 9.1's condition would dereference - it cannot arise from 4.6
+      (whose own unit already records this as out of scope for the same reason)
+      and has no basis in Table 9-2's text. Considered fully covered for what
+      this class implements, and deliberately partial for what section 9.1
+      documents.
   '9.2':
     test_status: not_started
     test_class: null
