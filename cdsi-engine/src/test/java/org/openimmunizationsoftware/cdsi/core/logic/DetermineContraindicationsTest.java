@@ -994,8 +994,8 @@ public class DetermineContraindicationsTest {
     document.getDocumentElement().normalize();
 
     Method readContraindications = DataModelLoader.class.getDeclaredMethod("readContraindications",
-        Schedule.class, DataModel.class, Document.class);
+        Schedule.class, Document.class);
     readContraindications.setAccessible(true);
-    readContraindications.invoke(null, schedule, dataModel, document);
+    readContraindications.invoke(null, schedule, document);
   }
 }

@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.data.DataModelLoader;
+import org.openimmunizationsoftware.cdsi.core.data.SupportingDataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.Patient;
@@ -974,10 +975,10 @@ public class EvaluateForPreferableVaccineTest {
     Node node = document.getDocumentElement();
 
     Method readVaccine = DataModelLoader.class.getDeclaredMethod("readVaccine",
-        DataModel.class, Node.class, Vaccine.class);
+        SupportingDataModel.class, Node.class, Vaccine.class);
     readVaccine.setAccessible(true);
     try {
-      readVaccine.invoke(null, dataModel, node, target);
+      readVaccine.invoke(null, dataModel.getSupportingDataModel(), node, target);
     } catch (InvocationTargetException ite) {
       if (ite.getCause() instanceof Exception) {
         throw (Exception) ite.getCause();

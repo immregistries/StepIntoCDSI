@@ -21,6 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.data.DataModelLoader;
+import org.openimmunizationsoftware.cdsi.core.data.SupportingDataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
@@ -887,10 +888,10 @@ public class EvaluateVaccineConflictTest {
     Node node = document.getDocumentElement();
 
     Method readLiveVirusConfict = DataModelLoader.class.getDeclaredMethod("readLiveVirusConfict",
-        DataModel.class, LiveVirusConflict.class, Node.class);
+        SupportingDataModel.class, LiveVirusConflict.class, Node.class);
     readLiveVirusConfict.setAccessible(true);
     try {
-      readLiveVirusConfict.invoke(null, dataModel, target, node);
+      readLiveVirusConfict.invoke(null, dataModel.getSupportingDataModel(), target, node);
     } catch (InvocationTargetException ite) {
       if (ite.getCause() instanceof Exception) {
         throw (Exception) ite.getCause();

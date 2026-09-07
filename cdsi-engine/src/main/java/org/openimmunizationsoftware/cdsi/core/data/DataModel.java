@@ -31,13 +31,23 @@ import org.openimmunizationsoftware.cdsi.core.logic.LogicStep;
 
 public class DataModel {
 
+  private final SupportingDataModel supportingDataModel;
+
+  public DataModel() {
+    this(new SupportingDataModel());
+  }
+
+  public DataModel(SupportingDataModel supportingDataModel) {
+    this.supportingDataModel = supportingDataModel;
+  }
+
+  public SupportingDataModel getSupportingDataModel() {
+    return supportingDataModel;
+  }
+
   // Input mechanism
   private ForecastInput forecastInput = null;
 
-  private List<LiveVirusConflict> liveVirusConflictList = new ArrayList<LiveVirusConflict>();
-  private Map<String, VaccineType> cvxMap = new HashMap<String, VaccineType>();
-  private Map<String, Antigen> antigenMap = new HashMap<String, Antigen>();
-  private List<Antigen> antigenList = null;
   private List<Antigen> antigenSelectedList = null;
   private List<String> antigenLabelFilterList = null;
   private int antigenPos = -1;
@@ -48,10 +58,8 @@ public class DataModel {
   private List<PatientSeries> bestPatientSeriesList = null;
   private List<PatientSeries> prioritizedPatientSeriesList = new ArrayList<PatientSeries>();
 
-  private Map<String, VaccineGroup> vaccineGroupMap = new HashMap<String, VaccineGroup>();
   private List<Immunity> immunityList = new ArrayList<Immunity>();
   private List<Contraindication_TO_BE_REMOVED> contraindicationList = new ArrayList<Contraindication_TO_BE_REMOVED>();
-  private List<Schedule> scheduleList = new ArrayList<Schedule>();
 
   private TargetDose targetDose = null;
   private TargetDose previousTargetDose = null;
@@ -72,13 +80,11 @@ public class DataModel {
   private int targetDoseListPos = -1;
 
   private AntigenAdministeredRecord previousAntigenAdministeredRecord = null;
-  private List<AntigenSeries> antigenSeriesList = new ArrayList<AntigenSeries>();
   private Stepper<PatientSeries> patientSeriesStepper = new Stepper<PatientSeries>();
   private List<PatientSeries> scorablePatientSeriesList = null;
   private List<Forecast> forecastList = new ArrayList<Forecast>();
   private List<VaccineGroupForecast> vaccineGroupForecastList = new ArrayList<VaccineGroupForecast>();
   private VaccineGroup vaccineGroup;
-  private List<VaccineGroup> vaccineGroupList;
   private int vaccineGroupPos = -1;
   private Forecast forecast = null;
   private PatientSeries forecastingForPatientSeries = null;
@@ -146,10 +152,8 @@ public class DataModel {
     return patientSeriesStepper;
   }
 
-  private Map<String, Observation> ObservationMap = new HashMap<String, Observation>();
-
   public Map<String, Observation> getObservationMap() {
-    return ObservationMap;
+    return supportingDataModel.getObservationMap();
   }
 
   public TargetDose getPreviousTargetDose() {
@@ -272,14 +276,11 @@ public class DataModel {
   }
 
   public List<VaccineGroup> getVaccineGroupList() {
-    if (vaccineGroupList == null) {
-      vaccineGroupList = new ArrayList<VaccineGroup>(vaccineGroupMap.values());
-    }
-    return vaccineGroupList;
+    return supportingDataModel.getVaccineGroupList();
   }
 
   public void setVaccineGroupList(List<VaccineGroup> vaccineGroupList) {
-    this.vaccineGroupList = vaccineGroupList;
+    supportingDataModel.setVaccineGroupList(vaccineGroupList);
   }
 
   public int getVaccineGroupPos() {
@@ -323,10 +324,7 @@ public class DataModel {
   }
 
   public List<Antigen> getAntigenList() {
-    if (antigenList == null) {
-      antigenList = new ArrayList<Antigen>(antigenMap.values());
-    }
-    return antigenList;
+    return supportingDataModel.getAntigenList();
   }
 
   public List<Antigen> getAntigenSelectedList() {
@@ -465,7 +463,7 @@ public class DataModel {
   }
 
   public List<AntigenSeries> getAntigenSeriesList() {
-    return antigenSeriesList;
+    return supportingDataModel.getAntigenSeriesList();
   }
 
   public List<AntigenAdministeredRecord> getAntigenAdministeredRecordList() {
@@ -530,55 +528,43 @@ public class DataModel {
   }
 
   public Map<String, Antigen> getAntigenMap() {
-    return antigenMap;
+    return supportingDataModel.getAntigenMap();
   }
 
   public Map<String, VaccineGroup> getVaccineGroupMap() {
-    return vaccineGroupMap;
+    return supportingDataModel.getVaccineGroupMap();
   }
 
   public Map<String, VaccineType> getCvxMap() {
-    return cvxMap;
+    return supportingDataModel.getCvxMap();
   }
 
   public void setCvxMap(Map<String, VaccineType> cvxMap) {
-    this.cvxMap = cvxMap;
+    supportingDataModel.setCvxMap(cvxMap);
   }
 
   public VaccineType getCvx(String cvxCode) {
-    return cvxMap.get(cvxCode);
+    return supportingDataModel.getCvx(cvxCode);
   }
 
   public Antigen getAntigen(String antigenName) {
-    return antigenMap.get(antigenName);
+    return supportingDataModel.getAntigen(antigenName);
   }
 
   public Antigen getOrCreateAntigen(String antigenName) {
-    Antigen antigen = getAntigen(antigenName);
-    if (antigen == null) {
-      antigen = new Antigen();
-      antigen.setName(antigenName);
-      getAntigenMap().put(antigenName, antigen);
-    }
-    return antigen;
+    return supportingDataModel.getOrCreateAntigen(antigenName);
   }
 
   public VaccineGroup getVaccineGroup(String vaccineGroupName) {
-    return vaccineGroupMap.get(vaccineGroupName);
+    return supportingDataModel.getVaccineGroup(vaccineGroupName);
   }
 
   public VaccineGroup getOrCreateVaccineGroup(String vaccineGroupName) {
-    VaccineGroup vaccineGroup = getVaccineGroup(vaccineGroupName);
-    if (vaccineGroup == null) {
-      vaccineGroup = new VaccineGroup();
-      vaccineGroup.setName(vaccineGroupName);
-      vaccineGroupMap.put(vaccineGroupName, vaccineGroup);
-    }
-    return vaccineGroup;
+    return supportingDataModel.getOrCreateVaccineGroup(vaccineGroupName);
   }
 
   public List<LiveVirusConflict> getLiveVirusConflictList() {
-    return liveVirusConflictList;
+    return supportingDataModel.getLiveVirusConflictList();
   }
 
   public List<Immunity> getImmunityList() {
@@ -598,7 +584,7 @@ public class DataModel {
   }
 
   public List<Schedule> getScheduleList() {
-    return scheduleList;
+    return supportingDataModel.getScheduleList();
   }
 
 }

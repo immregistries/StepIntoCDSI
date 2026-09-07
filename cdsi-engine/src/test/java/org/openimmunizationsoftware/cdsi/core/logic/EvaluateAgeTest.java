@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.data.DataModelLoader;
+import org.openimmunizationsoftware.cdsi.core.data.SupportingDataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Age;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.Patient;
@@ -760,10 +761,10 @@ public class EvaluateAgeTest {
     Node node = document.getDocumentElement();
 
     Method readSeriesDose = DataModelLoader.class.getDeclaredMethod("readSeriesDose",
-        SeriesDose.class, Map.class, DataModel.class, Node.class);
+        SeriesDose.class, Map.class, SupportingDataModel.class, Node.class);
     readSeriesDose.setAccessible(true);
     try {
-      readSeriesDose.invoke(null, target, new HashMap<String, SeriesDose>(), dataModel, node);
+      readSeriesDose.invoke(null, target, new HashMap<String, SeriesDose>(), dataModel.getSupportingDataModel(), node);
     } catch (InvocationTargetException ite) {
       if (ite.getCause() instanceof Exception) {
         throw (Exception) ite.getCause();

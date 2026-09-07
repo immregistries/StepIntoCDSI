@@ -679,9 +679,9 @@ public class DetermineEvidenceOfImmunityTest {
     document.getDocumentElement().normalize();
 
     Method readImmunity = DataModelLoader.class.getDeclaredMethod("readImmunity", Schedule.class,
-        DataModel.class, Document.class);
+        Document.class);
     readImmunity.setAccessible(true);
-    readImmunity.invoke(null, schedule, dataModel, document);
+    readImmunity.invoke(null, schedule, document);
   }
 
   // ================================================== 7.2's single destination

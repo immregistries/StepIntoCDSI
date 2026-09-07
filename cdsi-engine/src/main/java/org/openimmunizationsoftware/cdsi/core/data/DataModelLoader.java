@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
@@ -73,6 +74,12 @@ public class DataModelLoader {
   private static final String SCHEDULE_SUPPORTING_DATA_FILE_WITH_SPACE = "Schedule SupportingData.xml";
   private static final Pattern ANTIGEN_FILE_PATTERN = Pattern
       .compile("^AntigenSupportingData-\\s*(.+?)(?:-\\s*508)?\\.xml$", Pattern.CASE_INSENSITIVE);
+
+  // Phase 22: static Supporting Data is parsed once per selected data set and
+  // shared (read-only in practice - see SupportingDataModel's class Javadoc)
+  // across every DataModel built from it for the rest of this JVM's life,
+  // instead of being re-parsed from the zip on every createDataModel call.
+  private static final ConcurrentHashMap<String, SupportingDataModel> SUPPORTING_DATA_CACHE = new ConcurrentHashMap<>();
 
   /**
    * Lists the supporting-data zip file names bundled as classpath resources
@@ -132,12 +139,22 @@ public class DataModelLoader {
           "Supporting data set parameter cannot be null or empty. Provide a zip file name or ID.");
     }
 
-    DataModel dataModel = new DataModel();
-    loadZipData(dataModel, supportingDataSet.trim());
-    return dataModel;
+    SupportingDataModel supportingDataModel = loadCachedSupportingDataModel(supportingDataSet.trim());
+    return new DataModel(supportingDataModel);
   }
 
-  private static void loadZipData(DataModel dataModel, String supportingDataSet) throws Exception {
+  private static SupportingDataModel loadCachedSupportingDataModel(String supportingDataSet) throws Exception {
+    SupportingDataModel cached = SUPPORTING_DATA_CACHE.get(supportingDataSet);
+    if (cached != null) {
+      return cached;
+    }
+    SupportingDataModel loaded = loadSupportingDataModel(supportingDataSet);
+    SupportingDataModel existing = SUPPORTING_DATA_CACHE.putIfAbsent(supportingDataSet, loaded);
+    return existing != null ? existing : loaded;
+  }
+
+  private static SupportingDataModel loadSupportingDataModel(String supportingDataSet) throws Exception {
+    SupportingDataModel supportingDataModel = new SupportingDataModel();
     ZipSource zipSource = resolveSupportingDataZipSource(supportingDataSet);
 
     try (InputStream zipInputStream = zipSource.inputStream;
@@ -179,11 +196,11 @@ public class DataModelLoader {
                 + " or " + SCHEDULE_SUPPORTING_DATA_FILE_WITH_SPACE);
       }
 
-      readCvxToAntigenMap(dataModel, scheduleDoc);
-      readVaccineGroups(dataModel, scheduleDoc);
-      readVaccineGroupToAntigenMap(dataModel, scheduleDoc);
-      readLiveVirusConflicts(dataModel, scheduleDoc);
-      readObservations(dataModel, scheduleDoc);
+      readCvxToAntigenMap(supportingDataModel, scheduleDoc);
+      readVaccineGroups(supportingDataModel, scheduleDoc);
+      readVaccineGroupToAntigenMap(supportingDataModel, scheduleDoc);
+      readLiveVirusConflicts(supportingDataModel, scheduleDoc);
+      readObservations(supportingDataModel, scheduleDoc);
 
       if (scheduleDocList.isEmpty()) {
         throw new IllegalArgumentException(
@@ -194,12 +211,13 @@ public class DataModelLoader {
       for (ZipScheduleDocument zipScheduleDocument : scheduleDocList) {
         Schedule schedule = new Schedule();
         schedule.setScheduleName(zipScheduleDocument.scheduleName);
-        dataModel.getScheduleList().add(schedule);
-        readImmunity(schedule, dataModel, zipScheduleDocument.document);
-        readAntigenSeries(schedule, dataModel, zipScheduleDocument.document);
-        readContraindications(schedule, dataModel, zipScheduleDocument.document);
+        supportingDataModel.getScheduleList().add(schedule);
+        readImmunity(schedule, zipScheduleDocument.document);
+        readAntigenSeries(schedule, supportingDataModel, zipScheduleDocument.document);
+        readContraindications(schedule, zipScheduleDocument.document);
       }
     }
+    return supportingDataModel;
   }
 
   private static Document parseDocument(InputStream inputStream) throws Exception {
@@ -306,7 +324,7 @@ public class DataModelLoader {
     }
   }
 
-  private static void readImmunity(Schedule schedule, DataModel dataModel, Document doc) {
+  private static void readImmunity(Schedule schedule, Document doc) {
     NodeList parentList = doc.getElementsByTagName("immunity");
     for (int i = 0; i < parentList.getLength(); i++) {
       Immunity immunity = new Immunity();
@@ -384,7 +402,7 @@ public class DataModelLoader {
     }
   }
 
-  private static void readContraindications(Schedule schedule, DataModel dataModel, Document doc) {
+  private static void readContraindications(Schedule schedule, Document doc) {
     NodeList contraindicationsList = doc.getElementsByTagName("contraindications");
     NodeList parentList = contraindicationsList.item(0).getChildNodes();
     for (int i = 0; i < parentList.getLength(); i++) {
@@ -430,14 +448,14 @@ public class DataModelLoader {
     return concept;
   }
 
-  private static void readAntigenSeries(Schedule schedule, DataModel dataModel, Document doc) {
+  private static void readAntigenSeries(Schedule schedule, SupportingDataModel supportingDataModel, Document doc) {
     NodeList parentList = doc.getElementsByTagName("series");
     Map<String, SeriesDose> seriesDoseMap = new HashMap<String, SeriesDose>();
     for (int i = 0; i < parentList.getLength(); i++) {
       Node parentNode = parentList.item(i);
       AntigenSeries antigenSeries = new AntigenSeries();
       schedule.getAntigenSeriesList().add(antigenSeries);
-      dataModel.getAntigenSeriesList().add(antigenSeries);
+      supportingDataModel.getAntigenSeriesList().add(antigenSeries);
       NodeList childList = parentNode.getChildNodes();
       Antigen targetDisease = null;
       VaccineGroup vaccineGroup = null;
@@ -448,11 +466,11 @@ public class DataModelLoader {
             String seriesName = DomUtils.getInternalValue(childNode);
             antigenSeries.setSeriesName(seriesName);
           } else if (childNode.getNodeName().equals("targetDisease")) {
-            targetDisease = dataModel.getOrCreateAntigen(DomUtils.getInternalValue(childNode));
+            targetDisease = supportingDataModel.getOrCreateAntigen(DomUtils.getInternalValue(childNode));
             antigenSeries.setTargetDisease(targetDisease);
           } else if (childNode.getNodeName().equals("vaccineGroup")) {
             String nameValue = DomUtils.getInternalValue(childNode);
-            vaccineGroup = dataModel.getOrCreateVaccineGroup(nameValue);
+            vaccineGroup = supportingDataModel.getOrCreateVaccineGroup(nameValue);
             antigenSeries.setVaccineGroup(vaccineGroup);
           } else if (childNode.getNodeName().equals("seriesType")) {
             String nameValue = DomUtils.getInternalValue(childNode);
@@ -507,7 +525,7 @@ public class DataModelLoader {
           } else if (childNode.getNodeName().equals("seriesDose")) {
             SeriesDose seriesDose = new SeriesDose();
             seriesDose.setAntigenSeries(antigenSeries);
-            readSeriesDose(seriesDose, seriesDoseMap, dataModel, childNode);
+            readSeriesDose(seriesDose, seriesDoseMap, supportingDataModel, childNode);
             antigenSeries.getSeriesDoseList().add(seriesDose);
           }
         }
@@ -521,7 +539,7 @@ public class DataModelLoader {
   }
 
   private static void readSeriesDose(SeriesDose seriesDose, Map<String, SeriesDose> seriesDoseMap,
-      DataModel dataModel, Node node) {
+      SupportingDataModel supportingDataModel, Node node) {
     NodeList parentList = node.getChildNodes();
     for (int i = 0; i < parentList.getLength(); i++) {
       Node parentNode = parentList.item(i);
@@ -643,7 +661,7 @@ public class DataModelLoader {
           PreferrableVaccine preferableVaccine = new PreferrableVaccine();
           preferableVaccine.setSeriesDose(seriesDose);
           Vaccine vaccine = preferableVaccine;
-          readVaccine(dataModel, parentNode, vaccine);
+          readVaccine(supportingDataModel, parentNode, vaccine);
           NodeList childNodeList = parentNode.getChildNodes();
           for (int j = 0; j < childNodeList.getLength(); j++) {
             Node childNode = childNodeList.item(j);
@@ -658,7 +676,7 @@ public class DataModelLoader {
           AllowableVaccine allowableVaccine = new AllowableVaccine();
           allowableVaccine.setSeriesDose(seriesDose);
           Vaccine vaccine = allowableVaccine;
-          readVaccine(dataModel, parentNode, vaccine);
+          readVaccine(supportingDataModel, parentNode, vaccine);
           seriesDose.getAllowableVaccineList().add(allowableVaccine);
         } else if (parentNode.getNodeName().equals("conditionalSkip")) {
           ConditionalSkip conditionalSkip = new ConditionalSkip();
@@ -688,7 +706,7 @@ public class DataModelLoader {
                       conditionalSkipSet
                           .setConditionLogic(DomUtils.getInternalValue(grandchildNode));
                     } else if (grandchildNode.getNodeName().equals("condition")) {
-                      readCondition(dataModel, conditionalSkipSet, grandchildNode, seriesDose);
+                      readCondition(supportingDataModel, conditionalSkipSet, grandchildNode, seriesDose);
                     }
                   }
                 }
@@ -750,7 +768,7 @@ public class DataModelLoader {
     }
   }
 
-  private static void readCondition(DataModel dataModel, ConditionalSkipSet conditionalSkipSet,
+  private static void readCondition(SupportingDataModel supportingDataModel, ConditionalSkipSet conditionalSkipSet,
       Node grandchildNode, SeriesDose seriesDose) {
     ConditionalSkipCondition condition = new ConditionalSkipCondition(seriesDose);
     conditionalSkipSet.getConditionList().add(condition);
@@ -798,7 +816,7 @@ public class DataModelLoader {
           if (vaccineTypeCvxCodeString.length() > 0) {
             String[] vaccineTypeCvxCodes = vaccineTypeCvxCodeString.split("\\;");
             for (String vaccineTypeCvx : vaccineTypeCvxCodes) {
-              VaccineType vaccineType = dataModel.getCvx(vaccineTypeCvx);
+              VaccineType vaccineType = supportingDataModel.getCvx(vaccineTypeCvx);
               condition.getVaccineTypeSet().add(vaccineType);
             }
           }
@@ -826,7 +844,7 @@ public class DataModelLoader {
     return date;
   }
 
-  private static void readVaccine(DataModel dataModel, Node parentNode, Vaccine vaccine) {
+  private static void readVaccine(SupportingDataModel supportingDataModel, Node parentNode, Vaccine vaccine) {
     NodeList childNodeList = parentNode.getChildNodes();
     for (int j = 0; j < childNodeList.getLength(); j++) {
       Node childNode = childNodeList.item(j);
@@ -834,7 +852,7 @@ public class DataModelLoader {
         if (childNode.getNodeName().equals("vaccineType")) {
           // do nothing
         } else if (childNode.getNodeName().equals("cvx")) {
-          VaccineType vaccineType = dataModel.getCvx(DomUtils.getInternalValue(childNode));
+          VaccineType vaccineType = supportingDataModel.getCvx(DomUtils.getInternalValue(childNode));
           vaccine.setVaccineType(vaccineType);
         } else if (childNode.getNodeName().equals("beginAge")) {
           vaccine.setVaccineTypeBeginAge(new TimePeriod(DomUtils.getInternalValue(childNode)));
@@ -851,7 +869,7 @@ public class DataModelLoader {
     }
   }
 
-  private static void readVaccineGroups(DataModel dataModel, Document doc) {
+  private static void readVaccineGroups(SupportingDataModel supportingDataModel, Document doc) {
     NodeList parentList = doc.getElementsByTagName("vaccineGroups");
     for (int i = 0; i < parentList.getLength(); i++) {
       Node parentNode = parentList.item(i);
@@ -867,7 +885,7 @@ public class DataModelLoader {
             if (grandchildNode.getNodeType() == Node.ELEMENT_NODE) {
               if (grandchildNode.getNodeName().equals("name")) {
                 String nameValue = DomUtils.getInternalValue(grandchildNode);
-                vaccineGroup = dataModel.getOrCreateVaccineGroup(nameValue);
+                vaccineGroup = supportingDataModel.getOrCreateVaccineGroup(nameValue);
               } else if (vaccineGroup != null
                   && grandchildNode.getNodeName().equals("administerFullVaccineGroup")) {
                 String s = DomUtils.getInternalValue(grandchildNode);
@@ -886,7 +904,7 @@ public class DataModelLoader {
     }
   }
 
-  private static void readVaccineGroupToAntigenMap(DataModel dataModel, Document doc) {
+  private static void readVaccineGroupToAntigenMap(SupportingDataModel supportingDataModel, Document doc) {
     NodeList parentList = doc.getElementsByTagName("vaccineGroupToAntigenMap");
     for (int i = 0; i < parentList.getLength(); i++) {
       Node parentNode = parentList.item(i);
@@ -902,10 +920,10 @@ public class DataModelLoader {
             if (grandchildNode.getNodeType() == Node.ELEMENT_NODE) {
               if (grandchildNode.getNodeName().equals("name")) {
                 String nameValue = DomUtils.getInternalValue(grandchildNode);
-                vaccineGroup = dataModel.getOrCreateVaccineGroup(nameValue);
+                vaccineGroup = supportingDataModel.getOrCreateVaccineGroup(nameValue);
               } else if (vaccineGroup != null && grandchildNode.getNodeName().equals("antigen")) {
                 String antigenName = DomUtils.getInternalValue(grandchildNode);
-                Antigen antigen = dataModel.getOrCreateAntigen(antigenName);
+                Antigen antigen = supportingDataModel.getOrCreateAntigen(antigenName);
                 antigen.setVaccineGroup(vaccineGroup);
                 vaccineGroup.getAntigenList().add(antigen);
               }
@@ -916,7 +934,7 @@ public class DataModelLoader {
     }
   }
 
-  private static void readCvxToAntigenMap(DataModel dataModel, Document doc) {
+  private static void readCvxToAntigenMap(SupportingDataModel supportingDataModel, Document doc) {
     NodeList parentList = doc.getElementsByTagName("cvxToAntigenMap");
     for (int i = 0; i < parentList.getLength(); i++) {
       Node parentNode = parentList.item(i);
@@ -926,14 +944,14 @@ public class DataModelLoader {
         if (childNode.getNodeType() == Node.ELEMENT_NODE
             && childNode.getNodeName().equals("cvxMap")) {
           VaccineType cvx = new VaccineType();
-          readCvx(dataModel, cvx, childNode);
-          dataModel.getCvxMap().put(cvx.getCvxCode(), cvx);
+          readCvx(supportingDataModel, cvx, childNode);
+          supportingDataModel.getCvxMap().put(cvx.getCvxCode(), cvx);
         }
       }
     }
   }
 
-  private static void readCvx(DataModel dataModel, VaccineType cvx, Node parentNode) {
+  private static void readCvx(SupportingDataModel supportingDataModel, VaccineType cvx, Node parentNode) {
     NodeList childList = parentNode.getChildNodes();
     for (int j = 0; j < childList.getLength(); j++) {
       Node childNode = childList.item(j);
@@ -948,7 +966,7 @@ public class DataModelLoader {
             Node grandchildNode = grandchildList.item(k);
             if (grandchildNode.getNodeName().equals("antigen")) {
               String antigenName = DomUtils.getInternalValue(grandchildNode);
-              Antigen antigen = dataModel.getOrCreateAntigen(antigenName);
+              Antigen antigen = supportingDataModel.getOrCreateAntigen(antigenName);
               cvx.getAntigenList().add(antigen);
               antigen.getCvxList().add(cvx);
             }
@@ -958,7 +976,7 @@ public class DataModelLoader {
     }
   }
 
-  private static void readLiveVirusConflicts(DataModel dataModel, Document doc) {
+  private static void readLiveVirusConflicts(SupportingDataModel supportingDataModel, Document doc) {
     NodeList parentList = doc.getElementsByTagName("liveVirusConflicts");
     for (int i = 0; i < parentList.getLength(); i++) {
       Node parentNode = parentList.item(i);
@@ -969,24 +987,24 @@ public class DataModelLoader {
         if (childNode.getNodeType() == Node.ELEMENT_NODE
             && childNode.getNodeName().equals("liveVirusConflict")) {
           LiveVirusConflict liveVirusConflict = new LiveVirusConflict();
-          dataModel.getLiveVirusConflictList().add(liveVirusConflict);
-          readLiveVirusConfict(dataModel, liveVirusConflict, childNode);
+          supportingDataModel.getLiveVirusConflictList().add(liveVirusConflict);
+          readLiveVirusConfict(supportingDataModel, liveVirusConflict, childNode);
         }
       }
     }
   }
 
-  private static void readLiveVirusConfict(DataModel dataModel, LiveVirusConflict liveVirusConflict,
+  private static void readLiveVirusConfict(SupportingDataModel supportingDataModel, LiveVirusConflict liveVirusConflict,
       Node parentNode) {
     NodeList childList = parentNode.getChildNodes();
     for (int j = 0; j < childList.getLength(); j++) {
       Node childNode = childList.item(j);
       if (childNode.getNodeType() == Node.ELEMENT_NODE) {
         if (childNode.getNodeName().equals("previous")) {
-          VaccineType cvx = readVaccine(dataModel, childNode);
+          VaccineType cvx = readVaccine(supportingDataModel, childNode);
           liveVirusConflict.setPreviousVaccineType(cvx);
         } else if (childNode.getNodeName().equals("current")) {
-          VaccineType cvx = readVaccine(dataModel, childNode);
+          VaccineType cvx = readVaccine(supportingDataModel, childNode);
           liveVirusConflict.setCurrentVaccineType(cvx);
         } else if (childNode.getNodeName().equals("conflictBeginInterval")) {
           liveVirusConflict
@@ -1003,7 +1021,7 @@ public class DataModelLoader {
 
   }
 
-  private static void readObservations(DataModel dataModel, Document doc) {
+  private static void readObservations(SupportingDataModel supportingDataModel, Document doc) {
     NodeList parentList = doc.getElementsByTagName("observations");
     for (int i = 0; i < parentList.getLength(); i++) {
       Node parentNode = parentList.item(i);
@@ -1024,13 +1042,13 @@ public class DataModelLoader {
             }
           }
 
-          dataModel.getObservationMap().put(o.getObservationCode(), o);
+          supportingDataModel.getObservationMap().put(o.getObservationCode(), o);
         }
       }
     }
   }
 
-  private static VaccineType readVaccine(DataModel dataModel, Node childNode) {
+  private static VaccineType readVaccine(SupportingDataModel supportingDataModel, Node childNode) {
     NodeList grandchildList = childNode.getChildNodes();
     String vaccineType = "";
     String cvxCode = "";
@@ -1044,12 +1062,12 @@ public class DataModelLoader {
         }
       }
     }
-    VaccineType cvx = dataModel.getCvx(cvxCode);
+    VaccineType cvx = supportingDataModel.getCvx(cvxCode);
     if (cvx == null) {
       cvx = new VaccineType();
       cvx.setCvxCode(cvxCode);
       cvx.setShortDescription(vaccineType);
-      dataModel.getCvxMap().put(cvxCode, cvx);
+      supportingDataModel.getCvxMap().put(cvxCode, cvx);
     }
     return cvx;
   }
