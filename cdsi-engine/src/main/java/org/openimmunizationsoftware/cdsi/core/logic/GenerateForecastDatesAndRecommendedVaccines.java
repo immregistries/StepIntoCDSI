@@ -387,11 +387,7 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     } else {
       log(LogLevel.REASONING,
           "+ unadjusted recommended age date set to the earliest date of the patient series forecast");
-      if (dataModel.getVaccineGroupForecastList().size() > 0) {
-        Forecast forecast = dataModel.getVaccineGroupForecastList()
-            .get(dataModel.getVaccineGroupForecastList().size() - 1);
-        unadjustedRecommendedDate = forecast.getEarliestDate();
-      }
+      unadjustedRecommendedDate = computeEarliestDate();
     }
 
     if (unadjustedRecommendedDate != null) {

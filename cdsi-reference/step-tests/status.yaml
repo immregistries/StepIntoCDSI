@@ -2175,12 +2175,13 @@ units:
   '7.5':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.GenerateForecastDatesAndRecommendedVaccinesTest
-    fix_status: not_started
+    fix_status: in_progress
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0014"]
     notes: >
-      Role A, 2026-09-05. 39 tests: 30 green, 9 red (8 failures and 1 error).
+      Role A, 2026-09-05. 39 tests, now 31 green and 8 red (8 failures, 1
+      error - was 30/9; see SPEC-4.6-0014, merged, for red (2)'s fix).
       7.5 has no decision table, so the unit of coverage is one test per
       business rule, or per bullet where a rule prints a bulleted preference
       order - which is the unit Table 7-13 actually states. Covered: the step's
@@ -2223,15 +2224,21 @@ units:
       as a new dated entry in cross-cutting-notes.md; the direction of the fix is
       that 7.5's copy is the more complete one and 7.4's is the one already
       recorded as omitting candidates, so this is not a defect in 7.5's own
-      class. (2) forecastdtTwoFallsBackToTheForecastsOwnEarliestDate -
+      class. (2) Fixed (SPEC-4.6-0014, merged) -
+      forecastdtTwoFallsBackToTheForecastsOwnEarliestDate.
       FORECASTDT-2's third bullet says that with no earliest recommended age date
       and no earliest recommended interval date the unadjusted recommended date
-      is "the earliest date of the patient series forecast"; expected 01/15/2016
-      (the fixture's own earliest date), actual today's date, because
-      computeUnadjustedRecommendedDate() reads the last element of
+      is "the earliest date of the patient series forecast" (01/15/2016 in the
+      fixture); it used to return today's wall-clock date instead, because
+      computeUnadjustedRecommendedDate() read the last element of
       dataModel.getVaccineGroupForecastList() - a different patient series'
       forecast, and one that is empty at this point in the pipeline - and then
-      returns "new Date()" when that yields nothing. This is the ordinary case
+      returned "new Date()" when that yielded nothing. Fixed by calling this
+      class's own computeEarliestDate() directly. Confirmed against real FITS
+      data: 25 real cases (5 distinct Polio scenarios) had their computed
+      recommendedDate change from "whatever day the suite happened to run" to a
+      stable, patient-derived value - none flip pass/fail, since each has its
+      own separate, unrelated defect. This is the ordinary case
       for the majority of series doses (no earliest recommended age, no earliest
       recommended interval), and it makes the same patient's recommended date
       change every day the engine is run. (3)
