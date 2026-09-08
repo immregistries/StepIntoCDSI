@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-08 04:52:21 - regenerate with
+  Dashboard generated 2026-09-08 05:39:41 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,7 +57,7 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">3</div>
+    <div class="value">4</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
@@ -75,6 +75,25 @@
 </div>
 
 
+<section>
+  <h2>2026-09-08 - Phase 21 - Role B Round 3 - EvaluateAge&#x27;s Absolute-Minimum-Only Age Window Crash
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>The third Role B round, and the first to surface a genuine specification-level gap rather than a code/spec mismatch: Table 6-14 gives Minimum Age Date and Absolute Minimum Age Date the same flat 01/01/1900 default, applied independently, which Table 6-15&#x27;s rule grid cannot always resolve - a target dose with an absolute minimum age but no minimum age crashed the engine with an NPE on 5 real bundled Pneumococcal series doses. Filed as SPECIFICATION_DEFECT and explicitly flagged for CDC/CDSi review rather than treated as settled by this project&#x27;s own fix. Reviewed and approved a pragmatic resolution: fall the minimum age date back to the absolute minimum age date when only the latter is defined. Unit 6.4: 19/1 -&gt; 20/0 green/red. Full cdsi-engine suite: 188 -&gt; 187 failures (down exactly 1), 0 regressions. FITS suite unchanged (3364/1531/1 identical both sides) - none of the 4896 bundled fixtures reaches the affected input shape. See SPEC-4.6-0010.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>dc973a2</code></td></tr><tr><td>Engine tests</td><td>767 total, 188 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>5dbff7e</code></td></tr><tr><td>Engine tests</td><td>767 total, 187 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0010/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0010/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0010</p>
+</section>
 <section>
   <h2>2026-09-08 - Phase 21 - Role B Round 2 - EvaluateForAllowableVaccine&#x27;s Reference-Equality Bug and Calculated-Date Label Typos
     <span class="badge badge-green">reviewed</span>
