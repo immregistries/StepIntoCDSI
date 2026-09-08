@@ -934,12 +934,21 @@ units:
   '6.5':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluatePreferableIntervalTest
-    fix_status: not_started
+    fix_status: in_progress
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0012"]
     notes: >-
-      27 tests, 20 green and 7 red. Covered: the step's identity
+      27 tests, now 23 green and 4 red (was 20/7 - see SPEC-4.6-0012:
+      fixed the misassigned GRACE_PERIOD/TOO_SOON evaluation reason, the
+      unfilled attribute-table-name placeholder, and the "Mimium"/
+      "Minimum" misspelling; reviewed and merged). The remaining 4 red
+      tests are a separate, materially significant CALCDTINT-8/CALCDTINT-9
+      cluster (blocked in both the Supporting Data loader and the
+      reference-date rule body, affecting 61 real populated intervals),
+      deliberately deferred to its own round rather than folded in here -
+      see the Materiality note below and this unit's still-open reds.
+      Covered: the step's identity
       (EVALUATE_PREFERABLE_INTERVAL, chapter "6.5") and its Table 6-17 attribute
       table name; Table 6-17's four attributes being registered per interval,
       with their types, their values (the date administered 4.4 has made current
@@ -966,11 +975,20 @@ units:
       "not verified as implemented anywhere by this pass" item in the step
       package's Review Findings.
 
-      The 7 red tests, expected vs actual. (1) ruleOneRecordsEvaluationReasonTooSoon
-      - expected Table 6-18 Rule 1's documented reason 'Too soon'; actual
-      GRACE_PERIOD, because outcome 0 sets EvaluationReason.GRACE_PERIOD while
-      its own log line says "Evaluation reason is 'Too Soon'" (6.6's equivalent
-      single-condition case sets TOO_SOON correctly). (2)
+      Fixed (SPEC-4.6-0012, merged). (1) ruleOneRecordsEvaluationReasonTooSoon
+      - Table 6-18 Rule 1's documented reason is 'Too soon'; outcome 0 used to
+      set EvaluationReason.GRACE_PERIOD while its own log line said "Evaluation
+      reason is 'Too Soon'" (6.6's equivalent single-condition case already set
+      TOO_SOON correctly) - now sets TOO_SOON. (2)
+      theStepNamesTableSixSeventeenAsItsAttributeTable - expected "Table 6-17
+      Preferable Interval Attributes", the way 6.3 and 6.4 name theirs; the
+      placeholder "Table " is now filled in. (3)
+      tableSixSeventeenNamesItsAttributesAsTheSpecificationDoes - expected Table
+      6-17 row 4's name "Minimum Interval Date"; "Mimium Interval Date", a
+      misspelling in the published attribute name, is now corrected.
+
+      Still red - a separate, materially significant cluster deliberately not
+      touched this round. (1)
       calcdtintEightMeasuresFromTheMostRecentDoseOfANamedVaccineType - expected
       the absolute minimum interval date measured from the most recent dose of
       the named vaccine type (PCV13 03/01/2016 + 8 weeks = 04/26/2016); actual
@@ -978,14 +996,14 @@ units:
       !previousVdaEvaluation.getEvaluationReason().equals(INADVERTENT_ADMINISTRATION)
       without a null check, and a plainly-valid previous dose (6.4 Table 6-15
       Rule 3) has no evaluation reason, so it throws NullPointerException into
-      the method's own catch block and leaves the reference dose date null. (3)
+      the method's own catch block and leaves the reference dose date null. (2)
       calcdtintNineMeasuresFromTheMostRecentMatchingPatientObservation - expected
       the reference dose date to be the matching patient observation's date
       (onset of pregnancy 01/10/2016, so 0 days and 27 weeks give 01/10/2016 and
       07/17/2016); actual the assumed 01/01/1900 for both, because the
       CALCDTINT-9 branch only logs "REASONING: Using CALCDTINT-9" and never
-      assigns a date. (4) theSupportingDatasFromMostRecentVaccineTypeReachesTheInterval
-      and (5) theSupportingDatasFromRelevantObservationCodeReachesTheInterval -
+      assigns a date. (3) theSupportingDatasFromMostRecentVaccineTypeReachesTheInterval
+      and (4) theSupportingDatasFromRelevantObservationCodeReachesTheInterval -
       expected an Interval loaded from the Supporting Data's own markup to carry
       its from most recent vaccine type and its from relevant observation code;
       actual null for both, because DataModelLoader.readSeriesDose's interval
@@ -995,13 +1013,7 @@ units:
       Interval.setFromMostRecentVaccineType nor
       Interval.setFromRelevantObservation is called from anywhere in the engine.
       So CALCDTINT-8 and CALCDTINT-9 are each blocked twice over - once in the
-      loader, once in the rule body. (6)
-      theStepNamesTableSixSeventeenAsItsAttributeTable - expected "Table 6-17
-      Preferable Interval Attributes", the way 6.3 and 6.4 name theirs; actual
-      the placeholder "Table ". (7)
-      tableSixSeventeenNamesItsAttributesAsTheSpecificationDoes - expected Table
-      6-17 row 4's name "Minimum Interval Date"; actual "Mimium Interval Date", a
-      misspelling in the published attribute name.
+      loader, once in the rule body.
 
       Materiality of reds (2)-(5), checked against the Supporting Data release
       bundled in cdsi-engine/src/main/resources. Its 30 antigen files hold 597

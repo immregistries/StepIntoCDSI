@@ -25,7 +25,7 @@ public class EvaluatePreferableInterval extends LogicStep {
 
   public EvaluatePreferableInterval(DataModel dataModel) {
     super(LogicStepType.EVALUATE_PREFERABLE_INTERVAL, dataModel);
-    setConditionTableName("Table ");
+    setConditionTableName("Table 6-17 Preferable Interval Attributes");
 
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
 
@@ -39,7 +39,7 @@ public class EvaluatePreferableInterval extends LogicStep {
           "Preferable Interval Elements");
       logicTable.caAbsoluteMinimumIntervalDate = new ConditionAttribute<Date>("Calculated Date",
           "Absolute Minimum Interval Date");
-      logicTable.caMinimumIntervalDate = new ConditionAttribute<Date>("Calculated Date", "Mimium Interval Date");
+      logicTable.caMinimumIntervalDate = new ConditionAttribute<Date>("Calculated Date", "Minimum Interval Date");
 
       logicTable.caAbsoluteMinimumIntervalDate.setAssumedValue(PAST);
       logicTable.caMinimumIntervalDate.setAssumedValue(PAST);
@@ -145,7 +145,7 @@ public class EvaluatePreferableInterval extends LogicStep {
         public void perform() {
           log("No. The vaccine dose administered did not satisfy the preferable interval for the target dose. Evaluation reason is 'Too Soon'.");
           Evaluation evaluation = dataModel.getTargetDose().getEvaluation();
-          evaluation.setEvaluationReason(EvaluationReason.GRACE_PERIOD);
+          evaluation.setEvaluationReason(EvaluationReason.TOO_SOON);
           result = YesNo.NO;
         }
       });
