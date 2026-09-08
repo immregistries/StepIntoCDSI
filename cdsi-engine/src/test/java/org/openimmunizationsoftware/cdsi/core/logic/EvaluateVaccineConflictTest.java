@@ -287,6 +287,7 @@ public class EvaluateVaccineConflictTest {
     Evaluation previousEvaluation = new Evaluation();
     previousEvaluation.setEvaluationStatus(status);
     previousTargetDose.setEvaluation(previousEvaluation);
+    previous.getVaccineDoseAdministered().setEvaluatedAgainstTargetDose(previousTargetDose);
 
     dataModel.getTargetDoseList().add(previousTargetDose);
     dataModel.setPreviousTargetDose(previousTargetDose);

@@ -6,11 +6,12 @@ import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES
 
 import java.util.Date;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
+import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
@@ -58,8 +59,10 @@ public class EvaluateVaccineConflict extends LogicStep {
     logicTable.evaluate();
     y = YesNo.NO;
     if (logicTable.getY420() == YesNo.YES) {
-      for (int i = dataModel.getSelectedAntigenAdministeredRecordPos() + 1; i < dataModel
-          .getSelectedAntigenAdministeredRecordList().size(); i++) {
+      // CALCDTCONFLICT-1/2 both name "the previous vaccine dose administered" -
+      // scan the doses administered before this one (4.2 sorts the list
+      // ascending by date), not after it.
+      for (int i = 0; i < dataModel.getSelectedAntigenAdministeredRecordPos(); i++) {
         AntigenAdministeredRecord vaccineAdministered = dataModel.getSelectedAntigenAdministeredRecordList().get(i);
         LT421 logicTab = new LT421();
         logicTab.caPreviousVaccineType = new ConditionAttribute<VaccineType>(
@@ -229,37 +232,34 @@ public class EvaluateVaccineConflict extends LogicStep {
 
     public void setIntervalDate(AntigenAdministeredRecord vaccineAdministered) {
       for (LiveVirusConflict liveVirusConflict : dataModel.getLiveVirusConflictList()) {
-        if (liveVirusConflict.getCurrentVaccineType()
-            .equals(caCurrentVaccineType.getFinalValue())) {
-          Date dob = vaccineAdministered.getDateAdministered();
-          int beginAgeAmount = liveVirusConflict.getConflictBeginInterval().getAmount();
-          int endAgeAmount = liveVirusConflict.getConflictBeginInterval().getAmount();
-          Date beginIntervalDate = new Date();
-          Date endIntervalDate = new Date();
-          switch (liveVirusConflict.getConflictBeginInterval().getType()) {
-            case DAY:
-              beginIntervalDate = DateUtils.addDays(dob, beginAgeAmount);
-              endIntervalDate = DateUtils.addDays(dob, endAgeAmount);
-              break;
-            case WEEK:
-              beginIntervalDate = DateUtils.addWeeks(dob, beginAgeAmount);
-              endIntervalDate = DateUtils.addWeeks(dob, endAgeAmount);
-              break;
-            case MONTH:
-              beginIntervalDate = DateUtils.addMonths(dob, beginAgeAmount);
-              endIntervalDate = DateUtils.addMonths(dob, endAgeAmount);
-              break;
-            case YEAR:
-              beginIntervalDate = DateUtils.addYears(dob, beginAgeAmount);
-              endIntervalDate = DateUtils.addYears(dob, endAgeAmount);
-              break;
-            default:
-              break;
-          }
+        // Match on both the impacted (current) and conflicting (previous) vaccine
+        // type, the same pair LT421 already matched on - an impacted type can name
+        // more than one conflicting type, each with its own intervals, so matching
+        // on the impacted type alone lets the last such entry silently win.
+        if (liveVirusConflict.getCurrentVaccineType().equals(caCurrentVaccineType.getFinalValue())
+            && liveVirusConflict.getPreviousVaccineType().equals(vaccineAdministered.getVaccineType())) {
+          Date previousDateAdministered = vaccineAdministered.getDateAdministered();
+          Date beginIntervalDate = liveVirusConflict.getConflictBeginInterval()
+              .getDateFrom(previousDateAdministered);
+          // CALCDTCONFLICT-2: the minimum conflict end interval when the previous dose
+          // has no evaluation status or one of 'Valid'; the conflict end interval when
+          // it has an evaluation status that is not 'Valid'.
+          Date endIntervalDate = isPreviousDoseValidOrUnevaluated(vaccineAdministered)
+              ? liveVirusConflict.getMinimalConflictEndInterval().getDateFrom(previousDateAdministered)
+              : liveVirusConflict.getConflictEndInterval().getDateFrom(previousDateAdministered);
           caConflictBeginIntervalDate.setInitialValue(beginIntervalDate);
           caConflictEndIntervalDate.setInitialValue(endIntervalDate);
         }
       }
+    }
+
+    private boolean isPreviousDoseValidOrUnevaluated(AntigenAdministeredRecord vaccineAdministered) {
+      TargetDose evaluatedAgainst = vaccineAdministered.getVaccineDoseAdministered().getEvaluatedAgainstTargetDose();
+      if (evaluatedAgainst == null || evaluatedAgainst.getEvaluation() == null) {
+        return true;
+      }
+      EvaluationStatus status = evaluatedAgainst.getEvaluation().getEvaluationStatus();
+      return status == null || status == EvaluationStatus.VALID;
     }
 
     public LT422() {
@@ -271,8 +271,8 @@ public class EvaluateVaccineConflict extends LogicStep {
 
         @Override
         protected LogicResult evaluateInternal() {
-          if (caDateAdministered.getFinalValue()
-              .after(caConflictBeginIntervalDate.getFinalValue())
+          if (!caConflictBeginIntervalDate.getFinalValue()
+              .after(caDateAdministered.getFinalValue())
               && caDateAdministered.getFinalValue()
                   .before(caConflictEndIntervalDate.getFinalValue())) {
             return YES;
