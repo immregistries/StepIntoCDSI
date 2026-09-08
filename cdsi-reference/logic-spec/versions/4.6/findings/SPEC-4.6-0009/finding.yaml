@@ -1,0 +1,59 @@
+id: "SPEC-4.6-0009"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.9"]
+source_pages: [68]
+tables: ["Table 6-28", "Table 6-29"]
+business_rules: []
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateForAllowableVaccine"
+fits_cases: []
+summary: >
+  EvaluateForAllowableVaccine's Table 6-29 first condition compares vaccine
+  types by Java reference rather than by the domain model's own CVX-based
+  equality, and Table 6-28's two calculated-date rows are mislabeled
+  "Calculated data"/"Calculated Data" instead of "Calculated date".
+evidence: >
+  (1) Table 6-29's first condition asks whether the vaccine type of the
+  dose administered is "the same as" the vaccine type of an allowable
+  vaccine. VaccineType.equals() already defines "the same" as equal CVX
+  codes. EvaluateForAllowableVaccine's LT condition 0
+  (EvaluateForAllowableVaccine.java) instead compares with
+  `vt == av.getVaccineType()`, a Java reference comparison, so two
+  distinct VaccineType instances carrying the same CVX code are wrongly
+  "not the same vaccine type". (2) The condition-attribute labels for the
+  two calculated dates read "Calculated data (CALCDTALLOW-1)" and
+  "Calculated Data (CALCDTALLOW-2)" (constructor arguments in
+  EvaluateForAllowableVaccine's LT setup); Table 6-28's own rows 4 and 5
+  name these "Calculated date (CALCDTALLOW-1)" and
+  "Calculated date (CALCDTALLOW-2)" - "date", not "data" in either
+  capitalization. The calculated values themselves are correct in both
+  cases; only the attribute-type label text is wrong.
+interpretation: >
+  (1) is a latent divergence, not an observable one against the bundled
+  Supporting Data release: DataModelLoader and GatherNecessaryData both
+  take every VaccineType out of one shared cvxMap, so every allowable
+  vaccine entry and every administered dose already share one instance
+  per CVX code, meaning `==` and CVX-equality agree today. It is still a
+  real defect against the domain model's own contract, and the safer,
+  more general fix - `vt.equals(av.getVaccineType())`, deferring to
+  VaccineType's own equals() rather than re-deriving CVX comparison by
+  hand - was chosen over hand-rolled CVX string comparison so the
+  condition stays correct even if that sharing assumption ever changes.
+  VaccineType.equals() is already null-safe on its argument (an
+  `instanceof` check), so this also correctly returns NO, not an NPE,
+  against the entirely-empty <allowableVaccine/> shape the bundled
+  release carries three of (HepB Dose 1, HepB Dose 2, Pertussis Dose 1),
+  where getVaccineType() returns null.
+  (2) is a pure transcription slip with no behavioural effect at all -
+  6.6 and 6.8 both use "Calculated date (CALCDT...)" for their own
+  calculated-date attribute labels, so this brings 6.9 in line with the
+  same convention.
+  Both of unit 6.9's two red JUnit tests exercise exactly these:
+  sameVaccineTypeMeansTheSameCvxCode (defect 1) and
+  tableSixTwentyEightLabelsTheCalculatedDateRowsAsTheSpecificationDoes
+  (defect 2). This finding does not claim FITS impact - defect 1 is
+  explicitly latent against the current fixture set, and defect 2 is
+  presentation-only - and the full-suite before/after comparison
+  recorded under "Fix merged" confirms the fix is a no-op against the
+  current 4896-case fixture set.

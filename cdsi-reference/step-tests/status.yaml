@@ -1406,12 +1406,16 @@ units:
   '6.9':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluateForAllowableVaccineTest
-    fix_status: not_started
+    fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0009"]
     notes: >-
-      31 tests, 29 green and 2 red. Covered: the step's identity
+      31 tests, now all 31 green (was 29/2 - see SPEC-4.6-0009: fixed the
+      reference-equality vaccine-type comparison, replaced with
+      VaccineType's own CVX-based equals(), and the "Calculated data"/
+      "Calculated Data" label typos, corrected to "Calculated date"
+      matching 6.6 and 6.8's convention; reviewed and merged). Covered: the step's identity
       (EVALUATE_FOR_ALLOWABLE_VACCINE, chapter "6.9"); Figure 6-22's loop shape -
       one Table 6-29 decision table and one block of Table 6-28's five attributes
       per allowable vaccine defined on the target dose, and none at all when the
@@ -1448,20 +1452,24 @@ units:
       tests. This is a different expression from 6.8's, written independently,
       rather than the same expression reused; the bug is 6.8's alone.
 
-      The 2 red tests, expected vs actual. (1) sameVaccineTypeMeansTheSameCvxCode
-      - Table 6-29's first condition asks whether the vaccine type of the dose
+      Fixed (SPEC-4.6-0009, merged). (1) sameVaccineTypeMeansTheSameCvxCode -
+      Table 6-29's first condition asks whether the vaccine type of the dose
       administered is "the same as" the vaccine type of an allowable vaccine, and
-      VaccineType defines that itself by CVX code equality; expected YES for two
-      distinct CVX 20 instances, actual NO, because the condition is a Java
-      reference comparison (vt == av.getVaccineType()) rather than the CVX
-      comparison 6.8's equivalent condition uses. (2)
+      VaccineType defines that itself by CVX code equality; the condition
+      compared with Java reference equality (vt == av.getVaccineType()) rather
+      than VaccineType's own equals(), so two distinct CVX 20 instances wrongly
+      compared unequal. Fixed by deferring to vt.equals(av.getVaccineType()),
+      which is null-safe against the entirely-empty <allowableVaccine/> shape.
+      Latent against the bundled release (DataModelLoader shares one VaccineType
+      instance per CVX code), so no FITS case moved. (2)
       tableSixTwentyEightLabelsTheCalculatedDateRowsAsTheSpecificationDoes -
       Table 6-28 rows 4 and 5 carry the attribute type "Calculated date
-      (CALCDTALLOW-1)" / "Calculated date (CALCDTALLOW-2)"; expected "Calculated
-      date", actual "Calculated data" / "Calculated Data". The row names and the
-      calculated values themselves are correct - CALCDTALLOW-1 and CALCDTALLOW-2
-      are both green - so this is a presentation defect, not a behavioural one,
-      and the parallel of the label defect 6.8 found in its own Table 6-25.
+      (CALCDTALLOW-1)" / "Calculated date (CALCDTALLOW-2)"; the labels read
+      "Calculated data" / "Calculated Data". The row names and the calculated
+      values themselves were always correct - CALCDTALLOW-1 and CALCDTALLOW-2
+      are both green - so this was a presentation defect only, the parallel of
+      the label defect 6.8 found in its own Table 6-25; corrected to match 6.6
+      and 6.8's "Calculated date" convention.
 
       Materiality against the bundled Supporting Data release, which carries 3709
       allowableVaccine entries across 484 series doses in its 30 antigen files.
