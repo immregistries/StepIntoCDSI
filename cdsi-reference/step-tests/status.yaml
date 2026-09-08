@@ -1300,12 +1300,18 @@ units:
   '6.8':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluateForPreferableVaccineTest
-    fix_status: not_started
+    fix_status: fixed_pending_review
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0008"]
     notes: >-
-      30 tests, 25 green and 5 red. Covered: the step's identity
+      30 tests, now 27 green and 3 red (was 25/5 - see SPEC-4.6-0008: fixed
+      the strict-.before() lower-bound defect on Table 6-26's second
+      condition, flipping ruleOneIncludesTheBeginAgeDateItself and
+      aDoseAdministeredOnTheDateOfBirthIsInsideAZeroDayBeginAgeWindow to
+      green; awaiting project owner review, not yet merged). The remaining
+      3 red tests are the pre-existing, unrelated trade-name and
+      presentation defects described below. Covered: the step's identity
       (EVALUATE_FOR_PREFERABLE_VACCINE, chapter "6.8"); Figure 6-19's loop shape -
       one Table 6-26 decision table and one group of Table 6-25 attributes per
       preferable vaccine defined on the target dose, and none at all when the
@@ -1330,25 +1336,30 @@ units:
       conditions consult - CVX, begin age, end age, trade name and volume -
       actually lands on the domain object.
 
-      The 5 red tests, expected vs actual. (1) ruleOneIncludesTheBeginAgeDateItself
-      - Table 6-26's second condition is "Is the preferable vaccine type begin age
-      date <= date administered < preferable vaccine type end age date?", so a dose
-      administered on the begin age date itself is inside the window; expected YES,
-      actual NO, because the implementation compares with a strict
-      beginAgeDate.before(dateAdministered). (2)
-      aDoseAdministeredOnTheDateOfBirthIsInsideAZeroDayBeginAgeWindow - the same
-      defect at the boundary that matters most on real data: a "0 days" begin age
-      puts the begin age date on the date of birth, so a Hep B birth dose is inside
-      the window; expected YES, actual NO. These two share one root cause. (3)
+      Fixed (SPEC-4.6-0008, pending review). (1)
+      ruleOneIncludesTheBeginAgeDateItself and (2)
+      aDoseAdministeredOnTheDateOfBirthIsInsideAZeroDayBeginAgeWindow - Table
+      6-26's second condition is "Is the preferable vaccine type begin age date <=
+      date administered < preferable vaccine type end age date?", so a dose
+      administered on the begin age date itself is inside the window; the
+      implementation compared with a strict beginAgeDate.before(dateAdministered),
+      which excluded that boundary (a "0 days" begin age puts the begin age date on
+      the date of birth, so this also wrongly excluded a Hep B birth dose). These
+      two shared one root cause; both now green after changing the comparison to
+      the codebase's existing inclusive-lower-bound idiom
+      (!beginAgeDate.after(dateAdministered), matching EvaluateAge.java's own use
+      of the same idiom twice). No FITS case was confirmed to move on this fix.
+
+      The 3 remaining red tests, expected vs actual. (1)
       ruleFiveEvaluatesTheTradeNameOfTheVaccineDoseAdministered - expected Table
       6-26's third condition to answer NO for a RECOMBIVAX ADULT dose measured
       against the release's ENGERIX-B ADULT preferable vaccine; actual YES, because
-      the condition is hardcoded to return YES. (4)
+      the condition is hardcoded to return YES. (2)
       ruleFiveReportsNotPreferableWhenTheTradeNameDiffers - the outcome of the
       same: expected Rule 5 and a route to 6.9 Evaluate for Allowable Vaccine;
-      actual Rule 1 and a route to 6.10 Satisfy Target Dose. (3) and (4) share one
+      actual Rule 1 and a route to 6.10 Satisfy Target Dose. (1) and (2) share one
       root cause, already recorded in this step package's Review Findings as a
-      known, deliberate-looking limitation. (5)
+      known, deliberate-looking limitation. (3)
       tableSixTwentyFiveNamesTheCalculatedDatesAsTheSpecificationDoes - Table
       6-25's last two rows are attribute type "Calculated date (CALCDTPREF-1/2)"
       with names "Preferable Vaccine Type Begin/End Age Date"; actual the type and

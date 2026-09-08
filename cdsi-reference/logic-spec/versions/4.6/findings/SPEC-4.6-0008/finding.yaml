@@ -1,0 +1,56 @@
+id: "SPEC-4.6-0008"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.8"]
+source_pages: [65]
+tables: ["Table 6-26"]
+business_rules: ["CALCDTPREF-1", "CALCDTPREF-2"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateForPreferableVaccine"
+fits_cases: []
+summary: >
+  EvaluateForPreferableVaccine's Table 6-26 condition 2 excludes the
+  preferable vaccine type begin age date itself, contradicting the
+  condition's own documented "<=" (inclusive) lower bound.
+evidence: >
+  Table 6-26's second condition is "Is the preferable vaccine type begin
+  age date <= date administered < preferable vaccine type end age date?"
+  - an inclusive lower bound, exclusive upper bound. The implementation
+  (EvaluateForPreferableVaccine.java, LogicCondition index 1,
+  evaluateInternal()) reads
+  caVaccineTypeBeginAgeDate.getFinalValue().before(caDateAdministered.getFinalValue())
+  && caDateAdministered.getFinalValue().before(caVaccineTypeEndAgeDate.getFinalValue()).
+  The first half uses strict Date.before(), which is false when the two
+  dates are equal, so a dose administered exactly on the begin age date
+  is excluded from the window the condition's own label says it belongs
+  in. The second half (strict .before() against the end age date) matches
+  the label's own exclusive upper bound and is correct as written.
+interpretation: >
+  This reads as a copy-paste/off-by-one slip on the lower-bound half of a
+  two-sided range check, not a deliberate design choice - the condition's
+  own inline specification text states "<=" for exactly the comparison
+  that is implemented as strict "<". The codebase already has an
+  established, correct idiom for this exact shape of inclusive-lower-bound
+  check: EvaluateAge.java uses
+  !absoluteMinimumDate.after(dateAdministered) and
+  !minimumDate.after(administeredDate) at two call sites for the same
+  "date A is on or after date B" comparison. The minimal fix mirrors that
+  idiom: replace
+  caVaccineTypeBeginAgeDate.getFinalValue().before(caDateAdministered.getFinalValue())
+  with
+  !caVaccineTypeBeginAgeDate.getFinalValue().after(caDateAdministered.getFinalValue()),
+  changing nothing else - not the end-date half of this condition, and not
+  condition index 2 (the trade-name check), which is a separate, already
+  known, deliberately deferred limitation unrelated to this defect.
+  Two of unit 6.8's five red JUnit tests exercise exactly this boundary -
+  ruleOneIncludesTheBeginAgeDateItself (a dose on the begin age date
+  itself) and aDoseAdministeredOnTheDateOfBirthIsInsideAZeroDayBeginAgeWindow
+  (a "0 days" begin age window, so the begin age date equals the date of
+  birth - the boundary case most likely to occur on real Hep B birth-dose
+  data). Both assert LogicResult.YES for condition index 1 and currently
+  get NO. This finding does not claim FITS impact: no FITS case naming
+  this defect was found during investigation, and the full-suite
+  before/after comparison recorded under "Fix merged" below shows the
+  fix is a no-op against the current 4896-case fixture set. The two
+  affected JUnit tests are this round's evidence of a corrected behaviour,
+  independent of FITS.

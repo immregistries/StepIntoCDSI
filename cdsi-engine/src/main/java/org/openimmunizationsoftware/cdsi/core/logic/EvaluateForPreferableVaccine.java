@@ -144,7 +144,7 @@ public class EvaluateForPreferableVaccine extends LogicStep {
           "Is the preferable vaccine type begin age date <= date administered < preferable vaccine type end age date?") {
         @Override
         public LogicResult evaluateInternal() {
-          if (caVaccineTypeBeginAgeDate.getFinalValue().before(caDateAdministered.getFinalValue())
+          if (!caVaccineTypeBeginAgeDate.getFinalValue().after(caDateAdministered.getFinalValue())
               && caDateAdministered.getFinalValue()
                   .before(caVaccineTypeEndAgeDate.getFinalValue())) {
             return LogicResult.YES;
