@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-08 05:39:41 - regenerate with
+  Dashboard generated 2026-09-08 05:51:40 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,7 +57,7 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">4</div>
+    <div class="value">5</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
@@ -75,6 +75,25 @@
 </div>
 
 
+<section>
+  <h2>2026-09-08 - Phase 21 - Role B Round 4 - EvaluateAllowableInterval&#x27;s Placeholder Table Name and Shared Per-Interval State
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>The fourth Role B round, both closing unit 6.6 to fully green: (1) an unfilled &quot;Table &quot; placeholder attribute-table name, filled in to &quot;Table 6-20 Allowable Interval Attributes&quot;; (2) each per-interval decision table shared one ConditionAttribute instance for the absolute minimum interval date, so every allowable interval on a target dose was checked against only the last interval&#x27;s date - fixed by giving each per-interval table its own copies, mirroring the pattern 6.5 already uses correctly. Latent against the bundled Supporting Data (no series dose carries more than one populated allowable interval). Unit 6.6: 23/2 -&gt; 25/0 green/red. Full cdsi-engine suite: 187 -&gt; 185 failures (down exactly 2), 0 regressions. FITS suite unchanged (3364/1531/1 identical both sides). See SPEC-4.6-0011.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>5f39e80</code></td></tr><tr><td>Engine tests</td><td>767 total, 187 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>a177829</code></td></tr><tr><td>Engine tests</td><td>767 total, 185 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0011/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0011/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0011</p>
+</section>
 <section>
   <h2>2026-09-08 - Phase 21 - Role B Round 3 - EvaluateAge&#x27;s Absolute-Minimum-Only Age Window Crash
     <span class="badge badge-green">reviewed</span>

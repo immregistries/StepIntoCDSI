@@ -1,0 +1,30 @@
+id: "2026-09-08-role-b-round-4-evaluate-allowable-interval"
+date: "2026-09-08"
+phase: 21
+title: "Role B Round 4 - EvaluateAllowableInterval's Placeholder Table Name and Shared Per-Interval State"
+before:
+  commit: "5f39e80"
+  engine_tests: {total: 767, failures: 187, errors: 1}
+  fits: {total_cases: 4896, passed: 3364, failed_assertions: 1531, execution_errors: 1}
+  fits_runtime_seconds: 39.9
+after:
+  commit: "a177829"
+  engine_tests: {total: 767, failures: 185, errors: 1}
+  fits: {total_cases: 4896, passed: 3364, failed_assertions: 1531, execution_errors: 1}
+  fits_runtime_seconds: 39.9
+summary: >
+  The fourth Role B round, both closing unit 6.6 to fully green: (1) an
+  unfilled "Table " placeholder attribute-table name, filled in to
+  "Table 6-20 Allowable Interval Attributes"; (2) each per-interval
+  decision table shared one ConditionAttribute instance for the absolute
+  minimum interval date, so every allowable interval on a target dose
+  was checked against only the last interval's date - fixed by giving
+  each per-interval table its own copies, mirroring the pattern 6.5
+  already uses correctly. Latent against the bundled Supporting Data (no
+  series dose carries more than one populated allowable interval). Unit
+  6.6: 23/2 -> 25/0 green/red. Full cdsi-engine suite: 187 -> 185
+  failures (down exactly 2), 0 regressions. FITS suite unchanged
+  (3364/1531/1 identical both sides). See SPEC-4.6-0011.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0011/finding.md"
+finding_ids: ["SPEC-4.6-0011"]
+status: reviewed
