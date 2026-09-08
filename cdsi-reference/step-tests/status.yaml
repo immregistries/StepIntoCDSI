@@ -1060,12 +1060,17 @@ units:
   '6.6':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluateAllowableIntervalTest
-    fix_status: not_started
+    fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0011"]
     notes: >-
-      25 tests, 23 green and 2 red. Covered: the step's identity
+      25 tests, now all 25 green (was 23/2 - see SPEC-4.6-0011: filled in
+      the placeholder attribute-table name, and gave each per-interval
+      decision table its own ConditionAttribute copies instead of sharing
+      them on the outer step, so each interval is now checked against its
+      own absolute minimum interval date rather than the last one set;
+      reviewed and merged). Covered: the step's identity
       (EVALUATE_ALLOWABLE_INTERVAL, chapter "6.6") and its Table 6-20 attribute
       table name; Table 6-20's three attributes - exactly three, not 6.5's four,
       since 6.6 has no Minimum Interval Date row - with their types, their values
@@ -1090,20 +1095,24 @@ units:
       dose with all three elements 6.6 reads, and that a bare allowableInterval
       element loads as no allowable interval at all.
 
-      The 2 red tests, expected vs actual. (1)
+      Fixed (SPEC-4.6-0011, merged). (1)
       theStepNamesTableSixTwentyAsItsAttributeTable - expected "Table 6-20
-      Allowable Interval Attributes", the way 6.3 and 6.4 name theirs; actual the
-      placeholder "Table ", the same shape as 6.5's equivalent red. (2)
+      Allowable Interval Attributes", the way 6.3 and 6.4 name theirs; the step
+      left the placeholder "Table ", the same shape as 6.5's equivalent red - now
+      filled in. (2)
       eachAllowableIntervalIsCheckedAgainstItsOwnAbsoluteMinimumIntervalDate -
       expected an allowable interval the dose does not satisfy to be reported as
       an interval failure even when a second one is satisfied (two intervals from
       the immediate previous dose administered, 2 years and 4 weeks from
-      01/01/2016, with the dose given 02/15/2016); actual no interval failure
-      recorded, because EvaluateAllowableInterval declares its three Table 6-20
-      ConditionAttribute objects once on the step and overwrites them inside the
-      per-interval loop, so all of its Table 6-21 instances answer against the
-      last interval's absolute minimum interval date. 6.5 avoids this by giving
-      each of its tables its own attribute objects.
+      01/01/2016, with the dose given 02/15/2016); no interval failure used to be
+      recorded, because EvaluateAllowableInterval declared its three Table 6-20
+      ConditionAttribute objects once on the step and overwrote them inside the
+      per-interval loop, so all of its Table 6-21 instances answered against the
+      last interval's absolute minimum interval date. Fixed by giving each
+      per-interval decision table its own ConditionAttribute copies, mirroring
+      how 6.5 already avoids this mistake - the step-level attributes and
+      getConditionAttributeList() registration (6.6's own convention, unlike
+      6.5's per-interval getConditionAttributesAdditionalMap()) are unchanged.
 
       Materiality of red (2), checked against the Supporting Data release bundled
       in cdsi-engine/src/main/resources. Its 30 antigen files hold 484 seriesDose

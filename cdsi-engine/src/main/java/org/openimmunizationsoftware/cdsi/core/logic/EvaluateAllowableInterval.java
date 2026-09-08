@@ -27,7 +27,7 @@ public class EvaluateAllowableInterval extends LogicStep {
 
   public EvaluateAllowableInterval(DataModel dataModel) {
     super(LogicStepType.EVALUATE_ALLOWABLE_INTERVAL, dataModel);
-    setConditionTableName("Table ");
+    setConditionTableName("Table 6-20 Allowable Interval Attributes");
 
     caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
     caAllowableIntervalElements = new ConditionAttribute<AllowableInterval>("Supporting Data",
@@ -48,10 +48,10 @@ public class EvaluateAllowableInterval extends LogicStep {
       for (AllowableInterval aInterval : seriesDose.getAllowableintervalList()) {
         caAllowableIntervalElements.setInitialValue(aInterval);
         Interval intervalFromAllowableInterval = aInterval.getInterval();
-        caAbsoluteMinimumIntervalDate
-            .setInitialValue(CALCDTINT_3.evaluate(dataModel, this, intervalFromAllowableInterval));
+        Date absoluteMinimumIntervalDate = CALCDTINT_3.evaluate(dataModel, this, intervalFromAllowableInterval);
+        caAbsoluteMinimumIntervalDate.setInitialValue(absoluteMinimumIntervalDate);
 
-        LT logicTable = new LT();
+        LT logicTable = new LT(aar.getDateAdministered(), absoluteMinimumIntervalDate);
         logicTable.setLogicStepSink(this.getLogicStepSink());
         logicTableList.add(logicTable);
       }
@@ -80,11 +80,20 @@ public class EvaluateAllowableInterval extends LogicStep {
   }
 
   private class LT extends LogicTable {
+    private final ConditionAttribute<Date> caDateAdministered;
+    private final ConditionAttribute<Date> caAbsoluteMinimumIntervalDate;
     private YesNo result = null;
 
-    public LT() {
+    public LT(Date dateAdministered, Date absoluteMinimumIntervalDate) {
       super(1, 2,
           "Table 6 - 21 Did the vaccine dose administered satisfy the defined Allowable interval?");
+
+      caDateAdministered = new ConditionAttribute<Date>("Vaccine dose administered", "Date Administered");
+      caDateAdministered.setInitialValue(dateAdministered);
+      caAbsoluteMinimumIntervalDate = new ConditionAttribute<Date>("Calculated Date",
+          "Absolute Minimum Interval Date");
+      caAbsoluteMinimumIntervalDate.setAssumedValue(PAST);
+      caAbsoluteMinimumIntervalDate.setInitialValue(absoluteMinimumIntervalDate);
 
       setLogicCondition(0,
           new LogicCondition("Is the date administered < absolute minimum interval date?") {
