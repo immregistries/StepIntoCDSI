@@ -1,6 +1,8 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
@@ -13,7 +15,7 @@ public class Interval {
   private SeriesDose seriesDose = null;
   private YesNo fromImmediatePreviousDoseAdministered = null;
   private String fromTargetDoseNumberInSeries = "";
-  private VaccineType fromMostRecentVaccineType = null;
+  private List<VaccineType> fromMostRecentVaccineTypeList = new ArrayList<VaccineType>();
   private ObservationCode fromRelevantObservation = null;
   private TimePeriod absoluteMinimumInterval = null;
   private TimePeriod minimumInterval = null;
@@ -56,12 +58,12 @@ public class Interval {
     this.fromTargetDoseNumberInSeries = fromTargetDoseNumberInSeries;
   }
 
-  public VaccineType getFromMostRecentVaccineType() {
-    return fromMostRecentVaccineType;
+  public List<VaccineType> getFromMostRecentVaccineTypeList() {
+    return fromMostRecentVaccineTypeList;
   }
 
-  public void setFromMostRecentVaccineType(VaccineType fromMostRecentVaccineType) {
-    this.fromMostRecentVaccineType = fromMostRecentVaccineType;
+  public void setFromMostRecentVaccineTypeList(List<VaccineType> fromMostRecentVaccineTypeList) {
+    this.fromMostRecentVaccineTypeList = fromMostRecentVaccineTypeList;
   }
 
   public ObservationCode getFromRelevantObservation() {
@@ -195,14 +197,29 @@ public class Interval {
       }
       // CALCDTINT-8
       if (fromImmediatePreviousDoseAdministered == YesNo.NO) {
-        if (this.fromMostRecentVaccineType != null) {
-          if (!previousVdaEvaluation.getEvaluationReason().equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
-            Date mostRecentDate = null;
-            for (AntigenAdministeredRecord aar : dataModel.getAntigenAdministeredRecordList()) {
-              if (aar.getVaccineType().equals(this.fromMostRecentVaccineType)) {
-                mostRecentDate = aar.getDateAdministered();
-              }
+        if (!this.fromMostRecentVaccineTypeList.isEmpty()) {
+          Date dateAdministeredForThisEvaluation = dataModel.getAntigenAdministeredRecord().getDateAdministered();
+          Date mostRecentDate = null;
+          for (AntigenAdministeredRecord aar : dataModel.getAntigenAdministeredRecordList()) {
+            if (!this.fromMostRecentVaccineTypeList.contains(aar.getVaccineType())) {
+              continue;
             }
+            Date dateAdministered = aar.getDateAdministered();
+            // dataModel.getAntigenAdministeredRecordList() holds the patient's whole
+            // history, including the dose currently being evaluated and any later ones -
+            // "most recent" must mean strictly before this dose, or a dose could
+            // reference itself (or a future dose) as its own reference date.
+            if (!dateAdministered.before(dateAdministeredForThisEvaluation)) {
+              continue;
+            }
+            if (!isEligibleCalcdtint8ReferenceDose(aar)) {
+              continue;
+            }
+            if (mostRecentDate == null || dateAdministered.after(mostRecentDate)) {
+              mostRecentDate = dateAdministered;
+            }
+          }
+          if (mostRecentDate != null) {
             tmpPatientReferenceDoseDate = mostRecentDate;
             logicStep.log(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
                 "REASONING: Using CALCDTINT-8");
@@ -230,5 +247,37 @@ public class Interval {
 
     return tmpPatientReferenceDoseDate;
 
+  }
+
+  /**
+   * CALCDTINT-8 excludes a candidate dose that "is an inadvertent administration" -
+   * that dose's own evaluation, not the previous target dose's, which
+   * CALCDTINT-1/2 already check separately. It must also exclude an extraneous
+   * dose, the same way CALCDTINT-1 only accepts a reference dose whose evaluation
+   * status is VALID or NOT_VALID - an extraneous dose (e.g. a booster given too
+   * soon after a prior one) does not represent a real, countable administration
+   * of the vaccine, so it must not become the "most recent" reference point
+   * either. Reads {@code VaccineDoseAdministered.getEvaluatedAgainstTargetDose()}
+   * (set by 6.10 Satisfy Target Dose for every outcome, not just the satisfied
+   * one) rather than {@code TargetDose.getSatisfiedByVaccineDoseAdministered()},
+   * which several other steps rely on staying null for anything but a genuinely
+   * satisfied dose - reusing that field here would have broken those. A dose
+   * that was never evaluated against any target dose (belongs to a
+   * series/antigen this interval's target dose isn't part of) is not excluded -
+   * there is no evidence against it.
+   */
+  private boolean isEligibleCalcdtint8ReferenceDose(AntigenAdministeredRecord aar) {
+    TargetDose targetDose = aar.getVaccineDoseAdministered().getEvaluatedAgainstTargetDose();
+    if (targetDose == null || targetDose.getEvaluation() == null) {
+      return true;
+    }
+    Evaluation evaluation = targetDose.getEvaluation();
+    if (evaluation.getEvaluationStatus() == EvaluationStatus.EXTRANEOUS) {
+      return false;
+    }
+    if (evaluation.getEvaluationReason() == EvaluationReason.INADVERTENT_ADMINISTRATION) {
+      return false;
+    }
+    return true;
   }
 }

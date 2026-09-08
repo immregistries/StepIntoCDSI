@@ -937,12 +937,29 @@ units:
     fix_status: in_progress
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0012"]
+    finding_ids: ["SPEC-4.6-0012", "SPEC-4.6-0013"]
     notes: >-
-      27 tests, now 23 green and 4 red (was 20/7 - see SPEC-4.6-0012:
-      fixed the misassigned GRACE_PERIOD/TOO_SOON evaluation reason, the
-      unfilled attribute-table-name placeholder, and the "Mimium"/
-      "Minimum" misspelling; reviewed and merged). The remaining 4 red
+      30 tests (27 + 3 added this round), now 28 green and 2 red (was
+      20/7 originally - see SPEC-4.6-0012: fixed the misassigned
+      GRACE_PERIOD/TOO_SOON evaluation reason, the unfilled
+      attribute-table-name placeholder, and the "Mimium"/"Minimum"
+      misspelling; and SPEC-4.6-0013: fixed CALCDTINT-8 - a missing null
+      check that made it dead code on every real invocation, no loader
+      support for the Supporting Data's multi-CVX <fromMostRecent> list,
+      and (found only after an intermediate fix caused a real 20-case
+      FITS regression, root-caused by direct engine inspection) a missing
+      lower bound that let a dose reference itself as its own "most
+      recent" reference date. Also added VaccineDoseAdministered.
+      evaluatedAgainstTargetDose, wired into all six of 6.10 Satisfy
+      Target Dose's outcomes (not just the satisfied one) - a
+      project-owner-approved cross-step addition, since the existing
+      satisfiedByVaccineDoseAdministered/getTargetDose() links are relied
+      on elsewhere to stay null for anything but a genuinely satisfied
+      dose. Net FITS effect: a strict no-op (0 cases changed in either
+      direction) - the corrected rule is now provably right against 55
+      real Supporting Data intervals, just not currently exercised by any
+      of the 4896 bundled FITS fixtures; both fixes reviewed and merged).
+      The remaining 2 red
       tests are a separate, materially significant CALCDTINT-8/CALCDTINT-9
       cluster (blocked in both the Supporting Data loader and the
       reference-date rule body, affecting 61 real populated intervals),
@@ -987,43 +1004,58 @@ units:
       6-17 row 4's name "Minimum Interval Date"; "Mimium Interval Date", a
       misspelling in the published attribute name, is now corrected.
 
-      Still red - a separate, materially significant cluster deliberately not
-      touched this round. (1)
-      calcdtintEightMeasuresFromTheMostRecentDoseOfANamedVaccineType - expected
-      the absolute minimum interval date measured from the most recent dose of
-      the named vaccine type (PCV13 03/01/2016 + 8 weeks = 04/26/2016); actual
-      the assumed 01/01/1900, because the CALCDTINT-8 branch evaluates
+      Fixed (SPEC-4.6-0013, merged - CALCDTINT-8, see below for the full
+      story). (1) calcdtintEightMeasuresFromTheMostRecentDoseOfANamedVaccineType -
+      expected the absolute minimum interval date measured from the most
+      recent dose of the named vaccine type (PCV13 03/01/2016 + 8 weeks =
+      04/26/2016); it used to fall back to the assumed 01/01/1900, because
+      the CALCDTINT-8 branch evaluated
       !previousVdaEvaluation.getEvaluationReason().equals(INADVERTENT_ADMINISTRATION)
-      without a null check, and a plainly-valid previous dose (6.4 Table 6-15
-      Rule 3) has no evaluation reason, so it throws NullPointerException into
-      the method's own catch block and leaves the reference dose date null. (2)
-      calcdtintNineMeasuresFromTheMostRecentMatchingPatientObservation - expected
-      the reference dose date to be the matching patient observation's date
-      (onset of pregnancy 01/10/2016, so 0 days and 27 weeks give 01/10/2016 and
-      07/17/2016); actual the assumed 01/01/1900 for both, because the
-      CALCDTINT-9 branch only logs "REASONING: Using CALCDTINT-9" and never
-      assigns a date. (3) theSupportingDatasFromMostRecentVaccineTypeReachesTheInterval
-      and (4) theSupportingDatasFromRelevantObservationCodeReachesTheInterval -
-      expected an Interval loaded from the Supporting Data's own markup to carry
-      its from most recent vaccine type and its from relevant observation code;
-      actual null for both, because DataModelLoader.readSeriesDose's interval
-      branch has no case for the <fromMostRecent> or <fromRelevantObs> elements
-      (it handles fromPrevious, fromTargetDose, absMinInt, minInt, earliestRecInt,
-      latestRecInt and intervalPriority, and drops the rest), and neither
-      Interval.setFromMostRecentVaccineType nor
-      Interval.setFromRelevantObservation is called from anywhere in the engine.
-      So CALCDTINT-8 and CALCDTINT-9 are each blocked twice over - once in the
-      loader, once in the rule body.
+      without a null check, and a plainly-valid previous dose has no
+      evaluation reason, so it threw NullPointerException into the
+      method's own catch block and left the reference dose date null. (2)
+      theSupportingDatasFromMostRecentVaccineTypeReachesTheInterval -
+      expected an Interval loaded from the Supporting Data's own markup to
+      carry its from most recent vaccine type list; it used to be null,
+      because DataModelLoader.readSeriesDose's interval branch had no case
+      for the <fromMostRecent> element at all (it handled fromPrevious,
+      fromTargetDose, absMinInt, minInt, earliestRecInt, latestRecInt and
+      intervalPriority, and dropped the rest). Fixing the null check
+      alone surfaced a second, more consequential bug that only showed up
+      against real FITS data - a missing lower bound let a dose reference
+      itself as its own "most recent" reference date - root-caused by
+      direct engine inspection and fixed alongside; see SPEC-4.6-0013 for
+      the complete investigation, including the intermediate wrong turn.
 
-      Materiality of reds (2)-(5), checked against the Supporting Data release
-      bundled in cdsi-engine/src/main/resources. Its 30 antigen files hold 597
+      Still red - CALCDTINT-9, a separate cluster deliberately not touched
+      this round (observations are lower priority and cannot move any
+      FITS case - the FITS fixture format has no observation field at
+      all). (1) calcdtintNineMeasuresFromTheMostRecentMatchingPatientObservation -
+      expected the reference dose date to be the matching patient
+      observation's date (onset of pregnancy 01/10/2016, so 0 days and 27
+      weeks give 01/10/2016 and 07/17/2016); actual the assumed
+      01/01/1900 for both, because the CALCDTINT-9 branch only logs
+      "REASONING: Using CALCDTINT-9" and never assigns a date. (2)
+      theSupportingDatasFromRelevantObservationCodeReachesTheInterval -
+      expected an Interval loaded from the Supporting Data's own markup to
+      carry its from relevant observation code; actual null, because
+      DataModelLoader.readSeriesDose's interval branch has no case for the
+      <fromRelevantObs> element either, and neither
+      Interval.setFromRelevantObservation nor an ObservationCode
+      equals()/hashCode() (needed for the match to work once populated) is
+      implemented anywhere in the engine. So CALCDTINT-9 is still blocked
+      twice over - once in the loader, once in the rule body.
+
+      Materiality, checked against the Supporting Data release bundled in
+      cdsi-engine/src/main/resources. Its 30 antigen files hold 597
       <interval> elements, 107 of them empty and 490 populated. Of those 490, 388
       measure from the immediate previous dose administered (CALCDTINT-1, which
       works), 41 from a named target dose number (CALCDTINT-2, which works: HepB
       17, HPV 12, Meningococcal B 6, HepA 4, Pneumococcal 2), 55 from a most
-      recent vaccine type (CALCDTINT-8: COVID-19 31, Pneumococcal 14, Pertussis
-      4, Zoster 4, Meningococcal 2) and 6 from a relevant observation code
-      (CALCDTINT-9: one each in Hib, Measles, Mumps, Pertussis, RSV and Rubella,
+      recent vaccine type (CALCDTINT-8, which now works: COVID-19 31,
+      Pneumococcal 14, Pertussis 4, Zoster 4, Meningococcal 2) and 6 from a
+      relevant observation code (CALCDTINT-9, still blocked: one each in
+      Hib, Measles, Mumps, Pertussis, RSV and Rubella,
       all on Dose 1, using observation codes 171 "Date of hematopoietic stem cell
       transplant", 120 "Begin Date of antiviral therapy [ART]" and 170 "Onset of
       pregnancy" - the last being the Pertussis example section 6.5's own text

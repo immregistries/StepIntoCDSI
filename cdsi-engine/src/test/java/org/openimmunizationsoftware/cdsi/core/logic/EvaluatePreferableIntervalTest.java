@@ -13,6 +13,7 @@ import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -825,9 +826,105 @@ public class EvaluatePreferableIntervalTest {
 
     dataModel.getAntigenAdministeredRecordList().add(administeredRecord("03/01/2016", "133"));
     dataModel.getAntigenAdministeredRecordList().add(administeredRecord("06/01/2016", "10"));
+    administeredOn("07/01/2016"); // the dose whose own interval is being evaluated, after both history doses
 
     Interval preferableInterval = interval(YesNo.NO, "8 weeks", "8 weeks");
-    preferableInterval.setFromMostRecentVaccineType(pcv13);
+    preferableInterval.setFromMostRecentVaccineTypeList(Arrays.asList(pcv13));
+
+    run();
+
+    assertCalculatedDateIs("04/26/2016", 2, ABSOLUTE_MINIMUM_INTERVAL_DATE);
+  }
+
+  /**
+   * The bundled release's real shape for CALCDTINT-8: {@code <fromMostRecent>}
+   * names several CVX codes, not one, and a dose of any of them counts (55 of
+   * the 55 real occurrences are multi-code lists but one; the field is a list
+   * for exactly this reason). Two named vaccine types are administered on
+   * different dates; the later one's date is the reference dose date.
+   */
+  @Test
+  public void calcdtintEightMatchesADoseOfAnyNamedVaccineTypeInTheList() throws Exception {
+    VaccineType pcv13 = new VaccineType();
+    pcv13.setCvxCode("133");
+    VaccineType pcv15 = new VaccineType();
+    pcv15.setCvxCode("215");
+
+    dataModel.getAntigenAdministeredRecordList().add(administeredRecord("03/01/2016", "133"));
+    dataModel.getAntigenAdministeredRecordList().add(administeredRecord("04/01/2016", "215"));
+    administeredOn("05/01/2016"); // the dose whose own interval is being evaluated, after both history doses
+
+    Interval preferableInterval = interval(YesNo.NO, "8 weeks", "8 weeks");
+    preferableInterval.setFromMostRecentVaccineTypeList(Arrays.asList(pcv13, pcv15));
+
+    run();
+
+    assertCalculatedDateIs("05/27/2016", 2, ABSOLUTE_MINIMUM_INTERVAL_DATE);
+  }
+
+  /**
+   * CALCDTINT-8 excludes a dose that "is an inadvertent administration" - that
+   * dose's own evaluation, not some unrelated previous target dose's. The most
+   * recent PCV13 dose was itself inadvertent, so the reference dose date must
+   * fall back to the next-most-recent PCV13 dose that was not.
+   */
+  @Test
+  public void calcdtintEightExcludesADoseThatWasItselfAnInadvertentAdministration() throws Exception {
+    VaccineType pcv13 = new VaccineType();
+    pcv13.setCvxCode("133");
+
+    AntigenAdministeredRecord earlierValidDose = administeredRecord("03/01/2016", "133");
+    AntigenAdministeredRecord laterInadvertentDose = administeredRecord("05/01/2016", "133");
+    dataModel.getAntigenAdministeredRecordList().add(earlierValidDose);
+    dataModel.getAntigenAdministeredRecordList().add(laterInadvertentDose);
+
+    TargetDose evaluatedAgainstInadvertentDose = new TargetDose();
+    Evaluation inadvertentEvaluation = new Evaluation();
+    inadvertentEvaluation.setEvaluationReason(EvaluationReason.INADVERTENT_ADMINISTRATION);
+    evaluatedAgainstInadvertentDose.setEvaluation(inadvertentEvaluation);
+    laterInadvertentDose.getVaccineDoseAdministered()
+        .setEvaluatedAgainstTargetDose(evaluatedAgainstInadvertentDose);
+    administeredOn("06/01/2016"); // the dose whose own interval is being evaluated, after both history doses
+
+    Interval preferableInterval = interval(YesNo.NO, "8 weeks", "8 weeks");
+    preferableInterval.setFromMostRecentVaccineTypeList(Arrays.asList(pcv13));
+
+    run();
+
+    assertCalculatedDateIs("04/26/2016", 2, ABSOLUTE_MINIMUM_INTERVAL_DATE);
+  }
+
+  /**
+   * CALCDTINT-8 must also exclude a dose evaluated as extraneous - the same way
+   * CALCDTINT-1 only ever accepts a reference dose whose evaluation status is
+   * VALID or NOT_VALID. An extraneous dose (e.g. a booster given too soon after
+   * a prior one) is not a real, countable administration, so it must not become
+   * the "most recent" reference point. Regression case for
+   * FITS MCV-2023-0106 ("Patient... has been administered an extraneous dose
+   * of the Meningococcal vaccine"), where the second, extraneous MenACWY dose
+   * was wrongly picked as the CALCDTINT-8 reference date, making an already
+   * complete series look incomplete.
+   */
+  @Test
+  public void calcdtintEightExcludesADoseThatWasEvaluatedAsExtraneous() throws Exception {
+    VaccineType pcv13 = new VaccineType();
+    pcv13.setCvxCode("133");
+
+    AntigenAdministeredRecord earlierValidDose = administeredRecord("03/01/2016", "133");
+    AntigenAdministeredRecord laterExtraneousDose = administeredRecord("05/01/2016", "133");
+    dataModel.getAntigenAdministeredRecordList().add(earlierValidDose);
+    dataModel.getAntigenAdministeredRecordList().add(laterExtraneousDose);
+
+    TargetDose evaluatedAgainstExtraneousDose = new TargetDose();
+    Evaluation extraneousEvaluation = new Evaluation();
+    extraneousEvaluation.setEvaluationStatus(EvaluationStatus.EXTRANEOUS);
+    evaluatedAgainstExtraneousDose.setEvaluation(extraneousEvaluation);
+    laterExtraneousDose.getVaccineDoseAdministered()
+        .setEvaluatedAgainstTargetDose(evaluatedAgainstExtraneousDose);
+    administeredOn("06/01/2016"); // the dose whose own interval is being evaluated, after both history doses
+
+    Interval preferableInterval = interval(YesNo.NO, "8 weeks", "8 weeks");
+    preferableInterval.setFromMostRecentVaccineTypeList(Arrays.asList(pcv13));
 
     run();
 
@@ -877,12 +974,20 @@ public class EvaluatePreferableIntervalTest {
    * Confirms CALCDTINT-8's input can actually reach the step: the bundled
    * release's own markup for a "from most recent vaccine type" interval, read
    * through {@code DataModelLoader.readSeriesDose}, must produce an
-   * {@code Interval} whose from most recent vaccine type is set. The markup below
-   * is Pneumococcal's shape - {@code <fromPrevious>N</fromPrevious>} with a
-   * {@code <fromMostRecent>} vaccine type list.
+   * {@code Interval} whose from most recent vaccine type list is set - a
+   * semicolon-delimited CVX list, not a single code, which is COVID-19's own
+   * real shape (33 CVX codes on one interval; only 1 of the release's 55
+   * populated occurrences names a single code).
    */
   @Test
   public void theSupportingDatasFromMostRecentVaccineTypeReachesTheInterval() throws Exception {
+    VaccineType pcv13 = new VaccineType();
+    pcv13.setCvxCode("133");
+    dataModel.getCvxMap().put("133", pcv13);
+    VaccineType pcv15 = new VaccineType();
+    pcv15.setCvxCode("215");
+    dataModel.getCvxMap().put("215", pcv15);
+
     SeriesDose loaded = new SeriesDose();
     readSeriesDose(loaded, ""
         + "<seriesDose>"
@@ -890,7 +995,7 @@ public class EvaluatePreferableIntervalTest {
         + "<interval>"
         + "<fromPrevious>N</fromPrevious>"
         + "<fromTargetDose />"
-        + "<fromMostRecent>133</fromMostRecent>"
+        + "<fromMostRecent>133; 215</fromMostRecent>"
         + "<fromRelevantObs />"
         + "<absMinInt>8 weeks</absMinInt>"
         + "<minInt>8 weeks</minInt>"
@@ -906,8 +1011,11 @@ public class EvaluatePreferableIntervalTest {
     assertEquals("the interval is loaded", 1, loaded.getIntervalList().size());
     Interval loadedInterval = loaded.getIntervalList().get(0);
     assertEquals(YesNo.NO, loadedInterval.getFromImmediatePreviousDoseAdministered());
-    assertNotNull("CALCDTINT-8 needs the interval's from most recent vaccine type",
-        loadedInterval.getFromMostRecentVaccineType());
+    List<VaccineType> fromMostRecentVaccineTypeList = loadedInterval.getFromMostRecentVaccineTypeList();
+    assertEquals("CALCDTINT-8 needs every CVX code in the from most recent list, not just one",
+        2, fromMostRecentVaccineTypeList.size());
+    assertEquals("133", fromMostRecentVaccineTypeList.get(0).getCvxCode());
+    assertEquals("215", fromMostRecentVaccineTypeList.get(1).getCvxCode());
   }
 
   /**

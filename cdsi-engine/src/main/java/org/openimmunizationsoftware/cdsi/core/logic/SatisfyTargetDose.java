@@ -121,6 +121,8 @@ public class SatisfyTargetDose extends LogicStep {
           // dose can be accessed through the VDA
           dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered()
               .setTargetDose(dataModel.getTargetDose());
+          dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered()
+              .setEvaluatedAgainstTargetDose(dataModel.getTargetDose());
         }
       });
 
@@ -130,6 +132,8 @@ public class SatisfyTargetDose extends LogicStep {
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
           log("No. The target dose status is 'Not Satisfied'. Evaluation status is 'Extraneous' with evaluation reasons.");
           dataModel.getTargetDose().getEvaluation().setEvaluationStatus(EvaluationStatus.EXTRANEOUS);
+          dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered()
+              .setEvaluatedAgainstTargetDose(dataModel.getTargetDose());
         }
       });
 
@@ -139,6 +143,8 @@ public class SatisfyTargetDose extends LogicStep {
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
           log("No. The target dose status is 'Not Satisfied'. Evaluation status is 'Not Valid' with evaluation reasons.");
           dataModel.getTargetDose().getEvaluation().setEvaluationStatus(EvaluationStatus.NOT_VALID);
+          dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered()
+              .setEvaluatedAgainstTargetDose(dataModel.getTargetDose());
         }
       });
 
@@ -148,6 +154,8 @@ public class SatisfyTargetDose extends LogicStep {
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
           log("No. The target dose status is 'Not Satisfied'. Evaluation status is 'Not Valid' with evaluation reasons.");
           dataModel.getTargetDose().getEvaluation().setEvaluationStatus(EvaluationStatus.NOT_VALID);
+          dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered()
+              .setEvaluatedAgainstTargetDose(dataModel.getTargetDose());
         }
       });
 
@@ -157,6 +165,8 @@ public class SatisfyTargetDose extends LogicStep {
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
           log("No. The target dose status is 'Not Satisfied'. Evaluation status is 'Not Valid' with evaluation reasons. ");
           dataModel.getTargetDose().getEvaluation().setEvaluationStatus(EvaluationStatus.NOT_VALID);
+          dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered()
+              .setEvaluatedAgainstTargetDose(dataModel.getTargetDose());
         }
       });
 
@@ -166,6 +176,8 @@ public class SatisfyTargetDose extends LogicStep {
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
           log("No. The target dose status is 'Not Satisfied'. Evaluation status is 'Not Valid' with evaluation reasons.");
           dataModel.getTargetDose().getEvaluation().setEvaluationStatus(EvaluationStatus.NOT_VALID);
+          dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered()
+              .setEvaluatedAgainstTargetDose(dataModel.getTargetDose());
         }
       });
     }

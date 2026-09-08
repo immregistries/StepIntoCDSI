@@ -598,6 +598,25 @@ public class DataModelLoader {
                   interval.setFromTargetDoseNumberInSeries(fromTargetDose);
                   populated = true;
                 }
+              } else if (childNode.getNodeName().equals("fromMostRecent")) {
+                String fromMostRecent = DomUtils.getInternalValue(childNode);
+                if (!fromMostRecent.equalsIgnoreCase("n/a") && !fromMostRecent.equals("")) {
+                  List<VaccineType> fromMostRecentVaccineTypeList = new ArrayList<VaccineType>();
+                  for (String cvxCode : fromMostRecent.split(";")) {
+                    cvxCode = cvxCode.trim();
+                    if (cvxCode.length() == 0) {
+                      continue;
+                    }
+                    VaccineType cvx = supportingDataModel.getCvx(cvxCode);
+                    if (cvx != null) {
+                      fromMostRecentVaccineTypeList.add(cvx);
+                    }
+                  }
+                  if (fromMostRecentVaccineTypeList.size() > 0) {
+                    interval.setFromMostRecentVaccineTypeList(fromMostRecentVaccineTypeList);
+                    populated = true;
+                  }
+                }
               } else if (childNode.getNodeName().equals("absMinInt")) {
                 TimePeriod timePeriod = new TimePeriod(DomUtils.getInternalValue(childNode));
                 interval.setAbsoluteMinimumInterval(timePeriod);
