@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-08 10:17:58 - regenerate with
+  Dashboard generated 2026-09-08 10:58:19 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,11 +57,11 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">8</div>
+    <div class="value">9</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
-    <div class="value">68.7%</div>
+    <div class="value">69.0%</div>
     <div class="label">FITS pass rate now</div>
   </div>
   <div class="card">
@@ -75,6 +75,25 @@
 </div>
 
 
+<section>
+  <h2>2026-09-08 - Phase 21 - Role B Round 8 - EvaluateVaccineConflict&#x27;s Dead Live-Virus Conflict Window
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>The eighth Role B round, and the first in this whole pass to actually move the FITS suite. EvaluateVaccineConflict&#x27;s live-virus conflict window was effectively dead code in any normal chronological history: its per-previous-dose loop scanned doses after the current one instead of before, a copy-paste bug always collapsed the conflict end date to the begin date, the begin boundary was exclusive instead of the documented inclusive, and matching ignored the conflicting vaccine type. Fixing all four flipped 14 real FITS cases (3 distinct scenarios - two MMR-after-MMR-too-soon, one Varicella - all from standard age-based routine schedule test plans) from FAIL to PASS, with 0 regressions. Full cdsi-engine suite: 179 -&gt; 171 failures (down exactly 8). FITS suite: 3364 -&gt; 3378 passed (68.7% -&gt; 69.0%). See SPEC-4.6-0015.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>7f3b782</code></td></tr><tr><td>Engine tests</td><td>770 total, 179 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>f741ad3</code></td></tr><tr><td>Engine tests</td><td>770 total, 171 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3378 passed, 1517 failed-assertion, 1 execution-error (69.0%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0015/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0015/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0015</p>
+</section>
 <section>
   <h2>2026-09-08 - Phase 21 - Role B Round 7 - Unadjusted Recommended Date Falling Back to Wall-Clock Now
     <span class="badge badge-green">reviewed</span>
