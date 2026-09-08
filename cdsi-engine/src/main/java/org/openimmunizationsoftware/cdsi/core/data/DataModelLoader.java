@@ -521,6 +521,9 @@ public class DataModelLoader {
                 } else if (grandchildNode.getNodeName().equals("seriesPreference")) {
                   selectPatientSeries
                       .setSeriesPreference(DomUtils.getInternalValue(grandchildNode));
+                } else if (grandchildNode.getNodeName().equals("minAgeToStart")) {
+                  selectPatientSeries
+                      .setMinAgeToStart(new TimePeriod(DomUtils.getInternalValue(grandchildNode)));
                 } else if (grandchildNode.getNodeName().equals("maxAgeToStart")) {
                   selectPatientSeries
                       .setMaxAgeToStart(new TimePeriod(DomUtils.getInternalValue(grandchildNode)));

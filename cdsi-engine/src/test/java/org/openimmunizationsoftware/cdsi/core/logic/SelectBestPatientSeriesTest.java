@@ -6,8 +6,11 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Before;
@@ -15,8 +18,12 @@ import org.junit.Test;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.Patient;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.SelectPatientSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 
 /**
  * Section 4.5 "Select Best Patient Series" (Logic Specification for ACIP
@@ -118,6 +125,25 @@ public class SelectBestPatientSeriesTest {
     selectPatientSeries.setSeriesGroup(seriesGroup);
     antigenSeries.setSelectPatientSeries(selectPatientSeries);
     return antigenSeries;
+  }
+
+  private static void setMinimumAgeToStart(AntigenSeries antigenSeries, String timePeriod) {
+    antigenSeries.getSelectPatientSeries().setMinAgeToStart(new TimePeriod(timePeriod));
+  }
+
+  private void setPatient(String dateOfBirth, String assessmentDate) {
+    Patient patient = new Patient();
+    patient.setDateOfBirth(date(dateOfBirth));
+    dataModel.setPatient(patient);
+    dataModel.setAssessmentDate(date(assessmentDate));
+  }
+
+  private static Date date(String monthDayYear) {
+    try {
+      return new SimpleDateFormat("MM/dd/yyyy").parse(monthDayYear);
+    } catch (ParseException e) {
+      throw new IllegalArgumentException(e);
+    }
   }
 
   /**
@@ -333,6 +359,82 @@ public class SelectBestPatientSeriesTest {
     process();
     assertEquals("The second antigen's groups must not carry the first antigen's groups",
         Arrays.asList("1"), dataModel.getSeriesGroupStepper().getList());
+  }
+
+  /**
+   * SPEC-4.6-0021: a series group whose only member series the patient has not
+   * yet reached the minimum age to start (e.g. PCV's solo "Standard 50+"
+   * series group) must not be queued onto the stepper at all when the patient
+   * has no progress toward it - otherwise Chapter 8 independently promotes it
+   * into a competing best patient series for a patient it plainly does not
+   * apply to.
+   */
+  @Test
+  public void aSeriesGroupWhoseSoleSeriesThePatientHasNotReachedTheMinimumAgeToStartForIsExcluded() throws Exception {
+    List<Antigen> selected = selectAntigens(HEPB);
+    supportingDataAntigenSeries("HepB standard", selected.get(0), "1");
+    AntigenSeries riskSeries = supportingDataAntigenSeries("HepB Standard 50+", selected.get(0), "3");
+    setMinimumAgeToStart(riskSeries, "50 years");
+    setPatient("06/01/2000", "06/01/2026");
+
+    process();
+
+    assertEquals(Arrays.asList("1"), dataModel.getSeriesGroupStepper().getList());
+  }
+
+  /** The same series group is included once the patient is old enough for it. */
+  @Test
+  public void aSeriesGroupWhoseSoleSeriesThePatientHasReachedTheMinimumAgeToStartForIsIncluded() throws Exception {
+    List<Antigen> selected = selectAntigens(HEPB);
+    supportingDataAntigenSeries("HepB standard", selected.get(0), "1");
+    AntigenSeries riskSeries = supportingDataAntigenSeries("HepB Standard 50+", selected.get(0), "3");
+    setMinimumAgeToStart(riskSeries, "50 years");
+    setPatient("06/01/1970", "06/01/2026");
+
+    process();
+
+    assertEquals(Arrays.asList("1", "3"), dataModel.getSeriesGroupStepper().getList());
+  }
+
+  /**
+   * An age-inappropriate series group is still included when the patient
+   * already has a satisfied dose toward one of its series - genuine progress
+   * is never hidden by an age window.
+   */
+  @Test
+  public void aSeriesGroupIsIncludedWhenThePatientHasASatisfiedDoseTowardItRegardlessOfAge() throws Exception {
+    List<Antigen> selected = selectAntigens(HEPB);
+    supportingDataAntigenSeries("HepB standard", selected.get(0), "1");
+    AntigenSeries riskSeries = supportingDataAntigenSeries("HepB Standard 50+", selected.get(0), "3");
+    setMinimumAgeToStart(riskSeries, "50 years");
+    setPatient("06/01/2000", "06/01/2026");
+
+    PatientSeries riskPatientSeries = new PatientSeries(riskSeries);
+    TargetDose satisfiedDose = new TargetDose();
+    satisfiedDose.setTargetDoseStatus(TargetDoseStatus.SATISFIED);
+    riskPatientSeries.setTargetDoseList(new ArrayList<TargetDose>(Arrays.asList(satisfiedDose)));
+    dataModel.getPatientSeriesStepper().add(riskPatientSeries);
+
+    process();
+
+    assertEquals(Arrays.asList("1", "3"), dataModel.getSeriesGroupStepper().getList());
+  }
+
+  /**
+   * With no patient/date-of-birth information available at all, the age
+   * window cannot be evaluated, so the group is left in rather than silently
+   * dropped.
+   */
+  @Test
+  public void aSeriesGroupWithAnAgeWindowIsIncludedWhenNoPatientDataIsAvailable() throws Exception {
+    List<Antigen> selected = selectAntigens(HEPB);
+    supportingDataAntigenSeries("HepB standard", selected.get(0), "1");
+    AntigenSeries riskSeries = supportingDataAntigenSeries("HepB Standard 50+", selected.get(0), "3");
+    setMinimumAgeToStart(riskSeries, "50 years");
+
+    process();
+
+    assertEquals(Arrays.asList("1", "3"), dataModel.getSeriesGroupStepper().getList());
   }
 
   /**

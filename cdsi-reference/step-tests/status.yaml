@@ -271,7 +271,7 @@ units:
     fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0020"]
+    finding_ids: ["SPEC-4.6-0020", "SPEC-4.6-0021"]
     notes: >-
       Section 4.5 declares no inputs, no business rules and no decision tables -
       it says outright that selecting the best patient series "at the highest
@@ -339,9 +339,29 @@ units:
       antigen-selected list and the antigen series list, both cheaper and
       clearer to hand-build, and nothing in 4.5 depends on the content of a
       release. Considered fully covered for what 4.5 documents. See
-      SPEC-4.6-0020 for the full cross-unit change and its FITS materiality;
-      that finding also records a follow-on, not-yet-fixed defect,
-      SPEC-4.6-0021, found while verifying this fix.
+      SPEC-4.6-0020 for the full cross-unit change and its FITS materiality.
+
+      Fixed (SPEC-4.6-0021, merged) - minAgeToStart/maxAgeToStart, declared
+      on SelectPatientSeries but never enforced anywhere (minAgeToStart was
+      not even parsed by DataModelLoader), let an age-inappropriate,
+      solo-series series group (e.g. Pneumococcal's "Standard 50+") become a
+      competing best patient series once SPEC-4.6-0020 correctly scoped
+      Chapter 8 per series group. 22 tests now (was 18): 4 new cover a series
+      group whose sole member the patient hasn't reached the minimum age to
+      start for being excluded from the series-group stepper; the same group
+      included once the patient is old enough; included regardless of age
+      when the patient already has a satisfied dose toward a series in it;
+      and included when no patient/date-of-birth data is available at all
+      (the window can't be evaluated, so nothing is silently dropped). Two
+      earlier fix attempts inside PreFilterPatientSeries (8.1) were tried and
+      reverted - see the finding for why the exclusion has to live here, in
+      4.5's series-group enumeration, rather than in any single Chapter 8
+      step's own scoring. DataModelLoader.readAntigenSeries also gained the
+      missing minAgeToStart parsing. Full FITS run, case-by-case diffed
+      against the pre-fix baseline: +143 improvements (all PCV), 0
+      regressions. RSV's separate, not-yet-addressed "two independently
+      age-eligible, non-equivalent series groups" gap is recorded in the
+      finding's remaining-gap note, not fixed here.
   '4.6':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.IdentifyAndEvaluateVaccineGroupTest

@@ -1,81 +1,98 @@
 id: "SPEC-4.6-0021"
-status: "open"
+status: "confirmed"
 category: "IMPLEMENTATION_MISMATCH"
-spec_sections: ["8.1"]
-source_pages: [87]
+spec_sections: ["4.5", "8.1"]
+source_pages: [39, 87]
 tables: ["Table 8-2"]
 business_rules: ["SELECTSCORE-2"]
 code_locations:
-  - "org.openimmunizationsoftware.cdsi.core.domain.SelectPatientSeries"
-  - "org.openimmunizationsoftware.cdsi.core.logic.PreFilterPatientSeries"
+  - "org.openimmunizationsoftware.cdsi.core.logic.SelectBestPatientSeries"
   - "org.openimmunizationsoftware.cdsi.core.data.DataModelLoader"
+  - "org.openimmunizationsoftware.cdsi.core.domain.SelectPatientSeries"
 fits_cases:
   - "5eeca0522cc4517a96b0f417-PCV-2013-0575"
 summary: >
   SelectPatientSeries.minAgeToStart and maxAgeToStart - Supporting Data
-  fields present on every series definition (e.g. "Pneumococcal 50+
-  1-dose PCV series" declares minAgeToStart of 50 years) - are read by
-  no code anywhere in cdsi-engine. minAgeToStart is not even parsed by
-  DataModelLoader; maxAgeToStart is parsed but has zero readers. No
-  business rule anywhere (in Table 8-2 or otherwise) currently excludes
-  an age-inappropriate series from ever becoming a relevant, candidate,
-  or default patient series in the first place, so a solo-series series
-  group with no genuine applicability to the patient's current age can
-  still become that group's "best patient series" once Chapter 8's
-  business rules are applied per series group as the specification
-  requires (see SPEC-4.6-0020).
+  fields declared on the domain model for every series definition (e.g.
+  "Pneumococcal 50+ 1-dose PCV series" declares minAgeToStart of 50
+  years) - were read by no code anywhere in cdsi-engine, and
+  minAgeToStart was not even parsed by DataModelLoader (maxAgeToStart
+  was parsed but had zero readers). No business rule anywhere (in Table
+  8-2 or otherwise) excluded an age-inappropriate series from ever
+  becoming a relevant, candidate, or default patient series in the
+  first place, so a solo-series series group with no genuine
+  applicability to the patient's current age could still become that
+  group's "best patient series" once Chapter 8's business rules are
+  applied per series group as the specification requires (see
+  SPEC-4.6-0020). Fixed by excluding such a series group from the
+  antigen's series-group stepper entirely (SelectBestPatientSeries, 4.5)
+  before Chapter 8 ever runs for it, rather than inside any single
+  Chapter 8 step - Table 8-2 has no textual hook for a general
+  age-applicability gate, and two attempts to fix this inside
+  PreFilterPatientSeries (8.1) either broke HPV's zero-dose adult
+  forecast entirely or produced dates contradicting FITS's own
+  reference behavior for HPV's default-series fallback.
 evidence: >
-  Grep of cdsi-engine's main source tree: SelectPatientSeries.java
-  declares minAgeToStart nowhere at all (no field, no accessor) and
-  maxAgeToStart has exactly two references - its own getter/setter in
+  Grep of cdsi-engine's main source tree before this fix: maxAgeToStart
+  had exactly two references - its own getter/setter in
   SelectPatientSeries.java and its one write site in
   DataModelLoader.readAntigenSeries's <selectSeries> parsing branch - no
-  read site exists anywhere in cdsi-engine or cdsi-web.
-  AntigenSupportingData-Pneumococcal-508.xml's "Pneumococcal 50+ 1-dose
-  PCV series" (series group 3, its own group's sole member) declares
-  <minAgeToStart>50 years</minAgeToStart> and <defaultSeries>Yes</defaultSeries>.
-  SELECTSCORE-2's only mention of an age-to-start check (Table 8-2,
-  second bullet) is narrower than a general applicability gate: "The
-  earliest vaccine dose administered with an evaluation status of
-  'Valid' ... has a date administered before the maximum age to start
-  date" - it only fires for a Standard series that already has at least
-  one administered dose, so it cannot exclude a series the patient has
-  never received any dose toward at all. PreFilterPatientSeries's own
-  end-of-method "no default series fallback" (already recorded as a
-  SPECIFICATION_AMBIGUITY in this unit's status.yaml notes, since
-  SELECTSCORE-2 never documents how a group's default series becomes
-  scorable) has no age check of any kind.
+  read site anywhere in cdsi-engine or cdsi-web. minAgeToStart had a
+  declared field/getter/setter (confirmed via git log unchanged since
+  the module-split commit c1abaa1) but no loader write site and no read
+  sites. AntigenSupportingData-Pneumococcal-508.xml's "Pneumococcal 50+
+  1-dose PCV series" (series group 3, its own group's sole member)
+  declares <minAgeToStart>50 years</minAgeToStart> and
+  <defaultSeries>Yes</defaultSeries>. SELECTSCORE-2's only mention of an
+  age-to-start check (Table 8-2, second bullet) is narrower than a
+  general applicability gate: "The earliest vaccine dose administered
+  with an evaluation status of 'Valid' ... has a date administered
+  before the maximum age to start date" - it only fires for a Standard
+  series that already has at least one administered dose, so it cannot
+  exclude a series the patient has never received any dose toward at
+  all. A full-text search of the specification confirms "minimum age to
+  start"/"minAgeToStart" appears nowhere in the spec's prose at all.
 interpretation: >
   Traced directly from SPEC-4.6-0020's FITS regression
   (5eeca0522cc4517a96b0f417-PCV-2013-0575: a patient under 50 forecast
-  2076-09-01 for "Pneumococcal 50+ 1-dose PCV series"). Before
-  SPEC-4.6-0020's fix, Chapter 8 ran as one undivided competition across
-  every series group of an antigen, so an age-inappropriate series with
-  no real administered doses simply lost the scoring comparison to the
+  "Pneumococcal 50+ 1-dose PCV series"). Before SPEC-4.6-0020's fix,
+  Chapter 8 ran as one undivided competition across every series group
+  of an antigen, so an age-inappropriate series with no real
+  administered doses simply lost the scoring comparison to the
   antigen's genuine winner and this gap was invisible. Once Chapter 8 is
-  correctly scoped per series group (SPEC-4.6-0020, matching the
-  specification's own "repeated for each series group" text), a
-  solo-series group with an unenforced age gate reaches
-  PreFilterPatientSeries's default-series fallback with a trivially-zero
-  within-group valid-dose count, is admitted as the group's default, and
-  - being alone in its group - proceeds straight through Table 8-3 Rule
-  2 (no scoring needed for a single candidate) into bestPatientSeriesList,
-  regardless of the patient's actual age.
+  correctly scoped per series group (SPEC-4.6-0020), a solo-series group
+  with an unenforced age gate reached PreFilterPatientSeries's
+  default-series fallback with a trivially-zero within-group valid-dose
+  count, was admitted as the group's default, and - being alone in its
+  group - proceeded straight through Table 8-3 Rule 2 (no scoring
+  needed for a single candidate) into bestPatientSeriesList, regardless
+  of the patient's actual age.
 
-  This is not a defect that belongs to PreFilterPatientSeries (8.1) or
-  any other single Chapter 8 step's own business rules - Table 8-2 does
-  not describe an age-applicability gate at all, narrow or general. The
-  most likely correct home is earlier in the pipeline, where "relevant
-  patient series" is first decided (4.3 Create Relevant Patient Series
-  or 5.1 Select Relevant Patient Series) - a patient who has not reached
-  minAgeToStart, or who has passed maxAgeToStart with nothing
-  administered toward the series, arguably should never have that
-  series appear as a relevant patient series at all, upstream of every
-  question Chapter 8 asks. Confirming that placement requires reading
-  4.3/5.1's own business rules and Supporting Data usage in detail,
-  which this finding does not attempt - recording the defect and its
-  confirmed mechanism is this round's contribution; placement is a
-  separate Role A/B decision.
+  Two fix attempts inside PreFilterPatientSeries (8.1) were tried and
+  reverted. Gating the default-series fallback on the series' own age
+  window correctly excluded "Pneumococcal 50+" but left HPV's zero-dose
+  adult patients with no scorable series at all, because HPV splits one
+  logical default pathway across an age boundary into two series WITHIN
+  THE SAME series group ("2-dose" default under 15, "3-dose" non-default
+  15+) rather than into a separate group. Promoting the age-appropriate
+  alternate within the group when the literal default wasn't
+  age-appropriate fixed PCV/MEN but produced wrong dates for HPV: direct
+  inspection of FITS fixture 675c41f8e4b089d2bdc0c483-HPV-2013-0480 (a
+  27-year-old, zero HPV doses) shows the reference implementation keeps
+  reporting the literal default series's own historical dates rather
+  than switching to the age-appropriate alternate - an invented rule
+  with no spec basis, contradicted by FITS's own reference answer.
+
+  The fix therefore lives one layer up, in SelectBestPatientSeries
+  (4.5)'s per-antigen series-group enumeration (added by SPEC-4.6-0020):
+  a series group is excluded from the series-group stepper entirely -
+  before Chapter 8 ever runs for it - when none of its member series has
+  an age-to-start window that includes the patient's current age, and
+  the patient has no already-satisfied target dose toward any series in
+  that group. This leaves HPV's within-group default-series behavior
+  completely untouched while correctly removing PCV/RSV/MEN's
+  structurally distinct, wholly separate "Standard 50+/75+" group from
+  consideration.
 
   Materiality: at least 3 of the bundled release's antigens define a
   solo-series, age-gated series group of this exact shape - Pneumococcal
@@ -83,6 +100,29 @@ interpretation: >
   minAgeToStart 50 years - the seriesDose's own age window narrows this
   further to 75), and at least one Meningococcal series group,
   accounting for the great majority of SPEC-4.6-0020's 175-case FITS
-  regression (PCV 143, RSV 20, MEN 12). Likely to recur wherever the
-  bundled release defines an age-split "alternate" series group for a
-  single antigen.
+  regression (PCV 143, RSV 20, MEN 12).
+
+  Resolution: fixed in SelectBestPatientSeries.java -
+  isSeriesGroupApplicable(...) and isWithinAgeToStartWindow(...),
+  evaluated once per antigen when building the series-group stepper.
+  DataModelLoader.readAntigenSeries now also parses <minAgeToStart>
+  (mirroring the existing <maxAgeToStart> branch). Verified via the
+  standing Role B pipeline: SelectBestPatientSeriesTest (5 new tests)
+  plus the full cdsi-engine suite (139 pre-existing failures, identical
+  with/without this change, confirmed via git stash A/B) plus a full
+  FITS run case-by-case diffed against the pre-fix baseline: +143
+  improvements (all PCV), 0 regressions. One incidental
+  NullPointerException found and fixed during FITS verification -
+  isSeriesGroupApplicable's satisfied-dose check did not guard against
+  PatientSeries.getTargetDoseList() returning null, which real pipeline
+  data does for some series (e.g. COVID-19 case 2023-0071) unlike
+  hand-built JUnit fixtures.
+
+  Remaining gap, not addressed by this fix: RSV defines a genuinely
+  separate second series group ("RSV 75 years+ 1-dose series", group 3,
+  minAgeToStart 50 years) not declared equivalentSeriesGroups to the
+  antigen's main group 1 ("RSV 1-dose series", no age bounds). A 75+
+  patient who has completed group 1 still gets a second, competing best
+  patient series from group 3 with status AGED_OUT instead of COMPLETE.
+  Looks like a Supporting Data gap or a Chapter 8 equivalence-fallback
+  question, and needs its own investigation.
