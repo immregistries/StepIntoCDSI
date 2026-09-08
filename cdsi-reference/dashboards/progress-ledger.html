@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-08 11:37:34 - regenerate with
+  Dashboard generated 2026-09-08 12:30:55 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,7 +57,7 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">10</div>
+    <div class="value">11</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
@@ -226,6 +226,26 @@
   </div>
   <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0009/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0009/finding.md</a></p>
   <p class="muted">Findings: SPEC-4.6-0009</p>
+</section>
+<section>
+  <h2>2026-09-08 - Phase 21 - Role B Round 10 - Table 6-6 Label and Table 6-8 Interval Boundary
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>The tenth Role B round, on unit 6.2&#x27;s EvaluateConditionalSkip (shared base class also used by 7.1 and 7.6). Fixed two narrow, verified-safe mismatches: Table 6-6&#x27;s stale &quot;Table 4-6&quot; label, and Table 6-8&#x27;s interval condition excluding its own documented equality boundary (SPEC-4.6-0017). cdsi-engine: 169 -&gt; 167 failures (down exactly 2), 0 regressions. FITS: strict no-op (3378/1517/1 both sides, 0 cases changed by strict case-by-case diff).
+This round also investigated two further candidate fixes of the identical shape and found both to be real spec mismatches whose fixes are correct in isolation but not safe to merge yet: Table 6-6&#x27;s age-window lower bound (SPEC-4.6-0018 - fix produces a net +101 FITS improvement but a 14-case regression traced to the already-documented &quot;Chapter 8 has no series group&quot; defect) and Table 6-9&#x27;s &quot;equal to&quot; dose-count comparator (SPEC-4.6-0019 - fix is correct but exposes a separate, pre-existing NPE in PatientSeries.getForecast() downstream, 324 FITS execution errors). Both recorded as open findings for a future round rather than merged, per the standing rule that FITS must move forward, not backward.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>21f0d1f</code></td></tr><tr><td>Engine tests</td><td>771 total, 169 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3378 passed, 1517 failed-assertion, 1 execution-error (69.0%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>aa5628b</code></td></tr><tr><td>Engine tests</td><td>771 total, 167 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3378 passed, 1517 failed-assertion, 1 execution-error (69.0%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0017/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0017/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0017, SPEC-4.6-0018, SPEC-4.6-0019</p>
 </section>
 <section>
   <h2>2026-09-08 - Phase 21 - Role B Round 1 - EvaluateForPreferableVaccine&#x27;s Exclusive Begin-Age Boundary
