@@ -268,10 +268,10 @@ units:
   '4.5':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.SelectBestPatientSeriesTest
-    fix_status: not_started
+    fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0020"]
     notes: >-
       Section 4.5 declares no inputs, no business rules and no decision tables -
       it says outright that selecting the best patient series "at the highest
@@ -288,62 +288,60 @@ units:
       bestPatientSeriesList to accumulate across the loop rather than reset per
       antigen.
 
-      19 tests, all 19 green. They cover Figure 4-7 end to end (first call
-      selects the first antigen and delegates to 8.1; each re-entry advances one
-      antigen; every antigen is handed to Chapter 8 exactly once, in the
-      antigen-selected list's order; the loop ends at 4.6; calling again after
-      the loop has ended stays at 4.6; no antigens at all goes straight to 4.6),
-      the documented State Changes (antigenSeriesSelectedList filtered from the
-      full Supporting Data antigen series list to the current antigen and
-      rebuilt each iteration; selectedPatientSeriesList filtered from the
-      patient series stepper to the current antigen and rebuilt each iteration;
-      an antigen with no patient series still gets its turn with an empty list;
-      antigen matching is by Antigen.equals, i.e. by name not instance identity;
-      the prioritized patient series list emptied in place before each antigen
-      reaches Chapter 8; the best patient series list created before the first
-      antigen reaches 8.9, which adds to it with no null guard of its own, and
-      never replaced afterwards), the accumulation claim from the Purpose (two
-      antigens' best series both survive to 4.6), and the negative claim that
-      4.5 selects, prioritizes and pre-filters nothing itself.
+      Updated 2026-09-08 (SPEC-4.6-0020, merged). 4.5 no longer builds
+      selectedPatientSeriesList itself - that, and the per-series-group loop
+      Chapter 8's own overview text separately describes ("Process steps 8.1
+      through 8.7 are repeated for each series group..."), moved to a new
+      class, SelectNextSeriesGroup (see SelectNextSeriesGroupTest, 6 tests,
+      all green, and mappings/spec-to-code.yaml's notes on this section for
+      why that class has no numbered subsection of its own). 4.5's own
+      remaining per-antigen state change is populating a new series-group
+      stepper from antigenSeriesSelectedList; its dispatch target changed
+      from PRE_FILTER_PATIENT_SERIES to SELECT_NEXT_SERIES_GROUP.
 
-      One observation for review, deliberately pinned as actual behaviour rather
-      than asserted as a defect. The step package's State Changes says that once
-      the antigens are exhausted the step "clears per-antigen state"; the code
-      nulls dataModel.antigen and antigenSeriesSelectedList but leaves
-      selectedPatientSeriesList holding the last antigen's patient series.
-      Section 4.5 itself says nothing about state, and nothing in cdsi-engine
-      reads selectedPatientSeriesList after the loop ends (its only readers,
-      SelectPrioritizedPatientSeries and CompletePatientSeries, are Chapter 8
-      steps that no longer run), so this is read as an imprecision in the
-      step package's wording rather than a code defect - following the same
-      precedent as 4.3's "all antigens the patient has data for" nit. It is not
-      purely theoretical though:
-      LogicStepRenderer.printSelectBestPatientSeriesPost prints "Done checking
-      Antigens" and then lists that very list, so the cdsi-web step view shows
-      the last antigen's patient series under a heading implying none is
-      current. Recorded as observation only - no finding filed, no
-      classification attempted. A second, smaller observation: 4.5 is the only
-      writer of antigenSeriesSelectedList and nothing in cdsi-engine or cdsi-web
-      reads it, so that documented State Change is currently inert; the tests
-      pin it anyway so it is visible if someone starts reading it.
+      18 tests (was 19), all green. They cover Figure 4-7 end to end (first
+      call selects the first antigen and delegates to SelectNextSeriesGroup;
+      each re-entry advances one antigen; every antigen is handed to Chapter
+      8 exactly once, in the antigen-selected list's order; the loop ends at
+      4.6; calling again after the loop has ended stays at 4.6; no antigens
+      at all goes straight to 4.6), the documented State Changes
+      (antigenSeriesSelectedList filtered from the full Supporting Data
+      antigen series list to the current antigen and rebuilt each iteration;
+      the series-group stepper populated with the current antigen's distinct
+      series groups and rebuilt each iteration - retargeted from the two
+      tests that used to pin selectedPatientSeriesList content, now that
+      building that list is SelectNextSeriesGroup's job; an antigen with no
+      antigen series still gets its turn with an empty series-group stepper;
+      antigen matching is by Antigen.equals, i.e. by name not instance
+      identity; the prioritized patient series list emptied in place before
+      each antigen reaches Chapter 8; the best patient series list created
+      before the first antigen reaches 8.9, which adds to it with no null
+      guard of its own, and never replaced afterwards), the accumulation
+      claim from the Purpose (two antigens' best series both survive to
+      4.6), and the negative claim that 4.5 selects, prioritizes and
+      pre-filters nothing itself. The test that used to pin
+      selectedPatientSeriesList's (imprecisely-documented) state after the
+      loop ends was removed outright, since 4.5 no longer touches that list
+      at all, so there is nothing left to observe there under this unit's
+      name.
 
-      Deliberately not covered - (a) everything the Purpose says about Series
-      Groups and Equivalent Series Groups ("a best patient series will be
-      selected for each Series Group ... some antigen series define Equivalent
-      Series Groups which allow a single best series to be selected from across
-      multiple Series Groups"): 4.5 loops by antigen only and never touches a
-      series group, and the series-group reasoning lives entirely in Table 8-14
-      inside DetermineBestPatientSeries, so testing it here would be testing
-      8.9's class under 4.5's name; (b) the emergency entries into 4.5 from
-      EvaluateAndForecastAllPatientSeries' two loop guards and
-      ForecastDatesAndReasons' cycle guard, which can start 4.5's antigen loop
-      before 4.4 has finished: those transitions have no basis in 4.5's own
-      specification text and belong to 4.4's and 7.x's units, which already pin
-      them from their own side; (c) any assertion involving a real Supporting
-      Data release - the step reads only 4.3's antigen-selected list, the
-      antigen series list and the patient series stepper, all of which are
-      cheaper and clearer to hand-build, and nothing in 4.5 depends on the
-      content of a release. Considered fully covered for what 4.5 documents.
+      Deliberately not covered - (a) everything the Purpose says about
+      Series Groups and Equivalent Series Groups is now exercised, just by
+      SelectNextSeriesGroupTest (the loop and per-group scoping) and
+      DetermineBestPatientSeriesTest (Table 8-14's equivalence logic) rather
+      than this file, which is correctly still 4.5-only; (b) the emergency
+      entries into 4.5 from EvaluateAndForecastAllPatientSeries' two loop
+      guards and ForecastDatesAndReasons' cycle guard, which can start 4.5's
+      antigen loop before 4.4 has finished: those transitions have no basis
+      in 4.5's own specification text and belong to 4.4's and 7.x's units,
+      which already pin them from their own side; (c) any assertion
+      involving a real Supporting Data release - the step reads only 4.3's
+      antigen-selected list and the antigen series list, both cheaper and
+      clearer to hand-build, and nothing in 4.5 depends on the content of a
+      release. Considered fully covered for what 4.5 documents. See
+      SPEC-4.6-0020 for the full cross-unit change and its FITS materiality;
+      that finding also records a follow-on, not-yet-fixed defect,
+      SPEC-4.6-0021, found while verifying this fix.
   '4.6':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.IdentifyAndEvaluateVaccineGroupTest
@@ -2550,12 +2548,13 @@ units:
   '8.1':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.PreFilterPatientSeriesTest
-    fix_status: not_started
+    fix_status: in_progress
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0020", "SPEC-4.6-0021"]
     notes: >-
-      Role A, 2026-09-05. 24 tests: 16 green, 8 red (8 failures, 0 errors). 8.1
+      Role A, 2026-09-05. 24 tests: 16 green, 8 red (8 failures, 0 errors); now
+      20 green, 4 red after SPEC-4.6-0020 (2026-09-08, merged). 8.1
       has no figure and no decision table - Table 8-2's two business rules,
       SELECTB-24 and SELECTSCORE-2, are the whole section - so the shape of
       coverage is one test per rule clause: SELECTB-24's two bullets plus its
@@ -2590,57 +2589,76 @@ units:
       replaces rather than appends to that list on a second run.
 
       Red (8), expected-vs-actual. (1)
+      Fixed (SPEC-4.6-0020, merged) -
       selectbTwentyFourTheAllContraindicatedFallbackIsDecidedPerSeriesGroup -
       SELECTB-24's escape hatch asks whether every series "made for the same
       series group" is Contraindicated; expected a wholly-contraindicated
-      Increased Risk group to keep its series as candidates, actual it is
+      Increased Risk group to keep its series as candidates, actual it was
       suppressed by one healthy series in the Standard group because the
-      implementation decides the fallback over every series it can see. (2)
+      implementation decided the fallback over every series it could see. Now
+      correctly scoped per series group by the new SelectNextSeriesGroup step
+      upstream. (2)
       selectbTwentyFourASeriesWithNoPatientSeriesStatusIsStillNotContraindicated
       - SELECTB-24's first bullet is negative ("does not have a patient series
       status of 'Contraindicated'"); expected a series with a null status to be
       a candidate, actual the implementation's status != null guard drops it
       from both passes. Low materiality - DetermineForecastNeed sets a status on
-      every outcome path - but the guard is stricter than the rule text. (3)
+      every outcome path - but the guard is stricter than the rule text. Still
+      red; unrelated to SPEC-4.6-0020. (3)
       selectscoreTwoRiskPriorityIsComparedAgainstEverySeriesInTheGroupNotOnlyThe
       RiskOnes - the Risk bullet compares against "any relevant patient series"
       in the group; expected a priority-B Risk series to lose to a priority-A
       Standard series sharing its group, actual highestRiskPriority is computed
-      over Risk series only so the B series survives. (4)
+      over Risk series only so the B series survives. Still red - this is a
+      SPECIFICATION_AMBIGUITY about the scope of the priority comparison
+      (Risk-only vs. every series type), not a series-group scoping question;
+      unrelated to SPEC-4.6-0020 despite both series sharing one group. (4)
+      Fixed (SPEC-4.6-0020, merged) -
       selectscoreTwoRiskPrioritiesAreComparedWithinOneSeriesGroupNotAcrossGroups
       - expected a priority-B Risk series that tops its own Pediatric Travel
-      group to stay scorable, actual it is discarded because a different group
-      holds a priority-A Risk series. (5)
+      group to stay scorable, actual it was discarded because a different group
+      held a priority-A Risk series. Now correctly scoped per series group. (5)
       selectscoreTwoAValidDoseMustHaveBeenAdministeredBeforeTheMaximumAgeToStart
       Date - the Standard bullet's third clause; expected a series whose only
       valid dose was given at age 10 against a 5-year maximum age to start not
       to be scorable, actual it is, because the step reads neither the date
-      administered nor maxAgeToStart. (6)
+      administered nor maxAgeToStart. Still red; see SPEC-4.6-0021, which
+      confirms maxAgeToStart has zero readers anywhere in cdsi-engine and traces
+      the FITS consequence of that gap once Chapter 8 is correctly per-group
+      scoped. (6)
       selectscoreTwoAStandardSeriesIsScorableWhenItsGroupHasZeroValidDosesAndNo
       DefaultSeries - the third bullet has no counterpart in the code at all;
       expected both Standard series of a doseless, default-less group to be
       scorable, actual the scorable list comes back empty, so such a group has
-      nothing for 8.2-8.8 to score. (7)
+      nothing for 8.2-8.8 to score. Still red; unrelated to SPEC-4.6-0020. (7)
+      Fixed (SPEC-4.6-0020, merged) -
       theStepExaminesThePatientSeriesOfOnlyOneSeriesGroup - expected one run's
-      scorable list to be drawn from a single series group, actual it spans two.
-      (8) theStepExaminesOnlyThePatientSeriesOfTheAntigenBeingProcessed -
+      scorable list to be drawn from a single series group, actual it spanned
+      two. (8) Fixed (SPEC-4.6-0020, merged) -
+      theStepExaminesOnlyThePatientSeriesOfTheAntigenBeingProcessed -
       expected only HepB's series on the HepB pass of 4.5's antigen loop, actual
-      Measles' series is pre-filtered alongside it, because the step reads the
-      patient series stepper rather than the per-antigen selectedPatientSeriesList
-      that 4.5 had just built.
+      Measles' series was pre-filtered alongside it, because the step read the
+      patient series stepper rather than the per-antigen-and-series-group
+      selectedPatientSeriesList that SelectNextSeriesGroup now builds.
 
-      Reds 1, 3, 4, 7 and 8 are one cross-cutting cause, recorded as its own
-      2026-09-05 entry in cross-cutting-notes.md: nothing in cdsi-engine ever
-      reads SelectPatientSeries.getSeriesGroup()/getSeriesGroupName(), so
-      Chapter 8's "8.1 through 8.7 are repeated for each series group"
-      partitioning does not exist; and the eight Chapter 8 steps disagree about
-      which list is "the series in scope" (8.1/8.5/8.6/8.8 read the all-antigen
-      stepper, 8.4/8.7 read selectedPatientSeriesList, 8.2/8.3 read
-      scorablePatientSeriesList). Six of the eight affected classes belong to
-      other units, so this is explicitly not 8.1's own Role B session to
-      resolve. Reds 5 and 6 are 8.1's own class and are the two halves of the
-      unconfirmed observation already in 08-01's Review Findings, now confirmed
-      by test. Red 2 is 8.1's own class and cosmetic.
+      Reds 1, 4, 7 and 8 were the cross-cutting cause recorded in
+      cross-cutting-notes.md's 2026-09-05 entry: nothing in cdsi-engine read
+      SelectPatientSeries.getSeriesGroup()/getSeriesGroupName(), so Chapter 8's
+      "8.1 through 8.7 are repeated for each series group" partitioning did not
+      exist; and the eight Chapter 8 steps disagreed about which list was "the
+      series in scope". Fixed in full by SPEC-4.6-0020 (2026-09-08), which
+      touched six other units' classes too - see that finding for the complete
+      cross-unit change and its FITS materiality (a net -125 case regression,
+      merged anyway on an explicit project-owner decision - see SPEC-4.6-0021
+      for the separate, not-yet-fixed defect that regression traces to). Red 3
+      turned out NOT to be part of this cross-cutting cause on closer reading
+      (both series already share one group; the ambiguity is about which
+      series types the priority comparison should include, not about group
+      scoping) and remains red, unrelated. Reds 5 and 6 are 8.1's own class and
+      are the two halves of the unconfirmed observation already in 08-01's
+      Review Findings, now confirmed by test - red 5's materiality is now
+      further confirmed by SPEC-4.6-0021. Red 2 is 8.1's own class and
+      cosmetic.
 
       Specification ambiguity, recorded rather than guessed at (per
       cdsi-engine/AGENTS.md Role A step 3), so no test forces an
@@ -2681,12 +2699,14 @@ units:
   '8.2':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.IdentifyOnePrioritizedPatientSeriesTest
-    fix_status: not_started
+    fix_status: in_progress
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0020"]
     notes: >-
-      Role A, 2026-09-05. 14 tests: 9 green, 5 red (5 failures, 0 errors). 8.2
+      Role A, 2026-09-05. 14 tests: 9 green, 5 red (5 failures, 0 errors); now
+      11 green, 3 red after SPEC-4.6-0020 (2026-09-08, merged - no code change
+      to this class was needed, see below). 8.2
       is a small section - Table 8-4's three business rules (SELECTB-6,
       SELECTB-7, SELECTB-16) and Table 8-3's five rule columns plus its default
       outcome - so coverage is one test per business rule (with the negative
@@ -2749,17 +2769,25 @@ units:
       satisfied by exactly one dose, and unreachable for every partially
       completed multi-dose series past its first dose - which is the ordinary
       case the rule exists to catch. (4)
+      Fixed (SPEC-4.6-0020, merged) -
       theStepCountsOnlyThePatientSeriesOfOneSeriesGroup - Table 8-3's four
       conditions all say "...are in the series group?"; expected a run for the
       Standard group to see its one scorable series and fire Rule 2, actual the
-      Standard and Increased Risk groups are counted together, the scorable
-      count is 2, and no rule matches. (5)
+      Standard and Increased Risk groups were counted together, the scorable
+      count was 2, and no rule matched. (5)
+      Fixed (SPEC-4.6-0020, merged) -
       theScorableSeriesCountIsScopedToTheAntigenBeingProcessedLikeTheOtherThree
       Conditions - expected only HepB's series to be counted on the HepB pass of
-      4.5's antigen loop, actual a Measles series left in the scorable list is
+      4.5's antigen loop, actual a Measles series left in the scorable list was
       counted by condition 0 (which has no antigen filter) while the other three
-      conditions do filter it out, so the counts disagree with each other and no
-      rule matches.
+      conditions did filter it out, so the counts disagreed with each other and
+      no rule matched. Neither red needed a code change in this class: once 8.1
+      (fed by the new SelectNextSeriesGroup step) correctly pre-scopes
+      scorablePatientSeriesList to one antigen and series group, condition 0's
+      long-standing missing antigen filter becomes unreachable dead code rather
+      than a live defect - exactly the "resolvable only by the chapter-wide
+      decision" prediction cross-cutting-notes.md made for this class's sibling,
+      8.3. See SPEC-4.6-0020 for the full cross-unit change.
 
       Reds 1, 2 and 3 are 8.2's own class and are the whole of its Role B work:
       all three are counting defects in IdentifyOnePrioritizedPatientSeries$LT's
@@ -2797,12 +2825,14 @@ units:
   '8.3':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.ClassifyScorablePatientSeriesTest
-    fix_status: not_started
+    fix_status: in_progress
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0020"]
     notes: >-
-      Role A, 2026-09-05. 17 tests: 13 green, 4 red (4 failures, 0 errors). 8.3
+      Role A, 2026-09-05. 17 tests: 13 green, 4 red (4 failures, 0 errors); now
+      15 green, 2 red after SPEC-4.6-0020 (2026-09-08, merged - no code change
+      to this class was needed, see below). 8.3
       is a pure router - Table 8-6's three business rules (SELECTB-6,
       SELECTB-16, SELECTB-21) and Table 8-5's three rule columns - so its only
       observable output is the next LogicStepType, and every test asserts
@@ -2872,14 +2902,20 @@ units:
       zero complete, Rule 3 needs zero valid doses), the table has no default
       column, and process() sets NO_VALID_DOSES as a pre-evaluation default
       before evaluateLogicTables() runs, so the fall-through lands on 8.6. (3)
+      Fixed (SPEC-4.6-0020, merged) -
       theStepClassifiesOnlyThePatientSeriesOfOneSeriesGroup - expected a run for
       the Standard group (two in-process series) to route to 8.5, actual the
-      Increased Risk group's two complete series are counted with them, the
-      complete count is 2 and Rule 1 routes to 8.4. (4)
+      Increased Risk group's two complete series were counted with them, the
+      complete count was 2 and Rule 1 routed to 8.4. (4)
+      Fixed (SPEC-4.6-0020, merged) -
       theStepClassifiesOnlyThePatientSeriesOfTheAntigenBeingProcessed - the same
       shape across antigens: expected the HepB pass of 4.5's antigen loop to see
       only HepB's two in-process series and route to 8.5, actual two Measles
-      series left in the scorable list are counted and Rule 1 routes to 8.4.
+      series left in the scorable list were counted and Rule 1 routed to 8.4.
+      Neither red needed a code change in this class, exactly as predicted:
+      once 8.1 correctly pre-scopes scorablePatientSeriesList to one antigen and
+      series group, 8.3's total lack of internal filtering stops mattering. See
+      SPEC-4.6-0020 for the full cross-unit change.
 
       Reds 1 and 2 are 8.3's own class and are the whole of its unit-local Role
       B work, and they pull in opposite directions, which is worth deciding
@@ -2935,13 +2971,15 @@ units:
   '8.4':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.CompletePatientSeriesTest
-    fix_status: not_started
+    fix_status: in_progress
     blocked_category: null
     blocked_reason: null
     finding_ids:
       - SPEC-4.6-0006
+      - SPEC-4.6-0020
     notes: >-
-      Role A, 2026-09-05. 15 tests: 7 green, 8 red (8 failures, 0 errors). 8.4 is
+      Role A, 2026-09-05. 15 tests: 7 green, 8 red (8 failures, 0 errors); now
+      9 green, 6 red after SPEC-4.6-0020 (2026-09-08, merged). 8.4 is
       the smallest member of the 8.4/8.5/8.6 scoring family - one condition ("has
       the most valid doses", SELECTB-19) scored across Table 8-7's three outcome
       columns (+1 alone / 0 for a tie / -1 otherwise), resting on two business
@@ -3042,20 +3080,24 @@ units:
       consideration", and 8.4's descPatientScoreSeries() is a plausible if
       unusual reading of "dropped".
 
-      Reds 7 and 8 (theStepScoresTheScorablePatientSeriesEightOneProducedNot
-      EveryRelevantSeries, theStepScoresThePatientSeriesOfOneSeriesGroup) are
+      Reds 7 and 8, Fixed (SPEC-4.6-0020, merged) -
+      theStepScoresTheScorablePatientSeriesEightOneProducedNot
+      EveryRelevantSeries, theStepScoresThePatientSeriesOfOneSeriesGroup - were
       the 2026-09-05 "Chapter 8 has no series group" entry in
       cross-cutting-notes.md, which was updated in place from 8.4's side rather
-      than duplicated. 8.4 is the first tested Chapter 8 step that reads
-      selectedPatientSeriesList rather than the stepper, and what it contributes
-      is a correction to that entry's suggested remedy, not just more evidence.
-      selectedPatientSeriesList is not simply "the antigen-scoped list" - it is
-      4.5's *pre-8.1* list, every relevant patient series of the current
-      antigen, which 8.1 then narrows into scorablePatientSeriesList by dropping
-      contraindicated series (SELECTB-24) and all but the highest-priority Risk
-      series of a group (SELECTSCORE-2). So there are three lists on two axes,
-      not two on one, and 8.4 reads the wrong *stage* of the pipeline as well as
-      the wrong scope: every rule in 8.4 is phrased over scorable patient
+      than duplicated. 8.4 was the first tested Chapter 8 step that read
+      selectedPatientSeriesList rather than the stepper, and what it
+      contributed at the time was a correction to that entry's suggested
+      remedy, not just more evidence: selectedPatientSeriesList is not simply
+      "the antigen-scoped list" - it is 4.5's *pre-8.1* list, every relevant
+      patient series of the current antigen, which 8.1 then narrows into
+      scorablePatientSeriesList by dropping contraindicated series (SELECTB-24)
+      and all but the highest-priority Risk series of a group (SELECTSCORE-2).
+      So there were three lists on two axes, not two on one, and 8.4 read the
+      wrong *stage* of the pipeline as well as the wrong scope. SPEC-4.6-0020
+      fixed both: 8.4 now reads scorablePatientSeriesList, correctly pre-scoped
+      to (antigen, series group) by the new SelectNextSeriesGroup step and 8.1.
+      Every rule in 8.4 is phrased over scorable patient
       series, and 8.3 counts the scorable list to decide 8.4 should run at all.
       Red 7 shows the consequence with two Increased Risk series - the
       priority-A series 8.1 kept has 2 valid doses, the priority-B series 8.1
@@ -3102,12 +3144,13 @@ units:
   '8.5':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.InProcessPatientSeriesTest
-    fix_status: not_started
+    fix_status: in_progress
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0020"]
     notes: >-
-      Role A, 2026-09-05. 37 tests: 19 green, 18 red (18 failures, 0 errors).
+      Role A, 2026-09-05. 37 tests: 19 green, 18 red (18 failures, 0 errors);
+      now 24 green, 13 red after SPEC-4.6-0020 (2026-09-08, merged).
       8.5 is the middle member of the 8.4/8.5/8.6 scoring family and carries the
       largest rule set of the three - five independent conditions from Table 8-9
       (+2/n/a/-2 product-and-all-valid-doses, +3/n/a/-3 completable, +2/0/-2 most
@@ -3167,16 +3210,16 @@ units:
       SPECIFICATION_AMBIGUITY on the wording of SELECTB-2 rather than a plain
       IMPLEMENTATION_MISMATCH, but "this column can never be awarded" is strong
       evidence for one reading over the other. (2)
+      Fixed (SPEC-4.6-0020, merged) -
       selectbTwentyThreeTheProductPathFlagIsReadFromTheSeriesBeingScored, expected
-      -2 for the series whose product path is 'N', actual +2, and (3)
+      -2 for the series whose product path is 'N', actual was +2, and (3)
+      Fixed (SPEC-4.6-0020, merged) -
       selectbTwoTheAllValidDosesConditionIsReadFromTheSeriesBeingScored, expected +2
-      for the series whose doses are all valid, actual -2. Both are the same defect:
-      the method declares productPatientSeries and hasAllValidDoses outside its
-      per-series loop and never resets either, so both flags are sticky - once any
-      series sets one, every series scored after it inherits it, in both directions.
-      This is a one-line fix (move the two declarations inside the loop) and it is
-      unit-local, but see the cross-cutting note below for why its blast radius is
-      not.
+      for the series whose doses are all valid, actual was -2. Both were the same
+      defect: the method declared productPatientSeries and hasAllValidDoses outside
+      its per-series loop and never reset either, so both flags were sticky - once
+      any series set one, every series scored after it inherited it, in both
+      directions. Fixed by moving both declarations inside the loop.
 
       Row 2, is completable (4 reds). (4)
       selectbThreeCompletabilityIsMeasuredAgainstTheLastTargetDosesMaximumAgeDate,
@@ -3275,26 +3318,30 @@ units:
       SPECIFICATION_AMBIGUITY is plausible, because Table 8-5's outcome text also
       says the series a column does not select "are not scored and are dropped from
       consideration" and descPatientScoreSeries() is an unusual but arguable reading
-      of "dropped". Reds 16-18
+      of "dropped". Reds 16-18, Fixed (SPEC-4.6-0020, merged) -
       (theStepScoresTheScorablePatientSeriesEightOneProducedNotEveryRelevantSeries,
       theStepScoresThePatientSeriesOfTheAntigenBeingProcessed,
       theStepScoresThePatientSeriesOfOneSeriesGroup - each expected +2 for the
-      winner of the group actually under selection, each actual -2 because a series
-      outside it has more valid doses) are the 2026-09-05 "Chapter 8 has no series
-      group" entry in cross-cutting-notes.md, updated in place from 8.5's side
-      rather than duplicated. 8.5 is the first *tested* step confirmed to read
-      dataModel.getPatientSeriesStepper().getList() - the all-antigen, pre-8.1 list
-      - so unlike 8.4 it is wrong on both the antigen axis and the pipeline-stage
-      axis at once, which is direct support for 8.4's correction that the target
-      list is scorablePatientSeriesList rather than selectedPatientSeriesList. What
-      8.5 adds beyond more evidence is a third kind of consequence: in 8.1/8.2 a
-      stray series contaminates a count, in 8.3 it flips a branch, in 8.4 it wins a
-      comparison, and in 8.5 - because of the sticky flags behind reds 2 and 3 - it
-      can set a boolean that is then applied to a *different* series' own condition.
-      A Measles series with a product path of 'Y' makes every HepB series scored
-      after it a product patient series. Likewise red 14's
-      patientSeriesList.get(0) means whichever series happens to sit first in the
-      all-antigen stepper decides whether Table 8-9's last row is scored for anybody.
+      winner of the group actually under selection, each actual was -2 because a
+      series outside it had more valid doses) were the 2026-09-05 "Chapter 8 has no
+      series group" entry in cross-cutting-notes.md, updated in place from 8.5's
+      side rather than duplicated. 8.5 was the first *tested* step confirmed to
+      read dataModel.getPatientSeriesStepper().getList() - the all-antigen, pre-8.1
+      list - so unlike 8.4 it was wrong on both the antigen axis and the
+      pipeline-stage axis at once, which was direct support for 8.4's correction
+      that the target list is scorablePatientSeriesList rather than
+      selectedPatientSeriesList - the fix SPEC-4.6-0020 applied here too. What 8.5
+      added beyond more evidence was a third kind of consequence, now fixed
+      alongside the scoping: in 8.1/8.2 a stray series contaminates a count, in
+      8.3 it flips a branch, in 8.4 it wins a comparison, and in 8.5 - because of
+      the sticky flags behind reds 2 and 3 - it could set a boolean that was then
+      applied to a *different* series' own condition. A Measles series with a
+      product path of 'Y' used to make every HepB series scored after it a product
+      patient series; this is fixed by the same sticky-flag fix as reds 2/3.
+      Likewise red 14's patientSeriesList.get(0) issue remains (it is a genuinely
+      separate, still-unfixed defect, not scoping-related) but no longer risks a
+      cross-antigen series being first in the list, since the list is now
+      correctly scoped before this class ever sees it.
 
       Second cross-cutting entry added, 2026-09-05: "SELECTB-3's maximum age date is
       calculated three times outside the domain model, and every copy drops part of
@@ -3344,18 +3391,21 @@ units:
     fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0007"]
+    finding_ids: ["SPEC-4.6-0007", "SPEC-4.6-0020"]
     notes: >-
       TWO test classes cover this unit; the schema allows only one test_class
       string, so the second is named here. (a)
       org.openimmunizationsoftware.cdsi.core.logic.NoValidDosesCompletableTest -
       5 tests, all green, written alongside the SPEC-4.6-0007 fix (both branches
-      of the "is completable" row's if/else used to increment). fix_status
-      "merged" refers to that fix and to that class only. (b)
+      of the "is completable" row's if/else used to increment); its own fixture
+      helper was updated for SPEC-4.6-0020's list-source swap (populates
+      scorablePatientSeriesList, not only the stepper) and stays fully green.
+      fix_status "merged" refers to both fixes and to that class only. (b)
       org.openimmunizationsoftware.cdsi.core.logic.NoValidDosesTest - the Role A
-      pass proper, added 2026-09-05, 26 tests, 18 red. test_class points at (b)
-      because it is the larger of the two and the one whose pass/fail counts the
-      dashboard should show; (a) is untouched and still fully green.
+      pass proper, added 2026-09-05, 26 tests, 18 red; now 12 green, 14 red after
+      SPEC-4.6-0020 (2026-09-08, merged). test_class points at (b) because it is
+      the larger of the two and the one whose pass/fail counts the dashboard
+      should show; (a) is untouched and still fully green.
 
       Coverage is now substantially complete for what 08-06 documents. Covered
       by (b): all three rows of Table 8-11 with every outcome column the table
@@ -3375,42 +3425,56 @@ units:
       'Y' and decrements otherwise. This contradicts 08-06's Review Findings,
       which currently assert the code "matches the spec's sign correctly"; that
       sentence is wrong and should be corrected when this unit is next reviewed.
-      4 reds. (2) The same row's productPatientSeries boolean is declared
-      outside the per-series loop and never reset, so once one series sets it
-      every series scored after it inherits it - the byte-identical sibling of
-      8.5's Table 8-9 row 1 sticky-flag defect. 1 red
+      4 reds, still red - unrelated to SPEC-4.6-0020. (2) The same row's
+      productPatientSeries boolean was declared outside the per-series loop and
+      never reset, so once one series set it every series scored after it
+      inherited it - the byte-identical sibling of 8.5's Table 8-9 row 1
+      sticky-flag defect. Fixed by SPEC-4.6-0020 (moved the declaration inside
+      the loop), but its 1 test
       (theProductRowMustDiscriminateBetweenAProductSeriesAndOneThatIsNot, which
       is deliberately sign-agnostic so the two product-row defects can be told
-      apart). (3) Row 1's tie counter numOfEarliestDates is order-dependent and
-      compares Dates with == : a strictly earlier date found later in the list
-      resets it to 0, which the loop can never bring back to the 1 the scoring
-      loop requires, so the +1 becomes unawardable to anyone; and two equal
-      start dates in two Date objects are not detected as a tie (the same group
-      sharing one Date object is, and that test is green - it is the control).
-      The row is also abandoned entirely, for every series, when the first
-      series in the list has no earliest date. 4 reds. (4) Two scoring
-      conditions run that Table 8-11 does not define - a gender-match bonus and
-      an exceeded-maximum-age penalty. SPEC-4.6-0007 records these as an open
-      question (deliberate undocumented refinement, or copy-forward from
-      elsewhere); the two tests take the specification at its word and are the
-      concrete evidence for whichever way it is settled. 2 reds, plus their
-      whole-step counterpart in (6). (5) SELECTB-3 and SELECTB-12 are read
-      wrongly by the completable row - it compares the adjusted past due date
-      (Table 7-12's due date for the next dose) rather than SELECTB-12's
-      earliest date plus the latest remaining minimum interval, and measures
-      against the maximum age of the forecast target dose rather than of the
-      last target dose; and findMaximumAgeDate()/addTimePeriodtotoDate() drop
-      the child term of a compound maximum age. 3 reds. The compound-age one
-      confirms live a prediction the cross-cutting notes had made from 8.5's
-      side and could not test there. (6) Scope: the step reads
+      apart) is still red, because it needs (1)'s sign inversion fixed too
+      before a product series can score *below* a non-product one - both
+      defects must be fixed together for this one test to pass, and only one
+      was in scope here. (3) Row 1's tie counter numOfEarliestDates was
+      order-dependent and compared Dates with == : a strictly earlier date
+      found later in the list reset it to 0, which the loop could never bring
+      back to the 1 the scoring loop requires, so the +1 became unawardable to
+      anyone (fixed by SPEC-4.6-0020: a new-earliest reset now counts the
+      series that triggered it); two equal start dates in two Date objects are
+      still not detected as a tie (the == bug itself, not fixed here - the same
+      group sharing one Date object is, and that test is the green control);
+      and the row is still abandoned entirely, for every series, when the first
+      series in the list has no earliest date (also not fixed here, an
+      independent defect). Of the 4 reds, 2 fixed (SPEC-4.6-0020) and 2 remain.
+      (4) Two scoring conditions run that Table 8-11 does not define - a
+      gender-match bonus and an exceeded-maximum-age penalty. SPEC-4.6-0007
+      records these as an open question (deliberate undocumented refinement, or
+      copy-forward from elsewhere); the two tests take the specification at its
+      word and are the concrete evidence for whichever way it is settled. 2
+      reds, still red, plus their whole-step counterpart in (6). (5) SELECTB-3
+      and SELECTB-12 are read wrongly by the completable row - it compares the
+      adjusted past due date (Table 7-12's due date for the next dose) rather
+      than SELECTB-12's earliest date plus the latest remaining minimum
+      interval, and measures against the maximum age of the forecast target
+      dose rather than of the last target dose; and
+      findMaximumAgeDate()/addTimePeriodtotoDate() drop the child term of a
+      compound maximum age. 3 reds, still red, unrelated to SPEC-4.6-0020. The
+      compound-age one confirms live a prediction the cross-cutting notes had
+      made from 8.5's side and could not test there. (6) Fixed
+      (SPEC-4.6-0020, merged) - scope: the step read
       dataModel.getPatientSeriesStepper().getList(), 5.1's unfiltered
       all-antigen list, three pipeline stages before the scorable list every
-      Table 8-11 rule is phrased over. 3 reds; see the "Chapter 8 has no series
-      group" cross-cutting entry, updated from 8.6's side. (7) Two whole-step
-      State Changes tests that fail as the sum of the above - one asserting a
+      Table 8-11 rule is phrased over; now reads scorablePatientSeriesList,
+      correctly pre-scoped to (antigen, series group). 3 reds, all fixed; see
+      SPEC-4.6-0020 and SPEC-4.6-0021 for the full change and the FITS
+      materiality it exposed. (7) Two whole-step State Changes tests that still
+      fail as the sum of everything still unfixed above - one asserting a
       single all-conditions-true series scores +1 (+1 +1 -1) and gets +4, one
-      asserting a series losing every row scores -3 and gets 0. 2 reds. Totals:
-      4+1+4+2+3+3+2 = 19 attributions across 18 tests because
+      asserting a series losing every row scores -3 and gets 0. Still 2 red;
+      neither closes until (1), (2)'s remainder, (3)'s remainder, (4) and (5)
+      are also resolved. Original totals: 4+1+4+2+3+3+2 = 19 attributions
+      across 18 tests because
       theWholeTableAwardsOnlyTheThreeConditionsTableEightElevenDefines is
       counted under both (4) and (7).
 
@@ -3435,12 +3499,13 @@ units:
   '8.7':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.SelectPrioritizedPatientSeriesTest
-    fix_status: not_started
+    fix_status: in_progress
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0020"]
     notes: >-
-      Role A pass 2026-09-05. 21 tests, 16 green, 5 red. 8.7 is the consumer end
+      Role A pass 2026-09-05. 21 tests, 16 green, 5 red; now 19 green, 2 red
+      after SPEC-4.6-0020 (2026-09-08, merged). 8.7 is the consumer end
       of the 8.4/8.5/8.6 scoring family: it has no LogicTable of its own (Table
       8-13 is a plain two-column business-rule table), all of its logic is the
       one private method selectPrioritizedPatientSeries(), and it is the only
@@ -3448,9 +3513,10 @@ units:
       selection test invokes that private method reflectively on a hand-built
       DataModel and reads the public getPrioritizedPatientSeries(); the State
       Changes and Next Steps tests drive process(). Note for anyone extending
-      this class that the step captures dataModel.getSelectedPatientSeriesList()
-      in a field initializer, i.e. at construction time, so the fixture has to be
-      built before the step is.
+      this class that the step captures dataModel.getScorablePatientSeriesList()
+      (dataModel.getSelectedPatientSeriesList() before SPEC-4.6-0020) in a field
+      initializer, i.e. at construction time, so the fixture has to be built
+      before the step is.
 
       Coverage is full for what 08-07 documents. SELECTBEST-1 is covered by four
       tests (the score as a running sum of increments and decrements rather than
@@ -3497,24 +3563,31 @@ units:
       null check - getSeriesPreference() can also be null, which the guard lets
       through to parseInt for the same reason).
 
-      Reds 3-5 are the 2026-09-05 "Chapter 8 has no series group" cross-cutting
-      entry, confirmed from 8.7's side and recorded there.
+      Reds 3-5, Fixed (SPEC-4.6-0020, merged), were the 2026-09-05 "Chapter 8 has
+      no series group" cross-cutting entry, confirmed from 8.7's side and
+      recorded there.
       theSelectionIsMadeOverTheScorablePatientSeriesEightOneProduced (expected the
-      priority-A Risk series 8.1 kept, actual the priority-B Risk series 8.1
-      dropped) is the stage half: 8.7 reads 4.5's pre-8.1 selectedPatientSeriesList,
+      priority-A Risk series 8.1 kept, actual was the priority-B Risk series 8.1
+      dropped) was the stage half: 8.7 read 4.5's pre-8.1 selectedPatientSeriesList,
       so a series 8.1 deliberately excluded - and which 8.4/8.5/8.6 therefore never
-      scored - can be named the prioritized patient series outright. That is the
-      worst form this entry has taken across the chapter: in 8.4 a stray series
-      distorted a comparison, in 8.7 it becomes the answer 8.8 evaluates.
+      scored - could be named the prioritized patient series outright. That was
+      the worst form this entry took across the chapter: in 8.4 a stray series
+      distorted a comparison, in 8.7 it became the answer 8.8 evaluated. Fixed by
+      switching 8.7 to read scorablePatientSeriesList.
       theStepProducesOnePrioritizedPatientSeriesPerSeriesGroup (expected 2 entries,
-      actual 1) and theSelectionComparesScoresWithinOneSeriesGroupNotAcrossGroups
-      (expected the Standard group's own winner, actual the higher-scoring
-      Increased Risk series) are the series-group half, which 8.7's own Purpose
+      actual was 1) and theSelectionComparesScoresWithinOneSeriesGroupNotAcrossGroups
+      (expected the Standard group's own winner, actual was the higher-scoring
+      Increased Risk series) were the series-group half, which 8.7's own Purpose
       sentence names explicitly - the rules "result in the prioritized patient
-      series for the series group". Neither is fixable inside 8.7: 4.5 calls
-      dataModel.getPrioritizedPatientSeriesList().clear() on every antigen pass and
-      8.8 builds one LogicTable per entry on that list, so a per-group loop has to
-      be introduced between 4.5 and 8.1 and 4.5's clear has to move with it.
+      series for the series group". Neither was fixable inside 8.7 alone, as
+      predicted: SPEC-4.6-0020 introduced the per-group loop between 4.5 and 8.1
+      (a new class, SelectNextSeriesGroup) and moved 4.5's
+      prioritizedPatientSeriesList.clear() to run once per antigen rather than
+      once per call, exactly the sequencing this note anticipated. Both tests
+      now simulate SelectNextSeriesGroup's real behaviour by calling 8.7 once per
+      series group with scorablePatientSeriesList scoped accordingly, since 8.7
+      itself is still only ever handed one group's worth of candidates at a time
+      - the loop lives above it, not inside it.
 
       On the antigen axis 8.7 is CORRECT, and that is worth recording as a green
       result rather than an absence of a red one:
@@ -3562,6 +3635,21 @@ units:
       free to sequence; on its own it changes no outcome and is not worth a FITS
       regression on its own account.
 
+      Update 2026-09-08: SPEC-4.6-0020 made exactly the "re-scoping per series
+      group" move this analysis called safe, not the partial, fact-2-breaking
+      move it warned against - 8.1 through 8.7 now all read the same
+      correctly-scoped scorablePatientSeriesList together, via the new
+      SelectNextSeriesGroup step, so fact 2 (identical input to every antigen
+      pass) is replaced with an equally sound one: each series is now visited
+      by the scoring rows on exactly one pass (its own series group's), rather
+      than by every antigen's pass as before. Red 1's unreset-score defect
+      itself is untouched and still red - it was out of scope for this round -
+      but the sequencing precondition that made it provably non-material still
+      holds under the new scoping, for the same reason (a single per-series
+      visit is trivially "scaled by 1", the base case step 4's invariance
+      argument already covers). Not reverified by a new test; recorded here as
+      an analytical update pending one.
+
       Two further observations, neither worth a test on its own. 8.7 carries a
       public numberOfValidDoses(PatientSeries) copied from 8.4/8.5 that nothing
       calls (pinned dead by
@@ -3573,12 +3661,14 @@ units:
   '8.8':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.DetermineBestPatientSeriesTest
-    fix_status: not_started
+    fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0020"]
     notes: >-
-      Role A pass 2026-09-05. 23 tests, 17 green, 6 red. 8.8 is the last step of
+      Role A pass 2026-09-05. 23 tests, 17 green, 6 red; now 23/23 green after
+      SPEC-4.6-0020 (2026-09-08, merged) - unit fully closed. 8.8 is the last
+      step of
       Chapter 8 and the consumer end of 8.7: it reads
       dataModel.getPrioritizedPatientSeriesList(), applies Table 8-14 once per
       entry, and appends the survivors to dataModel.getBestPatientSeriesList()
@@ -3588,10 +3678,11 @@ units:
       the class builds its LogicTables in its constructor and evaluates them in
       process(), so driving the public process() over a hand-built DataModel
       exercises exactly one table per prioritized patient series and nothing
-      else. Two fixture notes for anyone extending the class: it captures
-      dataModel.getPatientSeriesStepper().getList() in a field initializer and
-      iterates the prioritized list in its constructor, so the fixture must be
-      built before the step is; and DataModel.bestPatientSeriesList defaults to
+      else. Two fixture notes for anyone extending the class: it iterates the
+      prioritized list in its constructor (SPEC-4.6-0020 removed the separate
+      stepper-backed field the two equivalent-series-group conditions used to
+      read instead - see below), so the fixture must be built before the step
+      is; and DataModel.bestPatientSeriesList defaults to
       null and is created only by 4.5 (SelectBestPatientSeries.process(), "if
       null"), so a fixture that omits it gets a NullPointerException from the
       outcome bodies rather than a failed assertion. The tests use HepA's real
@@ -3610,9 +3701,10 @@ units:
       Nothing in 08-08 is left untested and nothing needed disproportionate
       scaffolding.
 
-      Reds 1-3 are a NEW cross-cutting entry, recorded 2026-09-05 as
-      "<equivalentSeriesGroups> is in every antigen series in the release, is
-      parsed nowhere". Two of Table 8-14's five conditions are defined entirely
+      Reds 1-3, Fixed (SPEC-4.6-0020, merged), were a cross-cutting entry
+      recorded 2026-09-05 as "<equivalentSeriesGroups> is in every antigen
+      series in the release, is parsed nowhere". Two of Table 8-14's five
+      conditions are defined entirely
       over "an equivalent series group", and 4.5 defines that term as a declared
       Supporting Data value ("some antigen series define Equivalent Series Groups
       which allow a single best series to be selected from across multiple Series
@@ -3621,52 +3713,46 @@ units:
       - 54 populated (37 "2", 15 "1", 2 "3") across 10 antigens, 89 self-closing.
       It is a direct child of <series>, a sibling of <seriesType>, so it belongs
       on AntigenSeries and not on SelectPatientSeries where seriesGroup lives.
-      Grep finds zero references to the name in any .java file in cdsi-engine or
-      cdsi-web, and no domain class has a field for it - so unlike seriesGroup /
-      seriesGroupName, which are loaded and never read, this value never arrives
-      at all. theEquivalentSeriesGroupsTableEightFourteenTurnsOnAreCarriedByThe
-      DomainModel is the "can the condition even be expressed?" test (expected an
-      accessor mentioning "equivalent" on AntigenSeries or SelectPatientSeries,
-      actual none); theReleaseDeclaresTheEquivalentSeriesGroupsTableEightFourteen
-      Needs (green) is its companion evidence that the data is really there.
+      Grep found zero references to the name in any .java file in cdsi-engine
+      or cdsi-web, and no domain class had a field for it - so unlike
+      seriesGroup / seriesGroupName, which were loaded and never read, this
+      value never arrived at all. Fixed by SPEC-4.6-0020: AntigenSeries now
+      carries equivalentSeriesGroups (a List<String>), parsed from the
+      <series> element's own <equivalentSeriesGroups> child by
+      DataModelLoader.
+      theEquivalentSeriesGroupsTableEightFourteenTurnsOnAreCarriedByThe
+      DomainModel (expected an accessor mentioning "equivalent" on
+      AntigenSeries or SelectPatientSeries, actual none - now finds one) and
+      theReleaseDeclaresTheEquivalentSeriesGroupsTableEightFourteenNeeds
+      (green throughout - the companion evidence that the data is really
+      there) both pass.
       theCompleteSeriesConditionAnswersNoForASeriesThatDeclaresNoEquivalentSeries
-      Group (expected the pediatric travel series to be a best patient series by
-      Rule 2, actual only the Standard group's complete series) and theRisk
-      ElsewhereConditionAnswersNoForASeriesThatDeclaresNoEquivalentSeriesGroup
-      (expected it best by Rule 3, actual only the Increased Risk group's Risk
-      series) show the consequence in the majority shape: HepA's Increased Risk -
-      Pediatric Travel group declares an empty element and so is equivalent to
-      nothing, which means both conditions must answer No unconditionally for it,
-      and neither does. The suppression direction is the damaging one - a series
-      no other group is equivalent to gets dropped from the best patient series
-      list because some unrelated group has a complete or a Risk series.
+      Group and theRiskElsewhereConditionAnswersNoForASeriesThatDeclaresNoEquivalent
+      SeriesGroup (HepA's Increased Risk - Pediatric Travel group declares an
+      empty element and so is equivalent to nothing) both now correctly answer
+      No unconditionally for it, since the rewritten conditions check
+      membership in the pps's own equivalentSeriesGroups list rather than
+      answering over the whole antigen or the whole assessment.
 
-      Reds 4-6 are the 2026-09-05 "Chapter 8 has no series group" cross-cutting
-      entry, confirmed from 8.8's side and recorded there together with a closing
-      synthesis for the whole chapter now that all eight units are tested. The
-      shape 8.8 contributes that no earlier unit could: the two halves land on
-      different parts of the same class. The constructor's loop over the
-      prioritized list filters by
-      getTargetDisease().equals(dataModel.getAntigen()) and is CORRECT (pinned
-      green by theStepEvaluatesOnlyThePrioritizedPatientSeriesOfTheAntigenBeing
-      Processed), though dead in practice since 4.5 clears the prioritized list
-      every pass and 8.7 adds one entry; the conditions then scan
-      dataModel.getPatientSeriesStepper().getList() instead. And the two
-      outward-looking conditions do not agree with each other: condition 2
-      filters by antigen before checking completeness, condition 5 has no antigen
-      filter of any kind. theRiskElsewhereConditionAsksOnlyAboutThePatientSeries
-      OfTheAntigenBeingProcessed (expected the HepA Standard series to be a best
-      patient series, actual not - one Measles Risk series anywhere in the
-      assessment suppresses it) is the cleanest demonstration of the antigen half
-      in the whole chapter. theCompleteSeriesConditionAsksOnlyAboutPrioritized
-      PatientSeries and theRiskElsewhereConditionAsksOnlyAboutPrioritizedPatient
-      Series (both expected the prioritized Standard series to be best, actual
-      not) are the stage half, and 8.8 is where it needs no interpretation to
-      call: Table 8-14's conditions say "Is there a PRIORITIZED patient series
-      ..." in the specification's own words, so the right list here is
-      prioritizedPatientSeriesList - the one the class already iterates in its
-      constructor and then does not consult in its conditions - rather than
-      scorablePatientSeriesList, which is the answer for 8.2-8.7.
+      Reds 4-6, Fixed (SPEC-4.6-0020, merged), were the 2026-09-05 "Chapter 8
+      has no series group" cross-cutting entry, confirmed from 8.8's side and
+      recorded there together with a closing synthesis for the whole chapter
+      once all eight units were tested. The shape 8.8 contributed that no
+      earlier unit could: the two halves landed on different parts of the same
+      class. The constructor's loop over the prioritized list filters by
+      getTargetDisease().equals(dataModel.getAntigen()) and was already
+      CORRECT (pinned green by theStepEvaluatesOnlyThePrioritizedPatientSeriesOfTheAntigenBeing
+      Processed); the two outward-looking conditions previously scanned
+      dataModel.getPatientSeriesStepper().getList() instead and disagreed with
+      each other (condition 2 filtered by antigen, condition 5 had no antigen
+      filter of any kind). Both conditions now scan
+      dataModel.getPrioritizedPatientSeriesList() - the list the constructor
+      already iterates - checking each *other* entry's series group against
+      the entry currently being judged, per SPEC-4.6-0020.
+      theRiskElsewhereConditionAsksOnlyAboutThePatientSeriesOfTheAntigenBeing
+      Processed, theCompleteSeriesConditionAsksOnlyAboutPrioritizedPatientSeries
+      and theRiskElsewhereConditionAsksOnlyAboutPrioritizedPatientSeries all
+      pass now.
 
       Checked and not a problem in 8.8, recorded so a Role B session does not
       re-derive it. (a) The unreset patient series score: 8.8 reads no score at
@@ -3686,17 +3772,16 @@ units:
       once and never clears it - and 8.8 correctly appends rather than replaces
       (theBestPatientSeriesListAccumulatesAcrossAntigenPasses, green).
 
-      One documentation correction for 08-08's index.md, not worth a finding.
-      Its [IMPLEMENTATION] paragraph says the two equivalent-series-group
-      conditions "scan every OTHER patient series in
-      dataModel.getPatientSeriesStepper().getList()". They scan every patient
-      series including the prioritized one being judged; the word "OTHER" is
-      wrong. It happens not to change any outcome, because condition 2 only
-      matters on rule columns where condition 1 already answered "not complete"
-      and condition 5 only matters on Rule 3, which requires the series itself
-      not to be Risk - so in both cases the series cannot be its own answer. The
-      paragraph also does not mention that condition 5, unlike condition 2, has
-      no antigen filter.
+      Documentation correction recorded 2026-09-05 for 08-08's index.md (now
+      further outdated by SPEC-4.6-0020's rewrite): the [IMPLEMENTATION]
+      paragraph said the two equivalent-series-group conditions "scan every
+      OTHER patient series in dataModel.getPatientSeriesStepper().getList()".
+      That list is gone from the class entirely now; the conditions scan
+      dataModel.getPrioritizedPatientSeriesList(), explicitly skipping the
+      pps under judgment (SPEC-4.6-0020's rewrite added the "ps == pps"
+      exclusion the old code lacked, making "OTHER" now accurate where it
+      previously was not). 08-08's index.md should be updated to match during
+      a future documentation pass.
   '9.1':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.ApplyGeneralVaccineGroupRulesTest

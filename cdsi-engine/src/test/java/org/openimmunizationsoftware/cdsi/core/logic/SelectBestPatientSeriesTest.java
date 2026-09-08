@@ -16,6 +16,7 @@ import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.SelectPatientSeries;
 
 /**
  * Section 4.5 "Select Best Patient Series" (Logic Specification for ACIP
@@ -49,13 +50,17 @@ import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
  * <p>
  * The step is driven directly through its public {@code process()}, with a
  * hand-built {@code DataModel}: {@link SelectBestPatientSeries} reads only the
- * antigen-selected list (4.3's output), the Supporting Data antigen series
- * list, and the patient series stepper (5.1's output), so no Supporting Data
- * release is needed. Constructing the returned next step is inert - both
- * {@code PreFilterPatientSeries} and {@code IdentifyAndEvaluateVaccineGroup}
- * have do-nothing constructors and all their work is in {@code process()},
- * which is never called here. That is what keeps this a 4.5 test rather than an
- * 8.1 test.
+ * antigen-selected list (4.3's output) and the Supporting Data antigen series
+ * list, so no Supporting Data release is needed. It no longer builds
+ * {@code selectedPatientSeriesList} itself - that, and the per-series-group
+ * loop Chapter 8's own overview describes, is {@code SelectNextSeriesGroup}'s
+ * job (see {@code SelectNextSeriesGroupTest}); 4.5's own state change per
+ * antigen is populating the series-group stepper. Constructing the returned
+ * next step is inert - {@code SelectNextSeriesGroup} and
+ * {@code IdentifyAndEvaluateVaccineGroup} both have do-nothing constructors
+ * and all their work is in {@code process()}, which is never called here.
+ * That is what keeps this a 4.5 test rather than an 8.1 or a
+ * {@code SelectNextSeriesGroup} test.
  *
  * <p>
  * A fresh {@code SelectBestPatientSeries} is constructed per iteration, exactly
@@ -106,6 +111,15 @@ public class SelectBestPatientSeriesTest {
     return antigenSeries;
   }
 
+  /** The same, additionally declaring which series group the series belongs to. */
+  private AntigenSeries supportingDataAntigenSeries(String seriesName, Antigen targetDisease, String seriesGroup) {
+    AntigenSeries antigenSeries = supportingDataAntigenSeries(seriesName, targetDisease);
+    SelectPatientSeries selectPatientSeries = new SelectPatientSeries();
+    selectPatientSeries.setSeriesGroup(seriesGroup);
+    antigenSeries.setSelectPatientSeries(selectPatientSeries);
+    return antigenSeries;
+  }
+
   /**
    * Stands in for 5.1's output: a relevant patient series on the stepper, which
    * is where 4.5 looks for the patient series belonging to the current antigen.
@@ -151,7 +165,7 @@ public class SelectBestPatientSeriesTest {
         return visited;
       }
       assertEquals("While antigens remain, 4.5 delegates to Chapter 8 (8.1) and nowhere else",
-          LogicStepType.PRE_FILTER_PATIENT_SERIES, next.getLogicStepType());
+          LogicStepType.SELECT_NEXT_SERIES_GROUP, next.getLogicStepType());
       visited.add(dataModel.getAntigen());
     }
     throw new AssertionError("4.5's loop did not terminate after " + maximumIterations + " iterations");
@@ -171,7 +185,7 @@ public class SelectBestPatientSeriesTest {
 
     assertEquals("The loop starts at the first antigen", 0, dataModel.getAntigenPos());
     assertSame("Chapter 8 must be pointed at the first selected antigen", selected.get(0), dataModel.getAntigen());
-    assertEquals(LogicStepType.PRE_FILTER_PATIENT_SERIES, next.getLogicStepType());
+    assertEquals(LogicStepType.SELECT_NEXT_SERIES_GROUP, next.getLogicStepType());
   }
 
   /**
@@ -217,8 +231,8 @@ public class SelectBestPatientSeriesTest {
   public void transitionsToIdentifyAndEvaluateVaccineGroupOnceEveryAntigenIsProcessed() throws Exception {
     selectAntigens(HEPB, MEASLES);
 
-    assertEquals(LogicStepType.PRE_FILTER_PATIENT_SERIES, process().getLogicStepType());
-    assertEquals(LogicStepType.PRE_FILTER_PATIENT_SERIES, process().getLogicStepType());
+    assertEquals(LogicStepType.SELECT_NEXT_SERIES_GROUP, process().getLogicStepType());
+    assertEquals(LogicStepType.SELECT_NEXT_SERIES_GROUP, process().getLogicStepType());
     assertEquals("After the last antigen the loop hands off to 4.6",
         LogicStepType.IDENTIFY_AND_EVALUATE_VACCINE_GROUP, process().getLogicStepType());
   }
@@ -283,86 +297,84 @@ public class SelectBestPatientSeriesTest {
   }
 
   /**
-   * State Changes: "while antigens remain, it sets up ... {@code
-   * selectedPatientSeriesList} for the current antigen". Chapter 8 scores one
-   * antigen at a time, so the patient series it is handed must be exactly the
-   * relevant patient series (5.1's output, on the patient series stepper) whose
-   * tracked antigen series targets the current antigen.
+   * State Changes: while antigens remain, 4.5 sets up the series-group stepper
+   * for the current antigen - the distinct series groups
+   * {@code antigenSeriesSelectedList} declares - which {@code SelectNextSeriesGroup}
+   * (not 4.5 itself) steps through to build {@code selectedPatientSeriesList}
+   * for one group at a time. See {@code SelectNextSeriesGroupTest} for that
+   * half; this pins only what 4.5 itself hands off.
    */
   @Test
-  public void selectedPatientSeriesListHoldsOnlyTheCurrentAntigensPatientSeries() throws Exception {
-    List<Antigen> selected = selectAntigens(HEPB, MEASLES);
-    relevantPatientSeries("HepB standard", selected.get(0));
-    relevantPatientSeries("Measles standard", selected.get(1));
-    relevantPatientSeries("HepB risk", selected.get(0));
+  public void seriesGroupStepperHoldsTheCurrentAntigensDistinctSeriesGroups() throws Exception {
+    List<Antigen> selected = selectAntigens(HEPB);
+    supportingDataAntigenSeries("HepB standard", selected.get(0), "1");
+    supportingDataAntigenSeries("HepB risk", selected.get(0), "2");
 
     process();
 
-    assertEquals("Chapter 8 must only see the current antigen's patient series",
-        Arrays.asList("HepB standard", "HepB risk"),
-        seriesNamesOf(dataModel.getSelectedPatientSeriesList()));
+    assertEquals("Both of the current antigen's series groups are queued, and no other antigen's",
+        Arrays.asList("1", "2"), dataModel.getSeriesGroupStepper().getList());
   }
 
   /**
-   * The per-antigen patient series list is rebuilt each iteration rather than
-   * accumulated, so one antigen's scoring never sees the previous antigen's
-   * series.
+   * The series-group stepper's list is rebuilt each iteration rather than
+   * accumulated, so one antigen's groups never bleed into the next antigen's
+   * pass.
    */
   @Test
-  public void selectedPatientSeriesListIsRebuiltForEachAntigen() throws Exception {
+  public void seriesGroupStepperListIsRebuiltForEachAntigen() throws Exception {
     List<Antigen> selected = selectAntigens(HEPB, MEASLES);
-    relevantPatientSeries("HepB standard", selected.get(0));
-    relevantPatientSeries("Measles standard", selected.get(1));
+    supportingDataAntigenSeries("HepB standard", selected.get(0), "1");
+    supportingDataAntigenSeries("Measles standard", selected.get(1), "1");
 
     process();
-    assertEquals(Arrays.asList("HepB standard"), seriesNamesOf(dataModel.getSelectedPatientSeriesList()));
+    assertEquals(Arrays.asList("1"), dataModel.getSeriesGroupStepper().getList());
 
     process();
-    assertEquals("The second antigen's list must not carry the first antigen's series",
-        Arrays.asList("Measles standard"), seriesNamesOf(dataModel.getSelectedPatientSeriesList()));
+    assertEquals("The second antigen's groups must not carry the first antigen's groups",
+        Arrays.asList("1"), dataModel.getSeriesGroupStepper().getList());
   }
 
   /**
    * "Loops through each antigen" means every selected antigen, not only those
-   * the patient has a relevant patient series for: an antigen with no patient
-   * series still gets its turn, and Chapter 8 is handed an empty list for it.
-   * (An antigen with nothing to score is how a patient with no path to immunity
-   * for that antigen falls out of 8.1 with no best series.)
+   * with a series group to offer: an antigen with no antigen series at all
+   * still gets its turn, with an empty series-group stepper for
+   * {@code SelectNextSeriesGroup} to find immediately exhausted.
    */
   @Test
-  public void antigensWithNoPatientSeriesAreStillHandedToChapterEight() throws Exception {
+  public void antigensWithNoAntigenSeriesAreStillHandedToChapterEight() throws Exception {
     List<Antigen> selected = selectAntigens(HEPB, MEASLES);
-    relevantPatientSeries("Measles standard", selected.get(1));
+    supportingDataAntigenSeries("Measles standard", selected.get(1), "1");
 
     LogicStep next = process();
 
-    assertEquals("The antigen is still visited", LogicStepType.PRE_FILTER_PATIENT_SERIES, next.getLogicStepType());
+    assertEquals("The antigen is still visited", LogicStepType.SELECT_NEXT_SERIES_GROUP, next.getLogicStepType());
     assertSame(selected.get(0), dataModel.getAntigen());
-    assertTrue("Nothing relevant for this antigen, so nothing handed to Chapter 8",
-        dataModel.getSelectedPatientSeriesList().isEmpty());
+    assertTrue("Nothing relevant for this antigen, so no series group is queued",
+        dataModel.getSeriesGroupStepper().getList().isEmpty());
   }
 
   /**
    * Implementation behaviour with no specification basis, pinned because it is
-   * load-bearing for how the filters above behave: both filters compare with
+   * load-bearing for how the antigen filter above behaves: it compares with
    * {@code Antigen.equals}, which compares names rather than instance identity.
-   * A patient series or antigen series carrying a different {@code Antigen}
-   * object with the same name is still selected. This is what lets Supporting
-   * Data loaded from separate files agree on an antigen; it also means a
-   * duplicate-named antigen would silently be treated as the same one.
+   * An antigen series carrying a different {@code Antigen} object with the same
+   * name is still selected. This is what lets Supporting Data loaded from
+   * separate files agree on an antigen; it also means a duplicate-named antigen
+   * would silently be treated as the same one.
    */
   @Test
   public void antigenMatchingIsByNameNotByInstanceIdentity() throws Exception {
     selectAntigens(HEPB);
     Antigen separateHepBInstance = new Antigen();
     separateHepBInstance.setName(HEPB);
-    relevantPatientSeries("HepB standard", separateHepBInstance);
+    supportingDataAntigenSeries("HepB standard", separateHepBInstance, "1");
 
     process();
 
     assertEquals("A same-named but distinct Antigen instance still matches",
-        Arrays.asList("HepB standard"), seriesNamesOf(dataModel.getSelectedPatientSeriesList()));
-    assertEquals(1, dataModel.getAntigenSeriesSelectedList().size());
+        Arrays.asList("HepB standard"), antigenSeriesNamesOf(dataModel.getAntigenSeriesSelectedList()));
+    assertEquals(Arrays.asList("1"), dataModel.getSeriesGroupStepper().getList());
   }
 
   /**
@@ -485,38 +497,6 @@ public class SelectBestPatientSeriesTest {
 
     assertNull("No antigen is current once the loop has ended", dataModel.getAntigen());
     assertNull("No antigen series are selected once the loop has ended", dataModel.getAntigenSeriesSelectedList());
-  }
-
-  /**
-   * The other half of "it clears per-antigen state", pinned as it actually
-   * behaves rather than as the sentence reads: {@code selectedPatientSeriesList}
-   * is also per-antigen state that this step set up, and it is <i>not</i>
-   * cleared on the exhaustion branch - the last antigen's patient series are
-   * still on the data model after the loop ends, alongside a null antigen and a
-   * null antigen-series selected list.
-   *
-   * <p>
-   * Recorded here as an imprecision in the step package's State Changes wording
-   * rather than asserted as a defect, because section 4.5 itself says nothing
-   * about state and nothing in {@code cdsi-engine} reads
-   * {@code selectedPatientSeriesList} after the loop ends (its only readers,
-   * {@code SelectPrioritizedPatientSeries} and {@code CompletePatientSeries},
-   * are Chapter 8 steps that no longer run). It is not purely theoretical
-   * though: {@code LogicStepRenderer.printSelectBestPatientSeriesPost} prints
-   * "Done checking Antigens" and then lists this very list, so the cdsi-web
-   * step view shows the last antigen's patient series under a heading that
-   * implies none is current. Flagged for review, not classified.
-   */
-  @Test
-  public void exhaustingTheLoopLeavesTheLastAntigensSelectedPatientSeriesListInPlace() throws Exception {
-    List<Antigen> selected = selectAntigens(HEPB);
-    relevantPatientSeries("HepB standard", selected.get(0));
-
-    process();
-    process();
-
-    assertEquals("Actual behaviour: the last antigen's patient series are still on the data model",
-        Arrays.asList("HepB standard"), seriesNamesOf(dataModel.getSelectedPatientSeriesList()));
   }
 
   /**

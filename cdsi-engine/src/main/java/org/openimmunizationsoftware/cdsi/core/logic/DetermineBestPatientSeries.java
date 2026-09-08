@@ -12,7 +12,6 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
 public class DetermineBestPatientSeries extends LogicStep {
-    private List<PatientSeries> patientSeriesList = dataModel.getPatientSeriesStepper().getList();
 
     public DetermineBestPatientSeries(DataModel dataModel) {
         super(LogicStepType.DETERMINE_BEST_PATIENT_SERIES, dataModel);
@@ -58,11 +57,18 @@ public class DetermineBestPatientSeries extends LogicStep {
                     "Is there a prioritized patient series that is a complete patient series in an equivalent series group?") {
                 @Override
                 protected LogicResult evaluateInternal() {
-                    for (PatientSeries ps : patientSeriesList) {
-                        if (ps.getTrackedAntigenSeries().getTargetDisease().equals(dataModel.getAntigen())) {
-                            if (ps.getPatientSeriesStatus() == PatientSeriesStatus.COMPLETE) {
-                                return LogicResult.YES;
-                            }
+                    List<String> equivalentSeriesGroups = pps.getTrackedAntigenSeries().getEquivalentSeriesGroups();
+                    for (PatientSeries ps : dataModel.getPrioritizedPatientSeriesList()) {
+                        if (ps == pps) {
+                            continue;
+                        }
+                        if (!ps.getTrackedAntigenSeries().getTargetDisease().equals(dataModel.getAntigen())) {
+                            continue;
+                        }
+                        String otherSeriesGroup = SelectBestPatientSeries.seriesGroupOf(ps.getTrackedAntigenSeries());
+                        if (equivalentSeriesGroups.contains(otherSeriesGroup)
+                                && ps.getPatientSeriesStatus() == PatientSeriesStatus.COMPLETE) {
+                            return LogicResult.YES;
                         }
                     }
                     return LogicResult.NO;
@@ -94,8 +100,17 @@ public class DetermineBestPatientSeries extends LogicStep {
                     "Is there a prioritized patient series with a series type of 'Risk' in an equivalent series group?") {
                 @Override
                 protected LogicResult evaluateInternal() {
-                    for (PatientSeries ps : patientSeriesList) {
-                        if (ps.getTrackedAntigenSeries().getSeriesType().equals(SeriesType.RISK)) {
+                    List<String> equivalentSeriesGroups = pps.getTrackedAntigenSeries().getEquivalentSeriesGroups();
+                    for (PatientSeries ps : dataModel.getPrioritizedPatientSeriesList()) {
+                        if (ps == pps) {
+                            continue;
+                        }
+                        if (!ps.getTrackedAntigenSeries().getTargetDisease().equals(dataModel.getAntigen())) {
+                            continue;
+                        }
+                        String otherSeriesGroup = SelectBestPatientSeries.seriesGroupOf(ps.getTrackedAntigenSeries());
+                        if (equivalentSeriesGroups.contains(otherSeriesGroup)
+                                && ps.getTrackedAntigenSeries().getSeriesType() == SeriesType.RISK) {
                             return LogicResult.YES;
                         }
                     }

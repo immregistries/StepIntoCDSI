@@ -475,10 +475,16 @@ public class ClassifyScorablePatientSeriesTest {
    */
   @Test
   public void theStepClassifiesOnlyThePatientSeriesOfOneSeriesGroup() throws Exception {
-    satisfiedTargetDose(scorableSeries("HepB standard first", hepB, STANDARD_GROUP, PatientSeriesStatus.NOT_COMPLETE));
-    satisfiedTargetDose(scorableSeries("HepB standard second", hepB, STANDARD_GROUP, PatientSeriesStatus.NOT_COMPLETE));
+    PatientSeries first = scorableSeries("HepB standard first", hepB, STANDARD_GROUP, PatientSeriesStatus.NOT_COMPLETE);
+    satisfiedTargetDose(first);
+    PatientSeries second = scorableSeries("HepB standard second", hepB, STANDARD_GROUP, PatientSeriesStatus.NOT_COMPLETE);
+    satisfiedTargetDose(second);
     scorableSeries("HepB risk complete", hepB, INCREASED_RISK_GROUP, PatientSeriesStatus.COMPLETE);
     scorableSeries("HepB risk also complete", hepB, INCREASED_RISK_GROUP, PatientSeriesStatus.COMPLETE);
+
+    // SelectNextSeriesGroup hands 8.1 (and, through it, 8.3) one series group at
+    // a time; simulate the Standard group's own pass.
+    dataModel.setScorablePatientSeriesList(new ArrayList<PatientSeries>(Arrays.asList(first, second)));
 
     assertEquals("One run of 8.3 classifies one series group, whose two series are both in-process",
         LogicStepType.IN_PROCESS_PATIENT_SERIES, classify());
@@ -504,10 +510,16 @@ public class ClassifyScorablePatientSeriesTest {
   @Test
   public void theStepClassifiesOnlyThePatientSeriesOfTheAntigenBeingProcessed() throws Exception {
     Antigen measles = dataModel.getOrCreateAntigen("Measles");
-    satisfiedTargetDose(scorableSeries("HepB first", hepB, STANDARD_GROUP, PatientSeriesStatus.NOT_COMPLETE));
-    satisfiedTargetDose(scorableSeries("HepB second", hepB, STANDARD_GROUP, PatientSeriesStatus.NOT_COMPLETE));
+    PatientSeries first = scorableSeries("HepB first", hepB, STANDARD_GROUP, PatientSeriesStatus.NOT_COMPLETE);
+    satisfiedTargetDose(first);
+    PatientSeries second = scorableSeries("HepB second", hepB, STANDARD_GROUP, PatientSeriesStatus.NOT_COMPLETE);
+    satisfiedTargetDose(second);
     scorableSeries("Measles complete", measles, STANDARD_GROUP, PatientSeriesStatus.COMPLETE);
     scorableSeries("Measles also complete", measles, STANDARD_GROUP, PatientSeriesStatus.COMPLETE);
+
+    // What 8.1 (fed by SelectNextSeriesGroup's antigen scoping) actually leaves
+    // behind - no other antigen's series can reach this list.
+    dataModel.setScorablePatientSeriesList(new ArrayList<PatientSeries>(Arrays.asList(first, second)));
 
     assertEquals("8.3 runs inside 4.5's per-antigen loop, so only HepB's series are classified",
         LogicStepType.IN_PROCESS_PATIENT_SERIES, classify());

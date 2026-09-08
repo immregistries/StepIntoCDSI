@@ -12,6 +12,7 @@ public class AntigenSeries {
   private VaccineGroup vaccineGroup = null;
   private List<Indication> indicationList = new ArrayList<Indication>();
   private List<SeriesDose> seriesDoseList = new ArrayList<SeriesDose>();
+  private List<String> equivalentSeriesGroups = new ArrayList<String>();
 
   @Override
   public boolean equals(Object obj) {
@@ -80,6 +81,14 @@ public class AntigenSeries {
 
   public void setSelectPatientSeries(SelectPatientSeries selectPatientSeries) {
     this.selectPatientSeries = selectPatientSeries;
+  }
+
+  public List<String> getEquivalentSeriesGroups() {
+    return equivalentSeriesGroups;
+  }
+
+  public void addEquivalentSeriesGroup(String equivalentSeriesGroup) {
+    this.equivalentSeriesGroups.add(equivalentSeriesGroup);
   }
 
 }

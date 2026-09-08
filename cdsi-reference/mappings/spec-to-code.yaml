@@ -52,9 +52,24 @@ sections:
       module: "cdsi-engine"
       classes:
         - "org.openimmunizationsoftware.cdsi.core.logic.SelectBestPatientSeries"
+        - "org.openimmunizationsoftware.cdsi.core.logic.SelectNextSeriesGroup"
     tests:
       - "test-gap: no dedicated unit test; exercised indirectly by every cdsi-fits-tests fixture"
     mapping_status: "draft"
+    notes: >
+      SelectNextSeriesGroup (LogicStepType.SELECT_NEXT_SERIES_GROUP, labeled
+      with the bare chapter number "8" rather than a subsection) is new
+      infrastructure added 2026-09-08 to implement Chapter 8's own overview
+      text (sections/08-select-best-patient-series.txt, page 66): "Process
+      steps 8.1 through 8.7 are repeated for each series group to identify
+      one prioritized patient series per series group. Process step 8.8 is
+      then used to determine which prioritized patient series are selected
+      as a best patient series." That repetition previously did not exist -
+      see cdsi-reference/step-tests/cross-cutting-notes.md's 2026-09-05
+      "Chapter 8 has no series group" entry. SelectBestPatientSeries (4.5)
+      populates the series-group stepper once per antigen; SelectNextSeriesGroup
+      steps through it, dispatching to 8.1 for each group in turn and to 8.8
+      once an antigen's groups are exhausted.
   "4.6":
     title: "Identify and Evaluate Vaccine Group"
     implementation:

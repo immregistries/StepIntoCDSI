@@ -476,6 +476,11 @@ public class DataModelLoader {
             String nameValue = DomUtils.getInternalValue(childNode);
             SeriesType seriesType = SeriesType.getSeriestType(nameValue);
             antigenSeries.setSeriesType(seriesType);
+          } else if (childNode.getNodeName().equals("equivalentSeriesGroups")) {
+            String equivalentSeriesGroup = DomUtils.getInternalValue(childNode);
+            if (!equivalentSeriesGroup.isEmpty()) {
+              antigenSeries.addEquivalentSeriesGroup(equivalentSeriesGroup);
+            }
           } else if (childNode.getNodeName().equals("indication")) {
             Indication indication = new Indication();
             antigenSeries.getIndicationList().add(indication);

@@ -52,7 +52,8 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
  * <p>
  * The step is driven through its public {@code process()} with a hand-built
  * {@code DataModel}. {@link PreFilterPatientSeries} reads exactly three things -
- * {@code dataModel.getPatientSeriesStepper().getList()}, each patient series'
+ * {@code dataModel.getSelectedPatientSeriesList()} (the antigen-and-series-group
+ * scoped list 4.5/SelectNextSeriesGroup leave behind), each patient series'
  * {@code patientSeriesStatus} / {@code targetDoseList}, and each tracked
  * {@code AntigenSeries}' {@code seriesType} plus its
  * {@code SelectPatientSeries} (series priority, default series flag) - so no
@@ -117,9 +118,11 @@ public class PreFilterPatientSeriesTest {
   // ---------------------------------------------------------------------
 
   /**
-   * Adds one relevant patient series to the patient series stepper, which is
-   * where 5.1 {@code SelectRelevantPatientSeries} puts them and the only place
-   * 8.1 looks.
+   * Adds one relevant patient series to the patient series stepper (where 5.1
+   * {@code SelectRelevantPatientSeries} puts them) and to
+   * {@code selectedPatientSeriesList} (where 4.5 {@code SelectBestPatientSeries}
+   * / {@code SelectNextSeriesGroup} leave the current antigen-and-series-group's
+   * series before handing off to 8.1, which is the list 8.1 actually reads).
    */
   private PatientSeries relevantPatientSeries(String seriesName, Antigen targetDisease, SeriesType seriesType,
       String seriesGroupName, String seriesPriority, PatientSeriesStatus status) {
@@ -139,6 +142,7 @@ public class PreFilterPatientSeriesTest {
     patientSeries.setPatientSeriesStatus(status);
     patientSeries.setTargetDoseList(new ArrayList<TargetDose>());
     dataModel.getPatientSeriesStepper().add(patientSeries);
+    dataModel.getSelectedPatientSeriesList().add(patientSeries);
     return patientSeries;
   }
 
@@ -287,7 +291,12 @@ public class PreFilterPatientSeriesTest {
     PatientSeries riskGroupOnlySeries = relevantPatientSeries("HepB risk", hepB, SeriesType.STANDARD,
         INCREASED_RISK_GROUP, HIGHEST_PRIORITY, PatientSeriesStatus.CONTRAINDICATED);
     validDose(riskGroupOnlySeries, "06/01/2010");
-    validDose(standardSeries("HepB standard", PatientSeriesStatus.NOT_COMPLETE), "06/01/2010");
+    PatientSeries standard = standardSeries("HepB standard", PatientSeriesStatus.NOT_COMPLETE);
+    validDose(standard, "06/01/2010");
+
+    // SelectNextSeriesGroup hands 8.1 one series group at a time; simulate the
+    // Increased Risk group's own pass, in isolation from the Standard group.
+    dataModel.setSelectedPatientSeriesList(new ArrayList<PatientSeries>(Arrays.asList(riskGroupOnlySeries)));
 
     assertTrue("Every series of the Increased Risk group is Contraindicated, so its series stay candidates "
         + "- the Standard group's healthy series belongs to a different group and must not suppress it",
@@ -379,8 +388,12 @@ public class PreFilterPatientSeriesTest {
   @Test
   public void selectscoreTwoRiskPrioritiesAreComparedWithinOneSeriesGroupNotAcrossGroups() throws Exception {
     riskSeries("HepB risk A", HIGHEST_PRIORITY, PatientSeriesStatus.NOT_COMPLETE);
-    relevantPatientSeries("HepB travel risk B", hepB, SeriesType.RISK, PEDIATRIC_TRAVEL_GROUP, LOWER_PRIORITY,
-        PatientSeriesStatus.NOT_COMPLETE);
+    PatientSeries travelRisk = relevantPatientSeries("HepB travel risk B", hepB, SeriesType.RISK,
+        PEDIATRIC_TRAVEL_GROUP, LOWER_PRIORITY, PatientSeriesStatus.NOT_COMPLETE);
+
+    // SelectNextSeriesGroup hands 8.1 one series group at a time; simulate the
+    // Pediatric Travel group's own pass, in isolation from the Increased Risk group.
+    dataModel.setSelectedPatientSeriesList(new ArrayList<PatientSeries>(Arrays.asList(travelRisk)));
 
     assertTrue("Priority B is the highest priority within the Pediatric Travel group, which is the group that counts",
         scorableSeriesNames().contains("HepB travel risk B"));
@@ -605,8 +618,13 @@ public class PreFilterPatientSeriesTest {
    */
   @Test
   public void theStepExaminesThePatientSeriesOfOnlyOneSeriesGroup() throws Exception {
-    validDose(standardSeries("HepB standard", PatientSeriesStatus.NOT_COMPLETE), "06/01/2010");
+    PatientSeries standard = standardSeries("HepB standard", PatientSeriesStatus.NOT_COMPLETE);
+    validDose(standard, "06/01/2010");
     riskSeries("HepB risk", HIGHEST_PRIORITY, PatientSeriesStatus.NOT_COMPLETE);
+
+    // What SelectNextSeriesGroup has scoped selectedPatientSeriesList to for
+    // one series group's pass through 8.1-8.7.
+    dataModel.setSelectedPatientSeriesList(new ArrayList<PatientSeries>(Arrays.asList(standard)));
 
     process();
 
@@ -615,16 +633,17 @@ public class PreFilterPatientSeriesTest {
   }
 
   /**
-   * Chapter 8 runs once per antigen - 4.5 {@code SelectBestPatientSeries}
-   * selects one antigen, narrows the relevant patient series to that antigen's
+   * Chapter 8 runs once per antigen (and, per SelectNextSeriesGroup, once per
+   * series group within it) - 4.5 {@code SelectBestPatientSeries} selects one
+   * antigen, narrows the relevant patient series to that antigen-and-group's
    * in {@code selectedPatientSeriesList}, and only then enters 8.1. A run of
    * 8.1 must therefore not consider another antigen's patient series.
    *
    * <p>
-   * {@code PreFilterPatientSeries} reads
-   * {@code getPatientSeriesStepper().getList()} - 5.1's unfiltered,
-   * all-antigen list - rather than the per-antigen list 4.5 just built, so
-   * Measles' series is pre-filtered alongside HepB's on the HepB pass.
+   * {@code PreFilterPatientSeries} reads {@code selectedPatientSeriesList} -
+   * the antigen-and-series-group-scoped list SelectNextSeriesGroup builds -
+   * so Measles' series, only ever added to the unfiltered stepper here, is
+   * not pre-filtered alongside HepB's on the HepB pass.
    */
   @Test
   public void theStepExaminesOnlyThePatientSeriesOfTheAntigenBeingProcessed() throws Exception {

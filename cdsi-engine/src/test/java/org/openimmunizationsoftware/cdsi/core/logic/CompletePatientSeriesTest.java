@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
@@ -80,8 +81,8 @@ public class CompletePatientSeriesTest {
   public void setUp() {
     dataModel = new DataModel();
     hepB = dataModel.getOrCreateAntigen("HepB");
-    // The state 4.5 SelectBestPatientSeries leaves behind for one antigen pass,
-    // and the list 8.4 reads.
+    // The state 4.5 SelectBestPatientSeries leaves behind for one antigen pass.
+    // 8.4 reads scorablePatientSeriesList (8.1's output), not this one.
     dataModel.setAntigen(hepB);
     selectedPatientSeriesList = new ArrayList<PatientSeries>();
     dataModel.setSelectedPatientSeriesList(selectedPatientSeriesList);
@@ -117,6 +118,7 @@ public class CompletePatientSeriesTest {
       satisfiedTargetDose(patientSeries);
     }
     selectedPatientSeriesList.add(patientSeries);
+    dataModel.getScorablePatientSeriesList().add(patientSeries);
     return patientSeries;
   }
 
@@ -396,19 +398,18 @@ public class CompletePatientSeriesTest {
    * {@code selectedPatientSeriesList} as every relevant patient series of the
    * antigen being processed, before any pre-filtering; 8.1
    * {@code PreFilterPatientSeries} then narrows that to
-   * {@code scorablePatientSeriesList}, and 8.2 and 8.3 both read the narrowed
-   * one. 8.4 reads the wide one, so a series 8.1 deliberately dropped from
-   * consideration still sets the maximum valid dose count that every scorable
-   * series is measured against. See the 2026-09-05 "Chapter 8 has no series
-   * group" entry in {@code cdsi-reference/step-tests/cross-cutting-notes.md}.
+   * {@code scorablePatientSeriesList}, which 8.2, 8.3 and 8.4 alike now read,
+   * so a series 8.1 deliberately dropped from consideration does not set the
+   * maximum valid dose count that every scorable series is measured against.
    */
   @Test
   public void theStepScoresTheScorablePatientSeriesEightOneProducedNotEveryRelevantSeries() throws Exception {
     PatientSeries scorable = series("HepB risk priority A", PatientSeriesStatus.COMPLETE, INCREASED_RISK_GROUP,
         SeriesType.RISK, "A", 2);
-    series("HepB risk priority B", PatientSeriesStatus.COMPLETE, INCREASED_RISK_GROUP, SeriesType.RISK, "B", 5);
+    PatientSeries dropped = series("HepB risk priority B", PatientSeriesStatus.COMPLETE, INCREASED_RISK_GROUP,
+        SeriesType.RISK, "B", 5);
     // What 8.1 leaves behind: the priority B risk series is not scorable.
-    dataModel.getScorablePatientSeriesList().add(scorable);
+    dataModel.getScorablePatientSeriesList().remove(dropped);
 
     score();
 
@@ -438,9 +439,13 @@ public class CompletePatientSeriesTest {
    */
   @Test
   public void theStepScoresThePatientSeriesOfOneSeriesGroup() throws Exception {
-    completeSeries("HepB standard one valid dose", 1);
+    PatientSeries standardLoser = completeSeries("HepB standard one valid dose", 1);
     PatientSeries standardWinner = completeSeries("HepB standard two valid doses", 2);
     series("HepB increased risk", PatientSeriesStatus.COMPLETE, INCREASED_RISK_GROUP, SeriesType.RISK, "A", 5);
+
+    // SelectNextSeriesGroup hands 8.1 (and, through it, 8.4) one series group at
+    // a time; simulate the Standard group's own pass.
+    dataModel.setScorablePatientSeriesList(new ArrayList<PatientSeries>(Arrays.asList(standardLoser, standardWinner)));
 
     score();
 
@@ -493,6 +498,7 @@ public class CompletePatientSeriesTest {
     PatientSeries loser = completeSeries("HepB one valid dose", 1);
     TargetDose notSatisfied = notSatisfiedTargetDose(loser);
     PatientSeries winner = completeSeries("HepB two valid doses", 2);
+    int scorableSizeBeforeScoring = dataModel.getScorablePatientSeriesList().size();
 
     score();
 
@@ -505,8 +511,8 @@ public class CompletePatientSeriesTest {
     assertEquals(TargetDoseStatus.NOT_SATISFIED, notSatisfied.getTargetDoseStatus());
     assertEquals(TargetDoseStatus.SATISFIED, winner.getTargetDoseList().get(0).getTargetDoseStatus());
     assertTrue("8.4 prioritizes no patient series", dataModel.getPrioritizedPatientSeriesList().isEmpty());
-    assertTrue("8.4 does not re-derive the scorable patient series list",
-        dataModel.getScorablePatientSeriesList().isEmpty());
+    assertEquals("8.4 does not re-derive the scorable patient series list", scorableSizeBeforeScoring,
+        dataModel.getScorablePatientSeriesList().size());
   }
 
   // ---------------------------------------------------------------------

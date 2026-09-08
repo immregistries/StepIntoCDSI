@@ -130,7 +130,7 @@ public class NoValidDosesTest {
     dataModel.setSelectedPatientSeriesList(new ArrayList<PatientSeries>());
     dataModel.setScorablePatientSeriesList(new ArrayList<PatientSeries>());
     // The list 8.6 actually reads.
-    patientSeriesList = dataModel.getPatientSeriesStepper().getList();
+    patientSeriesList = dataModel.getScorablePatientSeriesList();
   }
 
   // ---------------------------------------------------------------------
@@ -722,7 +722,7 @@ public class NoValidDosesTest {
     startingOn(dropped, date(2023, 1, 1));
 
     // What 8.1 leaves behind: the priority B risk series is not scorable.
-    dataModel.getScorablePatientSeriesList().add(scorable);
+    dataModel.getScorablePatientSeriesList().remove(dropped);
 
     score(CAN_START_EARLIEST);
 
@@ -749,6 +749,9 @@ public class NoValidDosesTest {
     maximumAge(measlesDose, DEFAULT_MAXIMUM_AGE);
     forecast(measlesSeries, measlesDose);
     startingOn(measlesSeries, date(2023, 1, 1));
+    // What 8.1 (fed by SelectNextSeriesGroup's antigen scoping) actually leaves
+    // behind - no other antigen's series can reach this list.
+    dataModel.getScorablePatientSeriesList().remove(measlesSeries);
 
     score(CAN_START_EARLIEST);
 
@@ -773,6 +776,9 @@ public class NoValidDosesTest {
     maximumAge(riskDose, DEFAULT_MAXIMUM_AGE);
     forecast(increasedRisk, riskDose);
     startingOn(increasedRisk, date(2023, 1, 1));
+    // SelectNextSeriesGroup hands 8.1 (and, through it, 8.6) one series group at
+    // a time; simulate the Standard group's own pass.
+    dataModel.getScorablePatientSeriesList().remove(increasedRisk);
 
     score(CAN_START_EARLIEST);
 
@@ -871,6 +877,7 @@ public class NoValidDosesTest {
     PatientSeries second = noValidDosesSeries("HepB alternate", YesNo.YES, 3);
     startingOn(second, date(2025, 1, 1));
     finishingOn(second, date(2026, 1, 1));
+    int scorableSizeBeforeScoring = dataModel.getScorablePatientSeriesList().size();
 
     scoreWholeTable();
 
@@ -884,8 +891,8 @@ public class NoValidDosesTest {
     assertEquals(date(2024, 1, 1), first.getForecast().getEarliestDate());
     assertEquals(date(2024, 6, 1), first.getForecast().getAdjustedPastDueDate());
     assertTrue("8.6 prioritizes no patient series", dataModel.getPrioritizedPatientSeriesList().isEmpty());
-    assertTrue("8.6 does not re-derive the scorable patient series list",
-        dataModel.getScorablePatientSeriesList().isEmpty());
+    assertEquals("8.6 does not re-derive the scorable patient series list", scorableSizeBeforeScoring,
+        dataModel.getScorablePatientSeriesList().size());
   }
 
   // ---------------------------------------------------------------------

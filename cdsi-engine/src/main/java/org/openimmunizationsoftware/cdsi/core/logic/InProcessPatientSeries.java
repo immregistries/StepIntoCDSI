@@ -25,19 +25,19 @@ public class InProcessPatientSeries extends LogicStep {
 
   // private ConditionAttribute<Date> caDateAdministered = null;
 
-  private List<PatientSeries> patientSeriesList = dataModel.getPatientSeriesStepper().getList();
+  private List<PatientSeries> patientSeriesList = dataModel.getScorablePatientSeriesList();
 
   /***
    * cond1 A candidate patient series is a product patient series and has all
    * valid doses.
-   * 
+   *
    */
 
   private void evaluate_ACandidatePatientSeriesIsAProductPatientSeriesAndHasAllValidDoses() {
-    boolean productPatientSeries = false;
-    boolean hasAllValidDoses = true;
-
     for (PatientSeries patientSeries : patientSeriesList) {
+      boolean productPatientSeries = false;
+      boolean hasAllValidDoses = true;
+
       if (patientSeries.getTrackedAntigenSeries().getSelectPatientSeries()
           .getProductPath() != null) {
         if (patientSeries.getTrackedAntigenSeries().getSelectPatientSeries().getProductPath()

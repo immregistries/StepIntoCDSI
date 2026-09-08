@@ -1,0 +1,174 @@
+id: "SPEC-4.6-0020"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["4.5", "8.1", "8.2", "8.3", "8.4", "8.5", "8.6", "8.7", "8.8"]
+source_pages: [39, 66, 87]
+tables:
+  - "Table 8-3"
+  - "Table 8-5"
+  - "Table 8-7"
+  - "Table 8-9"
+  - "Table 8-11"
+  - "Table 8-14"
+business_rules:
+  - "SELECTB-24"
+  - "SELECTSCORE-2"
+  - "SELECTB-6"
+  - "SELECTB-16"
+  - "SELECTB-21"
+  - "SELECTB-19"
+  - "SELECTB-2"
+  - "SELECTB-3"
+  - "SELECTB-5"
+  - "SELECTB-11"
+  - "SELECTB-12"
+  - "SELECTB-23"
+  - "SELECTB-14"
+  - "SELECTBEST-1"
+  - "SELECTBEST-2"
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.SelectBestPatientSeries"
+  - "org.openimmunizationsoftware.cdsi.core.logic.SelectNextSeriesGroup"
+  - "org.openimmunizationsoftware.cdsi.core.logic.PreFilterPatientSeries"
+  - "org.openimmunizationsoftware.cdsi.core.logic.IdentifyOnePrioritizedPatientSeries"
+  - "org.openimmunizationsoftware.cdsi.core.logic.CompletePatientSeries"
+  - "org.openimmunizationsoftware.cdsi.core.logic.InProcessPatientSeries"
+  - "org.openimmunizationsoftware.cdsi.core.logic.NoValidDoses"
+  - "org.openimmunizationsoftware.cdsi.core.logic.SelectPrioritizedPatientSeries"
+  - "org.openimmunizationsoftware.cdsi.core.logic.DetermineBestPatientSeries"
+  - "org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries"
+  - "org.openimmunizationsoftware.cdsi.core.domain.datatypes.Stepper"
+  - "org.openimmunizationsoftware.cdsi.core.data.DataModel"
+  - "org.openimmunizationsoftware.cdsi.core.data.DataModelLoader"
+  - "org.openimmunizationsoftware.cdsi.core.logic.LogicStepType"
+  - "org.openimmunizationsoftware.cdsi.core.logic.LogicStepFactory"
+fits_cases:
+  - "675c41f8e4b089d2bdc0c483-HIB-2013-0308"
+  - "5eeca0522cc4517a96b0f417-PCV-2013-0575"
+summary: >
+  Chapter 8 (8.1-8.8) never implemented the series-group loop its own
+  overview text requires ("Process steps 8.1 through 8.7 are repeated for
+  each series group..."), and the eight steps disagreed about which of
+  three different lists was "the series in scope" - see
+  cross-cutting-notes.md's 2026-09-05 "Chapter 8 has no series group"
+  entry. This finding implements the loop and the correct scope for
+  every affected step in one coordinated change, plus the previously
+  entirely-unparsed `<equivalentSeriesGroups>` Supporting Data element
+  8.8's Table 8-14 needs. Verified correct against all nine affected
+  units' own JUnit suites (every remaining red in each reconciles
+  exactly against an already-documented, unrelated, pre-existing
+  defect) and against the full cdsi-engine suite (167 -> 139 failures,
+  0 new errors). Merged despite a net FITS regression (see
+  "FITS verification" and SPEC-4.6-0021) - an explicit, informed
+  project-owner decision, not an oversight.
+evidence: >
+  Confirmed via two independent code-reading passes and this round's own
+  fixes: 4.5 SelectBestPatientSeries looped only over antigens and built
+  antigenSeriesSelectedList/selectedPatientSeriesList unfiltered by
+  series group; no series-group concept existed anywhere in DataModel
+  (grep: zero hits for "seriesGroup"); 8.1 read the fully unfiltered
+  patientSeriesStepper; 8.4 and 8.7 read 4.5's pre-8.1
+  selectedPatientSeriesList (wrong pipeline stage); 8.5 and 8.6 read the
+  unfiltered stepper (wrong stage and wrong scope); 8.8's outer loop
+  correctly filtered prioritizedPatientSeriesList by antigen but its two
+  "equivalent series group" conditions read a stale, unrelated field and
+  implemented no equivalence check at all, because
+  `<equivalentSeriesGroups>` (present on 54 of the bundled release's 143
+  series) was parsed by nothing and had nowhere to be stored. Two further
+  independent bugs compounded this: 8.5/8.6's "sticky boolean" defect
+  (a per-series flag declared outside the scoring loop, never reset) and
+  8.6's numOfEarliestDates tie-counter (reset to 0 on a new earliest date
+  without counting the series that triggered the reset, making its own
+  +1 permanently unawardable).
+interpretation: >
+  Fix: a new `SELECT_NEXT_SERIES_GROUP` LogicStepType/class steps through
+  the antigen's distinct series groups (a `Stepper<String>` on DataModel,
+  populated once per antigen by 4.5 from `antigenSeriesSelectedList`),
+  rebuilding `selectedPatientSeriesList` scoped to (antigen, group) before
+  each pass through 8.1-8.7; every scoring-phase exit (8.2's five
+  shortcut outcomes, 8.7's normal path) now dispatches there instead of
+  straight to 8.8, so 8.8 only ever runs once an antigen's groups are
+  exhausted. List-source swaps: 8.1 now reads `selectedPatientSeriesList`
+  (not the stepper); 8.4/8.5/8.6/8.7 now read `scorablePatientSeriesList`
+  (not the pre-8.1 list or the stepper). `AntigenSeries.equivalentSeriesGroups`
+  (a `List<String>`) is now parsed from the `<series>` element's own
+  `<equivalentSeriesGroups>` child (a sibling of `<seriesType>`, not
+  nested under `<selectSeries>`), and 8.8's two "equivalent series group"
+  conditions now scan `prioritizedPatientSeriesList` (the list 8.8's
+  constructor already iterates) checking each *other* entry's series
+  group against the entry currently being judged.
+
+  A useful, testable consequence: 8.2 and 8.3 needed zero code changes -
+  once `scorablePatientSeriesList` is correctly pre-scoped by 8.1, their
+  own scoping asymmetries (8.2's condition 0 missing an antigen filter,
+  8.3 filtering nowhere at all) become unreachable dead code rather than
+  live defects, exactly as cross-cutting-notes.md predicted for 8.3.
+
+  Verification, unit by unit (JUnit): 4.5 SelectBestPatientSeriesTest
+  stays fully green (its own `selectedPatientSeriesList`-specific tests
+  were retargeted to the series-group stepper, since that responsibility
+  moved to the new class; a `SelectNextSeriesGroupTest` was added
+  covering the new class directly). 8.1: closes 4 of 8 reds (the
+  cross-cutting ones); 4 unrelated reds remain (a null-status guard, an
+  unread maxAgeToStart date check, an unimplemented zero-valid-dose
+  bullet, and a documented SPECIFICATION_AMBIGUITY about which series
+  types SELECTSCORE-2's Risk-priority comparison should include). 8.2:
+  closes 2 of 5; 3 unrelated reds remain (all pre-existing SELECTB-7/16
+  counting defects). 8.3: closes 2 of 4; 2 unrelated reds remain. 8.4:
+  0 of 8 close directly (all 8 are the pre-existing SPEC-4.6-0006
+  "break too early" bug and a documented scope ambiguity, none of them
+  this entry) - but the two cross-cutting tests this entry does own for
+  8.4 both go green. 8.5: closes 5 of 18 (2 sticky-boolean, 3
+  cross-cutting); 13 unrelated reds remain, all independently
+  pre-documented. 8.6 (already fix_status "merged" from an earlier
+  SPEC-4.6-0007 round covering its sibling NoValidDosesCompletableTest):
+  of NoValidDosesTest's 18 reds, closes the counter-reset portion of the
+  numOfEarliestDates defect plus the 3 cross-cutting ones; the
+  reference-equality half of the tie-counter bug, the product-row sign
+  inversion, and the two undocumented scoring conditions all remain,
+  independently pre-documented. 8.7: closes 3 of 5 (the cross-cutting
+  ones); the pre-existing, independently-documented SELECTBEST-1
+  running-total bug and the "" reference-equality bug remain. 8.8:
+  fully closes all 6 of its reds (3 cross-cutting, 3 equivalentSeriesGroups).
+
+  Full cdsi-engine suite: 771 -> 776 tests (net +5: a new
+  `SelectNextSeriesGroupTest` plus 4.5's own test count changes), 167 ->
+  139 failures (-28), 1 error unchanged (the one pre-existing,
+  already-documented `GenerateForecastDatesAndRecommendedVaccinesTest`
+  NullPointerException, confirmed unrelated).
+
+  FITS verification, full 4896-case suite, strict case-by-case
+  comparison: 3378 -> 3253 passed (-125 net): 175 cases regress (PCV
+  143, RSV 20, MEN 12) and 50 improve (HepA 15, POL 15, MMR 10, PCV 8,
+  MEN 2). Traced one regressed case via direct engine instrumentation
+  (`5eeca0522cc4517a96b0f417-PCV-2013-0575`, a patient under 50 given a
+  forecast of 2076 for "Pneumococcal 50+ 1-dose PCV series"): the
+  regression is not a defect in this fix - it is this fix correctly and
+  consistently scoping Table 8-2's already-undocumented "no default
+  series fallback" (a pre-existing, already-classified
+  SPECIFICATION_AMBIGUITY in PreFilterPatientSeries, not spec text) to
+  one series group at a time, the same way it already correctly scopes
+  SELECTSCORE-2's own zero-valid-dose bullet. Once correctly
+  group-scoped, an age-inappropriate solo-series group (its own
+  `<minAgeToStart>50 years</minAgeToStart>`, never read by anything in
+  the engine) reaches that fallback with a trivially-zero
+  within-group valid-dose count and is admitted as the group's default,
+  then short-circuits straight through Table 8-3 Rule 2 (a
+  single-candidate series group needs no scoring) into
+  bestPatientSeriesList. Recorded in full as SPEC-4.6-0021, a second,
+  separate, upstream defect (no business rule anywhere - in Table 8-2 or
+  otherwise - currently excludes an age-inappropriate series from ever
+  becoming a relevant, candidate, or default series in the first place).
+
+  Explicit project-owner decision: merge this finding despite the net
+  FITS regression, because (a) it is independently JUnit-verified
+  correct against all nine affected units' own conformance tests, (b)
+  the regression's cause is fully traced to a separate, already-tracked,
+  pre-existing defect rather than an error in this fix, and (c) the
+  56-case improvement it also produces (including the confirmed-correct
+  HepA equivalent-series-group blending this session had previously
+  found and could not merge - see SPEC-4.6-0018 - which is expected to
+  land clean once SPEC-4.6-0021 is addressed) represents real forward
+  progress on the spec's own terms. This is recorded here for CDC/CDSi
+  review as a deliberate exception to the standing "FITS moves forward,
+  not backward" rule, not as an oversight.

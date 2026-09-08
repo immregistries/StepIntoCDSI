@@ -149,6 +149,14 @@ public class DetermineBestPatientSeriesTest {
     antigenSeries.setSeriesType(seriesType);
     antigenSeries.setTargetDisease(targetDisease);
     antigenSeries.setSelectPatientSeries(selectPatientSeries);
+    // HepA's real Supporting Data: series group 1 (Standard) and 2 (Increased
+    // Risk) declare each other equivalent; group 3 (Pediatric Travel) declares
+    // no equivalent series group at all.
+    if (seriesGroup.equals(STANDARD_GROUP)) {
+      antigenSeries.addEquivalentSeriesGroup(INCREASED_RISK_GROUP);
+    } else if (seriesGroup.equals(INCREASED_RISK_GROUP)) {
+      antigenSeries.addEquivalentSeriesGroup(STANDARD_GROUP);
+    }
 
     PatientSeries patientSeries = new PatientSeries(antigenSeries);
     patientSeries.setPatientSeriesStatus(patientSeriesStatus);

@@ -13,7 +13,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 
 public class NoValidDoses extends LogicStep {
 
-  private List<PatientSeries> patientSeriesList = dataModel.getPatientSeriesStepper().getList();
+  private List<PatientSeries> patientSeriesList = dataModel.getScorablePatientSeriesList();
 
   public Date addTimePeriodtotoDate(Date date, TimePeriod timePeriod) {
     int amount = timePeriod.getAmount();
@@ -71,7 +71,7 @@ public class NoValidDoses extends LogicStep {
         } else {
           if (earliestDate.after(patientSeries.getForecast().getEarliestDate())) {
             earliestDate = patientSeries.getForecast().getEarliestDate();
-            numOfEarliestDates = 0;
+            numOfEarliestDates = 1;
           }
         }
       }
@@ -142,8 +142,8 @@ public class NoValidDoses extends LogicStep {
    */
 
   private void evaluate_ACandidatePatientSeriesIsAProductPatientSeries() {
-    boolean productPatientSeries = false;
     for (PatientSeries patientSeries : patientSeriesList) {
+      boolean productPatientSeries = false;
       if (patientSeries.getTrackedAntigenSeries().getSelectPatientSeries() != null &&
           patientSeries.getTrackedAntigenSeries().getSelectPatientSeries()
               .getProductPath() != null) {

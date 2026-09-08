@@ -10,7 +10,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 
 public class CompletePatientSeries extends LogicStep {
 
-  private List<PatientSeries> patientSeriesList = dataModel.getSelectedPatientSeriesList();
+  private List<PatientSeries> patientSeriesList = dataModel.getScorablePatientSeriesList();
 
   private int numberOfValidDoses(PatientSeries patientSeries) {
     int nbOfValidDoses = 0;

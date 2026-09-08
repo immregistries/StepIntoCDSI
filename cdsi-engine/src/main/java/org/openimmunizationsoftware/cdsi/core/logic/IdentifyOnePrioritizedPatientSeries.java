@@ -171,7 +171,7 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
               break;
             }
           }
-          setNextLogicStepType(LogicStepType.DETERMINE_BEST_PATIENT_SERIES);
+          setNextLogicStepType(LogicStepType.SELECT_NEXT_SERIES_GROUP);
         }
       });
 
@@ -186,7 +186,7 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
 
             dataModel.getPrioritizedPatientSeriesList().add(patientSeries);
           }
-          setNextLogicStepType(LogicStepType.DETERMINE_BEST_PATIENT_SERIES);
+          setNextLogicStepType(LogicStepType.SELECT_NEXT_SERIES_GROUP);
         }
       });
 
@@ -205,7 +205,7 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
               break;
             }
           }
-          setNextLogicStepType(LogicStepType.DETERMINE_BEST_PATIENT_SERIES);
+          setNextLogicStepType(LogicStepType.SELECT_NEXT_SERIES_GROUP);
         }
       });
 
@@ -228,7 +228,7 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
               }
             }
           }
-          setNextLogicStepType(LogicStepType.DETERMINE_BEST_PATIENT_SERIES);
+          setNextLogicStepType(LogicStepType.SELECT_NEXT_SERIES_GROUP);
         }
       });
 
@@ -248,7 +248,7 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
               break;
             }
           }
-          setNextLogicStepType(LogicStepType.DETERMINE_BEST_PATIENT_SERIES);
+          setNextLogicStepType(LogicStepType.SELECT_NEXT_SERIES_GROUP);
         }
       });
     }

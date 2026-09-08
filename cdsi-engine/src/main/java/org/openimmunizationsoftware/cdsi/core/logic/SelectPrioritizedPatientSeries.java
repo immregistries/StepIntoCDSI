@@ -9,7 +9,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 
 public class SelectPrioritizedPatientSeries extends LogicStep {
 
-  private List<PatientSeries> patientSeriesList = dataModel.getSelectedPatientSeriesList();
+  private List<PatientSeries> patientSeriesList = dataModel.getScorablePatientSeriesList();
 
   public SelectPrioritizedPatientSeries(DataModel dataModel) {
     super(LogicStepType.SELECT_PRIORITIZED_PATIENT_SERIES, dataModel);
@@ -57,7 +57,7 @@ public class SelectPrioritizedPatientSeries extends LogicStep {
     if (prioritizedPatientSeries != null) {
       dataModel.getPrioritizedPatientSeriesList().add(prioritizedPatientSeries);
     }
-    setNextLogicStepType(LogicStepType.DETERMINE_BEST_PATIENT_SERIES);
+    setNextLogicStepType(LogicStepType.SELECT_NEXT_SERIES_GROUP);
     return next();
   }
 

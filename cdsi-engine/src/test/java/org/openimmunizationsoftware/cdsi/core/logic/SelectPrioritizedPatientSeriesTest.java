@@ -92,7 +92,7 @@ public class SelectPrioritizedPatientSeriesTest {
   private DataModel dataModel;
   private Antigen hepB;
   private Antigen measles;
-  /** The list 8.7 actually reads - what 4.5 leaves behind for one antigen pass. */
+  /** What 4.5 leaves behind for one antigen pass - not what 8.7 itself reads. */
   private List<PatientSeries> selectedPatientSeriesList;
 
   @Before
@@ -115,14 +115,17 @@ public class SelectPrioritizedPatientSeriesTest {
 
   /**
    * A patient series of a named antigen and series group, with a declared
-   * series preference, registered both on the all-antigen patient series
-   * stepper (as 5.1 leaves it) and on the current antigen's selected list (as
-   * 4.5 leaves it), which is the list 8.7 reads.
+   * series preference, registered on the all-antigen patient series stepper
+   * (as 5.1 leaves it), the current antigen's selected list (as 4.5 leaves
+   * it) and the scorable list (as 8.1 leaves it, unless a test explicitly
+   * removes it to simulate 8.1 dropping the series) - the list 8.7 actually
+   * reads.
    */
   private PatientSeries series(String seriesName, Antigen targetDisease, String seriesGroupName,
       String seriesPreference) {
     PatientSeries patientSeries = unselectedSeries(seriesName, targetDisease, seriesGroupName, seriesPreference);
     selectedPatientSeriesList.add(patientSeries);
+    dataModel.getScorablePatientSeriesList().add(patientSeries);
     return patientSeries;
   }
 
@@ -536,22 +539,18 @@ public class SelectPrioritizedPatientSeriesTest {
   }
 
   /**
-   * 8.7's pipeline stage, which is not correct. Table 8-13's rules are phrased
-   * over the <i>scorable</i> patient series and 8.7's own Purpose says the rules
-   * are "applied to the scored patient series" - the list 8.1 produces. 8.7
-   * reads 4.5's pre-8.1 {@code selectedPatientSeriesList} instead, so a series
-   * 8.1 deliberately dropped from consideration is still a candidate to win the
-   * selection outright.
+   * 8.7's pipeline stage (SPEC-4.6, Chapter 8 series-group fix). Table 8-13's
+   * rules are phrased over the <i>scorable</i> patient series and 8.7's own
+   * Purpose says the rules are "applied to the scored patient series" - the
+   * list 8.1 produces. 8.7 reads {@code scorablePatientSeriesList}, so a
+   * series 8.1 deliberately dropped from consideration is not a candidate to
+   * win the selection.
    *
    * <p>
    * Here two Risk series of one group: 8.1's SELECTSCORE-2 keeps only the
-   * highest-priority one, so the priority-B series is not on
-   * {@code scorablePatientSeriesList} at all and was never scored by 8.4/8.5/8.6
-   * either - yet it is the series 8.7 names as prioritized. This is the same
-   * cross-cutting entry 8.4 confirmed from the other direction, and it is
-   * sharper here than anywhere else in the chapter: in 8.4 a stray series
-   * distorted a comparison between real candidates, in 8.7 it becomes the
-   * answer.
+   * highest-priority one, so the priority-B series is removed from
+   * {@code scorablePatientSeriesList} and was never scored by 8.4/8.5/8.6
+   * either - it must not be the series 8.7 names as prioritized.
    */
   @Test
   public void theSelectionIsMadeOverTheScorablePatientSeriesEightOneProduced() throws Exception {
@@ -564,7 +563,7 @@ public class SelectPrioritizedPatientSeriesTest {
     droppedByPreFilter.getTrackedAntigenSeries().getSelectPatientSeries().setSeriesPriority("B");
 
     // What 8.1 leaves behind: only the highest-priority Risk series of the group.
-    dataModel.getScorablePatientSeriesList().add(keptByPreFilter);
+    dataModel.getScorablePatientSeriesList().remove(droppedByPreFilter);
 
     assertSame("8.7 selects among the scorable patient series 8.1 produced; the priority-B Risk series 8.1"
         + " dropped is not a candidate and was never scored", keptByPreFilter, select());
@@ -579,17 +578,21 @@ public class SelectPrioritizedPatientSeriesTest {
    * patient series behind for 8.8, one each.
    *
    * <p>
-   * Nothing in the engine loops over series groups, so 8.7 runs once per antigen
-   * and produces one prioritized patient series for the whole antigen. See the
-   * 2026-09-05 "Chapter 8 has no series group" cross-cutting entry.
+   * The series-group loop itself lives above 8.7 (SelectNextSeriesGroup calls
+   * the whole 8.1-8.7 chain once per group); this unit test simulates that by
+   * calling 8.7 twice, each time with only one group's scorable series in
+   * scope, exactly as SelectNextSeriesGroup would leave it.
    */
   @Test
   public void theStepProducesOnePrioritizedPatientSeriesPerSeriesGroup() throws Exception {
-    award(series("HepB Standard winner", hepB, STANDARD_GROUP, "1"), 3);
-    award(series("HepB Standard runner-up", hepB, STANDARD_GROUP, "2"), 1);
-    award(series("HepB Increased Risk winner", hepB, INCREASED_RISK_GROUP, "1"), 5);
-    award(series("HepB Increased Risk runner-up", hepB, INCREASED_RISK_GROUP, "2"), 4);
+    PatientSeries standardWinner = award(series("HepB Standard winner", hepB, STANDARD_GROUP, "1"), 3);
+    PatientSeries standardRunnerUp = award(series("HepB Standard runner-up", hepB, STANDARD_GROUP, "2"), 1);
+    PatientSeries riskWinner = award(series("HepB Increased Risk winner", hepB, INCREASED_RISK_GROUP, "1"), 5);
+    PatientSeries riskRunnerUp = award(series("HepB Increased Risk runner-up", hepB, INCREASED_RISK_GROUP, "2"), 4);
 
+    dataModel.setScorablePatientSeriesList(new ArrayList<>(Arrays.asList(standardWinner, standardRunnerUp)));
+    selectWholeStep();
+    dataModel.setScorablePatientSeriesList(new ArrayList<>(Arrays.asList(riskWinner, riskRunnerUp)));
     selectWholeStep();
 
     assertEquals("one prioritized patient series per series group, not per antigen; got " + prioritizedNames(),
@@ -603,14 +606,16 @@ public class SelectPrioritizedPatientSeriesTest {
    * prioritized patient series even though an Increased Risk series of the same
    * antigen scored higher. Scores are not comparable across groups in the first
    * place - 8.1's SELECTSCORE-2 and 8.4/8.5/8.6's rows are all phrased within a
-   * series group.
+   * series group. As above, this simulates SelectNextSeriesGroup scoping
+   * scorablePatientSeriesList to one group before 8.7 runs.
    */
   @Test
   public void theSelectionComparesScoresWithinOneSeriesGroupNotAcrossGroups() throws Exception {
     PatientSeries standardWinner = award(series("HepB Standard winner", hepB, STANDARD_GROUP, "1"), 1);
-    award(series("HepB Standard runner-up", hepB, STANDARD_GROUP, "2"), 0);
+    PatientSeries standardRunnerUp = award(series("HepB Standard runner-up", hepB, STANDARD_GROUP, "2"), 0);
     award(series("HepB Increased Risk", hepB, INCREASED_RISK_GROUP, "1"), 5);
 
+    dataModel.setScorablePatientSeriesList(new ArrayList<>(Arrays.asList(standardWinner, standardRunnerUp)));
     selectWholeStep();
 
     assertTrue("the Standard series group's prioritized patient series is its own winner, not whichever"
@@ -649,21 +654,24 @@ public class SelectPrioritizedPatientSeriesTest {
   }
 
   // ---------------------------------------------------------------------
-  // Next Steps - unconditional to 8.8.
+  // Next Steps - unconditional to SelectNextSeriesGroup (which either loops
+  // back to 8.1 for the antigen's next series group, or continues to 8.8 once
+  // every group is done).
   // ---------------------------------------------------------------------
 
-  /** 8.7 always hands control to 8.8, whatever it selected. */
+  /** 8.7 always hands control to SelectNextSeriesGroup, whatever it selected. */
   @Test
   public void theStepAlwaysHandsOffToDetermineBestPatientSeries() throws Exception {
     award(series("HepB winner"), 2);
 
-    assertEquals("8.7 is unconditional to 8.8", LogicStepType.DETERMINE_BEST_PATIENT_SERIES, selectWholeStep());
+    assertEquals("8.7 is unconditional to SelectNextSeriesGroup", LogicStepType.SELECT_NEXT_SERIES_GROUP,
+        selectWholeStep());
   }
 
   /** ... including when it selected nothing at all. */
   @Test
   public void theStepHandsOffToDetermineBestPatientSeriesEvenWithNoCandidates() throws Exception {
-    assertEquals("8.7 is unconditional to 8.8 even with an empty candidate list",
-        LogicStepType.DETERMINE_BEST_PATIENT_SERIES, selectWholeStep());
+    assertEquals("8.7 is unconditional to SelectNextSeriesGroup even with an empty candidate list",
+        LogicStepType.SELECT_NEXT_SERIES_GROUP, selectWholeStep());
   }
 }

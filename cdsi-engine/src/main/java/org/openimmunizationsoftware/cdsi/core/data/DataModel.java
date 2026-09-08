@@ -82,6 +82,8 @@ public class DataModel {
   private AntigenAdministeredRecord previousAntigenAdministeredRecord = null;
   private Stepper<PatientSeries> patientSeriesStepper = new Stepper<PatientSeries>();
   private List<PatientSeries> scorablePatientSeriesList = null;
+  private Stepper<String> seriesGroupStepper = new Stepper<String>();
+  private String currentSeriesGroup = null;
   private List<Forecast> forecastList = new ArrayList<Forecast>();
   private List<VaccineGroupForecast> vaccineGroupForecastList = new ArrayList<VaccineGroupForecast>();
   private VaccineGroup vaccineGroup;
@@ -150,6 +152,18 @@ public class DataModel {
 
   public Stepper<PatientSeries> getPatientSeriesStepper() {
     return patientSeriesStepper;
+  }
+
+  public Stepper<String> getSeriesGroupStepper() {
+    return seriesGroupStepper;
+  }
+
+  public String getCurrentSeriesGroup() {
+    return currentSeriesGroup;
+  }
+
+  public void setCurrentSeriesGroup(String currentSeriesGroup) {
+    this.currentSeriesGroup = currentSeriesGroup;
   }
 
   public Map<String, Observation> getObservationMap() {

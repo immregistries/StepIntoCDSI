@@ -65,7 +65,8 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
  * in 8.6 - and only the State Changes and Next Steps tests at the bottom drive
  * the public {@code process()}. Either way the fixture is hand-built: no
  * Supporting Data release, no loader and no upstream step is involved. The step
- * reads {@code dataModel.getPatientSeriesStepper().getList()}, each series'
+ * reads {@code dataModel.getScorablePatientSeriesList()} (the
+ * antigen-and-series-group scoped list 8.1 leaves behind), each series'
  * {@code targetDoseList}, its tracked {@code AntigenSeries} (for the series name
  * it logs and the product path flag), its {@code Forecast}, and the patient's
  * date of birth.
@@ -120,7 +121,7 @@ public class InProcessPatientSeriesTest {
     dataModel.setSelectedPatientSeriesList(new ArrayList<PatientSeries>());
     dataModel.setScorablePatientSeriesList(new ArrayList<PatientSeries>());
     // The list 8.5 actually reads.
-    patientSeriesList = dataModel.getPatientSeriesStepper().getList();
+    patientSeriesList = dataModel.getScorablePatientSeriesList();
   }
 
   // ---------------------------------------------------------------------
@@ -950,7 +951,7 @@ public class InProcessPatientSeriesTest {
     }
     remainingTargetDose(dropped);
     // What 8.1 leaves behind: the priority B risk series is not scorable.
-    dataModel.getScorablePatientSeriesList().add(scorable);
+    dataModel.getScorablePatientSeriesList().remove(dropped);
 
     score(MOST_VALID_DOSES);
 
@@ -975,6 +976,9 @@ public class InProcessPatientSeriesTest {
       satisfiedTargetDose(measlesSeries);
     }
     remainingTargetDose(measlesSeries);
+    // What 8.1 (fed by SelectNextSeriesGroup's antigen scoping) actually leaves
+    // behind - no other antigen's series can reach this list.
+    dataModel.getScorablePatientSeriesList().remove(measlesSeries);
 
     score(MOST_VALID_DOSES);
 
@@ -1001,6 +1005,9 @@ public class InProcessPatientSeriesTest {
       satisfiedTargetDose(increasedRisk);
     }
     remainingTargetDose(increasedRisk);
+    // SelectNextSeriesGroup hands 8.1 (and, through it, 8.5) one series group at
+    // a time; simulate the Standard group's own pass.
+    dataModel.getScorablePatientSeriesList().remove(increasedRisk);
 
     score(MOST_VALID_DOSES);
 
@@ -1110,6 +1117,7 @@ public class InProcessPatientSeriesTest {
     PatientSeries second = inProcessSeries("HepB alternate", YesNo.NO, 1, 2);
     finishingOn(second, date(2026, 1, 1));
     withLatestDate(second, date(2030, 1, 1));
+    int scorableSizeBeforeScoring = dataModel.getScorablePatientSeriesList().size();
 
     scoreWholeTable();
 
@@ -1122,8 +1130,8 @@ public class InProcessPatientSeriesTest {
     assertEquals(TargetDoseStatus.NOT_SATISFIED, first.getTargetDoseList().get(2).getTargetDoseStatus());
     assertEquals(date(2024, 1, 1), first.getForecast().getAdjustedPastDueDate());
     assertTrue("8.5 prioritizes no patient series", dataModel.getPrioritizedPatientSeriesList().isEmpty());
-    assertTrue("8.5 does not re-derive the scorable patient series list",
-        dataModel.getScorablePatientSeriesList().isEmpty());
+    assertEquals("8.5 does not re-derive the scorable patient series list", scorableSizeBeforeScoring,
+        dataModel.getScorablePatientSeriesList().size());
   }
 
   // ---------------------------------------------------------------------

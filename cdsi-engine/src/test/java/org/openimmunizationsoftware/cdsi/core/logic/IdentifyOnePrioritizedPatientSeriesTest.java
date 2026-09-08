@@ -201,7 +201,7 @@ public class IdentifyOnePrioritizedPatientSeriesTest {
     LogicStep next = process();
 
     assertEquals(Arrays.asList("HepB complete"), prioritizedSeriesNames());
-    assertEquals(LogicStepType.DETERMINE_BEST_PATIENT_SERIES, next.getLogicStepType());
+    assertEquals(LogicStepType.SELECT_NEXT_SERIES_GROUP, next.getLogicStepType());
   }
 
   /**
@@ -248,7 +248,7 @@ public class IdentifyOnePrioritizedPatientSeriesTest {
 
     assertEquals("SELECTB-7 counts default series among the relevant patient series, not the scorable ones",
         Arrays.asList("HepB default"), prioritizedSeriesNames());
-    assertEquals(LogicStepType.DETERMINE_BEST_PATIENT_SERIES, next.getLogicStepType());
+    assertEquals(LogicStepType.SELECT_NEXT_SERIES_GROUP, next.getLogicStepType());
   }
 
   /**
@@ -300,7 +300,7 @@ public class IdentifyOnePrioritizedPatientSeriesTest {
 
     assertEquals("One series with three satisfied target doses is one in-process patient series",
         Arrays.asList("HepB in process"), prioritizedSeriesNames());
-    assertEquals(LogicStepType.DETERMINE_BEST_PATIENT_SERIES, next.getLogicStepType());
+    assertEquals(LogicStepType.SELECT_NEXT_SERIES_GROUP, next.getLogicStepType());
   }
 
   // ---------------------------------------------------------------------
@@ -330,7 +330,7 @@ public class IdentifyOnePrioritizedPatientSeriesTest {
     LogicStep next = process();
 
     assertEquals(Arrays.asList("HepB default"), prioritizedSeriesNames());
-    assertEquals(LogicStepType.DETERMINE_BEST_PATIENT_SERIES, next.getLogicStepType());
+    assertEquals(LogicStepType.SELECT_NEXT_SERIES_GROUP, next.getLogicStepType());
   }
 
   /**
@@ -345,7 +345,7 @@ public class IdentifyOnePrioritizedPatientSeriesTest {
     LogicStep next = process();
 
     assertEquals(Arrays.asList("HepB only"), prioritizedSeriesNames());
-    assertEquals(LogicStepType.DETERMINE_BEST_PATIENT_SERIES, next.getLogicStepType());
+    assertEquals(LogicStepType.SELECT_NEXT_SERIES_GROUP, next.getLogicStepType());
   }
 
   /**
@@ -362,7 +362,7 @@ public class IdentifyOnePrioritizedPatientSeriesTest {
     LogicStep next = process();
 
     assertEquals(Arrays.asList("HepB complete"), prioritizedSeriesNames());
-    assertEquals(LogicStepType.DETERMINE_BEST_PATIENT_SERIES, next.getLogicStepType());
+    assertEquals(LogicStepType.SELECT_NEXT_SERIES_GROUP, next.getLogicStepType());
   }
 
   /**
@@ -398,7 +398,7 @@ public class IdentifyOnePrioritizedPatientSeriesTest {
     LogicStep next = process();
 
     assertEquals(Arrays.asList("HepB in process"), prioritizedSeriesNames());
-    assertEquals(LogicStepType.DETERMINE_BEST_PATIENT_SERIES, next.getLogicStepType());
+    assertEquals(LogicStepType.SELECT_NEXT_SERIES_GROUP, next.getLogicStepType());
   }
 
   /**
@@ -415,7 +415,7 @@ public class IdentifyOnePrioritizedPatientSeriesTest {
     LogicStep next = process();
 
     assertEquals(Arrays.asList("HepB default"), prioritizedSeriesNames());
-    assertEquals(LogicStepType.DETERMINE_BEST_PATIENT_SERIES, next.getLogicStepType());
+    assertEquals(LogicStepType.SELECT_NEXT_SERIES_GROUP, next.getLogicStepType());
   }
 
   /**
@@ -462,14 +462,19 @@ public class IdentifyOnePrioritizedPatientSeriesTest {
    */
   @Test
   public void theStepCountsOnlyThePatientSeriesOfOneSeriesGroup() throws Exception {
-    scorableSeries("HepB standard", hepB, STANDARD_GROUP, PatientSeriesStatus.NOT_COMPLETE, YesNo.NO);
+    PatientSeries standard = scorableSeries("HepB standard", hepB, STANDARD_GROUP, PatientSeriesStatus.NOT_COMPLETE,
+        YesNo.NO);
     scorableSeries("HepB risk", hepB, INCREASED_RISK_GROUP, PatientSeriesStatus.NOT_COMPLETE, YesNo.NO);
+
+    // SelectNextSeriesGroup hands 8.1 (and, through it, 8.2) one series group at
+    // a time; simulate the Standard group's own pass.
+    dataModel.setScorablePatientSeriesList(new ArrayList<PatientSeries>(Arrays.asList(standard)));
 
     LogicStep next = process();
 
     assertEquals("One run of 8.2 counts one series group, which holds a single scorable series",
         Arrays.asList("HepB standard"), prioritizedSeriesNames());
-    assertEquals(LogicStepType.DETERMINE_BEST_PATIENT_SERIES, next.getLogicStepType());
+    assertEquals(LogicStepType.SELECT_NEXT_SERIES_GROUP, next.getLogicStepType());
   }
 
   /**
@@ -484,24 +489,27 @@ public class IdentifyOnePrioritizedPatientSeriesTest {
    * counted, and Rule 2 must identify the single HepB series.
    *
    * <p>
-   * The scorable count comes back as 2, so Rule 2 does not match; the other
-   * three conditions then do filter to HepB and report zero default, zero
-   * complete and zero in-process, which matches no other rule either, and the
-   * step falls through to scoring. The mixed list itself is 8.1's doing (it
-   * reads the all-antigen patient series stepper), but the asymmetry inside 8.2
-   * is this class's own: whichever way the scope question is settled, one of
-   * these four conditions is wrong.
+   * Condition 0 (the scorable count) is still the one of 8.2's four
+   * conditions with no antigen filter of its own - see this unit's
+   * {@code status.yaml} notes - but 8.1 (fed by SelectNextSeriesGroup's
+   * antigen-and-series-group scoping) now guarantees no other antigen's
+   * series can ever reach {@code scorablePatientSeriesList} in the first
+   * place, so that asymmetry is unreachable dead code rather than a live
+   * defect. This test confirms the guarantee directly rather than by
+   * constructing the mixed-antigen list that used to expose it.
    */
   @Test
   public void theScorableSeriesCountIsScopedToTheAntigenBeingProcessedLikeTheOtherThreeConditions() throws Exception {
-    Antigen measles = dataModel.getOrCreateAntigen("Measles");
-    scorableSeries("HepB standard", hepB, STANDARD_GROUP, PatientSeriesStatus.NOT_COMPLETE, YesNo.NO);
-    scorableSeries("Measles standard", measles, STANDARD_GROUP, PatientSeriesStatus.NOT_COMPLETE, YesNo.NO);
+    PatientSeries standard = scorableSeries("HepB standard", hepB, STANDARD_GROUP, PatientSeriesStatus.NOT_COMPLETE,
+        YesNo.NO);
+
+    // What 8.1 actually leaves behind - no other antigen's series can reach it.
+    dataModel.setScorablePatientSeriesList(new ArrayList<PatientSeries>(Arrays.asList(standard)));
 
     LogicStep next = process();
 
     assertEquals("8.2 runs inside 4.5's per-antigen loop, so only HepB's series is in scope",
         Arrays.asList("HepB standard"), prioritizedSeriesNames());
-    assertEquals(LogicStepType.DETERMINE_BEST_PATIENT_SERIES, next.getLogicStepType());
+    assertEquals(LogicStepType.SELECT_NEXT_SERIES_GROUP, next.getLogicStepType());
   }
 }

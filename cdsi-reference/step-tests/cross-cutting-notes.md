@@ -356,7 +356,12 @@ Pneumococcal 7, HepA/HPV/Hib 6 each, RSV 4, Meningococcal B and Zoster 3 each,
 COVID-19 2, Meningococcal 1). Both halves of the data are needed before either of
 Table 8-14's last two conditions can be right.
 
-**Status:** open, not yet fixed, not yet a formal finding.
+**Status:** Fixed 2026-09-08, see SPEC-4.6-0020. `AntigenSeries.equivalentSeriesGroups`
+(a `List<String>`) is now parsed from the `<series>` element's own
+`<equivalentSeriesGroups>` child, and `DetermineBestPatientSeries`'s two
+conditions now check membership in it against every other entry of
+`prioritizedPatientSeriesList`. Sequenced together with the series-group loop
+entry below, exactly as this entry's own "Suggested handling" anticipated.
 
 ---
 
@@ -808,18 +813,36 @@ stepper-reading classes to `selectedPatientSeriesList`, which this note
 originally suggested, would fix their antigen scope while silently putting 8.1's
 pre-filter back out of the loop for two more steps.
 
-**Status:** open, not yet fixed, not yet a formal finding. Confirmed from 8.1's
-side (2026-09-05), 8.2's side (2026-09-05), 8.3's side (2026-09-05), 8.4's
-side (2026-09-05, which corrects the suggested remedy), 8.5's side
-(2026-09-05, the first tested step that reads the stepper itself), 8.6's side
-(2026-09-05, where a stray series makes the row's +1 unawardable to anyone),
-8.7's side (2026-09-05, where a stray series wins the selection outright, and
-where the antigen axis is confirmed already correct) and 8.8's side
-(2026-09-05, where one class is correct in its loop and wrong in its conditions,
-and which closes out the chapter - see the closing synthesis above). **Note the sequencing
-constraint the score-accumulation entry below now places on this one: a partial
-fix here - re-scoping 8.3 without also re-scoping 8.5/8.6 - would activate that
-latent defect. See its 2026-09-05 update from 8.7's side.**
+**Status:** Fixed 2026-09-08, see SPEC-4.6-0020 - all eight units at once, per
+this entry's own "Suggested handling." Confirmed from 8.1's side (2026-09-05),
+8.2's side (2026-09-05), 8.3's side (2026-09-05), 8.4's side (2026-09-05,
+which corrects the suggested remedy), 8.5's side (2026-09-05, the first tested
+step that reads the stepper itself), 8.6's side (2026-09-05, where a stray
+series makes the row's +1 unawardable to anyone), 8.7's side (2026-09-05,
+where a stray series wins the selection outright, and where the antigen axis
+is confirmed already correct) and 8.8's side (2026-09-05, where one class is
+correct in its loop and wrong in its conditions, and which closes out the
+chapter - see the closing synthesis above).
+
+A new `SelectNextSeriesGroup` step (dispatched from 4.5, looped back to by
+every 8.1-8.7 scoring-phase exit) now implements the per-series-group
+repetition; 8.1 reads `selectedPatientSeriesList` (now correctly scoped by
+that step) and 8.4/8.5/8.6/8.7 read `scorablePatientSeriesList` (8.1's
+output) - the exact `scorablePatientSeriesList`-for-8.2-onward remedy this
+entry's last paragraph converged on. 8.2 and 8.3 needed no code change at all,
+confirming this entry's own prediction. The sequencing constraint the
+score-accumulation entry below raised was respected - 8.1 through 8.7 were
+re-scoped together, in one change, not partially - and that entry's own
+"non-material" analysis was re-verified to still hold under the new scoping
+(see its 2026-09-08 update).
+
+This fix produces a large net FITS improvement but also exposes a second,
+separate, upstream defect - `SelectPatientSeries.minAgeToStart`/`maxAgeToStart`
+are enforced nowhere in the engine, so an age-inappropriate solo-series
+series group can now become a "best patient series" once Chapter 8 is
+correctly scoped. Recorded as SPEC-4.6-0021, not yet fixed. Merged anyway on
+an explicit project-owner decision - see SPEC-4.6-0020's own "Explicit
+project-owner decision" for the full reasoning.
 
 ---
 
