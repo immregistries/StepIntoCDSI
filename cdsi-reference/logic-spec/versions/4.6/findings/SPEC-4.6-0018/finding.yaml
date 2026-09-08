@@ -1,0 +1,93 @@
+id: "SPEC-4.6-0018"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.2"]
+source_pages: [55]
+tables: ["Table 6-6"]
+business_rules: []
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkip"
+fits_cases:
+  - "675c41f8e4b089d2bdc0c483-HIB-2013-0308"
+summary: >
+  Table 6-6's own condition text is "Is the Conditional Skip End Age Date
+  > Conditional Skip Reference Date >= Conditional Skip Begin Age Date?",
+  but LT66's code wrote both comparisons as strict Date.after, making the
+  begin-age-date boundary exclusive when the spec's own ">=" requires it
+  to be inclusive. The correct, spec-matching fix is confirmed in
+  isolation (a dedicated characterization test already pins the
+  inclusive-begin behavior as correct), but merging it causes a 14-case
+  FITS regression that traces to the already-documented "Chapter 8 has
+  no series group" defect (cross-cutting-notes.md, 2026-09-05), not to
+  anything local to this condition. Left open rather than merged.
+evidence: >
+  Table 6-6 condition text: "Is the Conditional Skip End Age Date >
+  Conditional Skip Reference Date >= Conditional Skip Begin Age Date?"
+  LT66's code:
+  `if (caConditionalSkipEndAgeDate.getFinalValue().after(...) &&
+  caConditionalSkipReferenceDate.getFinalValue().after(caConditionalSkipBeginAgeDate.getFinalValue()))`
+  - the second comparison is strict Date.after in both directions, so a
+  reference date exactly equal to the begin age date evaluates to NO
+  (condition not met) instead of the spec's YES.
+  EvaluateConditionalSkipForEvaluationTest's own
+  theAgeWindowIsInclusiveOfItsBeginAgeDateAndExclusiveOfItsEndAgeDate
+  test already asserts the begin-age-date-itself case should be inside
+  the window (true) - this is red under the current code.
+interpretation: >
+  The fix (mirroring SPEC-4.6-0017's identical-shape Table 6-8 fix):
+  `!caConditionalSkipBeginAgeDate.getFinalValue().after(caConditionalSkipReferenceDate.getFinalValue())`
+  in place of the strict Date.after. Verified spec-correct and closes
+  the red test in isolation.
+
+  Full FITS run with only this fix applied (label and Table 6-8 fixes
+  from SPEC-4.6-0017 excluded, isolated via one-at-a-time reversion):
+  3479 passed / 1416 failed assertions / 1 error, i.e. +101 passed
+  relative to the 3378/1517/1 baseline. Case-by-case comparison shows
+  115 cases newly passing and 14 cases newly failing (net +101), all in
+  the Hib, Pneumococcal and Polio groups.
+
+  Traced one regressed case
+  (675c41f8e4b089d2bdc0c483-HIB-2013-0308) via direct engine
+  instrumentation (a temporary scratch JUnit test driving the real
+  DataModelLoader/LogicStepFactory pipeline, plus temporary println
+  tracing in EvaluateConditionalSkip and
+  EvaluateAndForecastAllPatientSeries, both removed before this finding
+  was written): the fix correctly and exactly reproduces the spec's own
+  intent for a single target dose - Hib target dose 3 is now correctly
+  SKIPPED because the patient's reference date exactly equals its
+  conditional-skip begin age date (the spec-correct 12-month boundary).
+  The pipeline then correctly advances to target dose 4, which the
+  orchestrator immediately marks SATISFIED against the same administered
+  dose that dose 3 would otherwise have consumed.
+
+  This is not a bug in LT66, in the skip-then-advance sequencing, or in
+  target-dose bookkeeping - all three behave exactly as Chapter 6/6.2
+  specify for a single series in isolation. The regression is caused by
+  Hib having 8 distinct, competing series-group definitions in the
+  bundled Supporting Data (grepped from
+  AntigenSupportingData-Hib-508.xml: "Hib start at 2 months 4-dose
+  series", "Hib start at 7 months 3-dose series", "Hib start at 12
+  months 2-dose series", "Hib start at 15 months 1-dose series", "Hib
+  PRP-OMP 3-dose series", and three risk-child variants) and the engine
+  having no series-group loop at all (cross-cutting-notes.md's
+  2026-09-05 entry, "Chapter 8 has no series group, and its eight steps
+  read three different 'series in scope' lists" - confirmed there that
+  8.1-8.7 run once per antigen rather than once per series group across
+  15 of the bundled release's 30 antigens, Hib among them). With the
+  boundary now correctly causing a skip-and-advance inside one series
+  definition, the case's true forecast depends on which of Hib's 8
+  competing series definitions should have been selected for this
+  patient in the first place - a question Chapter 8's missing
+  series-group scoping cannot currently answer correctly, independent of
+  anything in this unit.
+
+  This finding is left open (not merged, not wontfix) because the fix
+  itself is correct and the regression it exposes is real but belongs to
+  a different, already-known, deliberately out-of-scope defect that
+  "requires a project-owner sequencing decision across all eight [Chapter
+  8] steps at once, not a bounded round" (cross-cutting-notes.md).
+  Re-attempt this fix once Chapter 8's series-group scoping is addressed;
+  at that point this fix is expected to produce a clean, net-positive
+  FITS change with no regression, since the 115-case improvement side of
+  this same run shows the fix is correct wherever series-group scoping
+  does not also confound the case.

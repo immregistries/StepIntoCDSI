@@ -1,0 +1,54 @@
+id: "SPEC-4.6-0017"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.2"]
+source_pages: [55, 56]
+tables: ["Table 6-6", "Table 6-8"]
+business_rules: []
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkip"
+fits_cases: []
+summary: >
+  Two narrow, independently-safe fixes in EvaluateConditionalSkip's shared
+  base class (used by 6.2, 7.1's EvaluateConditionalSkipForForecast, and
+  7.6's ValidateRecommendation): Table 6-6's label named the wrong chapter
+  ("Table 4-6" instead of "Table 6-6"), and Table 6-8's interval condition
+  ("Is the Conditional Skip Reference Date >= Conditional Skip Interval
+  Date?") was coded as a strict Date.before comparison, excluding the
+  equality case the spec's own ">=" requires.
+evidence: >
+  Table 6-6's own header in the extracted spec text names it "Table 6-6
+  CONDITIONAL Type of Age", but LT66's constructor passed "Table 4-6
+  CONDITIONAL Type of Age - Is the Condition Met?" as its label - a stale
+  chapter number left over from a prior chapter renumbering (LT68's own
+  label already said "Table 6 - 8" correctly, so this was not a global
+  renumbering miss).
+  Table 6-8's second condition text is "Is the Conditional Skip Reference
+  Date >= Conditional Skip Interval Date?" but LT68's code read
+  `if (intervalDate.before(referenceDate)) { return LogicResult.YES; }` -
+  strictly before, silently dropping the boundary case where the
+  reference date exactly equals the interval date.
+interpretation: >
+  Both fixes were verified in isolation via full case-by-case FITS
+  comparison (4896 fixtures, strict field/status/hash diff, not just
+  aggregate counts) against the pre-round baseline (3378 passed / 1517
+  failed assertions / 1 execution error): 0 cases changed, in either
+  direction, not even a hidden actualHash change within an unchanged
+  status. Neither the label nor the interval-equality boundary is
+  exercised by any bundled fixture in a way that changes the reported
+  forecast - a real, now-correct fix that is a strict no-op on the
+  current fixture set (the same shape as SPEC-4.6-0016).
+  Two of unit 6.2's eight red tests close:
+  theAgeTableNamesItselfWithItsCurrentSpecificationNumber and
+  theIntervalConditionIsMetWhenTheReferenceDateEqualsTheIntervalDate.
+  Full cdsi-engine suite: 771 tests, 169 -> 167 failures (down exactly
+  2), 1 error unchanged, 0 regressions elsewhere.
+
+  This round also investigated two further candidate fixes in the same
+  file - Table 6-6's age-window lower bound (also written as a strict
+  Date.after, same shape as this finding's Table 6-8 fix) and Table 6-9's
+  "equal"/"equal to" dose-count comparator - and found both to be real
+  spec mismatches whose fixes are NOT safe to merge this round. They are
+  recorded separately as SPEC-4.6-0018 and SPEC-4.6-0019 (both status
+  "open") rather than bundled into this finding, so this finding stays a
+  clean, fully-verified no-op.

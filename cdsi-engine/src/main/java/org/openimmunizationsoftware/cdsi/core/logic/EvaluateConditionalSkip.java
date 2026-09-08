@@ -241,7 +241,7 @@ public class EvaluateConditionalSkip extends LogicStep {
 
     protected class LT66 extends LTInnerSet {
         public LT66() {
-            super(1, 2, "Table 4-6 CONDITIONAL Type of Age - Is the Condition Met?");
+            super(1, 2, "Table 6-6 CONDITIONAL Type of Age - Is the Condition Met?");
 
             setLogicCondition(0, new LogicCondition(
                     "Is the Conditional Skip End Age Date > Conditional Skip Reference Date >= Conditional Skip Begin Age Date?") {
@@ -349,7 +349,7 @@ public class EvaluateConditionalSkip extends LogicStep {
                     if (intervalDate == null) {
                         return LogicResult.NO;
                     }
-                    if (intervalDate.before(referenceDate)) {
+                    if (!intervalDate.after(referenceDate)) {
                         return LogicResult.YES;
                     }
                     return LogicResult.NO;

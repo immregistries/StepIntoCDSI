@@ -1,0 +1,80 @@
+id: "SPEC-4.6-0019"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.2"]
+source_pages: [56]
+tables: ["Table 6-9"]
+business_rules: []
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkip"
+  - "org.openimmunizationsoftware.cdsi.core.domain.PatientSeries"
+fits_cases:
+  - "5eeca0522cc4517a96b0f417-HPV-2013-0395"
+summary: >
+  Table 6-9's Equal row matches the bare word "equal", but the bundled
+  Supporting Data spells every one of its 69 equality dose-count
+  conditions as "equal to" - so the row is currently unreachable on any
+  real forecast. Making it reachable (an additive fix - "equal" OR
+  "equal to", since an existing characterization test pins the bare
+  spelling as currently-working) is spec-correct but exposes a separate,
+  pre-existing, unrelated NullPointerException in the forecast-assembly
+  path (PatientSeries.getForecast() returning null before
+  .getLatestDate() is called on it), causing 324 FITS execution errors.
+  Left open rather than merged.
+evidence: >
+  Table 6-9's row label in the extracted spec text is "Equal" (bare, no
+  "to"); LT69's code:
+  `caConditionalSkipElements.getFinalValue().getDoseCountLogic().equalsIgnoreCase("equal")`.
+  Grepping cdsi-engine's bundled Supporting Data XML for
+  <doseCountLogic> across the whole release: 303 total occurrences - 12
+  "Greater Than", 69 "equal to", 222 "greater than" - and zero bare
+  "equal" or any spelling of "less than" anywhere in the release. So the
+  Equal row, as coded, never fires on real data.
+  EvaluateConditionalSkipForEvaluationTest already carries two tests
+  pinning both spellings separately:
+  tableSixNineEqualRowAsTheSupportingDataSpellsIt ("equal to", currently
+  red) and tableSixNineEqualRowAsTheImplementationSpellsIt ("equal",
+  currently green) - the second is an existing characterization test
+  that must not regress, so the fix must be additive (support both
+  spellings) rather than a replacement.
+interpretation: >
+  Fix attempted: `.equalsIgnoreCase("equal") ||
+  .equalsIgnoreCase("equal to")`. Verified in isolation via full FITS
+  run (all other candidate changes from this round reverted first): the
+  fix causes 324 execution errors (up from the baseline's 1), while
+  producing no other visible change - the errors mask whatever the
+  correct effect would otherwise be.
+
+  Inspected one failure bundle
+  (5eeca0522cc4517a96b0f417-HPV-2013-0395): the exact exception is
+  `NullPointerException: Cannot invoke
+  "org.openimmunizationsoftware.cdsi.core.domain.Forecast.getLatestDate()"
+  because the return value of
+  "org.openimmunizationsoftware.cdsi.core.domain.PatientSeries.getForecast()"
+  is null`. This is not in EvaluateConditionalSkip at all - it is in
+  downstream forecast-assembly code that calls
+  PatientSeries.getForecast().getLatestDate() without a null check
+  (grepped call sites with this exact shape exist in
+  InProcessPatientSeries, among others). Making the "equal to" dose-count
+  branch reachable causes some target doses to be skipped that previously
+  were not, which apparently leaves some PatientSeries without a
+  Forecast having been assembled for it by the time this downstream code
+  runs - a pre-existing gap that the bare-"equal"-only bug had, until
+  now, coincidentally kept unreachable.
+
+  This finding is left open (not merged) because the dose-count fix
+  itself is correct and matches SPEC-4.6-0017/0018's identical pattern,
+  but merging it requires first fixing a separate, currently
+  undiagnosed NPE defect in the forecast-assembly path - out of scope
+  for this unit's (6.2's) bounded round. The NPE's root cause (why
+  PatientSeries.getForecast() can be null at the point
+  InProcessPatientSeries or its caller reads it) has not yet been
+  investigated; that investigation belongs to whichever unit owns
+  forecast assembly (Chapter 8 / PatientSeries forecast lifecycle), not
+  to 6.2.
+
+  Materiality if fixed cleanly: this is the largest of unit 6.2's
+  remaining reds by a wide margin - all 69 equality dose-count
+  conditions in the bundled release are spelled "equal to", so Table
+  6-9's Equal row is entirely dead code on any real forecast until this
+  is resolved.
