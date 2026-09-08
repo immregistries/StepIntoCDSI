@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-07 12:10:12 - regenerate with
+  Dashboard generated 2026-09-07 18:45:22 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,8 +57,8 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">1</div>
-    <div class="label">Reviewed round</div>
+    <div class="value">2</div>
+    <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
     <div class="value">68.7%</div>
@@ -75,6 +75,25 @@
 </div>
 
 
+<section>
+  <h2>2026-09-08 - Phase 21 - Role B Round 1 - EvaluateForPreferableVaccine&#x27;s Exclusive Begin-Age Boundary
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>The first Role B fix: unit 6.8&#x27;s EvaluateForPreferableVaccine used a strict &quot;&lt;&quot; comparison for a boundary its own spec label documents as &quot;&lt;=&quot;, excluding a dose administered exactly on the preferable vaccine&#x27;s begin age date (most visible on &quot;0 days&quot; begin-age windows, e.g. a HepB birth dose). One-line fix to the codebase&#x27;s existing inclusive-bound idiom flips the two JUnit tests exercising that boundary from red to green (25/5 -&gt; 27/3 for the unit), with zero regressions across the full cdsi-engine suite (192 -&gt; 190 failures) and zero change to the FITS suite (3364/1531/1 identical both sides - by design, this round targets JUnit correctness, not FITS pass-rate movement). See SPEC-4.6-0008.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>2f6eb4e</code></td></tr><tr><td>Engine tests</td><td>767 total, 192 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>cb1f5ce</code></td></tr><tr><td>Engine tests</td><td>767 total, 190 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0008/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0008/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0008</p>
+</section>
 <section>
   <h2>2026-09-07 - Phase 22 - Separate Static Supporting Data From Per-Run Forecast State
     <span class="badge badge-green">reviewed</span>

@@ -1,6 +1,6 @@
 # SPEC-4.6-0008: EvaluateForPreferableVaccine excludes the begin age date itself from its own inclusive window
 
-**Status:** open (fix implemented and AWAITING THE PROJECT OWNER'S REVIEW - not yet merged)
+**Status:** confirmed (reviewed and merged by the project owner on 2026-09-08 - see "Fix merged")
 **Category:** IMPLEMENTATION_MISMATCH
 
 ## Evidence
@@ -31,9 +31,9 @@ Both assert `LogicResult.YES` for condition index 1 and, before the fix, got `NO
 
 This finding does not claim FITS impact: no FITS case naming this defect was found during investigation, and the full-suite before/after comparison below shows the fix is a no-op against the current 4896-case fixture set. The two affected JUnit tests are this round's evidence of corrected behaviour, independent of FITS.
 
-## Fix implemented (pending review)
+## Fix merged
 
-Implemented by the investigating agent on 2026-09-07, **awaiting the project owner's review** - not yet merged to `develop`.
+Reviewed and approved by the project owner on 2026-09-08, commit `cb1f5ce` on `develop`.
 
 Scope: **only** the begin-date half of condition index 1. The end-date half of the same condition, and condition index 2 (the trade-name check - a separate, already-known, deliberately deferred limitation), were deliberately left untouched.
 

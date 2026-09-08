@@ -1300,7 +1300,7 @@ units:
   '6.8':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluateForPreferableVaccineTest
-    fix_status: fixed_pending_review
+    fix_status: merged
     blocked_category: null
     blocked_reason: null
     finding_ids: ["SPEC-4.6-0008"]
@@ -1309,7 +1309,7 @@ units:
       the strict-.before() lower-bound defect on Table 6-26's second
       condition, flipping ruleOneIncludesTheBeginAgeDateItself and
       aDoseAdministeredOnTheDateOfBirthIsInsideAZeroDayBeginAgeWindow to
-      green; awaiting project owner review, not yet merged). The remaining
+      green; reviewed and merged 2026-09-08, commit cb1f5ce). The remaining
       3 red tests are the pre-existing, unrelated trade-name and
       presentation defects described below. Covered: the step's identity
       (EVALUATE_FOR_PREFERABLE_VACCINE, chapter "6.8"); Figure 6-19's loop shape -
