@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-08 10:58:19 - regenerate with
+  Dashboard generated 2026-09-08 11:37:34 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,7 +57,7 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">9</div>
+    <div class="value">10</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
@@ -75,6 +75,25 @@
 </div>
 
 
+<section>
+  <h2>2026-09-08 - Phase 21 - Role B Round 9 - Note 2a&#x27;s Age-Based CVX-to-Antigen Association
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>The ninth Role B round: section 4.2&#x27;s note 2a (age-based CVX-to-antigen association - e.g. CVX 121 Zoster live associates with Varicella under 50 years, Zoster from 50 on) was entirely unimplemented, a complete gap rather than a logic bug. The Supporting Data&#x27;s Association Begin/End Age attributes were read by nothing and stored nowhere, so a Zoster-live dose always produced both a Varicella and a Zoster record at any age. Fixed across VaccineType (new per-antigen age maps), DataModelLoader (reads the two fields), and OrganizeImmunizationHistory (filters by patient age at administration, begin inclusive/end exclusive). Unit 4.2 fully closed (12/12, +1 new boundary test). Full cdsi-engine suite: 171 -&gt; 169 failures (down exactly 2), 0 regressions. FITS suite unchanged (3378/1517/1, 0 cases changed, not even a hidden output change) - none of the bundled fixtures exercises this exact scenario. See SPEC-4.6-0016.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>6ebd4c0</code></td></tr><tr><td>Engine tests</td><td>770 total, 171 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3378 passed, 1517 failed-assertion, 1 execution-error (69.0%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>87db5e5</code></td></tr><tr><td>Engine tests</td><td>771 total, 169 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3378 passed, 1517 failed-assertion, 1 execution-error (69.0%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0016/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0016/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0016</p>
+</section>
 <section>
   <h2>2026-09-08 - Phase 21 - Role B Round 8 - EvaluateVaccineConflict&#x27;s Dead Live-Virus Conflict Window
     <span class="badge badge-green">reviewed</span>

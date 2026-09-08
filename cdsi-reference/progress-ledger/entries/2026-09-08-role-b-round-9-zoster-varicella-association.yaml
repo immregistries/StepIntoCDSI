@@ -1,0 +1,32 @@
+id: "2026-09-08-role-b-round-9-zoster-varicella-association"
+date: "2026-09-08"
+phase: 21
+title: "Role B Round 9 - Note 2a's Age-Based CVX-to-Antigen Association"
+before:
+  commit: "6ebd4c0"
+  engine_tests: {total: 770, failures: 171, errors: 1}
+  fits: {total_cases: 4896, passed: 3378, failed_assertions: 1517, execution_errors: 1}
+  fits_runtime_seconds: 39.9
+after:
+  commit: "87db5e5"
+  engine_tests: {total: 771, failures: 169, errors: 1}
+  fits: {total_cases: 4896, passed: 3378, failed_assertions: 1517, execution_errors: 1}
+  fits_runtime_seconds: 39.9
+summary: >
+  The ninth Role B round: section 4.2's note 2a (age-based CVX-to-antigen
+  association - e.g. CVX 121 Zoster live associates with Varicella under
+  50 years, Zoster from 50 on) was entirely unimplemented, a complete
+  gap rather than a logic bug. The Supporting Data's Association
+  Begin/End Age attributes were read by nothing and stored nowhere, so
+  a Zoster-live dose always produced both a Varicella and a Zoster
+  record at any age. Fixed across VaccineType (new per-antigen age
+  maps), DataModelLoader (reads the two fields), and
+  OrganizeImmunizationHistory (filters by patient age at administration,
+  begin inclusive/end exclusive). Unit 4.2 fully closed (12/12, +1 new
+  boundary test). Full cdsi-engine suite: 171 -> 169 failures (down
+  exactly 2), 0 regressions. FITS suite unchanged (3378/1517/1, 0 cases
+  changed, not even a hidden output change) - none of the bundled
+  fixtures exercises this exact scenario. See SPEC-4.6-0016.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0016/finding.md"
+finding_ids: ["SPEC-4.6-0016"]
+status: reviewed
