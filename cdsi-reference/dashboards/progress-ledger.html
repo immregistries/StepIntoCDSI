@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-08 15:48:16 - regenerate with
+  Dashboard generated 2026-09-08 16:44:39 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,7 +57,7 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">12</div>
+    <div class="value">13</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
@@ -226,6 +226,30 @@
   </div>
   <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0009/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0009/finding.md</a></p>
   <p class="muted">Findings: SPEC-4.6-0009</p>
+</section>
+<section>
+  <h2>2026-09-08 - Phase 21 - Role B Round 12 - Enforcing minAgeToStart/maxAgeToStart (SPEC-4.6-0021, Recovers Round 11&#x27;s PCV Regression)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Follow-on to Round 11&#x27;s explicit, project-owner-approved exception to &quot;FITS moves forward, not backward&quot;: Round 11 shipped Chapter 8&#x27;s series-group loop despite a 125-case net FITS regression, tracing the cause to a separate, pre-existing defect (SPEC-4.6-0021) rather than an error in that round&#x27;s own fix. This round fixes that defect.
+SelectPatientSeries.minAgeToStart and maxAgeToStart were declared on the domain model (git history shows minAgeToStart&#x27;s field/getter/setter predate this whole campaign) but enforced nowhere: minAgeToStart was not even parsed by DataModelLoader, and neither field had a single read site anywhere in the engine. Table 8-2&#x27;s SELECTSCORE-2 has an age-to-start check, but it only fires for a series with at least one administered dose - it cannot exclude a series the patient has never received any dose toward. Once Round 11 correctly scoped Chapter 8 per series group, an age-inappropriate solo-series group (e.g. Pneumococcal&#x27;s &quot;Standard 50+&quot;, RSV&#x27;s &quot;Standard 75+&quot;) could reach PreFilterPatientSeries&#x27;s default-series fallback with a trivially-zero within-group valid-dose count and, being alone in its group, proceed straight into bestPatientSeriesList regardless of the patient&#x27;s actual age.
+Two fix attempts inside PreFilterPatientSeries (8.1) were tried and reverted: gating the default fallback on age broke HPV&#x27;s zero-dose adult forecast entirely (HPV splits one logical default pathway across an age boundary into two series *within the same series group*, unlike PCV&#x27;s wholly separate group for its older population); promoting an age-appropriate in-group alternate fixed PCV/MEN but produced dates contradicting FITS&#x27;s own reference behavior for HPV, confirmed by direct inspection of fixture 675c41f8e4b089d2bdc0c483-HPV-2013-0480. The fix instead lives in SelectBestPatientSeries (4.5)&#x27;s per-antigen series-group enumeration (added by Round 11): a series group is now excluded from the series-group stepper entirely - before Chapter 8 ever runs for it - when none of its member series has an age-to-start window including the patient&#x27;s current age, and the patient has no already-satisfied target dose toward any series in it. This leaves HPV&#x27;s within-group behavior untouched while correctly removing PCV/RSV/MEN&#x27;s structurally distinct, wholly separate age-gated groups.
+DataModelLoader.readAntigenSeries gained the missing minAgeToStart parsing. One incidental NullPointerException was found and fixed during FITS verification (not caught by hand-built JUnit fixtures, which always populate a target-dose list): the satisfied-dose check did not guard against PatientSeries.getTargetDoseList() returning null, which real pipeline data does for some series (e.g. COVID-19 case 2023-0071).
+Verified via the standing Role B pipeline: 4 new SelectBestPatientSeriesTest cases (22 total, all green); full cdsi-engine suite unchanged at 139 failures/1 error (confirmed identical with and without this change via git stash A/B - all pre-existing, unrelated to this fix); full FITS run case-by-case diffed against Round 11&#x27;s exact baseline (2026-09-08T195714-671589Z-18ba253-... , 3253 passed): +143 improvements, 0 regressions, every improvement in the PCV group - exactly the group the project owner flagged as poorest-performing and asked to watch. 3253 -&gt; 3396 passed, 18 short of the pre-Round-11 baseline of 3378 (RSV&#x27;s and other antigens&#x27; independently-tracked defects, not this one, account for the remainder).
+A distinct, related gap remains open: RSV defines a genuinely separate second series group (&quot;RSV 75 years+ 1-dose series&quot;) not declared equivalentSeriesGroups to its main group, so a 75+ patient who has completed the main series still gets a second, competing, wrongly-AGED_OUT forecast from the older-population group. Recorded in SPEC-4.6-0021&#x27;s finding as a remaining gap, not fixed here - it needs its own investigation into whether the Supporting Data or Chapter 8&#x27;s equivalence-fallback logic is the right place to close it.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>b29bad0</code></td></tr><tr><td>Engine tests</td><td>776 total, 139 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3253 passed, 1642 failed-assertion, 1 execution-error (66.4%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>801ea67</code></td></tr><tr><td>Engine tests</td><td>780 total, 139 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3396 passed, 1499 failed-assertion, 1 execution-error (69.4%)</td></tr><tr><td>FITS runtime</td><td>55.3s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0021/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0021/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0021</p>
 </section>
 <section>
   <h2>2026-09-08 - Phase 21 - Role B Round 11 - Chapter 8&#x27;s Series-Group Loop (Merged Despite a FITS Regression)
