@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-08 12:30:55 - regenerate with
+  Dashboard generated 2026-09-08 15:48:16 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,7 +57,7 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">11</div>
+    <div class="value">12</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
@@ -226,6 +226,28 @@
   </div>
   <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0009/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0009/finding.md</a></p>
   <p class="muted">Findings: SPEC-4.6-0009</p>
+</section>
+<section>
+  <h2>2026-09-08 - Phase 21 - Role B Round 11 - Chapter 8&#x27;s Series-Group Loop (Merged Despite a FITS Regression)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>The eleventh Role B round, and the largest of this campaign: Chapter 8 (8.1-8.8) never implemented the per-series-group repetition its own overview text requires, and the eight steps disagreed about which of three different lists was &quot;the series in scope&quot; - the 2026-09-05 &quot;Chapter 8 has no series group&quot; cross-cutting entry. Implemented a new SelectNextSeriesGroup step (dispatched from 4.5, looped back to by every 8.1-8.7 scoring-phase exit), corrected the pipeline-stage list every affected step reads, and parsed the previously-unread &lt;equivalentSeriesGroups&gt; Supporting Data element 8.8&#x27;s Table 8-14 needs. Two independent unit-local bugs (8.5/8.6&#x27;s sticky-boolean defect, 8.6&#x27;s tie-counter reset) were fixed alongside.
+Verified against all nine affected units&#x27; own JUnit suites - every remaining red in each reconciles exactly against an already-documented, unrelated, pre-existing defect (confirmed by cross-referencing this round&#x27;s failures against each unit&#x27;s own status.yaml red-test enumeration). Full cdsi-engine suite: 167 -&gt; 139 failures (-28), 0 new errors.
+FITS regresses: 3378 -&gt; 3253 passed (net -125: 175 cases regress, mostly Pneumococcal/RSV/Meningococcal; 50 improve, mostly HepA/Polio/MMR). Traced via direct engine instrumentation to a second, separate, upstream defect - SelectPatientSeries.minAgeToStart/maxAgeToStart are enforced nowhere in the engine, so an age-inappropriate solo-series series group (e.g. &quot;Pneumococcal 50+&quot;, minAgeToStart 50 years) can now become a &quot;best patient series&quot; once Chapter 8 is correctly scoped, where before it simply lost an undivided antigen-wide scoring competition. Recorded as SPEC-4.6-0021, not yet fixed - its most likely home is upstream of Chapter 8 entirely (4.3/5.1&#x27;s determination of what counts as a relevant patient series in the first place).
+Presented to the project owner as a genuine choice (hold pending SPEC-4.6-0021, keep investigating a same-session fix, or merge despite the regression); the explicit decision was to merge now, accepting the regression, because the fix is independently verified correct, the regression&#x27;s cause is fully traced to a separate pre-existing defect rather than an error in this fix, and the 50-case improvement it also produces is real forward progress expected to combine cleanly with SPEC-4.6-0021&#x27;s eventual fix. Recorded as a deliberate, informed exception to the standing &quot;FITS moves forward, not backward&quot; rule, for CDC/CDSi review.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>18ba253</code></td></tr><tr><td>Engine tests</td><td>771 total, 167 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3378 passed, 1517 failed-assertion, 1 execution-error (69.0%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>343aea7</code></td></tr><tr><td>Engine tests</td><td>776 total, 139 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3253 passed, 1642 failed-assertion, 1 execution-error (66.4%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0020/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0020/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0020, SPEC-4.6-0021</p>
 </section>
 <section>
   <h2>2026-09-08 - Phase 21 - Role B Round 10 - Table 6-6 Label and Table 6-8 Interval Boundary
