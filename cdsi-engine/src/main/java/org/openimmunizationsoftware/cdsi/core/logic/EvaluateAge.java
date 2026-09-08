@@ -62,9 +62,13 @@ public class EvaluateAge extends LogicStep {
       log(" + Absolute minimum age time period = " + age.getAbsoluteMinimumAge());
       log(" + Minimum age time period = " + age.getMinimumAge());
       log(" + Maximum age time period = " + age.getMaximumAge());
-      caAbsoluteMinimumAgeDate
-          .setInitialValue(age.getAbsoluteMinimumAge().getDateFrom(dateOfBirth));
-      caMinimumAgeDate.setInitialValue(age.getMinimumAge().getDateFrom(dateOfBirth));
+      Date absoluteMinimumAgeDate = age.getAbsoluteMinimumAge().getDateFrom(dateOfBirth);
+      caAbsoluteMinimumAgeDate.setInitialValue(absoluteMinimumAgeDate);
+      if (age.getMinimumAge().isValued()) {
+        caMinimumAgeDate.setInitialValue(age.getMinimumAge().getDateFrom(dateOfBirth));
+      } else if (absoluteMinimumAgeDate != null) {
+        caMinimumAgeDate.setInitialValue(absoluteMinimumAgeDate);
+      }
       if (age.getMaximumAge().isValued()) {
         caMaximumAgeDate.setInitialValue(age.getMaximumAge().getDateFrom(dateOfBirth));
       }

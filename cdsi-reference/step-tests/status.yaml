@@ -806,12 +806,22 @@ units:
   '6.4':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluateAgeTest
-    fix_status: not_started
+    fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0010"]
     notes: >-
-      20 tests, 19 green and 1 red. The step class is isolated and invoked
+      20 tests, now all 20 green (was 19/1 - see SPEC-4.6-0010, a
+      SPECIFICATION_DEFECT: Table 6-14's independent per-attribute assumed
+      defaults for Minimum Age Date and Absolute Minimum Age Date could
+      produce an out-of-order state Table 6-15's rule grid can't resolve,
+      crashing the engine with an NPE on 5 real bundled Pneumococcal series
+      doses. Fixed by falling back the minimum age date to the absolute
+      minimum age date when only the latter is defined, restoring the
+      ordering Table 6-15 depends on; reviewed and merged, but the
+      underlying specification gap itself is flagged for CDC/CDSi review,
+      not resolved by this project's own authority). The step class is
+      isolated and invoked
       directly: a hand-built DataModel supplies the patient date of birth, the
       AntigenAdministeredRecord 4.4 has made current, and the target dose whose
       SeriesDose carries the Supporting Data Age record. Ages are built the way
@@ -843,19 +853,23 @@ units:
       early dose in Rule 2's grace period); and the Next Steps claim that all
       four outcomes continue to 6.5 Evaluate Preferable Interval regardless.
 
-      The 1 red test.
-      aDoseBeforeTheAbsoluteMinimumAgeIsTooYoungEvenWithNoMinimumAgeDefined -
+      Fixed (SPEC-4.6-0010, merged - see also "For CDC/CDSi review" in the
+      finding). aDoseBeforeTheAbsoluteMinimumAgeIsTooYoungEvenWithNoMinimumAgeDefined
       expected Table 6-15 Rule 1's evaluation status 'Not Valid' and reason 'Too
-      young' for a dose administered before the absolute minimum age date;
-      actual NullPointerException("Evaluation should not be null at this point")
-      out of EvaluateAge.process(). When a target dose gives an absolute minimum
-      age but no minimum age, Table 6-14's assumed 01/01/1900 minimum age date
-      falls *before* the absolute minimum age date, so for a dose given before
-      the absolute minimum age both Table 6-15's first condition (date
-      administered < absolute minimum age date) and its third (minimum age date
-      <= date administered < maximum age date) answer Yes. No rule column
-      matches that combination, LogicTable performs no outcome, no evaluation is
-      recorded, and process()'s own guard throws. This is not a constructed
+      young' for a dose administered before the absolute minimum age date; it
+      used to throw NullPointerException("Evaluation should not be null at this
+      point") out of EvaluateAge.process() instead. When a target dose gives an
+      absolute minimum age but no minimum age, Table 6-14's assumed 01/01/1900
+      minimum age date used to fall *before* the absolute minimum age date, so
+      for a dose given before the absolute minimum age both Table 6-15's first
+      condition (date administered < absolute minimum age date) and its third
+      (minimum age date <= date administered < maximum age date) answered Yes.
+      No rule column matched that combination, LogicTable performed no outcome,
+      no evaluation was recorded, and process()'s own guard threw. Fixed by
+      falling the minimum age date back to the absolute minimum age date itself
+      when only the latter is defined, restoring the ordering Table 6-15
+      depends on - a dose now becomes fully VALID (no separate grace period)
+      the instant it clears the absolute minimum age. This is not a constructed
       corner: the Supporting Data release bundled with cdsi-engine has exactly 5
       series doses of that shape - <absMinAge>19 years</absMinAge> with an empty
       <minAge/> and <maxAge/>, and a single <age> row so it is the one the step
