@@ -2,11 +2,14 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 
 public class OrganizeImmunizationHistory extends LogicStep {
 
@@ -19,9 +22,12 @@ public class OrganizeImmunizationHistory extends LogicStep {
 
     for (VaccineDoseAdministered vda : dataModel.getImmunizationHistory()
         .getVaccineDoseAdministeredList()) {
-      for (Antigen antigen : vda.getVaccine().getVaccineType().getAntigenList()) {
-        AntigenAdministeredRecord aar = new AntigenAdministeredRecord(vda, antigen);
-        dataModel.getAntigenAdministeredRecordList().add(aar);
+      VaccineType vaccineType = vda.getVaccine().getVaccineType();
+      for (Antigen antigen : vaccineType.getAntigenList()) {
+        if (isAssociatedAtAdministration(vaccineType, antigen, vda.getDateAdministered())) {
+          AntigenAdministeredRecord aar = new AntigenAdministeredRecord(vda, antigen);
+          dataModel.getAntigenAdministeredRecordList().add(aar);
+        }
       }
     }
 
@@ -40,6 +46,31 @@ public class OrganizeImmunizationHistory extends LogicStep {
 
     return LogicStepFactory.createLogicStep(LogicStepType.CREATE_RELEVANT_PATIENT_SERIES,
         dataModel);
+  }
+
+  /**
+   * Note 2a: the CVX to Antigen Supporting Data's Association Begin/End Age
+   * select the antigen by the patient's age at administration - most
+   * associations carry no such restriction (an unvalued TimePeriod for both),
+   * but CVX 121 Zoster live's does: administered below 50 years associates
+   * with Varicella, at or above 50 years with Zoster. Begin age is inclusive,
+   * end age exclusive, matching every other age-window convention in the
+   * specification (e.g. Table 6-15).
+   */
+  private boolean isAssociatedAtAdministration(VaccineType vaccineType, Antigen antigen,
+      Date dateAdministered) {
+    Date dateOfBirth = dataModel.getPatient().getDateOfBirth();
+    TimePeriod beginAge = vaccineType.getAssociationBeginAge(antigen);
+    if (beginAge != null && beginAge.isValued()
+        && dateAdministered.before(beginAge.getDateFrom(dateOfBirth))) {
+      return false;
+    }
+    TimePeriod endAge = vaccineType.getAssociationEndAge(antigen);
+    if (endAge != null && endAge.isValued()
+        && !dateAdministered.before(endAge.getDateFrom(dateOfBirth))) {
+      return false;
+    }
+    return true;
   }
 
 }

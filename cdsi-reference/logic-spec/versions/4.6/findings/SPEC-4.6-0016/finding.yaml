@@ -1,0 +1,69 @@
+id: "SPEC-4.6-0016"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["4.2"]
+source_pages: [33]
+tables: []
+business_rules: []
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.OrganizeImmunizationHistory"
+  - "org.openimmunizationsoftware.cdsi.core.data.DataModelLoader"
+  - "org.openimmunizationsoftware.cdsi.core.domain.VaccineType"
+fits_cases: []
+summary: >
+  Note 2a's age-based CVX-to-antigen association was entirely unimplemented:
+  the Supporting Data's Association Begin/End Age attributes were parsed
+  by nothing and stored nowhere, so a CVX with more than one age-limited
+  antigen association (CVX 121 Zoster live, associated with Varicella
+  under 50 years and Zoster from 50 on) always produced a record for
+  every listed antigen at any age, rather than selecting by the
+  patient's age at administration.
+evidence: >
+  Note 2a: "The CVX to Antigen Supporting Data includes Association
+  Begin Age and Association End Age attributes to properly associate
+  the administered vaccine with the proper antigen based on the age of
+  patient at the time of administration (e.g., a Zoster vaccine
+  administered below 50 years should be associated with Varicella)."
+  The bundled Supporting Data's own cvxToAntigenMap entry for CVX 121:
+  two <association> elements, one naming Varicella with
+  <associationBeginAge>0 days</associationBeginAge> and
+  <associationEndAge>50 years</associationEndAge>, the other naming
+  Zoster with <associationBeginAge>50 years</associationBeginAge> and
+  an empty (unbounded) <associationEndAge/>.
+  DataModelLoader.readCvx's association branch read only the <antigen>
+  child of each <association> element - it never read
+  associationBeginAge or associationEndAge at all - and VaccineType held
+  a plain List<Antigen> with nowhere to put them even if it had.
+  OrganizeImmunizationHistory created an AntigenAdministeredRecord for
+  every antigen in vda.getVaccine().getVaccineType().getAntigenList()
+  unconditionally, so one CVX 121 dose always produced both a Varicella
+  and a Zoster record, at any patient age.
+interpretation: >
+  A complete implementation gap, not a subtle logic error: the relevant
+  Supporting Data existed, but no code anywhere read it, and the domain
+  model had nowhere to hold it even if something had. Fixed by adding
+  VaccineType.associationBeginAgeMap/associationEndAgeMap (keyed by the
+  same interned Antigen instances getOrCreateAntigen already shares),
+  reading the two Supporting Data fields in DataModelLoader.readCvx
+  alongside the existing antigen read, and adding an age check in
+  OrganizeImmunizationHistory before creating each AntigenAdministeredRecord -
+  begin age inclusive, end age exclusive, matching every other age-window
+  convention in the specification (e.g. Table 6-15).
+  VaccineType.getAntigenList() was confirmed (by exhaustive grep) to have
+  exactly one caller in the whole engine - OrganizeImmunizationHistory
+  itself - so this change carries no risk of an unrelated caller
+  expecting the old, unfiltered list.
+  Confirmed live by both of unit 4.2's red tests
+  (zosterLiveGivenBelowFiftyYearsIsAssociatedWithVaricellaOnly,
+  zosterLiveGivenAtOrAboveFiftyYearsIsAssociatedWithZosterOnly), and a
+  new third test added this round pinning the exact boundary
+  (zosterLiveGivenOnTheFiftiethBirthdayItselfIsAssociatedWithZosterOnly -
+  a dose given on the 50th birthday itself associates with Zoster alone,
+  confirming begin-inclusive/end-exclusive rather than the reverse).
+  Checked against real FITS data: 0 cases changed, in either direction,
+  across the full 4896-case suite - not even a hidden actualHash change
+  within an unchanged status. None of the bundled fixtures happens to
+  administer CVX 121 in a way this defect's double-counting would have
+  affected the reported forecast for. This is a real, now-correct fix
+  (unit 4.2 fully closed, 12/12), just not one the current fixture set
+  happens to exercise.

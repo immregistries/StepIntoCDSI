@@ -981,14 +981,27 @@ public class DataModelLoader {
           cvx.setShortDescription(DomUtils.getInternalValue(childNode));
         } else if (childNode.getNodeName().equals("association")) {
           NodeList grandchildList = childNode.getChildNodes();
+          String antigenName = null;
+          TimePeriod associationBeginAge = new TimePeriod("");
+          TimePeriod associationEndAge = new TimePeriod("");
           for (int k = 0; k < grandchildList.getLength(); k++) {
             Node grandchildNode = grandchildList.item(k);
-            if (grandchildNode.getNodeName().equals("antigen")) {
-              String antigenName = DomUtils.getInternalValue(grandchildNode);
-              Antigen antigen = supportingDataModel.getOrCreateAntigen(antigenName);
-              cvx.getAntigenList().add(antigen);
-              antigen.getCvxList().add(cvx);
+            if (grandchildNode.getNodeType() != Node.ELEMENT_NODE) {
+              continue;
             }
+            if (grandchildNode.getNodeName().equals("antigen")) {
+              antigenName = DomUtils.getInternalValue(grandchildNode);
+            } else if (grandchildNode.getNodeName().equals("associationBeginAge")) {
+              associationBeginAge = new TimePeriod(DomUtils.getInternalValue(grandchildNode));
+            } else if (grandchildNode.getNodeName().equals("associationEndAge")) {
+              associationEndAge = new TimePeriod(DomUtils.getInternalValue(grandchildNode));
+            }
+          }
+          if (antigenName != null) {
+            Antigen antigen = supportingDataModel.getOrCreateAntigen(antigenName);
+            cvx.getAntigenList().add(antigen);
+            antigen.getCvxList().add(cvx);
+            cvx.setAssociationAge(antigen, associationBeginAge, associationEndAge);
           }
         }
       }

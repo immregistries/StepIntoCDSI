@@ -46,15 +46,16 @@ units:
   '4.2':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.OrganizeImmunizationHistoryTest
-    fix_status: not_started
+    fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0016"]
     notes: >-
       Section 4.2 declares no business rules and no decision tables - it is "a
       fairly simple iterative process" of three numbered steps around Figure
-      4-3, with Tables 4-2/4-3 as a worked before/after example. The 11 tests
-      cover all three numbered steps plus the two explanatory notes: a
+      4-3, with Tables 4-2/4-3 as a worked before/after example. The 12 tests
+      (11 + 1 new boundary test added this round) cover all three numbered
+      steps plus the two explanatory notes: a
       combination product expanded into one antigen administered record per
       antigen it contains (all sharing the dose's date and pointing back at it);
       a single-antigen product producing exactly one record; the record carrying
@@ -66,25 +67,35 @@ units:
       each producing no records; the unconditional transition to 4.3; and note
       2a's age-based CVX-to-antigen association, from both sides.
 
-      9 green, 2 red. Both red tests are note 2a and fail for the same single
-      reason - zosterLiveGivenBelowFiftyYearsIsAssociatedWithVaricellaOnly
-      (expected [Varicella], actual [Varicella, Zoster]) and
+      All 12 green (was 9/2 - see SPEC-4.6-0016, merged). Both red tests were
+      note 2a and failed for the same single reason -
+      zosterLiveGivenBelowFiftyYearsIsAssociatedWithVaricellaOnly
+      (expected [Varicella], was [Varicella, Zoster]) and
       zosterLiveGivenAtOrAboveFiftyYearsIsAssociatedWithZosterOnly (expected
-      [Zoster], actual [Varicella, Zoster]). Note 2a requires the CVX to Antigen
+      [Zoster], was [Varicella, Zoster]). Note 2a requires the CVX to Antigen
       Supporting Data's Association Begin Age / Association End Age to select
       the antigen by the patient's age at administration ("a Zoster vaccine
       administered below 50 years should be associated with Varicella"), and
       CVX 121 in the bundled releases does carry those attributes (Varicella
       [0 days, 50 years), Zoster [50 years, -)). OrganizeImmunizationHistory
-      creates a record for every antigen in
+      used to create a record for every antigen in
       vda.getVaccine().getVaccineType().getAntigenList() with no age filter, so
-      one CVX 121 dose always yields both records at any age. For Role B: the
-      cause is not confined to this step's class - DataModelLoader.readCvx
-      reads only the <antigen> child of each <association> and discards
-      associationBeginAge/associationEndAge, and VaccineType holds a plain
-      List<Antigen> with nowhere to put them, so the association ages never
-      reach this step at all. Role A records this as observation only, with no
-      finding filed and no classification attempted.
+      one CVX 121 dose always yielded both records at any age. The cause was
+      not confined to this step's class - DataModelLoader.readCvx read only
+      the <antigen> child of each <association> and discarded
+      associationBeginAge/associationEndAge, and VaccineType held a plain
+      List<Antigen> with nowhere to put them. Fixed across all three: new
+      VaccineType.associationBeginAgeMap/EndAgeMap (keyed by antigen), the
+      loader now reads both fields, and OrganizeImmunizationHistory filters
+      by the patient's age at administration before creating each record.
+      A new third test
+      (zosterLiveGivenOnTheFiftiethBirthdayItselfIsAssociatedWithZosterOnly)
+      pins the exact boundary as begin-inclusive/end-exclusive. Checked
+      against real FITS data: 0 cases changed, not even a hidden output
+      change within an unchanged status - none of the 4896 bundled fixtures
+      happens to administer CVX 121 in a way this defect's double-counting
+      would have affected. A real, now-correct fix, just not one the current
+      fixture set exercises.
 
       Deliberately not covered - (a) Figure 4-3's own activity-diagram data
       element list: both extracted copies of the figure image are blank, so the
