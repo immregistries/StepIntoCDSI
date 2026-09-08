@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-07 18:45:22 - regenerate with
+  Dashboard generated 2026-09-08 04:52:21 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,7 +57,7 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">2</div>
+    <div class="value">3</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
@@ -75,6 +75,25 @@
 </div>
 
 
+<section>
+  <h2>2026-09-08 - Phase 21 - Role B Round 2 - EvaluateForAllowableVaccine&#x27;s Reference-Equality Bug and Calculated-Date Label Typos
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>The second Role B round, both closing unit 6.9 to fully green: (1) the vaccine-type-match condition compared VaccineType instances by Java reference (==) instead of deferring to VaccineType&#x27;s own CVX-based equals(), a latent divergence from the domain model&#x27;s own contract; (2) the two calculated-date attribute labels read &quot;Calculated data&quot;/ &quot;Calculated Data&quot; instead of &quot;Calculated date&quot;, a pure presentation typo. Bundled into one round since both are independent, equally narrow, single-file fixes with no shared state or causal link. Unit 6.9: 29/2 -&gt; 31/0 green/red. Full cdsi-engine suite: 190 -&gt; 188 failures (down exactly 2), 0 regressions. FITS suite unchanged (3364/1531/1 identical both sides, 0 status changes), as expected for JUnit-targeted fixes not selected for FITS impact. See SPEC-4.6-0009.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>c3448df</code></td></tr><tr><td>Engine tests</td><td>767 total, 190 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>393332d</code></td></tr><tr><td>Engine tests</td><td>767 total, 188 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0009/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0009/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0009</p>
+</section>
 <section>
   <h2>2026-09-08 - Phase 21 - Role B Round 1 - EvaluateForPreferableVaccine&#x27;s Exclusive Begin-Age Boundary
     <span class="badge badge-green">reviewed</span>
