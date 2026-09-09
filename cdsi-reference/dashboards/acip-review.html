@@ -78,12 +78,12 @@
 <div class="toc">
   <h2>Items</h2>
   <ol>
-    <li><a href="#hepa-calcdt5">HepA: does a computed date that lands on a non-existent day round to the last real day of that month, or the first of the next month?</a> <span class="badge badge-blocking">blocking</span></li>
-    <li><a href="#dtap-interval">DTaP: which target dose's interval rule applies once a 7-year-old with one infant dose ages into the adolescent Tdap track?</a> <span class="badge badge-blocking">blocking</span></li>
-    <li><a href="#pcv-minage">Pneumococcal: when only an "absolute minimum age" is defined and no separate "minimum age," is a dose fully valid the instant it clears that age, with no grace period?</a> <span class="badge badge-shipped">shipped - please confirm</span></li>
-    <li><a href="#single-antigen-precedence">Any antigen with more than one eligible pathway: if one pathway says Complete and another says Aged Out, which wins?</a> <span class="badge badge-shipped">shipped - please confirm</span></li>
-    <li><a href="#hpv-default">HPV: for an adult with zero doses, should the forecast follow the pediatric default series or switch to the age-appropriate alternate?</a> <span class="badge badge-shipped">shipped - please confirm</span></li>
-    <li><a href="#rsv-equivalence">RSV: should the 75+ series group be declared equivalent to the main series group, the way seven other antigens declare their age-gated groups equivalent?</a> <span class="badge badge-flagged">flagged - not yet investigated</span></li>
+    <li><a href="#hepa-calcdt5">HepA: does a computed date that lands on a non-existent day round to the last real day of that month, or the first of the next month?</a> <span class="badge badge-blocking">blocking</span> &middot; <a href="https://github.com/immregistries/StepIntoCDSI/issues/64">Issue #64</a></li>
+    <li><a href="#dtap-interval">DTaP: which target dose's interval rule applies once a 7-year-old with one infant dose ages into the adolescent Tdap track?</a> <span class="badge badge-blocking">blocking</span> &middot; <a href="https://github.com/immregistries/StepIntoCDSI/issues/65">Issue #65</a></li>
+    <li><a href="#pcv-minage">Pneumococcal: when only an "absolute minimum age" is defined and no separate "minimum age," is a dose fully valid the instant it clears that age, with no grace period?</a> <span class="badge badge-shipped">shipped - please confirm</span> &middot; <a href="https://github.com/immregistries/StepIntoCDSI/issues/66">Issue #66</a></li>
+    <li><a href="#single-antigen-precedence">Any antigen with more than one eligible pathway: if one pathway says Complete and another says Aged Out, which wins?</a> <span class="badge badge-shipped">shipped - please confirm</span> &middot; <a href="https://github.com/immregistries/StepIntoCDSI/issues/67">Issue #67</a></li>
+    <li><a href="#hpv-default">HPV: for an adult with zero doses, should the forecast follow the pediatric default series or switch to the age-appropriate alternate?</a> <span class="badge badge-shipped">shipped - please confirm</span> &middot; <a href="https://github.com/immregistries/StepIntoCDSI/issues/68">Issue #68</a></li>
+    <li><a href="#rsv-equivalence">RSV: should the 75+ series group be declared equivalent to the main series group, the way seven other antigens declare their age-gated groups equivalent?</a> <span class="badge badge-flagged">flagged - not yet investigated</span> &middot; <a href="https://github.com/immregistries/StepIntoCDSI/issues/69">Issue #69</a></li>
   </ol>
 </div>
 
@@ -113,7 +113,7 @@
     <p><strong>What we're asking:</strong> Is 02/28/2027 (the fixture's answer) actually what CALCDT-5 is supposed to produce - i.e., should the rule really round <em>down</em> to the last real day of the target month rather than forward to the next month's first day, and the specification's own worked examples and prose are the part that needs correcting? Or are these three historical test cases simply outdated relative to the current specification text, and 03/01/2027 (what the specification's own words say) is correct?</p>
   </div>
 
-  <p class="detail-link"><a href="https://github.com/immregistries/StepIntoCDSI/blob/develop/cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0026/finding.md">Full technical writeup on GitHub &rarr;</a></p>
+  <p class="detail-link"><a href="https://github.com/immregistries/StepIntoCDSI/issues/64"><strong>Discuss / respond: GitHub Issue #64 &rarr;</strong></a> &middot; <a href="https://github.com/immregistries/StepIntoCDSI/blob/develop/cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0026/finding.md">full technical writeup</a></p>
 </section>
 
 <section class="item" id="dtap-interval">
@@ -144,7 +144,7 @@
     <p>Put another way: once dose 7's "already has 2 valid doses" exemption is made to work as literally written in the Supporting Data, is that the clinically correct outcome for this patient, or does that exemption need an additional qualifier (e.g., only applies if those 2 doses were given at age-appropriate times) that the current Supporting Data doesn't state?</p>
   </div>
 
-  <p class="detail-link"><a href="https://github.com/immregistries/StepIntoCDSI/blob/develop/cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0019/finding.md">Full technical writeup on GitHub &rarr;</a></p>
+  <p class="detail-link"><a href="https://github.com/immregistries/StepIntoCDSI/issues/65"><strong>Discuss / respond: GitHub Issue #65 &rarr;</strong></a> &middot; <a href="https://github.com/immregistries/StepIntoCDSI/blob/develop/cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0019/finding.md">full technical writeup</a></p>
 </section>
 
 <section class="item" id="pcv-minage">
@@ -164,7 +164,7 @@
     <p><strong>What we're asking:</strong> Is "fully valid at exactly 19, no grace period" the clinically intended behavior for these five target doses? Or was some other resolution intended - for example, should Table 6-14 itself say Minimum Age's default is "whichever is later, 01/01/1900 or the Absolute Minimum Age" (same practical effect here, but stated as an explicit specification rule rather than an implementation choice), or should there be a genuine grace period between the absolute minimum and some other assumed minimum?</p>
   </div>
 
-  <p class="detail-link"><a href="https://github.com/immregistries/StepIntoCDSI/blob/develop/cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0010/finding.md">Full technical writeup on GitHub &rarr;</a></p>
+  <p class="detail-link"><a href="https://github.com/immregistries/StepIntoCDSI/issues/66"><strong>Discuss / respond: GitHub Issue #66 &rarr;</strong></a> &middot; <a href="https://github.com/immregistries/StepIntoCDSI/blob/develop/cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0010/finding.md">full technical writeup</a></p>
 </section>
 
 <section class="item" id="single-antigen-precedence">
@@ -184,7 +184,7 @@
     <p><strong>What we're asking:</strong> Is "the most favorable pathway wins" the intended precedence when a patient has more than one eligible pathway for the same antigen? Or should the system instead prefer whichever series the patient actually followed historically, treat the disagreement as something to flag for a clinician rather than silently resolve, or apply some other rule entirely?</p>
   </div>
 
-  <p class="detail-link"><a href="https://github.com/immregistries/StepIntoCDSI/blob/develop/cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0022/finding.md">Full technical writeup on GitHub &rarr;</a></p>
+  <p class="detail-link"><a href="https://github.com/immregistries/StepIntoCDSI/issues/67"><strong>Discuss / respond: GitHub Issue #67 &rarr;</strong></a> &middot; <a href="https://github.com/immregistries/StepIntoCDSI/blob/develop/cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0022/finding.md">full technical writeup</a></p>
 </section>
 
 <section class="item" id="hpv-default">
@@ -205,7 +205,7 @@
     <p><strong>What we're asking:</strong> For an adult with zero HPV doses, should the system report the "2-dose" default series (as currently implemented, matching the historical fixture), or switch to the age-appropriate "3-dose" alternate? If the default-series answer is correct, is there a general rule we should write down and apply consistently - e.g., "never switch away from a series' own default status based on the patient's age alone" - so future series groups with this same within-group age-split shape behave the same way without needing a fixture to reverse-engineer the answer from?</p>
   </div>
 
-  <p class="detail-link"><a href="https://github.com/immregistries/StepIntoCDSI/blob/develop/cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0021/finding.md">Full technical writeup on GitHub &rarr;</a></p>
+  <p class="detail-link"><a href="https://github.com/immregistries/StepIntoCDSI/issues/68"><strong>Discuss / respond: GitHub Issue #68 &rarr;</strong></a> &middot; <a href="https://github.com/immregistries/StepIntoCDSI/blob/develop/cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0021/finding.md">full technical writeup</a></p>
 </section>
 
 <section class="item" id="rsv-equivalence">
@@ -222,12 +222,14 @@
     <p><strong>What we're asking:</strong> Should RSV's Supporting Data declare its "75 years and older" group as equivalent to its main group, matching the pattern already used by the seven other antigens listed above? Or is the lack of an equivalence declaration for RSV specifically intentional - i.e., are these genuinely meant to be two distinct series a patient might need both of, rather than two paths to the same outcome?</p>
   </div>
 
+  <p class="detail-link"><a href="https://github.com/immregistries/StepIntoCDSI/issues/69"><strong>Discuss / respond: GitHub Issue #69 &rarr;</strong></a></p>
   <p class="muted" style="font-size:13px;">This item hasn't yet had its own dedicated investigation - it was noticed as a side effect of a different, already-fixed issue and is flagged here for awareness rather than fully written up.</p>
 </section>
 
 <div class="respond">
   <h2>How to respond</h2>
-  <p>This repository is public on GitHub at <a href="https://github.com/immregistries/StepIntoCDSI">immregistries/StepIntoCDSI</a>. Each item above links to its full technical writeup in <code>cdsi-reference/logic-spec/versions/4.6/findings/</code>. The most direct way to give guidance is a comment on the corresponding GitHub Issue (linked in a future revision of this page once filed) or a new Issue referencing the item number and finding ID above - either is tracked and visible to the project team.</p>
+  <p>This repository is public on GitHub at <a href="https://github.com/immregistries/StepIntoCDSI">immregistries/StepIntoCDSI</a>. Each item above has its own GitHub Issue, tagged <code>acip-review</code> - the "Discuss / respond" link at the end of each item goes straight to it. The most direct way to give guidance is a comment on that Issue; the project team will see it and follow up there.</p>
+  <p><a href="https://github.com/immregistries/StepIntoCDSI/issues?q=is%3Aissue+is%3Aopen+label%3Aacip-review">All six open <code>acip-review</code> issues on GitHub &rarr;</a></p>
   <p class="muted">This page itself lives at <code>cdsi-reference/dashboards/acip-review.html</code> and is published via GitHub Pages at the repository's Pages URL; it's a static, point-in-time snapshot, regenerated by hand as new items are found or existing ones get resolved.</p>
 </div>
 
