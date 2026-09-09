@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-08 19:43:53 - regenerate with
+  Dashboard generated 2026-09-08 20:56:32 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,7 +57,7 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">16</div>
+    <div class="value">17</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
@@ -65,16 +65,41 @@
     <div class="label">FITS pass rate now</div>
   </div>
   <div class="card">
-    <div class="value">61.1s (1.0m)</div>
+    <div class="value">54.2s</div>
     <div class="label">FITS runtime now</div>
   </div>
   <div class="card">
-    <div class="value">86.6%</div>
+    <div class="value">88.2%</div>
     <div class="label">Runtime reduction since start</div>
   </div>
 </div>
 
 
+<section>
+  <h2>2026-09-09 - Phase 21 - Role B Round 16 - HepA Investigation: CALCDT-5 Date-Math Bug Fixed (SPEC-4.6-0026), Two Remaining Failures Are a Spec-vs-Fixture Conflict and a Supporting-Data Gap
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Requested directly: get one FITS group to pass completely, starting with HepA (a simple schedule, only 4 failures at the time). Found and fixed a genuine, real date-arithmetic bug (SPEC-4.6-0026), plus a third CVX-equivalence gap in the same family as Round 13/14&#x27;s - but HepA cannot reach 100% without either a project-owner ruling on a spec-vs- fixture conflict or new CDC Supporting Data content, neither of which is something engine code can resolve.
+All 4 of HepA&#x27;s failures traced back to the exact same underlying computation - a dose administered 08/29/2026, HepA&#x27;s minInt of &quot;6 months,&quot; landing on a nonexistent 02/29/2027 (2027 is not a leap year) - split across two genuinely different problems:
+1. SPEC-4.6-0026 (fixed): TimePeriod.getDateFrom()&#x27;s CALCDT-5 handling (&quot;a computed date which is not a real date must be moved forward to first day of the next month&quot;) read the day-of-month back from the Calendar object *after* already setting its month/year fields with the original day still in place - but Calendar.set(MONTH, ...) doesn&#x27;t clamp an out-of-range day, it silently rolls the excess forward (day 31 landing on a 28-day February becomes March 3rd, not February 28th or March 1st). The dedicated CALCDT-5 check could therefore never fire correctly; the answer produced was whatever Calendar&#x27;s own overflow arithmetic happened to compute, which only coincidentally matches CALCDT-5 for a 1-day overflow (like this HepA case, and like the smaller of the specification&#x27;s own two worked examples) and not for a larger one (the specification&#x27;s other worked example, 08/31 + 6 months, was actually wrong by 2 days before this fix - 03/03/2001 instead of the specified 03/01/2001). Fixed by capturing the day-of- month before any month/year mutation and only then checking it against the target month&#x27;s real maximum. Two new TestTimePeriod tests pin the specification&#x27;s own worked examples plus the HepA-observed case; full cdsi-engine suite unchanged (identical failure set via sorted diff); full FITS run: 0 regressions, 0 improvements - the multi-day- overflow case this fix actually corrects does not occur anywhere in the current fixture set, only in the hand-authored test pinning the spec&#x27;s own example. A real, worthwhile correctness fix regardless.
+2. Not fixed - a genuine spec-vs-fixture conflict: three HepA fixtures (AART-EXTRA-3/5/7) all expect 02/28/2027 for this exact computation, directly contradicting CALCDT-5&#x27;s own literal text and worked examples (both of which compute 03/01/2027, correctly, both before and after this round&#x27;s fix). This cannot be resolved by further engine changes - the specification text is unambiguous, and these fixtures disagree with it. Needs a project-owner or CDC/CDSi decision about whether these &quot;Extra Test Cases&quot; fixtures are authoritative for this scenario, not something Role B can decide unilaterally.
+3. Not fixed - a Supporting Data completeness gap: HepA&#x27;s fourth failure (AART-EXTRA-10) throws IllegalArgumentException: Unrecognized cvx code &#x27;143&#x27; - confirmed absent from every antigen file and the schedule-level CVX map in the entire bundled 4.65 Supporting Data release, not just HepA&#x27;s own file. This is correct, defensive engine behavior given the input; the gap is in the Supporting Data content itself (a future CDC/ACIP release, or a fixture ahead of what&#x27;s bundled), not something engine code or a CvxEquivalence table entry can fix without fabricating vaccine registry data.
+Also fixed while investigating: CvxEquivalence&#x27;s HepA group was missing CVX 82 (adult formulation) alongside its existing 85 (unspecified) and 52 (pediatric) - the same class of gap as Round 13/14&#x27;s CVX 122/314 fixes. Added to both cdsi-fits-tests&#x27; CvxEquivalence.java and cdsi-web&#x27;s FitsServlet.java. This alone did not flip AART-EXTRA-10&#x27;s outcome, since that case fails earlier (the CVX-143 exception above), before the equivalence table is ever consulted.
+Net effect: HepA remains at 4 failures (96/100 passing, 96%), unchanged from before this round in raw pass count, but for well-understood, fully-documented reasons rather than an open question - one is a real, now-fixed engine bug with no FITS-visible effect yet, one needs a project-owner ruling, and one needs new Supporting Data. No FITS group reached 100% this round; the closest remaining candidates are worth a fresh survey once SPEC-4.6-0026&#x27;s sibling question is resolved.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>9c1f6df</code></td></tr><tr><td>Engine tests</td><td>781 total, 137 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3451 passed, 1444 failed-assertion, 1 execution-error (70.5%)</td></tr><tr><td>FITS runtime</td><td>61.1s (1.0m)</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>ef26c13</code></td></tr><tr><td>Engine tests</td><td>783 total, 137 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3451 passed, 1444 failed-assertion, 1 execution-error (70.5%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0026/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0026/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0026</p>
+</section>
 <section>
   <h2>2026-09-09 - Phase 21 - Role B Round 15 - COVID-19 Investigation: SELECTB-24&#x27;s Null-Status Gap Found, Fix Attempted and Reverted (SPEC-4.6-0025, Open)
     <span class="badge badge-green">reviewed</span>
