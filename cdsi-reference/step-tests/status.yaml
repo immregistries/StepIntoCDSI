@@ -698,8 +698,13 @@ units:
     fix_status: in_progress
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0017", "SPEC-4.6-0018", "SPEC-4.6-0019", "SPEC-4.6-0027"]
+    finding_ids: ["SPEC-4.6-0017", "SPEC-4.6-0018", "SPEC-4.6-0019", "SPEC-4.6-0027", "SPEC-4.6-0031"]
     notes: >-
+      Round 21 (2026-09-09): fixed 3 of the remaining 6 reds - see the note
+      after gap (8) below for the full account (SPEC-4.6-0031, SPEC-4.6-0018
+      merged). 41 green, 3 red as of round 21's end. Historical diagnosis
+      retained below because it explains the fixes.
+
       44 test methods in one class, 36 green and 8 red at the start of Role
       B's round on this unit; now 38 green and 6 red. 6.2 maps to two classes.
       EvaluateConditionalSkipForEvaluation turned out to be a near-empty
@@ -814,6 +819,23 @@ units:
       newly fail, 5 DTaP newly pass, net -14) traced to one specific DTaP
       case but not fully root-caused. Reverted; see SPEC-4.6-0027 for the
       full trace and the two live hypotheses for whoever picks this up next.
+
+      Round 21 (2026-09-09), under the project owner's revised JUnit-first
+      strategy with FITS regressions now acceptable when understood: fixed
+      reds (6) and (7) as SPEC-4.6-0031 (Administered Dose Count now sourced
+      from the whole patient's ImmunizationHistory, not the per-antigen
+      selected-record list; caEarliestDate now actually constructed) - both
+      confirmed FITS-inert (3511 passed before and after, 0 changed cases).
+      Merged red (4)'s already-written fix (SPEC-4.6-0018, previously left
+      open) now that the project owner has explicitly authorized shipping a
+      well-understood regression: re-measured fresh, 3511 -> 3616 passed,
+      net +105 (115 improve, 10 regress - down from 14, since round 18's
+      unit 4.4 fix independently resolved part of the original regression
+      set). Reds (1), (2) and (3) remain open - each requires either a
+      cross-dose mechanism not yet located (1, SPEC-4.6-0027), new
+      Supporting Data wiring for series groups (2), or fixing an unrelated
+      downstream NPE in PatientSeries.getForecast() (3, SPEC-4.6-0019) -
+      each judged too large to fold into this same bounded round.
 
       Deliberately not covered. CONDSKIP-1's exclusion of doses the engine has
       not yet linked to a target dose (`if

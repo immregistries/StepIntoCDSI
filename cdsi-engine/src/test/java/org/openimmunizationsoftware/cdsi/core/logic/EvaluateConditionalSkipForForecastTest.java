@@ -28,6 +28,9 @@ import org.openimmunizationsoftware.cdsi.core.domain.Patient;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
+import org.openimmunizationsoftware.cdsi.core.domain.Vaccine;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
@@ -460,6 +463,14 @@ public class EvaluateConditionalSkipForForecastTest {
   @Test
   public void theIntervalConditionIsAnsweredAgainstTheAssessmentDateToo() throws Exception {
     intervalCondition("3 years", "01/15/2016");
+    VaccineDoseAdministered dose = new VaccineDoseAdministered();
+    Vaccine vaccine = new Vaccine();
+    VaccineType vaccineType = new VaccineType();
+    vaccineType.setCvxCode("20");
+    vaccine.setVaccineType(vaccineType);
+    dose.setVaccine(vaccine);
+    dose.setDateAdministered(date("01/15/2016"));
+    dataModel.getImmunizationHistory().getVaccineDoseAdministeredList().add(dose);
 
     run();
 

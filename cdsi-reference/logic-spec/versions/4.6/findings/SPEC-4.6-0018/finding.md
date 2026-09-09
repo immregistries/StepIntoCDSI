@@ -1,6 +1,6 @@
-# SPEC-4.6-0018: Table 6-6's begin-age-date boundary is exclusive when the spec requires it inclusive - fix confirmed correct, but not safe to merge yet
+# SPEC-4.6-0018: Table 6-6's begin-age-date boundary is exclusive when the spec requires it inclusive
 
-**Status:** open (not merged - see "Why this is not merged")
+**Status:** confirmed, merged 2026-09-09 (see "Why this is now merged")
 **Category:** IMPLEMENTATION_MISMATCH
 
 ## Evidence
@@ -66,14 +66,18 @@ and the engine has no series-group loop at all - already documented in `cdsi-ref
 
 This fix correctly changes the skip/advance outcome *within whichever series definition is in scope*; it cannot, by itself, fix which series definition Chapter 8 should have put in scope in the first place. The 14 regressed cases are exactly the ones where that upstream scoping question changes the answer; the 115 improved cases are exactly the ones where it doesn't.
 
-## Why this is not merged
+## Why this is now merged
 
-The fix is correct and its regression is real, but the regression's cause is a separate, already-known, deliberately out-of-scope defect - the cross-cutting-notes.md entry explicitly says fixing it "requires a project-owner sequencing decision across all eight [Chapter 8] steps at once, not a bounded round." Merging this fix now would violate the standing rule that FITS must move forward, not backward, and bundling in a fix for Chapter 8's series-group scoping is far outside this unit's bounded round.
+At the time this finding was first written, the standing rule was that FITS must move forward, not backward - so this fix sat open despite being spec-correct, because its regression traced to a separate, out-of-scope defect (Chapter 8's missing series-group loop, `cross-cutting-notes.md`'s 2026-09-05 entry) that "requires a project-owner sequencing decision across all eight [Chapter 8] steps at once, not a bounded round."
 
-**Recommended path:** re-attempt this exact fix once Chapter 8's series-group loop is addressed (a separate, larger, already-flagged initiative). The 115-case improvement observed here suggests the fix will then land clean, with the 14-case regression resolving alongside the series-group fix rather than needing separate handling.
+On 2026-09-09 the project owner explicitly revised that rule (Role B round 21): a FITS regression is acceptable when the team is confident the underlying fix is correct and understands the regression's mechanism - the same tolerance already exercised once for Chapter 8's own SPEC-4.6-0020 rewrite. This finding is arguably a cleaner case for that tolerance than Chapter 8's own rewrite was: the regression isn't caused by *this* fix being wrong - it's caused by a different, already-documented, already out-of-scope defect that this fix merely stops incidentally masking.
+
+Re-measured fresh against the current codebase (rounds 18-20 had independently shifted the baseline since the original measurement): **3511 -> 3616 passed, net +105** - 115 improvements (same as originally measured), only 10 regressions now (down from 14; some of the original regression set was independently resolved by round 18's unit 4.4 fix). Same two antigens, same root cause: `675c41f8e4b089d2bdc0c483-HIB-2013-0308` is still one of the 10, tracing to the identical mechanism described above. Merged.
+
+**Expected resolution:** when Chapter 8's series-group loop is eventually addressed, the 10 remaining regressed cases are expected to resolve alongside it, per the original recommendation.
 
 ## Affected
 
 - Spec sections: 6.2 (page 55)
 - Code locations: `EvaluateConditionalSkip` (shared base class for 6.2, 7.1, 7.6)
-- FITS cases: 14 cases regress and 115 improve if merged today (net +101, but not a clean move); see `cdsi-reference/step-tests/cross-cutting-notes.md`'s 2026-09-05 entry for the blocking defect
+- FITS cases: 115 improved, 10 regressed (net +105) as of the 2026-09-09 merge; the 10 regressed cases (Hib, Polio) are expected to resolve once Chapter 8's series-group loop is fixed - see `cdsi-reference/step-tests/cross-cutting-notes.md`'s 2026-09-05 entry

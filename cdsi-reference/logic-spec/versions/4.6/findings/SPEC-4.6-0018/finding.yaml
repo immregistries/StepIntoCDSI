@@ -1,5 +1,5 @@
 id: "SPEC-4.6-0018"
-status: "open"
+status: "confirmed"
 category: "IMPLEMENTATION_MISMATCH"
 spec_sections: ["6.2"]
 source_pages: [55]
@@ -9,17 +9,28 @@ code_locations:
   - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkip"
 fits_cases:
   - "675c41f8e4b089d2bdc0c483-HIB-2013-0308"
+  - "5eeca0522cc4517a96b0f417-POL-2013-0640"
 summary: >
   Table 6-6's own condition text is "Is the Conditional Skip End Age Date
   > Conditional Skip Reference Date >= Conditional Skip Begin Age Date?",
   but LT66's code wrote both comparisons as strict Date.after, making the
   begin-age-date boundary exclusive when the spec's own ">=" requires it
-  to be inclusive. The correct, spec-matching fix is confirmed in
-  isolation (a dedicated characterization test already pins the
-  inclusive-begin behavior as correct), but merging it causes a 14-case
-  FITS regression that traces to the already-documented "Chapter 8 has
-  no series group" defect (cross-cutting-notes.md, 2026-09-05), not to
-  anything local to this condition. Left open rather than merged.
+  to be inclusive. The correct, spec-matching fix was confirmed in
+  isolation back when this finding was first written, but left open
+  rather than merged because it caused a 14-case FITS regression tracing
+  to the already-documented "Chapter 8 has no series group" defect
+  (cross-cutting-notes.md, 2026-09-05).
+
+  MERGED as of 2026-09-09 under the project owner's revised strategy
+  (Role B round 21): FITS regressions are now acceptable when the team
+  is confident the underlying fix is correct and the regression's
+  mechanism is understood, explicitly citing Chapter 8's own SPEC-4.6-0020
+  rewrite as precedent. Re-measured fresh against the current codebase
+  (after rounds 18-20's unrelated fixes shifted the baseline): 3511 ->
+  3616 passed, 115 improvements, 10 regressions (down from 14 in the
+  original measurement) - same root cause, same two antigens (Hib, Polio),
+  smaller because some of what used to regress was independently fixed
+  by round 18's unit 4.4 work. Net +105. Merged.
 evidence: >
   Table 6-6 condition text: "Is the Conditional Skip End Age Date >
   Conditional Skip Reference Date >= Conditional Skip Begin Age Date?"
@@ -81,13 +92,21 @@ interpretation: >
   series-group scoping cannot currently answer correctly, independent of
   anything in this unit.
 
-  This finding is left open (not merged, not wontfix) because the fix
-  itself is correct and the regression it exposes is real but belongs to
-  a different, already-known, deliberately out-of-scope defect that
-  "requires a project-owner sequencing decision across all eight [Chapter
-  8] steps at once, not a bounded round" (cross-cutting-notes.md).
-  Re-attempt this fix once Chapter 8's series-group scoping is addressed;
-  at that point this fix is expected to produce a clean, net-positive
-  FITS change with no regression, since the 115-case improvement side of
-  this same run shows the fix is correct wherever series-group scoping
-  does not also confound the case.
+  Originally left open (not merged) because the fix itself is correct
+  and the regression it exposes is real but belongs to a different,
+  already-known, deliberately out-of-scope defect that "requires a
+  project-owner sequencing decision across all eight [Chapter 8] steps
+  at once, not a bounded round" (cross-cutting-notes.md).
+
+  Merged 2026-09-09 (Role B round 21) once the project owner explicitly
+  changed the standing rule to allow a well-understood regression when
+  the fix itself is correct - the same tolerance already exercised for
+  Chapter 8's own SPEC-4.6-0020 rewrite. This finding's regression is
+  arguably an even cleaner case for that tolerance than Chapter 8's own
+  was: the regression here isn't caused by this fix being wrong, it's
+  caused by a *different*, already-documented, already out-of-scope
+  defect (Chapter 8's missing series-group loop) that this fix merely
+  stops incidentally masking. When Chapter 8's series-group loop is
+  eventually addressed, the 10 cases that regressed here are expected to
+  resolve alongside it rather than needing separate handling - matching
+  the original recommendation's prediction.

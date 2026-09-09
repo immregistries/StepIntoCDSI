@@ -64,6 +64,7 @@ public class EvaluateConditionalSkip extends LogicStep {
                 "Administered Dose Count");
         caAssessmentDate = new ConditionAttribute<Date>("Runtime data", "Assessment Date");
         caAssessmentDate.setAssumedValue(new Date());
+        caEarliestDate = new ConditionAttribute<Date>("Runtime data", "Earliest Date");
 
         // this list is just for printing?
         conditionAttributesList.add(caDateAdministered);
@@ -76,8 +77,14 @@ public class EvaluateConditionalSkip extends LogicStep {
             caDateAdministered.setInitialValue(aar == null ? null : aar.getDateAdministered());
         }
         caAssessmentDate.setInitialValue(dataModel.getAssessmentDate());
+        caEarliestDate.setInitialValue(dataModel.getForecast() == null ? null : dataModel.getForecast().getEarliestDate());
 
-        caAdministeredDoseCount.setInitialValue(dataModel.getSelectedAntigenAdministeredRecordList().size());
+        // Table 6-4 types this "Patient Immunization History" - the whole
+        // patient's recorded doses, not just the ones selected for the
+        // antigen currently being evaluated (that per-antigen list is what
+        // CONDSKIP-1 separately counts into caNumberofConditionalDosesAdministered).
+        caAdministeredDoseCount.setInitialValue(dataModel.getImmunizationHistory() == null ? 0
+            : dataModel.getImmunizationHistory().getVaccineDoseAdministeredList().size());
 
         // This appears to be the core logic of the function?
         /*
@@ -252,10 +259,14 @@ public class EvaluateConditionalSkip extends LogicStep {
                             || caConditionalSkipBeginAgeDate.getFinalValue() == null) {
                         return LogicResult.NO;
                     }
+                    // Table 6-6's own text: "End Age Date > Reference Date >=
+                    // Begin Age Date" - the lower bound is inclusive (>=),
+                    // unlike the strict upper bound. A reference date exactly
+                    // equal to the begin age date must still satisfy this.
                     if (caConditionalSkipEndAgeDate.getFinalValue()
                             .after(caConditionalSkipReferenceDate.getFinalValue())
-                            && caConditionalSkipReferenceDate.getFinalValue()
-                                    .after(caConditionalSkipBeginAgeDate.getFinalValue())) {
+                            && !caConditionalSkipBeginAgeDate.getFinalValue()
+                                    .after(caConditionalSkipReferenceDate.getFinalValue())) {
                         return LogicResult.YES;
                     }
                     return LogicResult.NO;

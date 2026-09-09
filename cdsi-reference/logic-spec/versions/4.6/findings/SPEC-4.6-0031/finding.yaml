@@ -1,0 +1,83 @@
+id: "SPEC-4.6-0031"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.2"]
+source_pages: [51]
+tables: ["Table 6-4"]
+business_rules: []
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkip"
+fits_cases: []
+summary: >
+  Two independent gaps in EvaluateConditionalSkip's shared Table 6-4
+  attribute construction (the base class shared by 6.2, 7.1 and 7.6),
+  fixed together as one bounded round.
+
+  1. Table 6-4 types "Administered Dose Count" as "Patient Immunization
+  History" - the whole patient's recorded doses - but the code sourced
+  it from dataModel.getSelectedAntigenAdministeredRecordList(), the
+  per-antigen-filtered subset built for whichever antigen is currently
+  being evaluated. For a patient with a 3-dose immunization history but
+  only 1 dose selected for the current antigen, the attribute read 1
+  instead of 3.
+
+  2. caEarliestDate ("Runtime data / Earliest Date") was declared as a
+  field but never constructed with `new ConditionAttribute<>(...)`
+  before being added to conditionAttributesList - the published
+  attribute list therefore contained a null entry.
+evidence: >
+  status.yaml's own pre-existing notes for unit 6.2 had already
+  diagnosed both gaps and named the tests pinning them:
+  theAdministeredDoseCountComesFromThePatientImmunizationHistory (adds
+  3 doses via a historicDose() helper that only touches
+  ImmunizationHistory, expects the attribute's final value to read 3)
+  and tableSixFourRegistersTheEarliestDateAttributeItLists (asserts no
+  null entries in the published attribute list, and that
+  the Earliest Date attribute's type is "Runtime data").
+
+  Fixing the Administered Dose Count source broke three other,
+  previously-green tests in the same file
+  (tableSixEightRuleOneIsMetWhenADoseWasGivenAndTheIntervalDateHasPassed,
+  tableSixEightRuleTwoIsNotMetBeforeTheIntervalDate,
+  theIntervalConditionIsMetWhenTheReferenceDateEqualsTheIntervalDate)
+  plus one in EvaluateConditionalSkipForForecastTest
+  (theIntervalConditionIsAnsweredAgainstTheAssessmentDateToo) - all four
+  rely on Table 6-8's "has at least one dose been administered"
+  condition (which reads this same attribute) being true via the
+  fixture's default AntigenAdministeredRecord, which their own setUp()
+  never mirrors into ImmunizationHistory (a completeness gap in the
+  test fixtures, not a real production discrepancy - in production,
+  OrganizeImmunizationHistory always builds every AntigenAdministeredRecord
+  from a VaccineDoseAdministered that is already present in
+  ImmunizationHistory, so the two lists can never actually diverge the
+  way these hand-built fixtures did). Fixed by adding an explicit
+  historicDose()/VaccineDoseAdministered entry to each of those four
+  tests' own setup, matching what production wiring already guarantees.
+
+  The Administered Dose Count fix also NPE'd across roughly 20
+  unrelated test classes engine-wide the first time it was run,
+  because dataModel.getImmunizationHistory() is null in any hand-built
+  DataModel that never runs 4.1 GatherNecessaryData (which is the only
+  place immunizationHistory is guaranteed non-null) - null-guarded to 0
+  in that case.
+interpretation: >
+  Fixed by sourcing caAdministeredDoseCount from
+  dataModel.getImmunizationHistory().getVaccineDoseAdministeredList().size()
+  (null-guarded to 0), and by constructing caEarliestDate as
+  `new ConditionAttribute<Date>("Runtime data", "Earliest Date")` with
+  its initial value read from dataModel.getForecast() (null-safe - no
+  Forecast exists yet in the EVALUATE/FORECAST contexts this attribute
+  is unused in; only the VALIDATING context, 7.6, has one, and this
+  attribute's value is not read by any of Table 6-4's own conditions -
+  only its presence and type are tested).
+
+  Verified via the standing Role B pipeline: both targeted tests green;
+  the four collateral-fixture tests corrected and green; full engine
+  suite confirmed via sorted diff to have flipped exactly these six
+  tests (plus a bonus seventh, ValidateRecommendationTest's own
+  "Earliest Date registered" test, which shares the same base class)
+  and nothing else; full FITS run: 3511 passed both before and after, 0
+  changed cases - neither attribute is read by any Table 6-4 condition
+  that decides a real outcome, so this is a genuine correctness fix
+  with no FITS materiality today, the same category as SPEC-4.6-0026's
+  CALCDT-5 fix.

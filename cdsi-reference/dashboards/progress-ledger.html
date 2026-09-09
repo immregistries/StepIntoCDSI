@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-09 06:03:13 - regenerate with
+  Dashboard generated 2026-09-09 06:27:40 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,11 +57,11 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">21</div>
+    <div class="value">22</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
-    <div class="value">71.7%</div>
+    <div class="value">73.9%</div>
     <div class="label">FITS pass rate now</div>
   </div>
   <div class="card">
@@ -75,6 +75,29 @@
 </div>
 
 
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 21 - Unit 6.2: 3 of 6 Reds Fixed, First Deliberate FITS-Regression Merge (SPEC-4.6-0018, SPEC-4.6-0031)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Fourth unit tackled under the JUnit-first strategy, and the first one the project owner flagged in advance as entangled/risky - unit 6.2 (EvaluateConditionalSkip, shared by 6.2/7.1/7.6) carries three previously-investigated, previously-open findings (SPEC-4.6-0018, SPEC-4.6-0019, SPEC-4.6-0027) plus one never-classified gap, all interacting. Explicitly scoped this round to fix what could be fixed cleanly, ship one deliberate, well-understood FITS regression under the project owner&#x27;s revised tolerance, and leave the rest open rather than force everything through at once.
+Fixed two small, independent gaps as SPEC-4.6-0031: Table 6-4&#x27;s &quot;Administered Dose Count&quot; was sourced from the per-antigen selected- record list instead of the whole patient&#x27;s ImmunizationHistory (Table 6-4 explicitly types it &quot;Patient Immunization History&quot;); and caEarliestDate was declared but never constructed, leaving a null entry in the published attribute list. Both confirmed FITS-inert (3511 passed before and after this pair, 0 changed cases) - neither attribute is read by any decision that changes a real outcome today. The dose-count fix required companion fixture fixes in four other, previously-green tests across two test classes (their own setUp() never mirrored the default administered record into ImmunizationHistory, a fixture completeness gap, not a real production discrepancy) and a null-guard for dataModel.getImmunizationHistory() being null in roughly 20 unrelated hand-built test DataModels engine-wide.
+Merged SPEC-4.6-0018 (Table 6-6&#x27;s begin-age-date boundary, exclusive when the spec&#x27;s own &quot;&gt;=&quot; requires inclusive) - a fix that was written and confirmed spec-correct back when this finding was first investigated, but left open because it caused a 14-case FITS regression tracing to the already-documented &quot;Chapter 8 has no series group&quot; defect. This is the first fix merged under the project owner&#x27;s revised tolerance for a well-understood regression: re-measured fresh against the current codebase, 3511 -&gt; 3616 passed, net +105 (115 improvements, 10 regressions - down from 14, since round 18&#x27;s unit 4.4 fix independently resolved part of the original regression set). Same root cause confirmed via the same cited case (675c41f8e4b089d2bdc0c483-HIB-2013-0308) still present in the smaller regression set - the mechanism is unchanged, just smaller.
+Left open, deliberately not attempted this round: red (1)&#x27;s ConditionalSkip context-tracking gap (SPEC-4.6-0027, already tried once and reverted - a cross-dose mechanism the fix&#x27;s own target case needs is still not located); red (2), Table 6-7&#x27;s series-group COMPLETED_SERIES condition (hardcoded NO; needs a new seriesGroups field on ConditionalSkipCondition, DataModelLoader parsing for the Supporting Data&#x27;s &lt;seriesGroups&gt; element, and a real implementation reading tracked patient series by group - new data-model wiring, not a bounded fix); and red (3), Table 6-9&#x27;s &quot;equal to&quot; spelling gap (SPEC-4.6-0019 - the dose-count fix itself is trivial, but making the branch reachable exposes 324 FITS execution errors from an unrelated, undiagnosed NullPointerException in PatientSeries.getForecast(), which is crash risk, not a wrong-answer regression, and stays out of scope until that&#x27;s understood on its own).
+Final verification: full engine suite 122 failures/1 error (down from 125/1); full FITS run case-by-case diffed: 0 unexplained regressions, 115 improvements, 10 deliberately-accepted regressions with a fully understood, already-documented cause. Unit 6.2 goes from 38/44 to 41/44 green; 3 reds remain, each individually re-scoped as future work rather than left as an undifferentiated backlog.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>610865d</code></td></tr><tr><td>Engine tests</td><td>783 total, 125 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3511 passed, 1384 failed-assertion, 1 execution-error (71.7%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>PENDING</code></td></tr><tr><td>Engine tests</td><td>783 total, 122 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3616 passed, 1279 failed-assertion, 1 execution-error (73.9%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0031/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0031/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0018, SPEC-4.6-0031</p>
+</section>
 <section>
   <h2>2026-09-09 - Phase 22 - Role B Round 20 - Unit 6.1 Closed: NPE on a Target Dose&#x27;s First Evaluation (SPEC-4.6-0030)
     <span class="badge badge-green">reviewed</span>

@@ -1,0 +1,78 @@
+id: "2026-09-09-role-b-round-21-unit-6.2-partial"
+date: "2026-09-09"
+phase: 22
+title: "Role B Round 21 - Unit 6.2: 3 of 6 Reds Fixed, First Deliberate FITS-Regression Merge (SPEC-4.6-0018, SPEC-4.6-0031)"
+before:
+  commit: "610865d"
+  engine_tests: {total: 783, failures: 125, errors: 1}
+  fits: {total_cases: 4896, passed: 3511, failed_assertions: 1384, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+after:
+  commit: "PENDING"
+  engine_tests: {total: 783, failures: 122, errors: 1}
+  fits: {total_cases: 4896, passed: 3616, failed_assertions: 1279, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+summary: >
+  Fourth unit tackled under the JUnit-first strategy, and the first one
+  the project owner flagged in advance as entangled/risky - unit 6.2
+  (EvaluateConditionalSkip, shared by 6.2/7.1/7.6) carries three
+  previously-investigated, previously-open findings (SPEC-4.6-0018,
+  SPEC-4.6-0019, SPEC-4.6-0027) plus one never-classified gap, all
+  interacting. Explicitly scoped this round to fix what could be fixed
+  cleanly, ship one deliberate, well-understood FITS regression under
+  the project owner's revised tolerance, and leave the rest open rather
+  than force everything through at once.
+
+  Fixed two small, independent gaps as SPEC-4.6-0031: Table 6-4's
+  "Administered Dose Count" was sourced from the per-antigen selected-
+  record list instead of the whole patient's ImmunizationHistory (Table
+  6-4 explicitly types it "Patient Immunization History"); and
+  caEarliestDate was declared but never constructed, leaving a null
+  entry in the published attribute list. Both confirmed FITS-inert
+  (3511 passed before and after this pair, 0 changed cases) - neither
+  attribute is read by any decision that changes a real outcome today.
+  The dose-count fix required companion fixture fixes in four other,
+  previously-green tests across two test classes (their own setUp()
+  never mirrored the default administered record into ImmunizationHistory,
+  a fixture completeness gap, not a real production discrepancy) and a
+  null-guard for dataModel.getImmunizationHistory() being null in
+  roughly 20 unrelated hand-built test DataModels engine-wide.
+
+  Merged SPEC-4.6-0018 (Table 6-6's begin-age-date boundary, exclusive
+  when the spec's own ">=" requires inclusive) - a fix that was written
+  and confirmed spec-correct back when this finding was first
+  investigated, but left open because it caused a 14-case FITS
+  regression tracing to the already-documented "Chapter 8 has no series
+  group" defect. This is the first fix merged under the project owner's
+  revised tolerance for a well-understood regression: re-measured fresh
+  against the current codebase, 3511 -> 3616 passed, net +105 (115
+  improvements, 10 regressions - down from 14, since round 18's unit
+  4.4 fix independently resolved part of the original regression set).
+  Same root cause confirmed via the same cited case
+  (675c41f8e4b089d2bdc0c483-HIB-2013-0308) still present in the smaller
+  regression set - the mechanism is unchanged, just smaller.
+
+  Left open, deliberately not attempted this round: red (1)'s
+  ConditionalSkip context-tracking gap (SPEC-4.6-0027, already tried
+  once and reverted - a cross-dose mechanism the fix's own target case
+  needs is still not located); red (2), Table 6-7's series-group
+  COMPLETED_SERIES condition (hardcoded NO; needs a new seriesGroups
+  field on ConditionalSkipCondition, DataModelLoader parsing for the
+  Supporting Data's <seriesGroups> element, and a real implementation
+  reading tracked patient series by group - new data-model wiring, not
+  a bounded fix); and red (3), Table 6-9's "equal to" spelling gap
+  (SPEC-4.6-0019 - the dose-count fix itself is trivial, but making the
+  branch reachable exposes 324 FITS execution errors from an unrelated,
+  undiagnosed NullPointerException in PatientSeries.getForecast(),
+  which is crash risk, not a wrong-answer regression, and stays out of
+  scope until that's understood on its own).
+
+  Final verification: full engine suite 122 failures/1 error (down
+  from 125/1); full FITS run case-by-case diffed: 0 unexplained
+  regressions, 115 improvements, 10 deliberately-accepted regressions
+  with a fully understood, already-documented cause. Unit 6.2 goes from
+  38/44 to 41/44 green; 3 reds remain, each individually re-scoped as
+  future work rather than left as an undifferentiated backlog.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0031/finding.md"
+finding_ids: ["SPEC-4.6-0018", "SPEC-4.6-0031"]
+status: reviewed

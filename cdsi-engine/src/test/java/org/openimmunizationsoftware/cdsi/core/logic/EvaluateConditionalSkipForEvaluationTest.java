@@ -924,6 +924,7 @@ public class EvaluateConditionalSkipForEvaluationTest {
   @Test
   public void tableSixEightRuleOneIsMetWhenADoseWasGivenAndTheIntervalDateHasPassed() throws Exception {
     administered("09/01/2016");
+    historicDose(vaccineType("20"), "09/01/2016", EvaluationStatus.VALID);
     intervalCondition("6 months", "01/15/2016");
 
     assertTrue("09/01/2016 >= the interval date 07/15/2016", conditionMet());
@@ -938,6 +939,7 @@ public class EvaluateConditionalSkipForEvaluationTest {
   @Test
   public void tableSixEightRuleTwoIsNotMetBeforeTheIntervalDate() throws Exception {
     administered("05/01/2016");
+    historicDose(vaccineType("20"), "05/01/2016", EvaluationStatus.VALID);
     intervalCondition("6 months", "01/15/2016");
 
     assertFalse("05/01/2016 is before the interval date 07/15/2016", conditionMet());
@@ -969,6 +971,7 @@ public class EvaluateConditionalSkipForEvaluationTest {
   @Test
   public void theIntervalConditionIsMetWhenTheReferenceDateEqualsTheIntervalDate() throws Exception {
     administered("07/15/2016");
+    historicDose(vaccineType("20"), "07/15/2016", EvaluationStatus.VALID);
     intervalCondition("6 months", "01/15/2016");
 
     assertTrue("the interval date itself satisfies 'reference date >= interval date'", conditionMet());
