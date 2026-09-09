@@ -1,0 +1,75 @@
+id: "2026-09-09-role-b-round-15-covid-19-investigation-selectb-24"
+date: "2026-09-09"
+phase: 21
+title: "Role B Round 15 - COVID-19 Investigation: SELECTB-24's Null-Status Gap Found, Fix Attempted and Reverted (SPEC-4.6-0025, Open)"
+before:
+  commit: "60c3faf"
+  engine_tests: {total: 781, failures: 137, errors: 1}
+  fits: {total_cases: 4896, passed: 3451, failed_assertions: 1444, execution_errors: 1}
+  fits_runtime_seconds: 61.1
+after:
+  commit: "PENDING"
+  engine_tests: {total: 781, failures: 137, errors: 1}
+  fits: {total_cases: 4896, passed: 3451, failed_assertions: 1444, execution_errors: 1}
+  fits_runtime_seconds: 61.1
+summary: >
+  Requested directly, following RSV's close-out: investigate COVID-19, now
+  the worst-performing FITS group (275/341 failing, 80.65%). Broke down
+  the 275 failures by pattern: 78 are the already-reviewed SPEC-4.6-0023
+  season-staleness exception (COVID-19 also declares seasonal
+  recommendations); the remaining ~197 split into three buckets, the
+  largest of which (74 cases, "No forecasted vaccine group matched CVX
+  213" - no COVID-19 forecast produced at all) was traced to its root
+  cause this round.
+
+  Direct instrumentation of FITS case
+  675c41f8e4b089d2bdc0c483-COVID-19-2023-0071 (a 9-month-old with two
+  valid Moderna doses, expected COMPLETE) found dataModel.getBestPatientSeriesList()
+  entirely empty for COVID-19, despite both of its group-1 series being
+  present, age-appropriate, and unexcluded by SPEC-4.6-0020/0021's
+  series-group gating. Traced further upstream to PreFilterPatientSeries
+  (8.1): both series reached it with patientSeriesStatus == null (not
+  yet classified), and 8.1's candidate-admission guard - `status != null
+  && status != CONTRAINDICATED` - excludes a null status from both its
+  main pass and its all-contraindicated fallback, leaving zero candidates
+  and therefore no forecast at all. SELECTB-24's own text is "does not
+  have a patient series status of 'Contraindicated,'" a negative
+  condition a null status trivially satisfies - already pinned by an
+  existing (previously red) unit test whose earlier-recorded "low
+  materiality" assessment this round's tracing disproves.
+
+  The textually-correct one-line fix (`status != CONTRAINDICATED`,
+  dropping the redundant/incorrect null exclusion) was implemented and
+  initially looked clean: it fixed the target unit test with no other
+  unit-test regressions (136 failures, down from 137, confirmed via a
+  sorted diff to be exactly that one test). The full FITS run told a
+  different story: passedCases fell from 3451 to 3426 and
+  executionErrors rose from 1 to 270, because multiple call sites
+  downstream in Chapter 8 (8.2 onward) assume - and directly dereference
+  - a non-null PatientSeriesStatus, an invariant that has silently held
+  only because 8.1 has always filtered null-status series out before
+  they could reach those call sites. Reverted immediately; confirmed via
+  a fresh full FITS run that the revert restores the exact pre-attempt
+  baseline (3451 passed, 1 execution error) and the exact pre-attempt
+  engine-suite failure set (137 failures, sorted-diff-identical).
+
+  Recorded as SPEC-4.6-0025 (open, not fixed): a confirmed, real defect
+  whose correct fix requires two coordinated pieces of work rather than
+  one - SELECTB-24's own fix, plus auditing and null-guarding every
+  downstream Chapter 8 call site the fix newly exposes to a null status -
+  which is a larger, more careful undertaking than this round's scope
+  should attempt as a single patch. This is the same discipline applied
+  to SPEC-4.6-0018/0019's earlier deferrals: a genuine, well-evidenced
+  finding, held rather than shipped as a partial, regression-causing
+  change.
+
+  Net effect this round: zero code shipped (the attempted fix was fully
+  reverted), engine and FITS state unchanged from Round 14's end state.
+  The investigation and its documented, open finding are this round's
+  deliverable. COVID-19 remains the worst-performing FITS group and will
+  need SPEC-4.6-0025's fuller fix, plus separate investigation of its
+  remaining two failure buckets (67 status-mismatch cases, 15 status-
+  flipped-the-other-way cases), before it can be meaningfully improved.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0025/finding.md"
+finding_ids: ["SPEC-4.6-0025"]
+status: reviewed

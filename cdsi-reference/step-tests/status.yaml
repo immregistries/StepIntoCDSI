@@ -2606,7 +2606,7 @@ units:
     fix_status: in_progress
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0020", "SPEC-4.6-0021"]
+    finding_ids: ["SPEC-4.6-0020", "SPEC-4.6-0021", "SPEC-4.6-0025"]
     notes: >-
       Role A, 2026-09-05. 24 tests: 16 green, 8 red (8 failures, 0 errors); now
       20 green, 4 red after SPEC-4.6-0020 (2026-09-08, merged). 8.1
@@ -2657,9 +2657,18 @@ units:
       - SELECTB-24's first bullet is negative ("does not have a patient series
       status of 'Contraindicated'"); expected a series with a null status to be
       a candidate, actual the implementation's status != null guard drops it
-      from both passes. Low materiality - DetermineForecastNeed sets a status on
-      every outcome path - but the guard is stricter than the rule text. Still
-      red; unrelated to SPEC-4.6-0020. (3)
+      from both passes. Still red; unrelated to SPEC-4.6-0020.
+
+      Correction, 2026-09-09 (SPEC-4.6-0025): the "low materiality" assessment
+      above was wrong - traced directly to 74 of COVID-19's FITS failures (a
+      relevant patient series can and does reach 8.1 with a null status in
+      real cases, not just a theoretical fixture). The one-line textual fix
+      was attempted and reverted the same round: it fixed this test cleanly
+      but caused 270 FITS execution errors (up from 1) elsewhere in Chapter 8,
+      because later steps assume 8.1 never hands them a null-status series.
+      See SPEC-4.6-0025 (open, not fixed) for the full trace and why this
+      needs a coordinated fix across multiple downstream call sites, not a
+      single-line patch here. (3)
       selectscoreTwoRiskPriorityIsComparedAgainstEverySeriesInTheGroupNotOnlyThe
       RiskOnes - the Risk bullet compares against "any relevant patient series"
       in the group; expected a priority-B Risk series to lose to a priority-A
