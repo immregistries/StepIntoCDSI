@@ -141,6 +141,13 @@ def render_index() -> str:
     <p class="desc">Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.</p>
     {ledger_stat}
   </a>
+  <a class="tile" href="acip-review.html">
+    <h2>Open ACIP/CDSi Clinical Questions</h2>
+    <p class="desc">Places where the specification text (or Supporting Data) genuinely disagrees with a historical reference
+      test case, or leaves no stated rule at all - written up for a domain expert to weigh in on, not a software bug.</p>
+    <div class="stat">6</div>
+    <div class="stat-label">open items - 2 blocking, 3 shipped pending confirmation, 1 flagged</div>
+  </a>
 </div>
 
 </body>

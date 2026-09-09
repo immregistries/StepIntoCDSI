@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Open ACIP/CDSi Clinical Questions</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #f7f7f8; --fg: #1a1a1a; --card-bg: #ffffff; --border: #e0e0e0;
+    --muted: #6b6b6b; --blue: #2563eb; --green: #15803d; --amber: #b45309; --red: #b91c1c;
+    --code-bg: #f0f0f2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #16171a; --fg: #e6e6e6; --card-bg: #1f2023; --border: #33343a; --muted: #9a9a9a;
+             --code-bg: #26272b; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 32px 20px 80px; background: var(--bg); color: var(--fg);
+          font-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size: 15px; line-height: 1.55; }
+  .wrap { max-width: 820px; margin: 0 auto; }
+  a { color: var(--blue); }
+  h1 { font-size: 24px; margin: 0 0 6px; }
+  .subtitle { color: var(--muted); margin: 0 0 8px; font-size: 13px; }
+  .back-link { font-size: 13px; margin: 0 0 28px; }
+  .intro { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px;
+            padding: 18px 22px; margin-bottom: 32px; }
+  .intro p:first-child { margin-top: 0; }
+  .intro p:last-child { margin-bottom: 0; }
+  .toc { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px;
+          padding: 16px 22px; margin-bottom: 36px; font-size: 14px; }
+  .toc h2 { font-size: 14px; margin: 0 0 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+  .toc ol { margin: 0; padding-left: 22px; }
+  .toc li { margin-bottom: 4px; }
+  .badge { display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .03em; padding: 3px 9px; border-radius: 999px; margin-left: 8px; vertical-align: middle; }
+  .badge-blocking { background: rgba(185,28,28,.13); color: var(--red); }
+  .badge-shipped { background: rgba(21,128,61,.13); color: var(--green); }
+  .badge-flagged { background: rgba(180,83,9,.13); color: var(--amber); }
+  section.item { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px;
+                  padding: 24px 26px; margin-bottom: 28px; scroll-margin-top: 20px; }
+  section.item h2 { font-size: 18px; margin: 0 0 4px; }
+  .item-sub { color: var(--muted); font-size: 13px; margin: 0 0 18px; }
+  .item-sub code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+  h3.sub { font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted);
+            margin: 20px 0 8px; }
+  h3.sub:first-of-type { margin-top: 0; }
+  .answers { display: grid; gap: 12px; margin: 0; }
+  .answer { border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; }
+  .answer .who { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase;
+                  letter-spacing: .03em; margin-bottom: 4px; }
+  .question-box { background: rgba(37,99,235,.08); border: 1px solid rgba(37,99,235,.3); border-radius: 8px;
+                   padding: 14px 18px; margin-top: 8px; }
+  .question-box p { margin: 0; }
+  .question-box p + p { margin-top: 10px; }
+  code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px;
+                background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+  .detail-link { font-size: 13px; margin-top: 18px; }
+  .respond { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px;
+              padding: 20px 24px; margin-top: 8px; }
+  .respond h2 { font-size: 16px; margin: 0 0 10px; }
+  .muted { color: var(--muted); }
+  ul.plain { margin: 8px 0; padding-left: 22px; }
+  ul.plain li { margin-bottom: 4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Open ACIP/CDSi Clinical Questions</h1>
+<p class="subtitle">Generated 2026-09-09. Reference implementation: StepIntoCDSi, Logic Specification for ACIP Recommendations v4.6.</p>
+<p class="back-link"><a href="index.html">&larr; back to dashboards</a></p>
+
+<div class="intro">
+  <p>This page collects every place where, while building and testing a reference engine against the CDC/CDSi Logic Specification, we found a real disagreement between what the specification text (or the bundled Supporting Data) says to do and what a historical reference test case expects the answer to be - or a place where the specification simply doesn't say what to do and we had to make a judgment call. These are not software bugs in the usual sense: the code faithfully implements <em>one</em> defensible reading in each case, but we don't have the clinical/ACIP authority to say which reading is the intended one.</p>
+  <p>Each item below gives the patient scenario, the candidate answers with what supports each one, and the specific question we'd like an ACIP/CDSi domain expert to weigh in on. Full technical detail (code, exact Supporting Data XML, verification numbers) is linked from each item for anyone who wants it, but shouldn't be necessary to answer the question itself.</p>
+</div>
+
+<div class="toc">
+  <h2>Items</h2>
+  <ol>
+    <li><a href="#hepa-calcdt5">HepA: does a computed date that lands on a non-existent day round to the last real day of that month, or the first of the next month?</a> <span class="badge badge-blocking">blocking</span></li>
+    <li><a href="#dtap-interval">DTaP: which target dose's interval rule applies once a 7-year-old with one infant dose ages into the adolescent Tdap track?</a> <span class="badge badge-blocking">blocking</span></li>
+    <li><a href="#pcv-minage">Pneumococcal: when only an "absolute minimum age" is defined and no separate "minimum age," is a dose fully valid the instant it clears that age, with no grace period?</a> <span class="badge badge-shipped">shipped - please confirm</span></li>
+    <li><a href="#single-antigen-precedence">Any antigen with more than one eligible pathway: if one pathway says Complete and another says Aged Out, which wins?</a> <span class="badge badge-shipped">shipped - please confirm</span></li>
+    <li><a href="#hpv-default">HPV: for an adult with zero doses, should the forecast follow the pediatric default series or switch to the age-appropriate alternate?</a> <span class="badge badge-shipped">shipped - please confirm</span></li>
+    <li><a href="#rsv-equivalence">RSV: should the 75+ series group be declared equivalent to the main series group, the way seven other antigens declare their age-gated groups equivalent?</a> <span class="badge badge-flagged">flagged - not yet investigated</span></li>
+  </ol>
+</div>
+
+<section class="item" id="hepa-calcdt5">
+  <h2>1. HepA: rounding a non-existent computed date <span class="badge badge-blocking">blocking</span></h2>
+  <p class="item-sub">Reference: <code>SPEC-4.6-0026</code> &middot; Business rule CALCDT-5 (Table 3-6) &middot; FITS cases <code>...-HepA-AART-EXTRA-3/5/7</code></p>
+
+  <h3 class="sub">Patient scenario</h3>
+  <p>A dose is administered on 08/29/2026. HepA's minimum interval to the next dose is "6 months." Adding 6 months to 08/29/2026 lands on 02/29/2027 - which doesn't exist, because 2027 is not a leap year.</p>
+
+  <h3 class="sub">What the specification says</h3>
+  <p>Business rule CALCDT-5: "a computed date which is not a real date must be moved forward to first day of the next month." The specification gives its own two worked examples directly in the text: "03/31/2000 + 6 months = 10/01/2000 (September 31 does not exist)" and "08/31/2000 + 6 months = 03/01/2001 (February 31 does not exist)." Applying that same rule to this case gives <strong>03/01/2027</strong>.</p>
+
+  <h3 class="sub">The disagreement</h3>
+  <div class="answers">
+    <div class="answer">
+      <div class="who">Specification's literal text and worked examples</div>
+      03/01/2027 - move forward to the first day of the next month, exactly as CALCDT-5 says and as both of its own worked examples do.
+    </div>
+    <div class="answer">
+      <div class="who">Historical reference test cases (CDC's own test plan, "Extra Test Cases" EXTRA-3, 5, 7)</div>
+      02/28/2027 - the last real day of the <em>same</em> target month, not the first day of the next one.
+    </div>
+  </div>
+
+  <div class="question-box">
+    <p><strong>What we're asking:</strong> Is 02/28/2027 (the fixture's answer) actually what CALCDT-5 is supposed to produce - i.e., should the rule really round <em>down</em> to the last real day of the target month rather than forward to the next month's first day, and the specification's own worked examples and prose are the part that needs correcting? Or are these three historical test cases simply outdated relative to the current specification text, and 03/01/2027 (what the specification's own words say) is correct?</p>
+  </div>
+
+  <p class="detail-link"><a href="https://github.com/immregistries/StepIntoCDSI/blob/develop/cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0026/finding.md">Full technical writeup on GitHub &rarr;</a></p>
+</section>
+
+<section class="item" id="dtap-interval">
+  <h2>2. DTaP: which dose's interval rule applies at the childhood/adolescent boundary <span class="badge badge-blocking">blocking</span></h2>
+  <p class="item-sub">Reference: <code>SPEC-4.6-0019</code> (part A) &middot; Table 6-9 &middot; FITS case <code>5eeca0522cc4517a96b0f417-DTAP-2013-0007</code> (and 24 similar)</p>
+
+  <h3 class="sub">Patient scenario</h3>
+  <p>Born 09/01/2019. One DTaP dose given 11/01/2019, at about 2 months old. No further doses until a Tdap dose given exactly on their 7th birthday, 09/01/2026. Assessed the same day, 09/01/2026. The historical fixture's own title describes the intended scenario: <em>"# 2 (Tdap) to child age 7. DTaP # 1 given before age 12 months. Forecast # 3 (Td) in 4 weeks."</em></p>
+
+  <h3 class="sub">What's actually in the Supporting Data</h3>
+  <p>The DTaP/Td/Tdap schedule defines 11 numbered target doses. Dose 3's own interval rule is "4 weeks from the previous dose." Dose 9's own interval rule is "6 months from the previous dose." Separately (and not in question here), doses 2 through 7 each carry a rule saying they're not required once the patient is 7 years or older, and dose 7 separately carries a rule saying it's not required once the patient already has 2 valid doses.</p>
+
+  <h3 class="sub">The disagreement</h3>
+  <p>Once every one of those skip rules is read and applied exactly as the Supporting Data spells it (a currently-dead code path is what would make dose 7's "already has 2 doses" rule start working; the age-based skip for doses 2-6 already works today), the walk through the schedule advances past doses 2-8 and lands on dose 9 as the next one to forecast - giving a 6-month interval from the Tdap dose, i.e. <strong>03/01/2027</strong>. The historical fixture instead expects the forecast to land on dose 3, giving a 4-week interval, i.e. <strong>09/29/2026</strong>.</p>
+  <div class="answers">
+    <div class="answer">
+      <div class="who">Following every skip rule as written once they all work correctly</div>
+      Dose 9, 6-month interval &rarr; 03/01/2027. Supported by: the age-7+ skip rule (already active today, not part of this question) plus dose 7's own "already has 2 doses" rule (currently dead code, would become active if this specific gap is fixed).
+    </div>
+    <div class="answer">
+      <div class="who">Historical reference test case</div>
+      Dose 3, 4-week interval &rarr; 09/29/2026, exactly 4 weeks after the Tdap dose - matching the fixture's own title and expected date precisely.
+    </div>
+  </div>
+
+  <div class="question-box">
+    <p><strong>What we're asking:</strong> For a patient who ages into the 7+ track with only one infant DTaP dose on record, is the correct next recommended dose the one 4 weeks after their most recent dose (treating this as still an early catch-up interval), or 6 months after (treating the patient as having effectively completed their available catch-up doses via the age-7+ and dose-count skip rules, landing on the longer-interval adolescent booster slot)?</p>
+    <p>Put another way: once dose 7's "already has 2 valid doses" exemption is made to work as literally written in the Supporting Data, is that the clinically correct outcome for this patient, or does that exemption need an additional qualifier (e.g., only applies if those 2 doses were given at age-appropriate times) that the current Supporting Data doesn't state?</p>
+  </div>
+
+  <p class="detail-link"><a href="https://github.com/immregistries/StepIntoCDSI/blob/develop/cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0019/finding.md">Full technical writeup on GitHub &rarr;</a></p>
+</section>
+
+<section class="item" id="pcv-minage">
+  <h2>3. Pneumococcal: minimum age with no defined grace period <span class="badge badge-shipped">shipped - please confirm</span></h2>
+  <p class="item-sub">Reference: <code>SPEC-4.6-0010</code> &middot; Tables 6-14, 6-15 &middot; 5 series doses in the bundled Pneumococcal Supporting Data</p>
+
+  <h3 class="sub">Patient scenario</h3>
+  <p>A patient under 19 receives a Pneumococcal dose against a target dose meant for "risk patients 19 years and older." Five such target doses exist in the bundled Supporting Data (Pneumococcal risk series for CSF leaks/cochlear implants and for immunocompromised patients).</p>
+
+  <h3 class="sub">The gap</h3>
+  <p>These five target doses define an "Absolute Minimum Age" (19 years) but no separate "Minimum Age" at all. The specification's Table 6-14 gives both attributes the same independent default (01/01/1900) when left undefined, with no stated relationship between them - so "Minimum Age" defaults to 1900, a date earlier than the real 19-year Absolute Minimum Age. Table 6-15 then can't decide which of its four rules applies, because two of them both say "yes" at once. As written, this combination has no valid answer and the reference engine crashed on it.</p>
+
+  <h3 class="sub">The resolution we shipped</h3>
+  <p>When Minimum Age isn't defined but Absolute Minimum Age is, we now make Minimum Age fall back to the Absolute Minimum Age itself, rather than the independent 1900 default. Practical effect: a dose given against one of these five target doses becomes fully valid the instant the patient turns 19 - no grace period, no distinction between "too young" and "not yet ideal timing."</p>
+
+  <div class="question-box">
+    <p><strong>What we're asking:</strong> Is "fully valid at exactly 19, no grace period" the clinically intended behavior for these five target doses? Or was some other resolution intended - for example, should Table 6-14 itself say Minimum Age's default is "whichever is later, 01/01/1900 or the Absolute Minimum Age" (same practical effect here, but stated as an explicit specification rule rather than an implementation choice), or should there be a genuine grace period between the absolute minimum and some other assumed minimum?</p>
+  </div>
+
+  <p class="detail-link"><a href="https://github.com/immregistries/StepIntoCDSI/blob/develop/cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0010/finding.md">Full technical writeup on GitHub &rarr;</a></p>
+</section>
+
+<section class="item" id="single-antigen-precedence">
+  <h2>4. Any antigen with multiple eligible pathways: which status wins? <span class="badge badge-shipped">shipped - please confirm</span></h2>
+  <p class="item-sub">Reference: <code>SPEC-4.6-0022</code> &middot; Table 9-3 &middot; affects RSV, and structurally also Pneumococcal, Meningococcal B, Zoster, COVID-19, HepA, HPV, Hib</p>
+
+  <h3 class="sub">Patient scenario</h3>
+  <p>Some antigens (RSV is the concrete example found) can produce more than one candidate "best patient series" for the same patient at once - for instance, one series covering the general recommendation and a separate, age-gated series (e.g. "75 years and older") covering the same antigen through a different pathway. If the patient has completed one pathway but the other pathway's own series reports them as aged out or not recommended, the two disagree about the patient's overall status for that antigen.</p>
+
+  <h3 class="sub">What the specification says</h3>
+  <p>Table 9-3 describes how to build a single-antigen vaccine group's forecast from its contained patient series forecast, but its own text never anticipated more than one contained forecast existing at the same time - so it gives no rule for resolving a disagreement between them.</p>
+
+  <h3 class="sub">The resolution we shipped</h3>
+  <p>When more than one contained forecast exists, prefer Complete or Immune over Not Complete, and prefer Not Complete over Contraindicated/Aged Out/Not Recommended. In plain terms: if any one of the patient's eligible pathways for this antigen says they're done, report them as done, even if a different pathway (one they didn't need) says otherwise.</p>
+
+  <div class="question-box">
+    <p><strong>What we're asking:</strong> Is "the most favorable pathway wins" the intended precedence when a patient has more than one eligible pathway for the same antigen? Or should the system instead prefer whichever series the patient actually followed historically, treat the disagreement as something to flag for a clinician rather than silently resolve, or apply some other rule entirely?</p>
+  </div>
+
+  <p class="detail-link"><a href="https://github.com/immregistries/StepIntoCDSI/blob/develop/cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0022/finding.md">Full technical writeup on GitHub &rarr;</a></p>
+</section>
+
+<section class="item" id="hpv-default">
+  <h2>5. HPV: default series vs. age-appropriate alternate for a zero-dose adult <span class="badge badge-shipped">shipped - please confirm</span></h2>
+  <p class="item-sub">Reference: <code>SPEC-4.6-0021</code> (part a) &middot; FITS case <code>675c41f8e4b089d2bdc0c483-HPV-2013-0480</code></p>
+
+  <h3 class="sub">Patient scenario</h3>
+  <p>A 27-year-old with zero HPV doses on record is assessed. HPV's Supporting Data defines a "2-dose" series as the <em>default</em> pathway (intended for patients who start before age 15) and a separate "3-dose" series as an alternate, non-default pathway (intended for patients who start at 15 or older) - both within the same series group.</p>
+
+  <h3 class="sub">What was tried</h3>
+  <ul class="plain">
+    <li>Excluding an age-inappropriate default series entirely - this correctly handled other antigens with a similar shape (Pneumococcal, RSV, Meningococcal's age-gated groups) but left this HPV patient with no scorable series at all, since HPV's age split happens <em>inside</em> one series group rather than between two separate groups.</li>
+    <li>Actively switching to the age-appropriate "3-dose" alternate within the group - this fixed the other antigens' shape but produced the wrong recommended dates specifically for HPV.</li>
+  </ul>
+  <p>What the reference engine actually does today - and what the historical FITS fixture itself expects - is to keep reporting the literal "2-dose" default series and its own historical dates, even for this 27-year-old with zero doses. Nothing in the specification's text describes this as intentional; it was reverse-engineered to match the fixture's own answer rather than derived from spec prose.</p>
+
+  <div class="question-box">
+    <p><strong>What we're asking:</strong> For an adult with zero HPV doses, should the system report the "2-dose" default series (as currently implemented, matching the historical fixture), or switch to the age-appropriate "3-dose" alternate? If the default-series answer is correct, is there a general rule we should write down and apply consistently - e.g., "never switch away from a series' own default status based on the patient's age alone" - so future series groups with this same within-group age-split shape behave the same way without needing a fixture to reverse-engineer the answer from?</p>
+  </div>
+
+  <p class="detail-link"><a href="https://github.com/immregistries/StepIntoCDSI/blob/develop/cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0021/finding.md">Full technical writeup on GitHub &rarr;</a></p>
+</section>
+
+<section class="item" id="rsv-equivalence">
+  <h2>6. RSV: is the 75+ series group equivalent to the main series group? <span class="badge badge-flagged">flagged - not yet investigated</span></h2>
+  <p class="item-sub">Reference: noted in <code>SPEC-4.6-0021</code>'s "remaining gap" section &middot; not yet its own finding</p>
+
+  <h3 class="sub">Patient scenario</h3>
+  <p>A patient aged 75 or older has already completed RSV's main series (no age restriction). RSV's Supporting Data also defines a separate "75 years and older" series, in its own series group, which this patient hasn't done.</p>
+
+  <h3 class="sub">The gap</h3>
+  <p>Seven other antigens in the bundled Supporting Data (HepA, HPV, Hib, Pneumococcal, Meningococcal B, Zoster, COVID-19) explicitly declare their comparable age-gated series groups as "equivalent" to each other, so completing either one satisfies both. RSV's two series groups are <strong>not</strong> declared equivalent to each other. As a result, this patient - who has genuinely completed their RSV vaccination via the main series - also gets a second, competing forecast from the 75+ group reporting them as "aged out" instead of simply irrelevant, because the system has no way to know the two groups mean the same thing clinically.</p>
+
+  <div class="question-box">
+    <p><strong>What we're asking:</strong> Should RSV's Supporting Data declare its "75 years and older" group as equivalent to its main group, matching the pattern already used by the seven other antigens listed above? Or is the lack of an equivalence declaration for RSV specifically intentional - i.e., are these genuinely meant to be two distinct series a patient might need both of, rather than two paths to the same outcome?</p>
+  </div>
+
+  <p class="muted" style="font-size:13px;">This item hasn't yet had its own dedicated investigation - it was noticed as a side effect of a different, already-fixed issue and is flagged here for awareness rather than fully written up.</p>
+</section>
+
+<div class="respond">
+  <h2>How to respond</h2>
+  <p>This repository is public on GitHub at <a href="https://github.com/immregistries/StepIntoCDSI">immregistries/StepIntoCDSI</a>. Each item above links to its full technical writeup in <code>cdsi-reference/logic-spec/versions/4.6/findings/</code>. The most direct way to give guidance is a comment on the corresponding GitHub Issue (linked in a future revision of this page once filed) or a new Issue referencing the item number and finding ID above - either is tracked and visible to the project team.</p>
+  <p class="muted">This page itself lives at <code>cdsi-reference/dashboards/acip-review.html</code> and is published via GitHub Pages at the repository's Pages URL; it's a static, point-in-time snapshot, regenerated by hand as new items are found or existing ones get resolved.</p>
+</div>
+
+</div>
+</body>
+</html>
