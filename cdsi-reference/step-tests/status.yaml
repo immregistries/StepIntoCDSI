@@ -1684,15 +1684,15 @@ units:
     fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0008"]
+    finding_ids: ["SPEC-4.6-0008", "SPEC-4.6-0037"]
     notes: >-
-      30 tests, now 27 green and 3 red (was 25/5 - see SPEC-4.6-0008: fixed
+      30 tests, now 30/30 green (was 25/5 - see SPEC-4.6-0008: fixed
       the strict-.before() lower-bound defect on Table 6-26's second
       condition, flipping ruleOneIncludesTheBeginAgeDateItself and
       aDoseAdministeredOnTheDateOfBirthIsInsideAZeroDayBeginAgeWindow to
-      green; reviewed and merged 2026-09-08, commit cb1f5ce). The remaining
-      3 red tests are the pre-existing, unrelated trade-name and
-      presentation defects described below. Covered: the step's identity
+      green; reviewed and merged 2026-09-08, commit cb1f5ce; and
+      SPEC-4.6-0037: fixed the remaining 3 - the trade-name condition and
+      a mislabeled attribute pair - see below). Covered: the step's identity
       (EVALUATE_FOR_PREFERABLE_VACCINE, chapter "6.8"); Figure 6-19's loop shape -
       one Table 6-26 decision table and one group of Table 6-25 attributes per
       preferable vaccine defined on the target dose, and none at all when the
@@ -1731,22 +1731,38 @@ units:
       (!beginAgeDate.after(dateAdministered), matching EvaluateAge.java's own use
       of the same idiom twice). No FITS case was confirmed to move on this fix.
 
-      The 3 remaining red tests, expected vs actual. (1)
+      Fixed (SPEC-4.6-0037, merged). (1)
       ruleFiveEvaluatesTheTradeNameOfTheVaccineDoseAdministered - expected Table
       6-26's third condition to answer NO for a RECOMBIVAX ADULT dose measured
-      against the release's ENGERIX-B ADULT preferable vaccine; actual YES, because
-      the condition is hardcoded to return YES. (2)
+      against the release's ENGERIX-B ADULT preferable vaccine; used to answer YES
+      unconditionally, because the condition was hardcoded to return YES. (2)
       ruleFiveReportsNotPreferableWhenTheTradeNameDiffers - the outcome of the
       same: expected Rule 5 and a route to 6.9 Evaluate for Allowable Vaccine;
-      actual Rule 1 and a route to 6.10 Satisfy Target Dose. (1) and (2) share one
-      root cause, already recorded in this step package's Review Findings as a
-      known, deliberate-looking limitation. (3)
+      used to be Rule 1 and a route to 6.10 Satisfy Target Dose. (1) and (2) shared
+      one root cause, already recorded in this step package's Review Findings as a
+      known, deliberate-looking limitation - now confirmed and fixed: both
+      AntigenAdministeredRecord and PreferrableVaccine already carry real trade
+      name data (the "not passed into the forecaster" comment was stale), the
+      condition just never compared them. A first exact-match implementation
+      regressed 10 real FITS cases (HepB-2013-0208/0210, both Recombivax-titled) -
+      the official NIST/CDC FITS test-plan JSON has no trade name field at all, so
+      every FITS-driven dose's trade name is empty and could never equal a
+      preferable vaccine's specific brand requirement. Fixed by treating an empty
+      trade name on either side as "no constraint," the same missing-data idiom
+      this table's own volume condition already uses one row away - only two
+      known, differing trade names now produce NO. (3)
       tableSixTwentyFiveNamesTheCalculatedDatesAsTheSpecificationDoes - Table
       6-25's last two rows are attribute type "Calculated date (CALCDTPREF-1/2)"
-      with names "Preferable Vaccine Type Begin/End Age Date"; actual the type and
-      the name are swapped and the name has lost its "Preferable" prefix. The
-      values themselves are correct - CALCDTPREF-1 and CALCDTPREF-2 are both green
-      - so this is a presentation defect, not a behavioural one.
+      with names "Preferable Vaccine Type Begin/End Age Date"; used to have the
+      type and the name swapped, with the name missing its "Preferable" prefix.
+      The values themselves were already correct - CALCDTPREF-1 and CALCDTPREF-2
+      were both green - so this was a presentation defect, not a behavioural one.
+
+      Confirmed against real FITS data: after the missing-data-tolerant fix, 3627
+      passed both before and after, 0 changed cases - the fixture format's own
+      missing trade-name field means it cannot exercise a genuine brand mismatch
+      either way, the same category as SPEC-4.6-0026, SPEC-4.6-0030,
+      SPEC-4.6-0034, SPEC-4.6-0035 and SPEC-4.6-0036.
 
       Materiality against the bundled Supporting Data release, which carries 1089
       preferableVaccine entries across its 30 antigen files. The begin-age boundary
@@ -1759,9 +1775,11 @@ units:
       under CVX 140 at 2 each), and those are exactly the entries where the
       condition could ever matter. The four CVX 140 influenza entries are the
       sharpest case: they share a series dose, a CVX, a begin age and a volume, so
-      trade name is the only attribute that distinguishes them, and with the
-      condition hardcoded to YES all four collapse into a single undifferentiated
-      match.
+      trade name is the only attribute that distinguishes them. Now that
+      SPEC-4.6-0037 wires the condition up for real, those four are correctly
+      distinguished whenever the administered dose's own trade name is known - but
+      every FITS-driven case still collapses them into a single undifferentiated
+      match, since the fixture format never supplies a trade name at all.
 
       Deliberately not covered. (1) Figure 6-19's loop exit. The process model
       leaves the loop as soon as one preferable vaccine matches, while process()

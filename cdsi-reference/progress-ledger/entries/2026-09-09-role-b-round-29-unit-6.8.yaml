@@ -1,0 +1,57 @@
+id: "2026-09-09-role-b-round-29-unit-6.8"
+date: "2026-09-09"
+phase: 22
+title: "Role B Round 29 - Unit 6.8 Closed: Trade-Name Matching Wired Up and a Mislabeled Attribute Pair Fixed, With a FITS-Caught Course Correction (SPEC-4.6-0037)"
+before:
+  commit: "676dbc7"
+  engine_tests: {total: 783, failures: 113, errors: 1}
+  fits: {total_cases: 4896, passed: 3627, failed_assertions: 1268, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+after:
+  commit: "PENDING"
+  engine_tests: {total: 783, failures: 109, errors: 1}
+  fits: {total_cases: 4896, passed: 3627, failed_assertions: 1268, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+summary: >
+  Moved forward to unit 6.8's last three reds after closing 6.7 (round
+  28) - two shared a root cause this step package's own Review
+  Findings had already flagged as a known, deliberate-looking
+  limitation pending confirmation (Table 6-26's trade-name condition,
+  hardcoded to always return YES); the third was a presentation-only
+  mislabeled attribute pair in Table 6-25.
+
+  Confirmed the "trade name is not passed into the forecaster"
+  comment was stale - both AntigenAdministeredRecord (via its
+  production constructor) and PreferrableVaccine (via
+  DataModelLoader's existing readVaccine) already carry real trade
+  name data; the condition just never compared them.
+
+  A first exact-match implementation fixed both targeted JUnit tests
+  but regressed 10 real FITS cases (5 snapshots each of
+  HepB-2013-0208 and HepB-2013-0210, both Recombivax-titled) - caught
+  by this round's own case-by-case diff discipline before committing.
+  Root cause: the official NIST/CDC FITS test-plan JSON has no trade
+  name field at all (confirmed by reading the raw source fixture), so
+  every FITS-driven administered dose's trade name is empty and could
+  never equal a preferable vaccine's specific brand requirement.
+  Corrected by treating an empty trade name on either side as "no
+  constraint" - the same missing-data idiom this table's own volume
+  condition already uses one row away - rather than reverting the fix
+  or accepting the regression.
+
+  Final verification: unit 6.8's own suite 30/30 green (up from
+  27/30); full engine suite 109 failures/1 error (down from 113/1,
+  sorted-diff-confirmed as exactly those 3 tests); full FITS run
+  (final version): 3627 passed both before and after, 0 changed cases
+  - the fixture format's own missing trade-name field means it cannot
+  exercise a genuine brand mismatch either way, the same category as
+  SPEC-4.6-0026, SPEC-4.6-0030, SPEC-4.6-0034, SPEC-4.6-0035 and
+  SPEC-4.6-0036.
+
+  Seventh consecutive unit-closing round today (4.4, 5.1, 6.1, 6.2,
+  6.3, 6.5, 6.7) with zero FITS regressions in what was actually
+  committed - the intermediate wrong turn was caught and corrected
+  before merging, not shipped.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0037/finding.md"
+finding_ids: ["SPEC-4.6-0037"]
+status: reviewed

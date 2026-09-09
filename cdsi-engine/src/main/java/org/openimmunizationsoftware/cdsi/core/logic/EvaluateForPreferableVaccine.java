@@ -38,9 +38,9 @@ public class EvaluateForPreferableVaccine extends LogicStep {
       logicTable.caPreferableVaccineElements = new ConditionAttribute<PreferrableVaccine>(
           "Supporting Data", "Preferable Vaccine elements");
       logicTable.caVaccineTypeBeginAgeDate = new ConditionAttribute<Date>(
-          "Vaccine Type Begin Age Date", "Calculated date (CALCDTPREF-1)");
-      logicTable.caVaccineTypeEndAgeDate = new ConditionAttribute<Date>("Vaccine Type End Age Date",
-          "Calculated date (CALCDTPREF-2)");
+          "Calculated date (CALCDTPREF-1)", "Preferable Vaccine Type Begin Age Date");
+      logicTable.caVaccineTypeEndAgeDate = new ConditionAttribute<Date>(
+          "Calculated date (CALCDTPREF-2)", "Preferable Vaccine Type End Age Date");
 
       logicTable.caDateAdministered.setInitialValue(aar.getDateAdministered());
       logicTable.caVolume.setInitialValue(aar.getVolume());
@@ -157,9 +157,17 @@ public class EvaluateForPreferableVaccine extends LogicStep {
           "Is the trade name of the vaccine dose administered the same as the trade name of the preferable vaccine for the target dose?") {
         @Override
         public LogicResult evaluateInternal() {
-          // default to returning YES as caTradeName is not set to the correct value, and
-          // trade name is not passed into the forecaster
-          return LogicResult.YES;
+          String preferableTradeName = caPreferableVaccineElements.getFinalValue().getTradeName();
+          // Trade name is sparsely populated (the bundled FITS test cases never carry
+          // it at all - only Volume's own condition, just below, already treats
+          // missing data as non-disqualifying), so an unrecorded trade name on either
+          // side means there is nothing to compare, not a mismatch.
+          if (caTradeName.getFinalValue().equals("") || preferableTradeName.equals("")
+              || caTradeName.getFinalValue().equalsIgnoreCase(preferableTradeName)) {
+            return LogicResult.YES;
+          } else {
+            return LogicResult.NO;
+          }
         }
       });
       setLogicCondition(3, new LogicCondition(

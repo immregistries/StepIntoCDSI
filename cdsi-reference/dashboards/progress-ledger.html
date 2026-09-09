@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-09 13:55:19 - regenerate with
+  Dashboard generated 2026-09-09 14:26:14 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,7 +57,7 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">29</div>
+    <div class="value">30</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
@@ -75,6 +75,29 @@
 </div>
 
 
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 29 - Unit 6.8 Closed: Trade-Name Matching Wired Up and a Mislabeled Attribute Pair Fixed, With a FITS-Caught Course Correction (SPEC-4.6-0037)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Moved forward to unit 6.8&#x27;s last three reds after closing 6.7 (round 28) - two shared a root cause this step package&#x27;s own Review Findings had already flagged as a known, deliberate-looking limitation pending confirmation (Table 6-26&#x27;s trade-name condition, hardcoded to always return YES); the third was a presentation-only mislabeled attribute pair in Table 6-25.
+Confirmed the &quot;trade name is not passed into the forecaster&quot; comment was stale - both AntigenAdministeredRecord (via its production constructor) and PreferrableVaccine (via DataModelLoader&#x27;s existing readVaccine) already carry real trade name data; the condition just never compared them.
+A first exact-match implementation fixed both targeted JUnit tests but regressed 10 real FITS cases (5 snapshots each of HepB-2013-0208 and HepB-2013-0210, both Recombivax-titled) - caught by this round&#x27;s own case-by-case diff discipline before committing. Root cause: the official NIST/CDC FITS test-plan JSON has no trade name field at all (confirmed by reading the raw source fixture), so every FITS-driven administered dose&#x27;s trade name is empty and could never equal a preferable vaccine&#x27;s specific brand requirement. Corrected by treating an empty trade name on either side as &quot;no constraint&quot; - the same missing-data idiom this table&#x27;s own volume condition already uses one row away - rather than reverting the fix or accepting the regression.
+Final verification: unit 6.8&#x27;s own suite 30/30 green (up from 27/30); full engine suite 109 failures/1 error (down from 113/1, sorted-diff-confirmed as exactly those 3 tests); full FITS run (final version): 3627 passed both before and after, 0 changed cases - the fixture format&#x27;s own missing trade-name field means it cannot exercise a genuine brand mismatch either way, the same category as SPEC-4.6-0026, SPEC-4.6-0030, SPEC-4.6-0034, SPEC-4.6-0035 and SPEC-4.6-0036.
+Seventh consecutive unit-closing round today (4.4, 5.1, 6.1, 6.2, 6.3, 6.5, 6.7) with zero FITS regressions in what was actually committed - the intermediate wrong turn was caught and corrected before merging, not shipped.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>676dbc7</code></td></tr><tr><td>Engine tests</td><td>783 total, 113 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3627 passed, 1268 failed-assertion, 1 execution-error (74.1%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>PENDING</code></td></tr><tr><td>Engine tests</td><td>783 total, 109 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3627 passed, 1268 failed-assertion, 1 execution-error (74.1%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0037/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0037/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0037</p>
+</section>
 <section>
   <h2>2026-09-09 - Phase 22 - Role B Round 28 - Unit 6.7 Closed: Mislabeled Attribute and a Doubling Constructor Side Effect Fixed, Closing a 6.6 Cross-Step Landmine (SPEC-4.6-0036)
     <span class="badge badge-green">reviewed</span>
