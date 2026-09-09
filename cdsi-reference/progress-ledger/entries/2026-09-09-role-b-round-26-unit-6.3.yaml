@@ -1,0 +1,51 @@
+id: "2026-09-09-role-b-round-26-unit-6.3"
+date: "2026-09-09"
+phase: 22
+title: "Role B Round 26 - Unit 6.3 Closed: Inadvertent Vaccine Data, Attribute, and NPE Fixed Together (SPEC-4.6-0034)"
+before:
+  commit: "2e54c0b"
+  engine_tests: {total: 783, failures: 121, errors: 1}
+  fits: {total_cases: 4896, passed: 3627, failed_assertions: 1268, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+after:
+  commit: "PENDING"
+  engine_tests: {total: 783, failures: 118, errors: 1}
+  fits: {total_cases: 4896, passed: 3627, failed_assertions: 1268, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+summary: >
+  Moved forward to the next unit in spec order after fully closing out
+  6.2's actionable work (rounds 24-25) - unit 6.3, Evaluate for
+  Inadvertent Vaccine. status.yaml's pre-existing notes had already
+  diagnosed all three of its reds precisely, including the exact
+  materiality count and the observation that two of them mask each
+  other in production today.
+
+  Fixed all three together, per the note's own analysis that they
+  couldn't be split (fixing the loader gap alone would have turned a
+  silent miss into a crash): (1) DataModelLoader never parsed the
+  Supporting Data's <inadvertentVaccine> element at all - 307 real
+  entries across 8 antigens (COVID-19, Polio, Tetanus, Diphtheria, RSV,
+  Pneumococcal, HPV, Pertussis) were silently discarded at load time,
+  making Table 6-13's Rule 1 unreachable on any real forecast; (2)
+  Table 6-12's own second attribute was dead code - constructed,
+  registered, mistyped, and never assigned, though the step's actual
+  decision never read it either, so this only affected what the step
+  publishes for display; (3) Rule 1's outcome could NullPointerException
+  writing to a target dose's not-yet-created Evaluation - the identical
+  shape already fixed for 6.1 in SPEC-4.6-0030, reapplied here.
+
+  Final verification: unit 6.3's own suite 11/11 green (up from 8/11);
+  full engine suite 118 failures/1 error (down from 121/1,
+  sorted-diff-confirmed as exactly those 3 tests); full FITS run: 3627
+  passed both before and after, 0 changed cases - none of the bundled
+  fixtures happens to record an administered dose matching one of the
+  307 real inadvertent-vaccine entries against the specific target
+  dose it's declared on. A genuine correctness fix the current
+  fixture set doesn't happen to exercise, the same category as
+  SPEC-4.6-0026's CALCDT-5 fix and SPEC-4.6-0030's 6.1 NPE guard.
+
+  Fourth consecutive unit-closing round today (following 4.4, 5.1, 6.1,
+  6.2) with zero FITS regressions.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0034/finding.md"
+finding_ids: ["SPEC-4.6-0034"]
+status: reviewed

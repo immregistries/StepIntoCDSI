@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-09 11:21:00 - regenerate with
+  Dashboard generated 2026-09-09 12:19:43 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,7 +57,7 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">26</div>
+    <div class="value">27</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
@@ -75,6 +75,28 @@
 </div>
 
 
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 26 - Unit 6.3 Closed: Inadvertent Vaccine Data, Attribute, and NPE Fixed Together (SPEC-4.6-0034)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Moved forward to the next unit in spec order after fully closing out 6.2&#x27;s actionable work (rounds 24-25) - unit 6.3, Evaluate for Inadvertent Vaccine. status.yaml&#x27;s pre-existing notes had already diagnosed all three of its reds precisely, including the exact materiality count and the observation that two of them mask each other in production today.
+Fixed all three together, per the note&#x27;s own analysis that they couldn&#x27;t be split (fixing the loader gap alone would have turned a silent miss into a crash): (1) DataModelLoader never parsed the Supporting Data&#x27;s &lt;inadvertentVaccine&gt; element at all - 307 real entries across 8 antigens (COVID-19, Polio, Tetanus, Diphtheria, RSV, Pneumococcal, HPV, Pertussis) were silently discarded at load time, making Table 6-13&#x27;s Rule 1 unreachable on any real forecast; (2) Table 6-12&#x27;s own second attribute was dead code - constructed, registered, mistyped, and never assigned, though the step&#x27;s actual decision never read it either, so this only affected what the step publishes for display; (3) Rule 1&#x27;s outcome could NullPointerException writing to a target dose&#x27;s not-yet-created Evaluation - the identical shape already fixed for 6.1 in SPEC-4.6-0030, reapplied here.
+Final verification: unit 6.3&#x27;s own suite 11/11 green (up from 8/11); full engine suite 118 failures/1 error (down from 121/1, sorted-diff-confirmed as exactly those 3 tests); full FITS run: 3627 passed both before and after, 0 changed cases - none of the bundled fixtures happens to record an administered dose matching one of the 307 real inadvertent-vaccine entries against the specific target dose it&#x27;s declared on. A genuine correctness fix the current fixture set doesn&#x27;t happen to exercise, the same category as SPEC-4.6-0026&#x27;s CALCDT-5 fix and SPEC-4.6-0030&#x27;s 6.1 NPE guard.
+Fourth consecutive unit-closing round today (following 4.4, 5.1, 6.1, 6.2) with zero FITS regressions.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>2e54c0b</code></td></tr><tr><td>Engine tests</td><td>783 total, 121 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3627 passed, 1268 failed-assertion, 1 execution-error (74.1%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>PENDING</code></td></tr><tr><td>Engine tests</td><td>783 total, 118 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3627 passed, 1268 failed-assertion, 1 execution-error (74.1%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0034/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0034/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0034</p>
+</section>
 <section>
   <h2>2026-09-09 - Phase 22 - Role B Round 25 - SPEC-4.6-0027 Re-Attempted: Worse Than Before, But Connected to the Open DTaP Question
     <span class="badge badge-green">reviewed</span>

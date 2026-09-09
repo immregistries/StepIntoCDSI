@@ -3,11 +3,11 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 
 // Importing modules
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
+import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
@@ -23,8 +23,7 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 public class EvaluateForInadvertentVaccine extends LogicStep {
     // Initialization of attributes
     protected ConditionAttribute<VaccineDoseAdministered> caVaccineDoseAdministered = null;
-    protected ConditionAttribute<VaccineDoseAdministered> caInadvertentVaccine = null;
-    protected List<VaccineType> caInadvertentVaccineList = new ArrayList<>();
+    protected ConditionAttribute<List<VaccineType>> caInadvertentVaccine = null;
 
     // Constructor
     public EvaluateForInadvertentVaccine(DataModel dataModel) {
@@ -34,12 +33,13 @@ public class EvaluateForInadvertentVaccine extends LogicStep {
         // Defining values?
         caVaccineDoseAdministered = new ConditionAttribute<VaccineDoseAdministered>("Vaccine dose administered",
                 "Vaccine Type");
-        caInadvertentVaccine = new ConditionAttribute<VaccineDoseAdministered>("Supporting Data (inadvertent vaccine)",
+        caInadvertentVaccine = new ConditionAttribute<List<VaccineType>>("Supporting Data (inadvertent vaccine)",
                 "Vaccine Type");
 
         // Setting initial values
         AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
         caVaccineDoseAdministered.setInitialValue(aar.getVaccineDoseAdministered());
+        caInadvertentVaccine.setInitialValue(dataModel.getTargetDose().getTrackedSeriesDose().getInadvertentVaccineList());
 
         conditionAttributesList.add(caVaccineDoseAdministered);
         conditionAttributesList.add(caInadvertentVaccine);
@@ -88,6 +88,13 @@ public class EvaluateForInadvertentVaccine extends LogicStep {
                     dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
                     log(LogLevel.STATE, "Setting evaluation status to \"not valid\"");
                     log(LogLevel.STATE, "Setting evaluation reason to \"inadvertent administration\"");
+                    // 4.4 hands 6.3 a target dose with no evaluation recorded yet
+                    // (6.1's/6.2's own non-rejecting outcomes record nothing) -
+                    // create one to receive this outcome's status if none exists,
+                    // rather than assuming a later step has already attached one.
+                    if (dataModel.getTargetDose().getEvaluation() == null) {
+                        dataModel.getTargetDose().setEvaluation(new Evaluation());
+                    }
                     dataModel.getTargetDose().getEvaluation().setEvaluationStatus(EvaluationStatus.NOT_VALID);
                     dataModel.getTargetDose().getEvaluation()
                             .setEvaluationReason(EvaluationReason.INADVERTENT_ADMINISTRATION);

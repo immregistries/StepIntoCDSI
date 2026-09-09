@@ -955,9 +955,13 @@ units:
     fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0024"]
+    finding_ids: ["SPEC-4.6-0024", "SPEC-4.6-0034"]
     notes: >-
-      11 test methods in one class, 8 green and 3 red. 6.3 is a small step - one
+      Fixed as SPEC-4.6-0034 (round 26, 2026-09-09) - 11 green, 0 red.
+      Historical diagnosis retained because it explains the fix:
+
+      11 test methods in one class, 8 green and 3 red as of the original
+      research pass. 6.3 is a small step - one
       attribute table (6-12), one decision table (6-13) with a single condition
       and two rules, no business rules - so the unit is fully covered apart from
       the two items listed at the end.
@@ -1050,6 +1054,23 @@ units:
       about this one administration, not a pointer to the shared, mutable
       target dose 6.3 already mutates. See SPEC-4.6-0024 for 7.5's matching
       half of this fix and its full FITS verification.
+
+      SPEC-4.6-0034's fix (round 26): DataModelLoader now parses
+      <inadvertentVaccine> (resolving each <cvx> child to a shared
+      VaccineType, into SeriesDose.getInadvertentVaccineList()) - all 307
+      real entries across 8 antigens were previously discarded at load
+      time. caInadvertentVaccine is now correctly typed
+      ConditionAttribute<List<VaccineType>> and assigned from that same
+      list (previously mistyped and never assigned - dead attribute, no
+      decision ever read it). Rule 1's outcome now lazily creates an
+      Evaluation on the target dose when none exists yet, matching
+      SPEC-4.6-0030's fix for 6.1's identical NPE shape - reds (1) and (3)
+      had to be fixed together since they masked each other (no
+      inadvertent type ever loaded, so Rule 1 never fired, so the NPE was
+      never reached either). Full FITS run: 3627 passed both before and
+      after, 0 changed cases - no bundled fixture happens to record an
+      administered dose matching one of the 307 real entries against the
+      specific target dose it's declared on.
   '6.4':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluateAgeTest

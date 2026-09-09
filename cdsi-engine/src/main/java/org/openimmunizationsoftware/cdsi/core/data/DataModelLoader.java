@@ -743,6 +743,20 @@ public class DataModelLoader {
           if (populated) {
             seriesDose.setConditionalSkip(conditionalSkip);
           }
+        } else if (parentNode.getNodeName().equals("inadvertentVaccine")) {
+          NodeList childNodeList = parentNode.getChildNodes();
+          for (int j = 0; j < childNodeList.getLength(); j++) {
+            Node childNode = childNodeList.item(j);
+            if (childNode.getNodeType() == Node.ELEMENT_NODE && childNode.getNodeName().equals("cvx")) {
+              String cvxCode = DomUtils.getInternalValue(childNode);
+              if (cvxCode.length() > 0) {
+                VaccineType vaccineType = supportingDataModel.getCvx(cvxCode);
+                if (vaccineType != null) {
+                  seriesDose.getInadvertentVaccineList().add(vaccineType);
+                }
+              }
+            }
+          }
         } else if (parentNode.getNodeName().equals("recurringDose")) {
           RecurringDose recurringDose = new RecurringDose();
           seriesDose.getRecurringDoseList().add(recurringDose);
