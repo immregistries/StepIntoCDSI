@@ -2014,11 +2014,23 @@ units:
   '7.1':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkipForForecastTest
-    fix_status: not_started
+    fix_status: in_progress
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0027"]
     notes: >-
+      Role B (2026-09-09): 10/11 green, 1 red - the same shared
+      ConditionalSkip-context gap 6.2 already tracks under SPEC-4.6-0027
+      (open, not merged, pending GitHub Issue #65's ACIP guidance). Twice
+      reconstructed and reverted this session (most recently round 25):
+      giving ConditionalSkip a context field and filtering at use time is
+      the correct-looking fix on paper - this unit's own materiality note
+      below already spells out exactly that shape - but both attempts
+      regressed 30 real DTaP FITS cases via the shared base class, tied to
+      the same underlying ACIP catch-up-interval question SPEC-4.6-0019's
+      part A hits independently. Not re-attempted a third time without new
+      information; left open here for the same external answer. Historical
+      diagnosis retained below.
       11 test methods in one class, 10 green and 1 red. This is deliberately a
       much smaller class than 6.2's 44, and the reason is structural rather than
       a coverage gap. 7.1 has no attribute table, no business rules and no
@@ -2074,9 +2086,9 @@ units:
       the consequence on this side is different in kind - see the next
       paragraph. The gap lives in ConditionalSkip and DataModelLoader, not in
       EvaluateConditionalSkip, so per cdsi-engine/AGENTS.md it is likely
-      upstream_step_defect territory rather than an edit to this unit's class;
-      that classification is Role B's call and nothing here has been recorded as
-      a finding yet.
+      upstream_step_defect territory rather than an edit to this unit's class.
+      Now tracked under SPEC-4.6-0027 (the same finding 6.2 tracks it under) -
+      see the note above for why it remains open rather than fixed here.
 
       7.1's side of the ConditionalSkip context problem, checked against the
       Supporting Data release bundled in cdsi-engine/src/main/resources. 484
