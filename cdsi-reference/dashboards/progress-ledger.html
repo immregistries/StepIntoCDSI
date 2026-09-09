@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-09 12:20:45 - regenerate with
+  Dashboard generated 2026-09-09 12:36:07 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,7 +57,7 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">27</div>
+    <div class="value">28</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
@@ -75,6 +75,29 @@
 </div>
 
 
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 27 - Unit 6.5 Closed: CALCDTINT-9, the Last of the Four Reference-Date Rules, Fixed (SPEC-4.6-0035)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Moved forward to the next unit in spec order after fully closing out 6.3 (round 26) - unit 6.5, Evaluate Preferable Interval&#x27;s last two reds. status.yaml&#x27;s pre-existing notes had already diagnosed both precisely as one cluster: CALCDTINT-9 (Table 6-19&#x27;s fourth reference-date business rule), blocked in three separate places at once and deliberately deferred out of the earlier SPEC-4.6-0013 round.
+Fixed all three together, since none is independently useful without the others: (1) DataModelLoader.readSeriesDose&#x27;s interval branch had no case for &lt;fromRelevantObs&gt; at all, so no interval loaded from real Supporting Data ever carried one; (2) ObservationCode had no equals()/hashCode(), so even loaded data could never successfully match the patient&#x27;s own recorded observation history (two independently-constructed instances that can never be reference-equal); (3) Interval.getPatientReferenceDoseDate&#x27;s own CALCDTINT-9 branch only logged its own use and never assigned a date, so even a successful match would have had no effect.
+Final verification: unit 6.5&#x27;s own suite 30/30 green (up from 28/30, the last two reds in the unit); full engine suite 116 failures/1 error (down from 118/1, sorted-diff-confirmed as exactly those 2 tests); full FITS run: 3627 passed both before and after, 0 changed cases - exactly as status.yaml&#x27;s own note predicted, since the bundled FITS fixture format has no observation field at all and cannot exercise this rule under any circumstances. A genuine correctness fix the current fixture set doesn&#x27;t happen to exercise, the same category as SPEC-4.6-0026, SPEC-4.6-0030, and SPEC-4.6-0034.
+Noted but deliberately left open: all 6 real &lt;fromRelevantObs&gt; intervals in the bundled Supporting Data sit on Dose 1, and getPatientReferenceDoseDate returns null outright whenever the previous target dose is null - a separate, cross-rule gap (affecting every CALCDTINT rule alike on Dose 1) that means this fix, while now provably correct, still cannot take effect against any real Supporting Data occurrence today.
+Fifth consecutive unit-closing round today (following 4.4, 5.1, 6.1, 6.2, 6.3) with zero FITS regressions. All four CALCDTINT reference- date rules (1, 2, 8, 9) in Table 6-19 are now correctly implemented.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>4ab22d2</code></td></tr><tr><td>Engine tests</td><td>783 total, 118 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3627 passed, 1268 failed-assertion, 1 execution-error (74.1%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>PENDING</code></td></tr><tr><td>Engine tests</td><td>783 total, 116 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3627 passed, 1268 failed-assertion, 1 execution-error (74.1%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0035/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0035/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0035</p>
+</section>
 <section>
   <h2>2026-09-09 - Phase 22 - Role B Round 26 - Unit 6.3 Closed: Inadvertent Vaccine Data, Attribute, and NPE Fixed Together (SPEC-4.6-0034)
     <span class="badge badge-green">reviewed</span>

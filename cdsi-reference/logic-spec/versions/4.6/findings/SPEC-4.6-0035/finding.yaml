@@ -1,0 +1,86 @@
+id: "SPEC-4.6-0035"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.5"]
+source_pages: [50]
+tables: ["Table 6-19"]
+business_rules: ["CALCDTINT-9"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.data.DataModelLoader"
+  - "org.openimmunizationsoftware.cdsi.core.domain.ObservationCode"
+  - "org.openimmunizationsoftware.cdsi.core.domain.Interval"
+fits_cases: []
+summary: >
+  CALCDTINT-9 (Table 6-19's fourth reference-date business rule -
+  "measures from the most recent matching patient observation") was
+  blocked twice over, the last of unit 6.5's two remaining reds and
+  the last of the four CALCDTINT rules to be implemented (CALCDTINT-1,
+  2 and 8 were fixed in earlier rounds: SPEC-4.6-0012/0013).
+
+  1. DataModelLoader.readSeriesDose's interval-parsing branch had no
+  case for the <fromRelevantObs> element - it handled fromPrevious,
+  fromTargetDose, fromMostRecent, absMinInt, minInt, earliestRecInt,
+  latestRecInt and intervalPriority, and silently dropped the rest -
+  so Interval.getFromRelevantObservation() was always null on any
+  interval loaded from real Supporting Data.
+
+  2. Even with data present, ObservationCode had no equals()/hashCode()
+  at all, so the CALCDTINT-9 branch's match against the patient's own
+  observation history (two separately-constructed instances - one from
+  Supporting Data, one from patient history - that can never be
+  reference-equal) could never succeed.
+
+  3. Interval.getPatientReferenceDoseDate's own CALCDTINT-9 branch only
+  logged "REASONING: Using CALCDTINT-9" and never assigned
+  tmpPatientReferenceDoseDate to anything, so even a successful match
+  would have had no effect.
+evidence: >
+  status.yaml's own pre-existing notes for unit 6.5 had already
+  diagnosed all three gaps precisely, including the exact materiality
+  count from a direct grep of the bundled Supporting Data: of 490
+  populated <interval> elements, 6 use <fromRelevantObs> (one each in
+  Hib, Measles, Mumps, Pertussis, RSV and Rubella, all on Dose 1,
+  against observation codes 171 "Date of hematopoietic stem cell
+  transplant", 120 "Begin Date of antiviral therapy [ART]" and 170
+  "Onset of pregnancy" - the last being section 6.5's own worked
+  example). The same notes also predicted this fix would be FITS-inert
+  regardless of correctness, since the bundled FITS fixture format has
+  no observation field at all - there is no way for any FITS case to
+  supply a patient observation for CALCDTINT-9 to match against.
+interpretation: >
+  Fixed all three: DataModelLoader now parses <fromRelevantObs>
+  (its <code>/<text> children) into a new ObservationCode, calling
+  Interval.setFromRelevantObservation (a setter that already existed
+  but had no caller). ObservationCode now has content-based
+  equals()/hashCode() keyed on its code field only - matching
+  VaccineType's own CVX-only equality convention - since text is a
+  human-readable label, not part of the code's identity.
+  Interval.getPatientReferenceDoseDate's CALCDTINT-9 branch now scans
+  dataModel.getPatient().getMedicalHistory().getPatientObservationList()
+  for the most recent observation whose ObservationCode matches (by
+  the new equals()), and assigns its date as the reference date.
+  Unlike CALCDTINT-8, no "strictly before this dose" lower bound is
+  needed - observations aren't administered doses and can't
+  self-reference the interval being evaluated.
+
+  Verified via the standing Role B pipeline: unit 6.5's own suite
+  30/30 green (was 28/30). Full engine suite: sorted diff confirms
+  exactly those 2 tests flipped (118 -> 116 failures) and nothing
+  else. Full FITS run, case-by-case diffed: 3627 passed both before
+  and after, 0 changed cases - exactly as status.yaml's own note
+  predicted, since the fixture format cannot exercise this rule at
+  all. A genuine correctness fix the current fixture set doesn't
+  happen to exercise, the same category as SPEC-4.6-0026's CALCDT-5
+  fix, SPEC-4.6-0030's 6.1 NPE guard, and SPEC-4.6-0034's 6.3 fix.
+
+  Note: status.yaml's own prior analysis (unit 6.5, "deliberately not
+  covered" item 4) already flagged that all 6 of the real
+  <fromRelevantObs> intervals sit on Dose 1, and
+  getPatientReferenceDoseDate returns null outright whenever
+  dataModel.getPreviousTargetDose() is null - which is always true on
+  Dose 1. That pre-existing, separately-scoped gap means this fix,
+  while now provably correct, still cannot take effect against any of
+  the 6 real Supporting Data occurrences until it is addressed; left
+  untouched here since it is a distinct defect (affecting CALCDTINT-1
+  through 9 alike on Dose 1, not specific to this rule) outside this
+  round's bounds.

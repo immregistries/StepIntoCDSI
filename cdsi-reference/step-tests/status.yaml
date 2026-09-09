@@ -1202,13 +1202,12 @@ units:
   '6.5':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluatePreferableIntervalTest
-    fix_status: in_progress
+    fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0012", "SPEC-4.6-0013"]
+    finding_ids: ["SPEC-4.6-0012", "SPEC-4.6-0013", "SPEC-4.6-0035"]
     notes: >-
-      30 tests (27 + 3 added this round), now 28 green and 2 red (was
-      20/7 originally - see SPEC-4.6-0012: fixed the misassigned
+      30 tests, now 30/30 green (was 20/7 originally - see SPEC-4.6-0012: fixed the misassigned
       GRACE_PERIOD/TOO_SOON evaluation reason, the unfilled
       attribute-table-name placeholder, and the "Mimium"/"Minimum"
       misspelling; and SPEC-4.6-0013: fixed CALCDTINT-8 - a missing null
@@ -1226,13 +1225,9 @@ units:
       dose. Net FITS effect: a strict no-op (0 cases changed in either
       direction) - the corrected rule is now provably right against 55
       real Supporting Data intervals, just not currently exercised by any
-      of the 4896 bundled FITS fixtures; both fixes reviewed and merged).
-      The remaining 2 red
-      tests are a separate, materially significant CALCDTINT-8/CALCDTINT-9
-      cluster (blocked in both the Supporting Data loader and the
-      reference-date rule body, affecting 61 real populated intervals),
-      deliberately deferred to its own round rather than folded in here -
-      see the Materiality note below and this unit's still-open reds.
+      of the 4896 bundled FITS fixtures; both fixes reviewed and merged);
+      and SPEC-4.6-0035: fixed the remaining CALCDTINT-9 cluster (see
+      below).
       Covered: the step's identity
       (EVALUATE_PREFERABLE_INTERVAL, chapter "6.5") and its Table 6-17 attribute
       table name; Table 6-17's four attributes being registered per interval,
@@ -1295,24 +1290,33 @@ units:
       direct engine inspection and fixed alongside; see SPEC-4.6-0013 for
       the complete investigation, including the intermediate wrong turn.
 
-      Still red - CALCDTINT-9, a separate cluster deliberately not touched
-      this round (observations are lower priority and cannot move any
-      FITS case - the FITS fixture format has no observation field at
-      all). (1) calcdtintNineMeasuresFromTheMostRecentMatchingPatientObservation -
+      Fixed (SPEC-4.6-0035, merged - CALCDTINT-9, the last of the four
+      CALCDTINT rules). (1)
+      calcdtintNineMeasuresFromTheMostRecentMatchingPatientObservation -
       expected the reference dose date to be the matching patient
       observation's date (onset of pregnancy 01/10/2016, so 0 days and 27
-      weeks give 01/10/2016 and 07/17/2016); actual the assumed
-      01/01/1900 for both, because the CALCDTINT-9 branch only logs
-      "REASONING: Using CALCDTINT-9" and never assigns a date. (2)
+      weeks give 01/10/2016 and 07/17/2016); used to fall back to the
+      assumed 01/01/1900 for both, because the CALCDTINT-9 branch only
+      logged "REASONING: Using CALCDTINT-9" and never assigned a date -
+      now assigns the matching observation's date. (2)
       theSupportingDatasFromRelevantObservationCodeReachesTheInterval -
       expected an Interval loaded from the Supporting Data's own markup to
-      carry its from relevant observation code; actual null, because
-      DataModelLoader.readSeriesDose's interval branch has no case for the
-      <fromRelevantObs> element either, and neither
+      carry its from relevant observation code; used to be null, because
+      DataModelLoader.readSeriesDose's interval branch had no case for the
+      <fromRelevantObs> element, and neither
       Interval.setFromRelevantObservation nor an ObservationCode
-      equals()/hashCode() (needed for the match to work once populated) is
-      implemented anywhere in the engine. So CALCDTINT-9 is still blocked
-      twice over - once in the loader, once in the rule body.
+      equals()/hashCode() (needed for the match to work once populated) was
+      implemented anywhere in the engine - all three now added. Net FITS
+      effect: a strict no-op (0 cases changed), exactly as predicted below -
+      the fixture format has no observation field at all, so none of the 6
+      real <fromRelevantObs> intervals in the bundled Supporting Data can be
+      exercised by any FITS case regardless of correctness. Separately, and
+      left untouched here: all 6 of those real intervals sit on Dose 1, and
+      getPatientReferenceDoseDate returns null outright whenever
+      dataModel.getPreviousTargetDose() is null (see "deliberately not
+      covered" item 4 below) - so even now-correct, this rule cannot yet
+      take effect against any real Supporting Data occurrence until that
+      separate, cross-rule gap is addressed.
 
       Materiality, checked against the Supporting Data release bundled in
       cdsi-engine/src/main/resources. Its 30 antigen files hold 597
@@ -1322,15 +1326,18 @@ units:
       17, HPV 12, Meningococcal B 6, HepA 4, Pneumococcal 2), 55 from a most
       recent vaccine type (CALCDTINT-8, which now works: COVID-19 31,
       Pneumococcal 14, Pertussis 4, Zoster 4, Meningococcal 2) and 6 from a
-      relevant observation code (CALCDTINT-9, still blocked: one each in
+      relevant observation code (CALCDTINT-9, now correctly implemented per
+      SPEC-4.6-0035, but still practically blocked - see below): one each in
       Hib, Measles, Mumps, Pertussis, RSV and Rubella,
       all on Dose 1, using observation codes 171 "Date of hematopoietic stem cell
       transplant", 120 "Begin Date of antiviral therapy [ART]" and 170 "Onset of
       pregnancy" - the last being the Pertussis example section 6.5's own text
-      names). All 61 of those intervals silently fall back to Table 6-17's
-      assumed 01/01/1900 for both calculated dates, which makes Table 6-18 Rule 3
-      true for every date administered - the interval is always reported as
-      satisfied, and the spacing those 61 rows exist to enforce is never applied.
+      names). Those 6 CALCDTINT-9 intervals still silently fall back to Table
+      6-17's assumed 01/01/1900 for both calculated dates today, because all 6
+      sit on Dose 1 and getPatientReferenceDoseDate returns null outright
+      whenever dataModel.getPreviousTargetDose() is null (item 4 below) - a
+      separate, cross-rule gap, not specific to CALCDTINT-9. The other 55
+      (CALCDTINT-8) now work correctly per SPEC-4.6-0013.
 
       Deliberately not covered, and why. (1) Which step 6.5 hands off to when the
       preferable interval IS satisfied. process() routes a satisfied interval to

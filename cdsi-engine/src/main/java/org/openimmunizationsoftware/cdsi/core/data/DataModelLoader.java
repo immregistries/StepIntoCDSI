@@ -625,6 +625,28 @@ public class DataModelLoader {
                     populated = true;
                   }
                 }
+              } else if (childNode.getNodeName().equals("fromRelevantObs")) {
+                ObservationCode fromRelevantObservation = new ObservationCode();
+                NodeList observationChildList = childNode.getChildNodes();
+                boolean observationPopulated = false;
+                for (int k = 0; k < observationChildList.getLength(); k++) {
+                  Node observationChild = observationChildList.item(k);
+                  if (observationChild.getNodeType() == Node.ELEMENT_NODE) {
+                    if (observationChild.getNodeName().equals("code")) {
+                      String code = DomUtils.getInternalValue(observationChild);
+                      fromRelevantObservation.setCode(code);
+                      if (code.length() > 0) {
+                        observationPopulated = true;
+                      }
+                    } else if (observationChild.getNodeName().equals("text")) {
+                      fromRelevantObservation.setText(DomUtils.getInternalValue(observationChild));
+                    }
+                  }
+                }
+                if (observationPopulated) {
+                  interval.setFromRelevantObservation(fromRelevantObservation);
+                  populated = true;
+                }
               } else if (childNode.getNodeName().equals("absMinInt")) {
                 TimePeriod timePeriod = new TimePeriod(DomUtils.getInternalValue(childNode));
                 interval.setAbsoluteMinimumInterval(timePeriod);

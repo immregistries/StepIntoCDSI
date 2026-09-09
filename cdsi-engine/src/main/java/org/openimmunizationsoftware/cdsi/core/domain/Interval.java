@@ -229,8 +229,25 @@ public class Interval {
       // CALCDTINT-9
       if (fromImmediatePreviousDoseAdministered == YesNo.NO) {
         if (this.getFromRelevantObservation() != null && !this.getFromRelevantObservation().getCode().equals("")) {
-          logicStep.log(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
-              "REASONING: Using CALCDTINT-9");
+          Date mostRecentObservationDate = null;
+          for (PatientObservation observation : dataModel.getPatient().getMedicalHistory()
+              .getPatientObservationList()) {
+            if (!this.getFromRelevantObservation().equals(observation.getObservationCode())) {
+              continue;
+            }
+            Date observationDate = observation.getObservationDate();
+            if (observationDate == null) {
+              continue;
+            }
+            if (mostRecentObservationDate == null || observationDate.after(mostRecentObservationDate)) {
+              mostRecentObservationDate = observationDate;
+            }
+          }
+          if (mostRecentObservationDate != null) {
+            tmpPatientReferenceDoseDate = mostRecentObservationDate;
+            logicStep.log(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
+                "REASONING: Using CALCDTINT-9");
+          }
         }
       }
     } catch (NullPointerException np) {
