@@ -769,10 +769,10 @@ units:
   '6.3':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluateForInadvertentVaccineTest
-    fix_status: not_started
+    fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0024"]
     notes: >-
       11 test methods in one class, 8 green and 3 red. 6.3 is a small step - one
       attribute table (6-12), one decision table (6-13) with a single condition
@@ -851,6 +851,22 @@ units:
       without a guard, but neither state is described by section 6.3 and both are
       the responsibility of the steps that populate them, so no test asserts an
       interpretation the specification does not state.
+
+      Fixed (SPEC-4.6-0024, merged) - a defect independent of the three reds
+      above: Rule 1's "yes, inadvertent" outcome never recorded that fact on
+      the administered dose itself. FORECASTDTCAN-1's sixth bullet ("date
+      administered of the most recent vaccine dose administered being
+      evaluated against a target dose") and fifth bullet ("latest of all
+      dates administered of any inadvertent administration...") both depend
+      on 7.5 being able to find this dose again later, but Rule 1 shortcuts
+      straight back to 4.4 without ever calling 6.10 Satisfy Target Dose, so
+      neither of VaccineDoseAdministered's existing target-dose links
+      (targetDose, evaluatedAgainstTargetDose) ever got set for an
+      inadvertent administration. Fixed by having Rule 1 also call the
+      administered dose's new setInadvertentAdministration(true) - a fact
+      about this one administration, not a pointer to the shared, mutable
+      target dose 6.3 already mutates. See SPEC-4.6-0024 for 7.5's matching
+      half of this fix and its full FITS verification.
   '6.4':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluateAgeTest
@@ -2255,7 +2271,7 @@ units:
     fix_status: in_progress
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0014"]
+    finding_ids: ["SPEC-4.6-0014", "SPEC-4.6-0023", "SPEC-4.6-0024"]
     notes: >
       Role A, 2026-09-05. 39 tests, now 31 green and 8 red (8 failures, 1
       error - was 30/9; see SPEC-4.6-0014, merged, for red (2)'s fix).
@@ -2405,6 +2421,25 @@ units:
       all and none of the reds above depend on it. When that chain is eventually
       closed, this bullet is a further consumer to wire up, but it adds no new
       constraint on how it is closed.
+
+      Fixed (SPEC-4.6-0023, merged) - the seasonal recommendation start date
+      this unit's findSeasonalRecommendationStartDate() reads was always null,
+      because DataModelLoader never parsed <startDate>/<endDate> out of
+      Supporting Data's <seasonalRecommendation> element at all (a loader
+      defect, not a defect in this class - its own read of the domain model
+      was already correct). Fixed in the loader; see SPEC-4.6-0023.
+
+      Fixed (SPEC-4.6-0024, merged) - "not covered" item (b) above, exactly as
+      predicted: computeEarliestDate()'s "all dates administered" bucket only
+      ever checked vda.getTargetDose() != null (satisfied doses only), so
+      FORECASTDTCAN-1's fifth bullet (inadvertent administrations) was never
+      implemented and its sixth bullet (the most recent dose administered,
+      evaluated against a target dose under any outcome) was implemented too
+      narrowly. Fixed by also checking the new
+      vda.isInadvertentAdministration() (set by 6.3, see SPEC-4.6-0024) and
+      vda.getEvaluatedAgainstTargetDose() != null. Full FITS run, case-by-case
+      diffed: RSV's CVX-314 case and one further RSV date case moved from FAIL
+      to PASS, plus 5 incidental HepB improvements, 0 regressions.
   '7.6':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.ValidateRecommendationTest

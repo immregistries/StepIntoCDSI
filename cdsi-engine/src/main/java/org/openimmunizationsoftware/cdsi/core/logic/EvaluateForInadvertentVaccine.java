@@ -91,6 +91,11 @@ public class EvaluateForInadvertentVaccine extends LogicStep {
                     dataModel.getTargetDose().getEvaluation().setEvaluationStatus(EvaluationStatus.NOT_VALID);
                     dataModel.getTargetDose().getEvaluation()
                             .setEvaluationReason(EvaluationReason.INADVERTENT_ADMINISTRATION);
+                    // FORECASTDTCAN-1 needs this administered dose's own date as a
+                    // floor for the next earliest forecast date; this is a fact about
+                    // this one administration (see the field's own Javadoc), not a
+                    // pointer to the shared, mutable target dose.
+                    caVaccineDoseAdministered.getFinalValue().setInadvertentAdministration(true);
                     log(LogLevel.CONTROL, "Setting next step: 4.4 Evaluate And Forecast All Patient Series");
                     setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
                 }

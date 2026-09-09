@@ -356,16 +356,27 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
         "CONS Item for consideration for Earliest date is: " + caSeasonalRecommendationStartDate.getAttributeName()
             + " with value of " + formatDate(caSeasonalRecommendationStartDate.getFinalValue()));
 
+    // FORECASTDTCAN-1's last two bullets, both folded into this one list since
+    // the outer computation is already "latest of" everything: (a) "latest of
+    // all dates administered of any inadvertent administration being
+    // evaluated against a target dose" and (b) "date administered of the most
+    // recent vaccine dose administered being evaluated against a target dose"
+    // (any outcome - satisfied, extraneous, or not valid). Neither is
+    // vda.getTargetDose(), which stays null unless the dose actually
+    // satisfied one - too narrow for (b) and always null for (a), since an
+    // inadvertent administration never satisfies anything.
     List<Date> allDatesAdministered = new ArrayList<Date>();
     for (AntigenAdministeredRecord aar : dataModel.getSelectedAntigenAdministeredRecordList()) {
       VaccineDoseAdministered vda = aar.getVaccineDoseAdministered();
-      if (vda.getTargetDose() != null) {
+      if (vda.isInadvertentAdministration() || vda.getEvaluatedAgainstTargetDose() != null
+          || vda.getTargetDose() != null) {
         allDatesAdministered.add(vda.getDateAdministered());
       }
     }
     list.add(getLatestDate(allDatesAdministered));
-    log(LogLevel.REASONING, "CONS Item for consideration for Earliest date is: all dates administered with value of "
-        + formatDateList(allDatesAdministered));
+    log(LogLevel.REASONING,
+        "CONS Item for consideration for Earliest date is: dates administered of inadvertent or"
+            + " evaluated-against-a-target-dose administrations with value of " + formatDateList(allDatesAdministered));
 
     Date earliestDate = getLatestDate(list);
     return earliestDate;

@@ -755,6 +755,19 @@ public class DataModelLoader {
         } else if (parentNode.getNodeName().equals("seasonalRecommendation")) {
           SeasonalRecommendation seasonalRecommendation = new SeasonalRecommendation();
           seasonalRecommendation.setSeriesDose(seriesDose);
+          NodeList childNodeList = parentNode.getChildNodes();
+          for (int j = 0; j < childNodeList.getLength(); j++) {
+            Node childNode = childNodeList.item(j);
+            if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+              if (childNode.getNodeName().equals("startDate")) {
+                seasonalRecommendation.setSeasonalRecommendationStartDate(
+                    parseDate(DomUtils.getInternalValue(childNode)));
+              } else if (childNode.getNodeName().equals("endDate")) {
+                seasonalRecommendation.setSeasonalRecommendationEndDate(
+                    parseDate(DomUtils.getInternalValue(childNode)));
+              }
+            }
+          }
           seriesDose.getSeasonalRecommendationList().add(seasonalRecommendation);
         } else if (parentNode.getNodeName().equals("substituteDose")) {
           SubstituteDose substituteDose = new SubstituteDose();
