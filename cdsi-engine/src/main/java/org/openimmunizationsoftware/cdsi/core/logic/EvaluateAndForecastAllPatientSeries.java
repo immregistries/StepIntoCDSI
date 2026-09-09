@@ -336,43 +336,51 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
 
   private boolean moveToNextTargetDoseIfAvailable() {
     log(LogLevel.CONTROL, "CONTROL: Advancing to next target dose");
+    TargetDose justProcessedDose = dataModel.getTargetDose();
     int oldPos = dataModel.getTargetDoseListPos();
+
+    // Figure 4-6 asks "is this target dose a recurring target dose?" of every
+    // satisfied target dose, not only the last one in the series - a
+    // mid-series recurring dose must also get a duplicate created for
+    // "another target dose" to process, exactly like the last one does.
+    // Checking this before advancing the position (and before comparing
+    // against the list size below) means a recurring dose's duplicate has
+    // already grown the list by the time that comparison runs, whether the
+    // recurring dose was in the middle or at the end.
+    //
+    // This must only fire for a dose that was actually satisfied (consumed
+    // an AAR) - not a SKIPPED one. moveToNextTargetDoseIfAvailable() is also
+    // called for SKIPPED doses (which never consume an AAR), and a copy
+    // constructed from a still-SKIPPED dose evaluates SKIPPED again on its
+    // own turn - checking recurring status there would duplicate it forever,
+    // tripping the loop guard instead of terminating.
+    TargetDoseStatus justProcessedStatus = justProcessedDose.getTargetDoseStatus();
+    boolean wasSatisfiedOutcome = justProcessedStatus == TargetDoseStatus.SATISFIED
+        || justProcessedStatus == TargetDoseStatus.SUBSTITUTED
+        || justProcessedStatus == TargetDoseStatus.UNNECESSARY;
+    RecurringDose recurringDose = justProcessedDose.getTrackedSeriesDose().getRecurringDose();
+    if (wasSatisfiedOutcome && recurringDose != null && recurringDose.getValue() == YesNo.YES) {
+      log(LogLevel.STATE, "STATE: Target dose is RECURRING - adding duplicate to target dose list");
+      TargetDose duplicate = new TargetDose(justProcessedDose);
+      dataModel.getTargetDoseList().add(duplicate);
+      log(LogLevel.TRACE, "TRACE: Recurring dose added - new list size: " + dataModel.getTargetDoseList().size());
+    }
+
     dataModel.incTargetDoseListPos();
     int newPos = dataModel.getTargetDoseListPos();
     log(LogLevel.TRACE, "TRACE: Target dose position: " + oldPos + " -> " + newPos);
 
-    // if there are no more target doses
+    // if there are no more target doses (a recurring dose's own duplicate,
+    // added above, already grew the list past newPos, so reaching here means
+    // this dose was not recurring - explicitly "No" or not declared at all)
     if (newPos >= dataModel.getTargetDoseList().size()) {
-      log(LogLevel.TRACE, "TRACE: Target dose index (" + newPos + ") >= list size (" +
-          dataModel.getTargetDoseList().size() + ") - checking for recurring dose");
-
-      // if the current target dose is a recurring dose, add a duplicate of it to the
-      // target dose list
-      RecurringDose recurringDose = dataModel.getTargetDose().getTrackedSeriesDose().getRecurringDose();
-      if (recurringDose != null) {
-        if (recurringDose.getValue() == YesNo.YES) {
-          log(LogLevel.STATE, "STATE: Target dose is RECURRING - adding duplicate to target dose list");
-          TargetDose targetDoseNext = new TargetDose(dataModel.getTargetDose());
-          dataModel.getTargetDoseList().add(targetDoseNext);
-          log(LogLevel.TRACE, "TRACE: Recurring dose added - new list size: " + dataModel.getTargetDoseList().size());
-          log(LogLevel.STATE, "STATE: Transitioning to new recurring target dose");
-          dataModel.setPreviousTargetDose(dataModel.getTargetDose());
-          dataModel.setTargetDose(targetDoseNext);
-          log(LogLevel.TRACE, "TRACE: Now on target dose: " +
-              targetDoseNext.getTrackedSeriesDose().getDoseNumber() + " (index " + newPos + ")");
-        } else {
-          log(LogLevel.REASONING,
-              "REASONING: Recurring dose value is NO - no more target doses available, ending evaluation");
-          return false;
-        }
-      } else {
-        log(LogLevel.REASONING, "REASONING: No recurring dose defined - marking remaining AARs as EXTRANEOUS");
-        markRestAsExtraneous();
-        return false;
-      }
+      log(LogLevel.REASONING,
+          "REASONING: Not a recurring dose (or explicitly not) - marking remaining AARs as EXTRANEOUS");
+      markRestAsExtraneous();
+      return false;
     } else {
       log(LogLevel.STATE, "STATE: Transitioning to next target dose in list");
-      dataModel.setPreviousTargetDose(dataModel.getTargetDose());
+      dataModel.setPreviousTargetDose(justProcessedDose);
       TargetDose nextDose = dataModel.getTargetDoseList().get(newPos);
       dataModel.setTargetDose(nextDose);
       log(LogLevel.TRACE, "TRACE: Now on target dose: " + nextDose.getTrackedSeriesDose().getDoseNumber() +
@@ -506,13 +514,19 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
   private void markRestAsExtraneous() {
     int aarListSize = dataModel.getSelectedAntigenAdministeredRecordList().size();
     int aarPos = dataModel.getSelectedAntigenAdministeredRecordPos();
-    int remainingAARs = aarListSize - (aarPos + 1);
+    // aarPos already points at the first un-evaluated record, not the last
+    // evaluated one - whichever caller reached here (a SATISFIED/SUBSTITUTED/
+    // UNNECESSARY dose already advanced aarPos past the record it consumed
+    // before calling moveToNextTargetDoseIfAvailable; a SKIPPED dose never
+    // advanced it at all, so it still points at the current, untouched
+    // record) - so the loop must start at aarPos itself, not aarPos + 1.
+    int remainingAARs = aarListSize - aarPos;
 
     log(LogLevel.CONTROL, "CONTROL: Marking remaining " + remainingAARs + " AARs (#" +
-        (aarPos + 2) + "-" + aarListSize + ") as EXTRANEOUS");
+        (aarPos + 1) + "-" + aarListSize + ") as EXTRANEOUS");
 
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-    for (int i = aarPos + 1; i < aarListSize; i++) {
+    for (int i = aarPos; i < aarListSize; i++) {
       dataModel.setAntigenAdministeredRecord(dataModel.getSelectedAntigenAdministeredRecordList().get(i));
       log(LogLevel.TRACE, "TRACE: AAR #" + (i + 1) + " (dated " +
           dataModel.getAntigenAdministeredRecord().getDateAdministered() + ") -> EXTRANEOUS");
@@ -521,6 +535,15 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
       dataModel.getTargetDoseList().add(targetDose);
       dataModel.setTargetDose(targetDose);
       dataModel.setEvaluationForCurrentTargetDose(EvaluationStatus.EXTRANEOUS, null);
+      // TargetDoseStatus has no EXTRANEOUS value of its own (Table 3-2 never
+      // defines one) and defaults to NOT_SATISFIED - left unset here, this
+      // placeholder dose would wrongly trip Table 7-10's "does any target
+      // dose have status NOT_SATISFIED?" check and mark the whole series
+      // NOT_COMPLETE, even though the series' real target doses were already
+      // satisfied and this is just a bookkeeping record for an extra AAR.
+      // UNNECESSARY is the closest existing status for "an extra dose that
+      // wasn't required."
+      targetDose.setTargetDoseStatus(TargetDoseStatus.UNNECESSARY);
       dataModel.incSelectedAntigenAdministeredRecordPos();
     }
 

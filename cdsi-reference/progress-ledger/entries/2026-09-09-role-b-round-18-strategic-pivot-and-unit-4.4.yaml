@@ -1,0 +1,97 @@
+id: "2026-09-09-role-b-round-18-strategic-pivot-and-unit-4.4"
+date: "2026-09-09"
+phase: 22
+title: "Role B Round 18 - Strategic Pivot to JUnit-First, and Unit 4.4 Closed Clean (SPEC-4.6-0028)"
+before:
+  commit: "fe98006"
+  engine_tests: {total: 783, failures: 137, errors: 1}
+  fits: {total_cases: 4896, passed: 3451, failed_assertions: 1444, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+after:
+  commit: "PENDING"
+  engine_tests: {total: 783, failures: 134, errors: 1}
+  fits: {total_cases: 4896, passed: 3511, failed_assertions: 1384, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+summary: >
+  After three consecutive investigation rounds (HepA, ROTA, MCV) each
+  surfaced a genuine, well-evidenced defect without any of them
+  reaching a clean 100% FITS group, the project owner called a
+  strategic pivot: stop hunting for FITS-group wins and instead work
+  forward through the Logic Specification unit by unit, clearing every
+  failing JUnit test starting at 4.4 (the first unit with reds).
+  Cross-section changes are now explicitly permitted (no longer
+  confined to one unit's own files) as long as each round stays
+  bounded and understandable, and a FITS regression is now acceptable
+  *if the team is confident the underlying fix is correct* - explicitly
+  citing Chapter 8's SPEC-4.6-0020 rewrite as precedent, where the old
+  behavior was accepted to be replaced despite a transitional
+  regression because it was "all wrong."
+
+  Unit 4.4 (EvaluateAndForecastAllPatientSeriesTest) was the first
+  target. status.yaml's own pre-existing notes had already diagnosed
+  two defects precisely enough to fix directly: (1)
+  moveToNextTargetDoseIfAvailable() only checked "is this dose
+  recurring?" once the target dose list was exhausted, using whichever
+  dose was last rather than the one just satisfied, so nine mid-series
+  recurring COVID-19 doses never got their duplicate; (2)
+  markRestAsExtraneous() looped from aarPos + 1 rather than aarPos,
+  silently dropping the first genuinely leftover antigen administered
+  record instead of marking it EXTRANEOUS.
+
+  Fixing both passed all 3 targeted JUnits cleanly (a sorted diff of
+  the full 783-test suite showed exactly those 3 tests flip and
+  nothing else), but the following full FITS run produced a severe
+  regression: 3451 -> 3211 passed (-245 regressions against only 19
+  improvements), with HIB/VAR losing their forecasts entirely
+  ("No forecasted vaccine group matched CVX n") and DTaP/HepB/MMR
+  keeping a forecast but with wrong dates/status.
+
+  Per this round's own new discipline - a regression this size needs
+  its mechanism explained before being accepted or reverted, not
+  just measured - the cause was root-caused by direct code reading
+  rather than reverting on the strength of the number alone: the
+  recurring-dose check fired unconditionally on every call to
+  moveToNextTargetDoseIfAvailable(), including for SKIPPED doses (which
+  never consumed an AAR). A SKIPPED dose with recurringDose=Yes whose
+  duplicate is *also* SKIPPED on its own turn re-triggers the same
+  check forever, tripping EvaluateAndForecastAllPatientSeries's own
+  MAX_TOTAL_CYCLES/MAX_REPEATED_STATE_CYCLES loop guards and forcing an
+  early, incomplete transition to SELECT_BEST_PATIENT_SERIES - exactly
+  matching HIB/VAR's symptom. Gating the check to only fire for
+  SATISFIED/SUBSTITUTED/UNNECESSARY outcomes fixed it.
+
+  That in turn exposed a third, pre-existing defect that had been
+  invisible until now: markRestAsExtraneous()'s placeholder TargetDose
+  objects get their Evaluation set to EXTRANEOUS but never get their
+  own TargetDoseStatus set, leaving it at the class default of
+  NOT_SATISFIED. Table 7-10's completion check (DetermineForecastNeed)
+  scans the whole target dose list for any NOT_SATISFIED entry, so
+  every leftover-AAR placeholder wrongly forced its series to
+  NOT_COMPLETE. This was invisible before because the off-by-one bug
+  (fix #2) meant a series with exactly one leftover AAR created zero
+  placeholders - fixing the off-by-one is what first exercised it.
+  Fixed by explicitly setting each placeholder's TargetDoseStatus to
+  UNNECESSARY - the closest existing value (Table 3-2 defines no
+  target-dose-level "extraneous" status at all, confirmed via this
+  project's own statuses.md concept doc) and otherwise dead code in
+  the current implementation.
+
+  Final verification: unit 4.4's own suite 21/21 green (0 red, down
+  from 3); full engine suite 134 failures/1 error (down from 137/1,
+  sorted-diff-confirmed as exactly the 3 targeted tests and nothing
+  else); full FITS run case-by-case diffed against the true pre-fix
+  baseline (not the intermediate, loop-guard-tripping attempt): 3451 ->
+  3511 passed, **0 regressions, 60 improvements** (51 DTaP, 9
+  COVID-19). The HIB/VAR/HepB/MMR cases that regressed under the first,
+  incomplete attempt show zero net change against the true baseline
+  once defect 1 was correctly gated - that regression was entirely
+  self-inflicted by an incomplete first pass within this same round,
+  not a pre-existing condition, and was fully resolved before merging.
+
+  This is the cleanest round of the whole campaign so far by the new
+  standard: zero regressions, meaningful net improvement, and a
+  self-inflicted mid-round regression caught, explained, and corrected
+  rather than either shipped blindly or reverted reflexively.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0028/finding.md"
+finding_ids: ["SPEC-4.6-0028"]
+status: reviewed

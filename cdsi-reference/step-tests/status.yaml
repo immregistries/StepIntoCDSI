@@ -193,10 +193,10 @@ units:
     test_status: tests_written
     test_class: >-
       org.openimmunizationsoftware.cdsi.core.logic.EvaluateAndForecastAllPatientSeriesTest
-    fix_status: not_started
+    fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0028"]
     notes: >-
       Section 4.4 declares no business rules and no decision tables of its own -
       the clinical logic it orchestrates is Chapters 6 and 7 - but unlike 4.1 and
@@ -222,7 +222,9 @@ units:
       recorded an evaluation" guard, and the two loop guards (>1000 cycles,
       >200 repeated states) the step package's Review Findings flags.
 
-      18 green, 3 red. (1)
+      21 green, 0 red as of SPEC-4.6-0028. Historical diagnosis of the 3
+      reds this section used to have, retained because it explains the
+      fix: (1)
       everyRecordLeftUnevaluatedWhenTargetDosesRunOutIsMarkedExtraneous -
       expected both records left un-evaluated to be EXTRANEOUS, actual only the
       last one: markRestAsExtraneous() loops from aarPos + 1, but aarPos already
@@ -265,6 +267,25 @@ units:
       process() on the returned step; (d) a full multi-series drive of the loop
       to completion, which would need a stand-in for every Chapter 6/7 step and
       would be an engine test rather than a 4.4 test.
+
+      SPEC-4.6-0028's fix: moveToNextTargetDoseIfAvailable() now checks the
+      recurring-dose flag on every call (not only at list exhaustion) but only
+      acts on it when the just-processed dose's status was
+      SATISFIED/SUBSTITUTED/UNNECESSARY - a first attempt that checked it
+      unconditionally (including for SKIPPED doses) caused a runaway
+      duplication loop for any SKIPPED dose with recurringDose=Yes, tripping
+      the step's own MAX_TOTAL_CYCLES/MAX_REPEATED_STATE_CYCLES guards and
+      producing a severe, self-inflicted FITS regression (HIB/VAR losing their
+      forecasts entirely) before being caught and corrected within this same
+      round. markRestAsExtraneous() now loops from aarPos instead of aarPos +
+      1, and its placeholder TargetDose per leftover record now gets an
+      explicit TargetDoseStatus.UNNECESSARY (previously left at the
+      NOT_SATISFIED default, which wrongly tripped Table 7-10's completion
+      check once the off-by-one was fixed and placeholders started actually
+      being created for the previously-skipped final record). Full FITS run
+      case-by-case diffed against the true pre-fix baseline: 0 regressions, 60
+      improvements (51 DTaP, 9 COVID-19). See SPEC-4.6-0028 for the full
+      account.
   '4.5':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.SelectBestPatientSeriesTest

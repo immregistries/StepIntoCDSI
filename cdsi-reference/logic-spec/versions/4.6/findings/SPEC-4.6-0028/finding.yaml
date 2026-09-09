@@ -1,0 +1,118 @@
+id: "SPEC-4.6-0028"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["4.4"]
+source_pages: [35, 38]
+tables: []
+business_rules: []
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateAndForecastAllPatientSeries"
+fits_cases:
+  - "5eeca0522cc4517a96b0f417-DTAP-2013-0040"
+  - "675c41f8e4b089d2bdc0c483-COVID-19-2024-0087"
+summary: >
+  Three compounding defects in EvaluateAndForecastAllPatientSeries, all
+  in the Figure 4-6 "another target dose?" / "mark the rest extraneous"
+  terminal handling, fixed together as one bounded round per the
+  project owner's new "work forward through failing JUnits" strategy:
+
+  1. moveToNextTargetDoseIfAvailable() only asked "is this target dose
+  recurring?" once the target dose list was already exhausted, using
+  whichever dose happened to be last in the list - so a mid-series
+  recurring dose (nine non-final series doses across the bundled
+  release, all COVID-19) never got its required duplicate, and the
+  recurring flag actually consulted belonged to the wrong dose
+  entirely.
+
+  2. markRestAsExtraneous() looped from aarPos + 1 rather than aarPos -
+  aarPos already points at the first un-evaluated record by the time
+  any caller reaches this method (a SATISFIED/SUBSTITUTED/UNNECESSARY
+  dose advances aarPos before calling
+  moveToNextTargetDoseIfAvailable(); a SKIPPED dose never advances it
+  at all), so the loop always left the first leftover record
+  completely unprocessed - not marked EXTRANEOUS, not represented by
+  any TargetDose at all.
+
+  3. A latent bug exposed only by fixing #2: markRestAsExtraneous()
+  creates a placeholder TargetDose per leftover record and sets its
+  Evaluation to EXTRANEOUS, but never sets the placeholder's own
+  TargetDoseStatus, which defaults to NOT_SATISFIED. Table 7-10's
+  completion check (DetermineForecastNeed) scans the whole target dose
+  list for any NOT_SATISFIED entry - so every leftover-AAR placeholder
+  wrongly forced the series to NOT_COMPLETE. This is a pre-existing
+  defect, not something introduced by this round's fixes; it was
+  invisible before because bug #2's off-by-one meant a series with
+  exactly one leftover AAR created zero placeholders (the buggy loop
+  ran zero iterations), never surfacing it.
+evidence: >
+  status.yaml's own pre-existing notes for unit 4.4 (from an earlier
+  research pass) precisely diagnosed defects #1 and #2 and identified
+  the three red JUnit tests that pin them:
+  satisfyingARecurringMidSeriesTargetDoseAlsoCreatesAnotherOne,
+  everyRecordLeftUnevaluatedWhenTargetDosesRunOutIsMarkedExtraneous,
+  anExplicitlyNonRecurringLastTargetDoseAlsoMarksTheRestExtraneous.
+
+  Fixing #1 and #2 alone (first attempt this round) passed all three
+  targeted JUnits and left the rest of the 783-test cdsi-engine suite
+  byte-identical (134 failures after vs. 137 before, exactly the 3
+  targeted tests removed), but produced a severe FITS regression: 3451
+  -> 3211 passed cases (-245 regressions against only 19 improvements),
+  concentrated in HIB (100) and VAR (66) as total forecast absence
+  ("No forecasted vaccine group matched CVX n") plus DTaP/HepB/MMR (74)
+  as wrong-but-present dates/statuses.
+
+  Root-caused by reading moveToNextTargetDoseIfAvailable() directly
+  rather than reverting: the unconditional recurring-dose check fired
+  for a SKIPPED target dose too, not only a satisfied one. A copy
+  constructed from a still-SKIPPED dose evaluates SKIPPED again on its
+  own turn (nothing about the copy changes why it was skipped), so if
+  that dose's own RecurringDose is Yes, checking recurring status on a
+  SKIPPED dose duplicates it forever - each duplicate re-triggers the
+  same check - until EvaluateAndForecastAllPatientSeries's own
+  MAX_TOTAL_CYCLES/MAX_REPEATED_STATE_CYCLES loop guards trip and force
+  an early, incomplete transition to SELECT_BEST_PATIENT_SERIES. This
+  explained HIB/VAR's total-forecast-absence symptom exactly, and
+  confirmed the recurring check must only apply to a target dose that
+  was actually satisfied.
+
+  Gating the recurring check to SATISFIED/SUBSTITUTED/UNNECESSARY only
+  (matching the switch's own three "advance both AAR and target dose"
+  outcomes at the call site) removed the loop-guard trips. The
+  remaining wrong-but-present symptom (DTaP/HepB/MMR: expected COMPLETE
+  matched at baseline, now wrongly NOT_COMPLETE) traced to defect #3
+  above via direct inspection of DetermineForecastNeed's Table 7-10
+  condition 0 and TargetDose's default-NOT_SATISFIED field.
+interpretation: >
+  All three defects fixed together as one bounded round (cross-section
+  changes explicitly permitted per the project owner's revised working
+  rules, though in practice only EvaluateAndForecastAllPatientSeries.java
+  needed changes):
+
+  - moveToNextTargetDoseIfAvailable() now checks the recurring-dose flag
+    unconditionally on every call, but only acts on it when the
+    just-processed dose's TargetDoseStatus was SATISFIED, SUBSTITUTED, or
+    UNNECESSARY - fixing the mid-series case (any satisfied dose can
+    spawn a duplicate, not only the list's last one) while excluding
+    SKIPPED doses (which never consumed an AAR and must not recur).
+  - markRestAsExtraneous() now loops from aarPos (not aarPos + 1),
+    processing every genuinely leftover record.
+  - Each placeholder TargetDose markRestAsExtraneous() creates now gets
+    an explicit TargetDoseStatus.UNNECESSARY (the closest existing value
+    to "an extra dose that wasn't required" - Table 3-2 defines no
+    target-dose-level "extraneous" status at all, per this project's own
+    statuses.md concept doc), so it no longer wrongly trips Table 7-10's
+    NOT_SATISFIED scan.
+
+  Verified via the standing Role B pipeline: all 21 of unit 4.4's own
+  JUnit tests green (0 red, down from 3); full cdsi-engine suite
+  confirmed unchanged elsewhere via sorted diff (134 failures, 1 error,
+  down from 137/1 - exactly the 3 targeted tests and nothing else);
+  full FITS run, case-by-case diffed against the true pre-fix baseline
+  (not the intermediate, loop-guard-tripping attempt): 3451 -> 3511
+  passed, 0 regressions, 60 improvements (51 DTaP, 9 COVID-19). The
+  HIB/VAR/HepB/MMR cases that briefly regressed under the first,
+  loop-guard-tripping attempt were never actually broken relative to
+  the true baseline - that regression was self-inflicted by defect #1's
+  first (incomplete) fix attempt and fully resolved by gating it to
+  satisfied outcomes, with zero net effect on those four groups either
+  way.
