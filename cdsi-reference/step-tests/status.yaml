@@ -593,10 +593,10 @@ units:
   '6.1':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluateDoseAdministeredConditionTest
-    fix_status: not_started
+    fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0030"]
     notes: >-
       Unlike every other Phase 21 unit so far, a test class already existed here,
       predating this initiative: a @RunWith(Parameterized.class) class extending
@@ -620,7 +620,11 @@ units:
       as an explicit rule test, including the equal-dates boundary the third
       scenario actually built. SectionTest itself is left in place, now unused.
 
-      15 test methods, 13 green and 2 red. Green: Table 6-2's three attributes
+      Fixed as SPEC-4.6-0030 - 15 green, 0 red. Historical diagnosis retained
+      because it explains the fix:
+
+      15 test methods, 13 green and 2 red as of the original research pass.
+      Green: Table 6-2's three attributes
       (types, names, initial values, and the 12/31/2999 assumed Lot Expiration
       Date, which is also verified to actually be the value the condition uses);
       the condition-attribute table name; Table 6-3's label, two condition
@@ -666,6 +670,13 @@ units:
       assumed 12/31/2999 always applies and Rule 1 can never fire; and every one
       of the FITS fixtures records `"doseCondition": null`, so Rule 2 never fires
       either. That is why the NPE has never surfaced in the FITS suite.
+
+      SPEC-4.6-0030's fix: lazily create an Evaluation on the target dose when
+      getEvaluation() is null, immediately before setting its status, in both
+      rejecting outcomes - preserving the existing mutate-in-place behavior
+      when one is already attached. Full FITS run: 3511 passed both before
+      and after, 0 changed cases, exactly as predicted (neither rejecting
+      rule is reachable through any current production or FITS input path).
 
       Deliberately not covered: business rule CALCDTLOTEXP-1. The specification
       section names it as the source of the Lot Expiration Date but does not

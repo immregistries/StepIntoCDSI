@@ -1,0 +1,53 @@
+id: "2026-09-09-role-b-round-20-unit-6.1"
+date: "2026-09-09"
+phase: 22
+title: "Role B Round 20 - Unit 6.1 Closed: NPE on a Target Dose's First Evaluation (SPEC-4.6-0030)"
+before:
+  commit: "54fe4c6"
+  engine_tests: {total: 783, failures: 127, errors: 1}
+  fits: {total_cases: 4896, passed: 3511, failed_assertions: 1384, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+after:
+  commit: "PENDING"
+  engine_tests: {total: 783, failures: 125, errors: 1}
+  fits: {total_cases: 4896, passed: 3511, failed_assertions: 1384, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+summary: >
+  Third unit tackled under the JUnit-first strategy, continuing forward
+  from 4.4 (round 18) and 5.1 (round 19). status.yaml's pre-existing
+  notes for 6.1 (EvaluateDoseAdministeredCondition) had already
+  diagnosed its single remaining gap precisely.
+
+  Table 6-3's Rule 1 and Rule 2 outcomes both write "Evaluation status
+  is sub-standard" via
+  dataModel.getTargetDose().getEvaluation().setEvaluationStatus(...) -
+  but 4.4 builds every fresh TargetDose with an empty evaluation list,
+  and 6.1 is the first evaluation step run against a newly administered
+  dose; nothing before it ever attaches an Evaluation (6.4 EvaluateAge
+  is the first step that does). On the very first vaccine dose
+  administered against a fresh target dose, getEvaluation() returns
+  null and both rejecting outcomes threw NullPointerException.
+
+  Fixed by lazily creating an Evaluation on the target dose when
+  getEvaluation() is null, immediately before setting its status -
+  preserving the existing mutate-in-place behavior for every test that
+  pre-attaches one, so Rule 3's "adds no evaluation" guarantee and every
+  other already-passing test stayed unaffected.
+
+  Final verification: unit 6.1's own suite 15/15 green (up from 13/15);
+  full engine suite 125 failures/1 error (down from 127/1, sorted-diff-
+  confirmed as exactly those 2 tests); full FITS run: 3511 passed both
+  before and after, 0 changed cases - exactly as status.yaml's own
+  notes predicted, since neither rejecting rule is reachable through
+  any current production or FITS input path (nothing ever calls
+  Vaccine.setLotExpirationDate, and every FITS fixture records
+  doseCondition: null). A genuine crash-prevention fix for a currently-
+  unreachable path, the same category as SPEC-4.6-0026's CALCDT-5 fix -
+  not a behavior change for any case today's data can produce, but a
+  real defect that would surface the moment lot-expiration or
+  dose-condition data starts flowing through either input path.
+
+  Third consecutive round with zero FITS regressions.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0030/finding.md"
+finding_ids: ["SPEC-4.6-0030"]
+status: reviewed
