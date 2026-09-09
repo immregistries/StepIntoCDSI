@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-08 18:44:59 - regenerate with
+  Dashboard generated 2026-09-08 19:24:34 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,24 +57,50 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">14</div>
+    <div class="value">15</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
-    <div class="value">69.9%</div>
+    <div class="value">70.5%</div>
     <div class="label">FITS pass rate now</div>
   </div>
   <div class="card">
-    <div class="value">60.6s (1.0m)</div>
+    <div class="value">61.1s (1.0m)</div>
     <div class="label">FITS runtime now</div>
   </div>
   <div class="card">
-    <div class="value">86.8%</div>
+    <div class="value">86.6%</div>
     <div class="label">Runtime reduction since start</div>
   </div>
 </div>
 
 
+<section>
+  <h2>2026-09-09 - Phase 21 - Role B Round 14 - Closing Out RSV: Seasonal Recommendation Parsing and FORECASTDTCAN-1&#x27;s Missing Sixth Bullet (SPEC-4.6-0023, SPEC-4.6-0024)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Requested directly, following on from Round 13: close out RSV&#x27;s four remaining FITS failures before moving to COVID-19. Found and fixed two more previously-hidden engine defects, plus a second CVX-equivalence data gap, all four remaining cases traced to precisely:
+1. SPEC-4.6-0023: DataModelLoader&#x27;s &lt;seasonalRecommendation&gt; parsing branch created the record and linked it to its series dose but never read the node&#x27;s own &lt;startDate&gt;/&lt;endDate&gt; children - both fields stayed null forever, for every antigen that declares a seasonal recommendation (confirmed for RSV; likely also Influenza and COVID-19). The two consuming steps (7.4&#x27;s Table 7-11 end-date check, 7.5&#x27;s FORECASTDTCAN-1 start-date bullet) were already correctly written, reading from the right accessor - it just never returned real data. Fixed by parsing the dates in the loader (reusing the existing parseDate(String) helper), with a new DataModelLoaderTest asserting the bundled release&#x27;s RSV series carries non-null, correctly-ordered dates without pinning the exact literal values (matching that test class&#x27;s own stated policy of not breaking on routine CDC data updates).
+This fix alone: +214 FITS improvements (143 PCV, 37 COVID-19, 32 RSV, 2 FLU) and 30 regressions, all old NIST fixtures (dated 2013-2016, 2020, 2024) now correctly measured against the bundled Supporting Data&#x27;s actual, current 2025-2026 season window - a window their own historical evalDate predates. Not fixable without inventing an unsupported &quot;nearest matching season&quot; computation the specification never describes; presented to the project owner as an explicit choice per the standing &quot;FITS moves forward, not backward&quot; rule, given the net effect (+184) - decision was to ship.
+2. SPEC-4.6-0024: a full-text extraction pass earlier in this campaign missed that FORECASTDTCAN-1 has six bullets, not five - the sixth, &quot;date administered of the most recent vaccine dose administered being evaluated against a target dose&quot; (any outcome), was implemented far too narrowly: computeEarliestDate() only checked vda.getTargetDose() != null, a field 6.10 Satisfy Target Dose sets on its one VALID outcome alone. The fifth bullet (inadvertent administrations specifically) was not implemented at all - Table 6-13&#x27;s &quot;yes, inadvertent&quot; outcome shortcuts straight back to 4.4 without ever reaching 6.10, so no existing link field gets set for it either. Fixed with a new, dedicated VaccineDoseAdministered.inadvertentAdministration flag (a fact about that one administration, not a pointer to the shared, mutable target dose an earlier or later administered dose could overwrite), set by 6.3 and read by 7.5 alongside the existing (now also broadened) checks. An already-written unit test regressed on the first attempt (its hand-built fixture predates the evaluatedAgainstTargetDose convention and only sets targetDose directly) and was fixed by keeping both checks rather than replacing one with the other.
+3. A second CVX-equivalence data bug in the same family as Round 13&#x27;s CVX 122/Rotavirus mixup: CVX 314 (&quot;Respiratory syncytial virus (RSV) vaccine, unspecified,&quot; confirmed against the bundled Supporting Data&#x27;s own inadvertentVaccine/allowableVaccine entries) was missing from CvxEquivalence&#x27;s RSV group in both cdsi-fits-tests and cdsi-web, causing a fully-correct engine forecast to be reported as &quot;No forecasted vaccine group matched CVX 314.&quot; Added alongside the earlier 122 removal.
+Verified via the standing Role B pipeline throughout: full cdsi-engine suite confirmed as an identical failure *set* before/after (not just count) via sorted diff at each step; full FITS run, case-by-case diffed against the pre-fix baseline: +228 improvements total this round (143 PCV, 40 COVID-19, 38 RSV, 5 HepB, 2 FLU), 30 regressions (all the already-reviewed SPEC-4.6-0023 season-staleness set, unchanged in count from the intermediate fix), net +198.
+RSV: of 50 FITS cases, only 4 remain failing - the SPEC-4.6-0023 season-staleness cases themselves (2023-0028/0031/0032/0033, all old fixtures whose expected 2024-season dates cannot be reproduced against the bundled release&#x27;s 2025-2026 season data). RSV&#x27;s failure rate: 92% before Round 13 -&gt; 36% after Round 13 -&gt; 16% now, and it has dropped out of the worst-10 list entirely. Considered closed for this campaign&#x27;s purposes; the 4 remaining cases are a known, accepted, documented exception, not a live defect.
+COVID-19 is now the clear worst-performing group (275/341 failing, 80.65%) - next requested target. FLU is now second-worst (71/91, 78.02%), almost entirely the same SPEC-4.6-0023 season-staleness pattern (FLU declares its own seasonal recommendations) rather than a new defect - worth confirming before spending investigation time there.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>fe60916</code></td></tr><tr><td>Engine tests</td><td>780 total, 137 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3424 passed, 1471 failed-assertion, 1 execution-error (69.9%)</td></tr><tr><td>FITS runtime</td><td>60.6s (1.0m)</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>6dcfb6c</code></td></tr><tr><td>Engine tests</td><td>781 total, 137 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3451 passed, 1444 failed-assertion, 1 execution-error (70.5%)</td></tr><tr><td>FITS runtime</td><td>61.1s (1.0m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0024/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0024/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0023, SPEC-4.6-0024</p>
+</section>
 <section>
   <h2>2026-09-09 - Phase 21 - Role B Round 13 - SingleAntigenVaccineGroup Aggregation (SPEC-4.6-0022) and a CVX-Equivalence Data Bug (RSV Was the Worst-Performing FITS Group)
     <span class="badge badge-green">reviewed</span>
