@@ -469,10 +469,10 @@ units:
   '5.1':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.SelectRelevantPatientSeriesTest
-    fix_status: not_started
+    fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0029"]
     notes: >-
       Section 5.1 is the first Chapter 5 unit and, unlike the Chapter 4 loop
       drivers, it carries real decision logic: Table 5-2's nine input attributes
@@ -484,7 +484,13 @@ units:
       This is where an antigen series actually becomes a PatientSeries, which is
       the scope 4.3's title shares but does not decide.
 
-      23 tests in one class, 16 green and 7 red. Every test hand-builds the
+      Fixed as SPEC-4.6-0029 - 23 green, 0 red for 3 of the 4 gaps below; the
+      4th (series-level gender restriction) is confirmed real but deliberately
+      deferred - see the note after gap (4) below. Historical diagnosis
+      retained because it explains the fix:
+
+      23 tests in one class, 16 green and 7 red as of the original research
+      pass. Every test hand-builds the
       minimal DataModel - a patient, an assessment date, the antigen 4.3's loop
       has made current, and one or more AntigenSeries - drives process()
       directly, and inspects either the decision tables the step exposes through
@@ -565,6 +571,25 @@ units:
       comparison would not reconcile. The tests use the Supporting Data
       vocabulary so they stay independent of where that normalization should
       live. Considered fully covered for the decisions 5.1 itself documents.
+
+      SPEC-4.6-0029's fix: gaps (1) and (3) fixed directly (condition 0 now
+      reads the patient's medical history; LT55 now gets its own
+      caGender/caRequiredGender instead of leaving them null); gap (4)'s ANY
+      encoded as UNKNOWN. Gap (2) - DataModelLoader never populating
+      AntigenSeries.getRequiredGenderList() from the series-level
+      <requiredGender> element - was confirmed and a fix was written, but
+      shipping it alone (without also normalizing patient gender's "F"/"M"
+      vocabulary against Supporting Data's "Female"/"Male"/"Unknown") was
+      measured to cause a 388-case FITS regression, 100% in HPV, 0
+      improvements - every gender-restricted series would flip to "not
+      relevant" for every patient, including the correct gender. Reverted;
+      left as an open, well-evidenced finding for whoever picks up the
+      gender-vocabulary normalization question (which also touches 4.10
+      EvaluateGender's own, separately-broken gender comparison). Full FITS
+      run for what was actually shipped: 3511 passed both before and after,
+      0 changed cases - PatientObservation/MedicalHistory data isn't present
+      anywhere in the FITS fixture format, so gap (1)'s fix is FITS-inert the
+      same way SPEC-4.6-0026's CALCDT-5 fix was.
   '6.1':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluateDoseAdministeredConditionTest

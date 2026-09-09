@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-09 05:07:39 - regenerate with
+  Dashboard generated 2026-09-09 05:53:18 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,7 +57,7 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">19</div>
+    <div class="value">20</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
@@ -75,6 +75,30 @@
 </div>
 
 
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 19 - Unit 5.1 Closed: 3 of 4 Gaps Fixed, 4th Deferred With Measured Evidence (SPEC-4.6-0029)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Second unit tackled under the JUnit-first strategy, continuing forward from unit 4.4 (round 18). status.yaml&#x27;s pre-existing notes for 5.1 (SelectRelevantPatientSeries) had already diagnosed all four gaps driving its 7 red tests precisely enough to act on directly.
+Fixed three cleanly: (1) Table 5-4 condition 0 (&quot;does the indication describe any active patient observations?&quot;) was a hardcoded NO stub - now reads the patient&#x27;s MedicalHistory for a matching ObservationCode. (2) Table 5-4 Rule 3 was encoded with its first condition as ANY instead of UNKNOWN, making the &quot;flag for clinician&quot; outcome a strictly weaker copy of Rule 2&#x27;s ordinary &quot;does not apply&quot; outcome - fixed by encoding UNKNOWN, which the (now-implemented) condition never returns, correctly making Rule 3 unreachable via this path. (3) Table 5-5&#x27;s own gender-check condition read caGender/caRequiredGender attributes that were only ever populated on its LT54 children, never on LT55 itself - both stayed null, so the condition always took its &quot;no required genders&quot; early Yes regardless of the series&#x27; actual restriction. Now LT55 gets its own copies, populated the same way.
+The fourth gap - AntigenSeries.getRequiredGenderList() never being populated by DataModelLoader from the series-level &lt;requiredGender&gt; element - was confirmed and a fix written, but measured (not assumed) to be unsafe to ship alone: Patient.getGender() carries ForecastInput&#x27;s raw &quot;F&quot;/&quot;M&quot; vocabulary with zero normalization, while Supporting Data&#x27;s &lt;requiredGender&gt; values are &quot;Female&quot;/&quot;Male&quot;/&quot;Unknown&quot;. Adding the missing parsing branch alone caused a 388-case FITS regression - 100% in HPV, 0 improvements - because every gender-restricted series (all 4 of the bundled release&#x27;s HPV series) flipped to &quot;not relevant&quot; for every patient, including the correct gender, once the comparison actually started running against never-matching strings. Reverted in full; a fresh FITS run confirmed the revert restores the exact 3-gaps-fixed baseline (3511 passed, 0 changed cases).
+This is deliberately NOT bundled into the same round: fixing it safely requires deciding where &quot;F&quot;/&quot;M&quot; &lt;-&gt; &quot;Female&quot;/&quot;Male&quot;/&quot;Unknown&quot; normalization belongs, a cross-cutting question that also touches 4.10 EvaluateGender&#x27;s own separate (and separately flagged as likely dead) gender comparison over a third domain type. Recorded as SPEC-4.6-0029 (open) with the regression already measured, so whoever picks it up next has the exact blast radius in hand rather than needing to rediscover it.
+Final verification: unit 5.1&#x27;s own suite 23/23 green (up from 16/23); full engine suite 127 failures/1 error (down from 134/1, sorted-diff- confirmed as exactly those 7 tests); full FITS run for what was actually shipped: 3511 passed both before and after, 0 changed cases - the fixture format carries no PatientObservation/MedicalHistory data at all, so fix (1) is FITS-inert for the same reason SPEC-4.6-0026&#x27;s CALCDT-5 fix was, and fixes (2)/(3) are inert only because of the deferred fourth gap.
+Second consecutive round with zero regressions in what actually shipped, and the second round in a row where a mid-flight discovery (a second, unrelated defect one level deeper) was investigated, measured, and explicitly deferred with evidence rather than either blindly shipped or silently dropped.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>fa715d5</code></td></tr><tr><td>Engine tests</td><td>783 total, 134 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3511 passed, 1384 failed-assertion, 1 execution-error (71.7%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>PENDING</code></td></tr><tr><td>Engine tests</td><td>783 total, 127 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3511 passed, 1384 failed-assertion, 1 execution-error (71.7%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0029/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0029/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0029</p>
+</section>
 <section>
   <h2>2026-09-09 - Phase 22 - Role B Round 18 - Strategic Pivot to JUnit-First, and Unit 4.4 Closed Clean (SPEC-4.6-0028)
     <span class="badge badge-green">reviewed</span>

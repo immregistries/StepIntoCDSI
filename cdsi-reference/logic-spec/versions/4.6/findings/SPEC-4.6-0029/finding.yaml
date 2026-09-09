@@ -1,0 +1,115 @@
+id: "SPEC-4.6-0029"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["5.1"]
+source_pages: [41, 44]
+tables: ["Table 5-4", "Table 5-5"]
+business_rules: []
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.SelectRelevantPatientSeries"
+  - "org.openimmunizationsoftware.cdsi.core.data.DataModelLoader"
+fits_cases: []
+summary: >
+  Fixed three of unit 5.1's (SelectRelevantPatientSeries, Table 5-4 and
+  Table 5-5) four documented gaps, and confirmed but explicitly did NOT
+  fix the fourth, series-level gender restriction, because doing so
+  requires a second, unrelated cross-cutting fix (gender-vocabulary
+  normalization) whose absence would turn this round's change into a
+  severe regression - discovered and measured directly, not assumed.
+
+  Fixed: (1) Table 5-4's condition 0 ("does the indication describe
+  any active patient observations?") was stubbed to always return NO;
+  now reads the patient's MedicalHistory for a PatientObservation whose
+  ObservationCode matches the indication's own. (2) Table 5-4's Rule 3
+  was encoded with its first condition as ANY rather than UNKNOWN,
+  making Rule 3 (the "flag for clinician" branch) a strictly weaker
+  copy of Rule 2 - any ordinary "does not apply" indication (observation
+  answer No) matched both columns and wrongly raised the clinician
+  notification. (3) Table 5-5's own condition 0 ("is the patient
+  gender one of the required genders?") read caGender/caRequiredGender
+  attributes that were only ever populated on each Table 5-4 child, never
+  on Table 5-5 itself - both stayed null, so the condition always took
+  its "no required genders supplied" early return (Yes) regardless of
+  the antigen series' actual required genders. Now LT55 gets its own
+  copies of both attributes, populated the same way LT54's are.
+
+  NOT fixed (deliberately, this round): AntigenSeries.getRequiredGenderList()
+  - the List<String> Table 5-5's now-correctly-wired condition 0 reads -
+  is never populated by DataModelLoader at all. The bundled Supporting
+  Data's series-level <requiredGender> (a direct child of <series>, e.g.
+  HPV's "HPV male 2-dose series" declaring <requiredGender>Male</requiredGender>)
+  has no parsing branch in readAntigenSeries's <series> child loop - a
+  different, dose-level <requiredGender> element (nested under seriesDose,
+  parsed into RequiredGender objects on SeriesDose) happens to share the
+  same element name but is an unrelated concept. Adding the missing
+  parsing branch was attempted and measured directly: it caused a 388-case
+  FITS regression, 100% concentrated in HPV, 0 improvements. Root cause -
+  Patient.getGender() carries ForecastInput's raw "F"/"M" vocabulary
+  (GatherNecessaryData.java: patient.setGender(input.getPatientSex()),
+  no normalization), while Supporting Data's <requiredGender> values are
+  "Female"/"Male"/"Unknown" - Table 5-5's exact string-equality
+  comparison ("F".equals("Male")) never matches, so every gender-restricted
+  series (all 4 HPV series in the bundled release) flips to "not relevant"
+  for every patient, including the correct gender. This is the same
+  vocabulary mismatch unit 5.1's own JUnit suite had already flagged as
+  deliberately out of scope ("the tests use the Supporting Data
+  vocabulary so they stay independent of where that normalization
+  should live"). Reverted the DataModelLoader change in full; confirmed
+  via a fresh FITS run that the revert restores the 5.1-fix-only
+  baseline exactly (3511 passed, 0 change).
+evidence: >
+  Unit 5.1's own JUnit suite (SelectRelevantPatientSeriesTest, 23 tests):
+  16 green / 7 red before this round, 23/23 green after - status.yaml's
+  own pre-existing notes had already diagnosed all four gaps precisely
+  enough to fix three of them directly from the diagnosis alone.
+
+  Full cdsi-engine suite: 127 failures/1 error after (down from 134/1) -
+  sorted diff confirms exactly the 7 targeted tests flipped and nothing
+  else changed.
+
+  Full FITS run for the three fixes actually shipped: 3511 passed both
+  before and after, 0 changed cases at all - the FITS fixture format
+  (FitsTestCase) never carries PatientObservation/MedicalHistory data at
+  all (confirmed: no reference to either in cdsi-fits-tests' FitsTestCase.java),
+  so fix (1) is genuinely inert against the current fixture set, the same
+  way SPEC-4.6-0026's CALCDT-5 fix was. Fixes (2) and (3) are likewise
+  FITS-inert for this fixture set: (2) only changes which log line fires
+  for an already-correctly-decided outcome, not any pass/fail assertion;
+  (3) has no effect because of the very DataModelLoader gap described
+  above - AntigenSeries.getRequiredGenderList() is empty for every real
+  series today, so LT55's now-correctly-wired condition 0 still takes its
+  "no required genders supplied" Yes for every case regardless.
+
+  The deferred fourth gap's regression was measured directly, not
+  estimated: adding the missing DataModelLoader parsing branch alone
+  (without a corresponding gender-vocabulary fix) took the full FITS run
+  from 3511 to 3123 passed - 388 regressions, 0 improvements, 100% in the
+  HPV group (all 4 of the bundled release's HPV series declare
+  <requiredGender>, and are the only antigen with any series-level
+  gender restriction in the bundled data).
+interpretation: >
+  Three of four gaps closed cleanly with zero FITS risk; the fourth is
+  real, well-evidenced, and load-bearing for real patients (HPV male-
+  and female-restricted series exist precisely because a Male patient
+  should not be forecast the female-only 2-dose/3-dose series or vice
+  versa) - but fixing it safely requires deciding where "F"/"M" <->
+  "Female"/"Male"/"Unknown" normalization belongs: at the ForecastInput
+  boundary (GatherNecessaryData, 4.1), inside Patient itself, or at each
+  comparison site (5.1's LT55, and separately 4.10/EvaluateGender's own
+  already-broken and separately-flagged gender check, which uses a
+  different, coincidentally-working String.contains() trick over a
+  third, dose-level RequiredGender type). That decision affects more
+  than one unit and is exactly the kind of cross-cutting design question
+  that deserves its own bounded round rather than being folded into 5.1's.
+
+  Recorded as SPEC-4.6-0029 (open) for whoever picks up the gender-
+  normalization question next. The DataModelLoader parsing branch is
+  simple to re-add (already written and verified once) once a
+  normalization approach is chosen; it should be added in the same
+  round as that decision, not before.
+
+  Whoever fixes this should re-verify EvaluateGender's status at the
+  same time - it is separately documented (mappings/spec-to-code.yaml)
+  as probable dead code entirely, unconditionally returning YES today
+  regardless of its own gender comparison, so it may not be the right
+  home for the fix even though it looks topically related.

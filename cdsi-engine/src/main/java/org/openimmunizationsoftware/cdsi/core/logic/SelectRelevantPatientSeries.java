@@ -13,6 +13,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.Indication;
 import org.openimmunizationsoftware.cdsi.core.domain.MedicalHistory;
 import org.openimmunizationsoftware.cdsi.core.domain.ObservationCode;
+import org.openimmunizationsoftware.cdsi.core.domain.PatientObservation;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesType;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
@@ -35,6 +36,22 @@ public class SelectRelevantPatientSeries extends LogicStep {
         continue;
       }
       LT55 logicTable55 = new LT55(antigenSeries);
+
+      // Table 5-5's own condition 0 ("is the patient gender one of the
+      // required genders?") reads caGender/caRequiredGender off LT55 itself,
+      // not off any of its LT54 children - these must be populated here too,
+      // the same way each LT54 populates its own copies below, or the
+      // condition's early "no required genders" return always fires.
+      logicTable55.caGender = new ConditionAttribute<String>("Patient", "Gender");
+      logicTable55.caGender.setAssumedValue("Unknown");
+      logicTable55.caGender.setInitialValue(dataModel.getPatient().getGender());
+
+      logicTable55.caRequiredGender = new ConditionAttribute<List<String>>("Supporting Data (Gender)",
+          "Required Gender");
+      List<String> assumedRequiredGenderListFor55 = new ArrayList<String>();
+      assumedRequiredGenderListFor55.add(dataModel.getPatient().getGender());
+      logicTable55.caRequiredGender.setAssumedValue(assumedRequiredGenderListFor55);
+      logicTable55.caRequiredGender.setInitialValue(antigenSeries.getRequiredGenderList());
 
       for (Indication indication : antigenSeries.getIndicationList()) {
         LT54 logicTable54 = new LT54();
@@ -72,7 +89,8 @@ public class SelectRelevantPatientSeries extends LogicStep {
         logicTable54.caDateOfBirth.setInitialValue(dataModel.getPatient().getDateOfBirth());
         logicTable54.caActivePatientObservations.setInitialValue(dataModel.getPatient().getMedicalHistory());
         logicTable54.caRequiredGender.setInitialValue(antigenSeries.getRequiredGenderList());
-        logicTable54.caSeriesType.setInitialValue(antigenSeries.getSeriesName());
+        logicTable54.caSeriesType.setInitialValue(
+            antigenSeries.getSeriesType() == null ? null : antigenSeries.getSeriesType().toString());
         logicTable54.caObservationCode.setInitialValue(indication.getObservationCode());
         logicTable54.caAssessmentDate.setInitialValue(dataModel.getAssessmentDate());
         logicTable54.caIndicationBeginAgeDate.setInitialValue(CALCDTIND_1.evaluate(dataModel, this, indication));
@@ -129,7 +147,18 @@ public class SelectRelevantPatientSeries extends LogicStep {
           "Does the indication describe any active patient observations?") {
         @Override
         public LogicResult evaluateInternal() {
-          // logic condition not yet implemented
+          if (caActivePatientObservations == null || caActivePatientObservations.getFinalValue() == null
+              || caObservationCode == null || caObservationCode.getFinalValue() == null) {
+            return LogicResult.NO;
+          }
+          String indicationCode = caObservationCode.getFinalValue().getCode();
+          for (PatientObservation observation : caActivePatientObservations.getFinalValue()
+              .getPatientObservationList()) {
+            if (observation.getObservationCode() != null
+                && indicationCode.equals(observation.getObservationCode().getCode())) {
+              return LogicResult.YES;
+            }
+          }
           return LogicResult.NO;
         }
       });
@@ -152,7 +181,7 @@ public class SelectRelevantPatientSeries extends LogicStep {
         }
       });
 
-      setLogicResults(0, new LogicResult[] { LogicResult.YES, LogicResult.NO, LogicResult.ANY, LogicResult.ANY });
+      setLogicResults(0, new LogicResult[] { LogicResult.YES, LogicResult.NO, LogicResult.UNKNOWN, LogicResult.ANY });
       setLogicResults(1, new LogicResult[] { LogicResult.YES, LogicResult.YES, LogicResult.YES, LogicResult.NO });
 
       setLogicOutcome(0, new LogicOutcome() {
