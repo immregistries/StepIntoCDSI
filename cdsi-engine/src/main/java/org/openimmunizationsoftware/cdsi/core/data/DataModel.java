@@ -10,7 +10,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.ClinicalGuidelineObservation;
-import org.openimmunizationsoftware.cdsi.core.domain.Contraindication_TO_BE_REMOVED;
+import org.openimmunizationsoftware.cdsi.core.domain.Contraindication;
 import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.Immunity;
@@ -59,7 +59,6 @@ public class DataModel {
   private List<PatientSeries> prioritizedPatientSeriesList = new ArrayList<PatientSeries>();
 
   private List<Immunity> immunityList = new ArrayList<Immunity>();
-  private List<Contraindication_TO_BE_REMOVED> contraindicationList = new ArrayList<Contraindication_TO_BE_REMOVED>();
 
   private TargetDose targetDose = null;
   private TargetDose previousTargetDose = null;
@@ -589,12 +588,18 @@ public class DataModel {
     this.immunityList = immunityList;
   }
 
-  public List<Contraindication_TO_BE_REMOVED> getContraindicationList() {
+  /**
+   * Every contraindication defined anywhere in the loaded Supporting Data,
+   * antigen- and vaccine-level alike - the flattened union of every schedule's
+   * own list, computed rather than stored since nothing populates a
+   * DataModel-level list directly.
+   */
+  public List<Contraindication> getContraindicationList() {
+    List<Contraindication> contraindicationList = new ArrayList<Contraindication>();
+    for (Schedule schedule : getScheduleList()) {
+      contraindicationList.addAll(schedule.getContraindicationList());
+    }
     return contraindicationList;
-  }
-
-  public void setContraindicationList(List<Contraindication_TO_BE_REMOVED> contraindicationList) {
-    this.contraindicationList = contraindicationList;
   }
 
   public List<Schedule> getScheduleList() {

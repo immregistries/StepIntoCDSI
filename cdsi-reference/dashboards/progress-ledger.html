@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-09 16:38:27 - regenerate with
+  Dashboard generated 2026-09-09 17:39:47 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,7 +57,7 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">32</div>
+    <div class="value">33</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
@@ -75,6 +75,29 @@
 </div>
 
 
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 32 - Unit 7.3 Closed: Determine Contraindications Built From Scratch (SPEC-4.6-0040)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Moved to unit 7.3 after closing 7.2 (round 31) - by far the least complete unit tackled so far (8/24 green). status.yaml&#x27;s own pre- existing notes had already root-caused all sixteen reds into four groups, all anticipated by the step package&#x27;s Review Findings.
+Fixed four compounding gaps together, since none was independently useful without the others: (1) DetermineContraindications built zero decision tables at all - its own header comment read &quot;Write the logic for logic tables 7-5 to 7-7&quot;; (2) DataModel.contraindicationList was typed for an unrelated, wrong domain class, so the step&#x27;s own commented-out read line would not have compiled even if uncommented; (3) the loader discarded almost every field of each contraindication (age window, clinician text, contraindicated vaccine types, and the antigen-versus-vaccine distinction itself); (4) Table 7-4&#x27;s two assumed values were swapped, which alone would have silently defeated 387 of the release&#x27;s 392 contraindications even after everything else was fixed.
+Built all three decision tables (7-5, 7-6, 7-7) as single reusable instances re-evaluated once per relevant contraindication candidate from process()&#x27;s own loop - deliberately not a looser &quot;OR across all contraindications per condition&quot; design, which would risk false positives against the release&#x27;s 392 real entries by combining unrelated contraindications&#x27; own attributes.
+Final verification: unit 7.3&#x27;s own suite 23/24 green (up from 8/24; the 24th is left red, classified UNDETERMINED - the same structurally-unsatisfiable-test shape as unit 7.2&#x27;s equivalent); full engine suite 86 failures/1 error (down from 101/1, sorted-diff- confirmed as exactly those 15 tests across all 783 tests); full FITS run, case-by-case diffed: 3637 passed both before and after, 0 changed cases - the FITS fixture format has no way to encode a patient&#x27;s own recorded clinical observations at all, and every one of the release&#x27;s 392 contraindications requires exactly that to ever apply, so this substantial correctness fix is entirely FITS-inert by construction, the same category as SPEC-4.6-0035 and SPEC-4.6-0039.
+Ninth consecutive unit-closing round today (4.4, 5.1, 6.1, 6.2, 6.3, 6.5, 6.7, 6.8, 6.10, 7.2) with zero FITS regressions.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>528737f</code></td></tr><tr><td>Engine tests</td><td>783 total, 101 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3637 passed, 1258 failed-assertion, 1 execution-error (74.3%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>PENDING</code></td></tr><tr><td>Engine tests</td><td>783 total, 86 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3637 passed, 1258 failed-assertion, 1 execution-error (74.3%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0040/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0040/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0040</p>
+</section>
 <section>
   <h2>2026-09-09 - Phase 22 - Role B Round 31 - Unit 7.2 Closed: Evidence of Immunity Was Completely Unreachable in Production (SPEC-4.6-0039)
     <span class="badge badge-green">reviewed</span>

@@ -2308,12 +2308,14 @@ units:
   '7.3':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.DetermineContraindicationsTest
-    fix_status: not_started
+    fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0040"]
     notes: >-
-      24 test methods in one class, 8 green and 16 red. 7.3 is Table 7-4 (six
+      24 test methods in one class, now 23/24 green (was 8/24 - see
+      SPEC-4.6-0040 below; the 24th is left red, classified UNDETERMINED, the
+      same shape as 7.2's equivalent). 7.3 is Table 7-4 (six
       attributes), three decision tables - 7-5 (antigen contraindication
       applies?), 7-6 (vaccine contraindication applies?), 7-7 (is the relevant
       patient series contraindicated?) - Table 7-8's two date business rules
@@ -2345,38 +2347,29 @@ units:
       to the loader's own private readContraindications reflectively, yields
       observation code 278 and its title.
 
-      The 16 red tests fall into four groups, all four already anticipated by
-      the step package's Review Findings. Group 1 - no decision logic exists (3
-      reds): tableSevenFive/SevenSix/SevenSevenIsEncodedExactlyAsTheSpecification
-      PrintsIt each expect the step to build their table with the printed
-      condition-by-rule grid; actual logicTableList is empty (0 tables), the
-      class carrying a commented-out sketch of an eventual LT75 and a top-of-file
-      note "Write the logic for logic tables 7-5 to 7-7". Group 2 - the state
-      change never happens (2 reds): tableSevenSevenRuleOne... expects an
-      applying antigen contraindication (patient has observation 278, assessed
-      inside its window) to set PatientSeriesStatus.CONTRAINDICATED, and
-      tableSevenSevenRuleTwo... expects the same when the series' only
-      preferable vaccine (CVX 111) has an applying vaccine contraindication;
-      actual status stays null in both, and grep confirms nothing anywhere in
-      cdsi-engine ever sets PatientSeriesStatus.CONTRAINDICATED except 7.4, off
-      a MedicalHistory.contraindicationSet nothing populates. Group 3 - Table
-      7-4's own attributes (5 reds):
-      tableSevenFoursAssumedContraindicationBeginAgeDateIsInThePast expects
-      01/01/1900 but gets 12/31/2999, and ...EndAgeDateIsInTheFuture expects
-      12/31/2999 but gets 01/01/1900 - the two assumed values are simply swapped
-      in the constructor (setAssumedValue(FUTURE) on begin, PAST on end);
-      theAssumedContraindicationAgeWindowContainsTheAssessmentDate is that
-      swap's consequence, expecting begin <= assessment < end to hold under the
-      assumed values and finding an empty window instead;
-      tableSevenFoursContraindicationElementsAttributeIsFilledFromSupportingData
-      expects the attribute Table 7-4 gives no assumed value to be filled from
-      the Supporting Data and finds it null (its setInitialValue line is
-      commented out); and theStepsContraindicationBegin/EndAgeDateIsComputed
-      FromTheContraindicationInHand (2 of the 5) expect the published dates to be
-      CALCDTCI-1/2 applied to the loaded RSV contraindication (01/15/2025 and
-      09/15/2025) and get the assumed values instead, because the rules are
-      evaluated against a null contraindication. Group 4 - the loader never
-      delivers the data (6 reds), detailed below.
+      Fixed (SPEC-4.6-0040, merged), 15 of the original 16 reds, in four groups
+      all already anticipated by the step package's Review Findings. Group 1 -
+      no decision logic existed (3 reds): tableSevenFive/SevenSix/SevenSeven
+      IsEncodedExactlyAsTheSpecificationPrintsIt each expected the step to
+      build their table with the printed condition-by-rule grid; used to find
+      logicTableList empty (0 tables), the class carrying only a commented-out
+      sketch and a top-of-file note "Write the logic for logic tables 7-5 to
+      7-7" - now all three tables are built and evaluated for real, Table 7-5
+      and 7-6 as single reusable instances re-evaluated once per relevant
+      contraindication (see the finding for why: a naive "OR across all
+      contraindications per condition" design would risk false positives
+      against the release's 392 real entries). Group 2 - the state change
+      never happened (2 reds): tableSevenSevenRuleOne... and
+      tableSevenSevenRuleTwo... now correctly set
+      PatientSeriesStatus.CONTRAINDICATED through Table 7-7's own two
+      "applies" outcomes. Group 3 - Table 7-4's own attributes (5 reds): the
+      swapped assumed values (setAssumedValue(FUTURE) on begin,
+      setAssumedValue(PAST) on end) are now the right way around;
+      caContraindicationElements and the two CALCDTCI dates now source from a
+      representative loaded contraindication instead of a commented-out line.
+      Group 4 - the loader never delivered the data (5 of 6 reds, detailed
+      below); the 6th (theParsedContraindicationsReachWhereSevenThreeLooksForThem)
+      is left open.
 
       Group 4 in detail, checked against the bundled 4.65-508 release. All 30
       antigen files ship a <contraindications> element; across the release there
@@ -2384,47 +2377,43 @@ units:
       vaccine-level under <vaccine>, the latter carrying 329
       <contraindicatedVaccine> entries, every one with a <cvx>. So unlike 7.2's
       immunity element (6 antigens), 7.3's Supporting Data is present in bulk.
-      DataModelLoader.readContraindications reads exactly two fields per
-      contraindication - observationCode and observationTitle - and drops
-      everything else. The reds: theParsedContraindicationsReachWhereSevenThree
-      LooksForThem expects dataModel.getContraindicationList() to be non-empty
-      after the loader has parsed a release contraindication and finds it empty
-      (the loader writes only to Schedule.contraindicationList, which no logic
-      step reads); aParsedContraindicationCarriesTheTextDescriptionShownToThe
-      Clinician expects the <contraindicationText> that Table 7-5 Rule 4 and
-      Table 7-6 Rule 7 say must be "made available to the clinician for manual
-      determination" and gets the empty string (all 392 carry one in the
-      release); aParsedAntigenContraindicationCarriesTheAgesCalcdtciNeeds
-      expects RSV 278's <beginAge>/<endAge> that CALCDTCI-1/2 compute from and
-      gets null for both; aParsedVaccineContraindicationCarriesIts
-      ContraindicatedVaccineTypes expects the CVX list Table 7-6's fourth
-      condition needs and finds the whole <contraindicatedVaccine> subtree
-      discarded; and antigenAndVaccineContraindicationsStayDistinguishableAfter
-      Loading expects Table 7-7's two conditions to be able to tell antigen-level
-      from vaccine-level contraindications and finds both flattened into one
-      List<Contraindication> with the AntigenContraindication and
-      VaccineContraindication subclasses (which exist, empty, in the domain
-      model) never instantiated. Materiality of the age reds is small on its own
-      - only 5 of the 392 carry any age (RSV 278, plus 4 <contraindicatedVaccine>
-      entries under 2 Influenza contraindications) - but that is exactly why
-      Table 7-4's two assumed values matter so much: the other 387 rely on them
-      entirely, and with the swap in place their window is empty rather than
-      universal.
+      DataModelLoader.readContraindications used to read exactly two fields per
+      contraindication - observationCode and observationTitle - and drop
+      everything else; now it also parses <contraindicationText>,
+      <beginAge>/<endAge>, and each <contraindicatedVaccine>'s <cvx> (onto a
+      new VaccineContraindication.contraindicatedVaccineTypeList), and
+      instantiates AntigenContraindication or VaccineContraindication instead
+      of a bare Contraindication depending on whether the source element was
+      <vaccineGroup> or <vaccine>. Materiality of the age fix is small on its
+      own - only 5 of the 392 carry any age (RSV 278, plus 4
+      <contraindicatedVaccine> entries under 2 Influenza contraindications) -
+      but that is exactly why Table 7-4's two assumed values mattered so much:
+      the other 387 rely on them entirely, and with the swap in place their
+      window was empty rather than universal - now fixed alongside.
 
-      On 7.2's prediction about this unit. The 2026-09-04 cross-cutting note
-      predicted 7.3 has "the identical shape" as 7.2's Schedule-routing defect.
-      It holds for the routing (readContraindications writes only to Schedule;
-      DataModel.contraindicationList is never populated) but it is worse and
-      structurally different in three ways, all now recorded in that note:
-      DataModel.contraindicationList is typed List<Contraindication_TO_BE_REMOVED>,
-      a different class from the domain.Contraindication the loader creates, so
-      the commented-out line in DetermineContraindications would not compile
-      even if the list were populated; the loader discards most of each element's
-      content rather than parsing it faithfully as readImmunity does; and the
-      routing gap is not currently the binding constraint here at all, because
-      7.3 has no decision tables to be starved of data in the first place. The
-      note's entry was updated in place rather than duplicated, per that file's
-      conventions.
+      Left open, classified UNDETERMINED. theParsedContraindicationsReachWhere
+      SevenThreeLooksForThem - structurally identical to 7.2's
+      theParsedImmunityElementReachesWhereSevenTwoLooksForIt: it asserts on a
+      DataModel object never connected, directly or indirectly, to the
+      Schedule/Document its own reflective readContraindications(Schedule,
+      Document) call operates on. No implementation change can satisfy it
+      without breaking the sibling passing test
+      (theReleasesContraindicationElementsAreParsedByTheLoader) that pins the
+      same method's two-argument signature.
+
+      On 7.2's prediction about this unit, now resolved. The 2026-09-04
+      cross-cutting note predicted 7.3 has "the identical shape" as 7.2's
+      Schedule-routing defect. It held for the routing, and was worse in three
+      ways the note also recorded: DataModel.contraindicationList was typed
+      List<Contraindication_TO_BE_REMOVED>, a different class from the
+      domain.Contraindication the loader creates (fixed by retyping
+      DataModel.getContraindicationList() to a computed
+      List<Contraindication> getter that flattens every schedule's own list);
+      the loader discarded most of each element's content rather than parsing
+      it faithfully as readImmunity does (fixed, see above); and the routing
+      gap was not the binding constraint here at all, because 7.3 had no
+      decision tables to be starved of data in the first place (now that the
+      tables exist, the fixed routing feeds them correctly).
 
       Deliberately not covered. (a) Rule-by-rule outcome tests for Tables 7-5
       and 7-6 individually. Neither table's outcome has any representation in

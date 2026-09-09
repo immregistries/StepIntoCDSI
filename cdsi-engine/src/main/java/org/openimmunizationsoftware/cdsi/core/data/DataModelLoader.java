@@ -32,6 +32,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.Age;
 import org.openimmunizationsoftware.cdsi.core.domain.AllowableInterval;
 import org.openimmunizationsoftware.cdsi.core.domain.AllowableVaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
+import org.openimmunizationsoftware.cdsi.core.domain.AntigenContraindication;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.BirthDateImmunity;
 import org.openimmunizationsoftware.cdsi.core.domain.ClinicalHistory;
@@ -61,6 +62,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesType;
 import org.openimmunizationsoftware.cdsi.core.domain.SubstituteDose;
 import org.openimmunizationsoftware.cdsi.core.domain.Vaccine;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineContraindication;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
@@ -417,11 +419,13 @@ public class DataModelLoader {
     NodeList parentList = contraindicationsList.item(0).getChildNodes();
     for (int i = 0; i < parentList.getLength(); i++) {
       Node childNode = parentList.item(i);
-      if (childNode.getNodeName().equals("vaccineGroup") || childNode.getNodeName().equals("vaccine")) {
+      boolean isVaccineLevel = childNode.getNodeName().equals("vaccine");
+      if (childNode.getNodeName().equals("vaccineGroup") || isVaccineLevel) {
         for (int ci = 0; ci < childNode.getChildNodes().getLength(); ci++) {
           Node contraindicationNode = childNode.getChildNodes().item(ci);
           if (contraindicationNode.getNodeType() == Node.ELEMENT_NODE) {
-            Contraindication contraindication = new Contraindication();
+            Contraindication contraindication =
+                isVaccineLevel ? new VaccineContraindication() : new AntigenContraindication();
             schedule.getContraindicationList().add(contraindication);
             for (int b = 0; b < contraindicationNode.getChildNodes().getLength(); b++) {
               Node grandChildNode = contraindicationNode.getChildNodes().item(b);
@@ -429,6 +433,35 @@ public class DataModelLoader {
                 contraindication.setObservationCode(DomUtils.getInternalValue(grandChildNode));
               } else if (grandChildNode.getNodeName().equals("observationTitle")) {
                 contraindication.setObservationTitle(DomUtils.getInternalValue(grandChildNode));
+              } else if (grandChildNode.getNodeName().equals("contraindicationText")) {
+                contraindication
+                    .setContraindicationTextDescription(DomUtils.getInternalValue(grandChildNode));
+              } else if (grandChildNode.getNodeName().equals("beginAge")) {
+                String beginAge = DomUtils.getInternalValue(grandChildNode);
+                if (!beginAge.equals("")) {
+                  contraindication.setContraindicationBeginAge(new TimePeriod(beginAge));
+                }
+              } else if (grandChildNode.getNodeName().equals("endAge")) {
+                String endAge = DomUtils.getInternalValue(grandChildNode);
+                if (!endAge.equals("")) {
+                  contraindication.setContraindicationEndAge(new TimePeriod(endAge));
+                }
+              } else if (grandChildNode.getNodeName().equals("contraindicatedVaccine")
+                  && contraindication instanceof VaccineContraindication) {
+                NodeList contraindicatedVaccineChildren = grandChildNode.getChildNodes();
+                String cvx = "";
+                for (int cv = 0; cv < contraindicatedVaccineChildren.getLength(); cv++) {
+                  Node contraindicatedVaccineChild = contraindicatedVaccineChildren.item(cv);
+                  if (contraindicatedVaccineChild.getNodeName().equals("cvx")) {
+                    cvx = DomUtils.getInternalValue(contraindicatedVaccineChild);
+                  }
+                }
+                if (!cvx.equals("")) {
+                  VaccineType vaccineType = new VaccineType();
+                  vaccineType.setCvxCode(cvx);
+                  ((VaccineContraindication) contraindication).getContraindicatedVaccineTypeList()
+                      .add(vaccineType);
+                }
               }
             }
           }

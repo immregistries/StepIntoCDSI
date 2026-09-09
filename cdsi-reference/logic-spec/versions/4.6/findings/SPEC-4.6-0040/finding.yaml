@@ -1,0 +1,112 @@
+id: "SPEC-4.6-0040"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["7.3"]
+source_pages: [74, 75, 76, 77]
+tables: ["Table 7-4", "Table 7-5", "Table 7-6", "Table 7-7", "Table 7-8"]
+business_rules: ["CALCDTCI-1", "CALCDTCI-2"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.DetermineContraindications"
+  - "org.openimmunizationsoftware.cdsi.core.data.DataModelLoader"
+  - "org.openimmunizationsoftware.cdsi.core.data.DataModel"
+  - "org.openimmunizationsoftware.cdsi.core.domain.VaccineContraindication"
+fits_cases: []
+summary: >
+  Unit 7.3 (Determine Contraindications) was almost entirely
+  unimplemented: Tables 7-5, 7-6 and 7-7 (the section's whole decision
+  logic) did not exist at all, the loader discarded most of each
+  contraindication's content, and DataModel's own contraindication
+  list was typed for the wrong domain class. 15 of 16 reds fixed
+  together as one bounded round; the 16th is a structurally
+  unsatisfiable JUnit assertion, documented rather than forced (the
+  same category as SPEC-4.6-0039's equivalent for unit 7.2).
+
+  1. DetermineContraindications built zero decision tables - the
+  class's own header comment read "Write the logic for logic tables
+  7-5 to 7-7", with only Table 7-4's attributes and CALCDTCI-1/2
+  genuinely implemented.
+
+  2. DataModel.contraindicationList was typed
+  List<Contraindication_TO_BE_REMOVED>, a different, unrelated class
+  from the domain.Contraindication the loader actually creates - the
+  step's own commented-out line to read it would not have compiled
+  even if uncommented.
+
+  3. DataModelLoader.readContraindications read only two of a
+  contraindication's fields (observationCode, observationTitle) and
+  discarded the rest: the age window (<beginAge>/<endAge>, needed by
+  CALCDTCI-1/2), the clinician-facing <contraindicationText>, the
+  <contraindicatedVaccine> list Table 7-6's fourth condition needs,
+  and the antigen-versus-vaccine distinction itself (both levels were
+  flattened into plain Contraindication objects, never the
+  AntigenContraindication/VaccineContraindication subclasses that
+  already existed, empty, in the domain model).
+
+  4. Table 7-4's two assumed values (begin/end age date if a
+  contraindication defines no age) were swapped - FUTURE on begin,
+  PAST on end - collapsing the assumed age window to empty instead of
+  universal, which would have silently defeated 387 of the release's
+  392 contraindications (only 5 define a real age at all) even after
+  fixing everything else.
+evidence: >
+  status.yaml's own pre-existing notes for unit 7.3 had already
+  root-caused all sixteen reds precisely, grouped into four causes,
+  including the exact release-wide materiality (392 contraindications:
+  250 antigen-level, 142 vaccine-level carrying 329
+  <contraindicatedVaccine> entries) and the prediction that this
+  unit's Schedule-routing gap would be "worse and structurally
+  different" than 7.2's equivalent, which held.
+interpretation: >
+  Fixed: DataModel.getContraindicationList() is now a computed getter
+  (List<Contraindication>) that flattens every schedule's own list
+  rather than a stored, wrongly-typed field - consistent with nothing
+  else in production ever populating a DataModel-level list directly.
+  DataModelLoader.readContraindications now instantiates
+  AntigenContraindication or VaccineContraindication depending on
+  whether the source element was <vaccineGroup> or <vaccine>, and
+  parses <contraindicationText>, <beginAge>/<endAge>, and (for vaccine-
+  level entries) each <contraindicatedVaccine>'s <cvx> into a new
+  VaccineContraindication.contraindicatedVaccineTypeList. Table 7-4's
+  two assumed values are un-swapped. DetermineContraindications now
+  builds all three decision tables exactly as printed: Table 7-5 and
+  Table 7-6 are single reusable instances whose conditions read a
+  mutable "current contraindication" (and, for 7-6, "current
+  preferable vaccine type") set by process()'s own loop before each
+  re-evaluation - one pass per antigen-level contraindication for 7-5,
+  one pass per (vaccine-level contraindication, preferable vaccine)
+  pair for 7-6 - so each evaluation genuinely tests one contraindication
+  against its own observation/age/vaccine-type data rather than
+  loosely OR-ing answers across unrelated contraindications. Table 7-7
+  aggregates the two resulting booleans and sets
+  PatientSeriesStatus.CONTRAINDICATED when applicable. Table 7-6's
+  vaccine-type condition treats an empty contraindicated-vaccine-type
+  list as "no restriction, applies to any vaccine" - not spec text,
+  but the reading that keeps this unit's own hand-built VaccineContraindication
+  test fixture (which never populates that list) consistent with the
+  release's near-universal real-world shape (virtually every real
+  vaccine-level contraindication does name specific types).
+  Table 7-7's own condition 1 (any antigen contraindication) treats
+  anything that is not specifically a VaccineContraindication as
+  antigen-level, so a hand-built plain Contraindication (as this
+  unit's own RSV fixture uses) is correctly counted alongside a
+  loader-produced AntigenContraindication.
+
+  Verified via the standing Role B pipeline: unit 7.3's own suite
+  23/24 green (was 8/24). Full engine suite: sorted diff confirms
+  exactly those 15 tests flipped across all 783 tests and nothing
+  else. Full FITS run, case-by-case diffed: 3637 passed both before
+  and after, 0 changed cases - the FITS fixture format has no way to
+  encode a patient's own recorded clinical observations at all, and
+  every one of the release's 392 contraindications requires exactly
+  that to ever apply, so this genuine, substantial correctness fix is
+  entirely FITS-inert by construction, the same category as
+  SPEC-4.6-0035 and SPEC-4.6-0039.
+
+  Left open: theParsedContraindicationsReachWhereSevenThreeLooksForThem
+  asserts on a DataModel object never connected to the Schedule/Document
+  its own reflective readContraindications(Schedule, Document) call
+  operates on - structurally identical to SPEC-4.6-0039's
+  theParsedImmunityElementReachesWhereSevenTwoLooksForIt, and left open
+  for the same reason: no implementation change can satisfy it without
+  breaking the sibling passing test that pins the same method's
+  signature. Classified UNDETERMINED.
