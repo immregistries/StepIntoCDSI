@@ -1,0 +1,90 @@
+id: "SPEC-4.6-0032"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.2"]
+source_pages: [56]
+tables: ["Table 6-7"]
+business_rules: []
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkip"
+  - "org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipCondition"
+  - "org.openimmunizationsoftware.cdsi.core.data.DataModelLoader"
+fits_cases: []
+summary: >
+  Table 6-7's single condition - "Does the Conditional Skip Series Group
+  identify a Series Group with at least one relevant patient series with
+  a patient series status of 'Complete'?" - was implemented as a bare
+  `return LogicResult.NO`, so a COMPLETED_SERIES conditional skip
+  condition could never be met. Two supporting gaps sat behind it:
+  ConditionalSkipCondition had no field to hold which series group(s)
+  the condition names, and DataModelLoader's readCondition ignored the
+  Supporting Data's <seriesGroups> element entirely - so even the "left
+  half" of the question (which group to check) was not representable.
+
+  The bundled release defines 25 such conditions across HepB (7),
+  Pneumococcal (16), and Polio (2), every one inside an AND set where
+  this always-No condition defeated the whole set.
+evidence: >
+  status.yaml's own pre-existing notes had already diagnosed this
+  precisely and named the test:
+  tableSixSevenIsMetWhenTheSeriesGroupHasACompleteRelevantPatientSeries.
+  Its fixture places a Complete PatientSeries in series group "1" and
+  expects the condition to answer YES - the condition never sets or
+  reads any series-group value on the fixture's own ConditionalSkipCondition,
+  confirming an unpopulated series-group filter must match any
+  relevant patient series (the same "empty means match all" convention
+  already used for required-gender filtering in 5.1).
+
+  Confirmed <seriesGroups> as a real, single-valued Supporting Data
+  element (grepped: 25 occurrences across the three affected antigen
+  files, always a single value "1" in the whole bundled release,
+  always a direct child of <condition>) - distinct from a same-named
+  <seriesGroups> concept the loader already parsed elsewhere.
+
+  A first implementation attempt read dataModel.getSelectedPatientSeriesList()
+  - confirmed via direct code reading (SelectNextSeriesGroup.java) to be
+  Chapter 8's own per-series-group-scoped list, populated only after
+  4.4 finishes evaluating *every* series for the current antigen. Since
+  6.2 runs *during* that same per-series evaluation (before Chapter 8
+  ever runs for this antigen), that list is stale/irrelevant at 6.2's
+  own execution time - it still holds whatever the previous antigen's
+  Chapter 8 pass left behind. Switched to dataModel.getPatientSeriesStepper().getList()
+  (4.4's own full per-antigen series list, live throughout the antigen's
+  evaluation, with each series' PatientSeriesStatus already set once
+  that series has finished its own forecast earlier in the same loop),
+  filtered to the current antigen via a null-safe Objects.equals (the
+  test fixture sets neither a target disease on its AntigenSeries nor a
+  current antigen on the DataModel).
+
+  Verified with a scratch diagnostic (removed before this finding was
+  written, per this project's standing practice) driving every PCV,
+  HepB and Polio FITS case through the real pipeline: not one of them
+  ever has more than one relevant patient series at all. The
+  cross-series scenario this condition exists to check - "has some
+  *other* series in my own series group already completed?" - never
+  arises in the current fixture set, because no PCV/HepB/Polio fixture
+  patient's medical history/indications ever make more than one series
+  relevant for the same antigen (5.1's Risk-series relevance
+  determination, not anything in this unit, decides that).
+interpretation: >
+  Fixed by adding ConditionalSkipCondition.getSeriesGroupSet() (a
+  Set<String>, semicolon-delimited on parse, mirroring the existing
+  vaccineTypeSet convention), a DataModelLoader.readCondition parsing
+  branch for <seriesGroups>, and a real LT67 condition body that scans
+  the current antigen's tracked patient series (via the patient series
+  stepper, not Chapter 8's own list - see evidence) for any COMPLETE
+  series whose own series group (via the already-existing
+  SelectBestPatientSeries.seriesGroupOf helper, reused rather than
+  re-implemented) is named by the condition, or any COMPLETE series at
+  all when the condition names no group.
+
+  Verified via the standing Role B pipeline: unit 6.2's own suite gains
+  this test (43/44 green, up from 42/44 within this same round); full
+  cdsi-engine suite confirmed via sorted diff to have flipped exactly
+  this one test and nothing else; full FITS run, case-by-case diffed:
+  3616 passed both before and after this fix, 0 changed cases -
+  confirmed via direct instrumentation (not assumed) to be because the
+  cross-series scenario this fix enables never actually arises in the
+  current fixture set, the same category of "correct but not yet
+  exercised" fix as SPEC-4.6-0026's CALCDT-5 and SPEC-4.6-0030's NPE
+  guard.

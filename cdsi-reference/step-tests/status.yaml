@@ -698,12 +698,12 @@ units:
     fix_status: in_progress
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0017", "SPEC-4.6-0018", "SPEC-4.6-0019", "SPEC-4.6-0027", "SPEC-4.6-0031"]
+    finding_ids: ["SPEC-4.6-0017", "SPEC-4.6-0018", "SPEC-4.6-0019", "SPEC-4.6-0027", "SPEC-4.6-0031", "SPEC-4.6-0032"]
     notes: >-
-      Round 21 (2026-09-09): fixed 3 of the remaining 6 reds - see the note
-      after gap (8) below for the full account (SPEC-4.6-0031, SPEC-4.6-0018
-      merged). 41 green, 3 red as of round 21's end. Historical diagnosis
-      retained below because it explains the fixes.
+      Round 21 (2026-09-09): fixed 4 of the remaining 6 reds - see the note
+      after gap (8) below for the full account (SPEC-4.6-0031, SPEC-4.6-0032,
+      SPEC-4.6-0018 merged). 42 green, 2 red as of round 21's end. Historical
+      diagnosis retained below because it explains the fixes.
 
       44 test methods in one class, 36 green and 8 red at the start of Role
       B's round on this unit; now 38 green and 6 red. 6.2 maps to two classes.
@@ -831,9 +831,26 @@ units:
       well-understood regression: re-measured fresh, 3511 -> 3616 passed,
       net +105 (115 improve, 10 regress - down from 14, since round 18's
       unit 4.4 fix independently resolved part of the original regression
-      set). Reds (1), (2) and (3) remain open - each requires either a
-      cross-dose mechanism not yet located (1, SPEC-4.6-0027), new
-      Supporting Data wiring for series groups (2), or fixing an unrelated
+      set).
+
+      Also fixed red (2) as SPEC-4.6-0032: Table 6-7's series-group
+      completion check was hardcoded No; added ConditionalSkipCondition's
+      missing seriesGroups field, DataModelLoader parsing for the
+      Supporting Data's <seriesGroups> element, and a real LT67
+      implementation. A first attempt scanned
+      dataModel.getSelectedPatientSeriesList() (Chapter 8's own
+      per-series-group list, populated by SelectNextSeriesGroup only
+      after 4.4 finishes evaluating every series for the antigen - stale
+      at 6.2's own, earlier execution time); switched to
+      dataModel.getPatientSeriesStepper().getList(), which is live and
+      antigen-scoped throughout 4.4's own per-series loop. Verified via a
+      scratch diagnostic (removed before committing) that no PCV, HepB or
+      Polio FITS case ever has more than one relevant patient series at
+      all, so this fix's cross-series scenario cannot currently arise -
+      0 changed FITS cases, confirmed directly rather than assumed.
+
+      Reds (1) and (3) remain open - each requires either a cross-dose
+      mechanism not yet located (1, SPEC-4.6-0027) or fixing an unrelated
       downstream NPE in PatientSeries.getForecast() (3, SPEC-4.6-0019) -
       each judged too large to fold into this same bounded round.
 

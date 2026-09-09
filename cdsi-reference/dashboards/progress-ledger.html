@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-09 06:28:27 - regenerate with
+  Dashboard generated 2026-09-09 07:50:17 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,7 +57,7 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">22</div>
+    <div class="value">23</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
@@ -75,6 +75,29 @@
 </div>
 
 
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 22 - Unit 6.2: Table 6-7&#x27;s Series-Group Completion Check (SPEC-4.6-0032)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Direct continuation of round 21, per the project owner&#x27;s explicit request to keep going on unit 6.2&#x27;s remaining reds rather than move on - specifically red (2), Table 6-7&#x27;s series-group completion check, the one of the three remaining reds judged most tractable as a bounded fix (unlike red (1)&#x27;s already-once-reverted cross-dose gap, or red (3)&#x27;s NPE-blocked gap).
+Table 6-7&#x27;s single condition (&quot;does this series group have a Complete relevant patient series?&quot;) was hardcoded `return LogicResult.NO`. Fixed by adding a seriesGroups field to ConditionalSkipCondition, parsing the Supporting Data&#x27;s &lt;seriesGroups&gt; element in DataModelLoader (25 occurrences across HepB, Pneumococcal, and Polio - previously silently dropped), and implementing a real condition body.
+A first implementation scanned dataModel.getSelectedPatientSeriesList(), which looked right but is actually Chapter 8&#x27;s own per-series-group list (populated by SelectNextSeriesGroup, already merged this session as SPEC-4.6-0020) - populated only after 4.4 finishes evaluating every series for the current antigen, i.e. after 6.2 has already run for all of them. Caught by reading SelectNextSeriesGroup.java directly rather than assuming the list was live; switched to dataModel.getPatientSeriesStepper().getList() (4.4&#x27;s own full per-antigen list, correctly live and populated throughout the antigen&#x27;s own evaluation loop).
+Verified the fix&#x27;s real-world materiality directly rather than assuming it: a scratch diagnostic (removed before committing) drove every PCV, HepB, and Polio FITS case through the real pipeline and confirmed none of them ever has more than one relevant patient series for the antigen at all - the cross-series scenario this condition exists to check cannot currently arise, so the fix is FITS-inert today (3616 passed before and after, 0 changed cases) for a fully understood, directly-confirmed reason, the same category as SPEC-4.6-0026&#x27;s CALCDT-5 fix.
+Final verification: unit 6.2&#x27;s own suite 42/44 green (up from 41/44); full engine suite 121 failures/1 error (down from 122/1, sorted-diff-confirmed as exactly this one test); full FITS run: 0 changed cases. Unit 6.2 now has 2 reds remaining (SPEC-4.6-0027&#x27;s context gap, SPEC-4.6-0019&#x27;s NPE-blocked gap), both requiring dedicated investigation rather than a bounded fix.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>a7fddff</code></td></tr><tr><td>Engine tests</td><td>783 total, 122 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3616 passed, 1279 failed-assertion, 1 execution-error (73.9%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>PENDING</code></td></tr><tr><td>Engine tests</td><td>783 total, 121 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3616 passed, 1279 failed-assertion, 1 execution-error (73.9%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0032/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0032/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0032</p>
+</section>
 <section>
   <h2>2026-09-09 - Phase 22 - Role B Round 21 - Unit 6.2: 3 of 6 Reds Fixed, First Deliberate FITS-Regression Merge (SPEC-4.6-0018, SPEC-4.6-0031)
     <span class="badge badge-green">reviewed</span>

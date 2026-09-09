@@ -1,0 +1,60 @@
+id: "2026-09-09-role-b-round-22-unit-6.2-series-group"
+date: "2026-09-09"
+phase: 22
+title: "Role B Round 22 - Unit 6.2: Table 6-7's Series-Group Completion Check (SPEC-4.6-0032)"
+before:
+  commit: "a7fddff"
+  engine_tests: {total: 783, failures: 122, errors: 1}
+  fits: {total_cases: 4896, passed: 3616, failed_assertions: 1279, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+after:
+  commit: "PENDING"
+  engine_tests: {total: 783, failures: 121, errors: 1}
+  fits: {total_cases: 4896, passed: 3616, failed_assertions: 1279, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+summary: >
+  Direct continuation of round 21, per the project owner's explicit
+  request to keep going on unit 6.2's remaining reds rather than move
+  on - specifically red (2), Table 6-7's series-group completion check,
+  the one of the three remaining reds judged most tractable as a
+  bounded fix (unlike red (1)'s already-once-reverted cross-dose gap,
+  or red (3)'s NPE-blocked gap).
+
+  Table 6-7's single condition ("does this series group have a Complete
+  relevant patient series?") was hardcoded `return LogicResult.NO`.
+  Fixed by adding a seriesGroups field to ConditionalSkipCondition,
+  parsing the Supporting Data's <seriesGroups> element in
+  DataModelLoader (25 occurrences across HepB, Pneumococcal, and Polio
+  - previously silently dropped), and implementing a real condition
+  body.
+
+  A first implementation scanned dataModel.getSelectedPatientSeriesList(),
+  which looked right but is actually Chapter 8's own per-series-group
+  list (populated by SelectNextSeriesGroup, already merged this session
+  as SPEC-4.6-0020) - populated only after 4.4 finishes evaluating every
+  series for the current antigen, i.e. after 6.2 has already run for all
+  of them. Caught by reading SelectNextSeriesGroup.java directly rather
+  than assuming the list was live; switched to
+  dataModel.getPatientSeriesStepper().getList() (4.4's own full
+  per-antigen list, correctly live and populated throughout the
+  antigen's own evaluation loop).
+
+  Verified the fix's real-world materiality directly rather than
+  assuming it: a scratch diagnostic (removed before committing) drove
+  every PCV, HepB, and Polio FITS case through the real pipeline and
+  confirmed none of them ever has more than one relevant patient series
+  for the antigen at all - the cross-series scenario this condition
+  exists to check cannot currently arise, so the fix is FITS-inert today
+  (3616 passed before and after, 0 changed cases) for a fully understood,
+  directly-confirmed reason, the same category as SPEC-4.6-0026's
+  CALCDT-5 fix.
+
+  Final verification: unit 6.2's own suite 42/44 green (up from 41/44);
+  full engine suite 121 failures/1 error (down from 122/1,
+  sorted-diff-confirmed as exactly this one test); full FITS run: 0
+  changed cases. Unit 6.2 now has 2 reds remaining (SPEC-4.6-0027's
+  context gap, SPEC-4.6-0019's NPE-blocked gap), both requiring
+  dedicated investigation rather than a bounded fix.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0032/finding.md"
+finding_ids: ["SPEC-4.6-0032"]
+status: reviewed

@@ -7,6 +7,7 @@ import static org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules.CA
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
@@ -14,7 +15,9 @@ import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkip;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipCondition;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipConditionType;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipSet;
+import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.businessRules.CONDSKIP_1;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
@@ -301,6 +304,38 @@ public class EvaluateConditionalSkip extends LogicStep {
                     "Does the Conditional Skip Series Group identify a Series Group with at least one relevant patient series with a patient series status of 'Complete'?") {
                 @Override
                 public LogicResult evaluateInternal() {
+                    ConditionalSkipCondition condition = caConditionalSkipElements.getFinalValue();
+                    if (condition == null) {
+                        return LogicResult.NO;
+                    }
+                    Set<String> seriesGroups = condition.getSeriesGroupSet();
+                    // dataModel.getSelectedPatientSeriesList() is Chapter 8's
+                    // own (SelectNextSeriesGroup) per-series-group scoped list -
+                    // but Chapter 8 only runs once 4.4 has finished evaluating
+                    // every series for this antigen, which is *after* 6.2 has
+                    // already run for all of them. At 6.2's own evaluation
+                    // time, the list that actually reflects this antigen's
+                    // patient series (including their PatientSeriesStatus, set
+                    // as each one finishes forecasting earlier in 4.4's own
+                    // per-series loop) is the patient series stepper's full list.
+                    for (PatientSeries patientSeries : dataModel.getPatientSeriesStepper().getList()) {
+                        if (!java.util.Objects.equals(
+                                patientSeries.getTrackedAntigenSeries().getTargetDisease(), dataModel.getAntigen())) {
+                            continue;
+                        }
+                        if (patientSeries.getPatientSeriesStatus() != PatientSeriesStatus.COMPLETE) {
+                            continue;
+                        }
+                        // An unpopulated series group on the condition (nothing
+                        // to filter by) matches any relevant patient series -
+                        // otherwise only a series actually in one of the named
+                        // groups counts.
+                        if (seriesGroups.isEmpty()
+                                || seriesGroups.contains(
+                                        SelectBestPatientSeries.seriesGroupOf(patientSeries.getTrackedAntigenSeries()))) {
+                            return LogicResult.YES;
+                        }
+                    }
                     return LogicResult.NO;
                 }
             });

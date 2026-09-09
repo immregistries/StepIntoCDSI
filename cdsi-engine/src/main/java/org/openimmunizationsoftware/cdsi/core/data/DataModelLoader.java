@@ -860,6 +860,13 @@ public class DataModelLoader {
               condition.getVaccineTypeSet().add(vaccineType);
             }
           }
+        } else if (greatgrandchildNode.getNodeName().equals("seriesGroups")) {
+          String seriesGroupsString = DomUtils.getInternalValue(greatgrandchildNode);
+          if (seriesGroupsString.length() > 0) {
+            for (String seriesGroup : seriesGroupsString.split("\\;")) {
+              condition.getSeriesGroupSet().add(seriesGroup);
+            }
+          }
         }
       }
     }
