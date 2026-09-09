@@ -8,7 +8,7 @@ before:
   fits: {total_cases: 4896, passed: 3627, failed_assertions: 1268, execution_errors: 1}
   fits_runtime_seconds: 54.2
 after:
-  commit: "PENDING"
+  commit: "cfd4a9a"
   engine_tests: {total: 783, failures: 121, errors: 1}
   fits: {total_cases: 4896, passed: 3627, failed_assertions: 1268, execution_errors: 1}
   fits_runtime_seconds: 54.2
