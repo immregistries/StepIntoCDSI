@@ -96,7 +96,20 @@ public class EvaluateConditionalSkip extends LogicStep {
          * Evaluation or Both
          */
         SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-        if (seriesDose.getConditionalSkip() != null) {
+        // A markRestAsExtraneous() placeholder (4.4's bookkeeping record for an
+        // extraneous administered dose beyond what the series needed) still
+        // tracks the same SeriesDose - and therefore the same ConditionalSkip
+        // data - as whichever real target dose it duplicates. Evaluating that
+        // data again here would let this step re-decide "skip" for a dose that
+        // 4.4 already resolved, overwriting its UNNECESSARY status back to
+        // SKIPPED and routing control back into 4.4 instead of forward through
+        // forecasting - never reaching 7.4's PatientSeriesStatus assignment for
+        // the whole series. An UNNECESSARY target dose is definitively resolved
+        // already; no conditional skip evaluation applies to it in any context.
+        if (dataModel.getTargetDose().getTargetDoseStatus() == TargetDoseStatus.UNNECESSARY) {
+            log("Target dose is an extraneous-dose placeholder (status UNNECESSARY) - "
+                    + "no conditional skip evaluation applies.");
+        } else if (seriesDose.getConditionalSkip() != null) {
             LT611 logicTable611 = new LT611(noSkip, skip);
 
             log("Conditional skip has been defined, now looking at the details.");

@@ -119,29 +119,24 @@ interpretation: >
   does not have - the same category of open question as HepA's already-
   documented "Extra Test Cases" spec-vs-fixture conflict (SPEC-4.6-0026).
 
-  (B) PCV, 4 cases - a genuine, not-yet-diagnosed defect. Traced one
-  case (675c41f8e4b089d2bdc0c483-PCV-2023-0002, an adult patient who
-  received PCV13, then PPSV23, then PCV20 five years later - a
-  textbook-complete adult pneumococcal sequence): expected status
-  COMPLETE; the engine now reports AGED_OUT instead once the Equal row
-  becomes reachable. Unlike (A), there is no found Supporting-Data-
-  level justification for this - a patient who has legitimately
-  completed their sequence should not read as aged out merely because
-  some other target dose was newly skipped via a dose-count exemption.
-  Not root-caused to a specific line before this investigation's time
-  budget ran out; the mechanism most likely lives in how
-  PatientSeriesStatus (COMPLETE vs AGED_OUT) is decided once a tail
-  target dose in the list is SKIPPED for dose-count reasons rather than
-  fully evaluated - worth a dedicated look at DetermineForecastNeed
-  and/or wherever AGED_OUT is assigned.
+  (B) PCV, 4 cases - **root-caused and fixed** as its own finding,
+  SPEC-4.6-0033 (Role B round 24, same day): a markRestAsExtraneous()
+  placeholder target dose still tracks the same SeriesDose - and
+  therefore the same ConditionalSkip data - as whichever real target
+  dose it duplicates, so routing it through EvaluateConditionalSkip
+  again can overwrite its UNNECESSARY status back to SKIPPED and
+  strand the whole series without a PatientSeriesStatus ever being
+  assigned. Fixed at the shared base class level: an UNNECESSARY
+  target dose now skips conditional-skip evaluation entirely. This bug
+  is independent of the Equal-row spelling gap itself - verified by
+  shipping it alone (equal-to still unfixed): 0 regressions, 11
+  improvements (6 COVID-19, 5 PCV) - confirming it already fires on
+  the current, unmodified codebase for other cases too.
 
-  Recommendation: do not merge this fix yet. Unlike SPEC-4.6-0018 (whose
-  regression traced entirely to an already-documented, well-understood,
-  separately-owned defect), this fix's regression set contains at least
-  one (B) genuinely unexplained defect and one (A) unresolved clinical-
-  correctness question - neither meets the bar of "the regression's
-  mechanism is understood" this project's revised tolerance requires.
-  Re-attempt after (B) is independently diagnosed and fixed, and ideally
-  after (A) gets a domain-expert read; the fix itself (the one-line
-  additive spelling match) remains ready to reapply as-is once those are
-  resolved.
+  Recommendation, updated: with (B) now fixed and merged separately,
+  only (A) - the DTaP clinical-correctness question - still blocks
+  merging this specific "equal to" spelling fix. Filed as GitHub Issue
+  #65 for ACIP/CDSi domain-expert input (see the "Open ACIP/CDSi
+  Clinical Questions" dashboard). Re-attempt this fix once that
+  question is answered; re-measure fresh at that point, since SPEC-4.6-0033
+  and other intervening fixes may have further changed the numbers.

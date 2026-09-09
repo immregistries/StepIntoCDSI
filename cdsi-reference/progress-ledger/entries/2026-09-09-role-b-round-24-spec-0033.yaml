@@ -1,0 +1,63 @@
+id: "2026-09-09-role-b-round-24-spec-0033"
+date: "2026-09-09"
+phase: 22
+title: "Role B Round 24 - Extraneous-Dose Placeholder Losing Its Series' Completion Status (SPEC-4.6-0033)"
+before:
+  commit: "c99859f"
+  engine_tests: {total: 783, failures: 121, errors: 1}
+  fits: {total_cases: 4896, passed: 3616, failed_assertions: 1279, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+after:
+  commit: "PENDING"
+  engine_tests: {total: 783, failures: 121, errors: 1}
+  fits: {total_cases: 4896, passed: 3627, failed_assertions: 1268, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+summary: >
+  Continuing straight into 6.2's remaining work per the project owner's
+  explicit direction to keep going while ACIP feedback (filed as
+  GitHub Issues in round 23) is pending - both remaining reds (context
+  tracking, SPEC-4.6-0027; the Equal-row NPE gap, SPEC-4.6-0019) are
+  independent of that feedback, so there was real, unblocked work
+  available. Chose SPEC-4.6-0019's part B (the PCV AGED_OUT defect
+  found but not root-caused in round 23) as the more concrete,
+  better-scoped lead.
+
+  Root-caused via direct instrumentation (a scratch diagnostic
+  capturing every log/alert event across the whole
+  EvaluateAndForecastAllPatientSeries <-> EvaluateConditionalSkip
+  cycle for the motivating case, removed before committing): a
+  markRestAsExtraneous() placeholder target dose (4.4's bookkeeping
+  record for an extraneous administered dose, introduced by
+  SPEC-4.6-0028) still tracks the same SeriesDose - and therefore the
+  same ConditionalSkip data - as whichever real target dose it
+  duplicates. When forecast dispatch routes that placeholder through
+  EvaluateConditionalSkip again, the step re-evaluates the same skip
+  data, decides "skip" is met again, and overwrites the placeholder's
+  explicit UNNECESSARY status back to SKIPPED - sending control back
+  into 4.4 instead of forward through forecasting, so the whole
+  series's PatientSeriesStatus never gets assigned by
+  DetermineForecastNeed. The series silently drops out of contention
+  with a null status, letting an unrelated, incorrect series-group win
+  by default.
+
+  Fixed at the shared EvaluateConditionalSkip base class level (one
+  guard clause, applying uniformly to 6.2/7.1/7.6): an UNNECESSARY
+  target dose now skips conditional-skip evaluation entirely rather
+  than being re-processed as if it were a real dose. Deliberately
+  tested and shipped independent of SPEC-4.6-0019's own "equal to"
+  spelling gap (left unfixed) to confirm this defect's own materiality
+  on its own terms, not as a side effect of that other fix: full FITS
+  run, case-by-case diffed, 3616 -> 3627 passed, 0 regressions, 11
+  improvements (6 COVID-19, 5 PCV) - confirming the bug was already
+  firing on the current, unmodified codebase for cases beyond the one
+  this investigation started from.
+
+  This closes part B of SPEC-4.6-0019 cleanly. Part A of that same
+  finding (the DTaP clinical-correctness question) remains open,
+  filed as GitHub Issue #65, awaiting ACIP/CDSi input. Unit 6.2's own
+  red/green count is unchanged by this round (no existing 6.2 test
+  pins this scenario), but the underlying defect it closes is real and
+  now fixed regardless.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0033/finding.md"
+finding_ids: ["SPEC-4.6-0033"]
+status: reviewed

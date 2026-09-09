@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-09 09:05:31 - regenerate with
+  Dashboard generated 2026-09-09 11:01:24 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,11 +57,11 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">24</div>
+    <div class="value">25</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
-    <div class="value">73.9%</div>
+    <div class="value">74.1%</div>
     <div class="label">FITS pass rate now</div>
   </div>
   <div class="card">
@@ -75,6 +75,28 @@
 </div>
 
 
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 24 - Extraneous-Dose Placeholder Losing Its Series&#x27; Completion Status (SPEC-4.6-0033)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Continuing straight into 6.2&#x27;s remaining work per the project owner&#x27;s explicit direction to keep going while ACIP feedback (filed as GitHub Issues in round 23) is pending - both remaining reds (context tracking, SPEC-4.6-0027; the Equal-row NPE gap, SPEC-4.6-0019) are independent of that feedback, so there was real, unblocked work available. Chose SPEC-4.6-0019&#x27;s part B (the PCV AGED_OUT defect found but not root-caused in round 23) as the more concrete, better-scoped lead.
+Root-caused via direct instrumentation (a scratch diagnostic capturing every log/alert event across the whole EvaluateAndForecastAllPatientSeries &lt;-&gt; EvaluateConditionalSkip cycle for the motivating case, removed before committing): a markRestAsExtraneous() placeholder target dose (4.4&#x27;s bookkeeping record for an extraneous administered dose, introduced by SPEC-4.6-0028) still tracks the same SeriesDose - and therefore the same ConditionalSkip data - as whichever real target dose it duplicates. When forecast dispatch routes that placeholder through EvaluateConditionalSkip again, the step re-evaluates the same skip data, decides &quot;skip&quot; is met again, and overwrites the placeholder&#x27;s explicit UNNECESSARY status back to SKIPPED - sending control back into 4.4 instead of forward through forecasting, so the whole series&#x27;s PatientSeriesStatus never gets assigned by DetermineForecastNeed. The series silently drops out of contention with a null status, letting an unrelated, incorrect series-group win by default.
+Fixed at the shared EvaluateConditionalSkip base class level (one guard clause, applying uniformly to 6.2/7.1/7.6): an UNNECESSARY target dose now skips conditional-skip evaluation entirely rather than being re-processed as if it were a real dose. Deliberately tested and shipped independent of SPEC-4.6-0019&#x27;s own &quot;equal to&quot; spelling gap (left unfixed) to confirm this defect&#x27;s own materiality on its own terms, not as a side effect of that other fix: full FITS run, case-by-case diffed, 3616 -&gt; 3627 passed, 0 regressions, 11 improvements (6 COVID-19, 5 PCV) - confirming the bug was already firing on the current, unmodified codebase for cases beyond the one this investigation started from.
+This closes part B of SPEC-4.6-0019 cleanly. Part A of that same finding (the DTaP clinical-correctness question) remains open, filed as GitHub Issue #65, awaiting ACIP/CDSi input. Unit 6.2&#x27;s own red/green count is unchanged by this round (no existing 6.2 test pins this scenario), but the underlying defect it closes is real and now fixed regardless.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>c99859f</code></td></tr><tr><td>Engine tests</td><td>783 total, 121 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3616 passed, 1279 failed-assertion, 1 execution-error (73.9%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>PENDING</code></td></tr><tr><td>Engine tests</td><td>783 total, 121 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3627 passed, 1268 failed-assertion, 1 execution-error (74.1%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0033/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0033/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0033</p>
+</section>
 <section>
   <h2>2026-09-09 - Phase 22 - Role B Round 23 - Dedicated Investigation of SPEC-4.6-0019 (Table 6-9 Equal Row): Blocker Resolved, Two New Problems Found, Not Merged
     <span class="badge badge-green">reviewed</span>

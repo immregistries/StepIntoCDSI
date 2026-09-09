@@ -698,7 +698,7 @@ units:
     fix_status: in_progress
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0017", "SPEC-4.6-0018", "SPEC-4.6-0019", "SPEC-4.6-0027", "SPEC-4.6-0031", "SPEC-4.6-0032"]
+    finding_ids: ["SPEC-4.6-0017", "SPEC-4.6-0018", "SPEC-4.6-0019", "SPEC-4.6-0027", "SPEC-4.6-0031", "SPEC-4.6-0032", "SPEC-4.6-0033"]
     notes: >-
       Round 21 (2026-09-09): fixed 4 of the remaining 6 reds - see the note
       after gap (8) below for the full account (SPEC-4.6-0031, SPEC-4.6-0032,
@@ -879,6 +879,32 @@ units:
       wherever AGED_OUT gets set). Still not merged - (B) needs its own
       dedicated fix first, and (A) needs a domain-expert read; see
       SPEC-4.6-0019 for the full trace and recommended path.
+
+      Round 24 (2026-09-09): root-caused and fixed (B) from round 23's note
+      above, as its own finding, SPEC-4.6-0033 - independent of red (3)'s
+      own "equal to" spelling gap. A markRestAsExtraneous() placeholder
+      target dose still tracks the same SeriesDose (and therefore the same
+      ConditionalSkip data) as whichever real target dose it duplicates;
+      when forecast dispatch routes it back through EvaluateConditionalSkip,
+      that step can re-decide "skip" and overwrite the placeholder's
+      UNNECESSARY status back to SKIPPED, stranding the whole series
+      without a PatientSeriesStatus ever being assigned - traced via a
+      scratch diagnostic capturing every log/alert across the full
+      EvaluateAndForecastAllPatientSeries <-> EvaluateConditionalSkip cycle
+      for the motivating PCV case (removed before committing). Fixed by
+      short-circuiting EvaluateConditionalSkip entirely (in all three
+      contexts it serves: 6.2/7.1/7.6) whenever the current target dose's
+      status is already UNNECESSARY. Verified shipped alone, with red (3)'s
+      own spelling gap still unfixed: full engine suite unchanged (sorted
+      diff, zero effect on any current unit test); full FITS run, 0
+      regressions, 11 improvements (6 COVID-19, 5 PCV) - confirming this
+      bug already fires on the unmodified codebase, not only via red (3)'s
+      own fix. Red (3) itself remains open pending GitHub Issue #65 (the
+      DTaP clinical-correctness question, part A of SPEC-4.6-0019); red (1)
+      (SPEC-4.6-0027) remains open pending its own dedicated investigation.
+      Unit 6.2 is now 42/44 green plus this out-of-band fix that doesn't
+      change 6.2's own red/green count (it lives in the shared base class
+      but the scenario it fixes isn't pinned by any 6.2 unit test).
 
       Deliberately not covered. CONDSKIP-1's exclusion of doses the engine has
       not yet linked to a target dose (`if
