@@ -39,6 +39,29 @@ summary: >
   19 cases newly fail (15 DTaP, 4 PCV) against only 5 newly passing (all
   DTaP), for a net -14 - for reasons this round did not have time to
   trace to a root cause.
+
+  Re-attempted 2026-09-09 (Role B round 25), per the project owner's
+  explicit request to keep working through 6.2's remaining reds while
+  ACIP feedback (filed as GitHub Issues in round 23) is pending. The
+  implementation was reconstructed identically (the round-17 attempt
+  had been fully reverted, so nothing was recoverable from git history)
+  and re-tested fresh against everything rounds 18-24 have since
+  changed. Result: worse than round 17's measurement, not better - net
+  -30 (0 improvements, 30 regressions, all DTaP; MCV's own target case
+  still did not change at all). Reverted again in full.
+
+  The DTaP regression this time was traced far enough to connect it
+  directly to an already-filed, open question: every one of the 30
+  regressed cases shows the exact same one-directional shift also seen
+  in SPEC-4.6-0019's part A investigation - the fixture expects a
+  later date (the longer, ~6-month interval track), and the
+  context-corrected engine now computes an earlier one (the shorter,
+  ~4-week interval track). This is not six separate mysteries; it is
+  one clinical question - which DTaP catch-up interval track applies
+  once several intervening target doses are skipped - surfacing twice,
+  through two independent code paths (this fix's context selection,
+  and SPEC-4.6-0019's "equal to" dose-count spelling). See "Where this
+  probably belongs" below.
 evidence: >
   MCV's own target case (a single MenACWY dose given at exactly age 16,
   expected COMPLETE per ACIP's "no booster needed if the first dose was
@@ -87,12 +110,32 @@ interpretation: >
   that only becomes visible once 6.2 stops over-reading Forecast-context
   data on their behalf.
 
-  Not merged. Reverted in full after confirming via a fresh FITS run that
-  the revert restores the exact pre-fix baseline (3451 passed, 1
-  execution error, engine suite failure set sorted-diff-identical).
-  Recorded as open per the same discipline as SPEC-4.6-0018/0019 -a
+  Not merged. Reverted in full both times, each time confirmed via a
+  fresh FITS run that the revert restores the exact pre-fix baseline.
+  Recorded as open per the same discipline as SPEC-4.6-0018/0019 - a
   textually-correct fix that regresses FITS needs its interaction fully
   traced before merging, not shipped on the strength of unit tests alone.
-  Whoever picks this up next should start from hypothesis (2) via the
-  specific DTaP case cited above, since it is the more concrete, better-
-  evidenced of the two.
+
+  Where this probably belongs: hypothesis (2) from the original round
+  is now confirmed at the pattern level (2026-09-09) rather than
+  traced to a specific line - all 30 regressions in this round's
+  re-attempt are the same DTaP catch-up interval-track question
+  already filed as GitHub Issue #65 (SPEC-4.6-0019, part A: does a
+  DTaP patient's forecast follow the short 4-week interval or the
+  longer ~6-month one once several intervening target doses correctly
+  skip). This fix's own DTaP regression and SPEC-4.6-0019's are very
+  likely the same underlying clinical question, reached through two
+  different code paths - whoever resolves Issue #65 should re-attempt
+  both this fix and SPEC-4.6-0019's together, since the same ACIP
+  answer likely settles both at once.
+
+  Hypothesis (1) - MCV's "16 years" rule needing a separate, not-yet-
+  located cross-dose cascade - is now doubly confirmed: fixing context
+  selection cleanly, on two independent implementations weeks apart,
+  has never once changed dose 2's own Evaluation object away from
+  null. Whoever picks this up next should treat the MCV question as
+  fully independent of the context bug and the DTaP question - it
+  needs its own investigation into how a conditional skip declared on
+  an earlier dose is supposed to reach a later one's own evaluation,
+  a mechanism this project has not yet located anywhere in the current
+  implementation.

@@ -118,7 +118,7 @@
 
 <section class="item" id="dtap-interval">
   <h2>2. DTaP: which dose's interval rule applies at the childhood/adolescent boundary <span class="badge badge-blocking">blocking</span></h2>
-  <p class="item-sub">Reference: <code>SPEC-4.6-0019</code> (part A) &middot; Table 6-9 &middot; FITS case <code>5eeca0522cc4517a96b0f417-DTAP-2013-0007</code> (and 24 similar)</p>
+  <p class="item-sub">Reference: <code>SPEC-4.6-0019</code> (part A) &middot; Table 6-9 &middot; FITS case <code>5eeca0522cc4517a96b0f417-DTAP-2013-0007</code> (and 24 similar) &middot; also entangled with <code>SPEC-4.6-0027</code> - see note below</p>
 
   <h3 class="sub">Patient scenario</h3>
   <p>Born 09/01/2019. One DTaP dose given 11/01/2019, at about 2 months old. No further doses until a Tdap dose given exactly on their 7th birthday, 09/01/2026. Assessed the same day, 09/01/2026. The historical fixture's own title describes the intended scenario: <em>"# 2 (Tdap) to child age 7. DTaP # 1 given before age 12 months. Forecast # 3 (Td) in 4 weeks."</em></p>
@@ -144,7 +144,8 @@
     <p>Put another way: once dose 7's "already has 2 valid doses" exemption is made to work as literally written in the Supporting Data, is that the clinically correct outcome for this patient, or does that exemption need an additional qualifier (e.g., only applies if those 2 doses were given at age-appropriate times) that the current Supporting Data doesn't state?</p>
   </div>
 
-  <p class="detail-link"><a href="https://github.com/immregistries/StepIntoCDSI/issues/65"><strong>Discuss / respond: GitHub Issue #65 &rarr;</strong></a> &middot; <a href="https://github.com/immregistries/StepIntoCDSI/blob/develop/cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0019/finding.md">full technical writeup</a></p>
+  <p class="muted" style="font-size:13px;">Update 2026-09-09: a second, independent fix (SPEC-4.6-0027, unrelated code path) was re-attempted and hit the exact same one-directional shift on 30 DTaP cases - the fixture wanting the longer interval track, the corrected code computing the shorter one. This is very likely the same clinical question surfacing twice; whichever answer resolves this issue should be re-applied to both findings.</p>
+  <p class="detail-link"><a href="https://github.com/immregistries/StepIntoCDSI/issues/65"><strong>Discuss / respond: GitHub Issue #65 &rarr;</strong></a> &middot; <a href="https://github.com/immregistries/StepIntoCDSI/blob/develop/cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0019/finding.md">SPEC-4.6-0019 writeup</a> &middot; <a href="https://github.com/immregistries/StepIntoCDSI/blob/develop/cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0027/finding.md">SPEC-4.6-0027 writeup</a></p>
 </section>
 
 <section class="item" id="pcv-minage">

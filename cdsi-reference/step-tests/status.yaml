@@ -906,6 +906,29 @@ units:
       change 6.2's own red/green count (it lives in the shared base class
       but the scenario it fixes isn't pinned by any 6.2 unit test).
 
+      Round 25 (2026-09-09): re-attempted red (1), SPEC-4.6-0027, per the
+      project owner's continued instruction to work through 6.2's
+      remaining reds while ACIP feedback is pending. Reconstructed the
+      round-17 implementation identically (nothing survived in git
+      history to reuse) and re-tested against everything rounds 18-24
+      have changed since. Worse than round 17, not better: full FITS run,
+      0 improvements, 30 regressions, all DTaP; MCV's own target case
+      still unchanged (dose 2's Evaluation stays null, confirming
+      hypothesis 1 a second time). Traced the DTaP regression far enough
+      to connect it directly to SPEC-4.6-0019's own open DTaP question
+      (GitHub Issue #65) - every regressed case shows the identical
+      one-directional shape already seen there (fixture wants the longer
+      ~6-month interval track, the corrected engine computes the shorter
+      ~4-week one), just reached through a different code path (context
+      selection here vs. dose-count spelling there). Very likely the same
+      clinical question surfacing twice; recommended that whoever resolves
+      Issue #65 re-attempt this fix at the same time. Reverted in full
+      again; see SPEC-4.6-0027 for the full trace. This closes out 6.2's
+      currently-actionable work - both remaining reds (this one and
+      SPEC-4.6-0019's part A) are now blocked on the same external ACIP
+      input, and MCV's cross-dose cascade needs its own, separate
+      investigation whenever picked up.
+
       Deliberately not covered. CONDSKIP-1's exclusion of doses the engine has
       not yet linked to a target dose (`if
       (vaccineDoseAdministered.getTargetDose() == null) continue;`) and its

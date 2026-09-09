@@ -1,0 +1,69 @@
+id: "2026-09-09-role-b-round-25-spec-0027-reattempt"
+date: "2026-09-09"
+phase: 22
+title: "Role B Round 25 - SPEC-4.6-0027 Re-Attempted: Worse Than Before, But Connected to the Open DTaP Question"
+before:
+  commit: "cc8622b"
+  engine_tests: {total: 783, failures: 121, errors: 1}
+  fits: {total_cases: 4896, passed: 3627, failed_assertions: 1268, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+after:
+  commit: "PENDING"
+  engine_tests: {total: 783, failures: 121, errors: 1}
+  fits: {total_cases: 4896, passed: 3627, failed_assertions: 1268, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+summary: >
+  Continuing straight into the last of 6.2's remaining reds per the
+  project owner's explicit direction to keep working while ACIP
+  feedback (filed as GitHub Issues in round 23) is pending -
+  SPEC-4.6-0027, the ConditionalSkip context-tracking gap, previously
+  attempted in round 17 and reverted (0 improvement to MCV's own
+  target case, net -14 FITS regression, two unconfirmed hypotheses
+  left for whoever picked it up next).
+
+  Reconstructed the round-17 implementation identically (nothing had
+  survived in git history to reuse - the revert was full) and
+  re-tested it fresh against everything rounds 18-24 have changed
+  since (unit 4.4's recurring-dose fix, 5.1, 6.1, Table 6-6's
+  inclusive boundary, Table 6-7's series-group check, and this same
+  day's own SPEC-4.6-0033 placeholder guard).
+
+  Result: worse, not better. Full FITS run, case-by-case diffed: 3627
+  -> 3597 passed, 0 improvements, 30 regressions, all DTaP. MCV's own
+  target case still did not change at all - dose 2's Evaluation object
+  is still entirely null, confirming (a second time, independently,
+  weeks apart, on a substantially different codebase) that this
+  scenario needs a genuinely separate cross-dose cascade the context
+  fix alone cannot supply.
+
+  The DTaP regression was traced far enough this time to connect it
+  directly to already-filed work: every one of the 30 regressions (6
+  distinct scenarios) shows the identical one-directional shape
+  already traced in detail in this same day's SPEC-4.6-0019
+  investigation (round 23) - the historical fixture expects the
+  longer (~6-month) DTaP catch-up interval track, and the
+  context-corrected engine computes the shorter (~4-week) one
+  instead, because excluding the Forecast-only ConditionalSkip
+  instance from 6.2's own evaluation changes which target doses skip
+  during evaluation. This is very likely the same clinical question as
+  GitHub Issue #65, reached through a second, independent code path
+  rather than a new, separate mystery. Posted a comment on Issue #65
+  connecting the two findings, and updated the "Open ACIP/CDSi
+  Clinical Questions" dashboard's DTaP item to note the connection, so
+  a single ACIP answer can resolve both findings' regressions at once
+  once it arrives.
+
+  Reverted in full again; confirmed via a fresh FITS run that the
+  revert restores the exact pre-attempt baseline (3627 passed, 0
+  changed cases). No code shipped this round, but SPEC-4.6-0027's
+  finding is substantially more useful to whoever (or whichever ACIP
+  answer) picks it up next.
+
+  This closes out 6.2's currently-actionable work: both of its
+  remaining reds (this one, and SPEC-4.6-0019's part A) are now
+  understood to be blocked on the same external ACIP input (Issue
+  #65), and MCV's cross-dose cascade is confirmed to need its own,
+  fully separate investigation whenever someone picks it up.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0027/finding.md"
+finding_ids: ["SPEC-4.6-0027"]
+status: reviewed
