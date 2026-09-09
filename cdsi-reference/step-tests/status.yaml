@@ -3929,10 +3929,10 @@ units:
   '9.2':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.SingleAntigenVaccineGroupTest
-    fix_status: not_started
+    fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0022"]
     notes: >-
       22 tests, 16 green and 6 red. Table 9-3 names only SINGLEANTVG-1 (the
       vaccine group status is the patient series status of the contained patient
@@ -4005,6 +4005,22 @@ units:
       writes; FORECASTVG-8 is written on the multiple-antigen branch only), and
       both are unit-local fixes that should not be sequenced behind the
       domain-model change reds 6 and FORECASTDN-2 need.
+
+      Fixed (SPEC-4.6-0022, merged) - reds 1 and 2 above, exactly as this
+      note predicted: process() now collects every matching patient series
+      before choosing one, rather than mutating one shared VaccineGroupForecast
+      per match. SINGLEANTVG-1 (status) picks the most favorable match -
+      Complete/Immune beats an actionable Not Complete beats a dead-end
+      Contraindicated/Aged Out/Not Recommended, a judgment call flagged for
+      CDC/CDSi review since Table 9-3 never anticipated more than one
+      contained forecast. SINGLEANTVG-2 (earliest date) now takes the true
+      minimum across every match, per its literal text, independent of which
+      match was chosen for status. 20/22 tests now green (was 16/22) - reds
+      3-6 confirmed identical before/after, pre-existing and unrelated. Full
+      FITS run: this fix combined with an unrelated CVX-equivalence data bug
+      the same investigation found (see SPEC-4.6-0022's finding.md and this
+      round's progress-ledger entry) moved RSV from the worst-performing FITS
+      group (92% failure) to well below several others (36%).
 
       Deliberately not covered - (a) the higher SINGLEANTVG labels' status as
       specification citations: this unit's Review Findings already record that
