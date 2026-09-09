@@ -10,17 +10,29 @@ code_locations:
   - "org.openimmunizationsoftware.cdsi.core.domain.PatientSeries"
 fits_cases:
   - "5eeca0522cc4517a96b0f417-HPV-2013-0395"
+  - "5eeca0522cc4517a96b0f417-DTAP-2013-0007"
+  - "675c41f8e4b089d2bdc0c483-PCV-2023-0002"
 summary: >
   Table 6-9's Equal row matches the bare word "equal", but the bundled
   Supporting Data spells every one of its 69 equality dose-count
   conditions as "equal to" - so the row is currently unreachable on any
   real forecast. Making it reachable (an additive fix - "equal" OR
   "equal to", since an existing characterization test pins the bare
-  spelling as currently-working) is spec-correct but exposes a separate,
-  pre-existing, unrelated NullPointerException in the forecast-assembly
-  path (PatientSeries.getForecast() returning null before
-  .getLatestDate() is called on it), causing 324 FITS execution errors.
-  Left open rather than merged.
+  spelling as currently-working) is spec-correct.
+
+  Re-investigated 2026-09-09 (Role B round 23), per the project owner's
+  explicit request for a dedicated investigation and a proposed
+  solution. The original blocking concern (324 FITS execution errors)
+  is GONE - re-measured fresh against the current codebase, the fix now
+  produces 0 execution errors, net +20 (49 improvements, 29
+  regressions). The underlying PatientSeries.getForecast() NPE this
+  finding originally traced appears to have been resolved incidentally
+  by one or more of this session's intervening fixes (most likely unit
+  4.4's SPEC-4.6-0028).
+
+  However, deep-diving the 29 regressions surfaced two further,
+  DIFFERENT problems, at least one of which is a genuine, not-yet-
+  understood defect - so this is still not safe to merge. Left open.
 evidence: >
   Table 6-9's row label in the extracted spec text is "Equal" (bare, no
   "to"); LT69's code:
@@ -78,3 +90,58 @@ interpretation: >
   conditions in the bundled release are spelled "equal to", so Table
   6-9's Equal row is entirely dead code on any real forecast until this
   is resolved.
+
+  2026-09-09 re-investigation findings (round 23), two distinct
+  regression mechanisms in the 29 cases, traced via direct fixture and
+  Supporting Data inspection rather than assumed:
+
+  (A) DTaP, 25 cases - a spec-vs-fixture correctness question, not
+  obviously a code bug. Traced one representative case
+  (5eeca0522cc4517a96b0f417-DTAP-2013-0007, title "Forecast #3 (Td) in
+  4 weeks", patient exactly 7 years old at assessment with 2 prior
+  valid doses) end to end via direct instrumentation. The fixture
+  expects the engine to forecast against series dose 3 (4-week minimum
+  interval from the previous dose, per that dose's own Supporting Data
+  <interval> element - matching the fixture's expected date exactly).
+  Once the Equal row becomes reachable, series doses 2-7 (each
+  independently carrying an "Age >= 7 years" skip condition already
+  present in the Supporting Data, unrelated to this fix, that a 7-year-
+  old now satisfies) plus dose 7's own "2 or more valid doses" Equal-
+  row condition (now reachable) correctly skip per their own literal
+  Supporting Data encoding, advancing the walk to dose 8 (satisfied by
+  the patient's Tdap dose) then dose 9 (a 6-month interval from dose 8,
+  per ITS OWN <interval> element) - which the engine now (also
+  correctly, per that dose's own data) forecasts for 2027-03-01 instead
+  of the fixture's expected 2026-09-29. Both the fixture's expectation
+  and the engine's new answer are individually well-supported by
+  different pieces of the Supporting Data; adjudicating which is
+  clinically correct requires ACIP domain expertise this investigation
+  does not have - the same category of open question as HepA's already-
+  documented "Extra Test Cases" spec-vs-fixture conflict (SPEC-4.6-0026).
+
+  (B) PCV, 4 cases - a genuine, not-yet-diagnosed defect. Traced one
+  case (675c41f8e4b089d2bdc0c483-PCV-2023-0002, an adult patient who
+  received PCV13, then PPSV23, then PCV20 five years later - a
+  textbook-complete adult pneumococcal sequence): expected status
+  COMPLETE; the engine now reports AGED_OUT instead once the Equal row
+  becomes reachable. Unlike (A), there is no found Supporting-Data-
+  level justification for this - a patient who has legitimately
+  completed their sequence should not read as aged out merely because
+  some other target dose was newly skipped via a dose-count exemption.
+  Not root-caused to a specific line before this investigation's time
+  budget ran out; the mechanism most likely lives in how
+  PatientSeriesStatus (COMPLETE vs AGED_OUT) is decided once a tail
+  target dose in the list is SKIPPED for dose-count reasons rather than
+  fully evaluated - worth a dedicated look at DetermineForecastNeed
+  and/or wherever AGED_OUT is assigned.
+
+  Recommendation: do not merge this fix yet. Unlike SPEC-4.6-0018 (whose
+  regression traced entirely to an already-documented, well-understood,
+  separately-owned defect), this fix's regression set contains at least
+  one (B) genuinely unexplained defect and one (A) unresolved clinical-
+  correctness question - neither meets the bar of "the regression's
+  mechanism is understood" this project's revised tolerance requires.
+  Re-attempt after (B) is independently diagnosed and fixed, and ideally
+  after (A) gets a domain-expert read; the fix itself (the one-line
+  additive spelling match) remains ready to reapply as-is once those are
+  resolved.

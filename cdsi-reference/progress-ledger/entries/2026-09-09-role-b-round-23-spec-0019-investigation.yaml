@@ -1,0 +1,78 @@
+id: "2026-09-09-role-b-round-23-spec-0019-investigation"
+date: "2026-09-09"
+phase: 22
+title: "Role B Round 23 - Dedicated Investigation of SPEC-4.6-0019 (Table 6-9 Equal Row): Blocker Resolved, Two New Problems Found, Not Merged"
+before:
+  commit: "6bf19dc"
+  engine_tests: {total: 783, failures: 121, errors: 1}
+  fits: {total_cases: 4896, passed: 3616, failed_assertions: 1279, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+after:
+  commit: "PENDING"
+  engine_tests: {total: 783, failures: 121, errors: 1}
+  fits: {total_cases: 4896, passed: 3616, failed_assertions: 1279, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+summary: >
+  Per the project owner's explicit request for "a dedicated
+  investigation" and "a proposed solution" on unit 6.2's remaining red
+  (3) - SPEC-4.6-0019, Table 6-9's Equal row matching only the bare
+  word "equal" when the bundled Supporting Data spells every one of its
+  69 equality conditions "equal to" - rather than re-attempting the
+  already-written fix on the strength of its old numbers.
+
+  Re-measured the fix fresh against the current codebase rather than
+  trusting the original finding's numbers (recorded weeks earlier, well
+  before rounds 18-22's fixes). Good news first: the original blocker -
+  324 FITS execution errors from a NullPointerException in
+  PatientSeries.getForecast() - is gone. 0 execution errors now. The
+  underlying gap was almost certainly closed incidentally by unit 4.4's
+  SPEC-4.6-0028 (round 18), which touched exactly the "every patient
+  series gets a forecast assembled" guarantee this NPE depended on.
+
+  With the crash risk resolved, the fix produces a net +20 FITS change
+  (49 improvements, 29 regressions) - but investigating the regressions
+  directly (fixture inspection plus targeted scratch instrumentation,
+  removed before committing, matching this project's standing practice)
+  found they are not one problem, but two:
+
+  (A) 25 DTaP cases are a genuine spec-vs-fixture correctness question,
+  not a code bug. Traced one case end to end: the fixture (from CDC's
+  own historical test plan, titled "Forecast #3 (Td) in 4 weeks")
+  expects the engine to forecast series dose 3, whose own Supporting
+  Data <interval> element gives exactly the fixture's expected date.
+  Once the Equal row becomes reachable, several intervening series
+  doses (2 through 8) each skip for their own, independently-justified
+  reasons already present in the Supporting Data (an age->=7 skip
+  condition unrelated to this fix, plus dose 7's own now-reachable
+  dose-count exemption) - landing the forecast on dose 9's own 6-month
+  interval instead of dose 3's 4-week one. Both answers are genuinely
+  well-supported by different pieces of the Supporting Data; deciding
+  which is clinically correct needs ACIP domain expertise this
+  investigation doesn't have - the same category of open question as
+  HepA's already-documented SPEC-4.6-0026 "Extra Test Cases" conflict.
+
+  (B) 4 PCV cases are a genuine, unexplained defect: a textbook-complete
+  adult pneumococcal sequence (PCV13, then PPSV23, then PCV20 five years
+  later) now reads AGED_OUT instead of COMPLETE. No Supporting-Data
+  justification was found for this one - it looks like a real bug in
+  how PatientSeriesStatus gets decided once some other target dose is
+  newly SKIPPED for a dose-count reason, most likely in
+  DetermineForecastNeed or wherever AGED_OUT gets assigned. Not
+  root-caused to a specific line within this round's time budget.
+
+  Proposed solution / recommendation, per the project owner's request:
+  do not merge yet. Unlike SPEC-4.6-0018 (round 21's precedent for
+  accepting a regression), this one contains a genuinely unexplained
+  defect (B), not just a regression traceable to an already-understood,
+  separately-owned gap - so it doesn't meet the "mechanism is
+  understood" bar this project's revised tolerance actually requires.
+  Fix (B) first (it looks self-contained and mechanical, not a clinical
+  judgment call); get a domain-expert read on (A) separately. The
+  one-line additive fix itself needs no further work and is ready to
+  reapply once both are resolved. Reverted the fix and the scratch
+  diagnostics used to investigate it; no code shipped this round, but
+  the finding (SPEC-4.6-0019) is substantially more useful to whoever
+  picks it up next than it was this morning.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0019/finding.md"
+finding_ids: ["SPEC-4.6-0019"]
+status: reviewed

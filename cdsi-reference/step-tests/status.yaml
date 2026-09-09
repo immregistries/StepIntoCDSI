@@ -854,6 +854,32 @@ units:
       downstream NPE in PatientSeries.getForecast() (3, SPEC-4.6-0019) -
       each judged too large to fold into this same bounded round.
 
+      Round 23 (2026-09-09): dedicated investigation into red (3),
+      SPEC-4.6-0019, per the project owner's explicit request. The
+      original 324-execution-error blocker is gone - re-measured fresh,
+      the fix now produces 0 errors and net +20 (49 improve, 29
+      regress), since the PatientSeries.getForecast() NPE this finding
+      originally traced was incidentally resolved by an intervening fix
+      (most likely round 18's unit 4.4 work). But the 29 regressions
+      split into two different problems: (A) 25 DTaP cases trace to a
+      genuine spec-vs-fixture correctness question (a fixture expects
+      dose 3's 4-week interval; the engine, once several intervening
+      doses correctly skip per their OWN, independently-justified
+      Supporting Data conditions, lands on dose 9's own 6-month
+      interval instead - both answers are individually well-supported
+      by different pieces of the Supporting Data, and adjudicating
+      which is clinically correct needs ACIP domain expertise this
+      investigation doesn't have, the same category as HepA's SPEC-4.6-0026
+      "Extra Test Cases" conflict); (B) 4 PCV cases are a genuine,
+      not-yet-root-caused defect (a textbook-complete adult pneumococcal
+      sequence now reads AGED_OUT instead of COMPLETE once some other
+      target dose is newly skipped for a dose-count reason - no
+      Supporting-Data justification found, most likely a
+      PatientSeriesStatus assignment bug in DetermineForecastNeed or
+      wherever AGED_OUT gets set). Still not merged - (B) needs its own
+      dedicated fix first, and (A) needs a domain-expert read; see
+      SPEC-4.6-0019 for the full trace and recommended path.
+
       Deliberately not covered. CONDSKIP-1's exclusion of doses the engine has
       not yet linked to a target dose (`if
       (vaccineDoseAdministered.getTargetDose() == null) continue;`) and its
