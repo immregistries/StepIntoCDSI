@@ -641,7 +641,7 @@ units:
     fix_status: in_progress
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0017", "SPEC-4.6-0018", "SPEC-4.6-0019"]
+    finding_ids: ["SPEC-4.6-0017", "SPEC-4.6-0018", "SPEC-4.6-0019", "SPEC-4.6-0027"]
     notes: >-
       44 test methods in one class, 36 green and 8 red at the start of Role
       B's round on this unit; now 38 green and 6 red. 6.2 maps to two classes.
@@ -743,8 +743,20 @@ units:
       partly outside EvaluateConditionalSkip - in ConditionalSkip,
       ConditionalSkipCondition, DataModelLoader and upstream steps - so per
       cdsi-engine/AGENTS.md they are likely upstream_step_defect territory
-      rather than edits to this unit's own class; that classification is Role
-      B's call and nothing here has been recorded as a finding yet.
+      rather than edits to this unit's own class.
+
+      Investigated (SPEC-4.6-0027, open, not merged), 2026-09-09 - red (1)
+      above, attempted directly: added context tracking to ConditionalSkip, a
+      list on SeriesDose instead of one instance, and context-based selection
+      in EvaluateConditionalSkip. All three "can context be expressed" probe
+      tests (6.2/7.1/7.6) went green with zero other unit-test regressions.
+      But it did not resolve the FITS case that motivated it (MCV's "given at
+      16+, no booster" rule - dose 2's Evaluation stayed null both before and
+      after, so some separate, not-yet-located cross-dose mechanism is also
+      needed) and caused a net FITS regression elsewhere (19 DTaP/PCV cases
+      newly fail, 5 DTaP newly pass, net -14) traced to one specific DTaP
+      case but not fully root-caused. Reverted; see SPEC-4.6-0027 for the
+      full trace and the two live hypotheses for whoever picks this up next.
 
       Deliberately not covered. CONDSKIP-1's exclusion of doses the engine has
       not yet linked to a target dose (`if

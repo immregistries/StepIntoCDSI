@@ -1,0 +1,98 @@
+id: "SPEC-4.6-0027"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.2", "7.1", "7.6"]
+source_pages: [58, 71, 74]
+tables: ["Table 6-4"]
+business_rules: []
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkip"
+  - "org.openimmunizationsoftware.cdsi.core.domain.SeriesDose"
+  - "org.openimmunizationsoftware.cdsi.core.data.DataModelLoader"
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkip"
+fits_cases:
+  - "5eeca0522cc4517a96b0f417-MCV-2013-0511"
+summary: >
+  ConditionalSkip carries no context field at all, and SeriesDose holds
+  exactly one ConditionalSkip instance (DataModelLoader overwrites it once
+  per <conditionalSkip> XML element found) - so for the 67 series doses in
+  the bundled Supporting Data that declare two (an Evaluation-or-Both
+  instance followed by a Forecast-only one), only the Forecast-only
+  instance survives, and it is the one 6.2 Evaluate Conditional Skip
+  (which the specification says must use only an Evaluation-or-Both
+  instance) ends up evaluating - the Evaluation-or-Both instance the
+  specification requires is silently discarded. This is already recorded
+  as a red unit test
+  (EvaluateConditionalSkipForEvaluationTest.aConditionalSkipInstanceCarriesTheContextThatDecidesWhetherSixTwoMayUseIt,
+  and its 7.1/7.6 siblings) from an earlier research pass, which this
+  round confirmed and attempted to fix.
+
+  The fix - tracking context on ConditionalSkip, holding a list on
+  SeriesDose instead of one instance, and having EvaluateConditionalSkip
+  select the context-appropriate instance for its own arm (EVALUATE vs.
+  FORECAST/VALIDATING) - is textually exact, resolves all three
+  "can this rule even be expressed" probe tests cleanly with zero other
+  unit-test regressions (confirmed via sorted diff), but when run against
+  the full FITS suite: (a) does not change the originally-targeted MCV
+  case's outcome at all (5eeca0522cc4517a96b0f417-MCV-2013-0511/0512
+  remain NOT_COMPLETE, unchanged), and (b) causes a net FITS regression -
+  19 cases newly fail (15 DTaP, 4 PCV) against only 5 newly passing (all
+  DTaP), for a net -14 - for reasons this round did not have time to
+  trace to a root cause.
+evidence: >
+  MCV's own target case (a single MenACWY dose given at exactly age 16,
+  expected COMPLETE per ACIP's "no booster needed if the first dose was
+  given at 16+" rule) has its relevant conditionalSkip data declared on
+  dose 1, not dose 2 - two sibling <conditionalSkip> elements, one
+  context=Evaluation ("Target Dose is not needed if the current dose was
+  administered on or after 16 years - 4 days of age"), one
+  context=Forecast ("Target Dose is not required for those who are 16
+  years of age or older"). Direct instrumentation before any fix showed
+  dose 2's own Evaluation object entirely null - 6.2 never even attempted
+  to evaluate it - and this did not change after the context fix either;
+  whatever mechanism is meant to let dose 1's declared conditional skip
+  affect dose 2's own need was not activated by correcting which
+  ConditionalSkip instance 6.2 reads. This suggests the "declared on the
+  earlier dose, applies to a later one" cascade this scenario needs is a
+  separate, not-yet-understood piece of the specification's Evaluate
+  Conditional Skip mechanism, independent of the context-selection bug -
+  fixing the latter was necessary but is evidently not sufficient.
+
+  The FITS regression (DTaP/PCV) was not traced beyond confirming its
+  existence and direction (one specific DTaP case: expected earliest date
+  03/01/2027, actual regresses from a value matching that to 09/29/2026 -
+  a much earlier date, suggesting some Forecast-context conditional skip
+  that used to be read by 6.2 (before context was tracked at all) was
+  contributing a constraint DTaP's forecast actually depends on, and
+  correctly excluding it from 6.2 removes that constraint without
+  whatever was actually supposed to supply it stepping in).
+interpretation: >
+  The context/list-storage bug is real and independently confirmed
+  (matches the already-existing red test and its detailed pre-existing
+  documentation in step-tests/status.yaml for unit 6.2). But the fix,
+  while textually faithful to Table 6-4's entry condition, interacts with
+  at least one other, not-yet-identified mechanism in a way that (a)
+  doesn't resolve the FITS case that motivated looking at it and (b)
+  regresses a different antigen's forecasts. Two live hypotheses, neither
+  confirmed:
+  (1) the "16 years" MCV rule requires a genuinely different mechanism
+  (perhaps ConditionalNeed, or a cross-dose cascade this pass didn't
+  locate) that 6.2's context fix alone cannot supply, independent of
+  whether the context bug is fixed; and
+  (2) some DTaP series dose's Forecast-context-only conditional skip was,
+  before this fix, incorrectly but load-bearing-ly being read by 6.2
+  (since context wasn't tracked, nothing excluded it), and 7.1/7.6's own
+  forecast-side processing was not, in practice, independently supplying
+  the same constraint - meaning 7.1/7.6 may have their own, separate gap
+  that only becomes visible once 6.2 stops over-reading Forecast-context
+  data on their behalf.
+
+  Not merged. Reverted in full after confirming via a fresh FITS run that
+  the revert restores the exact pre-fix baseline (3451 passed, 1
+  execution error, engine suite failure set sorted-diff-identical).
+  Recorded as open per the same discipline as SPEC-4.6-0018/0019 -a
+  textually-correct fix that regresses FITS needs its interaction fully
+  traced before merging, not shipped on the strength of unit tests alone.
+  Whoever picks this up next should start from hypothesis (2) via the
+  specific DTaP case cited above, since it is the more concrete, better-
+  evidenced of the two.
