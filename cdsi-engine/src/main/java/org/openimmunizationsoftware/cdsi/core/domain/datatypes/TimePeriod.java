@@ -181,30 +181,52 @@ public class TimePeriod {
           month = month - 12;
         }
       }
-      endingDate.set(Calendar.MONTH, month - 1);
-      endingDate.set(Calendar.YEAR, year);
+      setMonthAndYearApplyingCalcDtFive(endingDate, month, year);
     } else if (type == TimePeriodType.WEEK) {
       endingDate.add(Calendar.DAY_OF_MONTH, amount * 7);
     } else if (type == TimePeriodType.YEAR) {
       year = year + amount;
-      endingDate.set(Calendar.YEAR, year);
-    }
-    // CALCDT-5
-    if (endingDate.get(Calendar.DAY_OF_MONTH) > endingDate
-        .getActualMaximum(Calendar.DAY_OF_MONTH)) {
-      month = month + 1;
-      if (month > 12) {
-        year = year + 1;
-        month = 1;
-      }
-      endingDate.set(Calendar.MONTH, month - 1);
-      endingDate.set(Calendar.YEAR, year);
-      endingDate.set(Calendar.DAY_OF_MONTH, 1);
+      setMonthAndYearApplyingCalcDtFive(endingDate, month, year);
     }
 
     if (child != null) {
       return child.getDateFrom(endingDate.getTime());
     }
     return endingDate.getTime();
+  }
+
+  /**
+   * Sets {@code calendar} to the given 1-indexed {@code month}/{@code year},
+   * applying CALCDT-5 ("a computed date which is not a real date must be
+   * moved forward to first day of the next month") - e.g. 08/31 + 6 months
+   * lands on a February 31st that doesn't exist, so the result must be
+   * 03/01, not 03/03.
+   *
+   * <p>
+   * {@code Calendar.set(MONTH, ...)} does not clamp an out-of-range
+   * day-of-month for the new month - it silently rolls the excess days
+   * forward (day 31 in a 28-day February becomes March 3rd, not February
+   * 28th or March 1st), so the day-of-month must be captured and reset
+   * before the month/year change, and the target month/year's real max only
+   * checked against it afterward - checking {@code calendar.get(DAY_OF_MONTH)}
+   * after the fact (as this method used to) reads a day that has already
+   * silently overflowed, so the check can never fire correctly.
+   */
+  private static void setMonthAndYearApplyingCalcDtFive(Calendar calendar, int month, int year) {
+    int originalDay = calendar.get(Calendar.DAY_OF_MONTH);
+    calendar.set(Calendar.DAY_OF_MONTH, 1);
+    calendar.set(Calendar.MONTH, month - 1);
+    calendar.set(Calendar.YEAR, year);
+    if (originalDay > calendar.getActualMaximum(Calendar.DAY_OF_MONTH)) {
+      month = month + 1;
+      if (month > 12) {
+        year = year + 1;
+        month = 1;
+      }
+      calendar.set(Calendar.MONTH, month - 1);
+      calendar.set(Calendar.YEAR, year);
+    } else {
+      calendar.set(Calendar.DAY_OF_MONTH, originalDay);
+    }
   }
 }

@@ -14,7 +14,7 @@ public final class CvxEquivalence {
   }
 
   private static final String[][] EQUIVALENT_CVX = {
-      { "85", "52" },
+      { "85", "52", "82" }, // HepA: unspecified (85), pediatric (52), adult (82)
       { "45", "08", "189", "43" },
       { "163", "164", "162" },
       { "137", "165" },

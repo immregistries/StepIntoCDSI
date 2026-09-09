@@ -37,7 +37,7 @@ public class FitsServlet extends ForecastServlet {
         doGet(req, resp);
     }
 
-    private static String[][] equivalentCvx = new String[][] { { "85", "52" },
+    private static String[][] equivalentCvx = new String[][] { { "85", "52", "82" }, // HepA: unspecified/pediatric/adult
             { "45", "08", "189", "43" }, { "163", "164", "162" }, { "137", "165" }, { "48", "17" },
             { "03", "05", "06", "07" }, // MMR (03), Measles (05), Rubella (06), Mumps (07)
             { "107", "112", "20", "11" }, // DTaP: Diphtheria (20), Pertussis (11), Tetanus (112)

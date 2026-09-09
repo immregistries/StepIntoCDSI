@@ -1,0 +1,89 @@
+id: "SPEC-4.6-0026"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["3.4"]
+source_pages: [12]
+tables: ["Table 3-6"]
+business_rules: ["CALCDT-5"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod"
+fits_cases:
+  - "5925aa6aca7e8c78bc364506-HepA-AART-EXTRA-3"
+summary: >
+  TimePeriod.getDateFrom's CALCDT-5 handling ("a computed date which is
+  not a real date must be moved forward to first day of the next month")
+  read the day-of-month back from the java.util.Calendar *after* already
+  calling Calendar.set(MONTH, ...)/set(YEAR, ...) with the original
+  day-of-month still in place - but Calendar.set(MONTH, ...) does not
+  clamp an out-of-range day for the new month, it silently rolls the
+  excess days forward into the following month(s) (day 31 in a 28-day
+  February becomes March 3rd, not February 28th or March 1st). By the
+  time the CALCDT-5 overflow check ran, the day had already silently
+  rolled over into a valid day of whatever month it landed on, so the
+  check `dayOfMonth > actualMaximum` could never be true and the intended
+  "move forward to the first of the next month" logic never executed -
+  the result was whatever month/day Calendar's own default overflow
+  arithmetic produced, which for a single day of overflow (e.g. adding 6
+  months to a 29th landing on a 28-day February) accidentally matches
+  CALCDT-5's answer, but for a larger overflow (e.g. adding 6 months to a
+  31st landing on the same 28-day February) does not.
+evidence: >
+  The specification's own two worked examples for CALCDT-5: "03/31/2000 +
+  6 months = 10/01/2000 (September 31 does not exist)" and "08/31/2000 +
+  6 months = 03/01/2001 (February 31 does not exist)." A new unit test,
+  TestTimePeriod.calcdtFiveAComputedDateThatIsNotARealDateMovesForwardToTheFirstOfTheNextMonth,
+  pinning both verbatim, failed on the second example before this fix:
+  TimePeriod("6 months").getDateFrom(08/31/2000) returned 03/03/2001, not
+  03/01/2001 - a 3-day overflow (31 - 28 = 3) rolling three days into
+  March rather than landing on March 1st as CALCDT-5 requires. The first
+  example (03/31 -> a 30-day September, 1-day overflow) happened to still
+  produce the right answer by coincidence, since a 1-day overflow lands
+  exactly on the 1st of the next month whether or not CALCDT-5's own
+  "move to the first" logic actually runs.
+
+  Traced from FITS case 5925aa6aca7e8c78bc364506-HepA-AART-EXTRA-3 (a
+  dose administered 08/29/2026; the series' minInt is "6 months"; 2027 is
+  not a leap year, so 08/29/2026 + 6 months lands on a nonexistent
+  02/29/2027). This is only a 1-day overflow (29 - 28 = 1), so the bug
+  described above happens to already produce the CALCDT-5-correct answer
+  (03/01/2027) both before and after this fix - fixing the bug does not
+  change this specific FITS case's outcome. See the "Not fixed" section
+  below for why this and its two sibling FITS cases remain red for an
+  unrelated reason.
+interpretation: >
+  Fixed by capturing the original day-of-month before mutating the
+  Calendar's month/year fields at all, setting the day to 1 first (always
+  valid, so no overflow can occur while the month/year are in flux),
+  setting the target month/year, and only then comparing the *original*
+  day-of-month against the target month's actual maximum - applying
+  CALCDT-5's "move to the first of the next month" outcome only when that
+  comparison genuinely requires it, rather than reading a day value that
+  has already silently overflowed. Applied to both the MONTH and YEAR
+  branches (the YEAR branch has the identical latent bug for a leap-day
+  reference date, e.g. Feb 29 + 1 year).
+
+  Verified via the standing Role B pipeline: two new TestTimePeriod tests
+  (the specification's own two worked examples, plus a third pinning the
+  FITS-observed 08/29/2026 case) all green; full cdsi-engine suite
+  confirmed as an identical failure set before/after via sorted diff (no
+  new failures, no fixes to other tests); full FITS run, case-by-case
+  diffed against the pre-fix baseline: 0 regressions, 0 improvements -
+  the multi-day-overflow scenario this fix actually corrects does not
+  occur anywhere else in the current 4896-case fixture set, only in the
+  hand-authored unit test pinning the spec's own example. This is still a
+  genuine correctness fix, protecting against a class of date-arithmetic
+  errors (any month/year TimePeriod addition landing more than one day
+  past the end of a shorter target month) that the fixture set does not
+  currently happen to exercise.
+
+  Not fixed, and not fixable by correcting this bug further: HepA's three
+  sibling FITS cases (5925aa6aca7e8c78bc364506-HepA-AART-EXTRA-3/5/7) all
+  expect 02/28/2027 for this same 08/29/2026 + 6 months computation -
+  contradicting CALCDT-5's own literal text and worked examples, which
+  both this fix and the pre-fix code (by coincidence, for this specific
+  1-day-overflow case) already compute as 03/01/2027. This is recorded
+  as a separate, open question (see cross-cutting-notes.md and this
+  round's progress-ledger entry) about whether these "Extra Test Cases"
+  fixtures are authoritative relative to the specification's own explicit
+  rule, not something correcting the engine's CALCDT-5 implementation can
+  resolve either way.
