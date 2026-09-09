@@ -1490,12 +1490,12 @@ units:
   '6.7':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluateVaccineConflictTest
-    fix_status: in_progress
+    fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0015"]
+    finding_ids: ["SPEC-4.6-0015", "SPEC-4.6-0036"]
     notes: >-
-      25 tests, now 22 green and 3 red (was 14/11 - see SPEC-4.6-0015: fixed
+      25 tests, now 25/25 green (was 14/11 - see SPEC-4.6-0015: fixed
       the wrong loop direction (scanned doses after the current one instead
       of before), the copy-paste end-interval bug, the exclusive-instead-of-
       inclusive begin boundary, and matching that ignored the conflicting
@@ -1503,11 +1503,10 @@ units:
       code in any normal chronological history. Reviewed and merged. First
       round in this Role B pass to move FITS: 14 real cases (3 distinct
       scenarios - MMR-2013-0554, MMR-2013-0556, VAR-2013-0831, each across
-      4-5 test-plan snapshots) flip FAIL to PASS, 0 regressions). The
-      remaining 3 red tests are a separate, unrelated defect (a
-      presentation-only attribute label, and an already-documented-latent
-      constructor side effect) - see below, deliberately untouched this
-      round. 6.7 is the one chapter-6 evaluation step
+      4-5 test-plan snapshots) flip FAIL to PASS, 0 regressions; and
+      SPEC-4.6-0036: fixed the remaining 3 - a presentation-only attribute
+      label and the already-documented-latent constructor side effect - see
+      below). 6.7 is the one chapter-6 evaluation step
       with no decision table - version 4.4 restructured it "to be less process
       driven and more business rule based" - so Table 6-24's three business rules
       are the whole of what it normatively says, and the tests are organised
@@ -1533,18 +1532,30 @@ units:
       liveVirusConflict markup carries all three intervals the two CALCDTCONFLICT
       rules name, as three distinct values.
 
-      Still red, expected vs actual. (1)
+      Fixed (SPEC-4.6-0036, merged). (1)
       tableSixTwentyThreeNamesItsAttributesAsTheSpecificationDoes - expected Table
-      6-23 row 2's attribute type "Vaccine dose administered"; actual "Supporting
-      Data (Live Virus Conflict)", though the value it carries is correct. (2)
+      6-23 row 2's attribute type "Vaccine dose administered"; used to publish
+      "Supporting Data (Live Virus Conflict)" (the value it carries was already
+      correct - only the label was wrong; caCurrentVaccineType is now constructed
+      with the same "Vaccine dose administered" label as caDateAdministered). (2)
       constructingTheStepDoesNotRecordAnythingWhenThereIsNoPreviousDose - expected
-      constructing the step to leave the status cause at "Age"; actual
+      constructing the step to leave the status cause at "Age"; used to be
       "AgeVirusConflict". (3)
       noVaccineDoseAdministeredOnOrBeforeTheCurrentOneMeansNoConflict - expected
       no conflict recorded when nothing was administered on or before the current
-      dose; actual "VirusConflictVirusConflict". (2) and (3) are the constructor
-      side effect flagged by 6.6, below - a separate, unrelated defect in the
-      same class's first internal table, deliberately left for a later round.
+      dose; used to be "VirusConflictVirusConflict" (doubled, since the
+      constructor's own eager evaluation and process()'s later evaluateLogicTables()
+      both ran the same buggy outcome). (2) and (3) were the constructor
+      side effect flagged by 6.6, below: Table "4-20"'s third outcome column
+      (no vaccine dose administered on or before the current one - nothing to
+      evaluate against) incorrectly appended "VirusConflict" to the shared
+      status cause instead of doing nothing, the same way its sibling outcome
+      column (not an impacted vaccine type) correctly does. Now fixed by removing
+      that side effect; the outcome only logs, matching its sibling. This also
+      closes the cross-step landmine 6.6 recorded below - 6.6's own fixtures
+      leave antigenAdministeredRecordList empty, which used to make every one
+      of EvaluateAllowableIntervalTest's runs append a spurious "VirusConflict"
+      through 6.7's constructor; that can no longer happen.
 
       Fixed (SPEC-4.6-0015, merged). (1)
       calcdtconflictOneCalculatesTheConflictBeginIntervalDate - expected a
@@ -1612,27 +1623,26 @@ units:
       fields, which the green loader test confirms on the release's own
       MMR-after-MMR markup.
 
-      On the constructor side effect flagged by 6.6. Confirmed, with a
-      qualification. EvaluateVaccineConflict's constructor really does evaluate
+      On the constructor side effect flagged by 6.6 - now fixed (SPEC-4.6-0036).
+      EvaluateVaccineConflict's constructor really does evaluate
       its first internal table (the one labelled "Table 4-20") and run the whole
       per-previous-dose loop before returning; process() only re-evaluates the
       tables and then reads the YesNo the constructor already computed. That first
-      table's third outcome appends "VirusConflict" to the shared target dose
-      status cause, so constructing the step can mutate state - red (10) pins
-      exactly that. The qualification is that the outcome fires only when its
-      second condition, "is there at least one vaccine dose administered on or
-      before the current vaccine dose administered date?", is No, and that
-      condition scans dataModel.getAntigenAdministeredRecordList(), which in a
-      real pipeline run always contains the current dose itself. So in a full
-      engine run the condition is always Yes and no spurious marker is written -
-      the side effect is latent, not live. It becomes reachable from any caller
-      holding a DataModel whose antigenAdministeredRecordList is empty, which is
-      what 6.6's fixtures are: EvaluateAllowableIntervalTest never populates that
-      list, so every one of its runs that reaches next() does append a spurious
-      "VirusConflict" through 6.7's constructor. 6.6's tests are unaffected because
-      they only ever assert on their own "Interval" marker. Recorded here as a
-      fact for whoever runs 6.7's Role B, not as a cross-step problem to act on
-      now. The corresponding green test,
+      table's third outcome used to append "VirusConflict" to the shared target
+      dose status cause even during construction - red (10) pinned exactly that,
+      and it fired whenever the second condition ("is there at least one vaccine
+      dose administered on or before the current vaccine dose administered
+      date?") was No, i.e. whenever dataModel.getAntigenAdministeredRecordList()
+      had nothing at or before the current dose. In a real pipeline run that list
+      always contains the current dose itself, so the side effect was latent
+      there - but reachable from any caller holding a DataModel whose
+      antigenAdministeredRecordList is empty, which is what 6.6's fixtures are:
+      EvaluateAllowableIntervalTest never populates that list, so every one of
+      its runs that reached next() used to append a spurious "VirusConflict"
+      through 6.7's constructor (6.6's own tests were unaffected, since they only
+      ever assert on their own "Interval" marker). That outcome no longer touches
+      the status cause at all, so this cross-step landmine is closed along with
+      6.7's own reds. The corresponding green test,
       constructingTheStepDoesNotRecordAnythingWhenTheHistoryIsPopulated, pins the
       ordinary case.
 

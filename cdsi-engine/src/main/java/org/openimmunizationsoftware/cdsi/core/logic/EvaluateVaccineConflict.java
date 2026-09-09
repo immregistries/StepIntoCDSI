@@ -41,7 +41,7 @@ public class EvaluateVaccineConflict extends LogicStep {
     // CALCDTLIVE-3",
     // "Conflict End Interval Date");
     caCurrentVaccineType = new ConditionAttribute<VaccineType>(
-        "Supporting Data (Live Virus Conflict)", "Current Vaccine Type");
+        "Vaccine dose administered", "Vaccine Type");
 
     conditionAttributesList.add(caDateAdministered);
     conditionAttributesList.add(caCurrentVaccineType);
@@ -165,9 +165,8 @@ public class EvaluateVaccineConflict extends LogicStep {
       setLogicOutcome(2, new LogicOutcome() {
         @Override
         public void perform() {
-          log("No. The vaccine dose administered should not be evaluated for a live virus conflict.");
-          dataModel.getTargetDose()
-              .setStatusCause(dataModel.getTargetDose().getStatusCause() + "VirusConflict");
+          log("No. The vaccine dose administered should not be evaluated for a live virus conflict "
+              + "- there is no vaccine dose administered on or before the current one to conflict with.");
         }
       });
     }

@@ -1,0 +1,68 @@
+id: "SPEC-4.6-0036"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.7"]
+source_pages: [51]
+tables: ["Table 6-23"]
+business_rules: []
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateVaccineConflict"
+fits_cases: []
+summary: >
+  Unit 6.7's last three reds, both deliberately left open by
+  SPEC-4.6-0015's earlier round as a separate, unrelated defect.
+
+  1. Table 6-23 row 2's attribute was mislabeled "Supporting Data
+  (Live Virus Conflict)" instead of "Vaccine dose administered" - a
+  copy-paste artifact from the neighboring caPreviousVaccineType
+  attributes (which genuinely are Supporting-Data-sourced), even
+  though the row itself carries the current dose's own vaccine type
+  and the value it published was already correct.
+
+  2. Table "4-20"'s third outcome column - fired whenever there is no
+  vaccine dose administered on or before the current one, i.e.
+  nothing to possibly conflict with - incorrectly appended
+  "VirusConflict" to the target dose's shared status cause, instead
+  of doing nothing (the way its sibling "not an impacted vaccine
+  type" outcome correctly does).
+
+  3. Because EvaluateVaccineConflict's constructor eagerly evaluates
+  its own logic tables to determine the loop bounds it needs before
+  returning, and process() then unconditionally calls
+  evaluateLogicTables() again on the same table instances, gap 2's
+  side effect fired twice on a full process() call - once at
+  construction, once in process() - doubling the erroneous append.
+evidence: >
+  status.yaml's own pre-existing notes for unit 6.7 had already
+  root-caused all three precisely, including the fact that gap 2 is a
+  cross-step landmine: 6.6's own EvaluateAllowableIntervalTest
+  fixtures leave antigenAdministeredRecordList empty (unlike a real
+  pipeline run, which always has the current dose in that list), so
+  every one of 6.6's runs that reached next() was silently appending
+  a spurious "VirusConflict" onto the status cause through 6.7's
+  constructor - invisible to 6.6's own tests, which only assert on
+  their own "Interval" marker, but a latent hazard for anything else
+  built on top of 6.6 in isolation.
+interpretation: >
+  Fixed both root causes. caCurrentVaccineType is now constructed
+  with the label "Vaccine dose administered" (matching
+  caDateAdministered, Table 6-23's other row) rather than the
+  Supporting-Data label that only applies to the previous-dose
+  attributes added later in the same list. Table "4-20"'s third
+  outcome column no longer touches the status cause at all - it now
+  only logs, exactly like its sibling "not an impacted vaccine type"
+  outcome - so there is nothing left to double-fire regardless of how
+  many times the table gets (re-)evaluated. The redundant
+  evaluateLogicTables() call in process() was deliberately left
+  untouched: with outcome 2 no longer side-effecting, the double
+  evaluation is now harmless (idempotent logging only), and removing
+  it was outside this defect's bounds.
+
+  Verified via the standing Role B pipeline: unit 6.7's own suite
+  25/25 green (was 22/25). Full engine suite: sorted diff confirms
+  exactly those 3 tests flipped and nothing else. Full FITS run,
+  case-by-case diffed: 3627 passed both before and after, 0 changed
+  cases - a genuine correctness fix (including closing the 6.6
+  cross-step landmine) the current fixture set doesn't happen to
+  exercise, the same category as SPEC-4.6-0026, SPEC-4.6-0030,
+  SPEC-4.6-0034 and SPEC-4.6-0035.

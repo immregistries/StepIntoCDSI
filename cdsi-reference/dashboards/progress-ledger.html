@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-09 12:36:51 - regenerate with
+  Dashboard generated 2026-09-09 13:54:27 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,7 +57,7 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">28</div>
+    <div class="value">29</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
@@ -75,6 +75,29 @@
 </div>
 
 
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 28 - Unit 6.7 Closed: Mislabeled Attribute and a Doubling Constructor Side Effect Fixed, Closing a 6.6 Cross-Step Landmine (SPEC-4.6-0036)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Moved forward to the next unit in spec order after fully closing out 6.5 (round 27) - 6.6 (EvaluateAllowableIntervalTest) is already fully green, so unit 6.7&#x27;s last three reds, deliberately left open by the earlier SPEC-4.6-0015 round as a separate defect from the loop/interval bugs it fixed.
+Fixed two root causes: (1) Table 6-23 row 2&#x27;s attribute was mislabeled &quot;Supporting Data (Live Virus Conflict)&quot; instead of &quot;Vaccine dose administered&quot; - a copy-paste artifact, presentation- only, the value it published was already correct; (2) EvaluateVaccineConflict&#x27;s constructor eagerly evaluates its own logic tables to determine loop bounds (documented in this step package&#x27;s own test javadoc as unusual for chapter 6), and one outcome column - &quot;no vaccine dose administered on or before the current one, nothing to conflict with&quot; - incorrectly appended &quot;VirusConflict&quot; to the shared status cause instead of doing nothing, the same mistake its &quot;not impacted type&quot; sibling correctly avoids. Because process() also unconditionally re-evaluates the same table instances, a full process() call fired this side effect twice, producing a doubled &quot;VirusConflictVirusConflict&quot;.
+Fixing (2) also closes a cross-step landmine status.yaml&#x27;s own notes had already flagged from unit 6.6: EvaluateAllowableIntervalTest&#x27;s fixtures leave antigenAdministeredRecordList empty, which used to make every one of its runs silently append a spurious &quot;VirusConflict&quot; through 6.7&#x27;s constructor - invisible to 6.6&#x27;s own tests (they only assert on their own &quot;Interval&quot; marker), but a latent hazard for anything else built on 6.6 in isolation. That can no longer happen.
+Final verification: unit 6.7&#x27;s own suite 25/25 green (up from 22/25); full engine suite 113 failures/1 error (down from 116/1, sorted-diff-confirmed as exactly those 3 tests); full FITS run: 3627 passed both before and after, 0 changed cases - a genuine correctness fix (including closing the 6.6 landmine) the current fixture set doesn&#x27;t happen to exercise, the same category as SPEC-4.6-0026, SPEC-4.6-0030, SPEC-4.6-0034, and SPEC-4.6-0035.
+Sixth consecutive unit-closing round today (4.4, 5.1, 6.1, 6.2, 6.3, 6.5) with zero FITS regressions.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>48adab8</code></td></tr><tr><td>Engine tests</td><td>783 total, 116 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3627 passed, 1268 failed-assertion, 1 execution-error (74.1%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>PENDING</code></td></tr><tr><td>Engine tests</td><td>783 total, 113 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3627 passed, 1268 failed-assertion, 1 execution-error (74.1%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0036/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0036/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0036</p>
+</section>
 <section>
   <h2>2026-09-09 - Phase 22 - Role B Round 27 - Unit 6.5 Closed: CALCDTINT-9, the Last of the Four Reference-Date Rules, Fixed (SPEC-4.6-0035)
     <span class="badge badge-green">reviewed</span>

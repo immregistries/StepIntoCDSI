@@ -1,0 +1,57 @@
+id: "2026-09-09-role-b-round-28-unit-6.7"
+date: "2026-09-09"
+phase: 22
+title: "Role B Round 28 - Unit 6.7 Closed: Mislabeled Attribute and a Doubling Constructor Side Effect Fixed, Closing a 6.6 Cross-Step Landmine (SPEC-4.6-0036)"
+before:
+  commit: "48adab8"
+  engine_tests: {total: 783, failures: 116, errors: 1}
+  fits: {total_cases: 4896, passed: 3627, failed_assertions: 1268, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+after:
+  commit: "PENDING"
+  engine_tests: {total: 783, failures: 113, errors: 1}
+  fits: {total_cases: 4896, passed: 3627, failed_assertions: 1268, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+summary: >
+  Moved forward to the next unit in spec order after fully closing out
+  6.5 (round 27) - 6.6 (EvaluateAllowableIntervalTest) is already
+  fully green, so unit 6.7's last three reds, deliberately left open
+  by the earlier SPEC-4.6-0015 round as a separate defect from the
+  loop/interval bugs it fixed.
+
+  Fixed two root causes: (1) Table 6-23 row 2's attribute was
+  mislabeled "Supporting Data (Live Virus Conflict)" instead of
+  "Vaccine dose administered" - a copy-paste artifact, presentation-
+  only, the value it published was already correct; (2)
+  EvaluateVaccineConflict's constructor eagerly evaluates its own
+  logic tables to determine loop bounds (documented in this step
+  package's own test javadoc as unusual for chapter 6), and one
+  outcome column - "no vaccine dose administered on or before the
+  current one, nothing to conflict with" - incorrectly appended
+  "VirusConflict" to the shared status cause instead of doing
+  nothing, the same mistake its "not impacted type" sibling correctly
+  avoids. Because process() also unconditionally re-evaluates the
+  same table instances, a full process() call fired this side effect
+  twice, producing a doubled "VirusConflictVirusConflict".
+
+  Fixing (2) also closes a cross-step landmine status.yaml's own
+  notes had already flagged from unit 6.6: EvaluateAllowableIntervalTest's
+  fixtures leave antigenAdministeredRecordList empty, which used to
+  make every one of its runs silently append a spurious "VirusConflict"
+  through 6.7's constructor - invisible to 6.6's own tests (they only
+  assert on their own "Interval" marker), but a latent hazard for
+  anything else built on 6.6 in isolation. That can no longer happen.
+
+  Final verification: unit 6.7's own suite 25/25 green (up from
+  22/25); full engine suite 113 failures/1 error (down from 116/1,
+  sorted-diff-confirmed as exactly those 3 tests); full FITS run: 3627
+  passed both before and after, 0 changed cases - a genuine
+  correctness fix (including closing the 6.6 landmine) the current
+  fixture set doesn't happen to exercise, the same category as
+  SPEC-4.6-0026, SPEC-4.6-0030, SPEC-4.6-0034, and SPEC-4.6-0035.
+
+  Sixth consecutive unit-closing round today (4.4, 5.1, 6.1, 6.2, 6.3,
+  6.5) with zero FITS regressions.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0036/finding.md"
+finding_ids: ["SPEC-4.6-0036"]
+status: reviewed
