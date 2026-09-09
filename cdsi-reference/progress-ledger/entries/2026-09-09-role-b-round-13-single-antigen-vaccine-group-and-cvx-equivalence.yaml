@@ -1,0 +1,89 @@
+id: "2026-09-09-role-b-round-13-single-antigen-vaccine-group-and-cvx-equivalence"
+date: "2026-09-09"
+phase: 21
+title: "Role B Round 13 - SingleAntigenVaccineGroup Aggregation (SPEC-4.6-0022) and a CVX-Equivalence Data Bug (RSV Was the Worst-Performing FITS Group)"
+before:
+  commit: "07faaa9"
+  engine_tests: {total: 780, failures: 139, errors: 1}
+  fits: {total_cases: 4896, passed: 3396, failed_assertions: 1499, execution_errors: 1}
+  fits_runtime_seconds: 55.3
+after:
+  commit: "c2e1fc4"
+  engine_tests: {total: 780, failures: 137, errors: 1}
+  fits: {total_cases: 4896, passed: 3424, failed_assertions: 1471, execution_errors: 1}
+  fits_runtime_seconds: 60.6
+summary: >
+  Requested directly: with SPEC-4.6-0020/0021 shipped, RSV had become the
+  single worst-performing FITS group (92% failure rate, 46/50 cases),
+  worse even after those two rounds' PCV recovery. Investigated why.
+
+  Two independent, previously-hidden defects were found and fixed, both
+  exposed (not caused) by SPEC-4.6-0020's series-group loop the same way
+  SPEC-4.6-0021 was:
+
+  1. SPEC-4.6-0022: SingleAntigenVaccineGroup (9.2) built one
+  VaccineGroupForecast before its loop over the best patient series list
+  and mutated that same shared object once per matching series, so
+  whichever match was evaluated last silently overwrote every earlier
+  match - both the status and, separately, the earliest date (which
+  SINGLEANTVG-2 explicitly requires as a minimum across ALL matches, not
+  a copy from one). Before SPEC-4.6-0020, an antigen never had more than
+  one best patient series, so this was invisible. RSV's general "RSV
+  1-dose series" (no age bounds) and its "RSV 75 years+" alternate are
+  not declared equivalentSeriesGroups to each other, so both routinely
+  survive as separate best patient series for the same antigen - exactly
+  the shape this bug needed. Fixed by collecting every match, choosing
+  the most favorable status (Complete/Immune over an actionable Not
+  Complete over a dead-end Contraindicated/Aged Out/Not Recommended -
+  deliberately not MultipleAntigenVaccineGroup's own "any Aged Out wins"
+  precedence, which answers a different question), and taking the true
+  minimum earliest date across every match per SINGLEANTVG-2's literal
+  text. SingleAntigenVaccineGroupTest already had both defects pinned as
+  red tests from an earlier Role A pass (20/22 now green, was 16/22); the
+  full engine suite incidentally dropped from 139 to 137 failures because
+  those same two tests are counted there too.
+
+  2. A second, unrelated bug the same investigation surfaced while
+  verifying fix 1 had zero FITS effect on its own: cdsi-fits-tests'
+  CvxEquivalence.java (and cdsi-web's FitsServlet.java, the source it was
+  copied from) declared CVX 122 - Rotavirus's own code, confirmed against
+  the bundled Supporting Data - as equivalent to RSV's CVX 304. FITS's
+  comparator returns the first vaccine-group forecast whose CVX is "the
+  same vaccine" as expected; because Rotavirus's forecast happened to sit
+  earlier in the forecast list than RSV's own corrected entry, the
+  comparison silently graded RSV cases against Rotavirus's unrelated
+  status. Not a Logic Specification conformance defect (it lives outside
+  cdsi-engine, in the FITS harness and the interactive FITS servlet) so
+  it isn't its own SPEC-4.6-00NN finding, but it directly masked fix 1's
+  own FITS-visible effect until both were fixed together - fixed by
+  removing "122" from the RSV equivalence group in both files (a harmless
+  duplicate "112" in the neighboring DTaP group was also removed).
+
+  Verified via the standing Role B pipeline: SingleAntigenVaccineGroupTest
+  (20/22 green, the remaining 4 confirmed identical before/after -
+  pre-existing, unrelated field-plumbing gaps already tracked in this
+  unit's status.yaml notes); full cdsi-engine suite (137 failures/1 error,
+  down from 139/1, confirmed via diffing the exact failure list rather
+  than just the count); full FITS run case-by-case diffed against
+  SPEC-4.6-0021's exact baseline (2026-09-08T195714-671589Z-18ba253-...,
+  3253 passed): +171 improvements (143 PCV, 28 RSV), 0 regressions.
+
+  RSV's FITS failure rate: 92% (46/50) before this session's work on it,
+  36% (18/50) after both fixes - moved from the worst-performing group to
+  well below several others (COVID-19 91.5%, PCV 50.8%, FLU 50.6% are now
+  all worse). Remaining RSV failures are two further, distinct, unrelated
+  defects not addressed here: an interval/date-calculation gap (NOT_COMPLETE
+  cases forecasting a date roughly a month earlier than expected, similar
+  in shape to PCV's own remaining residual failures) and one case entirely
+  missing a forecast for CVX 314 (a newer RSV product code with no
+  matching Supporting Data or CvxEquivalence entry) - both would need
+  their own investigation.
+
+  COVID-19's now-worst 91.5% failure rate was not investigated this round
+  (out of scope - RSV was the specific request) but is a promising next
+  lead: COVID-19 is one of the antigens with populated equivalentSeriesGroups
+  data per SPEC-4.6-0020's materiality notes, so it may share SPEC-4.6-0022's
+  exact shape.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0022/finding.md"
+finding_ids: ["SPEC-4.6-0022"]
+status: reviewed
