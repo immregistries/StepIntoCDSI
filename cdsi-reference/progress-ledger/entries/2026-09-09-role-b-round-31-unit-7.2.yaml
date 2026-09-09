@@ -1,0 +1,57 @@
+id: "2026-09-09-role-b-round-31-unit-7.2"
+date: "2026-09-09"
+phase: 22
+title: "Role B Round 31 - Unit 7.2 Closed: Evidence of Immunity Was Completely Unreachable in Production (SPEC-4.6-0039)"
+before:
+  commit: "ab61354"
+  engine_tests: {total: 783, failures: 106, errors: 1}
+  fits: {total_cases: 4896, passed: 3632, failed_assertions: 1263, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+after:
+  commit: "PENDING"
+  engine_tests: {total: 783, failures: 101, errors: 1}
+  fits: {total_cases: 4896, passed: 3637, failed_assertions: 1258, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+summary: >
+  Moved forward to unit 7.2 after closing 6.10 (round 30) and
+  documenting 7.1's remaining red as the shared, already-tracked
+  SPEC-4.6-0027 gap (no code change, no round needed there).
+  status.yaml's own pre-existing notes had already root-caused all
+  six of unit 7.2's reds precisely, including the exact materiality
+  (six immunity-bearing antigens in the bundled release).
+
+  Fixed five together: (1) DataModelLoader.readImmunity parsed
+  <immunity> correctly but only stored it on a transient Schedule
+  object, never on the Antigen or DataModel - so Table 7-3's
+  conditions always saw an empty list in every real run, making the
+  whole determination inert; (2) all three implemented conditions
+  read a single schedule-wide index instead of the per-antigen
+  attribute Table 7-2 declares - masked by (1) but distinct; (3)
+  condition 1 (clinical-history path) was a placeholder that always
+  returned NO; (4) condition 3 (exclusion) asked the Supporting Data
+  whether it defined an exclusion at all rather than asking the
+  patient; (5) condition 4 (country of birth) dereferenced before its
+  own null guard, throwing NullPointerException. A latent forecast-
+  reason capitalization typo surfaced by fixing (3) was corrected
+  alongside. The sixth red - an assertion on a DataModel object
+  structurally disconnected from the method it claims to test - was
+  investigated in depth and classified UNDETERMINED rather than
+  forced: no implementation change can satisfy it without breaking a
+  sibling passing test that pins the same method's signature.
+
+  Final verification: unit 7.2's own suite 15/16 green (up from
+  10/16); full engine suite 101 failures/1 error (down from 106/1,
+  sorted-diff-confirmed as exactly those 5 tests); full FITS run,
+  case-by-case diffed: 3637 passed (up from 3632), 5 real cases
+  improved (all 5 snapshots of MMR-2015-0024, "Patient is born before
+  01/01/1957" with no vaccinations administered - the birth-date
+  immunity path this defect made completely unreachable), 0
+  regressions.
+
+  Second genuinely broad, cross-cutting FITS-moving fix in a row,
+  after SPEC-4.6-0038's decision-table engine fix - both rounds today
+  closed units whose defects reached well beyond their own step's
+  isolated test coverage.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0039/finding.md"
+finding_ids: ["SPEC-4.6-0039"]
+status: reviewed

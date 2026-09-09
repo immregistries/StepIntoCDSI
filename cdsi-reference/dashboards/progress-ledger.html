@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-09 15:18:16 - regenerate with
+  Dashboard generated 2026-09-09 16:37:42 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,11 +57,11 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">31</div>
+    <div class="value">32</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
-    <div class="value">74.2%</div>
+    <div class="value">74.3%</div>
     <div class="label">FITS pass rate now</div>
   </div>
   <div class="card">
@@ -75,6 +75,28 @@
 </div>
 
 
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 31 - Unit 7.2 Closed: Evidence of Immunity Was Completely Unreachable in Production (SPEC-4.6-0039)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Moved forward to unit 7.2 after closing 6.10 (round 30) and documenting 7.1&#x27;s remaining red as the shared, already-tracked SPEC-4.6-0027 gap (no code change, no round needed there). status.yaml&#x27;s own pre-existing notes had already root-caused all six of unit 7.2&#x27;s reds precisely, including the exact materiality (six immunity-bearing antigens in the bundled release).
+Fixed five together: (1) DataModelLoader.readImmunity parsed &lt;immunity&gt; correctly but only stored it on a transient Schedule object, never on the Antigen or DataModel - so Table 7-3&#x27;s conditions always saw an empty list in every real run, making the whole determination inert; (2) all three implemented conditions read a single schedule-wide index instead of the per-antigen attribute Table 7-2 declares - masked by (1) but distinct; (3) condition 1 (clinical-history path) was a placeholder that always returned NO; (4) condition 3 (exclusion) asked the Supporting Data whether it defined an exclusion at all rather than asking the patient; (5) condition 4 (country of birth) dereferenced before its own null guard, throwing NullPointerException. A latent forecast- reason capitalization typo surfaced by fixing (3) was corrected alongside. The sixth red - an assertion on a DataModel object structurally disconnected from the method it claims to test - was investigated in depth and classified UNDETERMINED rather than forced: no implementation change can satisfy it without breaking a sibling passing test that pins the same method&#x27;s signature.
+Final verification: unit 7.2&#x27;s own suite 15/16 green (up from 10/16); full engine suite 101 failures/1 error (down from 106/1, sorted-diff-confirmed as exactly those 5 tests); full FITS run, case-by-case diffed: 3637 passed (up from 3632), 5 real cases improved (all 5 snapshots of MMR-2015-0024, &quot;Patient is born before 01/01/1957&quot; with no vaccinations administered - the birth-date immunity path this defect made completely unreachable), 0 regressions.
+Second genuinely broad, cross-cutting FITS-moving fix in a row, after SPEC-4.6-0038&#x27;s decision-table engine fix - both rounds today closed units whose defects reached well beyond their own step&#x27;s isolated test coverage.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>ab61354</code></td></tr><tr><td>Engine tests</td><td>783 total, 106 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3632 passed, 1263 failed-assertion, 1 execution-error (74.2%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>PENDING</code></td></tr><tr><td>Engine tests</td><td>783 total, 101 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3637 passed, 1258 failed-assertion, 1 execution-error (74.3%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0039/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0039/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0039</p>
+</section>
 <section>
   <h2>2026-09-09 - Phase 22 - Role B Round 30 - Unit 6.10 Closed: Shared Decision-Table Engine Fixed to Honor Rule Priority (SPEC-4.6-0038)
     <span class="badge badge-green">reviewed</span>

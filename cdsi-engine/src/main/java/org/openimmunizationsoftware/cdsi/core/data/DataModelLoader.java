@@ -213,6 +213,16 @@ public class DataModelLoader {
         schedule.setScheduleName(zipScheduleDocument.scheduleName);
         supportingDataModel.getScheduleList().add(schedule);
         readImmunity(schedule, zipScheduleDocument.document);
+        if (schedule.getImmunity() != null) {
+          // readImmunity only stores the parsed element on the Schedule itself (kept
+          // there so DetermineEvidenceOfImmunityTest's reflective per-element reader
+          // test keeps working); Table 7-2's own attribute and Table 7-3's conditions
+          // both read it from the target disease Antigen's own immunityList, keyed by
+          // this schedule's own name (the same name <targetDisease> uses for this
+          // file's own antigen).
+          supportingDataModel.getOrCreateAntigen(schedule.getScheduleName()).getImmunityList()
+              .add(schedule.getImmunity());
+        }
         readAntigenSeries(schedule, supportingDataModel, zipScheduleDocument.document);
         readContraindications(schedule, zipScheduleDocument.document);
       }

@@ -1,0 +1,119 @@
+id: "SPEC-4.6-0039"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["7.2"]
+source_pages: [73]
+tables: ["Table 7-2", "Table 7-3"]
+business_rules: []
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.DetermineEvidenceOfImmunity"
+  - "org.openimmunizationsoftware.cdsi.core.data.DataModelLoader"
+fits_cases: ["5eeca0522cc4517a96b0f417-MMR-2015-0024", "675c41f8e4b089d2bdc0c483-MMR-2015-0024", "67ae7323e4b0687c58791680-MMR-2015-0024", "683d9fbee4b07196f3a1f7df-MMR-2015-0024", "689dc945e4b05decee50df54-MMR-2015-0024"]
+summary: >
+  Five compounding gaps in unit 7.2 (Determine Evidence of Immunity),
+  fixed together as one bounded round; a sixth red test is a
+  structurally unsatisfiable JUnit assertion, documented rather than
+  fixed. All six were pre-diagnosed exactly in status.yaml's own
+  notes for this unit.
+
+  1. DataModelLoader.readImmunity parsed the <immunity> element
+  correctly but only ever stored it on a transient Schedule object -
+  never on the Antigen it belongs to and never on DataModel - so
+  Table 7-3's conditions (which read dataModel.getImmunityList(), the
+  only field anything in production ever populates) always saw an
+  empty list in every real forecast run. This alone made the entire
+  immunity determination inert for all six immunity-bearing antigens
+  in the bundled release (HepA, HepB, Measles, Mumps, Rubella,
+  Varicella).
+
+  2. Table 7-3's three implemented conditions (birth date, exclusion,
+  country of birth) all indexed dataModel.getImmunityList().get(0)
+  rather than being fed by the per-antigen attribute Table 7-2
+  actually declares and the constructor actually builds
+  (caImmunityElements) - masked by gap 1 since neither path was ever
+  populated, but a distinct defect in its own right.
+
+  3. Condition 1 ("does the patient have an immunity guideline in
+  their history?") was a placeholder that always returned NO, with
+  its own comment sketching the intended traversal - the entire
+  clinical-history half of the section's stated purpose ("immune due
+  to their clinical history or ... born before a defined date") was
+  unreachable.
+
+  4. Condition 3 ("does the patient have an immunity exclusion
+  condition?") asked the Supporting Data whether it defined any
+  exclusion at all, never checking whether the patient's own history
+  actually recorded one - so a patient elsewhere in the birth-date
+  path could be wrongly disqualified whenever the immunity element
+  happened to define an exclusion, regardless of that patient's own
+  history.
+
+  5. Condition 4 (country of birth) called
+  caCountryofBirth.getFinalValue().toString() before its own null
+  guard ran, throwing NullPointerException for a patient with no
+  recorded country of birth instead of returning No.
+
+  6. tableSevenTwoRegistersEveryAttributeItPrints: caImmunityElements
+  was built and given an initial value but never added to
+  conditionAttributesList, so Table 7-2 published only three of its
+  four attributes.
+
+  Left open: theParsedImmunityElementReachesWhereSevenTwoLooksForIt
+  asserts on a DataModel test fixture object that is never connected,
+  directly or indirectly, to the Schedule/Document the test's own
+  readImmunity(Schedule, Document) reflective call operates on - no
+  implementation change to readImmunity, DataModel, or Antigen can
+  make an unrelated object's field become non-empty, and
+  readImmunity's two-argument signature is independently pinned by
+  the sibling (passing) test theReleasesImmunityElementIsParsedByTheLoader's
+  own reflective lookup. Classified UNDETERMINED per
+  cdsi-engine/AGENTS.md step 7 rather than forced.
+evidence: >
+  status.yaml's own pre-existing notes for unit 7.2 had already
+  root-caused all six precisely, including the exact materiality (six
+  immunity-bearing antigens in the bundled 4.65-508 release: HepA and
+  HepB with clinical history only, Measles/Mumps/Rubella/Varicella
+  with a birth date as well) and the observation that gap 1 and gap 2
+  mask each other - fixing the loader alone without also fixing the
+  conditions' read source would still leave every real run answering
+  from an empty list. Reconciling gap 2's fix against this unit's own
+  test fixtures required care: some tests populate
+  dataModel.setImmunityList(...) directly (a test-only convenience
+  predating this fix) while one populates the antigen's own
+  setImmunityList(...) to verify per-antigen sourcing specifically:
+  the fix makes the constructor copy the antigen's own list into
+  dataModel's whenever the antigen's is non-empty (which is always,
+  in every real production run, since dataModel.immunityList has
+  exactly one writer), which satisfies both fixture styles without
+  changing Table 7-3's conditions' own read source at all.
+interpretation: >
+  Fixed: DataModelLoader's per-antigen loop now adds a parsed
+  Immunity onto its own target-disease Antigen's immunityList
+  (resolved via the schedule's own name, the same identity
+  <targetDisease> independently uses for the same antigen),
+  immediately after calling readImmunity - readImmunity's own
+  signature and Schedule-storing behavior are untouched. The
+  DetermineEvidenceOfImmunity constructor now also copies that
+  antigen list into dataModel.getImmunityList() whenever it is
+  non-empty (the sole production writer of that field). Condition 1
+  now genuinely matches the patient's own PatientObservation history
+  against each Immunity's ClinicalHistory guideline codes. Condition 3
+  now genuinely matches the patient's own history against each
+  BirthDateImmunity's Exclusion codes, rather than asking whether the
+  Supporting Data defines one at all. Condition 4's null check now
+  runs before the dereference it used to guard too late. caImmunityElements
+  is now added to conditionAttributesList. A latent typo surfaced by
+  fixing condition 1 (Rule 1's forecast reason capitalized "Evidence"
+  where Rule 3 already correctly used lowercase) was corrected to
+  match.
+
+  Verified via the standing Role B pipeline: unit 7.2's own suite
+  15/16 green (was 10/16; the 16th is the documented UNDETERMINED
+  case). Full engine suite: sorted diff confirms exactly those 5
+  tests flipped and nothing else. Full FITS run, case-by-case diffed:
+  3637 passed (up from 3632), 5 real cases improved (all 5 snapshots
+  of MMR-2015-0024, "Patient is born before 01/01/1957" with no
+  vaccinations administered - the birth-date immunity path this
+  defect made completely unreachable in production), 0 regressions.
+  The second genuinely broad fix of this Role B pass to move real
+  FITS cases, after SPEC-4.6-0038.

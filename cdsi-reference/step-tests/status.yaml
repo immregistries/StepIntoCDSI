@@ -2145,12 +2145,14 @@ units:
   '7.2':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.DetermineEvidenceOfImmunityTest
-    fix_status: not_started
+    fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0039"]
     notes: >-
-      16 test methods in one class, 10 green and 6 red. 7.2 has no business
+      16 test methods in one class, now 15/16 green (was 10/16 - see
+      SPEC-4.6-0039 below; the 16th is left red, classified UNDETERMINED).
+      7.2 has no business
       rules of its own; its whole content is Table 7-2 (four immunity
       attributes), Table 7-3 (five rules, four conditions) and the state change
       the two "Immune" rules make, so every test below is one attribute, one
@@ -2189,47 +2191,79 @@ units:
       readImmunity reflectively, yields guideline 020, birth date 01/01/1957,
       empty birth country and exclusion 055.
 
-      The 6 red tests, expected vs actual. (1)
+      Fixed (SPEC-4.6-0039, merged), 5 of the original 6 reds. (1)
       ruleOneAPatientWhoseHistoryContainsAnImmunityGuidelineIsImmune - expected
       Table 7-3 condition 1 to answer Yes for a patient whose history contains
-      an immunity guideline, and the series to be IMMUNE; actual condition 1's
-      evaluateInternal is a placeholder that returns NO unconditionally (it
-      carries its own comment block sketching the traversal it was meant to
-      do), so Rule 1 can never fire and the entire clinical-history half of the
-      section's stated purpose is inert. The step package's Review Findings
-      already records this as a draft IMPLEMENTATION_MISMATCH. (2)
-      theExclusionConditionIsAskedOfThePatientNotOfTheSupportingData - expected
-      condition 3 ("Does this patient have an immunity exclusion condition?")
-      to be No for a patient with no such condition recorded, leaving them on
-      Rule 3 and immune; actual it returns Yes whenever the Supporting Data
-      element defines any exclusion at all, without ever looking at the
-      patient, so Rule 2 fires instead. (3)
+      an immunity guideline, and the series to be IMMUNE; used to be a
+      placeholder that returned NO unconditionally (it carried its own comment
+      block sketching the traversal it was meant to do), so Rule 1 could never
+      fire and the entire clinical-history half of the section's stated
+      purpose was inert - now matches the patient's own PatientObservation
+      history against each Immunity's ClinicalHistory guideline codes.
+      Fixing this surfaced a latent typo: Rule 1's forecast reason capitalized
+      "Evidence" where Rule 3 already correctly used lowercase - corrected to
+      match. (2) theExclusionConditionIsAskedOfThePatientNotOfTheSupportingData
+      - expected condition 3 ("Does this patient have an immunity exclusion
+      condition?") to be No for a patient with no such condition recorded,
+      leaving them on Rule 3 and immune; used to return Yes whenever the
+      Supporting Data element defined any exclusion at all, without ever
+      looking at the patient - now matches the patient's own history against
+      each BirthDateImmunity's Exclusion codes. (3)
       theImmunityElementUsedIsTheOneForThisPatientSeriesTargetDisease -
       expected the immunity element on this series' own antigen (Measles,
       01/01/1957) to answer condition 2 Yes for a patient born 06/15/1950;
-      actual all three implemented conditions read
-      dataModel.getImmunityList().get(0) - a single schedule-wide element,
-      ignoring the per-antigen attribute Table 7-2 declares and the constructor
-      populates - so the antigen's own element is never consulted. (4)
+      used to read dataModel.getImmunityList().get(0) - a single schedule-wide
+      element, ignoring the per-antigen attribute Table 7-2 declares and the
+      constructor populates - so the antigen's own element was never
+      consulted. Fixed not by changing the conditions' own read source but by
+      having DataModelLoader wire the parsed Immunity onto its own antigen
+      (see (4) below) and having the constructor copy that antigen list into
+      dataModel.getImmunityList() whenever it is non-empty - the sole
+      production writer of that field, so this is simply "always" in a real
+      run - which also keeps every other test's dataModel.setImmunityList(...)
+      fixture working unchanged. (4) tableSevenTwoRegistersEveryAttributeItPrints
+      - expected all four Table 7-2 attributes on the step's attribute list;
+      used to have the Supporting Data "Immunity Elements" attribute created
+      and given an initial value but never added to conditionAttributesList,
+      so the printed table showed three of four - now added. (5)
+      aPatientWithNoRecordedCountryOfBirthStillGetsAnAnswer - expected 7.2 to
+      answer for a patient with no recorded country of birth; used to
+      dereference caCountryofBirth.getFinalValue().toString() before its own
+      null guard ran, throwing NullPointerException - now checks null first.
+
+      Also fixed as part of the same round, feeding all five of the above:
+      DataModelLoader.readImmunity correctly parsed <immunity> but only ever
+      stored it on a transient Schedule object - never on the Antigen it
+      belongs to, and never on DataModel - so dataModel.getImmunityList() (the
+      only field anything in production ever populated it from) was empty in
+      every real forecast run, for all six immunity-bearing antigens in the
+      bundled release (HepA, HepB, Measles, Mumps, Rubella, Varicella). Fixed
+      by having the per-antigen loading loop add the parsed Immunity onto its
+      own target-disease Antigen's immunityList (resolved via the schedule's
+      own name, the same identity <targetDisease> independently uses for the
+      same antigen) immediately after calling readImmunity, without changing
+      readImmunity's own signature or its Schedule-storing behavior.
+
+      Confirmed against real FITS data: 5 real cases improved (all 5 snapshots
+      of MMR-2015-0024, "Patient is born before 01/01/1957" with no
+      vaccinations administered - the birth-date immunity path this defect
+      made completely unreachable in production), 0 regressions.
+
+      Left open, classified UNDETERMINED rather than fixed. (6)
       theParsedImmunityElementReachesWhereSevenTwoLooksForIt - expected the
-      element the loader has just parsed to be reachable from where Table 7-3
-      looks; actual readImmunity stores it only on a Schedule object, and
-      DataModel.immunityList (and Antigen.immunityList) are never populated by
-      anything, so dataModel.getImmunityList() is empty in every real run. (5)
-      tableSevenTwoRegistersEveryAttributeItPrints - expected all four Table
-      7-2 attributes on the step's attribute list; actual the Supporting Data
-      "Immunity Elements" attribute is created and given an initial value but
-      never added to conditionAttributesList, so the printed table shows three
-      of four. (6) aPatientWithNoRecordedCountryOfBirthStillGetsAnAnswer -
-      expected 7.2 to answer for a patient with no recorded country of birth;
-      actual condition 4 dereferences caCountryofBirth.getFinalValue()
-      .toString() before its own null guard runs, so it throws
-      NullPointerException and the guard is dead code. This one is latent
-      rather than live: Patient.countryOfBirth defaults to "" and nothing in
-      cdsi-engine or cdsi-fits-tests ever sets it to null, so no current input
-      path reaches it - it is recorded because Table 7-2 lists country of birth
-      as an input without marking it required, and because the condition itself
-      declares the guard.
+      element the loader has just parsed to be reachable from
+      dataModel.getImmunityList(); actual, still empty, because this test
+      asserts on a DataModel test fixture object never connected, directly or
+      indirectly, to the Schedule/Document its own reflective
+      readImmunity(Schedule, Document) call operates on. No change to
+      readImmunity, DataModel, or Antigen can make an unrelated object's field
+      become non-empty, and readImmunity's two-argument signature is
+      independently pinned by the sibling (passing) test
+      theReleasesImmunityElementIsParsedByTheLoader's own reflective lookup -
+      changing it to add a parameter would break that test instead. Per
+      cdsi-engine/AGENTS.md step 7 ("record UNDETERMINED, don't guess"), left
+      red rather than forced with a workaround; see SPEC-4.6-0039 for the full
+      trace.
 
       What reds (3) and (4) mean together, checked against the bundled
       4.65-508 release. Six antigens ship a populated <immunity> element: HepA
