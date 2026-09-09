@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-09 14:26:51 - regenerate with
+  Dashboard generated 2026-09-09 15:17:44 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,11 +57,11 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">30</div>
+    <div class="value">31</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
-    <div class="value">74.1%</div>
+    <div class="value">74.2%</div>
     <div class="label">FITS pass rate now</div>
   </div>
   <div class="card">
@@ -75,6 +75,28 @@
 </div>
 
 
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 30 - Unit 6.10 Closed: Shared Decision-Table Engine Fixed to Honor Rule Priority (SPEC-4.6-0038)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Moved forward to unit 6.10&#x27;s last three reds after closing 6.8 (round 29) - 6.9 was already green. status.yaml&#x27;s own pre-existing notes had already root-caused all three precisely as a single defect, and unusually, flagged it as reaching beyond 6.10 itself: Table 6-31&#x27;s six rules are priority-ordered (Rule 2 &quot;Extraneous&quot; must win over Rules 4/5/6&#x27;s three &quot;Not Valid&quot; reasons whenever more than one applies at once), but the shared LogicTable.evaluate() - used by every decision table across the whole engine - ran perform() on every matching column instead of stopping at the first, so a later-indexed NOT_VALID rule silently overwrote an earlier EXTRANEOUS one whenever both matched in the same pass.
+Fixed at the shared engine level rather than locally: added a break after the first matching column&#x27;s perform() runs in LogicTable.evaluate(), restoring standard priority-ordered decision- table semantics everywhere. Given the blast radius of a shared-class change, verified with extra weight on the full regression suite rather than relying on unit 6.10&#x27;s own tests alone.
+Final verification: unit 6.10&#x27;s own suite 25/25 green (up from 22/25); full engine suite across all 783 tests sorted-diff-confirmed exactly those 3 tests flipped and nothing else - no other decision table in the engine currently depends on more than one column validating at once; full FITS run, case-by-case diffed: 3632 passed (up from 3627), 5 real cases improved (all 5 test-plan snapshots of HIB-2013-0356, a too-old Hib dose that also triggers another status- cause marker - exactly the overlap this defect predicted), 0 regressions.
+Eighth consecutive unit-closing round today (4.4, 5.1, 6.1, 6.2, 6.3, 6.5, 6.7, 6.8) - and the first genuinely broad, cross-cutting fix of this Role B pass to move real FITS cases since SPEC-4.6-0032&#x27;s series-group fix.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>c331619</code></td></tr><tr><td>Engine tests</td><td>783 total, 109 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3627 passed, 1268 failed-assertion, 1 execution-error (74.1%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>PENDING</code></td></tr><tr><td>Engine tests</td><td>783 total, 106 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3632 passed, 1263 failed-assertion, 1 execution-error (74.2%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0038/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0038/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0038</p>
+</section>
 <section>
   <h2>2026-09-09 - Phase 22 - Role B Round 29 - Unit 6.8 Closed: Trade-Name Matching Wired Up and a Mislabeled Attribute Pair Fixed, With a FITS-Caught Course Correction (SPEC-4.6-0037)
     <span class="badge badge-green">reviewed</span>

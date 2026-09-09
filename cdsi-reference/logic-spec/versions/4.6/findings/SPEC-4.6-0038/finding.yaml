@@ -1,0 +1,62 @@
+id: "SPEC-4.6-0038"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.10"]
+source_pages: [55]
+tables: ["Table 6-31"]
+business_rules: []
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable"
+fits_cases: ["5eeca0522cc4517a96b0f417-HIB-2013-0356", "675c41f8e4b089d2bdc0c483-HIB-2013-0356", "67ae7323e4b0687c58791680-HIB-2013-0356", "683d9fbee4b07196f3a1f7df-HIB-2013-0356", "689dc945e4b05decee50df54-HIB-2013-0356"]
+summary: >
+  A rule-priority defect in the shared decision-table engine
+  (LogicTable.evaluate(), used by every decision table across all of
+  cdsi-engine), first surfaced by unit 6.10's own last three reds.
+
+  Table 6-31's six rules are priority-ordered - Rule 2 (Extraneous)
+  is meant to win over Rules 4, 5 and 6 (three separate "Not Valid"
+  reasons) whenever more than one applies at once, since a target
+  dose that is both extraneous and, say, impacted by a live virus
+  conflict is still fundamentally extraneous. But LogicTable.evaluate()
+  ran perform() on every column whose conditions matched, not just
+  the first (highest-priority) one - so whenever both Rule 2 and one
+  of Rules 4-6 matched simultaneously, Rule 2's EXTRANEOUS outcome ran
+  first and Rules 4/5/6's NOT_VALID outcome, running afterward in the
+  same evaluate() pass, silently overwrote it.
+evidence: >
+  status.yaml's own pre-existing notes for unit 6.10 had already
+  root-caused this precisely, including that it is reachable rather
+  than theoretical: EvaluateAge.process routes unconditionally on to
+  6.5 whatever Table 6-4 decided, so a too-old (Extraneous) dose still
+  passes through 6.5-6.9 and can pick up any of their status-cause
+  markers, and on the bundled Supporting Data release, 91 of the 92
+  series doses that can answer Extraneous at Table 6-4 also define at
+  least one allowableVaccine that could add the "Vaccine" marker Rule
+  6 reads. The notes explicitly flagged this as a rule-ordering defect,
+  not a marker-reading one, and recorded no finding pending Role B's
+  own classification. The shared LogicTable class's own comments
+  independently document the original intent: a validColumnCount != 1
+  check (with its throw commented out) shows the authors already
+  suspected only one column should ever validate.
+interpretation: >
+  Fixed at the shared engine level: LogicTable.evaluate() now breaks
+  after the first matching column's perform() runs, rather than
+  continuing to check and run every remaining column. This restores
+  standard priority-ordered decision-table semantics (first match
+  wins, columns read left to right in rule-number order) for every
+  LogicTable in the engine, not just Table 6-31 - matching how every
+  Table 6-31-derived test already read the specification
+  ("Rule 2 comes before Rule 4/5/6").
+
+  Verified via the standing Role B pipeline, with extra weight given
+  the shared-class blast radius: unit 6.10's own suite 25/25 green
+  (was 22/25). Full engine suite: sorted diff confirms exactly those 3
+  tests flipped and nothing else across all 783 tests - no other
+  decision table in the engine currently depends on more than one
+  column validating at once. Full FITS run, case-by-case diffed: 3632
+  passed (up from 3627), 5 real cases improved (all 5 test-plan
+  snapshots of HIB-2013-0356, "#2 Pentacel at 6 yrs 11.5 mo." - a
+  too-old Hib dose that also triggers another status-cause marker,
+  exactly the overlap this defect predicted), 0 regressions. The first
+  genuinely broad, cross-cutting fix of this Role B pass to move real
+  FITS cases since SPEC-4.6-0032's series-group fix.

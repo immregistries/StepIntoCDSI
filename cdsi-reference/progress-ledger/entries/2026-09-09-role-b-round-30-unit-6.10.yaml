@@ -1,0 +1,51 @@
+id: "2026-09-09-role-b-round-30-unit-6.10"
+date: "2026-09-09"
+phase: 22
+title: "Role B Round 30 - Unit 6.10 Closed: Shared Decision-Table Engine Fixed to Honor Rule Priority (SPEC-4.6-0038)"
+before:
+  commit: "c331619"
+  engine_tests: {total: 783, failures: 109, errors: 1}
+  fits: {total_cases: 4896, passed: 3627, failed_assertions: 1268, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+after:
+  commit: "PENDING"
+  engine_tests: {total: 783, failures: 106, errors: 1}
+  fits: {total_cases: 4896, passed: 3632, failed_assertions: 1263, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+summary: >
+  Moved forward to unit 6.10's last three reds after closing 6.8
+  (round 29) - 6.9 was already green. status.yaml's own pre-existing
+  notes had already root-caused all three precisely as a single
+  defect, and unusually, flagged it as reaching beyond 6.10 itself:
+  Table 6-31's six rules are priority-ordered (Rule 2 "Extraneous"
+  must win over Rules 4/5/6's three "Not Valid" reasons whenever more
+  than one applies at once), but the shared LogicTable.evaluate() -
+  used by every decision table across the whole engine - ran
+  perform() on every matching column instead of stopping at the
+  first, so a later-indexed NOT_VALID rule silently overwrote an
+  earlier EXTRANEOUS one whenever both matched in the same pass.
+
+  Fixed at the shared engine level rather than locally: added a break
+  after the first matching column's perform() runs in
+  LogicTable.evaluate(), restoring standard priority-ordered decision-
+  table semantics everywhere. Given the blast radius of a shared-class
+  change, verified with extra weight on the full regression suite
+  rather than relying on unit 6.10's own tests alone.
+
+  Final verification: unit 6.10's own suite 25/25 green (up from
+  22/25); full engine suite across all 783 tests sorted-diff-confirmed
+  exactly those 3 tests flipped and nothing else - no other decision
+  table in the engine currently depends on more than one column
+  validating at once; full FITS run, case-by-case diffed: 3632 passed
+  (up from 3627), 5 real cases improved (all 5 test-plan snapshots of
+  HIB-2013-0356, a too-old Hib dose that also triggers another status-
+  cause marker - exactly the overlap this defect predicted), 0
+  regressions.
+
+  Eighth consecutive unit-closing round today (4.4, 5.1, 6.1, 6.2, 6.3,
+  6.5, 6.7, 6.8) - and the first genuinely broad, cross-cutting fix of
+  this Role B pass to move real FITS cases since SPEC-4.6-0032's
+  series-group fix.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0038/finding.md"
+finding_ids: ["SPEC-4.6-0038"]
+status: reviewed

@@ -1913,12 +1913,13 @@ units:
   '6.10':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.SatisfyTargetDoseTest
-    fix_status: not_started
+    fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0038"]
     notes: >-
-      25 tests, 22 green and 3 red. Covered: the step's identity
+      25 tests, now 25/25 green (was 22/25 - see SPEC-4.6-0038 below).
+      Covered: the step's identity
       (SATISFY_TARGET_DOSE, chapter "6.10"); that it publishes no attribute table
       and no business rules, as the specification records for this section; Table
       6-31's identity, its four-condition six-rule shape and its full
@@ -1958,25 +1959,39 @@ units:
       one marker-related risk this unit does surface is not a marker defect at
       all but a rule-ordering one, below.
 
-      The three red tests share a single root cause and are the same assertion
-      against three different overlaps: an EXTRANEOUS evaluation from 6.4
-      combined with, respectively, an "Interval", a "VirusConflict" and a
-      "Vaccine" marker. Expected Table 6-31 Rule 2's evaluation status
-      EXTRANEOUS in each case; actual NOT_VALID in each case. LogicTable.evaluate
-      performs every matching rule column rather than stopping at the first, and
-      Rules 4, 5 and 6 all match on a dash for the age condition, so their
-      NOT_VALID overwrites Rule 2's EXTRANEOUS. The overlap is reachable rather
-      than theoretical: EvaluateAge.process routes unconditionally on to 6.5
-      whatever its own table decided, so a too-old dose still passes through 6.5
-      to 6.9 and can collect any of their markers; and on the bundled Supporting
-      Data release 4.65-508, of 506 series doses, 92 carry a non-empty maxAge
-      and so can make 6.4 answer Extraneous at all, of which 91 also define at
-      least one allowableVaccine and 59 also define an interval or an allowable
-      interval. The FITS suite cannot see the difference - its 4,896 cases
-      record 11,126 administered vaccinations and no expected per-dose
-      evaluation status, only expected forecasts - which is consistent with this
-      never having surfaced there. No finding is recorded and no classification
-      is attempted; that is Role B's call.
+      Fixed (SPEC-4.6-0038, merged). The three red tests shared a single root
+      cause and were the same assertion against three different overlaps: an
+      EXTRANEOUS evaluation from 6.4 combined with, respectively, an
+      "Interval", a "VirusConflict" and a "Vaccine" marker. Expected Table
+      6-31 Rule 2's evaluation status EXTRANEOUS in each case; actual
+      NOT_VALID in each case. LogicTable.evaluate used to perform every
+      matching rule column rather than stopping at the first, and Rules 4, 5
+      and 6 all match on a dash for the age condition, so their NOT_VALID
+      overwrote Rule 2's EXTRANEOUS. The overlap is reachable rather than
+      theoretical: EvaluateAge.process routes unconditionally on to 6.5
+      whatever its own table decided, so a too-old dose still passes through
+      6.5 to 6.9 and can collect any of their markers; and on the bundled
+      Supporting Data release 4.65-508, of 506 series doses, 92 carry a
+      non-empty maxAge and so can make 6.4 answer Extraneous at all, of which
+      91 also define at least one allowableVaccine and 59 also define an
+      interval or an allowable interval.
+
+      Fixed at the shared engine level, not locally: LogicTable.evaluate()
+      (used by every decision table in cdsi-engine) now breaks after the
+      first matching column's perform() runs, restoring standard priority-
+      ordered ("first match wins") decision-table semantics everywhere, not
+      just here - matching how every test already read Table 6-31's own
+      rule ordering. Verified with extra weight on the full regression
+      suite given the shared-class blast radius: full engine suite
+      sorted-diff confirmed exactly these 3 tests flipped across all 783
+      tests, no other decision table depends on more than one column
+      validating at once. Full FITS run, case-by-case diffed: 3632 passed
+      (up from 3627), 5 real cases improved (all 5 snapshots of
+      HIB-2013-0356, "#2 Pentacel at 6 yrs 11.5 mo." - a too-old Hib dose
+      that also triggers another marker, exactly the predicted overlap), 0
+      regressions. The first genuinely broad, cross-cutting fix of this
+      Role B pass to move real FITS cases since SPEC-4.6-0032's series-
+      group fix.
 
       Deliberately not covered. (1) Figure 6-23's process model, which draws the
       same four questions Table 6-31 tabulates and adds no rule of its own.
