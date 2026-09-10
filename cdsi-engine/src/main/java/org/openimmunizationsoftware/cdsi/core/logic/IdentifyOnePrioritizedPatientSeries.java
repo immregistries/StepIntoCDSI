@@ -2,37 +2,34 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.ANY;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.MORE_THAN_ONE;
-import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.ZERO;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.ONE;
+import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.ZERO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
-import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
+/**
+ * 8.2 Identify One Prioritized Patient Series (Table 8-3). SELECTB-7 counts
+ * default series over the relevant (stepper) list, not the scorable list, so
+ * Rule 1 is reachable when 8.1 promoted nothing.
+ */
 public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
-
-  // private ConditionAttribute<Date> caDateAdministered = null;
 
   public IdentifyOnePrioritizedPatientSeries(DataModel dataModel) {
     super(LogicStepType.IDENTIFY_ONE_PRIORITIZED_PATIENT_SERIES, dataModel);
-    // setConditionTableName("Table ");
-
-    // caDateAdministered = new ConditionAttribute<Date>("Vaccine dose
-    // administered", "Date
-    // Administered");
-
-    // caTriggerAgeDate.setAssumedValue(FUTURE);
-
-    // conditionAttributesList.add(caDateAdministered);
-
     LT logicTable = new LT();
     logicTable.setLogicStepSink(this.getLogicStepSink());
     logicTableList.add(logicTable);
@@ -45,101 +42,156 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
     return next();
   }
 
+  /**
+   * SELECTB-7's population: relevant patient series of the antigen (and of the
+   * current series group, when 4.5/SelectNextSeriesGroup has set one). Unit
+   * tests do not set {@code currentSeriesGroup}, so that filter is applied only
+   * when it is present.
+   */
+  private List<PatientSeries> relevantPatientSeriesInScope() {
+    List<PatientSeries> scoped = new ArrayList<PatientSeries>();
+    List<PatientSeries> relevant = dataModel.getPatientSeriesStepper() == null ? null
+        : dataModel.getPatientSeriesStepper().getList();
+    if (relevant == null) {
+      return scoped;
+    }
+    Antigen currentAntigen = dataModel.getAntigen();
+    String currentSeriesGroup = dataModel.getCurrentSeriesGroup();
+    for (PatientSeries patientSeries : relevant) {
+      if (patientSeries == null || patientSeries.getTrackedAntigenSeries() == null) {
+        continue;
+      }
+      if (currentAntigen != null
+          && !currentAntigen.equals(patientSeries.getTrackedAntigenSeries().getTargetDisease())) {
+        continue;
+      }
+      if (currentSeriesGroup != null) {
+        String seriesGroup = SelectBestPatientSeries.seriesGroupOf(patientSeries.getTrackedAntigenSeries());
+        if (!currentSeriesGroup.equals(seriesGroup)) {
+          continue;
+        }
+      }
+      scoped.add(patientSeries);
+    }
+    return scoped;
+  }
+
+  private List<PatientSeries> scorablePatientSeriesInScope() {
+    List<PatientSeries> scoped = new ArrayList<PatientSeries>();
+    List<PatientSeries> scorable = dataModel.getScorablePatientSeriesList();
+    if (scorable == null) {
+      return scoped;
+    }
+    Antigen currentAntigen = dataModel.getAntigen();
+    for (PatientSeries patientSeries : scorable) {
+      if (patientSeries == null || patientSeries.getTrackedAntigenSeries() == null) {
+        continue;
+      }
+      if (currentAntigen != null
+          && !currentAntigen.equals(patientSeries.getTrackedAntigenSeries().getTargetDisease())) {
+        continue;
+      }
+      scoped.add(patientSeries);
+    }
+    return scoped;
+  }
+
+  private static boolean isDefaultSeries(PatientSeries patientSeries) {
+    AntigenSeries antigenSeries = patientSeries.getTrackedAntigenSeries();
+    return antigenSeries != null && antigenSeries.getSelectPatientSeries() != null
+        && antigenSeries.getSelectPatientSeries().getDefaultSeries() == YesNo.YES;
+  }
+
+  private static boolean isInProcess(PatientSeries patientSeries) {
+    if (!PatientSeriesStatus.NOT_COMPLETE.equals(patientSeries.getPatientSeriesStatus())) {
+      return false;
+    }
+    if (patientSeries.getTargetDoseList() == null) {
+      return false;
+    }
+    for (TargetDose targetDose : patientSeries.getTargetDoseList()) {
+      if (targetDose.getTargetDoseStatus() == TargetDoseStatus.SATISFIED
+          || targetDose.getSatisfiedByVaccineDoseAdministered() != null) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private void addDefaultPatientSeriesAsPrioritized() {
+    for (PatientSeries patientSeries : relevantPatientSeriesInScope()) {
+      if (isDefaultSeries(patientSeries)) {
+        dataModel.getPrioritizedPatientSeriesList().add(patientSeries);
+        return;
+      }
+    }
+  }
+
+  private LogicResult countToResult(int count) {
+    if (count == 0) {
+      return ZERO;
+    }
+    if (count == 1) {
+      return ONE;
+    }
+    return MORE_THAN_ONE;
+  }
+
   private class LT extends LogicTable {
     public LT() {
       super(4, 5, "Table 8-3 Is there a single prioritized patient series in a series group?");
       setLogicCondition(0, new LogicCondition("How many scorable patient series are in the series group?") {
         @Override
         protected LogicResult evaluateInternal() {
-          int scorablePatientSeries = dataModel.getScorablePatientSeriesList().size();
-          if (scorablePatientSeries == 0) {
-            return ZERO;
-          } else if (scorablePatientSeries == 1) {
-            return ONE;
-          } else {
-            return MORE_THAN_ONE;
-          }
+          return countToResult(scorablePatientSeriesInScope().size());
         }
       });
 
-      // 1: How many default patient series are in the series group?
+      // SELECTB-7 counts over *relevant* patient series, not the scorable list.
+      // Table 8-3 Rule 1 is "0 scorable AND 1 default", which is unreachable if
+      // both counts walk the same list.
       setLogicCondition(1, new LogicCondition("How many default patient series are in the series group?") {
         @Override
         protected LogicResult evaluateInternal() {
           int defaultPatientSeries = 0;
-          log("Looking for default series");
-          for (PatientSeries patientSeries : dataModel.getScorablePatientSeriesList()) {
-            if (!patientSeries.getTrackedAntigenSeries().getTargetDisease().equals(dataModel.getAntigen())) {
-              continue;
-            }
-
+          log("Looking for default series among relevant patient series");
+          for (PatientSeries patientSeries : relevantPatientSeriesInScope()) {
             AntigenSeries antigenSeries = patientSeries.getTrackedAntigenSeries();
-            boolean isDefaultSeries = antigenSeries.getSelectPatientSeries().getDefaultSeries() == YesNo.YES;
             log(" - " + antigenSeries.getSeriesName() + " is default series: "
-                + antigenSeries.getSelectPatientSeries().getDefaultSeries());
-            if (isDefaultSeries) {
+                + (antigenSeries.getSelectPatientSeries() == null ? "null"
+                    : antigenSeries.getSelectPatientSeries().getDefaultSeries()));
+            if (isDefaultSeries(patientSeries)) {
               defaultPatientSeries++;
             }
           }
           log("Found " + defaultPatientSeries + " default series");
-          if (defaultPatientSeries == 0) {
-            return ZERO;
-          } else if (defaultPatientSeries == 1) {
-            return ONE;
-          } else {
-            return MORE_THAN_ONE;
-          }
+          return countToResult(defaultPatientSeries);
         }
       });
-      // 2: How many complete patient series are in the series group?
+
       setLogicCondition(2, new LogicCondition("How many complete patient series are in the series group?") {
         @Override
         protected LogicResult evaluateInternal() {
           int completePatientSeries = 0;
-          for (PatientSeries patientSeries : dataModel.getScorablePatientSeriesList()) {
-            if (!patientSeries.getTrackedAntigenSeries().getTargetDisease().equals(dataModel.getAntigen())) {
-              continue;
-            }
-
-            if (patientSeries.getPatientSeriesStatus() == PatientSeriesStatus.COMPLETE) {
+          for (PatientSeries patientSeries : scorablePatientSeriesInScope()) {
+            if (PatientSeriesStatus.COMPLETE.equals(patientSeries.getPatientSeriesStatus())) {
               completePatientSeries++;
             }
           }
-          if (completePatientSeries == 0) {
-            return ZERO;
-          } else if (completePatientSeries == 1) {
-            return ONE;
-          } else {
-            return MORE_THAN_ONE;
-          }
+          return countToResult(completePatientSeries);
         }
       });
-      // 3: How many in-process patient series are in the series group?
+
       setLogicCondition(3, new LogicCondition("How many in-process patient series are in the series group?") {
         @Override
         protected LogicResult evaluateInternal() {
           int inProcessPatientSeries = 0;
-          for (PatientSeries patientSeries : dataModel.getScorablePatientSeriesList()) {
-            if (!patientSeries.getTrackedAntigenSeries().getTargetDisease().equals(dataModel.getAntigen())) {
-              continue;
-            }
-
-            if (patientSeries.getPatientSeriesStatus() == PatientSeriesStatus.NOT_COMPLETE) {
-              for (TargetDose targetDose : patientSeries.getTargetDoseList()) {
-                VaccineDoseAdministered vda = targetDose.getSatisfiedByVaccineDoseAdministered();
-                if (vda != null) {
-                  inProcessPatientSeries++;
-                }
-              }
+          for (PatientSeries patientSeries : scorablePatientSeriesInScope()) {
+            if (isInProcess(patientSeries)) {
+              inProcessPatientSeries++;
             }
           }
-          if (inProcessPatientSeries == 0) {
-            return ZERO;
-          } else if (inProcessPatientSeries == 1) {
-            return ONE;
-          } else {
-            return MORE_THAN_ONE;
-          }
+          return countToResult(inProcessPatientSeries);
         }
       });
 
@@ -163,14 +215,7 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
         @Override
         public void perform() {
           log("Yes. The single default patient series is the prioritized patient series for the series group.");
-          for (PatientSeries patientSeries : dataModel.getScorablePatientSeriesList()) {
-            AntigenSeries antigenSeries = patientSeries.getTrackedAntigenSeries();
-            boolean isDefaultSeries = antigenSeries.getSelectPatientSeries().getDefaultSeries() == YesNo.YES;
-            if (isDefaultSeries) {
-              dataModel.getPrioritizedPatientSeriesList().add(patientSeries);
-              break;
-            }
-          }
+          addDefaultPatientSeriesAsPrioritized();
           setNextLogicStepType(LogicStepType.SELECT_NEXT_SERIES_GROUP);
         }
       });
@@ -179,11 +224,7 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
         @Override
         public void perform() {
           log("Yes. The single scorable patient series is the prioritized patient series for the series group.");
-          for (PatientSeries patientSeries : dataModel.getScorablePatientSeriesList()) {
-            if (!patientSeries.getTrackedAntigenSeries().getTargetDisease().equals(dataModel.getAntigen())) {
-              continue;
-            }
-
+          for (PatientSeries patientSeries : scorablePatientSeriesInScope()) {
             dataModel.getPrioritizedPatientSeriesList().add(patientSeries);
           }
           setNextLogicStepType(LogicStepType.SELECT_NEXT_SERIES_GROUP);
@@ -194,13 +235,8 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
         @Override
         public void perform() {
           log("Yes. The single complete patient series is the prioritized patient series for the series group.");
-          for (PatientSeries patientSeries : dataModel.getScorablePatientSeriesList()) {
-            if (!patientSeries.getTrackedAntigenSeries().getTargetDisease().equals(dataModel.getAntigen())) {
-              continue;
-            }
-
-            boolean isCompleteSeries = patientSeries.getPatientSeriesStatus() == PatientSeriesStatus.COMPLETE;
-            if (isCompleteSeries) {
+          for (PatientSeries patientSeries : scorablePatientSeriesInScope()) {
+            if (PatientSeriesStatus.COMPLETE.equals(patientSeries.getPatientSeriesStatus())) {
               dataModel.getPrioritizedPatientSeriesList().add(patientSeries);
               break;
             }
@@ -213,19 +249,10 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
         @Override
         public void perform() {
           log("Yes. The single in-process patient series is the prioritized patient series for the series group.");
-          for (PatientSeries patientSeries : dataModel.getScorablePatientSeriesList()) {
-            if (!patientSeries.getTrackedAntigenSeries().getTargetDisease().equals(dataModel.getAntigen())) {
-              continue;
-            }
-
-            if (patientSeries.getPatientSeriesStatus() == PatientSeriesStatus.NOT_COMPLETE) {
-              for (TargetDose targetDose : patientSeries.getTargetDoseList()) {
-                VaccineDoseAdministered vda = targetDose.getSatisfiedByVaccineDoseAdministered();
-                if (vda != null) {
-                  dataModel.getPrioritizedPatientSeriesList().add(patientSeries);
-                  break;
-                }
-              }
+          for (PatientSeries patientSeries : scorablePatientSeriesInScope()) {
+            if (isInProcess(patientSeries)) {
+              dataModel.getPrioritizedPatientSeriesList().add(patientSeries);
+              break;
             }
           }
           setNextLogicStepType(LogicStepType.SELECT_NEXT_SERIES_GROUP);
@@ -236,18 +263,7 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
         @Override
         public void perform() {
           log("Yes. The default patient series is the prioritized patient series for the series group.");
-          for (PatientSeries patientSeries : dataModel.getScorablePatientSeriesList()) {
-            if (!patientSeries.getTrackedAntigenSeries().getTargetDisease().equals(dataModel.getAntigen())) {
-              continue;
-            }
-
-            AntigenSeries antigenSeries = patientSeries.getTrackedAntigenSeries();
-            boolean isDefaultSeries = antigenSeries.getSelectPatientSeries().getDefaultSeries() == YesNo.YES;
-            if (isDefaultSeries) {
-              dataModel.getPrioritizedPatientSeriesList().add(patientSeries);
-              break;
-            }
-          }
+          addDefaultPatientSeriesAsPrioritized();
           setNextLogicStepType(LogicStepType.SELECT_NEXT_SERIES_GROUP);
         }
       });
