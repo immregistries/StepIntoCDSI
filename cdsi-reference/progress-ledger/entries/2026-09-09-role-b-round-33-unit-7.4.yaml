@@ -1,0 +1,50 @@
+id: "2026-09-09-role-b-round-33-unit-7.4"
+date: "2026-09-09"
+phase: 22
+title: "Role B Round 33 - Unit 7.4 Closed: Determine Forecast Need's Contraindication Read Fixed, Closing the SPEC-4.6-0040 Chain (SPEC-4.6-0041)"
+before:
+  commit: "316dfad"
+  engine_tests: {total: 783, failures: 86, errors: 1}
+  fits: {total_cases: 4896, passed: 3637, failed_assertions: 1258, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+after:
+  commit: "PENDING"
+  engine_tests: {total: 783, failures: 79, errors: 1}
+  fits: {total_cases: 4896, passed: 3637, failed_assertions: 1258, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+summary: >
+  Moved to unit 7.4 after closing 7.3 (round 32). status.yaml's own
+  pre-existing notes had already root-caused all six reds, including
+  the key asymmetry: 7.4's evidence-of-immunity condition already
+  correctly reads the per-series PatientSeriesStatus 7.2 sets (no
+  defect there), but its contraindication condition read an entirely
+  different, always-empty, wrongly-scoped field - an independent
+  defect on 7.4's own side that round 32's 7.3 fix alone could not
+  have resolved.
+
+  Fixed: condition 4 now reads the same per-series
+  PatientSeriesStatus field the evidence-of-immunity condition already
+  used, closing the chain SPEC-4.6-0040 opened. Also fixed: two Table
+  7-9 attributes missing their documented assumed values, and two
+  FORECASTDTCAN-1 candidate dates missing from computeEarliestDate()
+  entirely (the seasonal recommendation start date, and the most
+  recent date administered - present in 7.5's own copy of the
+  identical rule but never ported to 7.4's).
+
+  Final verification: unit 7.4's own suite 22/22 green (up from
+  16/22); full engine suite 79 failures/1 error (down from 86/1,
+  sorted-diff-confirmed as exactly those 6 tests plus one welcome
+  bonus - a cross-unit consistency test in
+  GenerateForecastDatesAndRecommendedVaccinesTest that checks 7.4's
+  and 7.5's two computeEarliestDate() implementations agree, which
+  could not pass while they disagreed); full FITS run, case-by-case
+  diffed: 3637 passed both before and after, 0 changed cases - the
+  contraindication fix is FITS-inert for the same reason SPEC-4.6-0040
+  is, and the two new candidate dates only affect a narrow boundary
+  condition no bundled case sits on.
+
+  Eleventh consecutive unit-closing round today (4.4, 5.1, 6.1, 6.2,
+  6.3, 6.5, 6.7, 6.8, 6.10, 7.2, 7.3) with zero FITS regressions.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0041/finding.md"
+finding_ids: ["SPEC-4.6-0041"]
+status: reviewed

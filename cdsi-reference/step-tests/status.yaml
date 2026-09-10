@@ -2440,12 +2440,13 @@ units:
   '7.4':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.DetermineForecastNeedTest
-    fix_status: not_started
+    fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0041"]
     notes: >
-      Role A, 2026-09-04. 22 tests: 16 green, 6 red. Coverage is
+      Role A, 2026-09-04; fixed (SPEC-4.6-0041, merged), 2026-09-09. 22 tests,
+      now 22/22 green (was 16/22). Coverage is
       Table 7-9's attribute list and its assumed values, Table 7-11's two
       business rules (CALCDTAGE-1 and FORECASTDTCAN-1), Table 7-10's printed
       seven-condition-by-eight-rule grid, and one outcome test per rule of Table
@@ -2476,48 +2477,73 @@ units:
       grep - the only readers are this condition and cdsi-web's
       LogicStepRenderer), so condition 4 answers NO for every patient in every
       run and Rule 5 is unreachable independently of 7.3's own two defects. It
-      is also patient-scoped where the specification is series-scoped. This is
-      7.4's own defect, not an inherited one, and it means a loader/type fix on
-      the 7.3 side alone would still leave Rule 5 dead. Recorded as a dated
+      is also patient-scoped where the specification is series-scoped. This was
+      7.4's own defect, not an inherited one, and it meant a loader/type fix on
+      the 7.3 side alone would still have left Rule 5 dead. Recorded as a dated
       update in place on the existing Schedule-routing entry in
       cross-cutting-notes.md rather than as a new entry, since it is the same
-      underlying contraindication issue seen from the consuming end. Worth
-      noting downstream: PatientSeriesStatus.CONTRAINDICATED is set nowhere in
-      the engine except 7.4's Rule 5 outcome, and 8.1 PreFilterPatientSeries and
-      MultipleAntigenVaccineGroup both branch on it, so those Chapter 8
-      behaviours are dead until the whole chain is closed.
+      underlying contraindication issue seen from the consuming end. Both ends
+      are now fixed (7.3: SPEC-4.6-0040, 7.4: SPEC-4.6-0041): 7.3's Table 7-7
+      genuinely sets PatientSeriesStatus.CONTRAINDICATED per series, and 7.4's
+      condition 4 now reads that same field. 8.1 PreFilterPatientSeries and
+      MultipleAntigenVaccineGroup both branch on that status, so those Chapter
+      8 behaviours are now structurally reachable - though still gated in
+      practice by the same FITS-fixture limitation SPEC-4.6-0040 documents (no
+      bundled case ever supplies a patient observation, so no real FITS case
+      currently reaches CONTRAINDICATED at all).
 
 
-      The 6 red tests, expected vs actual. (1)
+      Fixed (SPEC-4.6-0041, merged), all 6 reds. (1)
       theSevenTwoOutcomeAttributeCarriesItsAssumedNoEvidenceValue - Table 7-9
       gives "Evidence of Immunity" the assumed value "no evidence", so the
-      attribute must carry a value; actual final value is null (caEvidenceOfImmunity
-      is created and registered but never given an initial or assumed value, and
-      condition 3 bypasses it to read the patient series status directly). (2)
+      attribute must carry a value; used to be null (caEvidenceOfImmunity was
+      created and registered but never given an initial or assumed value) - now
+      carries "No evidence" or, when the current series is Immune, "Evidence of
+      immunity". (2)
       theSevenThreeOutcomeAttributeCarriesItsAssumedNotContraindicatedValue -
       same, for "Contraindicated Patient Series" and its assumed "not
-      contraindicated"; actual null. (3)
+      contraindicated"; used to be null - now carries "Not contraindicated" or
+      "Contraindicated". (3)
       forecastdtcanOneIncludesTheSeasonalRecommendationStartDate - FORECASTDTCAN-1
       names the seasonal recommendation start date as one of its six candidate
       dates, so with a season opening 09/01/2030 the candidate earliest date must
-      be at least that; actual 01/15/2015 (the minimum age date), the seasonal
-      line being commented out in computeEarliestDate(). (4)
+      be at least that; used to be 01/15/2015 (the minimum age date), the
+      seasonal line having been commented out in computeEarliestDate() - now
+      included. (4)
       forecastdtcanOneIncludesTheMostRecentDateAdministered - FORECASTDTCAN-1's
       sixth candidate date is the date administered of the most recent vaccine
       dose administered, so with a dose given 03/10/2024 the candidate earliest
-      date must be at least that; actual 01/15/2015, that leg being absent from
-      7.4's computeEarliestDate() entirely (7.5's own copy of the same rule does
-      include it). (5)
+      date must be at least that; used to be 01/15/2015, that leg having been
+      absent from 7.4's computeEarliestDate() entirely - now ported over from
+      7.5's own copy of the same rule. (5)
       ruleFiveAContraindicatedPatientSeriesStopsTheForecast - a patient series
       7.3 marked CONTRAINDICATED must yield Rule 5's reason "Patient has
-      contraindication", status Contraindicated and a loop back to 4.4; actual
-      forecast reason "" and Rule 1 fires instead (status overwritten to Not
-      Complete, next step 7.5), because condition 4 never sees the status. (6)
+      contraindication", status Contraindicated and a loop back to 4.4; used to
+      leave the forecast reason "" with Rule 1 firing instead (status
+      overwritten to Not Complete, next step 7.5), because condition 4 never
+      saw the status - now condition 4 reads the same per-series
+      PatientSeriesStatus field the evidence-of-immunity condition already
+      used correctly. (6)
       theContraindicationConditionAsksAboutThisPatientSeriesNotThePatientAsAWhole
       - the other direction: a contraindication recorded against the patient as
       a whole (for a different antigen) is not 7.3's per-series outcome, so the
-      series must remain Not Complete; actual Contraindicated, i.e. one antigen's
-      patient-level record would silence every series.
+      series must remain Not Complete; used to become Contraindicated, i.e. one
+      antigen's patient-level record would silence every series - now fixed by
+      the same condition-4 change, which no longer reads that patient-level set
+      at all.
+
+      Confirmed against the full engine suite: fixing this also turned green a
+      test in a different unit's own class -
+      GenerateForecastDatesAndRecommendedVaccinesTest's
+      forecastdtOneTheEarliestDateIsTheSameCandidateEarliestDateSevenFourTested,
+      a cross-unit consistency check between 7.4's and 7.5's two
+      computeEarliestDate() implementations that could not pass while they
+      disagreed. Confirmed against real FITS data: 3637 passed both before and
+      after, 0 changed cases - the contraindication fix is FITS-inert for the
+      same reason SPEC-4.6-0040 is (no FITS case ever has
+      PatientSeriesStatus.CONTRAINDICATED actually set), and the two new
+      candidate dates only affect Table 7-10's narrow Aged-Out boundary
+      conditions, which no bundled case happens to sit on.
 
 
       Two green results are worth flagging because they contradict things a

@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-09 17:40:39 - regenerate with
+  Dashboard generated 2026-09-09 18:17:44 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,7 +57,7 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">33</div>
+    <div class="value">34</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
@@ -75,6 +75,28 @@
 </div>
 
 
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 33 - Unit 7.4 Closed: Determine Forecast Need&#x27;s Contraindication Read Fixed, Closing the SPEC-4.6-0040 Chain (SPEC-4.6-0041)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Moved to unit 7.4 after closing 7.3 (round 32). status.yaml&#x27;s own pre-existing notes had already root-caused all six reds, including the key asymmetry: 7.4&#x27;s evidence-of-immunity condition already correctly reads the per-series PatientSeriesStatus 7.2 sets (no defect there), but its contraindication condition read an entirely different, always-empty, wrongly-scoped field - an independent defect on 7.4&#x27;s own side that round 32&#x27;s 7.3 fix alone could not have resolved.
+Fixed: condition 4 now reads the same per-series PatientSeriesStatus field the evidence-of-immunity condition already used, closing the chain SPEC-4.6-0040 opened. Also fixed: two Table 7-9 attributes missing their documented assumed values, and two FORECASTDTCAN-1 candidate dates missing from computeEarliestDate() entirely (the seasonal recommendation start date, and the most recent date administered - present in 7.5&#x27;s own copy of the identical rule but never ported to 7.4&#x27;s).
+Final verification: unit 7.4&#x27;s own suite 22/22 green (up from 16/22); full engine suite 79 failures/1 error (down from 86/1, sorted-diff-confirmed as exactly those 6 tests plus one welcome bonus - a cross-unit consistency test in GenerateForecastDatesAndRecommendedVaccinesTest that checks 7.4&#x27;s and 7.5&#x27;s two computeEarliestDate() implementations agree, which could not pass while they disagreed); full FITS run, case-by-case diffed: 3637 passed both before and after, 0 changed cases - the contraindication fix is FITS-inert for the same reason SPEC-4.6-0040 is, and the two new candidate dates only affect a narrow boundary condition no bundled case sits on.
+Eleventh consecutive unit-closing round today (4.4, 5.1, 6.1, 6.2, 6.3, 6.5, 6.7, 6.8, 6.10, 7.2, 7.3) with zero FITS regressions.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>316dfad</code></td></tr><tr><td>Engine tests</td><td>783 total, 86 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3637 passed, 1258 failed-assertion, 1 execution-error (74.3%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>PENDING</code></td></tr><tr><td>Engine tests</td><td>783 total, 79 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3637 passed, 1258 failed-assertion, 1 execution-error (74.3%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0041/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0041/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0041</p>
+</section>
 <section>
   <h2>2026-09-09 - Phase 22 - Role B Round 32 - Unit 7.3 Closed: Determine Contraindications Built From Scratch (SPEC-4.6-0040)
     <span class="badge badge-green">reviewed</span>
