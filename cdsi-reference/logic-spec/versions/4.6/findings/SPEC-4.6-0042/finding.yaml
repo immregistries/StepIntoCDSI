@@ -1,0 +1,86 @@
+id: "SPEC-4.6-0042"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["7.5"]
+source_pages: [81, 82, 83, 84]
+tables: ["Table 7-12", "Table 7-13"]
+business_rules: ["FORECASTDT-2", "FORECASTDT-3", "FORECASTRECVAC-1", "FORECASTDN-1", "FORECASTGUIDANCE-1"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.GenerateForecastDatesAndRecommendedVaccines"
+  - "org.openimmunizationsoftware.cdsi.core.domain.Forecast"
+fits_cases: []
+summary: >
+  7.5 ("Generate Forecast Dates and Recommended Vaccines") implemented
+  only the date half of its own section - the six FORECASTDT date
+  rules were present and correct on their first bullet each, but two
+  had unguarded fallback bugs, two Table 7-12 attributes were dead,
+  and the section's other three named business rules
+  (FORECASTRECVAC-1, FORECASTDN-1, FORECASTGUIDANCE-1) had no
+  representation anywhere in the domain model at all - the Forecast
+  class had nowhere to hold a recommended vaccine list, a dose
+  number, or administrative guidance.
+
+  1. computeUnadjustedPastDueDate() dereferenced
+  interval.getLatestRecommendedInterval() without a null check (its
+  sibling findLatestRecommendedIntervalDate() in the same class
+  already guards it), throwing NullPointerException for any interval
+  defining no latest recommended interval.
+
+  2. caVaccineType and caForecastVaccineType (Table 7-12's Supporting
+  Data preferable-vaccine attributes) were constructed and registered
+  but nothing ever set them - the class had no findVaccineType(),
+  unlike every other Table 7-12 attribute.
+
+  3. computeDates() assigned only the four adjusted/earliest/latest
+  dates onto the Forecast, discarding the two unadjusted dates
+  FORECASTDT-2/FORECASTDT-3 compute and Figure 7-7's timeline prints,
+  even though Forecast already had fields and accessors for both.
+
+  4. FORECASTRECVAC-1, FORECASTDN-1 and FORECASTGUIDANCE-1 were
+  entirely unimplemented - Forecast had no recommended-vaccine list,
+  no dose number, and no guidance field for any of the three rules to
+  write to.
+evidence: >
+  status.yaml's own pre-existing notes for unit 7.5 had already
+  root-caused all of this precisely, framing reds 4 through 8 as "one
+  story, not five": the section's title promises both dates and
+  recommended vaccines, and only the first half was ever built. The
+  notes also correctly predicted that FORECASTRECVAC-1's contraindication
+  bullet would not be reachable yet regardless of this fix, since the
+  7.2/7.3/7.4 contraindication chain (SPEC-4.6-0039/0040/0041) never
+  routes through 7.5 at all.
+interpretation: >
+  Fixed the two date-rule bugs and wired the two dead Table 7-12
+  attributes via a new findVaccineType(), reading the series dose's
+  own (first) preferable vaccine. computeDates() now also assigns the
+  two unadjusted dates. Added genuinely computed representations for
+  two of the three missing rules: Forecast.doseNumber (FORECASTDN-1 -
+  the count of Satisfied target doses in the relevant patient series'
+  own getTargetDoseList(), plus 1) and
+  Forecast.getRecommendedVaccineList() (FORECASTRECVAC-1's identifying
+  bullet - the series dose's own preferable vaccines whose
+  forecastVaccineType flag is Yes). FORECASTGUIDANCE-1's own
+  Forecast.getAdministrativeGuidanceList() accessor now exists but
+  stays structurally empty: its three sources (antigen series regimen
+  guidance, indication guidance, contraindication guidance) have no
+  representation anywhere else in the domain model or loader yet, so
+  populating it for real is a separate, larger loader-plus-domain-model
+  effort, not a wiring change - left open, matching status.yaml's own
+  scoping ("each rule gets one test asserting the artefact exists...
+  the sub-conditions cannot be asserted against a value the domain
+  model has nowhere to hold").
+
+  Verified via the standing Role B pipeline: unit 7.5's own suite
+  39/39 green (was 32/39 - two reds from round 33's cross-unit
+  consistency fix had already gone green before this round started).
+  Full engine suite: sorted diff confirms exactly those 7 tests
+  flipped, plus five welcome collateral fixes in three different
+  Chapter 9 test classes (ApplyGeneralVaccineGroupRulesTest x2,
+  MultipleAntigenVaccineGroupTest x2, SingleAntigenVaccineGroupTest
+  x1) that depend on Forecast now actually carrying a dose number and
+  a recommended-vaccine list - across all 783 tests, nothing else
+  changed. Full FITS run, case-by-case diffed: 3637 passed both
+  before and after, 0 changed cases - exactly as status.yaml's own
+  note predicted, since the bundled FITS fixtures assert forecast
+  dates and series status only, never recommended CVXs or dose
+  numbers.

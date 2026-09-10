@@ -1,0 +1,55 @@
+id: "2026-09-09-role-b-round-34-unit-7.5"
+date: "2026-09-09"
+phase: 22
+title: "Role B Round 34 - Unit 7.5 Closed: Generate Forecast Dates and Recommended Vaccines Gets Its Missing Half (SPEC-4.6-0042)"
+before:
+  commit: "d3395e6"
+  engine_tests: {total: 783, failures: 79, errors: 1}
+  fits: {total_cases: 4896, passed: 3637, failed_assertions: 1258, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+after:
+  commit: "PENDING"
+  engine_tests: {total: 783, failures: 68, errors: 0}
+  fits: {total_cases: 4896, passed: 3637, failed_assertions: 1258, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+summary: >
+  Moved to unit 7.5 after closing 7.4 (round 33), which had already
+  fixed one of 7.5's own reds as a bonus (the cross-unit
+  FORECASTDTCAN-1 consistency test). status.yaml's own pre-existing
+  notes had already root-caused the remaining seven precisely, framing
+  five of them as "one story": the section is titled "Generate
+  Forecast Dates and Recommended Vaccines" and only the date half was
+  ever implemented.
+
+  Fixed: an unguarded null dereference in computeUnadjustedPastDueDate()
+  (NullPointerException for any interval defining no latest
+  recommended interval); two dead Table 7-12 attributes (Vaccine Type,
+  Forecast Vaccine Type Flag) via a new findVaccineType(); computeDates()
+  discarding the two unadjusted dates FORECASTDT-2/3 already compute,
+  despite Forecast already having fields for both. Also implemented
+  genuine representations for two of the section's three previously
+  entirely-missing business rules: Forecast.doseNumber (FORECASTDN-1)
+  and Forecast.getRecommendedVaccineList() (FORECASTRECVAC-1's
+  identifying bullet). The third, FORECASTGUIDANCE-1, got its
+  accessor but stays unpopulated - its three guidance sources have no
+  representation anywhere else in the domain model or loader yet, a
+  separate, larger effort left open.
+
+  Final verification: unit 7.5's own suite 39/39 green (up from
+  32/39); full engine suite 68 failures/0 errors (down from 79/1,
+  sorted-diff-confirmed as exactly those 7 tests plus five welcome
+  collateral fixes across three different Chapter 9 test classes -
+  ApplyGeneralVaccineGroupRulesTest, MultipleAntigenVaccineGroupTest,
+  SingleAntigenVaccineGroupTest - that depend on Forecast actually
+  carrying a dose number and recommended-vaccine list); full FITS run,
+  case-by-case diffed: 3637 passed both before and after, 0 changed
+  cases, exactly as predicted since the bundled fixtures assert
+  forecast dates and series status only.
+
+  Twelfth consecutive unit-closing round today (4.4, 5.1, 6.1, 6.2,
+  6.3, 6.5, 6.7, 6.8, 6.10, 7.2, 7.3, 7.4) with zero FITS regressions -
+  the third round in a row to produce collateral fixes beyond its own
+  unit's test class.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0042/finding.md"
+finding_ids: ["SPEC-4.6-0042"]
+status: reviewed

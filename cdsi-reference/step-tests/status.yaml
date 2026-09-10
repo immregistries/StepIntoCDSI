@@ -2583,13 +2583,13 @@ units:
   '7.5':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.GenerateForecastDatesAndRecommendedVaccinesTest
-    fix_status: in_progress
+    fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0014", "SPEC-4.6-0023", "SPEC-4.6-0024"]
+    finding_ids: ["SPEC-4.6-0014", "SPEC-4.6-0023", "SPEC-4.6-0024", "SPEC-4.6-0042"]
     notes: >
-      Role A, 2026-09-05. 39 tests, now 31 green and 8 red (8 failures, 1
-      error - was 30/9; see SPEC-4.6-0014, merged, for red (2)'s fix).
+      Role A, 2026-09-05; fixed (SPEC-4.6-0042, merged), 2026-09-09. 39 tests,
+      now 39/39 green (was 30/9 originally; see SPEC-4.6-0014, merged, for red (2)'s fix).
       7.5 has no decision table, so the unit of coverage is one test per
       business rule, or per bullet where a rule prints a bulleted preference
       order - which is the unit Table 7-13 actually states. Covered: the step's
@@ -2621,19 +2621,17 @@ units:
       no implementation at all.
 
 
-      The 9 red tests, expected vs actual. (1)
+      The 9 original reds, expected vs actual. (1)
       forecastdtOneTheEarliestDateIsTheSameCandidateEarliestDateSevenFourTested -
       FORECASTDT-1 says the earliest date "must be the candidate earliest date",
       a single value FORECASTDTCAN-1 produces once and 7.4 already holds as its
       own Table 7-9 attribute; with a season opening 09/01/2030 the two steps
-      must agree, expected 09/01/2030 from both, actual 7.4 says 01/15/2015 and
-      7.5 says 09/01/2030, because each class carries its own separate copy of
-      FORECASTDTCAN-1 with a different subset of the six candidate dates. Added
-      as a new dated entry in cross-cutting-notes.md; the direction of the fix is
-      that 7.5's copy is the more complete one and 7.4's is the one already
-      recorded as omitting candidates, so this is not a defect in 7.5's own
-      class. (2) Fixed (SPEC-4.6-0014, merged) -
-      forecastdtTwoFallsBackToTheForecastsOwnEarliestDate.
+      must agree, expected 09/01/2030 from both, actual 7.4 said 01/15/2015 and
+      7.5 said 09/01/2030, because each class carried its own separate copy of
+      FORECASTDTCAN-1 with a different subset of the six candidate dates. Fixed
+      as a side effect of SPEC-4.6-0041 (7.4's own round) porting the missing
+      candidates into 7.4's copy - not a defect in 7.5's own class. (2) Fixed
+      (SPEC-4.6-0014, merged) - forecastdtTwoFallsBackToTheForecastsOwnEarliestDate.
       FORECASTDT-2's third bullet says that with no earliest recommended age date
       and no earliest recommended interval date the unadjusted recommended date
       is "the earliest date of the patient series forecast" (01/15/2016 in the
@@ -2649,60 +2647,74 @@ units:
       own separate, unrelated defect. This is the ordinary case
       for the majority of series doses (no earliest recommended age, no earliest
       recommended interval), and it makes the same patient's recommended date
-      change every day the engine is run. (3)
+      change every day the engine is run.
+
+      Fixed (SPEC-4.6-0042, merged), the remaining 7 reds. (3)
       forecastdtThreeIsBlankWhenAnIntervalDefinesNoLatestRecommendedInterval -
       FORECASTDT-3's third bullet says the unadjusted past due date is blank when
       there is no latest recommended age date and no latest recommended interval
-      date; expected null, actual a NullPointerException, because
-      computeUnadjustedPastDueDate() calls
+      date; used to throw a NullPointerException, because
+      computeUnadjustedPastDueDate() called
       interval.getLatestRecommendedInterval().getDateFrom(...) without a null
       check (the sibling findLatestRecommendedIntervalDate() in the same class
-      does guard it). Latent rather than live: DataModelLoader only assigns that
-      field when the <latestRecInt> element is present, and all 512 loaded
-      intervals in the bundled 4.65-508 release carry one, so no current input
-      reaches it. (4) theVaccineTypeAttributeCarriesThePreferableVaccinesCvx -
-      Table 7-12 sources Vaccine Type (CVX) from the Supporting Data preferable
-      vaccine; expected the series dose's preferable vaccine type, actual null,
-      because caVaccineType is constructed and registered but there is no
-      findVaccineType() and nothing ever sets it. (5)
+      already guarded it) - now guarded the same way. Latent rather than live in
+      the bundled release: all 512 loaded intervals carry a <latestRecInt>, so no
+      current input reaches it there. (4)
+      theVaccineTypeAttributeCarriesThePreferableVaccinesCvx - Table 7-12 sources
+      Vaccine Type (CVX) from the Supporting Data preferable vaccine; used to be
+      null, because caVaccineType was constructed and registered but there was
+      no findVaccineType() and nothing ever set it - now sourced from the series
+      dose's own preferable vaccine. (5)
       theForecastVaccineTypeFlagCarriesThePreferableVaccinesValue - same for the
-      forecast vaccine type flag; expected YES from a preferable vaccine that
-      declares 'Y', actual NO, i.e. Table 7-12's assumed value is the only value
-      this attribute ever has. (6)
+      forecast vaccine type flag; used to always answer NO (Table 7-12's assumed
+      value was the only value this attribute ever had) - now carries the
+      preferable vaccine's own flag. (6)
       forecastrecvacOneIdentifiesTheRecommendedSeriesDoseVaccines -
       FORECASTRECVAC-1 requires the forecast to identify its recommended series
-      dose vaccines; expected some accessor carrying them, actual none exists on
-      Forecast or on the step. (7) forecastdnOneIsTheCountOfSatisfiedTargetDoses
-      PlusOne - FORECASTDN-1 requires a forecast dose number (count of satisfied
-      target doses in the relevant patient series, plus 1); expected a dose
-      number accessor, actual Forecast has no dose number field at all - the
-      STATE log line labelled "Dose:" prints the tracked series dose's own dose
-      number, which is a different quantity. (8)
+      dose vaccines; used to have no accessor on Forecast or the step at all -
+      now Forecast.getRecommendedVaccineList() implements the rule's identifying
+      bullet (the series dose's own preferable vaccines flagged Yes); the rule's
+      other three bullets (age validity, availability, absence of a vaccine
+      contraindication) remain unimplemented, deliberately, since none has a
+      value to check against yet. (7)
+      forecastdnOneIsTheCountOfSatisfiedTargetDosesPlusOne - FORECASTDN-1
+      requires a forecast dose number (count of satisfied target doses in the
+      relevant patient series, plus 1); used to have no dose number field on
+      Forecast at all - now Forecast.getDoseNumber() computes it exactly,
+      reading the relevant patient series' own getTargetDoseList(). (8)
       forecastguidanceOneIncludesAdministrativeGuidance - FORECASTGUIDANCE-1
-      requires administrative guidance in the forecast; expected a guidance
-      accessor, actual Forecast has no guidance field. (9)
+      requires administrative guidance in the forecast; used to have no guidance
+      field - now Forecast.getAdministrativeGuidanceList() exists, but stays
+      structurally empty: its three sources (antigen series regimen guidance,
+      indication guidance, contraindication guidance) have no representation
+      anywhere else in the domain model or loader yet, so populating it for real
+      is a separate, larger effort left open. (9)
       computeDatesAlsoRecordsTheUnadjustedDates - FORECASTDT-2 and FORECASTDT-3
       define the unadjusted recommended and unadjusted past due dates as dates
       "of a patient series forecast" in their own right, Figure 7-7's timeline
-      prints both, and Forecast carries a field and accessor for each; expected
-      01/15/2019 and 01/14/2021 on the forecast, actual null for both, because
-      computeDates() assigns only the four adjusted/earliest/latest dates. The
-      distinction the two rules exist to draw - whether the date the patient is
-      given is the schedule's own or one pulled forward because they are behind -
-      is computed and then discarded.
+      prints both, and Forecast already carried a field and accessor for each;
+      used to be null for both, because computeDates() assigned only the four
+      adjusted/earliest/latest dates - now assigns both unadjusted dates too.
 
 
-      Reds 4 through 8 are one story, not five: the section is titled "Generate
+      Reds 4 through 8 were one story, not five: the section is titled "Generate
       Forecast Dates and Recommended Vaccines" and only the first half of that
-      title is implemented. The step package already recorded FORECASTRECVAC-1,
+      title was implemented. The step package already recorded FORECASTRECVAC-1,
       FORECASTDN-1 and FORECASTGUIDANCE-1 as "not found implemented in this
-      class ... not confirmed missing, only unverified"; this pass confirms them
-      missing from the class, and additionally confirms that the Forecast domain
-      object has no field any of the three could be written to, so the fix is a
-      domain-model change plus new logic, not a wiring change. The two dead
-      Table 7-12 attributes (reds 4 and 5) are the same gap seen from the input
-      side. Not observable via FITS, whose fixtures assert forecast dates and
-      series status, not recommended CVXs or dose numbers.
+      class ... not confirmed missing, only unverified"; this pass confirmed them
+      missing from the class, and that the Forecast domain object had no field
+      any of the three could be written to - fixed as a domain-model change plus
+      new logic for two of the three (recommended vaccines, dose number); the
+      third (guidance) got its accessor but stays unpopulated pending separate
+      loader work. The two dead Table 7-12 attributes (reds 4 and 5) were the
+      same gap seen from the input side. Confirmed against the full engine
+      suite: fixing this also turned green 5 tests in three different Chapter 9
+      classes (ApplyGeneralVaccineGroupRulesTest x2, MultipleAntigenVaccineGroupTest
+      x2, SingleAntigenVaccineGroupTest x1) that depend on Forecast actually
+      carrying a dose number and a recommended-vaccine list. Not observable via
+      FITS, whose fixtures assert forecast dates and series status, not
+      recommended CVXs or dose numbers - confirmed: 3637 passed both before and
+      after, 0 changed cases.
 
 
       Deliberately not covered. (a) FORECASTRECVAC-1's four bullets

@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-09 18:18:40 - regenerate with
+  Dashboard generated 2026-09-09 21:33:57 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,7 +57,7 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">34</div>
+    <div class="value">35</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
@@ -75,6 +75,28 @@
 </div>
 
 
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 34 - Unit 7.5 Closed: Generate Forecast Dates and Recommended Vaccines Gets Its Missing Half (SPEC-4.6-0042)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Moved to unit 7.5 after closing 7.4 (round 33), which had already fixed one of 7.5&#x27;s own reds as a bonus (the cross-unit FORECASTDTCAN-1 consistency test). status.yaml&#x27;s own pre-existing notes had already root-caused the remaining seven precisely, framing five of them as &quot;one story&quot;: the section is titled &quot;Generate Forecast Dates and Recommended Vaccines&quot; and only the date half was ever implemented.
+Fixed: an unguarded null dereference in computeUnadjustedPastDueDate() (NullPointerException for any interval defining no latest recommended interval); two dead Table 7-12 attributes (Vaccine Type, Forecast Vaccine Type Flag) via a new findVaccineType(); computeDates() discarding the two unadjusted dates FORECASTDT-2/3 already compute, despite Forecast already having fields for both. Also implemented genuine representations for two of the section&#x27;s three previously entirely-missing business rules: Forecast.doseNumber (FORECASTDN-1) and Forecast.getRecommendedVaccineList() (FORECASTRECVAC-1&#x27;s identifying bullet). The third, FORECASTGUIDANCE-1, got its accessor but stays unpopulated - its three guidance sources have no representation anywhere else in the domain model or loader yet, a separate, larger effort left open.
+Final verification: unit 7.5&#x27;s own suite 39/39 green (up from 32/39); full engine suite 68 failures/0 errors (down from 79/1, sorted-diff-confirmed as exactly those 7 tests plus five welcome collateral fixes across three different Chapter 9 test classes - ApplyGeneralVaccineGroupRulesTest, MultipleAntigenVaccineGroupTest, SingleAntigenVaccineGroupTest - that depend on Forecast actually carrying a dose number and recommended-vaccine list); full FITS run, case-by-case diffed: 3637 passed both before and after, 0 changed cases, exactly as predicted since the bundled fixtures assert forecast dates and series status only.
+Twelfth consecutive unit-closing round today (4.4, 5.1, 6.1, 6.2, 6.3, 6.5, 6.7, 6.8, 6.10, 7.2, 7.3, 7.4) with zero FITS regressions - the third round in a row to produce collateral fixes beyond its own unit&#x27;s test class.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>d3395e6</code></td></tr><tr><td>Engine tests</td><td>783 total, 79 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3637 passed, 1258 failed-assertion, 1 execution-error (74.3%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>PENDING</code></td></tr><tr><td>Engine tests</td><td>783 total, 68 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3637 passed, 1258 failed-assertion, 1 execution-error (74.3%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0042/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0042/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0042</p>
+</section>
 <section>
   <h2>2026-09-09 - Phase 22 - Role B Round 33 - Unit 7.4 Closed: Determine Forecast Need&#x27;s Contraindication Read Fixed, Closing the SPEC-4.6-0040 Chain (SPEC-4.6-0041)
     <span class="badge badge-green">reviewed</span>
