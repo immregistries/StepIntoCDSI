@@ -29,7 +29,11 @@ public class PreFilterPatientSeries extends LogicStep {
   @Override
   public LogicStep process() throws Exception {
     List<PatientSeries> inScope = seriesInScope();
-    dumpScope(inScope);
+    log("8.1 scope antigen="
+        + (dataModel.getAntigen() == null ? "null" : dataModel.getAntigen().getName())
+        + " seriesGroup=" + dataModel.getCurrentSeriesGroup()
+        + " selected=" + dataModel.getSelectedPatientSeriesList().size()
+        + " inScope=" + inScope.size());
 
     List<PatientSeries> candidatePatientSeriesList = new ArrayList<PatientSeries>();
     log("Adding all non-contraindicated schedules");
@@ -151,28 +155,6 @@ public class PreFilterPatientSeries extends LogicStep {
       inScope.add(patientSeries);
     }
     return inScope;
-  }
-
-  private void dumpScope(List<PatientSeries> inScope) {
-    String antigenName = dataModel.getAntigen() == null ? "null" : dataModel.getAntigen().getName();
-    log("8.1 scope antigen=" + antigenName + " seriesGroup=" + dataModel.getCurrentSeriesGroup()
-        + " selected=" + dataModel.getSelectedPatientSeriesList().size() + " inScope=" + inScope.size());
-    for (PatientSeries patientSeries : inScope) {
-      log("  selected " + seriesNameOf(patientSeries) + " status=" + patientSeries.getPatientSeriesStatus()
-          + " antigen=" + patientSeries.getTrackedAntigenSeries().getTargetDisease());
-    }
-    int nullStatusOnStepper = 0;
-    if (dataModel.getPatientSeriesStepper().getList() != null) {
-      for (PatientSeries patientSeries : dataModel.getPatientSeriesStepper().getList()) {
-        if (patientSeries.getPatientSeriesStatus() == null) {
-          nullStatusOnStepper++;
-          log("  stepper-null " + seriesNameOf(patientSeries) + " antigen="
-              + (patientSeries.getTrackedAntigenSeries() == null ? "null"
-                  : patientSeries.getTrackedAntigenSeries().getTargetDisease()));
-        }
-      }
-    }
-    log("  stepper null-status count=" + nullStatusOnStepper);
   }
 
   private boolean isScorable(PatientSeries patientSeries, String highestRiskPriority, boolean groupHasAValidDose,

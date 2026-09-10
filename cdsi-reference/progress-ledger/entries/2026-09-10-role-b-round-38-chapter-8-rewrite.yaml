@@ -1,0 +1,25 @@
+id: "2026-09-10-role-b-round-38-chapter-8-rewrite"
+date: "2026-09-10"
+phase: 22
+title: "Role B Round 38 - Chapter 8 Series Selection Rewrite (SPEC-4.6-0046)"
+before:
+  commit: "36106fb5"
+  engine_tests: {total: 783, failures: 62, errors: 0}
+  fits: {total_cases: 4896, passed: 3637, failed_assertions: 1258, execution_errors: 1}
+after:
+  commit: "85234203"
+  engine_tests: {total: 783, failures: 26, errors: 0}
+  fits: {total_cases: 4896, passed: 3749, failed_assertions: 1146, execution_errors: 1}
+  fits_runtime_seconds: 51.3
+summary: >
+  Rewrote Chapter 8 series selection (8.1-8.3, 8.5-8.7) against CDSi Logic
+  Spec v4.6, consuming the SPEC-4.6-0045 scoring foundation and not retrying
+  Copilot commit 2. Engine failures dropped from 62 to 26 (Chapter 8 intended
+  remaining reds: 2). Honest FITS vs the 2026-09-10 develop baseline moved
+  from 3637/4896 (74.3%) to 3749/4896 (76.6%), net +112, with HIB-2013-0281
+  now passing and a documented DTAP +16 fail regression. Chapter 9, 8.4,
+  7.6, and 6.2 were not touched; Codex can rebase Chapter 9 onto this rewrite
+  later. known-passing-cases.txt was not regenerated.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0046/finding.md"
+finding_ids: ["SPEC-4.6-0046", "SPEC-4.6-0045", "SPEC-4.6-0025"]
+status: pending_review

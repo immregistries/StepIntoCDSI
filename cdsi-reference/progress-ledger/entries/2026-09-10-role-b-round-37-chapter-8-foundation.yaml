@@ -7,19 +7,16 @@ before:
   engine_tests: {total: 783, failures: 62, errors: 0}
   fits: {total_cases: 4896, passed: 3637, failed_assertions: 1258, execution_errors: 1}
 after:
-  commit: "pending"
+  commit: "36106fb5"
   engine_tests: {total: 783, failures: 62, errors: 0}
   fits: {total_cases: 4896, passed: 3637, failed_assertions: 1258, execution_errors: 1}
 summary: >
   Added PatientSeries scoring and series-metric helpers, an explicit score reset,
   and a shared N-way extremum scorer. Wired reset at the two PreFilterPatientSeries
   insertion points. The scorer is not consumed yet, so this foundation preserves
-  behavior exactly.
-verification: >
-  PreFilterPatientSeriesTest retains its four pre-existing failures. The full
-  engine suite retains its baseline 62 failures and 0 errors. FITS case-level
-  comparison reports 0 added, removed, or status-changed cases versus the prior
-  local run.
+  behavior exactly. PreFilterPatientSeriesTest retains its four pre-existing
+  failures; the full engine suite retains 62 failures and 0 errors; FITS
+  case-level comparison reports 0 added, removed, or status-changed cases.
 details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0045/finding.md"
 finding_ids: ["SPEC-4.6-0045"]
 status: pending_review

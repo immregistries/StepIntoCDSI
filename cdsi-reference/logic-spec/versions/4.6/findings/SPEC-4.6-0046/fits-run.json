@@ -1,0 +1,19 @@
+{
+  "runId" : "2026-09-10T173051-051283466Z-85234203-acip-4.6-sd-4.65-fits-222cc1c7",
+  "startedAt" : "2026-09-10T17:30:51.051283466Z",
+  "finishedAt" : "2026-09-10T17:31:42.313712200Z",
+  "gitCommit" : "85234203427ac94b0564875528f030378be1ae66",
+  "gitCommitAbbreviated" : "85234203",
+  "gitBranch" : "cursor/chapter-8-rewrite-7598",
+  "gitDirty" : false,
+  "javaVersion" : "21.0.10",
+  "mavenVersion" : "unknown",
+  "testFilter" : "FitsFixtureTest",
+  "referenceSetId" : "acip-4.6-sd-4.65-fits-222cc1c7",
+  "logicSpecVersion" : "4.6",
+  "supportingDataRelease" : "4.65",
+  "supportingDataZipName" : "supporting-data-4.65-508.zip",
+  "supportingDataBundleSha256" : "741b8fd21c77887c4d2dc9ce1119a58d2659152007bda6791ffc57fdc098ce3d",
+  "fitsFixtureSetSha256" : "222cc1c7c2857987711895f2af8de0074b45fc85d6f784dae47ad00aa42cce1d",
+  "fitsFixtureSetCaseCount" : 4896
+}

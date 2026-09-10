@@ -1,0 +1,15 @@
+{
+  "discoveredCases" : 4896,
+  "executedCases" : 4896,
+  "passedCases" : 3749,
+  "failedAssertions" : 1146,
+  "executionErrors" : 1,
+  "skippedCases" : 0,
+  "knownFailures" : null,
+  "newRegressions" : null,
+  "newlyPassingCases" : null,
+  "changedKnownFailures" : null,
+  "baselineNote" : "Case-level regression baseline (Phase 19 of the reference-module plan) is not built yet - knownFailures/newRegressions/newlyPassingCases/changedKnownFailures are not available. See changed-cases.json for a same-machine comparison against the most recent previous local run, which is a convenience, not a reviewed baseline.",
+  "addedCases" : 0,
+  "removedCases" : 0
+}
