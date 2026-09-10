@@ -1,0 +1,54 @@
+id: "2026-09-10-role-b-round-36-unit-8.4"
+date: "2026-09-10"
+phase: 22
+title: "Role B Round 36 - Unit 8.4 Closed: A Break Statement Defeated Tie-Inclusive Scoring (SPEC-4.6-0044)"
+before:
+  commit: "d6b26b4"
+  engine_tests: {total: 783, failures: 68, errors: 0}
+  fits: {total_cases: 4896, passed: 3637, failed_assertions: 1258, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+after:
+  commit: "PENDING"
+  engine_tests: {total: 783, failures: 62, errors: 0}
+  fits: {total_cases: 4896, passed: 3637, failed_assertions: 1258, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+summary: >
+  After 7.6's revert, checked the standing Chapter 8 plan against the
+  actual current repository state before proceeding - the series-
+  group loop itself (the plan's own core architectural change) was
+  already implemented and merged in an earlier part of this session
+  (SPEC-4.6-0020, accepted despite a net FITS regression on an
+  explicit project-owner decision, per that finding). The plan
+  document in front of this round was stale; the real remaining work
+  is a set of already-individually-diagnosed residual defects across
+  6 Chapter 8/9 test classes (30 reds total), most already recorded
+  in status.yaml from that earlier work.
+
+  Started with unit 8.4 (Complete Patient Series), the smallest and
+  most clearly diagnosed of the six: status.yaml's own notes had
+  already root-caused 5 of its 6 reds to one shared cause
+  (evaluate_ACandidatePatientSeriesHasTheMostValidDoses()'s scoring
+  loop breaking after the first series it found at the maximum,
+  defeating both the tie column and the below-max column for every
+  series listed after the winner) and named the correct reference
+  implementation already sitting in InProcessPatientSeries's own copy
+  of the identical pattern. Fixing that surfaced a 6th, previously-
+  masked gap: a Not Complete series was being scored -1 even though
+  Table 8-7 is scoped to Complete series only.
+
+  Final verification: unit 8.4's own suite 15/15 green (up from
+  9/15); full engine suite 62 failures/0 errors (down from 68/0,
+  sorted-diff-confirmed as exactly those 6 tests and nothing else
+  across all 783 tests); full FITS run, case-by-case diffed: 3637
+  passed both before and after, 0 changed cases - 8.4's narrow
+  entry condition (2+ Complete series in one group) means the
+  corrected tie/exclusion handling doesn't change any of the 4896
+  bundled cases' outcomes.
+
+  Five more Chapter 8/9 units remain with reds (8.1, 8.2, 8.3, 8.5,
+  8.7, plus partial Chapter 9 residuals) - a substantial remaining
+  body of work, most of it already scoped in status.yaml from
+  earlier sessions, to be worked unit by unit as this pass continues.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0044/finding.md"
+finding_ids: ["SPEC-4.6-0044"]
+status: reviewed

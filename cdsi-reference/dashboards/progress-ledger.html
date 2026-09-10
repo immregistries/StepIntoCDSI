@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-09 22:31:26 - regenerate with
+  Dashboard generated 2026-09-10 05:20:40 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,7 +57,7 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">36</div>
+    <div class="value">37</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
@@ -75,6 +75,28 @@
 </div>
 
 
+<section>
+  <h2>2026-09-10 - Phase 22 - Role B Round 36 - Unit 8.4 Closed: A Break Statement Defeated Tie-Inclusive Scoring (SPEC-4.6-0044)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>After 7.6&#x27;s revert, checked the standing Chapter 8 plan against the actual current repository state before proceeding - the series- group loop itself (the plan&#x27;s own core architectural change) was already implemented and merged in an earlier part of this session (SPEC-4.6-0020, accepted despite a net FITS regression on an explicit project-owner decision, per that finding). The plan document in front of this round was stale; the real remaining work is a set of already-individually-diagnosed residual defects across 6 Chapter 8/9 test classes (30 reds total), most already recorded in status.yaml from that earlier work.
+Started with unit 8.4 (Complete Patient Series), the smallest and most clearly diagnosed of the six: status.yaml&#x27;s own notes had already root-caused 5 of its 6 reds to one shared cause (evaluate_ACandidatePatientSeriesHasTheMostValidDoses()&#x27;s scoring loop breaking after the first series it found at the maximum, defeating both the tie column and the below-max column for every series listed after the winner) and named the correct reference implementation already sitting in InProcessPatientSeries&#x27;s own copy of the identical pattern. Fixing that surfaced a 6th, previously- masked gap: a Not Complete series was being scored -1 even though Table 8-7 is scoped to Complete series only.
+Final verification: unit 8.4&#x27;s own suite 15/15 green (up from 9/15); full engine suite 62 failures/0 errors (down from 68/0, sorted-diff-confirmed as exactly those 6 tests and nothing else across all 783 tests); full FITS run, case-by-case diffed: 3637 passed both before and after, 0 changed cases - 8.4&#x27;s narrow entry condition (2+ Complete series in one group) means the corrected tie/exclusion handling doesn&#x27;t change any of the 4896 bundled cases&#x27; outcomes.
+Five more Chapter 8/9 units remain with reds (8.1, 8.2, 8.3, 8.5, 8.7, plus partial Chapter 9 residuals) - a substantial remaining body of work, most of it already scoped in status.yaml from earlier sessions, to be worked unit by unit as this pass continues.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>d6b26b4</code></td></tr><tr><td>Engine tests</td><td>783 total, 68 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3637 passed, 1258 failed-assertion, 1 execution-error (74.3%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>PENDING</code></td></tr><tr><td>Engine tests</td><td>783 total, 62 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3637 passed, 1258 failed-assertion, 1 execution-error (74.3%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0044/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0044/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0044</p>
+</section>
 <section>
   <h2>2026-09-09 - Phase 22 - Role B Round 35 - Unit 7.6 Attempted and Reverted: JUnit-Clean Fix Triggers a Real Skip/Re-Forecast Infinite Loop (SPEC-4.6-0043)
     <span class="badge badge-green">reviewed</span>

@@ -1,0 +1,59 @@
+id: "SPEC-4.6-0044"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["8.4"]
+source_pages: [89, 90]
+tables: ["Table 8-7", "Table 8-8"]
+business_rules: ["SELECTB-19"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.CompletePatientSeries"
+fits_cases: []
+summary: >
+  Two compounding gaps in unit 8.4 (Complete Patient Series), fixed
+  together as one bounded round, following the same Role B pipeline
+  used throughout this pass.
+
+  1. evaluate_ACandidatePatientSeriesHasTheMostValidDoses()'s scoring
+  loop awarded +1 to the first series it found at the maximum valid-
+  dose count and then broke out of the loop entirely, so every series
+  after that one in list order was never visited by any scoring
+  branch - not incremented, not decremented, not even considered for
+  the tie outcome Table 8-7's own middle column defines. SELECTB-19
+  defines "has the most" as >= every other scorable series, which is
+  tie-inclusive by design; the break made every tie resolve as if the
+  first-listed series had won outright and every later series
+  (including ones that also share the maximum) silently kept
+  whatever score it already had.
+
+  2. The same method decremented a Not Complete patient series
+  unconditionally, even though Table 8-7's own title scopes it to
+  "a Scorable Patient Series That Is a Complete Patient Series" - a
+  Not Complete series does not compete for "has the most valid doses"
+  at all and should not be scored by this row in either direction.
+evidence: >
+  status.yaml's own pre-existing notes for unit 8.4 had already
+  root-caused gap 1 precisely as the shared cause of five of the
+  unit's six reds, including the exact mechanism (the break statement)
+  and predicting the tie-inclusive semantics SELECTB-19 requires. Gap
+  2 surfaced only after fixing gap 1 - a genuinely separate defect the
+  break had been masking, since with the break in place a Not Complete
+  series's incorrect decrement was rarely the only wrong value in a
+  test fixture.
+interpretation: >
+  Fixed: the method now runs three passes instead of two - find the
+  maximum, count how many scorable Complete series share it, then
+  score every series accordingly (a lone series at the maximum: +1;
+  two or more sharing it: 0, per Table 8-7's own tie column; below the
+  maximum: -1) - with a Not Complete series now left untouched rather
+  than decremented, matching Table 8-7's own Complete-series-only
+  scope.
+
+  Verified via the standing Role B pipeline: unit 8.4's own suite
+  15/15 green (was 9/15). Full engine suite: sorted diff confirms
+  exactly those 6 tests flipped and nothing else across all 783
+  tests. Full FITS run, case-by-case diffed: 3637 passed both before
+  and after, 0 changed cases - 8.4 only runs when 8.3 finds two or
+  more Complete patient series in one series group, and within that
+  narrow scenario the corrected tie/exclusion handling does not
+  change which series 8.7 ultimately prioritizes for any of the
+  4896 bundled cases.

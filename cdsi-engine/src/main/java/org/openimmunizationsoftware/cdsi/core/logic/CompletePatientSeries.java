@@ -72,29 +72,48 @@ public class CompletePatientSeries extends LogicStep {
     }
 
     log("Phase 1 complete. Maximum valid dose count: " + mostValidDoses);
-    log("Phase 2: Scoring patient series based on valid dose count");
+    log("Phase 2: Counting how many series share the maximum");
 
-    // get number of patientSeries with the most valid dose
+    // SELECTB-19 defines "has the most" as >= every other scorable series - a
+    // tie (2 or more series at the maximum) scores 0 per Table 8-7's middle
+    // column, not +1 for each; only a lone series at the maximum scores +1.
+    int countAtMax = 0;
+    for (PatientSeries patientSeries : patientSeriesList) {
+      if (patientSeries.getPatientSeriesStatus() != null
+          && !patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)) {
+        continue;
+      }
+      if (numberOfValidDoses(patientSeries) >= mostValidDoses) {
+        countAtMax++;
+      }
+    }
+
+    log("Phase 2 complete. " + countAtMax + " series share the maximum.");
+    log("Phase 3: Scoring every patient series based on valid dose count");
+
     int scoredSeriesCount = 0;
     for (PatientSeries patientSeries : patientSeriesList) {
       scoredSeriesCount++;
       if (patientSeries.getPatientSeriesStatus() != null
           && !patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)) {
-        patientSeries.descPatientScoreSeries();
-        log("  Series " + scoredSeriesCount + ": Score decreased (status is not COMPLETE)");
+        // Table 8-7 scores complete patient series only - a Not Complete series
+        // does not compete for "has the most valid doses" and is not scored by
+        // this row at all (not even downward).
+        log("  Series " + scoredSeriesCount + ": Score unchanged (status is not COMPLETE)");
         continue;
       }
 
       if (numberOfValidDoses(patientSeries) < mostValidDoses) {
         patientSeries.descPatientScoreSeries();
         log("  Series " + scoredSeriesCount + ": Score decreased (valid doses less than max)");
-        continue;
+      } else if (countAtMax == 1) {
+        patientSeries.incPatientScoreSeries();
+        log("  Series " + scoredSeriesCount + ": Score increased (lone series with most valid doses)");
+      } else {
+        log("  Series " + scoredSeriesCount + ": Score unchanged (tied with another series at the maximum)");
       }
-      patientSeries.incPatientScoreSeries();
-      log("  Series " + scoredSeriesCount + ": Score increased (has most valid doses) - SELECTED");
-      break;
     }
-    log("Phase 2 complete. Patient series evaluation finished.");
+    log("Phase 3 complete. Patient series evaluation finished.");
 
   }
 

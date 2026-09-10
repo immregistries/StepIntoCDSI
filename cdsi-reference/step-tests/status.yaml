@@ -3386,15 +3386,17 @@ units:
   '8.4':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.CompletePatientSeriesTest
-    fix_status: in_progress
+    fix_status: merged
     blocked_category: null
     blocked_reason: null
     finding_ids:
       - SPEC-4.6-0006
       - SPEC-4.6-0020
+      - SPEC-4.6-0044
     notes: >-
-      Role A, 2026-09-05. 15 tests: 7 green, 8 red (8 failures, 0 errors); now
-      9 green, 6 red after SPEC-4.6-0020 (2026-09-08, merged). 8.4 is
+      Role A, 2026-09-05; fixed (SPEC-4.6-0044, merged), 2026-09-10. 15 tests,
+      now 15/15 green (was 7/15 originally; 9/15 after SPEC-4.6-0020 merged
+      2026-09-08). 8.4 is
       the smallest member of the 8.4/8.5/8.6 scoring family - one condition ("has
       the most valid doses", SELECTB-19) scored across Table 8-7's three outcome
       columns (+1 alone / 0 for a tie / -1 otherwise), resting on two business
@@ -3438,62 +3440,54 @@ units:
       unconditional transition to 8.7, asserted for an empty group, a lone
       winner and a tie alike.
 
-      Red (8), expected-vs-actual. Six of the eight share one root cause, which
-      is worth stating once: evaluate_ACandidatePatientSeriesHasTheMostValid
-      Doses()'s second loop awards +1 to the first series it finds at the
-      maximum and then breaks out of the loop entirely, so every series after
-      that one in list order is never visited by any scoring branch at all. (1)
+      Fixed (SPEC-4.6-0044, merged), all 6 reds. Five of the six shared one
+      root cause: evaluate_ACandidatePatientSeriesHasTheMostValidDoses()'s
+      second loop used to award +1 to the first series it found at the
+      maximum and then break out of the loop entirely, so every series after
+      that one in list order was never visited by any scoring branch at all -
+      not just the tie column (Reds 1-4) but also the third column (Red 5): a
+      series with strictly fewer valid doses than the winner was silently left
+      unscored whenever it sat after the winner in the list. (1)
       selectbNineteenTheMostValidDosesIsTieInclusiveSoNeitherTiedSeriesIsALone
       Winner - SELECTB-19 defines "has the most" as >= every other scorable
       series' count, so two series tied at two valid doses both have the most
-      and must score identically; expected equal scores, actual 1 and 0. (2)
-      tableEightSevenTrueForTwoOrMoreSeriesAwardsZeroToEachTiedSeries - expected
-      0 and 0, actual 1 and 0. (3) tableEightSevenTheTieOutcomeAppliesToEvery
+      and must score identically; used to be 1 and 0, now both 0. (2)
+      tableEightSevenTrueForTwoOrMoreSeriesAwardsZeroToEachTiedSeries - used to
+      be 1 and 0, now both 0. (3) tableEightSevenTheTieOutcomeAppliesToEvery
       TiedSeriesAndTheOthersStillLose - two series tied at two valid doses plus
-      one with one; expected 0, 0, -1, actual 1, 0, 0. (4) tableEightSevenA
+      one with one; used to be 1, 0, 0, now 0, 0, -1. (4) tableEightSevenA
       CompleteSeriesGroupWhereNoSeriesHasAValidDoseIsATie - the boundary at
-      zero, reachable because 8.3's Table 8-5 Rule 1 has "-" in its other two
-      cells (ClassifyScorablePatientSeriesTest#ruleOneFiresWhateverTheOtherTwo
-      ConditionsAnswer is green); SELECTB-19 is a comparison, not a threshold,
-      so 0 = 0 is a tie; expected 0 and 0, actual 1 and 0. (5) tableEightSeven
-      TheMinusOneIsAwardedWhateverTheBelowMaxSeriesPositionInTheList - the same
-      group as the green third-column test in the other order; expected the
-      winner +1 and the loser -1, actual +1 and 0.
+      zero; SELECTB-19 is a comparison, not a threshold, so 0 = 0 is a tie;
+      used to be 1 and 0, now both 0. (5) tableEightSevenTheMinusOneIsAwarded
+      WhateverTheBelowMaxSeriesPositionInTheList - used to be +1 and 0, now +1
+      and -1 as expected.
 
-      Red 5 is the piece 08-04's Review Findings and SPEC-4.6-0006 do not
-      currently record, and it should be added to both during Role B: those
-      documents describe the break as mishandling the *tie* column, but the
-      break sits after the +1 and before every later iteration, so it also
-      defeats the *third* column - a series with strictly fewer valid doses than
-      the winner is silently left unscored whenever it happens to sit after the
-      winner in the list. In a group of N complete series exactly one is ever
-      scored at all beyond the prefix that precedes the winner. The correct
-      reference implementation of the identical pattern is already in this
-      codebase - InProcessPatientSeries#evaluate_ACandidatePatientSeriesHasThe
-      MostValidDoses(), which collects every tied series into a
-      greatestElementPosList - so this is a fixable gap in 8.4 specifically, as
-      SPEC-4.6-0006 already says. Reds 1-5 are 8.4's own class and are the whole
-      of its unit-local Role B work; all five are one fix.
+      Fixed by rewriting the method as three passes instead of two: find the
+      maximum, count how many Complete series share it, then score every
+      series accordingly (lone winner +1, two-or-more-way tie 0, below max
+      -1) - the same reference pattern already correct in
+      InProcessPatientSeries#evaluate_ACandidatePatientSeriesHasTheMostValid
+      Doses(), which this fix now matches.
 
       (6) theStepScoresOnlyTheCompletePatientSeriesInTheGroup - Table 8-7 asks
       how many points are awarded "to a Scorable Patient Series That Is a
-      Complete Patient Series", and 8.3's Table 8-5 Rule 1, the only route into
-      this step, says to apply the complete patient series scoring business
-      rules "to these scorable patient series only"; expected a Not Complete
-      series sharing the group to come out of 8.4 with the score Chapter 7 and
-      8.1 left it holding, actual the scoring loop opens with an explicit
-      descPatientScoreSeries() for every non-complete series and it is scored
-      -1. This is the scope question ClassifyScorablePatientSeriesTest
-      deliberately left to this unit rather than forcing into a test of its own;
-      the test asserts only the half the specification settles (a table about
-      complete patient series does not penalise a series that is not one) and
-      takes no position on whether such series should be dropped from
-      consideration by some other means. Role B should expect
-      SPECIFICATION_AMBIGUITY here rather than a straightforward
-      IMPLEMENTATION_MISMATCH - Table 8-5's outcome text also says the series a
-      column does not select "are not scored and are dropped from
-      consideration", and 8.4's descPatientScoreSeries() is a plausible if
-      unusual reading of "dropped".
+      Complete Patient Series"; expected a Not Complete series sharing the
+      group to come out of 8.4 with the score Chapter 7 and 8.1 left it
+      holding, used to be scored -1 by an explicit descPatientScoreSeries()
+      call for every non-complete series - now left untouched, matching the
+      table's own Complete-series-only scope. Classified IMPLEMENTATION_MISMATCH
+      on Role B review rather than the SPECIFICATION_AMBIGUITY Role A
+      flagged: the fixture-driven test (added between Role A and Role B)
+      pins the concrete, testable half - a table about complete patient
+      series does not penalise a series that is not one - leaving the
+      broader "are such series dropped from consideration entirely"
+      question genuinely open but moot for this row's own scoring output.
+
+      Confirmed against real FITS data: 3637 passed both before and after,
+      0 changed cases - 8.4 only runs when 8.3 finds two or more Complete
+      patient series in one series group, and within that narrow scenario
+      the corrected tie/exclusion handling does not change which series 8.7
+      ultimately prioritizes for any of the 4896 bundled cases.
 
       Reds 7 and 8, Fixed (SPEC-4.6-0020, merged) -
       theStepScoresTheScorablePatientSeriesEightOneProducedNot
