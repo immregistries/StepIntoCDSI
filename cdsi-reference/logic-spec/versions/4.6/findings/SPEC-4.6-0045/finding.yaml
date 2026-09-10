@@ -1,0 +1,27 @@
+id: "SPEC-4.6-0045"
+status: open
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["8.1", "8.2", "8.3", "8.4", "8.5", "8.6", "8.7"]
+source_pages: [66, 87]
+tables: ["Table 8-2", "Table 8-7", "Table 8-9", "Table 8-11"]
+business_rules: ["SELECTB-3", "SELECTB-5", "SELECTB-19"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.domain.PatientSeries"
+  - "org.openimmunizationsoftware.cdsi.core.logic.PatientSeriesScoring"
+  - "org.openimmunizationsoftware.cdsi.core.logic.PreFilterPatientSeries"
+fits_cases: []
+summary: >
+  Chapter 8 scoring relied on an accumulating mutable score with no explicit
+  reset boundary and duplicated common series metrics across scoring steps.
+  Add domain-level metrics, a canonical last-target-dose maximum-age helper,
+  an explicit reset, and a shared N-way extremum scorer. This foundation is
+  behavior-neutral; the shared scorer is consumed by later sequenced fixes.
+evidence: >
+  PatientSeries exposed increment/decrement score methods but no reset method.
+  The Chapter 8 scoring classes independently counted satisfied target doses,
+  inspected product paths, and calculated maximum-age dates. The latter copies
+  used the forecast target dose and did not recurse through TimePeriod child
+  values, despite TimePeriod.getDateFrom(Date) already providing that behavior.
+interpretation: >
+  Establishing these operations at their owning abstractions reduces divergent
+  implementations and makes the per-scoring-pass score invariant explicit.
