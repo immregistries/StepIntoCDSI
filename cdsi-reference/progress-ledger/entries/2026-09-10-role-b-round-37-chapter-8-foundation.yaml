@@ -1,0 +1,25 @@
+id: "2026-09-10-role-b-round-37-chapter-8-foundation"
+date: "2026-09-10"
+phase: 22
+title: "Role B Round 37 - Chapter 8 Scoring Foundation (SPEC-4.6-0045)"
+before:
+  commit: "711e5fb"
+  engine_tests: {total: 783, failures: 62, errors: 0}
+  fits: {total_cases: 4896, passed: 3637, failed_assertions: 1258, execution_errors: 1}
+after:
+  commit: "pending"
+  engine_tests: {total: 783, failures: 62, errors: 0}
+  fits: {total_cases: 4896, passed: 3637, failed_assertions: 1258, execution_errors: 1}
+summary: >
+  Added PatientSeries scoring and series-metric helpers, an explicit score reset,
+  and a shared N-way extremum scorer. Wired reset at the two PreFilterPatientSeries
+  insertion points. The scorer is not consumed yet, so this foundation preserves
+  behavior exactly.
+verification: >
+  PreFilterPatientSeriesTest retains its four pre-existing failures. The full
+  engine suite retains its baseline 62 failures and 0 errors. FITS case-level
+  comparison reports 0 added, removed, or status-changed cases versus the prior
+  local run.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0045/finding.md"
+finding_ids: ["SPEC-4.6-0045"]
+status: pending_review

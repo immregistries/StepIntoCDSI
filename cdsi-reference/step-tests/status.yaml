@@ -2957,7 +2957,7 @@ units:
     fix_status: in_progress
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0020", "SPEC-4.6-0021", "SPEC-4.6-0025"]
+    finding_ids: ["SPEC-4.6-0020", "SPEC-4.6-0021", "SPEC-4.6-0025", "SPEC-4.6-0045"]
     notes: >-
       Role A, 2026-09-05. 24 tests: 16 green, 8 red (8 failures, 0 errors); now
       20 green, 4 red after SPEC-4.6-0020 (2026-09-08, merged). 8.1

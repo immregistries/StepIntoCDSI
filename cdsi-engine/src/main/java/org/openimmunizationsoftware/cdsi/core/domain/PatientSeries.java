@@ -3,6 +3,7 @@ package org.openimmunizationsoftware.cdsi.core.domain;
 import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 
 public class PatientSeries {
   private PatientSeriesStatus patientSeriesStatus = null;
@@ -65,6 +66,54 @@ public class PatientSeries {
 
   public int getScorePatientSeries() {
     return scorePatientSeries;
+  }
+
+  public void resetScore() {
+    scorePatientSeries = 0;
+  }
+
+  public int getValidDoseCount() {
+    int validDoseCount = 0;
+    if (targetDoseList != null) {
+      for (TargetDose targetDose : targetDoseList) {
+        if (targetDose.getTargetDoseStatus() == TargetDoseStatus.SATISFIED) {
+          validDoseCount++;
+        }
+      }
+    }
+    return validDoseCount;
+  }
+
+  public int getNotSatisfiedDoseCount() {
+    int notSatisfiedDoseCount = 0;
+    if (targetDoseList != null) {
+      for (TargetDose targetDose : targetDoseList) {
+        if (targetDose.getTargetDoseStatus() == TargetDoseStatus.NOT_SATISFIED) {
+          notSatisfiedDoseCount++;
+        }
+      }
+    }
+    return notSatisfiedDoseCount;
+  }
+
+  public boolean isProductPatientSeries() {
+    return trackedAntigenSeries != null
+        && trackedAntigenSeries.getSelectPatientSeries() != null
+        && trackedAntigenSeries.getSelectPatientSeries().getProductPath() != null
+        && trackedAntigenSeries.getSelectPatientSeries().getProductPath().name().equals("YES");
+  }
+
+  public java.util.Date getMaximumAgeDateOfLastTargetDose(java.util.Date dateOfBirth) {
+    if (dateOfBirth == null || targetDoseList == null || targetDoseList.isEmpty()) {
+      return null;
+    }
+    TargetDose lastTargetDose = targetDoseList.get(targetDoseList.size() - 1);
+    if (lastTargetDose.getTrackedSeriesDose() == null
+        || lastTargetDose.getTrackedSeriesDose().getAgeList().isEmpty()
+        || lastTargetDose.getTrackedSeriesDose().getAgeList().get(0).getMaximumAge() == null) {
+      return null;
+    }
+    return lastTargetDose.getTrackedSeriesDose().getAgeList().get(0).getMaximumAge().getDateFrom(dateOfBirth);
   }
 
   public void addScore(int value) {

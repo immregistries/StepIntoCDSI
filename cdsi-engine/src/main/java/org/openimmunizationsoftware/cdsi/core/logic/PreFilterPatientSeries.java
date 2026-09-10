@@ -103,6 +103,7 @@ public class PreFilterPatientSeries extends LogicStep {
                 }
             }
             if (add) {
+                patientSeries.resetScore();
                 scorablePatientSeriesList.add(patientSeries);
                 if (antigenSeries.getSelectPatientSeries().getDefaultSeries() == YesNo.YES) {
                     addedDefault = true;
@@ -121,6 +122,7 @@ public class PreFilterPatientSeries extends LogicStep {
                 SeriesType seriesType = antigenSeries.getSeriesType();
                 YesNo seriesDefault = antigenSeries.getSelectPatientSeries().getDefaultSeries();
                 if (seriesDefault == YesNo.YES && seriesType == SeriesType.STANDARD) {
+                    patientSeries.resetScore();
                     scorablePatientSeriesList.add(patientSeries);
                     String seriesName = antigenSeries.getSeriesName();
                     String logString = "[" + seriesType + "] " + seriesName + " validDoseCount = " + validDoseCount;
