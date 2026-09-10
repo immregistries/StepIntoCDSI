@@ -46,7 +46,7 @@ public class ClassifyScorablePatientSeries extends LogicStep {
     List<PatientSeries> relevantPatientSeriesList = dataModel.getScorablePatientSeriesList();
     for (PatientSeries patientSeries : relevantPatientSeriesList) {
       if (patientSeries != null) {
-        if (patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)) {
+        if (PatientSeriesStatus.COMPLETE.equals(patientSeries.getPatientSeriesStatus())) {
           completePatientSeries++;
         }
       }

@@ -101,7 +101,7 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
               continue;
             }
 
-            if (patientSeries.getPatientSeriesStatus() == PatientSeriesStatus.COMPLETE) {
+            if (PatientSeriesStatus.COMPLETE.equals(patientSeries.getPatientSeriesStatus())) {
               completePatientSeries++;
             }
           }
@@ -124,7 +124,7 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
               continue;
             }
 
-            if (patientSeries.getPatientSeriesStatus() == PatientSeriesStatus.NOT_COMPLETE) {
+            if (PatientSeriesStatus.NOT_COMPLETE.equals(patientSeries.getPatientSeriesStatus())) {
               for (TargetDose targetDose : patientSeries.getTargetDoseList()) {
                 VaccineDoseAdministered vda = targetDose.getSatisfiedByVaccineDoseAdministered();
                 if (vda != null) {
@@ -199,7 +199,7 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
               continue;
             }
 
-            boolean isCompleteSeries = patientSeries.getPatientSeriesStatus() == PatientSeriesStatus.COMPLETE;
+            boolean isCompleteSeries = PatientSeriesStatus.COMPLETE.equals(patientSeries.getPatientSeriesStatus());
             if (isCompleteSeries) {
               dataModel.getPrioritizedPatientSeriesList().add(patientSeries);
               break;
@@ -218,7 +218,7 @@ public class IdentifyOnePrioritizedPatientSeries extends LogicStep {
               continue;
             }
 
-            if (patientSeries.getPatientSeriesStatus() == PatientSeriesStatus.NOT_COMPLETE) {
+            if (PatientSeriesStatus.NOT_COMPLETE.equals(patientSeries.getPatientSeriesStatus())) {
               for (TargetDose targetDose : patientSeries.getTargetDoseList()) {
                 VaccineDoseAdministered vda = targetDose.getSatisfiedByVaccineDoseAdministered();
                 if (vda != null) {
