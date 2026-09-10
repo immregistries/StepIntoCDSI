@@ -1,0 +1,104 @@
+id: "SPEC-4.6-0043"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["7.6"]
+source_pages: [85]
+tables: ["Table 6-4", "Table 6-8"]
+business_rules: ["CONDSKIP-2"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.ValidateRecommendation"
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkip"
+fits_cases: []
+summary: >
+  Attempted and reverted. Unit 7.6 (Validate Recommendation) has two
+  genuine, narrowly-scoped defects in the shared EvaluateConditionalSkip
+  base class and in ValidateRecommendation's own class - fixing them
+  makes 6 of 7.6's own 8 reds pass with zero collateral damage to any
+  other cdsi-engine JUnit test, including the two sibling units (6.2,
+  7.1) that share the same base class - but activates a previously
+  entirely-dead code path (7.6 has never once evaluated its own
+  decision tables in this engine's history) that causes a genuine
+  skip/re-forecast infinite loop for a large number of real patients,
+  caught only by the full FITS suite.
+
+  1. ValidateRecommendation.process() was overridden to unconditionally
+  advance to the next step without ever calling
+  evaluateLogicTables() - so 7.6 has never validated anything; every
+  recommendation was accepted regardless of whether it was logically
+  self-contradictory.
+
+  2. EvaluateConditionalSkip's shared CONDSKIP-2 reference-date switch
+  has three arms (EVALUATE, FORECAST, VALIDATING); the VALIDATING arm
+  was a placeholder that always set the reference date to the PAST
+  sentinel (01/01/1900) instead of the forecast's own earliest date,
+  making every conditional-skip window in this context permanently
+  outside the reference date - the section's stated purpose ("Conditional
+  Skip is used to determine if a forecast is illogical") could never
+  fire.
+evidence: >
+  Fixing both (deleting the process() override; substituting
+  caEarliestDate.getFinalValue() for the PAST sentinel in the
+  VALIDATING arm) took unit 7.6's own suite from 6/15 to 13/15 green
+  (the remaining 2 are the already-tracked SPEC-4.6-0027 context
+  landmine and one test-fixture gap - see below) and, critically, ran
+  clean against the full cdsi-engine suite: sorted diff confirmed
+  exactly the 6 targeted tests flipped and nothing else changed across
+  all 783 tests, including 6.2's and 7.1's own suites, which were
+  re-run together with 7.6's explicitly because they share this exact
+  base class.
+
+  The FITS suite told a different story: passedCases dropped from
+  3637 to 3486 (-151) and executionErrors rose from the standing
+  baseline of 1 to 234. 233 of those 234 were a new exception class
+  never seen before in this Role B pass - "IllegalStateException:
+  Logic steps stuck in a loop at 7.1/7.2/7.3/7.4/7.5/7.6" (63 at 7.4,
+  59 at 7.2, 44 at 7.6, 40 at 7.1, 20 at 7.3, 7 at 7.5) - the engine's
+  own loop-guard tripping. This is the JUnit suite's blind spot made
+  concrete: no unit test for 7.6 (or 6.2, or 7.1) exercises a real,
+  multi-target-dose patient series being forecast end to end through
+  repeated skip-and-re-forecast cycles, because every one of those
+  test classes hand-builds a single target dose in isolation and never
+  calls process() on a sequence of them. Only a real FITS case's full
+  4.4-through-7.6 loop can surface a cycle that never terminates.
+interpretation: >
+  Reverted in full - both files restored to their pre-round state via
+  git checkout, confirmed via a fresh build (ValidateRecommendationTest
+  back to 8 failures/15, matching the state before this attempt) and
+  git status (clean except the untracked IDE prefs file every round
+  this session leaves alone).
+
+  Root cause not further investigated this round, but the shape is
+  informative for whoever does: 7.6 loops back to 7.1 for
+  re-forecasting on a Yes (skip), and 7.1's own skip outcome loops
+  back to 4.4 - a cycle the specification clearly intends to terminate
+  (a skipped dose should not remain permanently re-forecastable
+  through the same skip), but which was structurally untestable until
+  today, since 7.6's decision tables have never actually run in this
+  engine's history. Given that 7.1's and 7.6's CONDSKIP-2 arms and
+  6.2's own reference-date handling are the same three-way switch
+  already tracked as incomplete/regression-prone in SPEC-4.6-0027 (the
+  ConditionalSkip context field, open pending GitHub Issue #65's ACIP
+  guidance), and given the same "DTaP catch-up interval" clinical
+  question that finding traces may well be entangled with why a
+  target dose keeps re-qualifying for the same skip on every
+  re-forecast pass, this is recorded as a related but distinct
+  open question rather than assumed to be the identical bug - it
+  needs its own trace of one looping FITS case (e.g.
+  5eeca0522cc4517a96b0f417-DTAP-2013-0074, group DTAP, sampled above)
+  before either fix is safe to reattempt.
+
+  A test-fixture gap was also found and left undisturbed:
+  ValidateRecommendationTest.theIntervalConditionIsAnsweredAgainstTheForecastedEarliestDateToo
+  never populates dataModel.getImmunizationHistory()'s dose list, so
+  Table 6-8's own "has at least one dose been administered" condition
+  (independently verified correct and unrelated to this defect)
+  answers No regardless of the reference-date fix, leaving
+  onlyConditionTable().isMet() false. Not a defect in cdsi-engine;
+  worth a one-line fixture addition whenever this unit is reattempted.
+
+  Classified blocked_category: would_regress_other_tests per
+  cdsi-engine/AGENTS.md step 6 - this is the standing "any FITS
+  regression is an automatic stop" rule, not a judgment call. The
+  project owner should decide whether to trace the loop directly, or
+  to defer 7.6 until SPEC-4.6-0027's ACIP question resolves, since
+  they may turn out to share a root cause.

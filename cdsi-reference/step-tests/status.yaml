@@ -2770,10 +2770,20 @@ units:
   '7.6':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.ValidateRecommendationTest
-    fix_status: not_started
-    blocked_category: null
-    blocked_reason: null
-    finding_ids: []
+    fix_status: blocked
+    blocked_category: would_regress_other_tests
+    blocked_reason: >-
+      Deleting the process() override and fixing CONDSKIP-2's VALIDATING
+      reference-date stub makes 6 of 8 reds pass with zero collateral
+      damage to any cdsi-engine JUnit test (6.2 and 7.1 included, re-run
+      explicitly since they share the base class) - but it activates a
+      previously entirely-dead code path (7.6 has never once run its own
+      tables) that causes a genuine skip/re-forecast infinite loop for
+      233 real FITS cases, caught only by the engine's own loop guard
+      ("Logic steps stuck in a loop at 7.1" through "7.6"). Reverted in
+      full; see SPEC-4.6-0043 for the complete trace, including the
+      suspected connection to SPEC-4.6-0027's still-open ACIP question.
+    finding_ids: ["SPEC-4.6-0043"]
     notes: >
       Role A, 2026-09-05. 15 tests: 6 green, 9 red (9 failures, 0 errors). 7.6
       has no attribute table, no business rules and no decision tables of its
@@ -2826,7 +2836,21 @@ units:
       2026-09-05 cross-cutting-notes entry.
 
 
-      The 9 red tests, expected vs actual. (1)
+      Attempted and reverted (SPEC-4.6-0043), 2026-09-09. Deleting the
+      process() override and fixing the VALIDATING arm's reference-date
+      stub (below, reds 2 and 3) took this unit's own suite to 13/15
+      green with zero collateral in the full cdsi-engine JUnit suite -
+      but caused a genuine skip/re-forecast infinite loop for 233 real
+      FITS cases (the engine's own loop guard tripping across 7.1
+      through 7.6), invisible to every JUnit test in this file or in
+      6.2's/7.1's own, since none of them drive process() across a real
+      multi-target-dose series through repeated cycles. Reverted in
+      full; fix_status is blocked rather than merged. See SPEC-4.6-0043
+      for the complete trace, including the suspected (not yet traced)
+      connection to SPEC-4.6-0027's still-open ACIP question - both
+      involve the same CONDSKIP-2 reference-date machinery.
+
+      The 9 red tests as Role A found them, expected vs actual. (1)
       aConditionalSkipInstanceCarriesTheContextThatDecidesWhetherSevenSixMayUseIt
       - 7.6.1 requires only Conditional Skip instances with a context of
       Forecast or Both; expected some way to read an instance's context, actual
@@ -2848,11 +2872,11 @@ units:
       EvaluateConditionalSkip's constructor sets the reference date to the PAST
       sentinel. The EVALUATE and FORECAST arms two lines above it are both
       correct; only the third is a placeholder. (4)
-      theEarliestDateIsATableSixFourAttributeTheStepRegisters - Table 6-4 lists
-      the Earliest Date and 7.6 is the one context that reads it; expected a
-      registered attribute carrying 09/01/2023, actual no such attribute,
-      because caEarliestDate is declared and added to conditionAttributesList
-      but never constructed, leaving a literal null in the list. (5)
+      theEarliestDateIsATableSixFourAttributeTheStepRegisters - already green by
+      2026-09-09 (Role B, below): caEarliestDate is in fact constructed and
+      given an initial value in the shared base class's constructor, so this
+      red was stale by the time Role B ran, resolved as a side effect of an
+      earlier round's edit to the same shared class this session. (5)
       theAgeConditionIsAnsweredAgainstTheForecastedEarliestDate - Table 6-6's
       window must be measured against the forecasted earliest date; expected the
       01/01/2023-01/01/2025 window met and the two windows around the assessment
