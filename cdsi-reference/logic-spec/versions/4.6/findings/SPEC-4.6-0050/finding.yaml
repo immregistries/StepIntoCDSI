@@ -1,5 +1,5 @@
 id: "SPEC-4.6-0050"
-status: "open"
+status: "resolved"
 category: "IMPLEMENTATION_MISMATCH"
 spec_sections: ["9.1", "9.2", "9.3"]
 source_pages: [94, 95, 96]
@@ -39,4 +39,6 @@ interpretation: >
   chosen forecast's dose number and unions recommended vaccines from every
   contained forecast. Combined FITS vs the accepted 3691-case Chapter 9
   baseline is unchanged: 3691 passed, 1204 failed assertions, 1 execution
-  error, statusChanged empty. Allowlist was not regenerated.
+  error, statusChanged empty. Allowlist was not regenerated. Project
+  owner accepted the Chapter 9 remaining tests onto develop on 2026-09-14
+  without a code-review PR.

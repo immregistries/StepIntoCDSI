@@ -1,6 +1,6 @@
 # SPEC-4.6-0050: Chapter 9 remaining Table 9-2 aggregation (reason union, status gate, containment, recommended vaccines, dose number)
 
-**Status:** open
+**Status:** resolved
 **Category:** IMPLEMENTATION_MISMATCH
 
 Issue #71 commits 4–6, after SPEC-4.6-0049's MULTIANTVG-1 rewrite.
@@ -28,6 +28,7 @@ Table 9-2 also requires FORECASTVG-9 (union of recommended series dose vaccines)
 - Unit 9.1: 17/17. Unit 9.2: 22/22. Unit 9.3: 37/37 (was 31/34; three new behavioral tests for FORECASTVG-9 union and FORECASTDN-2 min/max).
 - Full `cdsi-engine`: 786 tests, 15 failures, 0 errors (was 783/18). The 15 remaining reds are the pre-existing 6.2/7.1/7.2/7.3/7.6/8.1/8.7 cluster, not this change.
 - Combined FITS run `2026-09-14T210541-071194Z-15541a2` (working tree with this change; allowlist green): **3691/4896 passed**, 1204 failed assertions, 1 execution error. `changed-cases.json` vs the accepted Chapter 9 baseline has `statusChanged: []`. `known-passing-cases.txt` was not regenerated.
+- Project owner accepted the tests onto develop on 2026-09-14 (reviewing test cases, not a code-review PR).
 
 ## Affected
 

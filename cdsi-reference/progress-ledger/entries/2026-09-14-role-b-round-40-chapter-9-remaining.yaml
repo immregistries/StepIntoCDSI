@@ -17,6 +17,7 @@ summary: >
   union, FORECASTDN-2 min/max) and the matching 9.2 dose-number copy.
   Engine failures 18 to 15; unit 9.3 is 37/37. Combined FITS is unchanged
   at 3691/1204/1 (statusChanged empty). Allowlist not regenerated.
+  Project owner accepted the tests onto develop without a code-review PR.
 details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0050/finding.md"
 finding_ids: ["SPEC-4.6-0050"]
-status: pending_review
+status: reviewed
