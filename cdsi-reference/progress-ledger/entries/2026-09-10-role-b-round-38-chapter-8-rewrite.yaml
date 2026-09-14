@@ -22,4 +22,4 @@ summary: >
   later. known-passing-cases.txt was not regenerated.
 details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0046/finding.md"
 finding_ids: ["SPEC-4.6-0046", "SPEC-4.6-0045", "SPEC-4.6-0025"]
-status: pending_review
+status: reviewed

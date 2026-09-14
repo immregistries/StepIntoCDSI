@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-10 17:42:34 - regenerate with
+  Dashboard generated 2026-09-14 14:40:00 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,27 +57,46 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">39</div>
+    <div class="value">40</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
-    <div class="value">76.6%</div>
+    <div class="value">75.4%</div>
     <div class="label">FITS pass rate now</div>
   </div>
   <div class="card">
-    <div class="value">51.3s</div>
+    <div class="value">455.4s (7.6m)</div>
     <div class="label">FITS runtime now</div>
   </div>
   <div class="card">
-    <div class="value">88.8%</div>
+    <div class="value">0.5%</div>
     <div class="label">Runtime reduction since start</div>
   </div>
 </div>
 
 
 <section>
+  <h2>2026-09-14 - Phase 22 - Role B Round 39 - Port Chapter 9 Codex work onto the Chapter 8 rewrite
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Took over issue #71&#x27;s Chapter 9 sequence from the Codex worktree and replayed it onto develop after SPEC-4.6-0046, remapping findings to SPEC-4.6-0047/0048/0049. Combined FITS vs the Chapter 8 baseline is DTAP-only: 3749 to 3691 passed (net -58); every other group is unchanged. That movement is accepted as spec-correct MULTIANTVG-1 aggregation exposing a 7-year DTaP target FITS still wants at age 11, not a reason to restore the old per-element switch.   Engine tests 26 to 18 failures. Project owner accepted the DTAP-only FITS movement and regenerated known-passing-cases.txt from run 2026-09-14T201255-673843200Z-130d206 (3691 PASS ids).
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>d6aff99</code></td></tr><tr><td>Engine tests</td><td>783 total, 26 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3749 passed, 1146 failed-assertion, 1 execution-error (76.6%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>130d206</code></td></tr><tr><td>Engine tests</td><td>783 total, 18 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3691 passed, 1204 failed-assertion, 1 execution-error (75.4%)</td></tr><tr><td>FITS runtime</td><td>455.4s (7.6m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0049/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0049/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0047, SPEC-4.6-0048, SPEC-4.6-0049</p>
+</section>
+<section>
   <h2>2026-09-10 - Phase 22 - Role B Round 38 - Chapter 8 Series Selection Rewrite (SPEC-4.6-0046)
-    <span class="badge badge-amber">pending_review</span>
+    <span class="badge badge-green">reviewed</span>
   </h2>
   <p>Rewrote Chapter 8 series selection (8.1-8.3, 8.5-8.7) against CDSi Logic Spec v4.6, consuming the SPEC-4.6-0045 scoring foundation and not retrying Copilot commit 2. Engine failures dropped from 62 to 26 (Chapter 8 intended remaining reds: 2). Honest FITS vs the 2026-09-10 develop baseline moved from 3637/4896 (74.3%) to 3749/4896 (76.6%), net +112, with HIB-2013-0281 now passing and a documented DTAP +16 fail regression. Chapter 9, 8.4, 7.6, and 6.2 were not touched; Codex can rebase Chapter 9 onto this rewrite later. known-passing-cases.txt was not regenerated.
 </p>
@@ -96,7 +115,7 @@
 </section>
 <section>
   <h2>2026-09-10 - Phase 22 - Role B Round 37 - Chapter 8 Scoring Foundation (SPEC-4.6-0045)
-    <span class="badge badge-amber">pending_review</span>
+    <span class="badge badge-green">reviewed</span>
   </h2>
   <p>Added PatientSeries scoring and series-metric helpers, an explicit score reset, and a shared N-way extremum scorer. Wired reset at the two PreFilterPatientSeries insertion points. The scorer is not consumed yet, so this foundation preserves behavior exactly. PreFilterPatientSeriesTest retains its four pre-existing failures; the full engine suite retains 62 failures and 0 errors; FITS case-level comparison reports 0 added, removed, or status-changed cases.
 </p>
