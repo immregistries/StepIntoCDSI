@@ -1,6 +1,6 @@
 # SPEC-4.6-0047: Chapter 9 table labels and 9.1 reasoning-log wiring were stale
 
-**Status:** open
+**Status:** resolved
 **Category:** IMPLEMENTATION_MISMATCH
 
 Ported onto the Chapter 8 rewrite (`develop` at `d6aff99`) from Codex Chapter 9 commit 1 (`beea5f1`). That commit originally used SPEC-4.6-0045, which this branch already assigned to the Chapter 8 scoring foundation.

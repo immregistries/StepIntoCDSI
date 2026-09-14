@@ -18,10 +18,10 @@ summary: >
   DTAP-only: 3749 to 3691 passed (net -58); every other group is
   unchanged. That movement is accepted as spec-correct MULTIANTVG-1
   aggregation exposing a 7-year DTaP target FITS still wants at age 11,
-  not a reason to restore the old per-element switch. Engine tests 26 to
-  18 failures. Do not regenerate known-passing-cases.txt; 81 of 145
-  allowlist assertion failures are DTAP, the rest are stale Chapter 8
-  allowlist entries.
+  not a reason to restore the old per-element switch.   Engine tests 26 to
+  18 failures. Project owner accepted the DTAP-only FITS movement and
+  regenerated known-passing-cases.txt from run
+  2026-09-14T201255-673843200Z-130d206 (3691 PASS ids).
 details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0049/finding.md"
 finding_ids: ["SPEC-4.6-0047", "SPEC-4.6-0048", "SPEC-4.6-0049"]
-status: pending_review
+status: reviewed

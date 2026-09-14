@@ -1,6 +1,6 @@
 # SPEC-4.6-0045: Chapter 8 scoring state lacks domain helpers and an explicit reset boundary
 
-**Status:** open
+**Status:** confirmed
 **Category:** IMPLEMENTATION_MISMATCH
 
 ## Evidence

@@ -1,5 +1,5 @@
 id: "SPEC-4.6-0047"
-status: "open"
+status: "resolved"
 category: "IMPLEMENTATION_MISMATCH"
 spec_sections: ["9.1", "9.2", "9.3"]
 source_pages: [94, 95, 96]

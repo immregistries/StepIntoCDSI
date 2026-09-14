@@ -1,6 +1,6 @@
 # SPEC-4.6-0049: Multiple-antigen priority earliest-date aggregation was per-forecast and ignored administered doses
 
-**Status:** open
+**Status:** resolved
 **Category:** IMPLEMENTATION_MISMATCH
 
 Ported onto the Chapter 8 rewrite from Codex Chapter 9 uncommitted commit 3. That draft originally used SPEC-4.6-0047.
@@ -46,7 +46,7 @@ Maven reported 145 known-passing allowlist assertion failures. Only 81 are DTAP.
 
 ## Decision
 
-Accept this FITS movement and keep the 9.3 rewrite. Do not restore the old per-element min/max switch. The 2033→2029 cluster is spec-correct aggregation of a 7-year Diphtheria/Tetanus Dose 7 override-interval target; FITS and ACIP want Tdap at 11, which means that 7-year target should not still be current — Chapter 8 series selection and/or forecast-time conditional skip, not 9.3. Issue #71 commits 4–6 (reason union, NOT_COMPLETE gate, forecastList/dose number) can continue; they do not change this date rule.
+Project owner accepted this FITS movement on 2026-09-14 and kept the 9.3 rewrite. `known-passing-cases.txt` was regenerated from run `2026-09-14T201255-673843200Z-130d206` (3691 PASS ids). Do not restore the old per-element min/max switch. The 2033→2029 cluster is spec-correct aggregation of a 7-year Diphtheria/Tetanus Dose 7 override-interval target; FITS and ACIP want Tdap at 11, which means that 7-year target should not still be current — Chapter 8 series selection and/or forecast-time conditional skip, not 9.3. Issue #71 commits 4–6 (reason union, NOT_COMPLETE gate, forecastList/dose number) can continue; they do not change this date rule.
 
 ## Affected
 

@@ -3129,7 +3129,7 @@ units:
   '8.2':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.IdentifyOnePrioritizedPatientSeriesTest
-    fix_status: fixed_pending_review
+    fix_status: merged
     blocked_category: null
     blocked_reason: null
     finding_ids: ["SPEC-4.6-0020", "SPEC-4.6-0046"]
@@ -3263,7 +3263,7 @@ units:
   '8.3':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.ClassifyScorablePatientSeriesTest
-    fix_status: fixed_pending_review
+    fix_status: merged
     blocked_category: null
     blocked_reason: null
     finding_ids: ["SPEC-4.6-0020", "SPEC-4.6-0046"]
@@ -3584,7 +3584,7 @@ units:
   '8.5':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.InProcessPatientSeriesTest
-    fix_status: fixed_pending_review
+    fix_status: merged
     blocked_category: null
     blocked_reason: null
     finding_ids: ["SPEC-4.6-0020", "SPEC-4.6-0046"]
@@ -4252,7 +4252,7 @@ units:
   '9.1':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.ApplyGeneralVaccineGroupRulesTest
-    fix_status: fixed_pending_review
+    fix_status: merged
     blocked_category: null
     blocked_reason: null
     finding_ids: ["SPEC-4.6-0047"]

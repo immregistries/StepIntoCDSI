@@ -1,5 +1,5 @@
 id: "SPEC-4.6-0049"
-status: "open"
+status: "resolved"
 category: "IMPLEMENTATION_MISMATCH"
 spec_sections: ["9.3"]
 source_pages: [95, 96]
@@ -42,6 +42,8 @@ interpretation: >
   uses the later of the earliest contained earliest date and the latest
   administered dose whose vaccine belongs to the current vaccine group.
   Do not restore the old per-element min/max switch. Combined FITS after
-  this rebase onto the Chapter 8 rewrite is the next measurement; remaining
-  2033-to-2029 DTaP movement is treated as exposed upstream series
-  selection or conditional-skip of the 7-year dose, not a 9.3 rollback.
+  this rebase onto the Chapter 8 rewrite is DTAP-only 3749 to 3691.
+  Project owner accepted that movement on 2026-09-14 and regenerated
+  known-passing-cases.txt from the 3691 PASS ids. Remaining 2033-to-2029
+  DTaP movement is treated as exposed upstream series selection or
+  forecast-time conditional skip of the 7-year dose, not a 9.3 rollback.

@@ -1,6 +1,6 @@
 # SPEC-4.6-0048: SingleAntigenVaccineGroup left contained forecast metadata and recommended outputs unwritten
 
-**Status:** open
+**Status:** resolved
 **Category:** IMPLEMENTATION_MISMATCH
 
 Ported onto the Chapter 8 rewrite from Codex Chapter 9 commit 2 (`50514f1`). That commit originally used SPEC-4.6-0046, which this branch already assigned to the Chapter 8 series-selection rewrite.

@@ -1,6 +1,6 @@
 # SPEC-4.6-0046: Rewrite Chapter 8 series selection against CDSi Logic Spec v4.6
 
-**Status:** open
+**Status:** confirmed
 **Category:** IMPLEMENTATION_MISMATCH
 
 ## Evidence
