@@ -2,7 +2,9 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
@@ -11,6 +13,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
@@ -175,12 +178,19 @@ public class SingleAntigenVaccineGroup extends LogicStep {
         antigensNeededList.add(forecast.getAntigen());
         vgf.setAntigensNeededList(antigensNeededList);
       }
-      // SINGLEANTVG-10 The vaccine group forecast recommended vaccines for a single
-      // antigen
-      // vaccine group must be the best patient series forecast recommended vaccines.
-      if (forecast.getRecommendedVaccineList() != null) {
-        vgf.getRecommendedVaccineList().addAll(forecast.getRecommendedVaccineList());
+      // SINGLEANTVG-10 / FORECASTVG-9: union of recommended series dose vaccines
+      // from every contained patient series forecast.
+      Set<VaccineType> recommendedVaccines = new LinkedHashSet<VaccineType>();
+      for (Forecast contained : containedForecasts) {
+        if (contained.getRecommendedVaccineList() != null) {
+          recommendedVaccines.addAll(contained.getRecommendedVaccineList());
+        }
       }
+      vgf.getRecommendedVaccineList().addAll(recommendedVaccines);
+      // FORECASTDN-2 is min-or-max of contained dose numbers; a single antigen
+      // vaccine group has no administer-full flag, so the one contained number
+      // is both the minimum and the maximum.
+      vgf.setDoseNumber(forecast.getDoseNumber());
       log(LogLevel.REASONING, "SINGLEANTVG: Adding vaccine group forecast; " +
           "antigen=" + vgf.getAntigen().getName() +
           ", chosenSeries=" + seriesName +

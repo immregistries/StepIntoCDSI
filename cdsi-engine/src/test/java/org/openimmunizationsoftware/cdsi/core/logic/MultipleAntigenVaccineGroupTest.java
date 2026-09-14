@@ -31,7 +31,9 @@ import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
 
 /**
@@ -873,10 +875,7 @@ public class MultipleAntigenVaccineGroupTest {
    * <b>FORECASTVG-1</b> defines what "contained in the vaccine group forecast"
    * means, and every one of Table 9-4's six conditions plus MULTIANTVG-1 and
    * FORECASTVG-2 through 9 is phrased over it.
-   * {@code VaccineGroupForecast.forecastList} exists for exactly this relation,
-   * with a getter and a setter; 9.3 assembles its own {@code selectedList} of
-   * patient series instead and never records which forecasts the group forecast
-   * was built from.
+   * {@code VaccineGroupForecast.forecastList} exists for exactly this relation.
    */
   @Test
   public void theContainedPatientSeriesForecastsAreRecordedOnTheVaccineGroupForecast() throws Exception {
@@ -887,6 +886,64 @@ public class MultipleAntigenVaccineGroupTest {
     assertEquals("FORECASTVG-1: the patient series forecasts the vaccine group forecast was made from are"
         + " contained in it", Arrays.asList(measles.getForecast(), mumps.getForecast()),
         theVaccineGroupForecast().getForecastList());
+  }
+
+  /**
+   * <b>FORECASTVG-9</b>: a series dose vaccine is a recommended series dose
+   * vaccine for the vaccine group forecast if it is recommended for any
+   * contained patient series forecast. The field exists on {@code Forecast}
+   * (SPEC-4.6-0042); this test is the union itself, not the accessor probe.
+   */
+  @Test
+  public void forecastvgNineTheRecommendedVaccinesAreTheUnionOfTheContainedForecasts() throws Exception {
+    mmrVaccineGroup();
+    VaccineType mmr = vaccineType("03", "MMR");
+    VaccineType measles = vaccineType("05", "Measles");
+    PatientSeries measlesSeries = bestPatientSeries(MEASLES, PatientSeriesStatus.NOT_COMPLETE, date("01/01/2024"));
+    measlesSeries.getForecast().getRecommendedVaccineList().add(mmr);
+    measlesSeries.getForecast().getRecommendedVaccineList().add(measles);
+    PatientSeries mumpsSeries = bestPatientSeries(MUMPS, PatientSeriesStatus.NOT_COMPLETE, date("01/01/2024"));
+    mumpsSeries.getForecast().getRecommendedVaccineList().add(mmr);
+
+    assertEquals("FORECASTVG-9: the union of the contained forecasts' recommended series dose vaccines",
+        Arrays.asList(mmr, measles), theVaccineGroupForecast().getRecommendedVaccineList());
+  }
+
+  /**
+   * <b>FORECASTDN-2</b>: MMR's administer-full flag is 'Y', so the vaccine group
+   * forecast dose number is the minimum of the contained forecasts' dose
+   * numbers.
+   */
+  @Test
+  public void forecastdnTwoIsTheMinimumWhenAdministerFullVaccineGroupIsYes() throws Exception {
+    mmrVaccineGroup().setAdministerFullVaccineGroup(YesNo.YES);
+    bestPatientSeries(MEASLES, PatientSeriesStatus.NOT_COMPLETE, date("01/01/2024")).getForecast().setDoseNumber(2);
+    bestPatientSeries(MUMPS, PatientSeriesStatus.NOT_COMPLETE, date("01/01/2024")).getForecast().setDoseNumber(1);
+
+    assertEquals("FORECASTDN-2 'Y': the minimum of the contained forecast dose numbers", Integer.valueOf(1),
+        theVaccineGroupForecast().getDoseNumber());
+  }
+
+  /**
+   * <b>FORECASTDN-2</b>: DTaP/Tdap/Td's administer-full flag is 'N', so the
+   * vaccine group forecast dose number is the maximum of the contained
+   * forecasts' dose numbers.
+   */
+  @Test
+  public void forecastdnTwoIsTheMaximumWhenAdministerFullVaccineGroupIsNo() throws Exception {
+    mmrVaccineGroup().setAdministerFullVaccineGroup(YesNo.NO);
+    bestPatientSeries(MEASLES, PatientSeriesStatus.NOT_COMPLETE, date("01/01/2024")).getForecast().setDoseNumber(2);
+    bestPatientSeries(MUMPS, PatientSeriesStatus.NOT_COMPLETE, date("01/01/2024")).getForecast().setDoseNumber(1);
+
+    assertEquals("FORECASTDN-2 'N': the maximum of the contained forecast dose numbers", Integer.valueOf(2),
+        theVaccineGroupForecast().getDoseNumber());
+  }
+
+  private static VaccineType vaccineType(String cvx, String description) {
+    VaccineType vaccineType = new VaccineType();
+    vaccineType.setCvxCode(cvx);
+    vaccineType.setShortDescription(description);
+    return vaccineType;
   }
 
   // =====================================================================

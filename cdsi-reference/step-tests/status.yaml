@@ -4383,10 +4383,13 @@ units:
     fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0022", "SPEC-4.6-0048"]
+    finding_ids: ["SPEC-4.6-0022", "SPEC-4.6-0048", "SPEC-4.6-0050"]
     notes: >-
       2026-09-14: SPEC-4.6-0048 (ported from Codex Chapter 9 commit 2)
       closed the four residual reds after SPEC-4.6-0022; unit is 22/22.
+      SPEC-4.6-0050 additionally copies the chosen forecast's dose number
+      and unions recommended vaccines from every contained forecast
+      (FORECASTVG-9 / FORECASTDN-2 for a single-antigen group).
       Originally 22 tests, 16 green and 6 red. Table 9-3 names only SINGLEANTVG-1 (the
       vaccine group status is the patient series status of the contained patient
       series forecast) and SINGLEANTVG-2 (the earliest date is the earliest date
@@ -4492,11 +4495,17 @@ units:
   '9.3':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.MultipleAntigenVaccineGroupTest
-    fix_status: in_progress
+    fix_status: fixed_pending_review
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0049"]
+    finding_ids: ["SPEC-4.6-0049", "SPEC-4.6-0050"]
     notes: >-
+      2026-09-14: SPEC-4.6-0050 closed the remaining three reds (FORECASTVG-7
+      reason union, FORECASTVG-8 computed for every Table 9-4 status,
+      FORECASTVG-1 forecastList) and implemented FORECASTVG-9 / FORECASTDN-2.
+      Unit is 37/37 (three new behavioral tests). Do not restore the
+      NOT_COMPLETE aggregation gate.
+
       34 tests, initially 25 green and 9 red; after SPEC-4.6-0049 (ported
       from Codex uncommitted commit 3), 31 green and 3 red. The section owns one decision table and two
       business rules: Table 9-4 (a six-condition cascade deciding the vaccine
