@@ -7,19 +7,21 @@ before:
   engine_tests: {total: 783, failures: 26, errors: 0}
   fits: {total_cases: 4896, passed: 3749, failed_assertions: 1146, execution_errors: 1}
 after:
-  commit: null
+  commit: "130d206"
   engine_tests: {total: 783, failures: 18, errors: 0}
-  fits: null
+  fits: {total_cases: 4896, passed: 3691, failed_assertions: 1204, execution_errors: 1}
+  fits_runtime_seconds: 455.4
 summary: >
-  Took over issue #71's Chapter 9 sequence from the Codex worktree
-  (codex/chapter-9-aggregation at 50514f1 plus uncommitted MULTIANTVG-1
-  rewrite) and replayed it onto develop after SPEC-4.6-0046. Finding ids
-  were remapped because Codex had reused 0045/0046/0047: 9.1 table labels
-  are SPEC-4.6-0047, 9.2 remaining aggregation is SPEC-4.6-0048, and the
-  9.3 priority earliest-date rewrite is SPEC-4.6-0049. Codex measured a
-  92-case DTaP FITS regression on pre-Chapter-8 inputs; combined FITS
-  against the Chapter 8 baseline is the next measurement and is not a
-  reason to restore the old per-element MULTIANTVG_1 switch.
+  Took over issue #71's Chapter 9 sequence from the Codex worktree and
+  replayed it onto develop after SPEC-4.6-0046, remapping findings to
+  SPEC-4.6-0047/0048/0049. Combined FITS vs the Chapter 8 baseline is
+  DTAP-only: 3749 to 3691 passed (net -58); every other group is
+  unchanged. That movement is accepted as spec-correct MULTIANTVG-1
+  aggregation exposing a 7-year DTaP target FITS still wants at age 11,
+  not a reason to restore the old per-element switch. Engine tests 26 to
+  18 failures. Do not regenerate known-passing-cases.txt; 81 of 145
+  allowlist assertion failures are DTAP, the rest are stale Chapter 8
+  allowlist entries.
 details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0049/finding.md"
 finding_ids: ["SPEC-4.6-0047", "SPEC-4.6-0048", "SPEC-4.6-0049"]
-status: in_progress
+status: pending_review
