@@ -4252,12 +4252,16 @@ units:
   '9.1':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.ApplyGeneralVaccineGroupRulesTest
-    fix_status: not_started
+    fix_status: fixed_pending_review
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0047"]
     notes: >-
-      Role A pass 2026-09-07. 17 tests, 14 green, 3 red. Read this unit's
+      2026-09-14: SPEC-4.6-0047 (ported from Codex Chapter 9 commit 1)
+      greened the remaining table-label red, wired setLogicStepSink, cited
+      Table 9-2/9-3/9-4, and deleted 9.2's dead commented-out LT scaffold.
+      Unit is 17/17. Role A pass 2026-09-07. Originally 17 tests, 14 green,
+      3 red. Read this unit's
       coverage with its central fact in mind: Table 9-2 assigns twelve business
       rules to section 9.1, and the class mapped to it implements exactly two of
       them. ApplyGeneralVaccineGroupRules is one LogicTable asking one question,
@@ -4379,9 +4383,11 @@ units:
     fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0022"]
+    finding_ids: ["SPEC-4.6-0022", "SPEC-4.6-0048"]
     notes: >-
-      22 tests, 16 green and 6 red. Table 9-3 names only SINGLEANTVG-1 (the
+      2026-09-14: SPEC-4.6-0048 (ported from Codex Chapter 9 commit 2)
+      closed the four residual reds after SPEC-4.6-0022; unit is 22/22.
+      Originally 22 tests, 16 green and 6 red. Table 9-3 names only SINGLEANTVG-1 (the
       vaccine group status is the patient series status of the contained patient
       series forecast) and SINGLEANTVG-2 (the earliest date is the earliest date
       of all the contained patient series forecasts); the class implements those
@@ -4486,12 +4492,13 @@ units:
   '9.3':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.MultipleAntigenVaccineGroupTest
-    fix_status: not_started
+    fix_status: in_progress
     blocked_category: null
     blocked_reason: null
-    finding_ids: []
+    finding_ids: ["SPEC-4.6-0049"]
     notes: >-
-      34 tests, 25 green and 9 red. The section owns one decision table and two
+      34 tests, initially 25 green and 9 red; after SPEC-4.6-0049 (ported
+      from Codex uncommitted commit 3), 31 green and 3 red. The section owns one decision table and two
       business rules: Table 9-4 (a six-condition cascade deciding the vaccine
       group status), MULTIANTVG-1 (the earliest date) and FORECASTPRIORITY-1
       (which contained forecasts are priority patient series forecasts). There is
@@ -4529,43 +4536,17 @@ units:
       section 9 on all three paths (Not Complete, Complete, and no matching
       series); and the six-condition/six-outcome shape of the table itself.
 
-      Red, and why - (1)
-      multiantvgOneOnePriorityForecastMakesTheEarliestDateTheEarliestOfAllContainedForecasts:
-      expected 03/01/2024, actual 06/01/2024. MULTIANTVG-1 is a two-branch rule
-      chosen once for the whole group ("if ANY contained forecast is a priority
-      patient series forecast"), and its priority branch takes the earliest date
-      of ALL contained forecasts. MULTIANTVG_1() instead seeds from the first
-      contained forecast and then decides per element, taking the minimum only
-      for elements that are themselves priority and the maximum otherwise - so a
-      non-priority forecast can still pull the group's earliest date later even
-      though a priority forecast is present, and the answer depends on the order
-      of bestPatientSeriesList. (2)
-      multiantvgOneThePriorityBranchIsNoEarlierThanTheLatestDoseAdministeredInTheVaccineGroup:
-      expected 12/01/2024, actual 06/01/2024. The priority branch is "the LATER
-      of (the earliest date of all contained patient series forecasts; the latest
-      date administered of any vaccine dose administered belonging to the vaccine
-      group)" and MULTIANTVG_1() never reads a vaccine dose administered at all -
-      it touches neither dataModel.getImmunizationHistory() nor
-      VaccineGroup.getVaccineList(). This resolves the "not fully re-derived"
-      item in 9.3's own Review Findings: the clause is not incorporated. (3)
-      forecastpriorityOneATargetDoseWhosePreferableIntervalHasThePriorityFlagIsAPriorityForecast:
-      expected 06/01/2024, actual 09/01/2024, and (4)
-      forecastpriorityOneOneUnflaggedPreferableIntervalMeansTheForecastIsNotAPriorityForecast:
-      expected 09/01/2024, actual 06/01/2024. FORECASTPRIORITY-1 is defined over
-      the TARGET DOSE's preferable intervals - "its target dose has at least one
-      preferable interval, and EVERY preferable interval for that target dose has
-      an interval priority flag of 'Y'" - i.e. a universal quantifier over
-      targetDose.getTrackedSeriesDose().getIntervalList(). MULTIANTVG_1() instead
-      reads the single Forecast.getInterval().getIntervalPriority(), so it misses
-      a priority target dose whose forecast carries no interval (test 3) and
-      treats a target dose with one flagged and one unflagged preferable interval
-      as priority when the rule says it is not (test 4). Both reds are in the
-      same three lines of MULTIANTVG_1() as reds 1 and 2; the four together are
-      one rewrite, not four fixes. Note for whoever does it that the release
-      spells the flag "override", not the specification's 'Y' - 90 of the 1492
-      intervalPriority elements in the bundled 4.65-508 release are populated and
-      all 90 hold that one value, which DataModelLoader maps to
-      IntervalPriority.OVERRIDE, the enum's only constant. (5)
+      Fixed on this Chapter 9-onto-Chapter-8 port (SPEC-4.6-0049) - the four
+      MULTIANTVG-1 and FORECASTPRIORITY-1 reds were one rewrite.
+      MULTIANTVG_1() now decides the priority branch once for the whole vaccine
+      group, derives priority from the forecast target dose's tracked SeriesDose
+      interval list rather than Forecast.interval, requires at least one interval
+      and requires every interval to have IntervalPriority.OVERRIDE, and applies
+      the priority branch's floor at the latest date administered for a vaccine
+      belonging to the current vaccine group. Do not restore the old per-element
+      min/max switch to recover DTaP FITS dates.
+
+      Remaining red, and why - (1)
       forecastvgSevenAReasonSharedByTwoContainedForecastsAppearsOnceInTheUnion:
       expected "Due Now", actual "Due NowDue Now". FORECASTVG-7 says the forecast
       reasons are the UNION of the contained forecasts' reasons; MULTIANTVG_7()

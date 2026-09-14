@@ -1,0 +1,36 @@
+id: "SPEC-4.6-0048"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["9.2"]
+source_pages: [95]
+tables: ["Table 9-2", "Table 9-3"]
+business_rules: ["SINGLEANTVG-1", "SINGLEANTVG-2", "FORECASTVG-1", "FORECASTVG-8", "FORECASTVG-9"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.SingleAntigenVaccineGroup"
+  - "org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast"
+fits_cases: []
+summary: >
+  SingleAntigenVaccineGroup had four remaining aggregation gaps after
+  SPEC-4.6-0022. A null patient series status defaulted
+  vaccineGroupStatus to NOT_COMPLETE while leaving patientSeriesStatus
+  null; contained Forecast objects were never recorded in forecastList;
+  antigensNeededList stayed empty; and the chosen forecast's recommended
+  vaccine list was not copied. Ported from Codex Chapter 9 commit 2
+  (originally numbered SPEC-4.6-0046, which develop already used for
+  the Chapter 8 rewrite).
+evidence: >
+  SingleAntigenVaccineGroupTest remaining reds after SPEC-4.6-0022:
+  aMissingPatientSeriesStatusFallsBackConsistentlyAcrossBothStatusFields,
+  theContainedPatientSeriesForecastIsRecordedOnTheVaccineGroupForecast,
+  singleantvgNineTheAntigensNeededAreTheContainedPatientSeriesTargetDisease,
+  and the recommended-vaccine probe. SPEC-4.6-0042 had already added
+  Forecast.recommendedVaccineList, so the test became a direct copy
+  assertion.
+interpretation: >
+  Fixed 9.2 by recording every matching contained Forecast, defaulting
+  patientSeriesStatus consistently with vaccineGroupStatus, setting
+  antigensNeededList to the single antigen only when the effective
+  status is NOT_COMPLETE, and copying the chosen Forecast's recommended
+  vaccines. SPEC-4.6-0022's multi-match choice logic is left intact.
+  Codex measured FITS as unchanged on pre-Chapter-8 inputs; combined
+  FITS with the Chapter 8 rewrite is still to be measured.

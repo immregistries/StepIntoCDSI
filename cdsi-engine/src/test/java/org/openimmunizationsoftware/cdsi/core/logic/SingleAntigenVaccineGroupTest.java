@@ -2,11 +2,9 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,6 +19,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupStatus;
@@ -150,6 +149,13 @@ public class SingleAntigenVaccineGroupTest {
     return bestPatientSeries("HepB standard", HEPATITIS_B, status, earliestDate);
   }
 
+  private static VaccineType vaccineType(String cvx, String description) {
+    VaccineType vaccineType = new VaccineType();
+    vaccineType.setCvxCode(cvx);
+    vaccineType.setShortDescription(description);
+    return vaccineType;
+  }
+
   // ---------------------------------------------------------------------
   // Driving the step.
   // ---------------------------------------------------------------------
@@ -176,30 +182,6 @@ public class SingleAntigenVaccineGroupTest {
       }
     }
     return false;
-  }
-
-  /**
-   * The "can the rule even be expressed?" probe used by 6.2, 7.1, 7.5, 7.6, 8.8
-   * and 9.1 - the first no-argument accessor of {@code type} whose name matches,
-   * or null.
-   */
-  private static Method accessorMatching(Class<?> type, String namePattern) {
-    for (Method method : type.getMethods()) {
-      if (method.getParameterTypes().length == 0 && method.getName().matches(namePattern)) {
-        return method;
-      }
-    }
-    return null;
-  }
-
-  private static List<String> accessorNames(Class<?> type) {
-    List<String> names = new ArrayList<String>();
-    for (Method method : type.getMethods()) {
-      if (method.getName().startsWith("get") && method.getParameterTypes().length == 0) {
-        names.add(method.getName());
-      }
-    }
-    return names;
   }
 
   // ---------------------------------------------------------------------
@@ -424,12 +406,16 @@ public class SingleAntigenVaccineGroupTest {
    * the same gap.
    */
   @Test
-  public void singleantvgTenTheVaccineGroupForecastCanCarryItsRecommendedSeriesDoseVaccines() {
-    assertNotNull("SINGLEANTVG-10: a single antigen vaccine group's forecast must carry the contained patient"
-        + " series forecast's recommended vaccines, but VaccineGroupForecast has no recommended-vaccine list;"
-        + " its accessors are " + accessorNames(VaccineGroupForecast.class),
-        accessorMatching(VaccineGroupForecast.class,
-            "(?i)get.*recommend\\w*.*vaccine.*|get.*vaccine.*recommend\\w*.*"));
+  public void singleantvgTenTheVaccineGroupForecastCopiesTheRecommendedSeriesDoseVaccines() throws Exception {
+    PatientSeries patientSeries = hepBFixture(PatientSeriesStatus.NOT_COMPLETE, date("01/01/2024"));
+    VaccineType hepBAdult = vaccineType("43", "Hep B, adult");
+    VaccineType hepBAdolescent = vaccineType("42", "Hep B, adolescent");
+    patientSeries.getForecast().getRecommendedVaccineList().add(hepBAdult);
+    patientSeries.getForecast().getRecommendedVaccineList().add(hepBAdolescent);
+
+    assertEquals("SINGLEANTVG-10: a single antigen vaccine group's forecast must carry the contained patient"
+        + " series forecast's recommended vaccines",
+        Arrays.asList(hepBAdult, hepBAdolescent), theVaccineGroupForecast().getRecommendedVaccineList());
   }
 
   // ---------------------------------------------------------------------

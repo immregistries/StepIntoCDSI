@@ -420,14 +420,12 @@ public class ApplyGeneralVaccineGroupRulesTest {
   }
 
   /**
-   * Pinned as behaviour, not asserted as a rule: 9.1's constructor never calls
-   * {@code setLogicStepSink} on its logic table, unlike both of the classes it
-   * branches to, so the classification message the outcome records never reaches
-   * the step's own log. The decision is still made correctly - this is only
-   * about what the step viewer shows for 9.1.
+   * 9.1's classification reasoning must reach the step log, matching both of the
+   * Chapter 9 classes it branches to. The decision is still made on the
+   * LogicTable outcome; this assertion keeps the step-viewer log wired to it.
    */
   @Test
-  public void theClassificationIsRecordedOnTheOutcomeRatherThanOnTheStepsOwnLog() {
+  public void theClassificationIsRecordedOnTheStepLog() {
     currentVaccineGroup(HEPB, "Hepatitis B");
     ApplyGeneralVaccineGroupRules step = new ApplyGeneralVaccineGroupRules(dataModel);
     LogicTable logicTable = tableNineTwoOf(step);
@@ -435,9 +433,9 @@ public class ApplyGeneralVaccineGroupRulesTest {
     classifiedBy(step);
 
     assertEquals("the outcome itself records the classification", 1, outcomeLog(logicTable, 0).size());
-    assertTrue("Actual behaviour: 9.1 does not propagate its log sink to its table, so the step's own log is"
-        + " empty; 9.2 and 9.3 both do propagate. Step log was: " + step.getLogList(),
-        step.getLogList().isEmpty());
+    assertTrue("9.1 should propagate its log sink to its table so the classification is visible in the step log; "
+        + "step log was: " + step.getLogList(),
+        step.getLogList().contains("Vaccine group is a single antigen vaccine group."));
   }
 
   // ---------------------------------------------------------------------

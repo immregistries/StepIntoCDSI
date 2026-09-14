@@ -1,0 +1,25 @@
+id: "2026-09-14-role-b-round-39-chapter-9-onto-ch8"
+date: "2026-09-14"
+phase: 22
+title: "Role B Round 39 - Port Chapter 9 Codex work onto the Chapter 8 rewrite"
+before:
+  commit: "d6aff99"
+  engine_tests: {total: 783, failures: 26, errors: 0}
+  fits: {total_cases: 4896, passed: 3749, failed_assertions: 1146, execution_errors: 1}
+after:
+  commit: null
+  engine_tests: {total: 783, failures: 18, errors: 0}
+  fits: null
+summary: >
+  Took over issue #71's Chapter 9 sequence from the Codex worktree
+  (codex/chapter-9-aggregation at 50514f1 plus uncommitted MULTIANTVG-1
+  rewrite) and replayed it onto develop after SPEC-4.6-0046. Finding ids
+  were remapped because Codex had reused 0045/0046/0047: 9.1 table labels
+  are SPEC-4.6-0047, 9.2 remaining aggregation is SPEC-4.6-0048, and the
+  9.3 priority earliest-date rewrite is SPEC-4.6-0049. Codex measured a
+  92-case DTaP FITS regression on pre-Chapter-8 inputs; combined FITS
+  against the Chapter 8 baseline is the next measurement and is not a
+  reason to restore the old per-element MULTIANTVG_1 switch.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0049/finding.md"
+finding_ids: ["SPEC-4.6-0047", "SPEC-4.6-0048", "SPEC-4.6-0049"]
+status: in_progress

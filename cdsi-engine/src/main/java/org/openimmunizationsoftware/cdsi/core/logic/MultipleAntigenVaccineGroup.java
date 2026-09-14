@@ -9,6 +9,8 @@ import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.IntervalPriority;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
+import org.openimmunizationsoftware.cdsi.core.domain.Vaccine;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupStatus;
@@ -283,43 +285,97 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
   }
 
   private void MULTIANTVG_1() {
-    Date earliestDate = null;
-    TargetDose td = null;
+    Date earliestContainedDate = null;
+    Date latestContainedDate = null;
+    TargetDose earliestTargetDose = null;
+    TargetDose latestTargetDose = null;
+    boolean hasPriorityPatientSeriesForecast = false;
     for (PatientSeries p : selectedList) {
       if (p.getForecast() != null) {
         Date ed = p.getForecast().getEarliestDate();
         if (ed != null) {
-          if (earliestDate == null) {
-            earliestDate = ed;
-            if (p.getForecast().getTargetDose() != null)
-              td = p.getForecast().getTargetDose();
-          } else {
-            IntervalPriority intervalPriority = p.getForecast().getInterval() == null ? null
-                : p.getForecast().getInterval().getIntervalPriority();
-            if (intervalPriority == null) {
-              if (ed.after(earliestDate)) {
-                earliestDate = ed;
-                if (p.getForecast().getTargetDose() != null)
-                  td = p.getForecast().getTargetDose();
-              }
-            } else {
-              if (ed.before(earliestDate)) {
-                earliestDate = ed;
-                if (p.getForecast().getTargetDose() != null)
-                  td = p.getForecast().getTargetDose();
-              }
-            }
+          if (earliestContainedDate == null || ed.before(earliestContainedDate)) {
+            earliestContainedDate = ed;
+            earliestTargetDose = p.getForecast().getTargetDose();
+          }
+          if (latestContainedDate == null || ed.after(latestContainedDate)) {
+            latestContainedDate = ed;
+            latestTargetDose = p.getForecast().getTargetDose();
           }
         }
+        if (isPriorityPatientSeriesForecast(p)) {
+          hasPriorityPatientSeriesForecast = true;
+        }
+      }
+    }
+    Date earliestDate = latestContainedDate;
+    TargetDose td = latestTargetDose;
+    if (hasPriorityPatientSeriesForecast) {
+      earliestDate = earliestContainedDate;
+      td = earliestTargetDose;
+      Date latestDateAdministered = latestDateAdministeredInVaccineGroup();
+      if (latestDateAdministered != null && (earliestDate == null || latestDateAdministered.after(earliestDate))) {
+        earliestDate = latestDateAdministered;
       }
     }
     vgf.setEarliestDate(earliestDate);
     vgf.setTargetDose(td);
   }
 
+  private boolean isPriorityPatientSeriesForecast(PatientSeries patientSeries) {
+    if (patientSeries.getForecast() == null || patientSeries.getForecast().getTargetDose() == null
+        || patientSeries.getForecast().getTargetDose().getTrackedSeriesDose() == null) {
+      return false;
+    }
+    List<org.openimmunizationsoftware.cdsi.core.domain.Interval> intervalList =
+        patientSeries.getForecast().getTargetDose().getTrackedSeriesDose().getIntervalList();
+    if (intervalList.isEmpty()) {
+      return false;
+    }
+    for (org.openimmunizationsoftware.cdsi.core.domain.Interval interval : intervalList) {
+      if (interval.getIntervalPriority() != IntervalPriority.OVERRIDE) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private Date latestDateAdministeredInVaccineGroup() {
+    if (dataModel.getImmunizationHistory() == null) {
+      return null;
+    }
+    Date latestDateAdministered = null;
+    for (VaccineDoseAdministered vaccineDoseAdministered :
+        dataModel.getImmunizationHistory().getVaccineDoseAdministeredList()) {
+      if (!belongsToVaccineGroup(vaccineDoseAdministered)) {
+        continue;
+      }
+      Date dateAdministered = vaccineDoseAdministered.getDateAdministered();
+      if (dateAdministered != null
+          && (latestDateAdministered == null || dateAdministered.after(latestDateAdministered))) {
+        latestDateAdministered = dateAdministered;
+      }
+    }
+    return latestDateAdministered;
+  }
+
+  private boolean belongsToVaccineGroup(VaccineDoseAdministered vaccineDoseAdministered) {
+    if (vaccineDoseAdministered == null || vaccineDoseAdministered.getVaccine() == null) {
+      return false;
+    }
+    Vaccine administeredVaccine = vaccineDoseAdministered.getVaccine();
+    for (Vaccine vaccine : dataModel.getVaccineGroup().getVaccineList()) {
+      if (vaccine == administeredVaccine || (vaccine.getVaccineType() != null
+          && vaccine.getVaccineType().equals(administeredVaccine.getVaccineType()))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   private class LT extends LogicTable {
     public LT(final VaccineGroupForecast vgf, final List<PatientSeries> selectedList) {
-      super(6, 6, "Table 9 - 3 WHAT IS THE VACCINE GROUP STATUS OF A MULTIPLE VACCINE GROUP?");
+      super(6, 6, "Table 9-4 What is the Vaccine Group Status of a Vaccine Group Forecast for a Multiple Antigen Vaccine Group?");
 
       setLogicCondition(0, new LogicCondition(
           "Is there a patient series forecast contained in the vaccine group forecast with a patient series status of 'Contraindicated'?") {

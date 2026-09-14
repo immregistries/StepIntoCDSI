@@ -16,6 +16,7 @@ public class ApplyGeneralVaccineGroupRules extends LogicStep {
   public ApplyGeneralVaccineGroupRules(DataModel dataModel) {
     super(LogicStepType.APPLY_GENERAL_VACCINE_GROUP_RULES, dataModel);
     LT logicTable = new LT();
+    logicTable.setLogicStepSink(this.getLogicStepSink());
     logicTableList.add(logicTable);
   }
 
@@ -27,7 +28,7 @@ public class ApplyGeneralVaccineGroupRules extends LogicStep {
 
   private class LT extends LogicTable {
     public LT() {
-      super(1, 2, "TABLE 7 - 2 WHAT IS THE VACCINE GROUP TYPE?");
+      super(1, 2, "Table 9-2 General Vaccine Group Business Rules");
 
       setLogicCondition(0, new LogicCondition("Does the vaccine group contain exactly 1 antigen?") {
         public LogicResult evaluateInternal() {
