@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.Age;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
@@ -18,6 +19,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
+import org.openimmunizationsoftware.cdsi.core.logic.concepts.RelevantSupportingData;
 import org.openimmunizationsoftware.cdsi.core.logic.concepts.SeasonalRecommendationDates;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
@@ -57,12 +59,28 @@ public class DetermineForecastNeed extends LogicStep {
         && status.equals(dataModel.getPatientSeriesStepper().getCurrent().getPatientSeriesStatus());
   }
 
-  private void findMaximumAgeDate() {
+  private Age relevantAge() {
     if (dataModel.getTargetDose() == null) {
+      return null;
+    }
+    return RelevantSupportingData.selectAge(dataModel.getTargetDose().getTrackedSeriesDose().getAgeList(),
+        dataModel.getAssessmentDate());
+  }
+
+  private List<Interval> relevantIntervals() {
+    if (dataModel.getTargetDose() == null) {
+      return RelevantSupportingData.selectIntervals(null, dataModel.getAssessmentDate());
+    }
+    return RelevantSupportingData.selectIntervals(
+        dataModel.getTargetDose().getTrackedSeriesDose().getIntervalList(), dataModel.getAssessmentDate());
+  }
+
+  private void findMaximumAgeDate() {
+    Age age = relevantAge();
+    if (age == null || age.getMaximumAge() == null) {
       return;
     }
-    SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-    TimePeriod timePeriod = referenceSeriesDose.getAgeList().get(0).getMaximumAge();
+    TimePeriod timePeriod = age.getMaximumAge();
 
     if (timePeriod.isValued()) {
       Date dob = dataModel.getPatient().getDateOfBirth();
@@ -393,9 +411,9 @@ public class DetermineForecastNeed extends LogicStep {
     SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
     Date dob = dataModel.getPatient().getDateOfBirth();
 
-    {
-      TimePeriod timePeriod = referenceSeriesDose.getAgeList().get(0).getMinimumAge();
-      Date minimumAgeDate = timePeriod.getDateFrom(dob);
+    Age age = relevantAge();
+    if (age != null && age.getMinimumAge() != null) {
+      Date minimumAgeDate = age.getMinimumAge().getDateFrom(dob);
       list.add(minimumAgeDate);
     }
     Date latestMinimumIntervalDate = GenerateForecastDatesAndRecommendedVaccines
@@ -432,18 +450,14 @@ public class DetermineForecastNeed extends LogicStep {
 
   private List<Date> findMinimumIntervalDates() {
     List<Date> minimumIntervalList = new ArrayList<Date>();
-    SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-
-    if (referenceSeriesDose.getIntervalList() != null) {
-      for (Interval minIn : referenceSeriesDose.getIntervalList()) {
-        Date patientReferenceDoseDate = minIn.getPatientReferenceDoseDate(dataModel, this);
-        if (patientReferenceDoseDate != null) {
-          TimePeriod minimalIntervalFromReferenceSeriesDose = minIn.getMinimumInterval();
-          if (minimalIntervalFromReferenceSeriesDose == null) {
-            continue;
-          }
-          minimumIntervalList.add(minimalIntervalFromReferenceSeriesDose.getDateFrom(patientReferenceDoseDate));
+    for (Interval minIn : relevantIntervals()) {
+      Date patientReferenceDoseDate = minIn.getPatientReferenceDoseDate(dataModel, this);
+      if (patientReferenceDoseDate != null) {
+        TimePeriod minimalIntervalFromReferenceSeriesDose = minIn.getMinimumInterval();
+        if (minimalIntervalFromReferenceSeriesDose == null) {
+          continue;
         }
+        minimumIntervalList.add(minimalIntervalFromReferenceSeriesDose.getDateFrom(patientReferenceDoseDate));
       }
     }
     return minimumIntervalList;

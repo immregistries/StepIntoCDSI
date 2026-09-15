@@ -1,0 +1,34 @@
+id: "SPEC-4.6-0056"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["3.3", "6.4", "6.5", "7.4"]
+source_pages: [25, 26, 52, 54, 78]
+tables: ["Table 3-4", "Table 3-5", "Table 6-14", "Table 6-17", "Table 7-9"]
+business_rules: ["RELEVANT-1", "RELEVANT-2", "CALCDTAGE-1", "FORECASTDTCAN-1"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.concepts.RelevantSupportingData"
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateAge"
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluatePreferableInterval"
+  - "org.openimmunizationsoftware.cdsi.core.logic.DetermineForecastNeed"
+fits_cases:
+  - "689dc945e4b05decee50df54-POL-2013-0640"
+summary: >
+  After SPEC-4.6-0055, 6.4/6.5/7.4 still used Age list index 0 and every
+  Preferable Interval row, so Polio Dose 4's ceased 18-week age and 4-week
+  interval still applied on evaluation and forecast-need.
+evidence: >
+  EvaluateAge and DetermineForecastNeed still called getAgeList().get(0);
+  EvaluatePreferableInterval looped the full interval list. Polio Dose 4
+  also has dual preferable intervals (cessation 20090806 minInt 4 weeks;
+  effective 20090807 minInt 6 months). POL-2013-0640 title states the
+  4-year dose given less than 6 months after dose 2 is not valid and the
+  child needs another; engine was COMPLETE.
+interpretation: >
+  Same RelevantSupportingData helper: date administered for 6.4/6.5,
+  assessment date for 7.4. Allowable Interval (6.6) remains a follow-on.
+
+  Verified on run 2026-09-15T215530 vs 2026-09-15T195518: combined FITS
+  4046 to 4094 (net +48). POL 504 to 554 (+50); MenB 2024-0075/0076 +8.
+  Oracle POL-2013-0640 still COMPLETE - 6.5 now fails the 6-month interval
+  alone, then empty 6.6 allowable still accepts the dose. Collateral
+  COVID-19 -10 / 11 new allowlist reds; COVID parked.

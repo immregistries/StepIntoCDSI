@@ -1057,6 +1057,32 @@ public class EvaluatePreferableIntervalTest {
   }
 
   /**
+   * Section 3.3 / RELEVANT-1: Polio Dose 4's ceased 4-week preferable interval
+   * must not be evaluated alongside the current 6-month row. A dose four months
+   * after the previous dose fails the relevant 6-month interval (and therefore
+   * falls through to 6.6) even though it would have satisfied the ceased 4-week
+   * row.
+   */
+  @Test
+  public void onlyPreferableIntervalsRelevantForTheDateAdministeredAreEvaluated() throws Exception {
+    Interval ceased = interval(YesNo.YES, "4 weeks - 4 days", "4 weeks");
+    ceased.setEffectiveDate(date("01/01/1900"));
+    ceased.setCessationDate(date("08/06/2009"));
+    Interval current = interval(YesNo.YES, "6 months - 4 days", "6 months");
+    current.setEffectiveDate(date("08/07/2009"));
+    previousDoseAdministeredOn("01/01/2016", EvaluationStatus.VALID, null);
+    administeredOn("05/01/2016"); // four months later
+
+    run();
+
+    assertEquals("RELEVANT-1 drops the ceased 4-week row, leaving one Table 6-18 check",
+        1, step.getLogicTableList().size());
+    assertEquals(
+        "four months satisfies the ceased 4-week interval but not the current 6-month interval",
+        LogicStepType.EVALUATE_ALLOWABLE_INTERVAL, step.getNextLogicStepType());
+  }
+
+  /**
    * Invokes {@code DataModelLoader.readSeriesDose} - private, like the loader's
    * other per-element readers - on one {@code <seriesDose>} element.
    */

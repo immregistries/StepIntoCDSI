@@ -97,6 +97,11 @@ import org.w3c.dom.Node;
  * {@code process()} is never called on the returned step.
  *
  * <p>
+ * When a series dose has more than one {@code <age>} row, RELEVANT-1 (section
+ * 3.3) selects the row whose Effective/Cessation window covers the date
+ * administered - see {@code ageAttributesUseTheRowRelevantForTheDateAdministered}.
+ *
+ * <p>
  * The step's decision table is a {@code private} inner class, so it is read here
  * through the public {@code getLogicTableList()} as a plain {@link LogicTable},
  * and its five condition attributes through {@code getConditionAttributeList()}.
@@ -117,15 +122,6 @@ import org.w3c.dom.Node;
  * specification-internal inconsistency (Table 6-15 has four rule columns, not
  * six) and explicitly declines to resolve it; no test here takes a position on
  * which of the two the specification meant.
- *
- * <p>
- * Selection among multiple {@code <age>} records for one series dose. The step
- * reads {@code getAgeList().get(0)} and the specification section says nothing
- * about choosing between several, nor about the {@code effectiveDate} /
- * {@code cessationDate} that would be the natural basis for choosing - so there
- * is no documented behaviour to assert. (The bundled release has 502
- * {@code <age>} elements across 484 series doses, so the case is real but
- * undocumented here.)
  */
 public class EvaluateAgeTest {
 
@@ -712,6 +708,39 @@ public class EvaluateAgeTest {
         EvaluationStatus.NOT_VALID, targetDose.getEvaluation().getEvaluationStatus());
     assertEquals("Rule 1: evaluation reason 'Too young'",
         EvaluationReason.TOO_YOUNG, targetDose.getEvaluation().getEvaluationReason());
+  }
+
+  /**
+   * Section 3.3 / RELEVANT-1: when a series dose has multiple {@code <age>} rows,
+   * evaluation uses the row whose Effective/Cessation window covers the date
+   * administered - not {@code getAgeList().get(0)}. Polio Dose 4's ceased 18-week
+   * row preceding the current 4-year row is the real-world case.
+   */
+  @Test
+  public void ageAttributesUseTheRowRelevantForTheDateAdministered() throws Exception {
+    Age ceased = new Age();
+    ceased.setAbsoluteMinimumAge(new TimePeriod("18 weeks - 4 days"));
+    ceased.setMinimugeAge(new TimePeriod("18 weeks"));
+    ceased.setMaximumAge(new TimePeriod("18 years"));
+    ceased.setEffectiveDate(date("01/01/1900"));
+    ceased.setCessationDate(date("08/06/2009"));
+
+    Age current = new Age();
+    current.setAbsoluteMinimumAge(new TimePeriod("4 years - 4 days"));
+    current.setMinimugeAge(new TimePeriod("4 years"));
+    current.setMaximumAge(new TimePeriod("18 years"));
+    current.setEffectiveDate(date("08/07/2009"));
+
+    seriesDose.getAgeList().add(ceased);
+    seriesDose.getAgeList().add(current);
+    administeredOn("06/01/2016"); // 17 months old, after the 2009 change
+
+    run();
+
+    assertEquals(
+        "RELEVANT-1: date administered 06/01/2016 selects the post-2009 4-year row, so a 17-month dose is too young",
+        EvaluationStatus.NOT_VALID, targetDose.getEvaluation().getEvaluationStatus());
+    assertEquals(EvaluationReason.TOO_YOUNG, targetDose.getEvaluation().getEvaluationReason());
   }
 
   /**

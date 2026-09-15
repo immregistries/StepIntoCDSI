@@ -11,6 +11,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
+import org.openimmunizationsoftware.cdsi.core.logic.concepts.RelevantSupportingData;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
@@ -56,8 +57,8 @@ public class EvaluateAge extends LogicStep {
     caDateOfBirth.setInitialValue(dateOfBirth);
     log("Date of Birth = " + sdf.format(dateOfBirth));
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-    if (seriesDose.getAgeList().size() > 0) {
-      Age age = seriesDose.getAgeList().get(0);
+    Age age = RelevantSupportingData.selectAge(seriesDose.getAgeList(), aar.getDateAdministered());
+    if (age != null) {
       log("Found Age information from series dose, now calculating dates");
       log(" + Absolute minimum age time period = " + age.getAbsoluteMinimumAge());
       log(" + Minimum age time period = " + age.getMinimumAge());

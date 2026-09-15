@@ -16,6 +16,14 @@ summary: >
   Forecast date generation always used Age list index 0 and never loaded
   Effective/Cessation Dates, so ceased Polio Dose 4 minAge (18 weeks)
   drove FORECASTDT earliest while recommended age stayed at 4 years.
+evidence: >
+  Polio IPV 4-dose series Dose 4 has two <age> rows: cessation 20090806
+  (minAge 18 weeks) then effective 20090807 (minAge 4 years).
+  GenerateForecastDatesAndRecommendedVaccines used getAgeList().get(0).
+  POL-2013-0632 (DOB 2026-05-30, eval 2026-09-01, three early IPV doses)
+  expected ED/RD 2030-05-30 (age 4); actual ED was 2027-03-01 (6 months
+  after last dose). DataModelLoader did not parse Age effectiveDate or
+  cessationDate.
 interpretation: >
   Scoped §3.3 fix for 7.5 only: parse Age/Interval dates on load, select
   the relevant age row and preferable intervals by assessment date via

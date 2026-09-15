@@ -1,0 +1,23 @@
+id: "2026-09-15-fits-relevant-supporting-data-7.5"
+date: "2026-09-15"
+phase: 22
+title: "FITS - Select relevant Age/Interval rows when forecasting (SPEC-4.6-0055)"
+before:
+  commit: "65b442f"
+  engine_tests: {total: 797, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 3962, failed_assertions: 933, execution_errors: 1}
+after:
+  commit: "3aafa97"
+  engine_tests: {total: 806, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 4046, failed_assertions: 849, execution_errors: 1}
+summary: >
+  Forecast dates used Age list index 0, so Polio Dose 4's ceased 18-week
+  minAge overrode the current 4-year row. DataModelLoader now parses
+  Effective/Cessation Dates; RelevantSupportingData selects Age and Preferable
+  Interval rows for 7.5 by assessment date. Combined FITS 3962 to 4046
+  (net +84). POL 417 to 504 (+87); oracle POL-2013-0632 PASS. Collateral:
+  three allowlisted COVID-19-2024-0067 copies (COVID parked, allowlist not
+  regenerated). Evaluation-path §3.3 (6.4/6.5/7.4) left to SPEC-4.6-0056.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0055/finding.md"
+finding_ids: ["SPEC-4.6-0055"]
+status: reviewed

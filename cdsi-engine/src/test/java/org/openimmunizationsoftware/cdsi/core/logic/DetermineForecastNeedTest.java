@@ -84,9 +84,8 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
  *
  * <p>
  * Each test hand-builds the minimal {@code DataModel} 7.4's constructor reads:
- * a target dose whose tracked series dose carries an {@link Age} (both
- * {@code computeEarliestDate()} and {@code findMaximumAgeDate()} dereference
- * {@code getAgeList().get(0)}), a patient with a date of birth, an assessment
+ * a target dose whose tracked series dose carries an {@link Age} (FORECASTDTCAN-1
+ * and CALCDTAGE-1 select the Age row relevant for the assessment date), a patient with a date of birth, an assessment
  * date, a current patient series, and a {@link Forecast} for the series' target
  * disease so the forecast reasons the outcomes write have somewhere to land.
  *
@@ -903,5 +902,33 @@ public class DetermineForecastNeedTest {
     assertEquals("a partly completed series proceeds to 7.5 to have its next dose forecast",
         LogicStepType.GENERATE_FORECAST_DATES_AND_RECOMMENDED_VACCINES,
         step.getNextLogicStepType());
+  }
+
+  /**
+   * Section 3.3 / RELEVANT-2: FORECASTDTCAN-1's minimum-age candidate must come
+   * from the Age row whose window covers the assessment date, not
+   * {@code getAgeList().get(0)}. Polio Dose 4's ceased 18-week row preceding the
+   * current 4-year row is the real-world case.
+   */
+  @Test
+  public void forecastdtcanOneUsesTheAgeRowRelevantForTheAssessmentDate() {
+    Age ceased = new Age();
+    ceased.setSeriesDose(seriesDose);
+    ceased.setMinimugeAge(new TimePeriod("18 weeks"));
+    ceased.setMaximumAge(new TimePeriod(""));
+    ceased.setEffectiveDate(date("01/01/1900"));
+    ceased.setCessationDate(date("08/06/2009"));
+
+    seriesDose.getAgeList().clear();
+    seriesDose.getAgeList().add(ceased);
+    age.setMinimugeAge(new TimePeriod("4 years"));
+    age.setEffectiveDate(date("08/07/2009"));
+    seriesDose.getAgeList().add(age);
+
+    build();
+
+    assertEquals(
+        "RELEVANT-2: assessment 06/15/2025 selects the post-2009 age row (minAge 4 years), not the ceased 18-week row",
+        date("01/15/2019"), candidateEarliestDate());
   }
 }

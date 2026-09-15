@@ -58,6 +58,7 @@ Some vaccines have a "preferred" spacing that's a little more forgiving than a h
 
 ## Review Findings
 
+- **Documented fix (2026-09-15, SPEC-4.6-0056): §3.3 Preferable Interval selection for evaluation.** Table 6-17/6-18 checks run only for interval rows whose Effective–Cessation window covers the date administered (RELEVANT-1). Previously every `<interval>` on the series dose was evaluated, so Polio Dose 4's ceased 4-week row sat beside the current 6-month row. Unvalued dates stay always-relevant, so HepB/HPV dual-interval doses are unchanged.
 - **Outcome 0's `EvaluationReason` is wrong: sets `GRACE_PERIOD` where the spec (and the code's own log message) call for "Too Soon."** Verified by direct comparison with `EvaluateAllowableInterval`'s equivalent, correctly-implemented case. Draft `IMPLEMENTATION_MISMATCH` - this could produce a misleading evaluation reason wherever a dose fails the preferable-interval check, which is exactly the kind of transparency defect this reference module exists to surface.
 - CALCDTINT-1/2/8/9 (which reference date an interval measures from) are not verified as implemented anywhere by this pass - flagged as unresolved rather than assumed correct.
 - Table 6-19 missing from the document's own LOFT (see Source, above) - same pattern as 6.2's Table 6-11.

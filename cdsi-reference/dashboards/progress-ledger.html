@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-15 12:02:51 - regenerate with
+  Dashboard generated 2026-09-15 16:07:42 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,7 +57,7 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">45</div>
+    <div class="value">48</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
@@ -131,6 +131,63 @@
   </div>
   <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0051/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0051/finding.md</a></p>
   <p class="muted">Findings: SPEC-4.6-0051</p>
+</section>
+<section>
+  <h2>2026-09-15 - Phase 22 - FITS - Select relevant Age/Interval rows when forecasting (SPEC-4.6-0055)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Forecast dates used Age list index 0, so Polio Dose 4&#x27;s ceased 18-week minAge overrode the current 4-year row. DataModelLoader now parses Effective/Cessation Dates; RelevantSupportingData selects Age and Preferable Interval rows for 7.5 by assessment date. Combined FITS 3962 to 4046 (net +84). POL 417 to 504 (+87); oracle POL-2013-0632 PASS. Collateral: three allowlisted COVID-19-2024-0067 copies (COVID parked, allowlist not regenerated). Evaluation-path §3.3 (6.4/6.5/7.4) left to SPEC-4.6-0056.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>65b442f</code></td></tr><tr><td>Engine tests</td><td>797 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3962 passed, 933 failed-assertion, 1 execution-error (80.9%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>3aafa97</code></td></tr><tr><td>Engine tests</td><td>806 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4046 passed, 849 failed-assertion, 1 execution-error (82.6%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0055/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0055/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0055</p>
+</section>
+<section>
+  <h2>2026-09-15 - Phase 22 - FITS - Wire RelevantSupportingData into 6.4, 6.5, and 7.4 (SPEC-4.6-0056)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Extends SPEC-4.6-0055&#x27;s RelevantSupportingData helper to evaluation (6.4 Age and 6.5 Preferable Interval, date administered) and 7.4 forecast-need (assessment date). Combined FITS 4046 to 4094 (net +48). POL 504 to 554 (+50); MenB 2024-0075/0076 +8. Oracle POL-2013-0640 still COMPLETE: 6.5 now fails the current 6-month interval, then empty 6.6 allowable still accepts the dose. Collateral COVID-19 -10 / 11 new allowlist reds; COVID parked, allowlist not regenerated. Same two engine reds (8.1/8.7).
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>0af6461</code></td></tr><tr><td>Engine tests</td><td>806 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4046 passed, 849 failed-assertion, 1 execution-error (82.6%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>pending</code></td></tr><tr><td>Engine tests</td><td>809 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4094 passed, 801 failed-assertion, 1 execution-error (83.6%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0056/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0056/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0056</p>
+</section>
+<section>
+  <h2>2026-09-15 - Phase 22 - FITS - Open-ended seasonal start projection for COVID-19 (SPEC-4.6-0054)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Extends SeasonalRecommendationDates to open-ended templates (start only, empty end) used by COVID-19 SD 4.65. Combined FITS 3956 to 3962 (net +6, all COVID-19, 0 regressions). A blanket assessment-date floor for overdue earliest/recommended was tried and rejected (net -92 with 170 allowlist regressions). Remaining COVID: ~200 fails, dominated by COMPLETE status (67) and date mismatches that expect assessment-date due-now.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>946221a</code></td></tr><tr><td>Engine tests</td><td>795 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3956 passed, 939 failed-assertion, 1 execution-error (80.8%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>0c3cbbb</code></td></tr><tr><td>Engine tests</td><td>797 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3962 passed, 933 failed-assertion, 1 execution-error (80.9%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0054/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0054/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0054</p>
 </section>
 <section>
   <h2>2026-09-15 - Phase 22 - FITS - Last skipped forecast target routes to Table 7-10; trim conditional-skip CVX tokens
