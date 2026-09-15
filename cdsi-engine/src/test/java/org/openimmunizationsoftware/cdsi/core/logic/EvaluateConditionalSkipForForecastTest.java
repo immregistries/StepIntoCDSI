@@ -540,4 +540,22 @@ public class EvaluateConditionalSkipForForecastTest {
     assertEquals("forecasting continues at 7.2 Determine Evidence of Immunity",
         LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY, step.getNextLogicStepType());
   }
+
+  /**
+   * 7.6 skip hops to 7.1 without 4.4 advancing. If 7.1 re-evaluates the same
+   * already-SKIPPED dose against the assessment date, 7.2-7.6 regenerate the
+   * same forecast and 7.6 skips again - the infinite loop SPEC-4.6-0043 caught.
+   * An already-skipped target must go straight back to 4.4.
+   */
+  @Test
+  public void anAlreadySkippedTargetDoseReturnsToFourFourWithoutReForecasting() throws Exception {
+    ageCondition("8 years", "10 years");
+    targetDose.setTargetDoseStatus(TargetDoseStatus.SKIPPED);
+
+    run();
+
+    assertEquals(TargetDoseStatus.SKIPPED, targetDose.getTargetDoseStatus());
+    assertEquals("an already-skipped dose is 4.4's to advance, not 7.1's to re-forecast",
+        LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES, step.getNextLogicStepType());
+  }
 }

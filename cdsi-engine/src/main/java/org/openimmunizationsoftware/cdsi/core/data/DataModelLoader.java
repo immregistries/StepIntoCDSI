@@ -65,6 +65,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.Vaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineContraindication;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.ConditionalSkipContext;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.w3c.dom.Document;
@@ -777,7 +778,10 @@ public class DataModelLoader {
           for (int j = 0; j < childNodeList.getLength(); j++) {
             Node childNode = childNodeList.item(j);
             if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-              if (childNode.getNodeName().equals("setLogic")) {
+              if (childNode.getNodeName().equals("context")) {
+                conditionalSkip.setContext(
+                    ConditionalSkipContext.fromXml(DomUtils.getInternalValue(childNode)));
+              } else if (childNode.getNodeName().equals("setLogic")) {
                 String setLogic = DomUtils.getInternalValue(childNode);
                 conditionalSkip.setSetLogic(setLogic);
               } else if (childNode.getNodeName().equals("set")) {
@@ -806,7 +810,7 @@ public class DataModelLoader {
             }
           }
           if (populated) {
-            seriesDose.setConditionalSkip(conditionalSkip);
+            seriesDose.addConditionalSkip(conditionalSkip);
           }
         } else if (parentNode.getNodeName().equals("inadvertentVaccine")) {
           NodeList childNodeList = parentNode.getChildNodes();

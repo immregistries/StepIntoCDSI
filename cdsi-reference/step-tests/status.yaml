@@ -695,11 +695,19 @@ units:
   '6.2':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkipForEvaluationTest
-    fix_status: in_progress
-    blocked_category: null
-    blocked_reason: null
-    finding_ids: ["SPEC-4.6-0017", "SPEC-4.6-0018", "SPEC-4.6-0019", "SPEC-4.6-0027", "SPEC-4.6-0031", "SPEC-4.6-0032", "SPEC-4.6-0033"]
+    fix_status: blocked
+    blocked_category: would_regress_other_tests
+    blocked_reason: >-
+      Cluster with 7.1/7.6 (2026-09-14): unit is 44/44. Combined FITS is
+      net +37 (3691 to 3728) and MCV-2013-0511 now passes, but 74
+      allowlisted DTaP cases (15 unique uids) go PASS to FAIL. Loop is
+      gone (still 1 standing execution error). See SPEC-4.6-0043.
+    finding_ids: ["SPEC-4.6-0017", "SPEC-4.6-0018", "SPEC-4.6-0019", "SPEC-4.6-0027", "SPEC-4.6-0031", "SPEC-4.6-0032", "SPEC-4.6-0033", "SPEC-4.6-0043"]
     notes: >-
+      2026-09-14 cluster: context list + "equal to" spelling greened the
+      last two reds (44/44). Not merged: 74 allowlisted DTaP FITS cases
+      newly fail. Historical diagnosis retained below.
+
       Round 21 (2026-09-09): fixed 4 of the remaining 6 reds - see the note
       after gap (8) below for the full account (SPEC-4.6-0031, SPEC-4.6-0032,
       SPEC-4.6-0018 merged). 42 green, 2 red as of round 21's end. Historical
@@ -2014,11 +2022,18 @@ units:
   '7.1':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkipForForecastTest
-    fix_status: in_progress
-    blocked_category: null
-    blocked_reason: null
-    finding_ids: ["SPEC-4.6-0027"]
+    fix_status: blocked
+    blocked_category: would_regress_other_tests
+    blocked_reason: >-
+      Cluster with 6.2/7.6 (2026-09-14): unit is 12/12 including the
+      already-SKIPPED hop to 4.4 that stops the 7.6 loop. Combined FITS
+      net +37 but 74 allowlisted DTaP cases newly fail. See SPEC-4.6-0043.
+    finding_ids: ["SPEC-4.6-0027", "SPEC-4.6-0043"]
     notes: >-
+      2026-09-14 cluster: context filter greened the last red; added
+      anAlreadySkippedTargetDoseReturnsToFourFourWithoutReForecasting.
+      12/12. Not merged: 74 allowlisted DTaP FITS cases. Historical
+      diagnosis retained below.
       Role B (2026-09-09): 10/11 green, 1 red - the same shared
       ConditionalSkip-context gap 6.2 already tracks under SPEC-4.6-0027
       (open, not merged, pending GitHub Issue #65's ACIP guidance). Twice
@@ -2773,17 +2788,15 @@ units:
     fix_status: blocked
     blocked_category: would_regress_other_tests
     blocked_reason: >-
-      Deleting the process() override and fixing CONDSKIP-2's VALIDATING
-      reference-date stub makes 6 of 8 reds pass with zero collateral
-      damage to any cdsi-engine JUnit test (6.2 and 7.1 included, re-run
-      explicitly since they share the base class) - but it activates a
-      previously entirely-dead code path (7.6 has never once run its own
-      tables) that causes a genuine skip/re-forecast infinite loop for
-      233 real FITS cases, caught only by the engine's own loop guard
-      ("Logic steps stuck in a loop at 7.1" through "7.6"). Reverted in
-      full; see SPEC-4.6-0043 for the complete trace, including the
-      suspected connection to SPEC-4.6-0027's still-open ACIP question.
-    finding_ids: ["SPEC-4.6-0043"]
+      Cluster with 6.2/7.1 (2026-09-14): process() override deleted,
+      CONDSKIP-2 VALIDATING uses the forecast earliest date, 7.1 returns
+      an already-SKIPPED dose to 4.4. Unit is 15/15. The 233-case
+      skip/re-forecast loop is gone (FITS still 1 standing execution
+      error, 6:47 runtime). Combined FITS net +37 (MCV-2013-0511 and
+      DTAP-2013-0028 "#4 at age 4 is UTD until age 11" now pass) but 74
+      allowlisted DTaP cases (15 unique uids) go PASS to FAIL. See
+      SPEC-4.6-0043.
+    finding_ids: ["SPEC-4.6-0027", "SPEC-4.6-0043"]
     notes: >
       Role A, 2026-09-05. 15 tests: 6 green, 9 red (9 failures, 0 errors). 7.6
       has no attribute table, no business rules and no decision tables of its

@@ -58,6 +58,25 @@ Reverted in full again; a fresh FITS run confirmed the revert restores the exact
 
 Recorded as open per the same discipline as SPEC-4.6-0018/0019: a textually-correct fix that regresses FITS needs its interaction fully traced before merging, not shipped on unit-test strength alone.
 
+## 2026-09-14 cluster re-attempt (6.2 + 7.1 + 7.6 together)
+
+Implemented as one repair rather than 7.6 in isolation:
+
+1. `ConditionalSkip` carries `ConditionalSkipContext`; `SeriesDose` holds a list; `DataModelLoader` appends and parses `<context>`.
+2. `EvaluateConditionalSkip` selects the first instance that applies (Evaluation/Both vs Forecast/Both). Unset context still applies unconditionally for hand-built tests.
+3. Table 6-9 matches `"equal"` or `"equal to"`.
+4. `ValidateRecommendation.process()` override deleted so inherited tables run; CONDSKIP-2 VALIDATING uses the forecast earliest date.
+5. Loop fix: 7.1 `process()` returns an already-SKIPPED target to 4.4 instead of re-forecasting it (7.6 skip hops to 7.1 without 4.4 advancing).
+
+### Verification
+
+- Units: 6.2 44/44, 7.1 12/12, 7.6 15/15.
+- Full `cdsi-engine`: 787 tests, 4 failures, 0 errors (was 786/15). Remaining reds are the pre-existing 7.2, 7.3, 8.1, 8.7 cluster.
+- FITS run `2026-09-15T024959-174434Z-6e894db`: **3728/4896 passed**, 1167 failed assertions, **1 execution error** (unchanged standing error). Runtime 6:47. **No skip/re-forecast loop.**
+- vs the 3691-case Chapter 9 baseline: net **+37**. `statusChanged` is DTAP+MCV only: 111 FAIL→PASS (23 unique uids, including `MCV-2013-0511` and `DTAP-2013-0028` "#4 at age 4 is UTD until age 11") and 74 PASS→FAIL (15 unique DTaP uids). Allowlist not regenerated.
+
+Not merged. Role B automatic stop on the 74 allowlisted DTaP cases. Project owner should decide whether to accept that movement the same way Chapter 9's DTAP-only −58 was accepted.
+
 ## Affected
 
 - Spec sections: 6.2 (page 58, Table 6-4's entry condition), 7.1 (page 71, mirror entry condition), 7.6.1 (page 74, same rule cited again)

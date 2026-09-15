@@ -35,6 +35,12 @@ Reverted in full via `git checkout` on both files, confirmed by a fresh build (`
 
 Classified `blocked_category: would_regress_other_tests` per `cdsi-engine/AGENTS.md` step 6 - any FITS regression is an automatic stop, not a judgment call, even with a fully clean JUnit run. The project owner should decide whether to trace the loop directly or defer 7.6 until SPEC-4.6-0027 resolves.
 
+## 2026-09-14 cluster re-attempt (with 6.2 and 7.1)
+
+The loop is fixed: 7.1 returns an already-SKIPPED target to 4.4 instead of re-running 7.1–7.6 on the same dose. Combined with context filtering and `"equal to"`, FITS run `2026-09-15T024959-174434Z-6e894db` has **1 execution error** (the standing one) and a 6:47 runtime — not 234 errors. Unit 7.6 is 15/15.
+
+Combined FITS is 3728/1167/1 (net +37 vs 3691). `MCV-2013-0511` and `DTAP-2013-0028` now pass. 74 allowlisted DTaP cases (15 unique uids) newly fail. Not merged; see [SPEC-4.6-0027](../SPEC-4.6-0027/finding.md) for the cluster write-up. The project owner should decide whether to accept that DTaP movement.
+
 ## Affected
 
 - Spec sections: 7.6 (page 85)

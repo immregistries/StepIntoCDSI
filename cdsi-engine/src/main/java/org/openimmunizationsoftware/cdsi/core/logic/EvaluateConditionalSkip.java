@@ -58,6 +58,7 @@ public class EvaluateConditionalSkip extends LogicStep {
             LogicStepType skip) {
         super(logicStepType, dataModel);
         setConditionTableName("Table 6.4 Conditional Skip Attributes");
+        this.conditionalSkipType = conditionalSkipType;
         this.skipLogicStep = skip;
         this.noSkipLogicStep = noSkip;
 
@@ -91,9 +92,10 @@ public class EvaluateConditionalSkip extends LogicStep {
 
         // This appears to be the core logic of the function?
         /*
-         * I'm sure there is a better place to list this but before the for loop starts,
-         * we should eliminate Conditional Skip instances without a context of
-         * Evaluation or Both
+         * Table 6-4 / 7.1 / 7.6.1: keep only the Conditional Skip instance whose
+         * context matches this arm (Evaluation or Both here; Forecast or Both
+         * when forecasting or validating). SeriesDose holds every XML instance;
+         * selectConditionalSkip() picks the first that applies.
          */
         SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
         // A markRestAsExtraneous() placeholder (4.4's bookkeeping record for an
@@ -106,14 +108,19 @@ public class EvaluateConditionalSkip extends LogicStep {
         // forecasting - never reaching 7.4's PatientSeriesStatus assignment for
         // the whole series. An UNNECESSARY target dose is definitively resolved
         // already; no conditional skip evaluation applies to it in any context.
-        if (dataModel.getTargetDose().getTargetDoseStatus() == TargetDoseStatus.UNNECESSARY) {
+        TargetDoseStatus existingStatus = dataModel.getTargetDose().getTargetDoseStatus();
+        ConditionalSkip conditionalSkip = selectConditionalSkip(seriesDose);
+        if (existingStatus == TargetDoseStatus.UNNECESSARY) {
             log("Target dose is an extraneous-dose placeholder (status UNNECESSARY) - "
                     + "no conditional skip evaluation applies.");
-        } else if (seriesDose.getConditionalSkip() != null) {
+        } else if (existingStatus == TargetDoseStatus.SKIPPED
+                && conditionalSkipType == ConditionalSkipType.FORECAST) {
+            log("Target dose is already SKIPPED - 4.4 must pick the next target rather than "
+                    + "re-forecasting the same dose (7.6 skip hops here before 4.4 advances).");
+        } else if (conditionalSkip != null) {
             LT611 logicTable611 = new LT611(noSkip, skip);
 
             log("Conditional skip has been defined, now looking at the details.");
-            ConditionalSkip conditionalSkip = seriesDose.getConditionalSkip();
             logicTable611.setSetLogicType(conditionalSkip.getSetLogic());
             for (ConditionalSkipSet conditionalSkipSet : conditionalSkip.getConditionalSkipSetList()) {
                 LT610 logicTable610 = new LT610();
@@ -201,7 +208,9 @@ public class EvaluateConditionalSkip extends LogicStep {
                                 lt.caConditionalSkipReferenceDate.setInitialValue(caAssessmentDate.getFinalValue());
                                 break;
                             case VALIDATING:
-                                lt.caConditionalSkipReferenceDate.setInitialValue(PAST);
+                                Date earliestDate = caEarliestDate.getFinalValue();
+                                lt.caConditionalSkipReferenceDate.setInitialValue(
+                                        earliestDate != null ? earliestDate : PAST);
                                 break;
                         }
 
@@ -227,6 +236,18 @@ public class EvaluateConditionalSkip extends LogicStep {
     // Overriding the methods of parent functions and redefining them
     @Override
     public LogicStep process() throws Exception {
+        TargetDoseStatus existingStatus = dataModel.getTargetDose().getTargetDoseStatus();
+        if (existingStatus == TargetDoseStatus.SKIPPED
+                && conditionalSkipType == ConditionalSkipType.FORECAST) {
+            // 7.6 skip goes to 7.1 without 4.4 advancing. Re-running 7.1-7.5 on
+            // the same dose loops: 7.1 uses the assessment date (often no skip)
+            // and 7.6 uses the earliest date (skip again). Hand the already-
+            // skipped dose back to 4.4 so it can forecast the next target.
+            log(LogLevel.CONTROL,
+                    "DOSE ALREADY SKIPPED - returning to 4.4 to advance the target dose");
+            setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
+            return next();
+        }
         setNextLogicStepType(noSkipLogicStep);
         evaluateLogicTables();
         TargetDoseStatus status = dataModel.getTargetDose().getTargetDoseStatus();
@@ -236,6 +257,32 @@ public class EvaluateConditionalSkip extends LogicStep {
             log(LogLevel.STATE, "Dose NOT skipped - continuing evaluation");
         }
         return next();
+    }
+
+    /**
+     * First Conditional Skip instance this arm is allowed to use. Evaluation
+     * keeps Evaluation or Both; forecasting and validating keep Forecast or
+     * Both. An unset context (hand-built tests) applies in every arm.
+     */
+    protected ConditionalSkip selectConditionalSkip(SeriesDose seriesDose) {
+        for (ConditionalSkip candidate : seriesDose.getConditionalSkipList()) {
+            if (conditionalSkipApplies(candidate)) {
+                return candidate;
+            }
+        }
+        return null;
+    }
+
+    private boolean conditionalSkipApplies(ConditionalSkip candidate) {
+        switch (conditionalSkipType) {
+            case EVALUATE:
+                return candidate.appliesToEvaluation();
+            case FORECAST:
+            case VALIDATING:
+                return candidate.appliesToForecast();
+            default:
+                return true;
+        }
     }
 
     // Defining condition attributes
@@ -467,7 +514,9 @@ public class EvaluateConditionalSkip extends LogicStep {
                         }
                         return LogicResult.NO;
                     }
-                    if (caConditionalSkipElements.getFinalValue().getDoseCountLogic().equalsIgnoreCase("equal")) {
+                    if (caConditionalSkipElements.getFinalValue().getDoseCountLogic().equalsIgnoreCase("equal")
+                            || caConditionalSkipElements.getFinalValue().getDoseCountLogic()
+                                    .equalsIgnoreCase("equal to")) {
                         if (caConditionalSkipElements.getFinalValue()
                                 .getDoseCount() == caNumberofConditionalDosesAdministered
                                         .getFinalValue()) {

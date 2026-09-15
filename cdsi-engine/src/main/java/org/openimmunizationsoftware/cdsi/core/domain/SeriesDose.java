@@ -9,7 +9,7 @@ public class SeriesDose {
   private List<Age> ageList = new ArrayList<Age>();
   private List<Interval> intervalList = new ArrayList<Interval>();
   private List<AllowableInterval> allowableintervalList = new ArrayList<AllowableInterval>();
-  private ConditionalSkip conditionalSkip = null;
+  private List<ConditionalSkip> conditionalSkipList = new ArrayList<ConditionalSkip>();
   private List<RecurringDose> recurringDoseList = new ArrayList<RecurringDose>();
   private List<ConditionalNeed> conditionalNeedList = new ArrayList<ConditionalNeed>();
   private List<SeasonalRecommendation> seasonalRecommendationList = new ArrayList<SeasonalRecommendation>();
@@ -28,12 +28,38 @@ public class SeriesDose {
     }
   }
 
-  public ConditionalSkip getConditionalSkip() {
-    return conditionalSkip;
+  public List<ConditionalSkip> getConditionalSkipList() {
+    return conditionalSkipList;
   }
 
+  /**
+   * Convenience for fixtures and callers that still expect a single instance:
+   * the first of {@link #getConditionalSkipList()}, or null if empty.
+   */
+  public ConditionalSkip getConditionalSkip() {
+    if (conditionalSkipList.isEmpty()) {
+      return null;
+    }
+    return conditionalSkipList.get(0);
+  }
+
+  /**
+   * Replaces the list with this one instance (or clears it when {@code null}).
+   * Tests and hand-built fixtures use this; the loader appends via
+   * {@link #addConditionalSkip(ConditionalSkip)} so a series dose that
+   * declares two XML elements keeps both.
+   */
   public void setConditionalSkip(ConditionalSkip conditionalSkip) {
-    this.conditionalSkip = conditionalSkip;
+    conditionalSkipList.clear();
+    if (conditionalSkip != null) {
+      conditionalSkipList.add(conditionalSkip);
+    }
+  }
+
+  public void addConditionalSkip(ConditionalSkip conditionalSkip) {
+    if (conditionalSkip != null) {
+      conditionalSkipList.add(conditionalSkip);
+    }
   }
 
   public String getDoseNumber() {
