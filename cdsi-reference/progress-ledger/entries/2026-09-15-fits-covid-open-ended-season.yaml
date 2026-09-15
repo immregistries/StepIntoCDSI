@@ -1,0 +1,22 @@
+id: "2026-09-15-fits-covid-open-ended-season"
+date: "2026-09-15"
+phase: 22
+title: "FITS - Open-ended seasonal start projection for COVID-19 (SPEC-4.6-0054)"
+before:
+  commit: "946221a"
+  engine_tests: {total: 795, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 3956, failed_assertions: 939, execution_errors: 1}
+after:
+  commit: pending
+  engine_tests: {total: 797, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 3962, failed_assertions: 933, execution_errors: 1}
+summary: >
+  Extends SeasonalRecommendationDates to open-ended templates (start only,
+  empty end) used by COVID-19 SD 4.65. Combined FITS 3956 to 3962 (net +6,
+  all COVID-19, 0 regressions). A blanket assessment-date floor for overdue
+  earliest/recommended was tried and rejected (net -92 with 170 allowlist
+  regressions). Remaining COVID: ~200 fails, dominated by COMPLETE status
+  (67) and date mismatches that expect assessment-date due-now.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0054/finding.md"
+finding_ids: ["SPEC-4.6-0054"]
+status: reviewed

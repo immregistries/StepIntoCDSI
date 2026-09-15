@@ -73,6 +73,27 @@ public class SeasonalRecommendationDatesTest {
     assertNull(projected[1]);
   }
 
+  @Test
+  public void openEndedSeasonRollsStartBackSoAssessmentIsOnOrAfterIt() {
+    // COVID-19 4.65: start 2025-08-27, empty end. A 2024 FITS assessment must
+    // not wait for the literal 2025 start - roll back to the prior anniversary
+    // that is already open (2023-08-27 for an Aug 2024 assessment).
+    Date[] projected = SeasonalRecommendationDates.project(date("08/27/2025"), null,
+        date("08/22/2024"));
+
+    assertEquals(date("08/27/2023"), projected[0]);
+    assertNull(projected[1]);
+  }
+
+  @Test
+  public void openEndedSeasonLeavesStartAloneWhenAssessmentIsAlreadyOnOrAfterIt() {
+    Date[] projected = SeasonalRecommendationDates.project(date("08/27/2025"), null,
+        date("09/01/2025"));
+
+    assertEquals(date("08/27/2025"), projected[0]);
+    assertNull(projected[1]);
+  }
+
   private static Date date(String monthDayYear) {
     try {
       return new SimpleDateFormat("MM/dd/yyyy").parse(monthDayYear);

@@ -64,13 +64,35 @@ public final class SeasonalRecommendationDates {
    * to {@code assessmentDate}. Returns {@code [start, end]} (either may be null
    * if the template was incomplete). When {@code assessmentDate} is null, the
    * template is returned unchanged.
+   *
+   * <p>
+   * Open-ended seasons (start date only, empty end - COVID-19 in Supporting Data
+   * 4.65) are projected by rolling the start back until the assessment is on or
+   * after it. There is no forward roll: once that anniversary is in the past the
+   * season is treated as still open.
    */
   public static Date[] project(Date templateStart, Date templateEnd, Date assessmentDate) {
     if (templateStart == null && templateEnd == null) {
       return new Date[] { null, null };
     }
-    if (assessmentDate == null || templateStart == null || templateEnd == null) {
+    if (assessmentDate == null) {
       return new Date[] { templateStart, templateEnd };
+    }
+
+    // Open-ended template (COVID-style: start 20250827, empty end). Without an
+    // end date the closed-window loop below cannot run; leaving the literal
+    // start unprojected made every historical assessment wait for 2025-08-27.
+    if (templateStart != null && templateEnd == null) {
+      Date start = templateStart;
+      int guard = 0;
+      while (assessmentDate.before(start) && guard++ < 200) {
+        start = addYears(start, -1);
+      }
+      return new Date[] { start, null };
+    }
+
+    if (templateStart == null) {
+      return new Date[] { null, templateEnd };
     }
 
     Date start = templateStart;
