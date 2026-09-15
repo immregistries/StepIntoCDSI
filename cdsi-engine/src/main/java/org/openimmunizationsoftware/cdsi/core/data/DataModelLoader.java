@@ -937,16 +937,30 @@ public class DataModelLoader {
         } else if (greatgrandchildNode.getNodeName().equals("vaccineTypes")) {
           String vaccineTypeCvxCodeString = DomUtils.getInternalValue(greatgrandchildNode);
           if (vaccineTypeCvxCodeString.length() > 0) {
-            String[] vaccineTypeCvxCodes = vaccineTypeCvxCodeString.split("\\;");
-            for (String vaccineTypeCvx : vaccineTypeCvxCodes) {
+            // CDC Supporting Data uses "; "-separated CVX lists (space after the
+            // semicolon). Trim and skip unresolved codes, same as fromMostRecent
+            // interval parsing above - otherwise only the first token matches
+            // and Influenza season-completion skips never see CVX 88/333/etc.
+            // (SPEC-4.6-0053).
+            for (String vaccineTypeCvx : vaccineTypeCvxCodeString.split(";")) {
+              vaccineTypeCvx = vaccineTypeCvx.trim();
+              if (vaccineTypeCvx.length() == 0) {
+                continue;
+              }
               VaccineType vaccineType = supportingDataModel.getCvx(vaccineTypeCvx);
-              condition.getVaccineTypeSet().add(vaccineType);
+              if (vaccineType != null) {
+                condition.getVaccineTypeSet().add(vaccineType);
+              }
             }
           }
         } else if (greatgrandchildNode.getNodeName().equals("seriesGroups")) {
           String seriesGroupsString = DomUtils.getInternalValue(greatgrandchildNode);
           if (seriesGroupsString.length() > 0) {
-            for (String seriesGroup : seriesGroupsString.split("\\;")) {
+            for (String seriesGroup : seriesGroupsString.split(";")) {
+              seriesGroup = seriesGroup.trim();
+              if (seriesGroup.length() == 0) {
+                continue;
+              }
               condition.getSeriesGroupSet().add(seriesGroup);
             }
           }

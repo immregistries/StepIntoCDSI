@@ -203,6 +203,19 @@ public class EvaluateAndForecastAllPatientSeries extends LogicStep {
               dataModel.getTargetDose().getTrackedSeriesDose().getDoseNumber() + ")");
           return finalizeStep(FORECAST);
         }
+        // 7.1 skipped the last forecast target and looped back here. Table 7-10
+        // (Determine Forecast Need) still has to assign PatientSeriesStatus -
+        // e.g. COMPLETE when prior targets are SATISFIED and none remain
+        // NOT_SATISFIED (Influenza "already vaccinated this season"). Skipping
+        // straight to the next series left status null → vaccine-group
+        // NOT_COMPLETE (SPEC-4.6-0052). Once 7.4 has set a status, a second
+        // return with the same SKIPPED last dose advances the series loop.
+        if (currentPatientSeries.getPatientSeriesStatus() == null) {
+          log(LogLevel.REASONING,
+              "REASONING: Last forecast target skipped with no series status yet - "
+                  + "routing through Determine Evidence of Immunity / Determine Forecast Need");
+          return finalizeStep(LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY);
+        }
         log(LogLevel.REASONING,
             "REASONING: No more target doses available after skipped dose - transitioning to next series");
         setNextPatientSeries();

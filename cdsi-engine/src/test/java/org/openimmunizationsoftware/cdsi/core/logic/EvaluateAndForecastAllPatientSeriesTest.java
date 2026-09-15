@@ -22,12 +22,14 @@ import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
+import org.openimmunizationsoftware.cdsi.core.domain.Patient;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.RecurringDose;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 
@@ -90,6 +92,12 @@ public class EvaluateAndForecastAllPatientSeriesTest {
   @Before
   public void setUp() {
     dataModel = new DataModel();
+    // Chapter 7 constructors (e.g. Determine Evidence of Immunity) read DOB
+    // when 4.4 hands off after a last-forecast-target skip (SPEC-4.6-0052).
+    Patient patient = new Patient();
+    patient.setDateOfBirth(date(2010, 1, 1));
+    dataModel.setPatient(patient);
+    dataModel.setAssessmentDate(date(2011, 6, 1));
   }
 
   // ---------------------------------------------------------------- fixtures
@@ -657,6 +665,58 @@ public class EvaluateAndForecastAllPatientSeriesTest {
     assertSame(doseTwo, dataModel.getTargetDose().getTrackedSeriesDose());
     assertSame(Neighborhood.FORECAST, dataModel.getNeighborhood());
     assertEquals(LogicStepType.EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST, next.getLogicStepType());
+  }
+
+  /**
+   * When 7.1 skips the <i>last</i> forecast target and loops back to 4.4,
+   * Table 7-10 still has to run so PatientSeriesStatus can become COMPLETE
+   * (e.g. Influenza already vaccinated this season: prior SATISFIED + recurring
+   * clone SKIPPED). Abandoning the series here left status null and the
+   * vaccine group fell through to NOT_COMPLETE (SPEC-4.6-0052).
+   */
+  @Test
+  public void aSkippedLastForecastTargetWithNoSeriesStatusYetRoutesThroughDetermineForecastNeed()
+      throws Exception {
+    Antigen hepB = antigen(HEPB);
+    PatientSeries patientSeries = relevantPatientSeries("Influenza standard series", hepB, seriesDose("1"));
+    administered(hepB, date(2011, 3, 1));
+
+    process();
+    dataModel.setNeighborhood(Neighborhood.FORECAST);
+    dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.SKIPPED);
+    assertNull(patientSeries.getPatientSeriesStatus());
+
+    LogicStep next = process();
+
+    assertSame(patientSeries, dataModel.getPatientSeriesStepper().getCurrent());
+    assertSame(Neighborhood.FORECAST, dataModel.getNeighborhood());
+    assertEquals(LogicStepType.DETERMINE_EVIDENCE_OF_IMMUNITY, next.getLogicStepType());
+  }
+
+  /**
+   * After 7.4 has assigned a status, returning to 4.4 with the same skipped
+   * last forecast target must advance the outer series loop rather than
+   * re-enter 7.2/7.4 forever.
+   */
+  @Test
+  public void aSkippedLastForecastTargetAfterSeriesStatusIsSetMovesToTheNextSeries() throws Exception {
+    Antigen hepB = antigen(HEPB);
+    Antigen polio = antigen(POLIO);
+    PatientSeries fluSeries = relevantPatientSeries("Influenza standard series", hepB, seriesDose("1"));
+    PatientSeries polioSeries = relevantPatientSeries("Polio 4 dose series", polio, seriesDose("1"));
+    administered(hepB, date(2011, 3, 1));
+    administered(polio, date(2011, 4, 1));
+
+    process();
+    dataModel.setNeighborhood(Neighborhood.FORECAST);
+    dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.SKIPPED);
+    fluSeries.setPatientSeriesStatus(PatientSeriesStatus.COMPLETE);
+
+    LogicStep next = process();
+
+    assertSame(polioSeries, dataModel.getPatientSeriesStepper().getCurrent());
+    assertSame(Neighborhood.EVALUATE, dataModel.getNeighborhood());
+    assertEquals(LogicStepType.EVALUATE_DOSE_ADMINISTERED_CONDITION, next.getLogicStepType());
   }
 
   /**

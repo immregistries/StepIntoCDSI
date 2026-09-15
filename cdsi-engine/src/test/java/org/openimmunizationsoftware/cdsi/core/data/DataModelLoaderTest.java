@@ -174,4 +174,46 @@ public class DataModelLoaderTest {
                 seasonalRecommendation.getSeasonalRecommendationStartDate()
                         .before(seasonalRecommendation.getSeasonalRecommendationEndDate()));
     }
+
+    /**
+     * SPEC-4.6-0053: CDC writes conditional-skip vaccineTypes as
+     * {@code 15; 16; 88; ...} (space after {@code ;}). Loading without trim left
+     * only CVX 15 resolved, so Influenza season-completion skips never matched
+     * administered CVX 88/333 doses.
+     */
+    @Test
+    public void testConditionalSkipVaccineTypesTrimCvxTokens() throws Exception {
+        DataModel dataModel = DataModelLoader.createDataModel("supporting-data-4.65-508.zip");
+
+        org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries influenzaSeries = null;
+        for (org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries antigenSeries : dataModel
+                .getAntigenSeriesList()) {
+            if ("Influenza standard series".equals(antigenSeries.getSeriesName())) {
+                influenzaSeries = antigenSeries;
+                break;
+            }
+        }
+        assertNotNull("Supporting Data must still declare \"Influenza standard series\"", influenzaSeries);
+        assertTrue("Influenza standard series must have at least two doses",
+                influenzaSeries.getSeriesDoseList().size() >= 2);
+
+        org.openimmunizationsoftware.cdsi.core.domain.SeriesDose doseTwo = influenzaSeries.getSeriesDoseList().get(1);
+        assertNotNull(doseTwo.getConditionalSkip());
+        assertFalse(doseTwo.getConditionalSkip().getConditionalSkipSetList().isEmpty());
+
+        org.openimmunizationsoftware.cdsi.core.domain.VaccineType cvx88 = dataModel.getCvxMap().get("88");
+        assertNotNull(cvx88);
+        boolean foundCvx88 = false;
+        for (org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipSet set : doseTwo.getConditionalSkip()
+                .getConditionalSkipSetList()) {
+            for (org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipCondition condition : set
+                    .getConditionList()) {
+                if (condition.getVaccineTypeSet().contains(cvx88)) {
+                    foundCvx88 = true;
+                    break;
+                }
+            }
+        }
+        assertTrue("Dose 2 season-completion skips must resolve CVX 88 despite '; ' separators", foundCvx88);
+    }
 }
