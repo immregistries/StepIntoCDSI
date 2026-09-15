@@ -24,6 +24,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
+import org.openimmunizationsoftware.cdsi.core.logic.concepts.SeasonalRecommendationDates;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
 
@@ -207,8 +208,10 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
     Date seasonalRecommendationStartDate = new DateTime(1900, 1, 1, 0, 0).toDate();
     caSeasonalRecommendationStartDate.setAssumedValue(seasonalRecommendationStartDate);
     if (referenceSeriesDose.getSeasonalRecommendationList().size() > 0) {
-      seasonalRecommendationStartDate = referenceSeriesDose.getSeasonalRecommendationList().get(0)
-          .getSeasonalRecommendationStartDate();
+      // Assessment-relative projection of the Supporting Data season template
+      // (documented deviation - see SeasonalRecommendationDates and 07-05).
+      seasonalRecommendationStartDate = SeasonalRecommendationDates
+          .effectiveStartDate(referenceSeriesDose, dataModel.getAssessmentDate());
       caSeasonalRecommendationStartDate.setInitialValue(seasonalRecommendationStartDate);
     } else {
       // log("Couldn't find seasonalRecommendation start date");

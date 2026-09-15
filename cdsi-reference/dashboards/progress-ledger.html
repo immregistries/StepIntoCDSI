@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-15 07:37:46 - regenerate with
+  Dashboard generated 2026-09-15 10:20:09 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,7 +57,7 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">43</div>
+    <div class="value">44</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
@@ -112,6 +112,25 @@
   </div>
   <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0027/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0027/finding.md</a></p>
   <p class="muted">Findings: SPEC-4.6-0019, SPEC-4.6-0027, SPEC-4.6-0043</p>
+</section>
+<section>
+  <h2>2026-09-15 - Phase 22 - FITS - Assessment-relative seasonal recommendation projection (SPEC-4.6-0051)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Documented deviation: project Supporting Data seasonal start/end dates around the assessment date (SeasonalRecommendationDates), wired into 7.4 and 7.5. Inter-season gaps use the upcoming season. Combined FITS 3728 to 3765 (net +37, 0 regressions). FLU 20 to 49; RSV 42 to 50. COVID-19 unchanged. Allowlist regenerated from run 2026-09-15T161322.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>b8618e4</code></td></tr><tr><td>Engine tests</td><td>787 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3728 passed, 1167 failed-assertion, 1 execution-error (76.1%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>pending</code></td></tr><tr><td>Engine tests</td><td>793 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3765 passed, 1130 failed-assertion, 1 execution-error (76.9%)</td></tr><tr><td>FITS runtime</td><td>153.4s (2.6m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0051/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0051/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0051</p>
 </section>
 <section>
   <h2>2026-09-14 - Phase 22 - Role B Round 40 - Finish Chapter 9 Table 9-2 aggregation (SPEC-4.6-0050)

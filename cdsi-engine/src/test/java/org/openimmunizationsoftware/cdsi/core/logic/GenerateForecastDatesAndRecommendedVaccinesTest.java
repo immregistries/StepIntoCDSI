@@ -562,12 +562,13 @@ public class GenerateForecastDatesAndRecommendedVaccinesTest {
    */
   @Test
   public void theSeasonalRecommendationStartDateComesFromTheSeriesDosesSeason() {
-    seasonalRecommendation("09/01/2025", "03/31/2026");
+    seasonalRecommendation("07/01/2025", "06/30/2026");
+    dataModel.setAssessmentDate(date("08/15/2025"));
 
     build();
 
     assertEquals("Table 7-12: the seasonal recommendation start date of the series dose being "
-        + "forecast", date("09/01/2025"), finalValueOf("Seasonal Recommendation Start Date"));
+        + "forecast", date("07/01/2025"), finalValueOf("Seasonal Recommendation Start Date"));
   }
 
   /**
@@ -672,12 +673,16 @@ public class GenerateForecastDatesAndRecommendedVaccinesTest {
    */
   @Test
   public void forecastdtOneTheEarliestDateAccountsForTheSeasonalRecommendationStartDate() {
-    seasonalRecommendation("09/01/2030", "03/31/2031");
+    // Season must contain the assessment date (06/15/2025); otherwise
+    // SeasonalRecommendationDates projects the template to another year.
+    // Start after the other earliest-date candidates so season start wins.
+    seasonalRecommendation("09/01/2025", "03/31/2026");
+    dataModel.setAssessmentDate(date("10/15/2025"));
 
     build();
 
     assertEquals("FORECASTDT-1: the candidate earliest date includes the seasonal recommendation "
-        + "start date (09/01/2030)", date("09/01/2030"), step.computeEarliestDate());
+        + "start date (09/01/2025)", date("09/01/2025"), step.computeEarliestDate());
   }
 
   /**
@@ -736,7 +741,8 @@ public class GenerateForecastDatesAndRecommendedVaccinesTest {
    */
   @Test
   public void forecastdtOneTheEarliestDateIsTheSameCandidateEarliestDateSevenFourTested() {
-    seasonalRecommendation("09/01/2030", "03/31/2031");
+    seasonalRecommendation("09/01/2025", "03/31/2026");
+    dataModel.setAssessmentDate(date("10/15/2025"));
 
     DetermineForecastNeed sevenFour = new DetermineForecastNeed(dataModel);
     Date candidateEarliestDate = null;

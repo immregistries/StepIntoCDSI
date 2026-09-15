@@ -18,6 +18,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
+import org.openimmunizationsoftware.cdsi.core.logic.concepts.SeasonalRecommendationDates;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
@@ -41,8 +42,10 @@ public class DetermineForecastNeed extends LogicStep {
     }
     SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
     if (referenceSeriesDose.getSeasonalRecommendationList().size() > 0) {
-      Date seasonalRecommendationEndDate = referenceSeriesDose.getSeasonalRecommendationList()
-          .get(0).getSeasonalRecommendationEndDate();
+      // Assessment-relative projection of the Supporting Data season template
+      // (documented deviation - see SeasonalRecommendationDates and 07-04).
+      Date seasonalRecommendationEndDate = SeasonalRecommendationDates
+          .effectiveEndDate(referenceSeriesDose, dataModel.getAssessmentDate());
       caSeasonalRecommendationEndDate.setInitialValue(seasonalRecommendationEndDate);
     } else {
       log("Recommendation End date is not referenced");
@@ -401,8 +404,8 @@ public class DetermineForecastNeed extends LogicStep {
     // list.add(caLatestConflictEndIntervalDate.getFinalValue());// CALCDTLIVE-4 is
     // both used and removed?
     if (referenceSeriesDose.getSeasonalRecommendationList().size() > 0) {
-      list.add(referenceSeriesDose.getSeasonalRecommendationList().get(0)
-          .getSeasonalRecommendationStartDate());
+      list.add(SeasonalRecommendationDates.effectiveStartDate(referenceSeriesDose,
+          dataModel.getAssessmentDate()));
     }
     // FORECASTDTCAN-1's last two bullets, both folded into this one list the same
     // way 7.5's own computeEarliestDate() does: (a) "latest of all dates
