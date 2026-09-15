@@ -1,5 +1,5 @@
 id: "SPEC-4.6-0027"
-status: "open"
+status: "resolved"
 category: "IMPLEMENTATION_MISMATCH"
 spec_sections: ["6.2", "7.1", "7.6"]
 source_pages: [58, 71, 74]
@@ -139,3 +139,9 @@ interpretation: >
   an earlier dose is supposed to reach a later one's own evaluation,
   a mechanism this project has not yet located anywhere in the current
   implementation.
+
+  2026-09-15: Implemented as one cluster with 7.1/7.6 (context list,
+  equal-to, live 7.6 validation, SKIPPED hop to 4.4). MCV-2013-0511
+  now PASSES. Combined FITS 3728/1167/1 (net +37). Project owner
+  accepted the 74 allowlisted DTaP FAIL cases onto develop. Allowlist
+  regenerated from run 2026-09-15T024959-174434Z-6e894db.

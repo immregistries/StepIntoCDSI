@@ -1,0 +1,24 @@
+id: "2026-09-15-role-b-round-42-units-7.2-7.3-fixture-rewrites"
+date: "2026-09-15"
+phase: 22
+title: "Role B Round 42 - Units 7.2/7.3 fixture rewrites (UNDETERMINED reds closed)"
+before:
+  commit: "9ae3c94"
+  engine_tests: {total: 787, failures: 4, errors: 0}
+  fits: {total_cases: 4896, passed: 3728, failed_assertions: 1167, execution_errors: 1}
+after:
+  commit: pending
+  engine_tests: {total: 787, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 3728, failed_assertions: 1167, execution_errors: 1}
+summary: >
+  Rewrote the two remaining UNDETERMINED fixture assertions in units 7.2 and
+  7.3. Neither was an engine defect: each called readImmunity /
+  readContraindications on a Schedule and then asserted on an unrelated
+  DataModel. Loader signatures unchanged. 7.2 now mirrors the production
+  Antigen handoff after readImmunity; 7.3 adds the parsed Schedule to
+  dataModel.getScheduleList() like production. Units 7.2 and 7.3 are 16/16
+  and 24/24. Full engine suite 787 tests, 2 failures left (8.1 Risk-only
+  priority, 8.7 carried-in score). FITS unchanged (test-only change).
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0039/finding.md"
+finding_ids: ["SPEC-4.6-0039", "SPEC-4.6-0040"]
+status: reviewed

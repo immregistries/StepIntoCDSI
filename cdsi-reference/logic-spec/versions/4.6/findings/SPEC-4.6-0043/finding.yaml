@@ -1,5 +1,5 @@
 id: "SPEC-4.6-0043"
-status: "open"
+status: "resolved"
 category: "IMPLEMENTATION_MISMATCH"
 spec_sections: ["7.6"]
 source_pages: [85]
@@ -102,3 +102,8 @@ interpretation: >
   project owner should decide whether to trace the loop directly, or
   to defer 7.6 until SPEC-4.6-0027's ACIP question resolves, since
   they may turn out to share a root cause.
+
+  2026-09-15: Loop fixed by returning an already-SKIPPED dose from 7.1
+  to 4.4. Project owner accepted the cluster onto develop. Combined
+  FITS 3728/1167/1; allowlist regenerated from run
+  2026-09-15T024959-174434Z-6e894db.

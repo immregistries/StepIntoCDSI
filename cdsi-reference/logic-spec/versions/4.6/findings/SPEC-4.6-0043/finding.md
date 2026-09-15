@@ -1,6 +1,6 @@
 # SPEC-4.6-0043: Wiring 7.6's validation logic for real is JUnit-clean but triggers a genuine skip/re-forecast infinite loop in production - reverted
 
-**Status:** open (reverted, not merged)
+**Status:** resolved
 **Category:** IMPLEMENTATION_MISMATCH
 
 ## Evidence
@@ -39,7 +39,9 @@ Classified `blocked_category: would_regress_other_tests` per `cdsi-engine/AGENTS
 
 The loop is fixed: 7.1 returns an already-SKIPPED target to 4.4 instead of re-running 7.1–7.6 on the same dose. Combined with context filtering and `"equal to"`, FITS run `2026-09-15T024959-174434Z-6e894db` has **1 execution error** (the standing one) and a 6:47 runtime — not 234 errors. Unit 7.6 is 15/15.
 
-Combined FITS is 3728/1167/1 (net +37 vs 3691). `MCV-2013-0511` and `DTAP-2013-0028` now pass. 74 allowlisted DTaP cases (15 unique uids) newly fail. Not merged; see [SPEC-4.6-0027](../SPEC-4.6-0027/finding.md) for the cluster write-up. The project owner should decide whether to accept that DTaP movement.
+Combined FITS is 3728/1167/1 (net +37 vs 3691). `MCV-2013-0511` and `DTAP-2013-0028` now pass. 74 allowlisted DTaP cases (15 unique uids) newly fail.
+
+**2026-09-15:** Project owner accepted that DTaP movement onto develop. See [SPEC-4.6-0027](../SPEC-4.6-0027/finding.md) for the cluster write-up.
 
 ## Affected
 

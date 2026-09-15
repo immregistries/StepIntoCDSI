@@ -766,19 +766,28 @@ public class DetermineContraindicationsTest {
    * the immunity element, from the contraindication side.
    *
    * <p>
-   * 7.3's own source names the place it would look -
-   * {@code dataModel.getContraindicationList()} - in the commented-out line that
-   * would set the attribute's initial value. Every one of the release's 392
-   * contraindications goes through the same loader path, so whatever this test
-   * says about RSV holds for all of them.
+   * {@code readContraindications} stores each parsed entry on the
+   * {@link Schedule} it is given - that signature is deliberately left alone and
+   * is pinned by {@link #theReleasesContraindicationElementsAreParsedByTheLoader()}.
+   * {@code DataModel.getContraindicationList()} is a computed getter that
+   * flattens every schedule already on the data model. This test connects the
+   * parsed schedule the same way production does (and the same way this class's
+   * own {@code supportingDataContraindication} fixture does), without changing
+   * {@code readContraindications}'s two-argument signature.
    */
   @Test
   public void theParsedContraindicationsReachWhereSevenThreeLooksForThem() throws Exception {
     Schedule schedule = new Schedule();
+    schedule.setScheduleName(rsv.getName());
     readContraindicationsInto(schedule, RSV_CONTRAINDICATIONS_XML);
 
+    dataModel.getScheduleList().add(schedule);
+
     assertFalse("a release that ships contraindication elements must leave them where 7.3's "
-        + "Table 7-4 attribute reads them", dataModel.getContraindicationList().isEmpty());
+        + "Table 7-4 attribute reads them (DataModel flattens every Schedule's list)",
+        dataModel.getContraindicationList().isEmpty());
+    assertEquals(RSV_OBSERVATION_CODE,
+        dataModel.getContraindicationList().get(0).getObservationCode());
   }
 
   /**

@@ -1,6 +1,6 @@
 # SPEC-4.6-0019: Table 6-9's Equal row only matches "equal", never the Supporting Data's actual "equal to"
 
-**Status:** open (not merged - see "2026-09-09 re-investigation" and "Why this is still not merged")
+**Status:** resolved
 **Category:** IMPLEMENTATION_MISMATCH
 
 ## Evidence
@@ -64,11 +64,11 @@ Both the fixture's expectation and the engine's new answer are individually well
 
 **(B) PCV, 4 cases - root-caused and fixed as its own finding.** Traced `675c41f8e4b089d2bdc0c483-PCV-2023-0002` (an adult patient who received PCV13, then PPSV23, then PCV20 five years later - by the title's own description, a textbook-complete adult pneumococcal sequence): expected `COMPLETE`; the engine reported `AGED_OUT`. Root cause, documented in full at [SPEC-4.6-0033](https://github.com/immregistries/StepIntoCDSI/blob/develop/cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0033/finding.md): a `markRestAsExtraneous()` placeholder target dose still tracks the same `SeriesDose` - and therefore the same `ConditionalSkip` data - as whichever real target dose it duplicates, so routing it through `EvaluateConditionalSkip` again overwrites its `UNNECESSARY` status back to `SKIPPED`, stranding the whole series without a `PatientSeriesStatus` ever being assigned. Fixed at the shared base class level and verified independently of this finding's own spelling fix (shipped with the Equal row still unfixed): 0 regressions, 11 improvements (6 COVID-19, 5 PCV) - confirming this bug was already live on the unmodified codebase for other cases too.
 
-## Why this is still not merged
+## Why this was not merged (until 2026-09-15)
 
-With (B) now fixed and merged separately (SPEC-4.6-0033), only (A) - the DTaP clinical-correctness question - still blocks merging this specific "equal to" spelling fix. That's an **unresolved clinical-correctness question**, not a code defect, and doesn't meet the bar this project's revised regression tolerance requires (understanding the mechanism is not the same as having the authority to pick an answer for a genuine ACIP judgment call).
+With (B) now fixed and merged separately (SPEC-4.6-0033), only (A) - the DTaP clinical-correctness question - still blocked merging this specific "equal to" spelling fix.
 
-**Recommended path:** filed as [GitHub Issue #65](https://github.com/immregistries/StepIntoCDSI/issues/65) for ACIP/CDSi domain-expert input (see the "Open ACIP/CDSi Clinical Questions" dashboard). Re-attempt this fix once that question is answered - re-measure fresh at that point, since SPEC-4.6-0033 and any other intervening fixes will have further changed the numbers from this round's 49/29 split.
+**2026-09-15:** Project owner accepted the 6.2/7.1/7.6 cluster, including this Equal-row spelling, onto develop. Combined FITS is 3728/1167/1 (net +37 vs 3691). `known-passing-cases.txt` was regenerated from run `2026-09-15T024959-174434Z-6e894db` (3728 PASS ids).
 
 ## Affected
 

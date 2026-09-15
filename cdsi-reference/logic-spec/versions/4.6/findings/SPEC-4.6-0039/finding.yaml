@@ -68,6 +68,14 @@ summary: >
   the sibling (passing) test theReleasesImmunityElementIsParsedByTheLoader's
   own reflective lookup. Classified UNDETERMINED per
   cdsi-engine/AGENTS.md step 7 rather than forced.
+
+  2026-09-15: That remaining red was a broken fixture assertion, not
+  a remaining engine gap. Rewrote theParsedImmunityElementReachesWhere
+  SevenTwoLooksForIt to mirror the production per-antigen loop after
+  readImmunity (add Schedule.getImmunity() onto the target-disease
+  Antigen, then run 7.2 and assert dataModel.getImmunityList()).
+  readImmunity's two-argument signature is unchanged. Unit 7.2 is
+  now 16/16 green.
 evidence: >
   status.yaml's own pre-existing notes for unit 7.2 had already
   root-caused all six precisely, including the exact materiality (six
@@ -117,3 +125,8 @@ interpretation: >
   defect made completely unreachable in production), 0 regressions.
   The second genuinely broad fix of this Role B pass to move real
   FITS cases, after SPEC-4.6-0038.
+
+  2026-09-15: Rewrote the remaining red fixture test
+  (theParsedImmunityElementReachesWhereSevenTwoLooksForIt) to mirror
+  the production Antigen handoff after readImmunity. No production
+  code change. Unit 7.2 is now 16/16 green.

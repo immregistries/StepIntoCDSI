@@ -1,5 +1,5 @@
 id: "SPEC-4.6-0019"
-status: "open"
+status: "resolved"
 category: "IMPLEMENTATION_MISMATCH"
 spec_sections: ["6.2"]
 source_pages: [56]
@@ -140,3 +140,7 @@ interpretation: >
   Clinical Questions" dashboard). Re-attempt this fix once that
   question is answered; re-measure fresh at that point, since SPEC-4.6-0033
   and other intervening fixes may have further changed the numbers.
+
+  2026-09-15: Project owner accepted the 6.2/7.1/7.6 cluster, including
+  this Equal-row spelling, onto develop. Combined FITS 3728/1167/1.
+  Allowlist regenerated from run 2026-09-15T024959-174434Z-6e894db.

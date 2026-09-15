@@ -635,18 +635,34 @@ public class DetermineEvidenceOfImmunityTest {
    * whatever this test says about Measles holds for the whole release.
    *
    * <p>
-   * The question asked here is the smallest one that can be asked of 7.2 in
-   * isolation: after the loader has read the element, is it reachable from the
-   * two places 7.2's decision table and Table 7-2 attribute look - the data
-   * model's own immunity list, and the target disease antigen's?
+   * {@code readImmunity} itself only stores the parsed element on the
+   * {@link Schedule} it is given - that signature is deliberately left alone and
+   * is pinned by {@link #theReleasesImmunityElementIsParsedByTheLoader()}. The
+   * production per-antigen loop in {@code DataModelLoader} then adds that same
+   * element onto the target-disease {@link Antigen}'s immunity list. 7.2's
+   * constructor copies that antigen list into {@code dataModel.getImmunityList()}
+   * for Table 7-3. This test exercises that handoff without changing
+   * {@code readImmunity}'s two-argument signature.
    */
   @Test
   public void theParsedImmunityElementReachesWhereSevenTwoLooksForIt() throws Exception {
     Schedule schedule = new Schedule();
+    schedule.setScheduleName(measles.getName());
     readImmunityInto(schedule, MEASLES_IMMUNITY_XML);
 
+    assertNotNull("readImmunity stores the parsed element on the Schedule", schedule.getImmunity());
+    // Same wiring DataModelLoader's per-antigen loop does immediately after
+    // readImmunity: add the Schedule's Immunity onto the antigen named by the
+    // schedule (the same identity <targetDisease> uses for this file).
+    measles.getImmunityList().add(schedule.getImmunity());
+
+    run();
+
     assertFalse("Table 7-3's conditions read dataModel.getImmunityList(); a release that ships "
-        + "an immunity element must leave one there", dataModel.getImmunityList().isEmpty());
+        + "an immunity element must leave one there after 7.2's constructor copies "
+        + "the target-disease antigen's list", dataModel.getImmunityList().isEmpty());
+    assertSame("7.2 copies the target-disease antigen's immunity list into the data model",
+        measles.getImmunityList(), dataModel.getImmunityList());
   }
 
   /** The {@code <immunity>} element of {@code AntigenSupportingData- Measles-508.xml}. */

@@ -1,6 +1,6 @@
 # SPEC-4.6-0027: ConditionalSkip's missing context tracking is real, but the textually-correct fix regresses FITS and doesn't resolve the case that motivated it
 
-**Status:** open (confirmed defect; fix attempted and reverted twice - see "2026-09-09 re-attempt")
+**Status:** resolved
 **Category:** IMPLEMENTATION_MISMATCH
 
 ## Evidence
@@ -73,12 +73,12 @@ Implemented as one repair rather than 7.6 in isolation:
 - Units: 6.2 44/44, 7.1 12/12, 7.6 15/15.
 - Full `cdsi-engine`: 787 tests, 4 failures, 0 errors (was 786/15). Remaining reds are the pre-existing 7.2, 7.3, 8.1, 8.7 cluster.
 - FITS run `2026-09-15T024959-174434Z-6e894db`: **3728/4896 passed**, 1167 failed assertions, **1 execution error** (unchanged standing error). Runtime 6:47. **No skip/re-forecast loop.**
-- vs the 3691-case Chapter 9 baseline: net **+37**. `statusChanged` is DTAP+MCV only: 111 FAIL→PASS (23 unique uids, including `MCV-2013-0511` and `DTAP-2013-0028` "#4 at age 4 is UTD until age 11") and 74 PASS→FAIL (15 unique DTaP uids). Allowlist not regenerated.
+- vs the 3691-case Chapter 9 baseline: net **+37**. `statusChanged` is DTAP+MCV only: 111 FAIL→PASS (23 unique uids, including `MCV-2013-0511` and `DTAP-2013-0028` "#4 at age 4 is UTD until age 11") and 74 PASS→FAIL (15 unique DTaP uids).
 
-Not merged. Role B automatic stop on the 74 allowlisted DTaP cases. Project owner should decide whether to accept that movement the same way Chapter 9's DTAP-only −58 was accepted.
+**2026-09-15:** Project owner accepted this DTaP movement onto develop. `known-passing-cases.txt` was regenerated from the 3728 PASS ids. Code locations below shipped in `9ae3c94`.
 
 ## Affected
 
 - Spec sections: 6.2 (page 58, Table 6-4's entry condition), 7.1 (page 71, mirror entry condition), 7.6.1 (page 74, same rule cited again)
-- Code locations: `ConditionalSkip.java`, `SeriesDose.java`, `DataModelLoader.java`, `EvaluateConditionalSkip.java` (all reverted, no code shipped)
+- Code locations: `ConditionalSkip.java`, `SeriesDose.java`, `DataModelLoader.java`, `EvaluateConditionalSkip.java`
 - FITS cases: MCV's target case (unresolved, needs its own cross-dose-cascade investigation); the DTaP regression (30 cases as of 2026-09-09) is believed to be the same open question as [GitHub Issue #65](https://github.com/immregistries/StepIntoCDSI/issues/65)

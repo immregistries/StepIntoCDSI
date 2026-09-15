@@ -1,0 +1,25 @@
+id: "2026-09-15-role-b-round-41-conditional-skip-cluster"
+date: "2026-09-15"
+phase: 22
+title: "Role B Round 41 - Conditional skip cluster 6.2/7.1/7.6"
+before:
+  commit: "6e894db"
+  engine_tests: {total: 786, failures: 15, errors: 0}
+  fits: {total_cases: 4896, passed: 3691, failed_assertions: 1204, execution_errors: 1}
+after:
+  commit: "9ae3c94"
+  engine_tests: {total: 787, failures: 4, errors: 0}
+  fits: {total_cases: 4896, passed: 3728, failed_assertions: 1167, execution_errors: 1}
+  fits_runtime_seconds: 407.0
+summary: >
+  Implemented 6.2/7.1/7.6 as one cluster: ConditionalSkip context list,
+  Table 6-9 "equal to", live 7.6 validation, CONDSKIP-2 earliest date,
+  and 7.1 returning an already-SKIPPED dose to 4.4 (the skip/re-forecast
+  loop is gone). Units 6.2/7.1/7.6 all green. Engine 15 to 4 failures.
+  Combined FITS 3691 to 3728 (net +37, DTAP+MCV only). MCV-2013-0511 and
+  DTAP-2013-0028 now pass. Project owner accepted the 74 allowlisted
+  DTaP PASS-to-FAIL cases; known-passing-cases.txt regenerated from run
+  2026-09-15T024959-174434Z-6e894db (3728 PASS ids).
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0027/finding.md"
+finding_ids: ["SPEC-4.6-0019", "SPEC-4.6-0027", "SPEC-4.6-0043"]
+status: reviewed

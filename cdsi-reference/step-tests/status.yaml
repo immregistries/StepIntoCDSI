@@ -695,18 +695,15 @@ units:
   '6.2':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkipForEvaluationTest
-    fix_status: blocked
-    blocked_category: would_regress_other_tests
-    blocked_reason: >-
-      Cluster with 7.1/7.6 (2026-09-14): unit is 44/44. Combined FITS is
-      net +37 (3691 to 3728) and MCV-2013-0511 now passes, but 74
-      allowlisted DTaP cases (15 unique uids) go PASS to FAIL. Loop is
-      gone (still 1 standing execution error). See SPEC-4.6-0043.
+    fix_status: merged
+    blocked_category: null
+    blocked_reason: null
     finding_ids: ["SPEC-4.6-0017", "SPEC-4.6-0018", "SPEC-4.6-0019", "SPEC-4.6-0027", "SPEC-4.6-0031", "SPEC-4.6-0032", "SPEC-4.6-0033", "SPEC-4.6-0043"]
     notes: >-
-      2026-09-14 cluster: context list + "equal to" spelling greened the
-      last two reds (44/44). Not merged: 74 allowlisted DTaP FITS cases
-      newly fail. Historical diagnosis retained below.
+      2026-09-15: Project owner accepted the 6.2/7.1/7.6 cluster onto
+      develop, including the 74 allowlisted DTaP FITS cases (15 unique
+      uids) that newly fail. Allowlist regenerated from run
+      2026-09-15T024959-174434Z-6e894db (3728 PASS ids). Unit is 44/44.
 
       Round 21 (2026-09-09): fixed 4 of the remaining 6 reds - see the note
       after gap (8) below for the full account (SPEC-4.6-0031, SPEC-4.6-0032,
@@ -2022,18 +2019,13 @@ units:
   '7.1':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkipForForecastTest
-    fix_status: blocked
-    blocked_category: would_regress_other_tests
-    blocked_reason: >-
-      Cluster with 6.2/7.6 (2026-09-14): unit is 12/12 including the
-      already-SKIPPED hop to 4.4 that stops the 7.6 loop. Combined FITS
-      net +37 but 74 allowlisted DTaP cases newly fail. See SPEC-4.6-0043.
+    fix_status: merged
+    blocked_category: null
+    blocked_reason: null
     finding_ids: ["SPEC-4.6-0027", "SPEC-4.6-0043"]
     notes: >-
-      2026-09-14 cluster: context filter greened the last red; added
-      anAlreadySkippedTargetDoseReturnsToFourFourWithoutReForecasting.
-      12/12. Not merged: 74 allowlisted DTaP FITS cases. Historical
-      diagnosis retained below.
+      2026-09-15: Project owner accepted the 6.2/7.1/7.6 cluster onto
+      develop. Unit is 12/12. Historical diagnosis retained below.
       Role B (2026-09-09): 10/11 green, 1 red - the same shared
       ConditionalSkip-context gap 6.2 already tracks under SPEC-4.6-0027
       (open, not merged, pending GitHub Issue #65's ACIP guidance). Twice
@@ -2165,8 +2157,9 @@ units:
     blocked_reason: null
     finding_ids: ["SPEC-4.6-0039"]
     notes: >-
-      16 test methods in one class, now 15/16 green (was 10/16 - see
-      SPEC-4.6-0039 below; the 16th is left red, classified UNDETERMINED).
+      16 test methods in one class, now 16/16 green (was 10/16 - see
+      SPEC-4.6-0039; the last red was a broken fixture assertion rewritten
+      2026-09-15, not an engine change).
       7.2 has no business
       rules of its own; its whole content is Table 7-2 (four immunity
       attributes), Table 7-3 (five rules, four conditions) and the state change
@@ -2280,6 +2273,13 @@ units:
       red rather than forced with a workaround; see SPEC-4.6-0039 for the full
       trace.
 
+      Resolved 2026-09-15 by rewriting that test (not the loader): after
+      readImmunity stores the element on the Schedule, add it onto the
+      target-disease Antigen the same way DataModelLoader's per-antigen loop
+      does, then run 7.2 and assert dataModel.getImmunityList() is that antigen
+      list. readImmunity's two-argument signature is unchanged. Unit 7.2 is
+      now 16/16 green.
+
       What reds (3) and (4) mean together, checked against the bundled
       4.65-508 release. Six antigens ship a populated <immunity> element: HepA
       and HepB with clinical history only, and Measles, Mumps, Rubella
@@ -2328,9 +2328,10 @@ units:
     blocked_reason: null
     finding_ids: ["SPEC-4.6-0040"]
     notes: >-
-      24 test methods in one class, now 23/24 green (was 8/24 - see
-      SPEC-4.6-0040 below; the 24th is left red, classified UNDETERMINED, the
-      same shape as 7.2's equivalent). 7.3 is Table 7-4 (six
+      24 test methods in one class, now 24/24 green (was 8/24 - see
+      SPEC-4.6-0040; the last red was a broken fixture assertion rewritten
+      2026-09-15, not an engine change, the same shape as 7.2's equivalent).
+      7.3 is Table 7-4 (six
       attributes), three decision tables - 7-5 (antigen contraindication
       applies?), 7-6 (vaccine contraindication applies?), 7-7 (is the relevant
       patient series contraindicated?) - Table 7-8's two date business rules
@@ -2415,6 +2416,13 @@ units:
       without breaking the sibling passing test
       (theReleasesContraindicationElementsAreParsedByTheLoader) that pins the
       same method's two-argument signature.
+
+      Resolved 2026-09-15 by rewriting that test (not the loader): add the
+      parsed Schedule to dataModel.getScheduleList() the same way production
+      and this class's own supportingDataContraindication fixture do, then
+      assert DataModel.getContraindicationList() (the computed flatten) is
+      non-empty. readContraindications's two-argument signature is unchanged.
+      Unit 7.3 is now 24/24 green.
 
       On 7.2's prediction about this unit, now resolved. The 2026-09-04
       cross-cutting note predicted 7.3 has "the identical shape" as 7.2's
@@ -2785,19 +2793,14 @@ units:
   '7.6':
     test_status: tests_written
     test_class: org.openimmunizationsoftware.cdsi.core.logic.ValidateRecommendationTest
-    fix_status: blocked
-    blocked_category: would_regress_other_tests
-    blocked_reason: >-
-      Cluster with 6.2/7.1 (2026-09-14): process() override deleted,
-      CONDSKIP-2 VALIDATING uses the forecast earliest date, 7.1 returns
-      an already-SKIPPED dose to 4.4. Unit is 15/15. The 233-case
-      skip/re-forecast loop is gone (FITS still 1 standing execution
-      error, 6:47 runtime). Combined FITS net +37 (MCV-2013-0511 and
-      DTAP-2013-0028 "#4 at age 4 is UTD until age 11" now pass) but 74
-      allowlisted DTaP cases (15 unique uids) go PASS to FAIL. See
-      SPEC-4.6-0043.
+    fix_status: merged
+    blocked_category: null
+    blocked_reason: null
     finding_ids: ["SPEC-4.6-0027", "SPEC-4.6-0043"]
     notes: >
+      2026-09-15: Project owner accepted the 6.2/7.1/7.6 cluster onto
+      develop. Unit is 15/15. The skip/re-forecast loop is gone.
+
       Role A, 2026-09-05. 15 tests: 6 green, 9 red (9 failures, 0 errors). 7.6
       has no attribute table, no business rules and no decision tables of its
       own - 7.6.1 says outright that "the process model, attribute table, and

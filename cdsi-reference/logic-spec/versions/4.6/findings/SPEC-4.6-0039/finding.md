@@ -21,6 +21,8 @@ Six gaps in unit 7.2 (Determine Evidence of Immunity), five fixed together, one 
 
 **Left open - `theParsedImmunityElementReachesWhereSevenTwoLooksForIt`.** This test asserts on a `DataModel` fixture object never connected, directly or indirectly, to the `Schedule`/`Document` its own `readImmunity(Schedule, Document)` reflective call operates on. No change to `readImmunity`, `DataModel`, or `Antigen` can make an unrelated object's field non-empty, and `readImmunity`'s two-argument signature is independently pinned by the sibling (passing) test `theReleasesImmunityElementIsParsedByTheLoader`'s own reflective lookup - changing it would break that test instead. Classified `UNDETERMINED` per `cdsi-engine/AGENTS.md` step 7 rather than forced with a workaround.
 
+**Resolved 2026-09-15 - test rewrite, not an engine change.** The red was a broken fixture assertion, not a remaining loader gap. `readImmunity`'s two-argument signature is still untouched. The test now mirrors the production per-antigen loop: after `readImmunity` stores the element on the `Schedule`, add that same `Immunity` onto the target-disease `Antigen`, then run 7.2 and assert `dataModel.getImmunityList()` is the antigen list the constructor copies. Unit 7.2 is now 16/16 green.
+
 ## Fix
 
 - `DataModelLoader`'s per-antigen loop now adds the parsed `Immunity` onto its own target-disease `Antigen`'s `immunityList` (resolved via the schedule's own name - the same identity `<targetDisease>` independently uses for the same antigen), immediately after calling `readImmunity`. `readImmunity`'s own signature and its `Schedule`-storing behavior are untouched.

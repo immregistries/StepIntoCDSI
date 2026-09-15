@@ -110,3 +110,17 @@ interpretation: >
   for the same reason: no implementation change can satisfy it without
   breaking the sibling passing test that pins the same method's
   signature. Classified UNDETERMINED.
+
+  2026-09-15: Rewrote the remaining red fixture test
+  (theParsedContraindicationsReachWhereSevenThreeLooksForThem) to add
+  the parsed Schedule to dataModel.getScheduleList(), matching
+  production and this class's own supportingDataContraindication
+  fixture. No production code change. Unit 7.3 is now 24/24 green.
+
+  2026-09-15: That remaining red was a broken fixture assertion, not
+  a remaining engine gap. Rewrote theParsedContraindicationsReachWhere
+  SevenThreeLooksForThem to add the parsed Schedule to
+  dataModel.getScheduleList() (same as production / this class's own
+  supportingDataContraindication fixture), then assert the computed
+  DataModel.getContraindicationList() flatten. readContraindications's
+  two-argument signature is unchanged. Unit 7.3 is now 24/24 green.

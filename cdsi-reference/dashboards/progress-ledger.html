@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-14 15:55:56 - regenerate with
+  Dashboard generated 2026-09-15 07:37:46 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,24 +57,62 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">41</div>
+    <div class="value">43</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
-    <div class="value">75.4%</div>
+    <div class="value">76.1%</div>
     <div class="label">FITS pass rate now</div>
   </div>
   <div class="card">
-    <div class="value">427.0s (7.1m)</div>
+    <div class="value">-</div>
     <div class="label">FITS runtime now</div>
   </div>
   <div class="card">
-    <div class="value">6.7%</div>
+    <div class="value">-</div>
     <div class="label">Runtime reduction since start</div>
   </div>
 </div>
 
 
+<section>
+  <h2>2026-09-15 - Phase 22 - Role B Round 42 - Units 7.2/7.3 fixture rewrites (UNDETERMINED reds closed)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Rewrote the two remaining UNDETERMINED fixture assertions in units 7.2 and 7.3. Neither was an engine defect: each called readImmunity / readContraindications on a Schedule and then asserted on an unrelated DataModel. Loader signatures unchanged. 7.2 now mirrors the production Antigen handoff after readImmunity; 7.3 adds the parsed Schedule to dataModel.getScheduleList() like production. Units 7.2 and 7.3 are 16/16 and 24/24. Full engine suite 787 tests, 2 failures left (8.1 Risk-only priority, 8.7 carried-in score). FITS unchanged (test-only change).
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>9ae3c94</code></td></tr><tr><td>Engine tests</td><td>787 total, 4 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3728 passed, 1167 failed-assertion, 1 execution-error (76.1%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>pending</code></td></tr><tr><td>Engine tests</td><td>787 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3728 passed, 1167 failed-assertion, 1 execution-error (76.1%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0039/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0039/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0039, SPEC-4.6-0040</p>
+</section>
+<section>
+  <h2>2026-09-15 - Phase 22 - Role B Round 41 - Conditional skip cluster 6.2/7.1/7.6
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Implemented 6.2/7.1/7.6 as one cluster: ConditionalSkip context list, Table 6-9 &quot;equal to&quot;, live 7.6 validation, CONDSKIP-2 earliest date, and 7.1 returning an already-SKIPPED dose to 4.4 (the skip/re-forecast loop is gone). Units 6.2/7.1/7.6 all green. Engine 15 to 4 failures. Combined FITS 3691 to 3728 (net +37, DTAP+MCV only). MCV-2013-0511 and DTAP-2013-0028 now pass. Project owner accepted the 74 allowlisted DTaP PASS-to-FAIL cases; known-passing-cases.txt regenerated from run 2026-09-15T024959-174434Z-6e894db (3728 PASS ids).
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>6e894db</code></td></tr><tr><td>Engine tests</td><td>786 total, 15 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3691 passed, 1204 failed-assertion, 1 execution-error (75.4%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>9ae3c94</code></td></tr><tr><td>Engine tests</td><td>787 total, 4 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3728 passed, 1167 failed-assertion, 1 execution-error (76.1%)</td></tr><tr><td>FITS runtime</td><td>407.0s (6.8m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0027/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0027/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0019, SPEC-4.6-0027, SPEC-4.6-0043</p>
+</section>
 <section>
   <h2>2026-09-14 - Phase 22 - Role B Round 40 - Finish Chapter 9 Table 9-2 aggregation (SPEC-4.6-0050)
     <span class="badge badge-green">reviewed</span>

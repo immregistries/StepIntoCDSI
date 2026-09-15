@@ -34,6 +34,10 @@ Unit 7.3 (Determine Contraindications) was 8/24 green - the least complete unit 
 
 `theParsedContraindicationsReachWhereSevenThreeLooksForThem` asserts on a `DataModel` object never connected to the `Schedule`/`Document` its own reflective `readContraindications(Schedule, Document)` call operates on - structurally identical to SPEC-4.6-0039's `theParsedImmunityElementReachesWhereSevenTwoLooksForIt`, and left open for the same reason: no implementation change can satisfy it without breaking the sibling passing test (`theReleasesContraindicationElementsAreParsedByTheLoader`) that pins the same method's two-argument signature. Classified `UNDETERMINED`.
 
+## Resolved 2026-09-15 - test rewrite, not an engine change
+
+The red was a broken fixture assertion, not a remaining loader gap. `readContraindications`'s two-argument signature is still untouched. The test now adds the parsed `Schedule` to `dataModel.getScheduleList()` the same way production (and this class's own `supportingDataContraindication` fixture) does, then asserts `DataModel.getContraindicationList()` - the computed flatten over every schedule - is non-empty. Unit 7.3 is now 24/24 green.
+
 ## Affected
 
 - Spec sections: 7.3 (pages 74-77, Tables 7-4 through 7-8)
