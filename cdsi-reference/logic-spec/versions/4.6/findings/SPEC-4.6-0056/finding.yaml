@@ -29,6 +29,7 @@ interpretation: >
 
   Verified on run 2026-09-15T215530 vs 2026-09-15T195518: combined FITS
   4046 to 4094 (net +48). POL 504 to 554 (+50); MenB 2024-0075/0076 +8.
-  Oracle POL-2013-0640 still COMPLETE - 6.5 now fails the 6-month interval
-  alone, then empty 6.6 allowable still accepts the dose. Collateral
-  COVID-19 -10 / 11 new allowlist reds; COVID parked.
+  Oracle POL-2013-0640 still COMPLETE: 6.5 now fails the 6-month interval
+  in isolation, but CALCDTINT-1 after the skipped Dose 3 treated the
+  interval as assumed PAST so 6.6 never ran. Follow-on: SPEC-4.6-0057.
+  Collateral COVID-19 -10 / 11 new allowlist reds; COVID parked.

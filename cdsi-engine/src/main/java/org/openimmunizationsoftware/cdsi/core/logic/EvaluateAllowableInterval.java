@@ -12,6 +12,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
+import org.openimmunizationsoftware.cdsi.core.logic.concepts.RelevantSupportingData;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
@@ -43,18 +44,18 @@ public class EvaluateAllowableInterval extends LogicStep {
     AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
     caDateAdministered.setInitialValue(aar.getDateAdministered());
     SeriesDose seriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
+    Date administered = aar.getDateAdministered();
 
-    if (seriesDose.getAllowableintervalList().size() > 0) {
-      for (AllowableInterval aInterval : seriesDose.getAllowableintervalList()) {
-        caAllowableIntervalElements.setInitialValue(aInterval);
-        Interval intervalFromAllowableInterval = aInterval.getInterval();
-        Date absoluteMinimumIntervalDate = CALCDTINT_3.evaluate(dataModel, this, intervalFromAllowableInterval);
-        caAbsoluteMinimumIntervalDate.setInitialValue(absoluteMinimumIntervalDate);
+    for (AllowableInterval aInterval : RelevantSupportingData.selectAllowableIntervals(
+        seriesDose.getAllowableintervalList(), administered)) {
+      caAllowableIntervalElements.setInitialValue(aInterval);
+      Interval intervalFromAllowableInterval = aInterval.getInterval();
+      Date absoluteMinimumIntervalDate = CALCDTINT_3.evaluate(dataModel, this, intervalFromAllowableInterval);
+      caAbsoluteMinimumIntervalDate.setInitialValue(absoluteMinimumIntervalDate);
 
-        LT logicTable = new LT(aar.getDateAdministered(), absoluteMinimumIntervalDate);
-        logicTable.setLogicStepSink(this.getLogicStepSink());
-        logicTableList.add(logicTable);
-      }
+      LT logicTable = new LT(administered, absoluteMinimumIntervalDate);
+      logicTable.setLogicStepSink(this.getLogicStepSink());
+      logicTableList.add(logicTable);
     }
   }
 

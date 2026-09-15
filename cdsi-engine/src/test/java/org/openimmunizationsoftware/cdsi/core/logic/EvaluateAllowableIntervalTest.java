@@ -37,6 +37,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
@@ -271,6 +272,31 @@ public class EvaluateAllowableIntervalTest {
 
     dataModel.setPreviousTargetDose(previousTargetDose);
     dataModel.setPreviousAntigenAdministeredRecord(administeredRecord(monthDayYear, "21"));
+  }
+
+  /**
+   * 4.4 skipped the previous target but left the previous antigen administered
+   * record pointing at the last real shot. CALCDTINT-1 must measure from that
+   * shot.
+   */
+  private void previousSatisfiedDoseThenSkippedTarget(String monthDayYear) {
+    SeriesDose satisfiedSeriesDose = new SeriesDose();
+    satisfiedSeriesDose.setDoseNumber("1");
+    TargetDose satisfiedTarget = new TargetDose(satisfiedSeriesDose);
+    Evaluation previousEvaluation = new Evaluation();
+    previousEvaluation.setEvaluationStatus(EvaluationStatus.VALID);
+    satisfiedTarget.setEvaluation(previousEvaluation);
+
+    AntigenAdministeredRecord previousAar = administeredRecord(monthDayYear, "21");
+    previousAar.getVaccineDoseAdministered().setTargetDose(satisfiedTarget);
+
+    SeriesDose skippedSeriesDose = new SeriesDose();
+    skippedSeriesDose.setDoseNumber("2");
+    TargetDose skippedTarget = new TargetDose(skippedSeriesDose);
+    skippedTarget.setTargetDoseStatus(TargetDoseStatus.SKIPPED);
+
+    dataModel.setPreviousTargetDose(skippedTarget);
+    dataModel.setPreviousAntigenAdministeredRecord(previousAar);
   }
 
   /**
@@ -858,6 +884,45 @@ public class EvaluateAllowableIntervalTest {
     assertEquals("the loader read the series dose", "1", loaded.getDoseNumber());
     assertTrue("an empty <allowableInterval/> defines no allowable interval attributes",
         loaded.getAllowableintervalList().isEmpty());
+  }
+
+  /**
+   * Section 3.3 / RELEVANT-1: only allowable-interval rows whose
+   * Effective/Cessation window covers the date administered are Table 6-21
+   * checks. A ceased 4-week row must not rescue a dose that fails the current
+   * 6-month allowable interval.
+   */
+  @Test
+  public void onlyAllowableIntervalsRelevantForTheDateAdministeredAreEvaluated() throws Exception {
+    AllowableInterval ceased = allowableInterval(YesNo.YES, "", "4 weeks");
+    ceased.setEffectiveDate(date("01/01/1900"));
+    ceased.setCessationDate(date("08/06/2009"));
+    AllowableInterval current = allowableInterval(YesNo.YES, "", "6 months");
+    current.setEffectiveDate(date("08/07/2009"));
+    previousDoseAdministeredOn("01/01/2016", EvaluationStatus.VALID, null);
+    administeredOn("05/01/2016");
+
+    run();
+
+    assertEquals("RELEVANT-1 drops the ceased 4-week row, leaving one Table 6-21 check",
+        1, step.getLogicTableList().size());
+    assertIntervalFailureRecorded(
+        "four months fails the current 6-month allowable interval");
+  }
+
+  /**
+   * CALCDTINT-1 after a skipped previous target still uses the last
+   * administered dose as the reference date (01/01/2016 + 4 weeks = 01/29/2016).
+   */
+  @Test
+  public void calcdtintOneMeasuresFromThePreviousAdministeredDoseWhenPreviousTargetWasSkipped()
+      throws Exception {
+    previousSatisfiedDoseThenSkippedTarget("01/01/2016");
+    theStandardAllowableInterval();
+
+    run();
+
+    assertEquals(date("01/29/2016"), attribute(2).getFinalValue());
   }
 
   /**

@@ -39,7 +39,7 @@ FITS run `2026-09-15T215530` vs SPEC-4.6-0055 run `2026-09-15T195518`:
 | COVID-19 | 138 | 128 | −10 |
 
 - `POL-2013-0632` still PASS.
-- Oracle `POL-2013-0640` did **not** move (still COMPLETE). Preferable 6-month interval now fails in isolation, but 6.6 Allowable Interval is empty, so the dose is still treated as valid. 6.6 is out of scope for this finding.
+- Oracle `POL-2013-0640` did **not** move (still COMPLETE). 6.5 fails the 6-month interval in isolation, but CALCDTINT-1 after skipped Dose 3 treated the interval as assumed PAST so 6.6 never ran. Follow-on: SPEC-4.6-0057.
 - `POL-2013-0630` still due-now vs expected +6 months (catch-up target, not this selection bug).
 - POL remaining: 84 fails / 17 unique uids.
 - Collateral allowlist red: 11 additional COVID-19 copies (`2023-0101`, `2024-0001`, `2024-0002`, `2025-0097`, `2025-0098`) on top of the three `2024-0067` from SPEC-4.6-0055. COVID parked — do not regenerate allowlist until reviewed.

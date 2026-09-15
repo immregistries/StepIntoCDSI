@@ -1,0 +1,25 @@
+id: "2026-09-15-fits-allowable-interval-calcdtint1-skip"
+date: "2026-09-15"
+phase: 22
+title: "FITS - 6.6 §3.3 and CALCDTINT-1 after skipped previous target (SPEC-4.6-0057)"
+before:
+  commit: "cb85a18"
+  engine_tests: {total: 809, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 4094, failed_assertions: 801, execution_errors: 1}
+after:
+  commit: "pending"
+  engine_tests: {total: 813, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 4209, failed_assertions: 686, execution_errors: 1}
+  fits_runtime_seconds: 254
+summary: >
+  6.6 now selects allowable-interval rows by date administered (RELEVANT-1).
+  CALCDTINT-1 measures from the previous administered dose when the previous
+  target was skipped, so 6.5 can fail and empty 6.6 allowable can record
+  Interval. Combined FITS 4094 to 4209 (net +115). POL 554 to 609 (+55);
+  DTAP +30, Hib +20, PCV +5, COVID-19 +5. Newly failing: none.
+  Oracle POL-2013-0655 PASS. POL-2013-0640 status now NOT_COMPLETE; ED/RD
+  still due-now vs expected +6 months. Same two engine reds (8.1/8.7).
+  COVID parked, allowlist not regenerated.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0057/finding.md"
+finding_ids: ["SPEC-4.6-0057"]
+status: reviewed

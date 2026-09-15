@@ -18,13 +18,13 @@ Logic Specification for ACIP Recommendations v4.6, pages 58-60. Figures 6-12/6-1
 
 **[SPEC]** Table 6-20: Date Administered, Allowable Interval elements, and one calculated date - Absolute Minimum Interval Date (CALCDTINT-3), assumed `01/01/1900`.
 
-**[IMPLEMENTATION]** Matches exactly; one `LT` built per `AllowableInterval` on the series dose (via `CALCDTINT_3.evaluate(...)`), same one-table-per-interval pattern as 6.5.
+**[IMPLEMENTATION]** One `LT` built per *relevant* `AllowableInterval` (RELEVANT-1 via `RelevantSupportingData.selectAllowableIntervals`, date administered), same one-table-per-interval pattern as 6.5.
 
 ## Business Rules
 
 **[SPEC]** Table 6-22: CALCDTINT-1 (reference dose date from immediate previous dose), CALCDTINT-2 (reference dose date from a named target-dose-number), CALCDTINT-3 (absolute minimum interval date = reference date + absolute minimum interval).
 
-**[IMPLEMENTATION]** Same as 6.5: only CALCDTINT-3 is directly invoked here; CALCDTINT-1/2 (reference-date selection) are assumed resolved upstream, not verified by this pass.
+**[IMPLEMENTATION]** Same as 6.5: this class calls `CALCDTINT_3`; CALCDTINT-1/2 live on `Interval.getPatientReferenceDoseDate`. After a skipped previous target, CALCDTINT-1 uses the previous administered dose's satisfied evaluation (SPEC-4.6-0057), not the skipped target's missing evaluation.
 
 ## Decision Tables
 
@@ -50,8 +50,9 @@ Where 6.5 is forgiving (a slightly-early dose still often counts, with a note), 
 ## StepIntoCDSi Implementation
 
 - `org.openimmunizationsoftware.cdsi.core.logic.EvaluateAllowableInterval` (LogicStepType `EVALUATE_ALLOWABLE_INTERVAL`) - `cdsi-engine`.
-- Tests: no dedicated unit test.
+- Tests: `EvaluateAllowableIntervalTest`.
 
 ## Review Findings
 
-None for this section - it matched the specification on inspection, including correctly getting right the `EvaluationReason` that 6.5's near-identical code gets wrong.
+- **Documented fix (2026-09-15, SPEC-4.6-0057): §3.3 Allowable Interval selection and CALCDTINT-1 after skip.** Table 6-21 checks run only for allowable-interval rows whose Effective–Cessation window covers the date administered. CALCDTINT-1 measures from the last administered dose when the previous target was skipped, so 6.5 can fail and this empty-allowable fallback can run. Engine still skips 6.6 when 6.5 is satisfied — combining "always run 6.6" with empty-allowable = not valid would fail 465 of 484 series doses.
+- Outcome 0 correctly sets `EvaluationReason.TOO_SOON` (unlike 6.5's historically wrong equivalent — see that step's Review Findings).

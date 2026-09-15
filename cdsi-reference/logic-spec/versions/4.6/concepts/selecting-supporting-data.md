@@ -21,5 +21,5 @@ How the specification decides *which version* of a Supporting Data rule applies 
 
 ## Open questions
 
-- **[IMPLEMENTATION]**, partially resolved (2026-09-15, SPEC-4.6-0055/0056): forecast path (7.4/7.5) and evaluation path (6.4/6.5) now select Age and Preferable Interval rows via `RelevantSupportingData` (RELEVANT-1/2 defaults and inclusive bounds) after `DataModelLoader` parses Effective/Cessation Dates. Allowable Interval (6.6) and Conditional Skip effective dates remain unresolved.
+- **[IMPLEMENTATION]**, partially resolved (2026-09-15, SPEC-4.6-0055/0056/0057): forecast path (7.4/7.5) and evaluation path (6.4/6.5/6.6) now select Age, Preferable Interval, and Allowable Interval rows via `RelevantSupportingData` (RELEVANT-1/2 defaults and inclusive bounds) after `DataModelLoader` parses Effective/Cessation Dates. Conditional Skip effective dates remain unresolved.
 - Whether the Conditional Skip "context" tag (Evaluation/Forecast/Both/n/a) is read anywhere in `EvaluateConditionalSkip`/`ConditionalSkipType` to filter which supporting-data instances apply to 6.2 versus 7.1 wasn't traced in this pass either - worth checking when 6.2/7.1's shared-class relationship gets a closer look.

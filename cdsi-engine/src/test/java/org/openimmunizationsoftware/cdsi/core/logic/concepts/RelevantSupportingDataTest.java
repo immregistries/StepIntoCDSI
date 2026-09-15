@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.openimmunizationsoftware.cdsi.core.domain.Age;
+import org.openimmunizationsoftware.cdsi.core.domain.AllowableInterval;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 
@@ -80,6 +81,17 @@ public class RelevantSupportingDataTest {
     assertNull(RelevantSupportingData.selectAge(Collections.<Age>emptyList(), date("2026-09-01")));
   }
 
+  @Test
+  public void selectAllowableIntervalsDropsCeasedRow() {
+    AllowableInterval ceased = allowableInterval(date("1900-01-01"), date("2009-08-06"));
+    AllowableInterval current = allowableInterval(date("2009-08-07"), null);
+
+    List<AllowableInterval> selected = RelevantSupportingData.selectAllowableIntervals(
+        Arrays.asList(ceased, current), date("2026-09-01"));
+    assertEquals(1, selected.size());
+    assertSame(current, selected.get(0));
+  }
+
   private static Age age(Date effective, Date cessation, String minAge) {
     Age age = new Age();
     age.setEffectiveDate(effective);
@@ -93,6 +105,13 @@ public class RelevantSupportingDataTest {
     interval.setEffectiveDate(effective);
     interval.setCessationDate(cessation);
     interval.setMinimumInterval(new TimePeriod(minInt));
+    return interval;
+  }
+
+  private static AllowableInterval allowableInterval(Date effective, Date cessation) {
+    AllowableInterval interval = new AllowableInterval();
+    interval.setEffectiveDate(effective);
+    interval.setCessationDate(cessation);
     return interval;
   }
 

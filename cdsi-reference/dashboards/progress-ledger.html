@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-15 16:09:23 - regenerate with
+  Dashboard generated 2026-09-15 17:02:44 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,7 +57,7 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">48</div>
+    <div class="value">49</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
@@ -207,6 +207,25 @@
   </div>
   <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0052/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0052/finding.md</a></p>
   <p class="muted">Findings: SPEC-4.6-0052, SPEC-4.6-0053</p>
+</section>
+<section>
+  <h2>2026-09-15 - Phase 22 - FITS - 6.6 §3.3 and CALCDTINT-1 after skipped previous target (SPEC-4.6-0057)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>6.6 now selects allowable-interval rows by date administered (RELEVANT-1). CALCDTINT-1 measures from the previous administered dose when the previous target was skipped, so 6.5 can fail and empty 6.6 allowable can record Interval. Combined FITS 4094 to 4209 (net +115). POL 554 to 609 (+55); DTAP +30, Hib +20, PCV +5, COVID-19 +5. Newly failing: none. Oracle POL-2013-0655 PASS. POL-2013-0640 status now NOT_COMPLETE; ED/RD still due-now vs expected +6 months. Same two engine reds (8.1/8.7). COVID parked, allowlist not regenerated.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>cb85a18</code></td></tr><tr><td>Engine tests</td><td>809 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4094 passed, 801 failed-assertion, 1 execution-error (83.6%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>pending</code></td></tr><tr><td>Engine tests</td><td>813 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4209 passed, 686 failed-assertion, 1 execution-error (86.0%)</td></tr><tr><td>FITS runtime</td><td>254.0s (4.2m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0057/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0057/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0057</p>
 </section>
 <section>
   <h2>2026-09-14 - Phase 22 - Role B Round 40 - Finish Chapter 9 Table 9-2 aggregation (SPEC-4.6-0050)
