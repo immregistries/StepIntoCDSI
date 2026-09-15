@@ -7,7 +7,7 @@ before:
   engine_tests: {total: 806, failures: 2, errors: 0}
   fits: {total_cases: 4896, passed: 4046, failed_assertions: 849, execution_errors: 1}
 after:
-  commit: pending
+  commit: "c9c86b9"
   engine_tests: {total: 809, failures: 2, errors: 0}
   fits: {total_cases: 4896, passed: 4094, failed_assertions: 801, execution_errors: 1}
 summary: >
