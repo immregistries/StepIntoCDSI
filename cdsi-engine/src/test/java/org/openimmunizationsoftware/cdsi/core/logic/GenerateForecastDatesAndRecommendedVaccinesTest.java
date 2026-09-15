@@ -468,6 +468,39 @@ public class GenerateForecastDatesAndRecommendedVaccinesTest {
   }
 
   /**
+   * Section 3.3 / RELEVANT-2: when a series dose has multiple {@code <age>} rows
+   * with Effective/Cessation Dates, forecasting must use the row whose window
+   * covers the assessment date - not {@code getAgeList().get(0)}. Polio Dose 4's
+   * ceased "18 weeks" row preceding the current "4 years" row is the real-world
+   * case (POL-2013-0632).
+   */
+  @Test
+  public void theMinimumAgeDateUsesTheAgeRowRelevantForTheAssessmentDate() {
+    Age ceased = new Age();
+    ceased.setSeriesDose(seriesDoseTwo);
+    ceased.setMinimugeAge(new TimePeriod("18 weeks"));
+    ceased.setEarliestRecommendedAge(new TimePeriod("4 years"));
+    ceased.setMaximumAge(new TimePeriod(""));
+    ceased.setLatestRecommendedAge(new TimePeriod(""));
+    ceased.setEffectiveDate(date("01/01/1900"));
+    ceased.setCessationDate(date("08/06/2009"));
+
+    age.setMinimugeAge(new TimePeriod("4 years"));
+    age.setEarliestRecommendedAge(new TimePeriod("4 years"));
+    age.setEffectiveDate(date("08/07/2009"));
+
+    seriesDoseTwo.getAgeList().clear();
+    seriesDoseTwo.getAgeList().add(ceased);
+    seriesDoseTwo.getAgeList().add(age);
+
+    build();
+
+    assertEquals(
+        "RELEVANT-2: assessment 06/15/2025 selects the post-2009 age row (minAge 4 years), not the ceased 18-week row",
+        date("01/15/2019"), finalValueOf("Minimum Age Date"));
+  }
+
+  /**
    * <strong>CALCDTAGE-3.</strong> The earliest recommended age date - date of
    * birth plus the earliest recommended age - is FORECASTDT-2's first choice for
    * the unadjusted recommended date.

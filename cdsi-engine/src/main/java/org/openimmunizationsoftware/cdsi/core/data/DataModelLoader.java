@@ -624,6 +624,10 @@ public class DataModelLoader {
                 age.setLatestRecommendedAge(new TimePeriod(DomUtils.getInternalValue(childNode)));
               } else if (childNode.getNodeName().equals("maxAge")) {
                 age.setMaximumAge(new TimePeriod(DomUtils.getInternalValue(childNode)));
+              } else if (childNode.getNodeName().equals("effectiveDate")) {
+                age.setEffectiveDate(parseDate(DomUtils.getInternalValue(childNode)));
+              } else if (childNode.getNodeName().equals("cessationDate")) {
+                age.setCessationDate(parseDate(DomUtils.getInternalValue(childNode)));
               }
             }
           }
@@ -708,6 +712,10 @@ public class DataModelLoader {
                 if (intervalPriority != null && intervalPriority.equalsIgnoreCase("override")) {
                   interval.setIntervalPriority(IntervalPriority.OVERRIDE);
                 }
+              } else if (childNode.getNodeName().equals("effectiveDate")) {
+                interval.setEffectiveDate(parseDate(DomUtils.getInternalValue(childNode)));
+              } else if (childNode.getNodeName().equals("cessationDate")) {
+                interval.setCessationDate(parseDate(DomUtils.getInternalValue(childNode)));
               }
             }
           }
