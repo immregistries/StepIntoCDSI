@@ -14,13 +14,17 @@ implementation:
   module: "cdsi-engine"
   classes:
     - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateVaccineConflict"
+  logic_step_type: "EVALUATE_VACCINE_CONFLICT"
   note: >
     No decision table is cited because this section genuinely has none
     in v4.6 (see its Implementer Note - refined in v4.4 to be business-
     rule based, not process/table driven). The code still implements it
     internally as three nested LogicTables with stale "Table 4-20/4-21/
-    4-22" labels left over from a pre-4.6 chapter numbering.
+    4-22" labels left over from a pre-4.6 chapter numbering. Previous
+    doses are the full immunization history (SPEC-4.6-0065), not the
+    antigen-filtered selected list.
 tests:
-  - status: "test-gap"
-    note: "No dedicated unit test."
+  - status: "present"
+    class: "org.openimmunizationsoftware.cdsi.core.logic.EvaluateVaccineConflictTest"
+    note: "26 tests. Table 6-24 plus a previous dose on another antigen (SPEC-4.6-0065)."
 review_status: "draft"

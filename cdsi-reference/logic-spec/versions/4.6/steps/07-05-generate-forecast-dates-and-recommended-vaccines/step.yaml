@@ -34,5 +34,5 @@ implementation:
 tests:
   - status: "present"
     class: "org.openimmunizationsoftware.cdsi.core.logic.GenerateForecastDatesAndRecommendedVaccinesTest"
-    note: "Covers Table 7-12/7-13 FORECASTDT rules, including CALCDTINT-1 after a Not Valid last shot and after an inadvertent immediate previous dose."
+    note: "44 tests. Table 7-12/7-13 FORECASTDT rules, including CALCDTLIVE-4 from a previous live-virus dose not on the antigen being forecast (SPEC-4.6-0065)."
 review_status: "draft"

@@ -150,7 +150,7 @@ sections:
       classes:
         - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateVaccineConflict"
     tests:
-      - "test-gap: no dedicated unit test"
+      - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateVaccineConflictTest (26 tests; cross-antigen previous dose is SPEC-4.6-0065)"
     mapping_status: "draft"
   "6.8":
     title: "Evaluate for Preferable Vaccine"
@@ -223,7 +223,7 @@ sections:
       classes:
         - "org.openimmunizationsoftware.cdsi.core.logic.GenerateForecastDatesAndRecommendedVaccines"
     tests:
-      - "test-gap: no dedicated unit test isolating this class; exercised end-to-end by every cdsi-fits-tests fixture with a NOT_COMPLETE forecast"
+      - "org.openimmunizationsoftware.cdsi.core.logic.GenerateForecastDatesAndRecommendedVaccinesTest (44 tests; CALCDTLIVE-4 from history is SPEC-4.6-0065)"
     mapping_status: "draft"
   "7.6":
     title: "Validate Recommendation"

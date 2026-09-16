@@ -174,54 +174,80 @@ public class GenerateForecastDatesAndRecommendedVaccines extends LogicStep {
 
   private void findLatestConflictEndIntervalDate() {
     Date latestDate = null;
-    List<Date> conflictEndIntervalDatesList = new ArrayList<>();
-
-    // CALCDTCONFLICT-2, create list of conflict end interval dates
-    for (LiveVirusConflict lvc : dataModel.getLiveVirusConflictList()) {
-      boolean isImpactedVaccineDoseAdministered = false;
-      boolean isPreviousVdaConflicting = false;
-      if (dataModel.getAntigenAdministeredRecord() == null
-          || dataModel.getPreviousAntigenAdministeredRecord() == null) {
+    List<VaccineType> impactedTypes = preferableVaccineTypes();
+    if (impactedTypes.isEmpty()) {
+      return;
+    }
+    for (AntigenAdministeredRecord previous : dataModel.getAntigenAdministeredRecordList()) {
+      if (previous == null || previous.getDateAdministered() == null || previous.getVaccineType() == null) {
         continue;
       }
-
-      if (dataModel.getAntigenAdministeredRecord().getVaccineType().equals(lvc.getCurrentVaccineType())) {
-        isImpactedVaccineDoseAdministered = true;
-        if (dataModel.getPreviousAntigenAdministeredRecord().getVaccineType().equals(lvc.getPreviousVaccineType())) {
-          // if aar was administered before the conflict end date
-          if (dataModel.getAntigenAdministeredRecord().getDateAdministered().before(lvc.getConflictBeginInterval()
-              .getDateFrom(dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered()))) {
-            isPreviousVdaConflicting = true;
-          }
-        }
+      LiveVirusConflict match = matchingLiveVirusConflict(previous.getVaccineType(), impactedTypes);
+      if (match == null) {
+        continue;
       }
-
-      if (isImpactedVaccineDoseAdministered && isPreviousVdaConflicting) {
-        VaccineDoseAdministered previousVda = dataModel.getPreviousAntigenAdministeredRecord()
-            .getVaccineDoseAdministered();
-        if (previousVda.getTargetDose() == null || previousVda.getTargetDose().getEvaluation() == null) {
-          continue;
-        }
-        EvaluationStatus previousVdaStatus = previousVda.getTargetDose().getEvaluation().getEvaluationStatus();
-        if (previousVdaStatus == EvaluationStatus.VALID || previousVdaStatus == null) {
-          conflictEndIntervalDatesList.add(lvc.getMinimalConflictEndInterval()
-              .getDateFrom(dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered()));
-        }
-        if (previousVdaStatus != null && previousVdaStatus != EvaluationStatus.VALID) {
-          conflictEndIntervalDatesList.add(lvc.getConflictEndInterval()
-              .getDateFrom(dataModel.getPreviousAntigenAdministeredRecord().getDateAdministered()));
-        }
+      TimePeriod endInterval = isPreviousDoseValidOrUnevaluated(previous)
+          ? match.getMinimalConflictEndInterval()
+          : match.getConflictEndInterval();
+      if (endInterval == null || !endInterval.isValued()) {
+        continue;
+      }
+      Date endDate = endInterval.getDateFrom(previous.getDateAdministered());
+      if (endDate != null && (latestDate == null || endDate.after(latestDate))) {
+        latestDate = endDate;
       }
     }
+    if (latestDate != null) {
+      caLatestConflictEndIntervalDate.setInitialValue(latestDate);
+    }
+  }
 
-    // CALCDTLIVE-4, which does not have logic defined in the 4.5 document, picks
-    // latest date from list.
-    for (Date d : conflictEndIntervalDatesList) {
-      if (latestDate == null || d.after(latestDate)) {
-        latestDate = d;
+  /**
+   * CALCDTLIVE-4 / CALCDTCONFLICT-2: the current (impacted) types are the
+   * preferable vaccine types of the target being forecast, not the antigen of
+   * the last selected AAR. Previous doses come from the full immunization
+   * history so a valid MMR still floors a Varicella Dose 1 forecast.
+   */
+  private List<VaccineType> preferableVaccineTypes() {
+    List<VaccineType> types = new ArrayList<VaccineType>();
+    if (referenceSeriesDose == null) {
+      return types;
+    }
+    for (PreferrableVaccine preferrableVaccine : referenceSeriesDose.getPreferrableVaccineList()) {
+      if (preferrableVaccine != null && preferrableVaccine.getVaccineType() != null
+          && !types.contains(preferrableVaccine.getVaccineType())) {
+        types.add(preferrableVaccine.getVaccineType());
       }
     }
-    caLatestConflictEndIntervalDate.setInitialValue(latestDate);
+    return types;
+  }
+
+  private LiveVirusConflict matchingLiveVirusConflict(VaccineType previousType,
+      List<VaccineType> impactedTypes) {
+    for (LiveVirusConflict liveVirusConflict : dataModel.getLiveVirusConflictList()) {
+      if (liveVirusConflict.getPreviousVaccineType() == null
+          || liveVirusConflict.getCurrentVaccineType() == null) {
+        continue;
+      }
+      if (liveVirusConflict.getPreviousVaccineType().equals(previousType)
+          && impactedTypes.contains(liveVirusConflict.getCurrentVaccineType())) {
+        return liveVirusConflict;
+      }
+    }
+    return null;
+  }
+
+  private boolean isPreviousDoseValidOrUnevaluated(AntigenAdministeredRecord previous) {
+    VaccineDoseAdministered previousVda = previous.getVaccineDoseAdministered();
+    if (previousVda == null) {
+      return true;
+    }
+    TargetDose evaluatedAgainst = previousVda.getEvaluatedAgainstTargetDose();
+    if (evaluatedAgainst == null || evaluatedAgainst.getEvaluation() == null) {
+      return true;
+    }
+    EvaluationStatus status = evaluatedAgainst.getEvaluation().getEvaluationStatus();
+    return status == null || status == EvaluationStatus.VALID;
   }
 
   private void findVaccineType() {

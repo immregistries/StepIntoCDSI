@@ -26,7 +26,7 @@ Logic Specification for ACIP Recommendations v4.6, pages 61-62. Figure 6-15 (Tim
 
 **[SPEC]** CALCDTCONFLICT-1 (conflict begin interval date = previous dose's date + the conflict's begin interval, when the current dose is an "impacted" type and the previous dose is a "conflicting" type for it); CALCDTCONFLICT-2 (conflict end interval date, similarly, with an extra branch for whether the previous dose's evaluation status was Valid or something else); CONFLICT-3 (a dose is "impacted" if its date falls within the begin/end interval window).
 
-**[IMPLEMENTATION]** These three conditions are exactly what `LT420`/`LT421`/`LT422` check (see Decision Tables) - the business rules were not "removed" by the v4.4 refinement so much as restructured as inline conditions on internally-named tables rather than a separate Yes/No grid the spec now exposes to the reader.
+**[IMPLEMENTATION]** These three conditions are exactly what `LT420`/`LT421`/`LT422` check (see Decision Tables) - the business rules were not "removed" by the v4.4 refinement so much as restructured as inline conditions on internally-named tables rather than a separate Yes/No grid the spec now exposes to the reader. Previous doses are taken from the full `antigenAdministeredRecordList` (on or before the current date, skipping the current VDA), not 4.4's antigen-filtered selected list, because live-virus pairings are product type vs product type (SPEC-4.6-0065).
 
 ## Decision Tables
 
@@ -49,8 +49,9 @@ This step asks: does giving this vaccine now conflict with a live-virus (or othe
 ## StepIntoCDSi Implementation
 
 - `org.openimmunizationsoftware.cdsi.core.logic.EvaluateVaccineConflict` (LogicStepType `EVALUATE_VACCINE_CONFLICT`) - `cdsi-engine`.
-- Tests: no dedicated unit test.
+- Tests: `EvaluateVaccineConflictTest` (26 tests).
 
 ## Review Findings
 
+- **Documented fix (2026-09-16, SPEC-4.6-0065): previous doses are the immunization history, not the selected antigen list.** 4.4 antigen-filters the selected AAR list, so a previous MMR never conflicted with a Varicella evaluation. 6.7 now scans `antigenAdministeredRecordList` for doses on or before the current date. 7.5 CALCDTLIVE-4 uses the same history for a forecast conflict-end floor. VAR 218/218 after this round.
 - Internal decision-table labels ("Table 4-20/21/22") are stale relative to the current v4.6 document, which has no numbered decision table for this section at all post-4.4-refinement. Documentation-only; the underlying conditions match the current business rules. Worth a low-priority cleanup pass, not a correctness issue.

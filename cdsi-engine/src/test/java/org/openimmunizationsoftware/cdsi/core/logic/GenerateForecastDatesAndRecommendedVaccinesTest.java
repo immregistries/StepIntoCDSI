@@ -25,6 +25,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.ImmunizationHistory;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
+import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
 import org.openimmunizationsoftware.cdsi.core.domain.Patient;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.PreferrableVaccine;
@@ -294,6 +295,45 @@ public class GenerateForecastDatesAndRecommendedVaccinesTest {
     preferrableVaccine.setVaccineTypeEndAge(new TimePeriod(endAge));
     seriesDoseTwo.getPreferrableVaccineList().add(preferrableVaccine);
     return preferrableVaccine;
+  }
+
+  private LiveVirusConflict liveVirusConflict(String previousCvx, String currentCvx,
+      String conflictBeginInterval, String minimumConflictEndInterval,
+      String conflictEndInterval) {
+    LiveVirusConflict liveVirusConflict = new LiveVirusConflict();
+    liveVirusConflict.setPreviousVaccineType(vaccineType(previousCvx));
+    liveVirusConflict.setCurrentVaccineType(vaccineType(currentCvx));
+    liveVirusConflict.setConflictBeginInterval(new TimePeriod(conflictBeginInterval));
+    liveVirusConflict.setMinimalConflictEndInterval(new TimePeriod(minimumConflictEndInterval));
+    liveVirusConflict.setConflictEndInterval(new TimePeriod(conflictEndInterval));
+    dataModel.getLiveVirusConflictList().add(liveVirusConflict);
+    return liveVirusConflict;
+  }
+
+  private AntigenAdministeredRecord historyDose(String administered, String cvx,
+      EvaluationStatus status) {
+    VaccineType type = vaccineType(cvx);
+    VaccineDoseAdministered vda = new VaccineDoseAdministered();
+    vda.setDateAdministered(date(administered));
+    TargetDose evaluatedAgainst = new TargetDose(seriesDoseOne);
+    Evaluation evaluation = new Evaluation();
+    evaluation.setEvaluationStatus(status);
+    evaluatedAgainst.setEvaluation(evaluation);
+    vda.setEvaluatedAgainstTargetDose(evaluatedAgainst);
+
+    AntigenAdministeredRecord aar = new AntigenAdministeredRecord();
+    aar.setDateAdministered(date(administered));
+    aar.setVaccineType(type);
+    aar.setVaccineDoseAdministered(vda);
+    dataModel.getAntigenAdministeredRecordList().add(aar);
+    return aar;
+  }
+
+  private static VaccineType vaccineType(String cvxCode) {
+    VaccineType vaccineType = new VaccineType();
+    vaccineType.setCvxCode(cvxCode);
+    vaccineType.setShortDescription("CVX " + cvxCode);
+    return vaccineType;
   }
 
   // ------------------------------------------------------- reading the step
@@ -831,6 +871,41 @@ public class GenerateForecastDatesAndRecommendedVaccinesTest {
 
     assertEquals("FORECASTDT-1: the candidate earliest date includes the latest conflict end "
         + "interval date (08/01/2026)", date("08/01/2026"), step.computeEarliestDate());
+  }
+
+  /**
+   * CALCDTLIVE-4 from a previous live-virus dose that is not on the antigen
+   * being forecast. A Valid MMR on 08/31/2026 plus the MMR→Varicella minimum
+   * conflict end interval of 28 days floors Varicella Dose 1 at 09/28/2026,
+   * even though there is no previous Varicella AAR.
+   */
+  @Test
+  public void calcdtliveFourFloorsTheEarliestDateAtAPreviousLiveVirusConflictEnd() {
+    preferableVaccine("21", YesNo.YES, "12 months", "18 years");
+    liveVirusConflict("03", "21", "1 day", "28 days", "28 days");
+    historyDose("08/31/2026", "03", EvaluationStatus.VALID);
+
+    build();
+
+    assertEquals("CALCDTLIVE-4: Valid MMR 08/31/2026 plus minConflictEnd 28 days",
+        date("09/28/2026"), step.computeEarliestDate());
+  }
+
+  /**
+   * CALCDTCONFLICT-2's second branch: a previous dose that is not Valid takes
+   * the conflict end interval, not the minimum. Not Valid Varicella on
+   * 09/01/2026 plus 28 days (not the 24-day minimum) is 09/29/2026.
+   */
+  @Test
+  public void calcdtliveFourUsesConflictEndIntervalWhenPreviousIsNotValid() {
+    preferableVaccine("21", YesNo.YES, "12 months", "18 years");
+    liveVirusConflict("21", "21", "1 day", "24 days", "28 days");
+    historyDose("09/01/2026", "21", EvaluationStatus.NOT_VALID);
+
+    build();
+
+    assertEquals("CALCDTCONFLICT-2: Not Valid previous dose takes conflictEndInterval 28 days, "
+        + "not minConflictEndInterval 24 days", date("09/29/2026"), step.computeEarliestDate());
   }
 
   /**

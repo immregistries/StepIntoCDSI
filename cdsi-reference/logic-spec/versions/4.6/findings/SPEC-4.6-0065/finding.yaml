@@ -1,0 +1,61 @@
+id: "SPEC-4.6-0065"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.7", "7.5"]
+source_pages: [61, 62, 80, 81, 82]
+tables: ["Table 6-23", "Table 6-24", "Table 7-12"]
+business_rules: ["CALCDTCONFLICT-1", "CALCDTCONFLICT-2", "CONFLICT-3", "CALCDTLIVE-4", "FORECASTDT-1"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateVaccineConflict"
+  - "org.openimmunizationsoftware.cdsi.core.logic.GenerateForecastDatesAndRecommendedVaccines"
+fits_cases:
+  - "689dc945e4b05decee50df54-VAR-2013-0803"
+  - "689dc945e4b05decee50df54-VAR-2013-0815"
+  - "689dc945e4b05decee50df54-VAR-2013-0840"
+  - "689dc945e4b05decee50df54-MMR-2013-0540"
+summary: >
+  6.7 scanned only the antigen-filtered selected AAR list, so a previous
+  MMR or LAIV never conflicted with a Varicella evaluation. 7.5's
+  CALCDTLIVE-4 required a current and previous AAR on that same antigen,
+  so a Varicella Dose 1 forecast never floored at a live-virus conflict
+  end. Live-virus pairings are product type vs product type across the
+  immunization history.
+evidence: >
+  Section 6.7: "Evaluate vaccine conflict validates the date administered
+  of a vaccine dose administered against previous administered vaccines."
+  CALCDTCONFLICT-1/2 pair an impacted current type with a conflicting
+  previous type from Supporting Data; CONFLICT-3 is the begin/end window.
+  4.4's selected list keeps only AARs for the antigen being evaluated,
+  so MMR (CVX 03) is absent while evaluating Varicella (CVX 21).
+
+  Table 7-12 CALCDTLIVE-4 is the latest conflict-end interval date
+  (CALCDTCONFLICT-2). FORECASTDTCAN-1 includes that date as an earliest
+  candidate. The previous implementation required
+  getAntigenAdministeredRecord() and getPreviousAntigenAdministeredRecord()
+  both non-null on the current antigen, so a first Varicella target after
+  MMR never received a conflict-end floor.
+
+  Bundled 4.65 liveVirusConflicts: MMR→Varicella 1d/28d/28d; LAIV4→Varicella
+  1d/28d/28d; Varicella→Varicella minEnd 24d end 28d; MMRV→Varicella 28/28.
+  Live VAR-2013-0815: MMR 08/05 then VZ 09/01 (27d). FITS invalidates VZ
+  and wants ED/RD at MMR+28d. Engine treated VZ as Valid Dose 1 and
+  forecast Dose 2. Live VAR-2013-0803: VZ at 12m-5d Not Valid; FITS wants
+  that shot+28d (conflictEnd, not min 24d). Live VAR-2013-0840: MMR only;
+  FITS wants MMR+28d rather than the 12-month min age.
+interpretation: >
+  6.7 must scan antigenAdministeredRecordList for doses on or before the
+  current date (skip the current VDA itself). 7.5 CALCDTLIVE-4 must take
+  the latest CALCDTCONFLICT-2 end over history doses whose previous type
+  conflicts with a preferable vaccine type of the target being forecast
+  (Valid/unevaluated → minConflictEnd; otherwise conflictEnd). Do not
+  invent a 28-day from-previous interval on Dose 1. Do not change
+  CALCDT-5. Do not special-case VAR uids.
+
+  FAIL to PASS: all VAR remaining after 0064 (0803, 0815, 0817, 0818,
+  0825, 0832, 0840; 35 copies) and MMR 0540, 0547, 0549, 0563 (20 copies).
+  VAR is 218/218. Explained leftover: ZOSTER-2015-0019 (5 copies) FITS
+  still treats CVX 121 as Valid 27 days after MMR and forecasts recombinant
+  Dose 2 at +8 weeks; CONFLICT-3 puts that 121 inside the MMR→Zoster live
+  window, so the engine now forecasts recombinant Dose 1 from the last
+  shot. Drop those five allowlist rows. Newly failing otherwise: none.
+  COVID parked. Remaining MMR: 0528/0530/0539 (15 copies).

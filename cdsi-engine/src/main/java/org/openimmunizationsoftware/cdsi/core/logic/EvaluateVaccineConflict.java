@@ -10,6 +10,7 @@ import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.LiveVirusConflict;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
@@ -60,10 +61,26 @@ public class EvaluateVaccineConflict extends LogicStep {
     y = YesNo.NO;
     if (logicTable.getY420() == YesNo.YES) {
       // CALCDTCONFLICT-1/2 both name "the previous vaccine dose administered" -
-      // scan the doses administered before this one (4.2 sorts the list
-      // ascending by date), not after it.
-      for (int i = 0; i < dataModel.getSelectedAntigenAdministeredRecordPos(); i++) {
-        AntigenAdministeredRecord vaccineAdministered = dataModel.getSelectedAntigenAdministeredRecordList().get(i);
+      // live-virus pairings are product-type vs product-type, not same-antigen.
+      // 4.4's selected list is antigen-filtered, so previous MMR/LAIV would be
+      // invisible while evaluating Varicella. Scan the full immunization history
+      // for doses on or before the current date, skipping this dose itself.
+      AntigenAdministeredRecord current = dataModel.getAntigenAdministeredRecord();
+      Date currentDate = caDateAdministered.getInitialValue();
+      VaccineDoseAdministered currentVda =
+          current == null ? null : current.getVaccineDoseAdministered();
+      for (AntigenAdministeredRecord vaccineAdministered : dataModel
+          .getAntigenAdministeredRecordList()) {
+        if (vaccineAdministered == current) {
+          continue;
+        }
+        if (currentVda != null && vaccineAdministered.getVaccineDoseAdministered() == currentVda) {
+          continue;
+        }
+        if (vaccineAdministered.getDateAdministered() == null || currentDate == null
+            || vaccineAdministered.getDateAdministered().after(currentDate)) {
+          continue;
+        }
         LT421 logicTab = new LT421();
         logicTab.caPreviousVaccineType = new ConditionAttribute<VaccineType>(
             "Supporting Data (Live Virus Conflict)", "Previous Vaccine Type");

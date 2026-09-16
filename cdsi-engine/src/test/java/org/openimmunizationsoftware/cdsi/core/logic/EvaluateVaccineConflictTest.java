@@ -699,6 +699,31 @@ public class EvaluateVaccineConflictTest {
   }
 
   /**
+   * 4.4's selected antigen list is antigen-filtered, so a previous MMR is not
+   * on the Varicella selected list. Section 6.7 still validates "against
+   * previous administered vaccines" from the immunization history: MMR then
+   * Varicella is a defined live-virus pairing even when the two AARs are on
+   * different antigens.
+   */
+  @Test
+  public void aPreviousDoseOnAnotherAntigenStillConflictsWithTheCurrentType() throws Exception {
+    AntigenAdministeredRecord previousMmr = administeredRecord(PREVIOUS_DOSE, MMR);
+    AntigenAdministeredRecord currentVaricella = administeredRecord(CURRENT_DOSE, VARICELLA);
+    dataModel.setAntigenAdministeredRecordList(
+        new ArrayList<AntigenAdministeredRecord>(Arrays.asList(previousMmr, currentVaricella)));
+    dataModel.setSelectedAntigenAdministeredRecordList(
+        new ArrayList<AntigenAdministeredRecord>(Arrays.asList(currentVaricella)));
+    dataModel.setSelectedAntigenAdministeredRecordPos(0);
+    dataModel.setAntigenAdministeredRecord(currentVaricella);
+    liveVirusConflict(MMR, VARICELLA, "1 day", "28 days", "28 days");
+
+    run();
+
+    assertConflictRecorded("MMR administered before Varicella is a live-virus conflict "
+        + "even though MMR is not on the Varicella selected antigen list");
+  }
+
+  /**
    * Section 6.7 validates the current dose "against previous administered
    * vaccines". With nothing administered on or before it there is nothing for it
    * to conflict with, so no conflict can be recorded.

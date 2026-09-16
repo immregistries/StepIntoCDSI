@@ -1516,8 +1516,12 @@ units:
     fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0015", "SPEC-4.6-0036"]
+    finding_ids: ["SPEC-4.6-0015", "SPEC-4.6-0036", "SPEC-4.6-0065"]
     notes: >-
+      2026-09-16: 6.7 scans the full immunization history so a previous
+      MMR still conflicts with Varicella (SPEC-4.6-0065). One new test;
+      unit is 26/26.
+
       25 tests, now 25/25 green (was 14/11 - see SPEC-4.6-0015: fixed
       the wrong loop direction (scanned doses after the current one instead
       of before), the copy-paste end-interval bug, the exclusive-instead-of-
@@ -2630,8 +2634,11 @@ units:
     fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0014", "SPEC-4.6-0023", "SPEC-4.6-0024", "SPEC-4.6-0042", "SPEC-4.6-0060"]
+    finding_ids: ["SPEC-4.6-0014", "SPEC-4.6-0023", "SPEC-4.6-0024", "SPEC-4.6-0042", "SPEC-4.6-0060", "SPEC-4.6-0065"]
     notes: >
+      2026-09-16: CALCDTLIVE-4 from the full immunization history
+      (SPEC-4.6-0065). Two new tests; unit is 44/44.
+
       2026-09-15: FORECASTDT-1 does not measure the minimum interval from
       an inadvertent previous dose (SPEC-4.6-0060). One new test; unit is 42/42.
 
