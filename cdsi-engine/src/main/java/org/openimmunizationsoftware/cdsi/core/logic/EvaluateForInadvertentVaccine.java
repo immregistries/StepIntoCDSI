@@ -103,6 +103,13 @@ public class EvaluateForInadvertentVaccine extends LogicStep {
                     // this one administration (see the field's own Javadoc), not a
                     // pointer to the shared, mutable target dose.
                     caVaccineDoseAdministered.getFinalValue().setInadvertentAdministration(true);
+                    // 6.10 never runs on this path (Figure 6-4 returns to 4.4), so
+                    // write evaluatedAgainstTargetDose here the same way 6.10 does
+                    // for every other outcome. CALCDTINT-1 then sees this VDA as
+                    // inadvertent instead of borrowing the previous target's Valid
+                    // evaluation and pairing it with this shot's date.
+                    caVaccineDoseAdministered.getFinalValue()
+                            .setEvaluatedAgainstTargetDose(dataModel.getTargetDose());
                     log(LogLevel.CONTROL, "Setting next step: 4.4 Evaluate And Forecast All Patient Series");
                     setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
                 }

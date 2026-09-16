@@ -21,5 +21,5 @@ implementation:
 tests:
   - status: "present"
     class: "org.openimmunizationsoftware.cdsi.core.logic.EvaluateAllowableIntervalTest"
-    note: "Covers Table 6-20/6-21, empty-allowable fallback, RELEVANT-1 selection, and CALCDTINT-1 after a skipped previous target."
+    note: "Covers Table 6-20/6-21, empty-allowable fallback, RELEVANT-1 selection, and CALCDTINT-1 after a skipped previous target, a Not Valid last shot, and an inadvertent immediate previous dose."
 review_status: "draft"

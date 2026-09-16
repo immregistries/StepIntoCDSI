@@ -292,6 +292,45 @@ public class EvaluatePreferableIntervalTest {
   }
 
   /**
+   * Production 4.4 after 6.3: the last SATISFIED target stays
+   * {@code previousTargetDose} (Valid), while {@code previousAntigenAdministeredRecord}
+   * is the inadvertent shot that never reached 6.10. CALCDTINT-1 must measure
+   * from the Valid dose, not pair that Valid evaluation with the inadvertent date.
+   */
+  private void previousInadvertentDoseAfterValidDose(String validDate, String inadvertentDate) {
+    SeriesDose doseOne = new SeriesDose();
+    doseOne.setDoseNumber("1");
+    TargetDose satisfiedTarget = new TargetDose(doseOne);
+    Evaluation validEvaluation = new Evaluation();
+    validEvaluation.setEvaluationStatus(EvaluationStatus.VALID);
+    satisfiedTarget.setEvaluation(validEvaluation);
+
+    AntigenAdministeredRecord validAar = administeredRecord(validDate, "10");
+    validAar.getVaccineDoseAdministered().setTargetDose(satisfiedTarget);
+    satisfiedTarget.setSatisfiedByVaccineDoseAdministered(validAar.getVaccineDoseAdministered());
+
+    SeriesDose doseTwo = new SeriesDose();
+    doseTwo.setDoseNumber("2");
+    TargetDose inadvertentTarget = new TargetDose(doseTwo);
+    inadvertentTarget.setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
+    Evaluation inadvertentEvaluation = new Evaluation();
+    inadvertentEvaluation.setEvaluationStatus(EvaluationStatus.NOT_VALID);
+    inadvertentEvaluation.setEvaluationReason(EvaluationReason.INADVERTENT_ADMINISTRATION);
+    inadvertentTarget.setEvaluation(inadvertentEvaluation);
+
+    AntigenAdministeredRecord inadvertentAar = administeredRecord(inadvertentDate, "178");
+    inadvertentAar.getVaccineDoseAdministered().setInadvertentAdministration(true);
+    inadvertentAar.getVaccineDoseAdministered().setEvaluatedAgainstTargetDose(inadvertentTarget);
+
+    dataModel.setPreviousTargetDose(satisfiedTarget);
+    dataModel.setPreviousAntigenAdministeredRecord(inadvertentAar);
+    dataModel.setSelectedAntigenAdministeredRecordList(new ArrayList<AntigenAdministeredRecord>());
+    dataModel.getSelectedAntigenAdministeredRecordList().add(validAar);
+    dataModel.getSelectedAntigenAdministeredRecordList().add(inadvertentAar);
+    dataModel.setSelectedAntigenAdministeredRecordPos(2);
+  }
+
+  /**
    * Forecast-shaped leftover after 6.10: the last shot failed the current
    * target ({@code getTargetDose()} stays null;
    * {@code getEvaluatedAgainstTargetDose()} holds the Not Valid evaluation)
@@ -819,6 +858,25 @@ public class EvaluatePreferableIntervalTest {
 
     assertCalculatedDateIs(ASSUMED_INTERVAL_DATE, 2, ABSOLUTE_MINIMUM_INTERVAL_DATE);
     assertCalculatedDateIs(ASSUMED_INTERVAL_DATE, 3, MINIMUM_INTERVAL_DATE);
+  }
+
+  /**
+   * CALCDTINT-1 still has an eligible previous dose when the immediate previous
+   * VDA is inadvertent: measure from the last Valid/Not Valid non-inadvertent
+   * shot (01/01/2016 + 24/28 days), not from the inadvertent date (03/01/2016)
+   * and not assumed 01/01/1900. This is 4.4 after 6.3: previousTargetDose is
+   * still the Valid dose, previousAAR is the inadvertent shot.
+   */
+  @Test
+  public void calcdtintOneMeasuresFromTheLastEligibleDoseWhenTheImmediatePreviousWasInadvertent()
+      throws Exception {
+    previousInadvertentDoseAfterValidDose("01/01/2016", "03/01/2016");
+    interval(YesNo.YES, "24 days", "28 days");
+
+    run();
+
+    assertCalculatedDateIs("01/25/2016", 2, ABSOLUTE_MINIMUM_INTERVAL_DATE);
+    assertCalculatedDateIs("01/29/2016", 3, MINIMUM_INTERVAL_DATE);
   }
 
   /**

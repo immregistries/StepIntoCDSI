@@ -54,13 +54,14 @@ Some vaccines have a "preferred" spacing that's a little more forgiving than a h
 ## StepIntoCDSi Implementation
 
 - `org.openimmunizationsoftware.cdsi.core.logic.EvaluatePreferableInterval` (LogicStepType `EVALUATE_PREFERABLE_INTERVAL`) - `cdsi-engine`.
-- Tests: no dedicated unit test.
+- Tests: `EvaluatePreferableIntervalTest`.
 
 ## Review Findings
 
 - **Documented fix (2026-09-15, SPEC-4.6-0056): §3.3 Preferable Interval selection for evaluation.** Table 6-17/6-18 checks run only for interval rows whose Effective–Cessation window covers the date administered (RELEVANT-1). Previously every `<interval>` on the series dose was evaluated, so Polio Dose 4's ceased 4-week row sat beside the current 6-month row. Unvalued dates stay always-relevant, so HepB/HPV dual-interval doses are unchanged.
 - **Documented fix (2026-09-15, SPEC-4.6-0057): CALCDTINT-1 after a skipped previous target.** A skipped target has no evaluation; the interval now measures from the previous administered dose's satisfied evaluation so Table 6-18 can fail and fall through to 6.6.
 - **Documented fix (2026-09-15, SPEC-4.6-0058): CALCDTINT-1 after a Not Valid last shot.** 6.10 writes the evaluation onto `evaluatedAgainstTargetDose` for every outcome and leaves `targetDose` null unless SATISFIED. Forecast of the same target after a too-soon attempt now measures from that Not Valid date instead of a skipped previous target with no evaluation.
+- **Documented fix (2026-09-15, SPEC-4.6-0060): CALCDTINT-1 after an inadvertent immediate previous dose.** Date and evaluation must belong to the same VDA. An inadvertent previous AAR (6.3 never runs 6.10) is skipped so the interval measures from the last Valid/Not Valid non-inadvertent dose, not from pairing the previous target's Valid evaluation with the inadvertent date (`POL-2024-0071`).
 - **Outcome 0's `EvaluationReason` is wrong: sets `GRACE_PERIOD` where the spec (and the code's own log message) call for "Too Soon."** Verified by direct comparison with `EvaluateAllowableInterval`'s equivalent, correctly-implemented case. Draft `IMPLEMENTATION_MISMATCH` - this could produce a misleading evaluation reason wherever a dose fails the preferable-interval check, which is exactly the kind of transparency defect this reference module exists to surface.
 - CALCDTINT-1/2/8/9 (which reference date an interval measures from) are not verified as implemented anywhere by this pass - flagged as unresolved rather than assumed correct.
 - Table 6-19 missing from the document's own LOFT (see Source, above) - same pattern as 6.2's Table 6-11.

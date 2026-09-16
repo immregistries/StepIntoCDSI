@@ -963,8 +963,11 @@ units:
     fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0024", "SPEC-4.6-0034"]
+    finding_ids: ["SPEC-4.6-0024", "SPEC-4.6-0034", "SPEC-4.6-0060"]
     notes: >-
+      2026-09-15: Rule 1 writes evaluatedAgainstTargetDose on the rejected
+      VDA (SPEC-4.6-0060). Unit is 11/11.
+
       Fixed as SPEC-4.6-0034 (round 26, 2026-09-09) - 11 green, 0 red.
       Historical diagnosis retained because it explains the fix:
 
@@ -1213,8 +1216,11 @@ units:
     fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0012", "SPEC-4.6-0013", "SPEC-4.6-0035"]
+    finding_ids: ["SPEC-4.6-0012", "SPEC-4.6-0013", "SPEC-4.6-0035", "SPEC-4.6-0060"]
     notes: >-
+      2026-09-15: CALCDTINT-1 skips an inadvertent immediate previous VDA
+      (SPEC-4.6-0060). One new test; unit is 34/34.
+
       30 tests, now 30/30 green (was 20/7 originally - see SPEC-4.6-0012: fixed the misassigned
       GRACE_PERIOD/TOO_SOON evaluation reason, the unfilled
       attribute-table-name placeholder, and the "Mimium"/"Minimum"
@@ -1390,8 +1396,11 @@ units:
     fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0011"]
+    finding_ids: ["SPEC-4.6-0011", "SPEC-4.6-0060"]
     notes: >-
+      2026-09-15: CALCDTINT-1 skips an inadvertent immediate previous VDA
+      (SPEC-4.6-0060). One new test; unit is 29/29.
+
       25 tests, now all 25 green (was 23/2 - see SPEC-4.6-0011: filled in
       the placeholder attribute-table name, and gave each per-interval
       decision table its own ConditionAttribute copies instead of sharing
@@ -2612,8 +2621,11 @@ units:
     fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0014", "SPEC-4.6-0023", "SPEC-4.6-0024", "SPEC-4.6-0042"]
+    finding_ids: ["SPEC-4.6-0014", "SPEC-4.6-0023", "SPEC-4.6-0024", "SPEC-4.6-0042", "SPEC-4.6-0060"]
     notes: >
+      2026-09-15: FORECASTDT-1 does not measure the minimum interval from
+      an inadvertent previous dose (SPEC-4.6-0060). One new test; unit is 42/42.
+
       Role A, 2026-09-05; fixed (SPEC-4.6-0042, merged), 2026-09-09. 39 tests,
       now 39/39 green (was 30/9 originally; see SPEC-4.6-0014, merged, for red (2)'s fix).
       7.5 has no decision table, so the unit of coverage is one test per

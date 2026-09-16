@@ -32,6 +32,7 @@ implementation:
     - "org.openimmunizationsoftware.cdsi.core.logic.GenerateForecastDatesAndRecommendedVaccines"
   logic_step_type: "GENERATE_FORECAST_DATES_AND_RECOMMENDED_VACCINES"
 tests:
-  - status: "test-gap"
-    note: "No dedicated unit test isolating this class; exercised end-to-end by every cdsi-fits-tests fixture with a NOT_COMPLETE forecast. FORECASTRECVAC-1/FORECASTDN-1/FORECASTGUIDANCE-1 were not confirmed as implemented anywhere in this pass - see Review Findings."
+  - status: "present"
+    class: "org.openimmunizationsoftware.cdsi.core.logic.GenerateForecastDatesAndRecommendedVaccinesTest"
+    note: "Covers Table 7-12/7-13 FORECASTDT rules, including CALCDTINT-1 after a Not Valid last shot and after an inadvertent immediate previous dose."
 review_status: "draft"

@@ -13,6 +13,7 @@ implementation:
   classes:
     - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateForInadvertentVaccine"
 tests:
-  - status: "test-gap"
-    note: "No dedicated unit test."
+  - status: "present"
+    class: "org.openimmunizationsoftware.cdsi.core.logic.EvaluateForInadvertentVaccineTest"
+    note: "Covers Table 6-12/6-13 and Rule 1 writing evaluatedAgainstTargetDose on the rejected VDA (SPEC-4.6-0060)."
 review_status: "draft"

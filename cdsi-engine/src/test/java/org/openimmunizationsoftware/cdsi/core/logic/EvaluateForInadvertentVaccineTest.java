@@ -343,6 +343,11 @@ public class EvaluateForInadvertentVaccineTest {
     assertEquals("an inadvertent dose returns to 4.4 Evaluate and Forecast All Patient Series",
         LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES, step.getNextLogicStepType());
     assertEquals("Rule 1 adds no second evaluation", 1, targetDose.getEvaluationList().size());
+    assertTrue("FORECASTDTCAN-1 needs this VDA's own inadvertent flag",
+        vaccineDoseAdministered.isInadvertentAdministration());
+    assertSame("6.10 never runs on this path, so 6.3 writes evaluatedAgainstTargetDose "
+        + "the same way 6.10 does for every other outcome",
+        targetDose, vaccineDoseAdministered.getEvaluatedAgainstTargetDose());
   }
 
   /**

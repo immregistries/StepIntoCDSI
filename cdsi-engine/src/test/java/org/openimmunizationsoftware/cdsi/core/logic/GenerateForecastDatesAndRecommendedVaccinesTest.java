@@ -749,6 +749,55 @@ public class GenerateForecastDatesAndRecommendedVaccinesTest {
   }
 
   /**
+   * CALCDTINT-1 / FORECASTDT-1 after 6.3: the immediate previous VDA is
+   * inadvertent, so the 6-month interval measures from the last Valid dose
+   * (03/10/2024 + 6 months = 09/10/2024), not from the inadvertent date
+   * (04/10/2024 + 6 months = 10/10/2024) and not assumed 01/01/1900 (which
+   * would leave FORECASTDTCAN-1's last-administered candidate 04/10/2024 as
+   * earliest). 4.4 leaves previousTargetDose as the Valid dose and
+   * previousAAR as the inadvertent shot.
+   */
+  @Test
+  public void forecastdtOneDoesNotMeasureIntervalFromAnInadvertentPreviousDose() {
+    Interval fromImmediate = interval("6 months", null, null);
+    fromImmediate.setFromImmediatePreviousDoseAdministered(YesNo.YES);
+    fromImmediate.setFromTargetDoseNumberInSeries("");
+
+    AntigenAdministeredRecord doseOneAar = new AntigenAdministeredRecord();
+    doseOneAar.setAntigen(measles);
+    doseOneAar.setDateAdministered(date(DOSE_ONE_ADMINISTERED));
+    doseOneAar.setVaccineDoseAdministered(doseOneAdministered);
+
+    TargetDose inadvertentTarget = new TargetDose(seriesDoseTwo);
+    inadvertentTarget.setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
+    Evaluation inadvertentEval = new Evaluation();
+    inadvertentEval.setEvaluationStatus(EvaluationStatus.NOT_VALID);
+    inadvertentEval.setEvaluationReason(EvaluationReason.INADVERTENT_ADMINISTRATION);
+    inadvertentTarget.setEvaluation(inadvertentEval);
+
+    VaccineDoseAdministered inadvertentDose = new VaccineDoseAdministered();
+    inadvertentDose.setDateAdministered(date("04/10/2024"));
+    inadvertentDose.setInadvertentAdministration(true);
+    inadvertentDose.setEvaluatedAgainstTargetDose(inadvertentTarget);
+
+    AntigenAdministeredRecord inadvertentAar = new AntigenAdministeredRecord();
+    inadvertentAar.setAntigen(measles);
+    inadvertentAar.setDateAdministered(date("04/10/2024"));
+    inadvertentAar.setVaccineDoseAdministered(inadvertentDose);
+
+    dataModel.setPreviousAntigenAdministeredRecord(inadvertentAar);
+    dataModel.getSelectedAntigenAdministeredRecordList().add(doseOneAar);
+    dataModel.getSelectedAntigenAdministeredRecordList().add(inadvertentAar);
+    dataModel.setSelectedAntigenAdministeredRecordPos(2);
+
+    build();
+
+    assertEquals("FORECASTDT-1: CALCDTINT-4 from the Valid dose (03/10/2024) plus '6 months' "
+        + "is later than the inadvertent shot's own date", date("09/10/2024"),
+        step.computeEarliestDate());
+  }
+
+  /**
    * <strong>FORECASTDT-1</strong> through FORECASTDTCAN-1's fourth candidate,
    * "seasonal recommendation start date": a dose that may only be given inside a
    * season cannot be given before the season opens.

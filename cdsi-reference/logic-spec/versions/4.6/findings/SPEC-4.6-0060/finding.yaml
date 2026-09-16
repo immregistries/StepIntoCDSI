@@ -1,0 +1,46 @@
+id: "SPEC-4.6-0060"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.3", "6.5", "6.6", "7.5"]
+source_pages: [52, 54, 58, 80]
+tables: ["Table 6-13", "Table 6-19", "Table 6-22", "Table 7-12"]
+business_rules: ["CALCDTINT-1", "CALCDTINT-4", "FORECASTDT-1"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.domain.Interval"
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateForInadvertentVaccine"
+fits_cases:
+  - "689dc945e4b05decee50df54-POL-2024-0071"
+  - "689dc945e4b05decee50df54-DTAP-2013-0060"
+summary: >
+  CALCDTINT-1 paired the previous target's Valid evaluation with an
+  inadvertent previous AAR's date, so forecast measured the next interval
+  from the rejected shot instead of the last Valid/Not Valid
+  non-inadvertent dose.
+evidence: >
+  Table 6-19 CALCDTINT-1: the reference dose date is the date administered
+  of the most immediate previous vaccine dose administered when the
+  interval's from-immediate-previous flag is Y, that dose's evaluation
+  status is Valid or Not Valid, and it is not an inadvertent
+  administration. Date and evaluation belong to the same VDA.
+
+  6.3 Figure 6-4 returns to 4.4 without running 6.10, so an inadvertent
+  VDA never received evaluatedAgainstTargetDose. 4.4 then stores that
+  shot as previousAntigenAdministeredRecord while previousTargetDose is
+  still the last SATISFIED (Valid) target. CALCDTINT-1 fell through to
+  the previous target's Valid evaluation and used the inadvertent date.
+
+  POL-2024-0071 (DOB 2015-09-13; tOPV CVX 02 2016-02-06; bOPV CVX 178
+  2016-05-06; assessment 2016-05-06): expected NOT_COMPLETE ED/RD
+  2016-05-06. Engine ED/RD 2016-06-03 (178 plus 4 weeks). Live dump:
+  Dose 1 SATISFIED VALID, Dose 2 NOT_SATISFIED NOT_VALID /
+  INADVERTENT_ADMINISTRATION, best series Not Complete.
+
+  DTAP-2013-0060 (Tdap CVX 115 as dose 3 under age 4) is the same shape:
+  an inadvertent last shot must not become the interval reference date.
+interpretation: >
+  Skip an inadvertent immediate previous VDA and measure from the most
+  recent Valid/Not Valid non-inadvertent dose before it. FORECASTDTCAN-1
+  still includes the inadvertent administration date as a floor, so
+  POL-2024-0071 lands due-now on 2016-05-06. 6.3 writes
+  evaluatedAgainstTargetDose the same way 6.10 does for every other
+  outcome, so CALCDTINT-1 can see this VDA as inadvertent.

@@ -134,37 +134,14 @@ public class Interval {
       return null;
     }
 
-    Evaluation previousVdaEvaluation = evaluationOfImmediatePreviousDoseAdministered(dataModel, logicStep);
-
     Date tmpPatientReferenceDoseDate = null;
-    if (previousVdaEvaluation == null) {
-      logicStep.alert(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
-          "ALERT.MISSING: Previous evaluation is null when calculating PRDD; returning null");
-      return null;
-    }
     try {
       // CALCDTINT-1
       if (fromImmediatePreviousDoseAdministered == YesNo.YES) {
-        logicStep
-            .log(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
-                "REASONING: Attempting to use CALCDTINT-1 where previous evaluation status = "
-                    + previousVdaEvaluation.getEvaluationStatus());
-        if (previousVdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.VALID)
-            || previousVdaEvaluation.getEvaluationStatus().equals(EvaluationStatus.NOT_VALID)) {
-          logicStep.log(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.TRACE,
-              "TRACE: evaluationReason is " + previousVdaEvaluation.getEvaluationReason());
-          if (previousVdaEvaluation.getEvaluationReason() == null
-              || !previousVdaEvaluation.getEvaluationReason().equals(EvaluationReason.INADVERTENT_ADMINISTRATION)) {
-            AntigenAdministeredRecord previousAAR = dataModel.getPreviousAntigenAdministeredRecord();
-            if (previousAAR == null) {
-              logicStep.alert(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
-                  "ALERT.MISSING: Previous AAR is null in CALCDTINT-1; cannot determine PRDD");
-            } else {
-              tmpPatientReferenceDoseDate = previousAAR.getVaccineDoseAdministered().getDateAdministered();
-              logicStep.log(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
-                  "REASONING: Success using CALCDTINT-1");
-            }
-          }
+        tmpPatientReferenceDoseDate = dateOfCalcdtint1ReferenceDose(dataModel, logicStep);
+        if (tmpPatientReferenceDoseDate != null) {
+          logicStep.log(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
+              "REASONING: Success using CALCDTINT-1");
         }
       }
       // CALCDTINT-2
@@ -255,6 +232,152 @@ public class Interval {
   }
 
   /**
+   * Table 6-19 CALCDTINT-1: the reference date is the date administered of the
+   * most immediate previous vaccine dose administered whose own evaluation is
+   * Valid or Not Valid and is not inadvertent. Date and evaluation must belong
+   * to the same VDA. An inadvertent immediate previous shot (6.3 never runs
+   * 6.10) is skipped so the interval measures from the last eligible dose
+   * before it, not from pairing the previous target's Valid evaluation with
+   * the inadvertent date.
+   */
+  private Date dateOfCalcdtint1ReferenceDose(DataModel dataModel, LogicStep logicStep) {
+    AntigenAdministeredRecord previousAAR = dataModel.getPreviousAntigenAdministeredRecord();
+    VaccineDoseAdministered previousVda = previousAAR == null ? null
+        : previousAAR.getVaccineDoseAdministered();
+    Evaluation ownEvaluation = evaluationOfVda(previousVda, logicStep);
+
+    if (isEligibleCalcdtint1Evaluation(ownEvaluation)) {
+      if (previousVda == null || previousVda.getDateAdministered() == null) {
+        logicStep.alert(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
+            "ALERT.MISSING: Previous AAR is null in CALCDTINT-1; cannot determine PRDD");
+        return null;
+      }
+      logicStep.log(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
+          "REASONING: Attempting to use CALCDTINT-1 where previous evaluation status = "
+              + ownEvaluation.getEvaluationStatus());
+      return previousVda.getDateAdministered();
+    }
+
+    if (isInadvertentPreviousVda(previousVda, ownEvaluation)) {
+      Date earlierEligible = dateOfMostRecentEligiblePreviousDose(dataModel, logicStep, previousAAR);
+      if (earlierEligible != null) {
+        logicStep.log(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
+            "REASONING: CALCDTINT-1 skipped an inadvertent immediate previous dose");
+        return earlierEligible;
+      }
+      logicStep.log(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
+          "REASONING: CALCDTINT-1's immediate previous dose is inadvertent and no earlier "
+              + "Valid/Not Valid non-inadvertent dose was found");
+      return null;
+    }
+
+    Evaluation previousTargetEvaluation = evaluationOfImmediatePreviousDoseAdministered(dataModel,
+        logicStep);
+    if (isEligibleCalcdtint1Evaluation(previousTargetEvaluation)) {
+      if (previousVda == null || previousVda.getDateAdministered() == null) {
+        logicStep.alert(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
+            "ALERT.MISSING: Previous AAR is null in CALCDTINT-1; cannot determine PRDD");
+        return null;
+      }
+      logicStep.log(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.REASONING,
+          "REASONING: Attempting to use CALCDTINT-1 where previous evaluation status = "
+              + previousTargetEvaluation.getEvaluationStatus());
+      return previousVda.getDateAdministered();
+    }
+    return null;
+  }
+
+  /**
+   * Walk the selected antigen-administered list from the inadvertent previous
+   * shot backward, returning the date of the most recent Valid/Not Valid
+   * non-inadvertent VDA. Falls back to the previous target's satisfied-by
+   * date when that target is a different, eligible dose (isolated fixtures
+   * that do not populate the selected list).
+   */
+  private Date dateOfMostRecentEligiblePreviousDose(DataModel dataModel, LogicStep logicStep,
+      AntigenAdministeredRecord inadvertentPrevious) {
+    List<AntigenAdministeredRecord> selected = dataModel.getSelectedAntigenAdministeredRecordList();
+    if (selected != null && !selected.isEmpty()) {
+      int start = selected.indexOf(inadvertentPrevious);
+      if (start < 0) {
+        int pos = dataModel.getSelectedAntigenAdministeredRecordPos();
+        if (pos < 0) {
+          start = selected.size() - 1;
+        } else {
+          start = Math.min(pos, selected.size()) - 1;
+        }
+      }
+      for (int i = start; i >= 0; i--) {
+        AntigenAdministeredRecord aar = selected.get(i);
+        if (aar == null || aar.getVaccineDoseAdministered() == null) {
+          continue;
+        }
+        VaccineDoseAdministered vda = aar.getVaccineDoseAdministered();
+        Evaluation evaluation = evaluationOfVda(vda, logicStep);
+        if (isInadvertentPreviousVda(vda, evaluation)) {
+          continue;
+        }
+        if (isEligibleCalcdtint1Evaluation(evaluation)) {
+          return vda.getDateAdministered();
+        }
+      }
+    }
+    TargetDose previousTargetDose = dataModel.getPreviousTargetDose();
+    if (previousTargetDose != null
+        && isEligibleCalcdtint1Evaluation(previousTargetDose.getEvaluation())
+        && previousTargetDose.getSatisfiedByVaccineDoseAdministered() != null) {
+      return previousTargetDose.getSatisfiedByVaccineDoseAdministered().getDateAdministered();
+    }
+    return null;
+  }
+
+  private static boolean isEligibleCalcdtint1Evaluation(Evaluation evaluation) {
+    if (evaluation == null || evaluation.getEvaluationStatus() == null) {
+      return false;
+    }
+    if (evaluation.getEvaluationStatus() != EvaluationStatus.VALID
+        && evaluation.getEvaluationStatus() != EvaluationStatus.NOT_VALID) {
+      return false;
+    }
+    return evaluation.getEvaluationReason() != EvaluationReason.INADVERTENT_ADMINISTRATION;
+  }
+
+  private static boolean isInadvertentPreviousVda(VaccineDoseAdministered vda,
+      Evaluation ownEvaluation) {
+    if (vda != null && vda.isInadvertentAdministration()) {
+      return true;
+    }
+    return ownEvaluation != null
+        && ownEvaluation.getEvaluationReason() == EvaluationReason.INADVERTENT_ADMINISTRATION;
+  }
+
+  /**
+   * The evaluation written onto this VDA itself (satisfied target, or
+   * evaluated-against). Does not fall back to {@code previousTargetDose},
+   * which may be a different dose than this VDA.
+   */
+  private Evaluation evaluationOfVda(VaccineDoseAdministered vda, LogicStep logicStep) {
+    if (vda == null) {
+      return null;
+    }
+    if (vda.getTargetDose() != null && vda.getTargetDose().getEvaluation() != null) {
+      logicStep.log(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.TRACE,
+          "TRACE: Administered dose satisfied targetDose #"
+              + vda.getTargetDose().getTrackedSeriesDose().getDoseNumber());
+      return vda.getTargetDose().getEvaluation();
+    }
+    if (vda.getEvaluatedAgainstTargetDose() != null
+        && vda.getEvaluatedAgainstTargetDose().getEvaluation() != null) {
+      logicStep.log(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.TRACE,
+          "TRACE: Administered dose evaluated against targetDose #"
+              + vda.getEvaluatedAgainstTargetDose().getTrackedSeriesDose().getDoseNumber()
+              + " (not satisfied)");
+      return vda.getEvaluatedAgainstTargetDose().getEvaluation();
+    }
+    return null;
+  }
+
+  /**
    * CALCDTINT-1's evaluation-status check is about the immediate previous
    * <em>vaccine dose administered</em>, not the previous target dose.
    * 6.10 writes that evaluation onto {@code getTargetDose()} only when the
@@ -268,21 +391,10 @@ public class Interval {
   private Evaluation evaluationOfImmediatePreviousDoseAdministered(DataModel dataModel,
       LogicStep logicStep) {
     AntigenAdministeredRecord previousAAR = dataModel.getPreviousAntigenAdministeredRecord();
-    if (previousAAR != null && previousAAR.getVaccineDoseAdministered() != null) {
-      VaccineDoseAdministered previousVda = previousAAR.getVaccineDoseAdministered();
-      if (previousVda.getTargetDose() != null && previousVda.getTargetDose().getEvaluation() != null) {
-        logicStep.log(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.TRACE,
-            "TRACE: Previous administered dose satisfied targetDose #"
-                + previousVda.getTargetDose().getTrackedSeriesDose().getDoseNumber());
-        return previousVda.getTargetDose().getEvaluation();
-      }
-      if (previousVda.getEvaluatedAgainstTargetDose() != null
-          && previousVda.getEvaluatedAgainstTargetDose().getEvaluation() != null) {
-        logicStep.log(org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel.TRACE,
-            "TRACE: Previous administered dose evaluated against targetDose #"
-                + previousVda.getEvaluatedAgainstTargetDose().getTrackedSeriesDose().getDoseNumber()
-                + " (not satisfied)");
-        return previousVda.getEvaluatedAgainstTargetDose().getEvaluation();
+    if (previousAAR != null) {
+      Evaluation ownEvaluation = evaluationOfVda(previousAAR.getVaccineDoseAdministered(), logicStep);
+      if (ownEvaluation != null) {
+        return ownEvaluation;
       }
     }
     TargetDose previousTargetDose = dataModel.getPreviousTargetDose();
