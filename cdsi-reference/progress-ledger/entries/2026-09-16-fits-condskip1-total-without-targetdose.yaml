@@ -1,0 +1,23 @@
+id: "2026-09-16-fits-condskip1-total-without-targetdose"
+date: "2026-09-16"
+phase: 22
+title: "FITS - CONDSKIP-1 Total counts doses with no targetDose (SPEC-4.6-0062)"
+before:
+  commit: "7c08d39"
+  engine_tests: {total: 823, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 4257, failed_assertions: 638, execution_errors: 1}
+after:
+  commit: "46a584f"
+  engine_tests: {total: 824, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 4301, failed_assertions: 594, execution_errors: 1}
+  fits_runtime_seconds: 116
+summary: >
+  CONDSKIP-1 Total now counts a matching administered dose with no
+  targetDose, so Pertussis Dose 8/9 Td-after-7 skips see Td. Combined
+  FITS 4257 to 4301 (net +44), all DTAP. Newly failing: 2013-0010 and
+  2013-0067 (10 copies, extra skip to age 11); dropped from the
+  allowlist. COVID unchanged. Same two engine reds (8.1/8.7). Newly
+  passing ids are not added to the allowlist.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0062/finding.md"
+finding_ids: ["SPEC-4.6-0062"]
+status: reviewed
