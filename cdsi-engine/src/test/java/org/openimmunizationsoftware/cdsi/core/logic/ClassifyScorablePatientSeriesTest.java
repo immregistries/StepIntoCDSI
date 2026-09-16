@@ -75,9 +75,9 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
  * guard of its own to test. Table 8-5's outcome text also says the series a
  * column does not select "are not scored and are dropped from consideration";
  * 08-03's State Changes reads that as a downstream responsibility rather than a
- * mutation 8.3 performs, and 8.4 `CompletePatientSeries` does in fact implement
- * it by scoring non-complete series down, so it is recorded as a scope question
- * in this unit's notes rather than forced into a test here.
+ * mutation 8.3 performs, and 8.4 {@code CompletePatientSeries} implements it by
+ * dropping non-complete series from the scorable list after Table 8-7
+ * (SPEC-4.6-0064).
  */
 public class ClassifyScorablePatientSeriesTest {
 

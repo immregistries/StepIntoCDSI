@@ -268,7 +268,7 @@ sections:
       classes:
         - "org.openimmunizationsoftware.cdsi.core.logic.CompletePatientSeries"
     tests:
-      - "test-gap: no dedicated unit test; verified tie-handling bug in its only scoring condition, see 08-04's Review Findings"
+      - "org.openimmunizationsoftware.cdsi.core.logic.CompletePatientSeriesTest (17 tests; Table 8-5 Rule 1 drop is SPEC-4.6-0064)"
     mapping_status: "draft"
   "8.5":
     title: "In-process Patient Series"

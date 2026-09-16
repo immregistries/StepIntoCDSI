@@ -207,12 +207,10 @@ public class CompletePatientSeriesTest {
    * <p>
    * This is the scope question {@link ClassifyScorablePatientSeriesTest}
    * deliberately left to this unit rather than forcing into a test of its own.
-   * The test asserts only the half the specification settles - that a table
-   * about complete patient series does not penalise a series that is not one -
-   * and takes no position on whether such series should later be dropped from
-   * consideration by some other means. The implementation's scoring loop opens
-   * with an explicit {@code descPatientScoreSeries()} for every non-complete
-   * series it sees.
+   * Scoring itself must not penalise a series that is not complete; dropping
+   * that series from the scorable list is a separate Table 8-5 Rule 1 outcome,
+   * asserted by
+   * {@link #tableEightFiveRuleOneDropsInProcessSeriesFromConsideration}.
    */
   @Test
   public void theStepScoresOnlyTheCompletePatientSeriesInTheGroup() throws Exception {
@@ -223,6 +221,48 @@ public class CompletePatientSeriesTest {
     score();
 
     assertEquals("Table 8-7 scores complete patient series only", 0, inProcess.getScorePatientSeries());
+  }
+
+  /**
+   * Table 8-5 Rule 1 (the only route into 8.4): in-process patient series and
+   * patient series with 0 valid doses "are not scored and dropped from
+   * consideration." 8.3 is a router and does not mutate the scorable list, so
+   * 8.4 must drop them after Table 8-7 runs. Otherwise an in-process default
+   * series stays at score 0 beside two complete series tied at 0, and 8.7's
+   * SELECTBEST-2 preference tie picks the default Not Complete series.
+   */
+  @Test
+  public void tableEightFiveRuleOneDropsInProcessSeriesFromConsideration() throws Exception {
+    PatientSeries inProcess = notCompleteSeries("HepB in process", 1);
+    PatientSeries completeA = completeSeries("HepB complete A", 3);
+    PatientSeries completeB = completeSeries("HepB complete B", 3);
+
+    score();
+
+    assertEquals("Table 8-7 still does not penalise the in-process series", 0, inProcess.getScorePatientSeries());
+    assertEquals(Arrays.asList(completeA, completeB), dataModel.getScorablePatientSeriesList());
+  }
+
+  /**
+   * HPV 0409 shape: two complete 3-dose series tied at the maximum valid-dose
+   * count (score 0) plus the default 2-dose series in-process (score 0,
+   * seriesPreference 1). After the Table 8-5 drop, 8.7 must pick a complete
+   * series even though its preference is worse than the default's.
+   */
+  @Test
+  public void aCompleteSeriesTiedAtScoreZeroBeatsAnInProcessDefaultOnPreference() throws Exception {
+    PatientSeries inProcessDefault = notCompleteSeries("HPV 2-dose", 1);
+    inProcessDefault.getTrackedAntigenSeries().getSelectPatientSeries().setSeriesPreference("1");
+    PatientSeries complete = completeSeries("HPV 3-dose start under 15", 3);
+    complete.getTrackedAntigenSeries().getSelectPatientSeries().setSeriesPreference("2");
+    completeSeries("HPV 3-dose start under 15 male", 3).getTrackedAntigenSeries().getSelectPatientSeries()
+        .setSeriesPreference("2");
+
+    score();
+    new SelectPrioritizedPatientSeries(dataModel).process();
+
+    assertEquals("8.7 selects among complete series only", "HPV 3-dose start under 15",
+        dataModel.getPrioritizedPatientSeriesList().get(0).getTrackedAntigenSeries().getSeriesName());
   }
 
   /**

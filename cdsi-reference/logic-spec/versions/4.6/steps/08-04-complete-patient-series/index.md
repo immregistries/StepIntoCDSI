@@ -1,6 +1,6 @@
 # 8.4 Complete Patient Series
 
-> **Review status:** draft. See Review Findings for a verified tie-handling bug in this step's scoring logic.
+> **Review status:** draft.
 
 ## Source
 
@@ -28,11 +28,11 @@ Logic Specification for ACIP Recommendations v4.6, pages 89-90. No figure. Table
 | --- | --- | --- | --- |
 | Has the most valid doses (SELECTB-19) | +1 | 0 | -1 |
 
-**[IMPLEMENTATION]** `evaluate_ACandidatePatientSeriesHasTheMostValidDoses()` finds the maximum valid-dose count among COMPLETE series, then loops a second time: any non-complete or below-max series gets `descPatientScoreSeries()` (-1); the **first** series found at the max gets `incPatientScoreSeries()` (+1) and the loop **breaks immediately** - see Review Findings, this does not correctly implement the tie ("0") case.
+**[IMPLEMENTATION]** `evaluate_ACandidatePatientSeriesHasTheMostValidDoses()` finds the maximum valid-dose count among COMPLETE series, counts how many share that maximum, then scores: below-max complete series get -1; a lone series at the maximum gets +1; a tie at the maximum is left at 0 (SELECTB-19). Non-complete series are not scored. After scoring, they are dropped from `scorablePatientSeriesList` so 8.7 cannot select them (Table 8-5 Rule 1 / SPEC-4.6-0064).
 
 ## State Changes
 
-**[IMPLEMENTATION]** Each scorable patient series in the group has `PatientSeries.incPatientScoreSeries()`/`descPatientScoreSeries()` called on it (a running integer score field), consumed later by 8.7.
+**[IMPLEMENTATION]** Each complete scorable patient series in the group has `PatientSeries.incPatientScoreSeries()`/`descPatientScoreSeries()` called on it (a running integer score field), consumed later by 8.7. Non-complete series are then removed from `scorablePatientSeriesList` (Table 8-5 Rule 1 / SPEC-4.6-0064).
 
 ## Next Steps
 
@@ -42,13 +42,14 @@ Logic Specification for ACIP Recommendations v4.6, pages 89-90. No figure. Table
 
 ## Plain-Language Walkthrough
 
-When multiple series are already complete, the only thing distinguishing them (per the spec) is how many valid doses each accumulated - the one with strictly the most gets a point bump, a tie between two or more gets nobody a bump or a penalty, and anyone with fewer gets penalized. In practice, the current code only reliably handles the "one clear winner" case; see Review Findings for what happens when two or more series are actually tied.
+When multiple series are already complete, the only thing distinguishing them (per the spec) is how many valid doses each accumulated - the one with strictly the most gets a point bump, a tie between two or more gets nobody a bump or a penalty, and anyone with fewer gets penalized. In-process siblings are dropped before 8.7 so they cannot win a preference tie at score 0.
 
 ## StepIntoCDSi Implementation
 
 - `org.openimmunizationsoftware.cdsi.core.logic.CompletePatientSeries` (LogicStepType `COMPLETE_PATIENT_SERIES`) - `cdsi-engine`.
-- Tests: no dedicated unit test.
+- Tests: `CompletePatientSeriesTest` (17 tests).
 
 ## Review Findings
 
-- **Verified tie-handling bug, `IMPLEMENTATION_MISMATCH` (draft):** `evaluate_ACandidatePatientSeriesHasTheMostValidDoses()` increments the score of only the *first* series it finds at the maximum valid-dose count, then `break`s out of the scoring loop entirely. Any *other* series also at the maximum (a genuine tie) is never reached by that loop iteration again - it receives neither the +1 a lone winner should get nor the 0 a tie should produce, and critically, it was already given -1 in the first pass over non-max series... no, re-reading: the second loop's `continue`/`break` structure means a series tied for the max but iterated *after* the first max-series is simply never visited by the scoring branch, leaving its score contribution as whatever it already was (not explicitly documented as 0, but not the spec's specified "0" outcome either - it's "no code path touched it this round," which is a different thing from "the spec-mandated tie score of 0" whenever this scoring step runs more than once across the overall pipeline). Compare with 8.5's `evaluate_ACandidatePatientSeriesHasTheMostValidDoses()` (`InProcessPatientSeries.java`), which implements the identical spec pattern **correctly** using a `greatestElementPosList` that collects every tied series and applies the tie treatment to all of them - confirming this is a real, fixable gap in 8.4 specifically, not an inherent limitation of the framework. Needs prompt engineering/domain-expert attention.
+- **Tie handling is implemented:** `countAtMax` awards 0 to every complete series at the maximum valid-dose count and +1 only when exactly one series is at the maximum (Table 8-7). The earlier "first series at max gets +1 then break" gap is closed.
+- **SPEC-4.6-0064 (open):** Table 8-5 Rule 1 requires in-process series to be dropped from consideration. 8.4 now removes non-COMPLETE series from the scorable list after Table 8-7 so 8.7 cannot pick an in-process default at score 0 via SELECTBEST-2 preference.

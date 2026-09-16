@@ -1,5 +1,6 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
@@ -96,9 +97,9 @@ public class CompletePatientSeries extends LogicStep {
       scoredSeriesCount++;
       if (patientSeries.getPatientSeriesStatus() != null
           && !patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.COMPLETE)) {
-        // Table 8-7 scores complete patient series only - a Not Complete series
-        // does not compete for "has the most valid doses" and is not scored by
-        // this row at all (not even downward).
+        // Table 8-7 scores complete patient series only. Table 8-5 Rule 1 then
+        // drops the rest from consideration so they cannot win an 8.7
+        // SELECTBEST-2 preference tie at score 0.
         log("  Series " + scoredSeriesCount + ": Score unchanged (status is not COMPLETE)");
         continue;
       }
@@ -117,11 +118,38 @@ public class CompletePatientSeries extends LogicStep {
 
   }
 
+  /**
+   * Table 8-5 Rule 1: "All complete patient series in the series group should
+   * be scored. ... In-process patient series and patient series with 0 valid
+   * doses are not scored and dropped from consideration." 8.3 is only a
+   * router, so the drop happens here after Table 8-7 has scored the complete
+   * series. 8.7 then selects among complete series only.
+   */
+  private void dropSeriesNotUnderConsideration() {
+    List<PatientSeries> scorable = dataModel.getScorablePatientSeriesList();
+    if (scorable == null || scorable.isEmpty()) {
+      return;
+    }
+    List<PatientSeries> remaining = new ArrayList<PatientSeries>();
+    for (PatientSeries patientSeries : scorable) {
+      if (PatientSeriesStatus.COMPLETE.equals(patientSeries.getPatientSeriesStatus())) {
+        remaining.add(patientSeries);
+      } else {
+        log("Dropping from consideration (not a complete patient series): "
+            + (patientSeries.getTrackedAntigenSeries() == null ? "(unnamed)"
+                : patientSeries.getTrackedAntigenSeries().getSeriesName()));
+      }
+    }
+    scorable.clear();
+    scorable.addAll(remaining);
+  }
+
   @Override
   public LogicStep process() throws Exception {
     log("CompletePatientSeries.process() started");
     setNextLogicStepType(LogicStepType.SELECT_PRIORITIZED_PATIENT_SERIES);
     evaluate_ACandidatePatientSeriesHasTheMostValidDoses();
+    dropSeriesNotUnderConsideration();
     log("CompletePatientSeries.process() completed. Moving to next step: "
         + LogicStepType.SELECT_PRIORITIZED_PATIENT_SERIES);
     return next();
