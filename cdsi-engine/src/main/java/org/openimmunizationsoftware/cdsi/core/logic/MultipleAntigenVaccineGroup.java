@@ -371,15 +371,47 @@ public class MultipleAntigenVaccineGroup extends LogicStep {
     return latestDateAdministered;
   }
 
+  /**
+   * Table 9-5 MULTIANTVG-1: a dose belongs to the current vaccine group. Schedule
+   * Supporting Data never populates {@code VaccineGroup.vaccineList} (groups are
+   * named and mapped to antigens only), so catalog identity matching is dead in
+   * production. Prefer that catalog when a test or caller did fill it; otherwise
+   * a dose belongs if its CVX-to-antigen associations overlap the group's
+   * antigens (DT CVX 28 belongs to DTaP/Tdap/Td because it contains Diphtheria
+   * and Tetanus).
+   */
   private boolean belongsToVaccineGroup(VaccineDoseAdministered vaccineDoseAdministered) {
     if (vaccineDoseAdministered == null || vaccineDoseAdministered.getVaccine() == null) {
       return false;
     }
+    VaccineGroup vaccineGroup = dataModel.getVaccineGroup();
+    if (vaccineGroup == null) {
+      return false;
+    }
     Vaccine administeredVaccine = vaccineDoseAdministered.getVaccine();
-    for (Vaccine vaccine : dataModel.getVaccineGroup().getVaccineList()) {
+    for (Vaccine vaccine : vaccineGroup.getVaccineList()) {
       if (vaccine == administeredVaccine || (vaccine.getVaccineType() != null
           && vaccine.getVaccineType().equals(administeredVaccine.getVaccineType()))) {
         return true;
+      }
+    }
+    return vaccineTypeSharesAnAntigenWithTheVaccineGroup(administeredVaccine.getVaccineType(), vaccineGroup);
+  }
+
+  private static boolean vaccineTypeSharesAnAntigenWithTheVaccineGroup(VaccineType vaccineType,
+      VaccineGroup vaccineGroup) {
+    if (vaccineType == null || vaccineType.getAntigenList().isEmpty()
+        || vaccineGroup.getAntigenList().isEmpty()) {
+      return false;
+    }
+    for (Antigen administeredAntigen : vaccineType.getAntigenList()) {
+      if (administeredAntigen == null) {
+        continue;
+      }
+      for (Antigen groupAntigen : vaccineGroup.getAntigenList()) {
+        if (administeredAntigen.equals(groupAntigen)) {
+          return true;
+        }
       }
     }
     return false;

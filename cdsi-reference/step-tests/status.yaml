@@ -4529,8 +4529,15 @@ units:
     fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0049", "SPEC-4.6-0050"]
+    finding_ids: ["SPEC-4.6-0049", "SPEC-4.6-0050", "SPEC-4.6-0061"]
     notes: >-
+      2026-09-16: SPEC-4.6-0061. MULTIANTVG-1's last-administered floor
+      matched against VaccineGroup.vaccineList, which Schedule Supporting
+      Data never populates, so production always got a null floor. Membership
+      is now CVX-to-antigen overlap against the group's antigens (catalog
+      identity kept for isolated fixtures). Unit is 39/39. Combined FITS
+      4248 to 4257, DTAP-only +9 (2013-0035 and 2024-0058).
+
       2026-09-14: Project owner accepted the 9.3 tests onto develop
       (reviewing test cases, not engine code). SPEC-4.6-0050 closed the
       remaining three reds (FORECASTVG-7 reason union, FORECASTVG-8

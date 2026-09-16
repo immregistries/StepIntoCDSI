@@ -228,6 +228,30 @@ public class MultipleAntigenVaccineGroupTest {
     dataModel.getImmunizationHistory().getVaccineDoseAdministeredList().add(vaccineDoseAdministered);
   }
 
+  /**
+   * Production shape of MULTIANTVG-1's last-administered term: the dose is on
+   * immunization history with a CVX whose antigen list overlaps the vaccine
+   * group, and the group's vaccine catalog is left empty (as Schedule
+   * Supporting Data leaves it).
+   */
+  private void vaccineDoseAdministeredSharingAntigen(String antigenName, Date dateAdministered) {
+    VaccineType vaccineType = new VaccineType();
+    vaccineType.setCvxCode(antigenName);
+    vaccineType.getAntigenList().add(dataModel.getOrCreateAntigen(antigenName));
+
+    Vaccine vaccine = new Vaccine();
+    vaccine.setVaccineType(vaccineType);
+
+    VaccineDoseAdministered vaccineDoseAdministered = new VaccineDoseAdministered();
+    vaccineDoseAdministered.setVaccine(vaccine);
+    vaccineDoseAdministered.setDateAdministered(dateAdministered);
+
+    if (dataModel.getImmunizationHistory() == null) {
+      dataModel.setImmunizationHistory(new ImmunizationHistory());
+    }
+    dataModel.getImmunizationHistory().getVaccineDoseAdministeredList().add(vaccineDoseAdministered);
+  }
+
   // ---------------------------------------------------------------------
   // Driving the step.
   // ---------------------------------------------------------------------
@@ -540,6 +564,47 @@ public class MultipleAntigenVaccineGroupTest {
 
     assertEquals("MULTIANTVG-1, priority branch: the later of the earliest contained date (06/01/2024) and the"
         + " latest date administered in the vaccine group (12/01/2024)", date("12/01/2024"),
+        theVaccineGroupForecast().getEarliestDate());
+  }
+
+  /**
+   * Same MULTIANTVG-1 floor as
+   * {@link #multiantvgOneThePriorityBranchIsNoEarlierThanTheLatestDoseAdministeredInTheVaccineGroup},
+   * but membership is the production path: CVX-to-antigen overlap against the
+   * group's antigen list, with {@code VaccineGroup.vaccineList} empty. That is
+   * how a DT (CVX 28) or Td (CVX 09) shot belongs to DTaP/Tdap/Td.
+   */
+  @Test
+  public void multiantvgOneTheLatestDoseAdministeredIsFoundByAntigenOverlapWhenTheGroupHasNoVaccineCatalog()
+      throws Exception {
+    mmrVaccineGroup();
+    makePriorityPatientSeriesForecast(
+        bestPatientSeries(MEASLES, PatientSeriesStatus.NOT_COMPLETE, date("06/01/2024")));
+    makePriorityPatientSeriesForecast(
+        bestPatientSeries(MUMPS, PatientSeriesStatus.NOT_COMPLETE, date("09/01/2024")));
+    vaccineDoseAdministeredSharingAntigen(MEASLES, date("12/01/2024"));
+
+    assertEquals("MULTIANTVG-1, priority branch: a dose whose vaccine type shares a group antigen still"
+        + " floors the earliest date when the group catalog is empty", date("12/01/2024"),
+        theVaccineGroupForecast().getEarliestDate());
+  }
+
+  /**
+   * A shot whose antigens are not in the vaccine group (HepB vs MMR) is not
+   * "belonging to the vaccine group" and must not floor the priority earliest
+   * date.
+   */
+  @Test
+  public void multiantvgOneADoseOutsideTheVaccineGroupDoesNotFloorThePriorityEarliestDate() throws Exception {
+    mmrVaccineGroup();
+    makePriorityPatientSeriesForecast(
+        bestPatientSeries(MEASLES, PatientSeriesStatus.NOT_COMPLETE, date("06/01/2024")));
+    makePriorityPatientSeriesForecast(
+        bestPatientSeries(MUMPS, PatientSeriesStatus.NOT_COMPLETE, date("09/01/2024")));
+    vaccineDoseAdministeredSharingAntigen(HEPATITIS_B, date("12/01/2024"));
+
+    assertEquals("MULTIANTVG-1, priority branch: a dose that does not share a group antigen is ignored,"
+        + " so the earliest date stays the earliest contained forecast", date("06/01/2024"),
         theVaccineGroupForecast().getEarliestDate());
   }
 

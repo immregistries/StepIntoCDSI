@@ -33,4 +33,4 @@ For a single-antigen group, consolidation is close to a pass-through (the one an
 ## Open questions
 
 - `VaccineGroupForecast` keeps both a `vaccineGroupStatus` and a `patientSeriesStatus` field, independently settable. This documentation pass didn't trace every place both get read to confirm they're always kept in sync (they have a mapping method, `setVaccineGroupStatus(PatientSeriesStatus)`, but nothing prevents a caller from setting one without the other) - worth a closer look if a future FITS discrepancy ever shows the two disagreeing.
-- Per [9.3's Review Findings](../steps/09-03-multiple-antigen-vaccine-group/index.md), `MULTIANTVG-1`'s "latest date administered" clause wasn't traced to a specific line of code in this pass - flagged unconfirmed there, not resolved here either.
+- `MULTIANTVG-1`'s last-administered floor is in `MultipleAntigenVaccineGroup.latestDateAdministeredInVaccineGroup()` (SPEC-4.6-0049/0061). A dose belongs to the group when its CVX-to-antigen associations overlap the group's antigens.
