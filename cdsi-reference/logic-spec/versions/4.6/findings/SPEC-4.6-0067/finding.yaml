@@ -1,0 +1,59 @@
+id: "SPEC-4.6-0067"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["8.5"]
+source_pages: [90]
+tables: ["Table 8-9", "Table 8-10"]
+business_rules: ["SELECTB-2", "SELECTB-23"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.domain.PatientSeries"
+  - "org.openimmunizationsoftware.cdsi.core.logic.InProcessPatientSeries"
+fits_cases:
+  - "689dc945e4b05decee50df54-HIB-2013-0348"
+  - "689dc945e4b05decee50df54-HepB-2018-0020"
+  - "689dc945e4b05decee50df54-MEN-B-2024-0081"
+summary: >
+  SELECTB-2 read only the last evaluation on each target dose, so a
+  product series that later satisfied the same target with a Valid dose
+  still scored +2 even when an earlier administered dose on that target
+  was Not Valid. Table 8-9 then preferred the product path over the
+  default series that already had the FITS dates.
+evidence: >
+  Table 8-10 SELECTB-2: "A scorable patient series has all valid doses
+  only if all evaluations based on the target doses that are part of
+  the scorable patient series have an evaluation status of 'Valid'."
+  Table 8-9 awards +2 / n/a / -2 for "Is a product series AND has all
+  valid doses" (SELECTB-23 AND SELECTB-2).
+
+  TargetDose.evaluationList holds every evaluation; getEvaluation() is
+  the last entry. 6.10 SatisfyTargetDose writes Not Valid onto the
+  current evaluation when the dose is not allowable, then a later
+  allowable dose adds a new Valid evaluation on the same target.
+
+  PatientSeries.hasAllValidAdministeredDoses previously inspected only
+  getEvaluation(). A list of [Not Valid, Valid] therefore counted as
+  all valid.
+
+  Live 689dc945e4b05decee50df54-HIB-2013-0348: DOB 2025-07-12, CVX 48
+  at 12 months then CVX 49 at 8 weeks-5 days. FITS ED/RD 2026-10-27
+  (12-month 2-dose Dose 2 +8 weeks; second shot TOO_SOON). Engine
+  published PRP-OMP 2026-09-29. PRP-OMP Dose 1 list=[NOT_VALID/cvx48,
+  VALID/cvx49]; 12-month series already had 10-27 at score +2.
+
+  Live HepB-2018-0020: CVX 08 then Heplisav-B CVX 189. FITS 2026-10-27
+  (3-dose Dose 3). Heplisav product path is the same [Not Valid, Valid]
+  shape. Live MEN-B-2024-0081: Bexsero CVX 163 then Trumenba CVX 162.
+interpretation: >
+  SELECTB-2 names every evaluation on the series' target doses, not the
+  surviving Satisfied evaluation. Walking evaluationList makes product
+  + all-valid -2 when any earlier evaluation is not Valid, so the
+  default series can win SELECTBEST-2. Unevaluated remaining targets
+  still do not count against. Do not special-case Hib/HepB/MenB uids.
+  Do not change CALCDT-5. Do not change 2013-0308 (4-dose complete via
+  skip at exactly 12 months vs FITS NOT_COMPLETE null dates).
+
+  FAIL to PASS: all copies of HIB 2013-0348 (5), HepB 2018-0020 (5),
+  MEN B 2024-0081 (4). Newly failing: none. COVID parked. Remaining
+  HIB current-plan: 2013-0299 and 2013-0357 (CALCDT-5), 2013-0308
+  (skip-at-12-months complete vs FITS not complete). HepB remaining:
+  2013-0220 and 2013-0238 (CALCDT-5). MEN B remaining: none.

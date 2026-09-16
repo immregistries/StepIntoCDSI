@@ -369,6 +369,30 @@ public class InProcessPatientSeriesTest {
   }
 
   /**
+   * SELECTB-2 names every evaluation on the series' target doses, not only the
+   * last one. A product series can still satisfy a target after an earlier
+   * administered dose evaluated Not Valid (not allowable for that product
+   * path); the surviving Valid evaluation does not make the series "all valid."
+   */
+  @Test
+  public void selectbTwoAnEarlierNotValidEvaluationOnASatisfiedTargetStillFailsAllValidDoses()
+      throws Exception {
+    PatientSeries productSeries = standardSeries("Hib PRP-OMP", YesNo.YES);
+    TargetDose doseOne = satisfiedTargetDose(productSeries);
+    Evaluation notValid = new Evaluation();
+    notValid.setEvaluationStatus(EvaluationStatus.NOT_VALID);
+    doseOne.getEvaluationList().add(0, notValid);
+    TargetDose remaining = remainingTargetDose(productSeries);
+    maximumAge(remaining, DEFAULT_MAXIMUM_AGE);
+    forecast(productSeries, remaining);
+
+    score(PRODUCT_AND_ALL_VALID_DOSES);
+
+    assertEquals("a prior Not Valid evaluation on the satisfied target still fails SELECTB-2", -2,
+        productSeries.getScorePatientSeries());
+  }
+
+  /**
    * SELECTB-23 asks whether <i>this</i> patient series is a product patient
    * series - "the patient series has a product path of 'Y'" - so the answer must
    * come from the series being scored. A series whose product path is 'N' is not

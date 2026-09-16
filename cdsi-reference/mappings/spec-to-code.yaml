@@ -277,7 +277,7 @@ sections:
       classes:
         - "org.openimmunizationsoftware.cdsi.core.logic.InProcessPatientSeries"
     tests:
-      - "test-gap: no dedicated unit test; verified Date reference-equality bug in one scoring condition, see 08-05's Review Findings"
+      - "org.openimmunizationsoftware.cdsi.core.logic.InProcessPatientSeriesTest (39 tests; SELECTB-2 evaluationList walk is SPEC-4.6-0067)"
     mapping_status: "draft"
   "8.6":
     title: "No Valid Doses"

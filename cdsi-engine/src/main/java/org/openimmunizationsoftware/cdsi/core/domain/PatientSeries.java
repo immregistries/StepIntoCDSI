@@ -107,16 +107,22 @@ public class PatientSeries {
   }
 
   /**
-   * SELECTB-2: every administered dose that was evaluated against this series
-   * came back Valid. Target doses that have not been evaluated yet (the rest of
-   * an in-process series) do not count against the series.
+   * SELECTB-2: every evaluation recorded against this series' target doses is
+   * Valid. A later Valid evaluation on the same target does not erase an earlier
+   * Not Valid one (the last evaluation is only the one that satisfied the
+   * target). Remaining unevaluated target doses do not count against the series.
    */
   public boolean hasAllValidAdministeredDoses() {
     boolean sawAnEvaluation = false;
     if (targetDoseList != null) {
       for (TargetDose targetDose : targetDoseList) {
-        Evaluation evaluation = targetDose.getEvaluation();
-        if (evaluation != null && evaluation.getEvaluationStatus() != null) {
+        if (targetDose.getEvaluationList() == null) {
+          continue;
+        }
+        for (Evaluation evaluation : targetDose.getEvaluationList()) {
+          if (evaluation == null || evaluation.getEvaluationStatus() == null) {
+            continue;
+          }
           sawAnEvaluation = true;
           if (evaluation.getEvaluationStatus() != EvaluationStatus.VALID) {
             return false;
