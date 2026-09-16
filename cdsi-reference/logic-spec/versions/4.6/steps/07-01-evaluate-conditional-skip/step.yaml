@@ -12,6 +12,6 @@ implementation:
     - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkip"
   logic_step_type: "EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST"
 tests:
-  - status: "test-gap"
-    note: "No dedicated unit test. Shares its implementation with 6.2 - see that section's package for the actual attributes/business-rules/decision-tables (6.2's Tables 6-4 through 6-11), which this section explicitly says are identical."
+  - status: "present"
+    note: "EvaluateConditionalSkipForForecastTest covers 7.1's CONDSKIP-2 assessment-date arm, destinations, and CONDSKIP-1 still counting the last administered dose (SPEC-4.6-0063). Shared tables live in 6.2."
 review_status: "draft"

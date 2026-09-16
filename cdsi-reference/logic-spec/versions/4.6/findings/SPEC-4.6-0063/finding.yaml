@@ -1,0 +1,56 @@
+id: "SPEC-4.6-0063"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.2", "7.1"]
+source_pages: [47, 48, 49]
+tables: ["Table 6-5"]
+business_rules: ["CONDSKIP-1"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.businessRules.CONDSKIP_1"
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkip"
+fits_cases:
+  - "689dc945e4b05decee50df54-DTAP-2013-0008"
+  - "689dc945e4b05decee50df54-DTAP-2013-0010"
+  - "689dc945e4b05decee50df54-DTAP-2013-0065"
+  - "689dc945e4b05decee50df54-DTAP-2020-0005"
+  - "689dc945e4b05decee50df54-DTAP-2020-0007"
+summary: >
+  CONDSKIP-1 counted the vaccine dose administered 6.2 is currently
+  evaluating, so start-at-12-months Dose 8's "more than 1 Valid" skip
+  fired on the second catch-up shot that should have satisfied Dose 8.
+evidence: >
+  Table 6-5 CONDSKIP-1: the Number of Conditional Doses Administered is
+  the count of vaccine doses administered matching vaccine type, age
+  window, date window, and Valid vs Total. 6.2 runs after 6.1 accepts
+  the current dose for evaluation; that VDA is already in immunization
+  history.
+
+  Pertussis start-at-12-months Dose 8 Both set 1: "Dose is not required
+  if the patient has received more than 1 dose", doseType Valid,
+  doseCount 1, greater than, empty vaccineTypes.
+
+  Live 689dc945e4b05decee50df54-DTAP-2013-0008: DOB 2018-09-01; DTaP 20
+  on 2026-03-01, Tdap 115 on 2026-09-01. FITS wants ED 2027-03-01
+  (6-month Dose 9). Engine skipped Dose 8 (2 Valid including the Tdap
+  under evaluation), satisfied Dose 9 with Tdap, forecast Dose 10 at
+  age 11. After this fix: Tdap satisfies Dose 8, forecast Dose 9 at
+  2027-03-01.
+
+  Live 689dc945e4b05decee50df54-DTAP-2020-0005: adult Tdap 115 then Td
+  139 at 4 weeks. FITS wants 2027-03-01 (6 months from the Td). Engine
+  after this fix: 2027-02-04 (6 months from the Tdap). Same shape as
+  Issue #65 / SPEC-4.6-0019: FITS 6-month catch-up vs Dose 8's own
+  interval once the current shot is not counted as a prior skip dose.
+interpretation: >
+  6.2's count is of other administered doses. The shot under evaluation
+  is not a prior dose that already made this target unnecessary. 7.1
+  and 7.6 still count every administered dose; forecasting has no
+  current shot.
+
+  2013-0008, 0010, 0020, 0065, 0067, 0088, 0093, 0094, 0128, 0135,
+  0163, 2020-0004, 2020-0007, and 2020-0010 newly pass. 2020-0005 and
+  2020-0006 newly fail (FITS 6-month from Td, engine 6-month from
+  Tdap) - Issue #65 leftover, not added to the allowlist. Do not
+  evaluate every Conditional Skip instance. Do not change CALCDT-5.
+  Remaining DTAP fails are CALCDT-5 0011/0095/0136 and these two
+  0005/0006 copies.

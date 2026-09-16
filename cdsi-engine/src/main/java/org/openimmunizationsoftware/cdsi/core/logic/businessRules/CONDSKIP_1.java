@@ -16,6 +16,22 @@ import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 public class CONDSKIP_1
         extends org.openimmunizationsoftware.cdsi.core.logic.items.BusinessRule<Integer, ConditionalSkipCondition> {
 
+    /**
+     * The dose 6.2 is currently evaluating. Null when forecasting or
+     * validating - every administered dose is already in history then.
+     * Counting the current shot makes Dose 8's "more than N valid" skip
+     * fire on the dose that should satisfy it.
+     */
+    private final VaccineDoseAdministered doseBeingEvaluated;
+
+    public CONDSKIP_1() {
+        this(null);
+    }
+
+    public CONDSKIP_1(VaccineDoseAdministered doseBeingEvaluated) {
+        this.doseBeingEvaluated = doseBeingEvaluated;
+    }
+
     @Override
     public Integer evaluate(DataModel dataModel,
             ConditionalSkipCondition conditionalSkipCondition) {
@@ -25,6 +41,10 @@ public class CONDSKIP_1
         int count = 0;
         for (VaccineDoseAdministered vaccineDoseAdministered : dataModel.getImmunizationHistory()
                 .getVaccineDoseAdministeredList()) {
+            if (vaccineDoseAdministered == doseBeingEvaluated) {
+                log("  + skipping the dose currently being evaluated");
+                continue;
+            }
             if (vaccineDoseAdministered.getVaccine() == null
                     || vaccineDoseAdministered.getVaccine().getVaccineType() == null) {
                 continue;

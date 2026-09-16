@@ -17,6 +17,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipConditionTyp
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipSet;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.businessRules.CONDSKIP_1;
@@ -255,7 +256,7 @@ public class EvaluateConditionalSkip extends LogicStep {
                     }
 
                     lt.caConditionalSkipElements.setInitialValue(condition);
-                    CONDSKIP_1 condskip1 = new CONDSKIP_1();
+                    CONDSKIP_1 condskip1 = new CONDSKIP_1(doseBeingEvaluated());
                     log("Evaluating Business Rule CONDSKIP_1 for Condition ");
                     businessRuleList.add(condskip1);
                     lt.caNumberofConditionalDosesAdministered
@@ -267,6 +268,18 @@ public class EvaluateConditionalSkip extends LogicStep {
             logicTable611.addInnerSet(logicTable610);
         }
         logicTableList.add(logicTable611);
+    }
+
+    /**
+     * 6.2 only: the VDA this target is being evaluated against. 7.1/7.6
+     * leave it null so every administered dose counts.
+     */
+    private VaccineDoseAdministered doseBeingEvaluated() {
+        if (conditionalSkipType != ConditionalSkipType.EVALUATE) {
+            return null;
+        }
+        AntigenAdministeredRecord aar = dataModel.getAntigenAdministeredRecord();
+        return aar == null ? null : aar.getVaccineDoseAdministered();
     }
 
     private boolean conditionalSkipApplies(ConditionalSkip candidate) {

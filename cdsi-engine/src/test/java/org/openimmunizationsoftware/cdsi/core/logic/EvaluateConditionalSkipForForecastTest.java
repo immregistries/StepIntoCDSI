@@ -23,6 +23,8 @@ import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkip;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipCondition;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipConditionType;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipSet;
+import org.openimmunizationsoftware.cdsi.core.domain.DoseType;
+import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.ImmunizationHistory;
 import org.openimmunizationsoftware.cdsi.core.domain.Patient;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
@@ -31,6 +33,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.Vaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
@@ -68,10 +71,12 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
  * <p>
  * What is genuinely 7.1's own, and is what this class covers:
  * <ol>
- * <li>the FORECAST arm of the shared constructor's one context switch -
- * CONDSKIP-2's Conditional Skip Reference Date, which is the Assessment Date
- * when determining a forecast rather than 6.2's Date Administered - and what
+ * <li>the FORECAST arm of CONDSKIP-2's reference date (the Assessment Date
+ * when determining a forecast rather than 6.2's Date Administered) and what
  * that substitution actually does to the skip decision;</li>
+ * <li>CONDSKIP-1 still counting every administered dose, including the last
+ * one the current AntigenAdministeredRecord points at (6.2 excludes that
+ * VDA - SPEC-4.6-0063);</li>
  * <li>{@code EvaluateConditionalSkipForForecast}'s own construction: the step
  * type it publishes, that {@code LogicStepFactory} builds it for 7.1, and its
  * two destinations, which are <em>not</em> 6.2's (no skip goes to 7.2 Determine
@@ -81,7 +86,7 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
  * </ol>
  *
  * <p>
- * (3) covers the same domain-model gap 6.2 found, but it is 7.1's own entry
+ * (4) covers the same domain-model gap 6.2 found, but it is 7.1's own entry
  * condition read from the opposite direction and reaches a different
  * conclusion about the bundled data, so it is asserted once here rather than
  * inherited. See the class comment on that test.
@@ -205,6 +210,40 @@ public class EvaluateConditionalSkipForForecastTest {
     dataModel.setPreviousAntigenAdministeredRecord(previous);
     dataModel.setAntigenAdministeredRecordThatSatisfiedPreviousTargetDose(previous);
     return condition;
+  }
+
+  private ConditionalSkipCondition vaccineCountCondition(String doseCountLogic, int doseCount) {
+    ConditionalSkipCondition condition = soleCondition(ConditionalSkipConditionType.VACCINE_COUNT_BY_AGE);
+    condition.setDoseCountLogic(doseCountLogic);
+    condition.setDoseCount(doseCount);
+    condition.setDoseType(DoseType.VALID);
+    return condition;
+  }
+
+  private static VaccineType vaccineType(String cvxCode) {
+    VaccineType vaccineType = new VaccineType();
+    vaccineType.setCvxCode(cvxCode);
+    vaccineType.setShortDescription("CVX " + cvxCode);
+    return vaccineType;
+  }
+
+  private VaccineDoseAdministered historicDose(VaccineType type, String monthDayYear,
+      EvaluationStatus evaluationStatus) {
+    Vaccine vaccine = new Vaccine();
+    vaccine.setVaccineType(type);
+
+    VaccineDoseAdministered vaccineDoseAdministered = new VaccineDoseAdministered();
+    vaccineDoseAdministered.setVaccine(vaccine);
+    vaccineDoseAdministered.setDateAdministered(date(monthDayYear));
+
+    TargetDose historicTargetDose = new TargetDose(new SeriesDose());
+    Evaluation evaluation = new Evaluation();
+    evaluation.setEvaluationStatus(evaluationStatus);
+    historicTargetDose.setEvaluation(evaluation);
+    vaccineDoseAdministered.setTargetDose(historicTargetDose);
+
+    dataModel.getImmunizationHistory().getVaccineDoseAdministeredList().add(vaccineDoseAdministered);
+    return vaccineDoseAdministered;
   }
 
   private LogicStep run() throws Exception {
@@ -421,6 +460,27 @@ public class EvaluateConditionalSkipForForecastTest {
     assertEquals("no current dose administered does not disturb the forecast reference date",
         date(ASSESSMENT), referenceDate());
     assertTrue("01/01/2020 <= 06/01/2021 < 01/01/2025", onlyConditionTable().isMet());
+  }
+
+  /**
+   * 7.1 still counts every administered dose, including the last one the
+   * current AntigenAdministeredRecord points at. 6.2 excludes that VDA
+   * because it is the shot under evaluation; forecasting has no current
+   * shot, so excluding it would under-count "more than N valid".
+   */
+  @Test
+  public void condskipOneCountsTheLastAdministeredDoseWhenForecasting() throws Exception {
+    historicDose(vaccineType("20"), "06/01/2016", EvaluationStatus.VALID);
+    VaccineDoseAdministered last = historicDose(vaccineType("115"), "09/01/2016",
+        EvaluationStatus.VALID);
+    antigenAdministeredRecord.setVaccineDoseAdministered(last);
+
+    vaccineCountCondition("greater than", 1);
+
+    run();
+
+    assertEquals("forecasting counts every administered Valid, including the last",
+        Integer.valueOf(2), onlyConditionTable().caNumberofConditionalDosesAdministered.getFinalValue());
   }
 
   // ================= What the forecast reference date does to the skip decision

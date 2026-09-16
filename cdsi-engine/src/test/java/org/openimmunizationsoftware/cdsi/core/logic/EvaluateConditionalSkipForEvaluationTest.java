@@ -67,15 +67,13 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
  *
  * <p>
  * The base class is shared with 7.1 ({@code EvaluateConditionalSkipForForecast})
- * and with {@code ValidateRecommendation}. It branches on the context in exactly
- * one place: CONDSKIP-2's reference date, a {@code switch} in the constructor
- * that takes the date administered when evaluating, the assessment date when
- * forecasting, and 01/01/1900 when validating. Only the EVALUATE arm is
- * exercised here; the FORECAST arm, and the two forecast-side destinations, are
- * 7.1's own unit and are intentionally left alone. Everything else covered below
- * - Tables 6-6 through 6-11, CALCDTSKIP-3/4/5, CONDSKIP-1, the per-condition
- * attributes - is context-independent shared logic and does not need
- * re-litigating under 7.1.
+ * and with {@code ValidateRecommendation}. It branches on the context in two
+ * places: CONDSKIP-2's reference date, and CONDSKIP-1's exclusion of the dose
+ * currently being evaluated (6.2 only). The FORECAST arm, and the two
+ * forecast-side destinations, are 7.1's own unit and are intentionally left
+ * alone here. Everything else covered below - Tables 6-6 through 6-11,
+ * CALCDTSKIP-3/4/5, CONDSKIP-1's count criteria, the per-condition attributes -
+ * is context-independent shared logic and does not need re-litigating under 7.1.
  *
  * <h2>Scaffolding</h2>
  *
@@ -803,6 +801,49 @@ public class EvaluateConditionalSkipForEvaluationTest {
     run();
 
     assertEquals("Total Td shots count without a Pertussis targetDose",
+        Integer.valueOf(2), onlyConditionTable().caNumberofConditionalDosesAdministered.getFinalValue());
+  }
+
+  /**
+   * CONDSKIP-1's count is of other administered doses. The shot 6.2 is
+   * currently evaluating is already in immunization history, but counting it
+   * makes Dose 8's "more than 1 valid" skip fire on the second catch-up
+   * dose that should satisfy Dose 8.
+   */
+  @Test
+  public void condskipOneDoesNotCountTheDoseCurrentlyBeingEvaluated() throws Exception {
+    historicDose(vaccineType("20"), "06/01/2016", EvaluationStatus.VALID);
+    VaccineDoseAdministered current = historicDose(vaccineType("115"), "09/01/2016",
+        EvaluationStatus.VALID);
+    antigenAdministeredRecord.setVaccineDoseAdministered(current);
+
+    ConditionalSkipCondition condition = vaccineCountCondition("greater than", 1);
+    condition.setDoseType(DoseType.VALID);
+
+    run();
+
+    assertEquals("the dose under evaluation is not a prior dose",
+        Integer.valueOf(1), onlyConditionTable().caNumberofConditionalDosesAdministered.getFinalValue());
+  }
+
+  /**
+   * Two already-administered Valids still meet "greater than 1" when a
+   * third shot is the one under evaluation.
+   */
+  @Test
+  public void condskipOneStillCountsTwoPriorValidDosesWhenEvaluatingAThird() throws Exception {
+    historicDose(vaccineType("20"), "06/01/2016", EvaluationStatus.VALID);
+    historicDose(vaccineType("20"), "08/01/2016", EvaluationStatus.VALID);
+    VaccineDoseAdministered current = historicDose(vaccineType("115"), "09/01/2016",
+        EvaluationStatus.VALID);
+    antigenAdministeredRecord.setVaccineDoseAdministered(current);
+
+    ConditionalSkipCondition condition = vaccineCountCondition("greater than", 1);
+    condition.setDoseType(DoseType.VALID);
+
+    run();
+
+    assertEquals("two prior Valids still count",
         Integer.valueOf(2), onlyConditionTable().caNumberofConditionalDosesAdministered.getFinalValue());
   }
 
