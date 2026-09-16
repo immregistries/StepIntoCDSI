@@ -7,6 +7,7 @@ import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipCondition;
 import org.openimmunizationsoftware.cdsi.core.domain.DoseType;
 import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
+import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
@@ -24,6 +25,10 @@ public class CONDSKIP_1
         int count = 0;
         for (VaccineDoseAdministered vaccineDoseAdministered : dataModel.getImmunizationHistory()
                 .getVaccineDoseAdministeredList()) {
+            if (vaccineDoseAdministered.getVaccine() == null
+                    || vaccineDoseAdministered.getVaccine().getVaccineType() == null) {
+                continue;
+            }
             VaccineType vaccineType = vaccineDoseAdministered.getVaccine().getVaccineType();
             log("  + Looking at vaccine type: " + vaccineType);
             log("    - ConditionalSkipCondition vaccine types: "
@@ -75,24 +80,19 @@ public class CONDSKIP_1
                     }
                 }
                 if (inRangeForAge && inRangeForDate) {
-                    if (vaccineDoseAdministered.getTargetDose() == null) {
-                        log("  + not counting dose with no target dose");
-                        continue;
-                    }
-                    Evaluation evaluation = vaccineDoseAdministered.getTargetDose().getEvaluation();
-                    if (evaluation != null && evaluation.getEvaluationStatus() != null) {
-                        log("  + Skip dose type = " + conditionalSkipCondition.getDoseType());
-                        if (conditionalSkipCondition.getDoseType() == DoseType.TOTAL) {
+                    log("  + Skip dose type = " + conditionalSkipCondition.getDoseType());
+                    if (conditionalSkipCondition.getDoseType() == DoseType.TOTAL) {
+                        // Table 6-5 CONDSKIP-1: Total counts every matching administered
+                        // dose. A Td shot belongs in Pertussis Dose 9's "2 or more Td
+                        // on or after 7 years" skip even though Td has no pertussis
+                        // and was never evaluated against this antigen.
+                        count++;
+                        log("  + Counting any type of dose, regardless of evaluation status");
+                    } else if (conditionalSkipCondition.getDoseType() == DoseType.VALID) {
+                        Evaluation evaluation = evaluationOf(vaccineDoseAdministered);
+                        if (evaluation != null && evaluation.getEvaluationStatus() == EvaluationStatus.VALID) {
                             count++;
-                            log("  + Counting any type of dose, regardless of evaluation status");
-                        } else {
-                            if (conditionalSkipCondition.getDoseType() == DoseType.VALID) {
-                                log("  + dose evaluation status = " + evaluation.getEvaluationStatus());
-                                if (evaluation.getEvaluationStatus() == EvaluationStatus.VALID) {
-                                    count++;
-                                    log("  + Counting because dose is valid");
-                                }
-                            }
+                            log("  + Counting because dose is valid");
                         }
                     }
                 }
@@ -100,6 +100,22 @@ public class CONDSKIP_1
         }
         log("  --> CONDSKIP_1 count = " + count);
         return count;
+    }
+
+    /**
+     * Prefer the VDA's own evaluated-against target (6.10 / 6.3 write this for
+     * every outcome). Fall back to {@code targetDose}, which 6.10 only sets on
+     * SATISFIED and which a later antigen can overwrite.
+     */
+    private static Evaluation evaluationOf(VaccineDoseAdministered vaccineDoseAdministered) {
+        TargetDose evaluatedAgainst = vaccineDoseAdministered.getEvaluatedAgainstTargetDose();
+        if (evaluatedAgainst != null && evaluatedAgainst.getEvaluation() != null) {
+            return evaluatedAgainst.getEvaluation();
+        }
+        if (vaccineDoseAdministered.getTargetDose() != null) {
+            return vaccineDoseAdministered.getTargetDose().getEvaluation();
+        }
+        return null;
     }
 
     private static boolean onOrAfter(Date date, Date refDate) {

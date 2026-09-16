@@ -33,5 +33,5 @@ implementation:
     both Evaluation and Forecasting."
 tests:
   - status: "present"
-    note: "EvaluateConditionalSkipForEvaluationTest covers Tables 6-4 through 6-11 and CALCDTSKIP-3/4/5, including the production previousAAR path for CALCDTSKIP-5 (SPEC-4.6-0059)."
+    note: "EvaluateConditionalSkipForEvaluationTest covers Tables 6-4 through 6-11 and CALCDTSKIP-3/4/5, including the production previousAAR path for CALCDTSKIP-5 (SPEC-4.6-0059) and CONDSKIP-1 Total without a targetDose (SPEC-4.6-0062)."
 review_status: "draft"

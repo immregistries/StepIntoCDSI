@@ -22,7 +22,7 @@ This step exists so the exact same skip logic that ran once during evaluation (6
 
 **[IMPLEMENTATION]** Confirmed by reading the source directly: `EvaluateConditionalSkipForForecast` is a two-line subclass of the exact same `EvaluateConditionalSkip` base class that 6.2's `EvaluateConditionalSkipForEvaluation` also subclasses - the same `LT66`/`LT67`/`LT68`/`LT69`/`LT610`/`LT611` decision-table logic runs either way. The only difference in the base class's behavior is `ConditionalSkipType` (`EVALUATE` for 6.2 vs. `FORECAST` here), which affects CONDSKIP-2's reference-date calculation (date administered vs. assessment date) and which Conditional Skip instances are filtered in (context Evaluation-or-Both vs. Forecast-or-Both).
 
-The one gap already documented for 6.2 - `LT67`'s "Completed Series" condition hardcoded to `LogicResult.NO` - applies identically here, since it's the same code.
+The one gap already documented for 6.2 - `LT67`'s "Completed Series" condition hardcoded to `LogicResult.NO` - applies identically here, since it's the same code. CONDSKIP-1 Total without a `targetDose` (SPEC-4.6-0062) is also the shared `CONDSKIP_1` class.
 
 ## State Changes
 

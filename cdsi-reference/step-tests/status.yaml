@@ -698,8 +698,11 @@ units:
     fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0017", "SPEC-4.6-0018", "SPEC-4.6-0019", "SPEC-4.6-0027", "SPEC-4.6-0031", "SPEC-4.6-0032", "SPEC-4.6-0033", "SPEC-4.6-0043", "SPEC-4.6-0059"]
+    finding_ids: ["SPEC-4.6-0017", "SPEC-4.6-0018", "SPEC-4.6-0019", "SPEC-4.6-0027", "SPEC-4.6-0031", "SPEC-4.6-0032", "SPEC-4.6-0033", "SPEC-4.6-0043", "SPEC-4.6-0059", "SPEC-4.6-0062"]
     notes: >-
+      2026-09-16: CONDSKIP-1 Total counts a matching dose with no
+      targetDose (SPEC-4.6-0062). One new test; unit is 47/47.
+
       2026-09-15: CALCDTSKIP-5 now reads previousAntigenAdministeredRecord
       (SPEC-4.6-0059). Two new tests; unit is 46/46.
 
@@ -2034,7 +2037,7 @@ units:
     fix_status: merged
     blocked_category: null
     blocked_reason: null
-    finding_ids: ["SPEC-4.6-0027", "SPEC-4.6-0043"]
+    finding_ids: ["SPEC-4.6-0027", "SPEC-4.6-0043", "SPEC-4.6-0062"]
     notes: >-
       2026-09-15: Project owner accepted the 6.2/7.1/7.6 cluster onto
       develop. Unit is 12/12. Historical diagnosis retained below.

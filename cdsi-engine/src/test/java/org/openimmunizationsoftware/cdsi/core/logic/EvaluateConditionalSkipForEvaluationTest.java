@@ -784,6 +784,28 @@ public class EvaluateConditionalSkipForEvaluationTest {
         Integer.valueOf(3), onlyConditionTable().caNumberofConditionalDosesAdministered.getFinalValue());
   }
 
+  /**
+   * CONDSKIP-1 Total counts an administered dose of a named vaccine type even
+   * when that shot was never evaluated against the current antigen (no
+   * targetDose). Pertussis Dose 9's "2 or more Td on or after 7 years" skip
+   * has to see Td CVX 139 this way.
+   */
+  @Test
+  public void condskipOneCountsTotalDosesThatWereNeverEvaluatedAgainstATarget() throws Exception {
+    historicDose(vaccineType("139"), "03/01/2016", null);
+    historicDose(vaccineType("139"), "09/01/2016", null);
+    historicDose(vaccineType("20"), "09/01/2016", EvaluationStatus.VALID);
+
+    ConditionalSkipCondition condition = vaccineCountCondition("greater than", 1);
+    condition.setDoseType(DoseType.TOTAL);
+    condition.getVaccineTypeSet().add(vaccineType("139"));
+
+    run();
+
+    assertEquals("Total Td shots count without a Pertussis targetDose",
+        Integer.valueOf(2), onlyConditionTable().caNumberofConditionalDosesAdministered.getFinalValue());
+  }
+
   // =========================================================== Table 6-6 (Age)
 
   /**
