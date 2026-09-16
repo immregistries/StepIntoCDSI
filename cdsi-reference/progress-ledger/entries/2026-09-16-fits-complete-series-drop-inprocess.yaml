@@ -1,0 +1,21 @@
+id: "2026-09-16-fits-complete-series-drop-inprocess"
+date: "2026-09-16"
+phase: 22
+title: "FITS - 8.4 drops in-process series from consideration (SPEC-4.6-0064)"
+before:
+  commit: "6ff0804"
+  engine_tests: {total: 827, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 4400, failed_assertions: 495, execution_errors: 1}
+after:
+  commit: "e9d65aa"
+  engine_tests: {total: 829, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 4455, failed_assertions: 440, execution_errors: 1}
+  fits_runtime_seconds: 179
+summary: >
+  Table 8-5 Rule 1 now drops in-process series after 8.4 scores complete
+  ones, so SELECTBEST-2 cannot pick a default Not Complete series on a
+  score-0 preference tie. Combined FITS 4400 to 4455 (net +55), all HPV.
+  Newly failing: none. COVID unchanged. Same two engine reds (8.1/8.7).
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0064/finding.md"
+finding_ids: ["SPEC-4.6-0064"]
+status: reviewed

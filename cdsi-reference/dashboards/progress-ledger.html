@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-16 05:52:33 - regenerate with
+  Dashboard generated 2026-09-16 06:22:52 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,7 +57,7 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">55</div>
+    <div class="value">56</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
@@ -131,6 +131,25 @@
   </div>
   <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0063/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0063/finding.md</a></p>
   <p class="muted">Findings: SPEC-4.6-0063</p>
+</section>
+<section>
+  <h2>2026-09-16 - Phase 22 - FITS - 8.4 drops in-process series from consideration (SPEC-4.6-0064)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Table 8-5 Rule 1 now drops in-process series after 8.4 scores complete ones, so SELECTBEST-2 cannot pick a default Not Complete series on a score-0 preference tie. Combined FITS 4400 to 4455 (net +55), all HPV. Newly failing: none. COVID unchanged. Same two engine reds (8.1/8.7).
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>6ff0804</code></td></tr><tr><td>Engine tests</td><td>827 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4400 passed, 495 failed-assertion, 1 execution-error (89.9%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>e9d65aa</code></td></tr><tr><td>Engine tests</td><td>829 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4455 passed, 440 failed-assertion, 1 execution-error (91.0%)</td></tr><tr><td>FITS runtime</td><td>179.0s (3.0m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0064/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0064/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0064</p>
 </section>
 <section>
   <h2>2026-09-15 - Phase 22 - Role B Round 42 - Units 7.2/7.3 fixture rewrites (UNDETERMINED reds closed)
