@@ -292,6 +292,35 @@ public class EvaluatePreferableIntervalTest {
   }
 
   /**
+   * Forecast-shaped leftover after 6.10: the last shot failed the current
+   * target ({@code getTargetDose()} stays null;
+   * {@code getEvaluatedAgainstTargetDose()} holds the Not Valid evaluation)
+   * and {@code previousTargetDose} is still the skipped dose that never
+   * consumed an administration.
+   */
+  private void previousNotValidDoseThenSkippedTarget(String monthDayYear) {
+    SeriesDose attemptedSeriesDose = new SeriesDose();
+    attemptedSeriesDose.setDoseNumber("4");
+    TargetDose attemptedTarget = new TargetDose(attemptedSeriesDose);
+    attemptedTarget.setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
+    Evaluation previousEvaluation = new Evaluation();
+    previousEvaluation.setEvaluationStatus(EvaluationStatus.NOT_VALID);
+    previousEvaluation.setEvaluationReason(EvaluationReason.TOO_SOON);
+    attemptedTarget.setEvaluation(previousEvaluation);
+
+    AntigenAdministeredRecord previousAar = administeredRecord(monthDayYear, "10");
+    previousAar.getVaccineDoseAdministered().setEvaluatedAgainstTargetDose(attemptedTarget);
+
+    SeriesDose skippedSeriesDose = new SeriesDose();
+    skippedSeriesDose.setDoseNumber("3");
+    TargetDose skippedTarget = new TargetDose(skippedSeriesDose);
+    skippedTarget.setTargetDoseStatus(TargetDoseStatus.SKIPPED);
+
+    dataModel.setPreviousTargetDose(skippedTarget);
+    dataModel.setPreviousAntigenAdministeredRecord(previousAar);
+  }
+
+  /**
    * A Supporting Data preferable interval, written the way
    * {@code DataModelLoader.readSeriesDose} writes one: both {@link TimePeriod}s
    * assigned, an empty Supporting Data value becoming an unvalued
@@ -1120,6 +1149,26 @@ public class EvaluatePreferableIntervalTest {
       throws Exception {
     interval(YesNo.YES, "6 months - 4 days", "6 months");
     previousSatisfiedDoseThenSkippedTarget("01/01/2016");
+    administeredOn("05/01/2016");
+
+    run();
+
+    assertEquals(LogicStepType.EVALUATE_ALLOWABLE_INTERVAL, step.getNextLogicStepType());
+  }
+
+  /**
+   * CALCDTINT-1: a Not Valid last shot still counts as the immediate previous
+   * vaccine dose administered. 6.10 leaves {@code getTargetDose()} null on
+   * that VDA and writes the evaluation onto
+   * {@code getEvaluatedAgainstTargetDose()} instead. Four months later must
+   * still fail the 6-month interval rather than falling back to a skipped
+   * previous target with no evaluation (assumed 01/01/1900).
+   */
+  @Test
+  public void preferableIntervalAfterNotValidPreviousDoseUsesTheEvaluatedAgainstTarget()
+      throws Exception {
+    interval(YesNo.YES, "6 months - 4 days", "6 months");
+    previousNotValidDoseThenSkippedTarget("01/01/2016");
     administeredOn("05/01/2016");
 
     run();

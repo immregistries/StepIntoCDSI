@@ -55,4 +55,5 @@ Where 6.5 is forgiving (a slightly-early dose still often counts, with a note), 
 ## Review Findings
 
 - **Documented fix (2026-09-15, SPEC-4.6-0057): §3.3 Allowable Interval selection and CALCDTINT-1 after skip.** Table 6-21 checks run only for allowable-interval rows whose Effective–Cessation window covers the date administered. CALCDTINT-1 measures from the last administered dose when the previous target was skipped, so 6.5 can fail and this empty-allowable fallback can run. Engine still skips 6.6 when 6.5 is satisfied — combining "always run 6.6" with empty-allowable = not valid would fail 465 of 484 series doses.
+- **Documented fix (2026-09-15, SPEC-4.6-0058): CALCDTINT-1 after a Not Valid last shot.** Same helper as 6.5/7.5: when the previous AAR failed its target, the reference date comes from `evaluatedAgainstTargetDose` rather than a skipped previous target with no evaluation.
 - Outcome 0 correctly sets `EvaluationReason.TOO_SOON` (unlike 6.5's historically wrong equivalent — see that step's Review Findings).

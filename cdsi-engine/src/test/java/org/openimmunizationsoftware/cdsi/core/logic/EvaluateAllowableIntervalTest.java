@@ -300,6 +300,35 @@ public class EvaluateAllowableIntervalTest {
   }
 
   /**
+   * Forecast-shaped leftover after 6.10: the last shot failed the current
+   * target ({@code getTargetDose()} stays null;
+   * {@code getEvaluatedAgainstTargetDose()} holds the Not Valid evaluation)
+   * and {@code previousTargetDose} is still the skipped dose that never
+   * consumed an administration.
+   */
+  private void previousNotValidDoseThenSkippedTarget(String monthDayYear) {
+    SeriesDose attemptedSeriesDose = new SeriesDose();
+    attemptedSeriesDose.setDoseNumber("4");
+    TargetDose attemptedTarget = new TargetDose(attemptedSeriesDose);
+    attemptedTarget.setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
+    Evaluation previousEvaluation = new Evaluation();
+    previousEvaluation.setEvaluationStatus(EvaluationStatus.NOT_VALID);
+    previousEvaluation.setEvaluationReason(EvaluationReason.TOO_SOON);
+    attemptedTarget.setEvaluation(previousEvaluation);
+
+    AntigenAdministeredRecord previousAar = administeredRecord(monthDayYear, "21");
+    previousAar.getVaccineDoseAdministered().setEvaluatedAgainstTargetDose(attemptedTarget);
+
+    SeriesDose skippedSeriesDose = new SeriesDose();
+    skippedSeriesDose.setDoseNumber("2");
+    TargetDose skippedTarget = new TargetDose(skippedSeriesDose);
+    skippedTarget.setTargetDoseStatus(TargetDoseStatus.SKIPPED);
+
+    dataModel.setPreviousTargetDose(skippedTarget);
+    dataModel.setPreviousAntigenAdministeredRecord(previousAar);
+  }
+
+  /**
    * A Supporting Data allowable interval, written the way
    * {@code DataModelLoader.readSeriesDose} writes one.
    */
@@ -918,6 +947,22 @@ public class EvaluateAllowableIntervalTest {
   public void calcdtintOneMeasuresFromThePreviousAdministeredDoseWhenPreviousTargetWasSkipped()
       throws Exception {
     previousSatisfiedDoseThenSkippedTarget("01/01/2016");
+    theStandardAllowableInterval();
+
+    run();
+
+    assertEquals(date("01/29/2016"), attribute(2).getFinalValue());
+  }
+
+  /**
+   * CALCDTINT-1 after a Not Valid last shot still uses that shot's date
+   * when 6.10 left {@code getTargetDose()} null and wrote the evaluation
+   * onto {@code getEvaluatedAgainstTargetDose()} instead.
+   */
+  @Test
+  public void calcdtintOneMeasuresFromANotValidPreviousDoseWhenPreviousTargetWasSkipped()
+      throws Exception {
+    previousNotValidDoseThenSkippedTarget("01/01/2016");
     theStandardAllowableInterval();
 
     run();

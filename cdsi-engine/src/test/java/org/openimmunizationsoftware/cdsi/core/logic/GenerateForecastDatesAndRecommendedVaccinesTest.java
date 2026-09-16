@@ -33,6 +33,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationReason;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
@@ -697,6 +698,54 @@ public class GenerateForecastDatesAndRecommendedVaccinesTest {
     assertEquals("FORECASTDT-1: the candidate earliest date includes the latest minimum interval "
         + "date, dose 1 (03/10/2024) plus '4 weeks'", date("04/07/2024"),
         step.computeEarliestDate());
+  }
+
+  /**
+   * CALCDTINT-1 / FORECASTDT-1 leftover after a Not Valid last shot: 6.10
+   * leaves {@code getTargetDose()} null on that VDA and writes the evaluation
+   * onto {@code getEvaluatedAgainstTargetDose()}. The previous target is still
+   * SKIPPED (no evaluation). The 6-month preferable interval must still be
+   * measured from the Not Valid date administered, so earliest/recommended
+   * land six months later rather than on the last-shot / minimum-age date.
+   */
+  @Test
+  public void forecastdtOneMinimumIntervalUsesNotValidPreviousDoseWhenPreviousTargetWasSkipped() {
+    Interval fromImmediate = interval("6 months", null, null);
+    fromImmediate.setFromImmediatePreviousDoseAdministered(YesNo.YES);
+    fromImmediate.setFromTargetDoseNumberInSeries("");
+
+    SeriesDose attemptedSeriesDose = new SeriesDose();
+    attemptedSeriesDose.setDoseNumber("4");
+    TargetDose attemptedTarget = new TargetDose(attemptedSeriesDose);
+    attemptedTarget.setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
+    Evaluation notValid = new Evaluation();
+    notValid.setEvaluationStatus(EvaluationStatus.NOT_VALID);
+    notValid.setEvaluationReason(EvaluationReason.TOO_SOON);
+    attemptedTarget.setEvaluation(notValid);
+
+    VaccineDoseAdministered notValidDose = new VaccineDoseAdministered();
+    notValidDose.setDateAdministered(date("09/01/2026"));
+    notValidDose.setEvaluatedAgainstTargetDose(attemptedTarget);
+
+    AntigenAdministeredRecord previousAar = new AntigenAdministeredRecord();
+    previousAar.setAntigen(measles);
+    previousAar.setDateAdministered(date("09/01/2026"));
+    previousAar.setVaccineDoseAdministered(notValidDose);
+
+    TargetDose skippedPrevious = new TargetDose(seriesDoseOne);
+    skippedPrevious.setTargetDoseStatus(TargetDoseStatus.SKIPPED);
+
+    dataModel.setPreviousTargetDose(skippedPrevious);
+    dataModel.setPreviousAntigenAdministeredRecord(previousAar);
+    dataModel.getSelectedAntigenAdministeredRecordList().add(previousAar);
+
+    build();
+
+    assertEquals("FORECASTDT-1: CALCDTINT-4 from the Not Valid last shot (09/01/2026) plus "
+        + "'6 months' is later than that shot's own date", date("03/01/2027"),
+        step.computeEarliestDate());
+    assertEquals("FORECASTDT-5: the adjusted recommended date is pulled to that earliest date",
+        date("03/01/2027"), step.computeAdjustedRecommendedDate());
   }
 
   /**
