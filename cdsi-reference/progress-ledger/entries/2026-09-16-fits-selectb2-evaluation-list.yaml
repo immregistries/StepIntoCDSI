@@ -1,0 +1,22 @@
+id: "2026-09-16-fits-selectb2-evaluation-list"
+date: "2026-09-16"
+phase: 22
+title: "FITS - SELECTB-2 walks every evaluation on a target (SPEC-4.6-0067)"
+before:
+  commit: "9adbc15"
+  engine_tests: {total: 834, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 4515, failed_assertions: 380, execution_errors: 1}
+after:
+  commit: "12af043"
+  engine_tests: {total: 835, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 4529, failed_assertions: 366, execution_errors: 1}
+  fits_runtime_seconds: 205
+summary: >
+  SELECTB-2 now walks every evaluation on a target dose, so a product
+  series cannot keep +2 after an earlier Not Valid dose on the same
+  target. Combined FITS 4515 to 4529 (net +14): HIB 0348, HepB 2018-0020,
+  MEN B 2024-0081. Newly failing: none. COVID unchanged. Same two
+  engine reds (8.1/8.7).
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0067/finding.md"
+finding_ids: ["SPEC-4.6-0067"]
+status: reviewed
