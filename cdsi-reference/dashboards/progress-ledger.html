@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-16 05:22:32 - regenerate with
+  Dashboard generated 2026-09-16 05:52:33 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,7 +57,7 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">54</div>
+    <div class="value">55</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
@@ -112,6 +112,25 @@
   </div>
   <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0062/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0062/finding.md</a></p>
   <p class="muted">Findings: SPEC-4.6-0062</p>
+</section>
+<section>
+  <h2>2026-09-16 - Phase 22 - FITS - CONDSKIP-1 does not count the dose under evaluation (SPEC-4.6-0063)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>CONDSKIP-1 evaluation no longer counts the current VDA, so Pertussis Dose 8&#x27;s &quot;more than 1 Valid&quot; skip no longer fires on the second catch-up shot. Combined FITS 4301 to 4400 (net +99): DTAP +60, COVID-19 +39 parked. Newly failing: 2020-0005 and 2020-0006 (10 copies, Issue #65 6-month vs interval-from-Tdap); never on the allowlist. COVID newly passing ids are not added. Same two engine reds (8.1/8.7).
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>62b38b6</code></td></tr><tr><td>Engine tests</td><td>824 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4301 passed, 594 failed-assertion, 1 execution-error (87.8%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>6f5eca7</code></td></tr><tr><td>Engine tests</td><td>827 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4400 passed, 495 failed-assertion, 1 execution-error (89.9%)</td></tr><tr><td>FITS runtime</td><td>117.0s (1.9m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0063/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0063/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0063</p>
 </section>
 <section>
   <h2>2026-09-15 - Phase 22 - Role B Round 42 - Units 7.2/7.3 fixture rewrites (UNDETERMINED reds closed)
