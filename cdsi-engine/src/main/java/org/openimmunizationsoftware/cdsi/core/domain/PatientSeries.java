@@ -6,6 +6,7 @@ import java.util.List;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 
 public class PatientSeries {
@@ -173,9 +174,12 @@ public class PatientSeries {
   }
 
   private static boolean hasMaximumAge(TargetDose targetDose) {
-    return targetDose != null && targetDose.getTrackedSeriesDose() != null
-        && !targetDose.getTrackedSeriesDose().getAgeList().isEmpty()
-        && targetDose.getTrackedSeriesDose().getAgeList().get(0).getMaximumAge() != null;
+    if (targetDose == null || targetDose.getTrackedSeriesDose() == null
+        || targetDose.getTrackedSeriesDose().getAgeList().isEmpty()) {
+      return false;
+    }
+    TimePeriod maximumAge = targetDose.getTrackedSeriesDose().getAgeList().get(0).getMaximumAge();
+    return maximumAge != null && maximumAge.isValued();
   }
 
   public void addScore(int value) {

@@ -135,6 +135,18 @@ public class NoValidDosesCompletableTest {
   }
 
   /**
+   * A blank last-dose maximum age is Supporting Data for "no upper bound",
+   * not a missing input. SELECTB-3 is then true: the series can finish
+   * because it never ages out.
+   */
+  @Test
+  public void seriesWithNoMaximumAgeIsCompletable() throws Exception {
+    PatientSeries noMaximumAge = patientSeries(date(2024, 1, 1), null);
+    evaluateIsCompletable(dataModelFor(noMaximumAge));
+    assertEquals(1, noMaximumAge.getScorePatientSeries());
+  }
+
+  /**
    * The condition cannot be shown true when there is no finish date to compare,
    * so it falls in the table's "not true" column. Documents the behaviour of the
    * minimal fix rather than asserting a separate specification rule.

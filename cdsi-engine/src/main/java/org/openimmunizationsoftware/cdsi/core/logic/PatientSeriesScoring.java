@@ -71,10 +71,23 @@ public final class PatientSeriesScoring {
     return forecast.getAdjustedPastDueDate();
   }
 
+  /**
+   * SELECTB-3: completable when the forecast finish date is before the last
+   * target dose's maximum age date. Supporting Data leaves {@code <maxAge/>}
+   * blank to mean no upper bound (FORECASTDT-4's "blank if there is no maximum
+   * age date"), so a series that never ages out is completable as long as it
+   * has a finish date. A missing finish date still cannot be shown completable.
+   */
   public static boolean isCompletable(PatientSeries patientSeries, Date dateOfBirth) {
     Date finishDate = forecastFinishDate(patientSeries);
+    if (finishDate == null) {
+      return false;
+    }
     Date maximumAgeDate = patientSeries.getMaximumAgeDateOfLastTargetDose(dateOfBirth);
-    return finishDate != null && maximumAgeDate != null && finishDate.before(maximumAgeDate);
+    if (maximumAgeDate == null) {
+      return true;
+    }
+    return finishDate.before(maximumAgeDate);
   }
 
   public static Date dateOfBirth(org.openimmunizationsoftware.cdsi.core.data.DataModel dataModel) {

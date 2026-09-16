@@ -559,6 +559,28 @@ public class InProcessPatientSeriesTest {
   }
 
   /**
+   * FORECASTDT-4 / Supporting Data: a blank {@code <maxAge/>} on the last
+   * target dose is "no maximum age date", not an unknown date. SELECTB-3's
+   * finish-before-max-age test is then vacuously true - the series never ages
+   * out - so Table 8-9 awards +3. Treating the blank as "not completable"
+   * penalizes every childhood default series (HepB 3-dose, HepB 4-dose) by 6
+   * points against an adolescent series that happens to declare a 16-year cap.
+   */
+  @Test
+  public void selectbThreeABlankMaximumAgeOnTheLastTargetDoseMeansTheSeriesNeverAgesOut() throws Exception {
+    PatientSeries patientSeries = inProcessSeries("HepB 3-dose", 2);
+    TargetDose lastTargetDose = patientSeries.getTargetDoseList()
+        .get(patientSeries.getTargetDoseList().size() - 1);
+    lastTargetDose.getTrackedSeriesDose().getAgeList().get(0).setMaximumAge(new TimePeriod(""));
+    finishingOn(patientSeries, date(2024, 1, 1));
+
+    score(COMPLETABLE);
+
+    assertEquals("blank maxAge is no upper bound, so a series with a finish date is completable", 3,
+        patientSeries.getScorePatientSeries());
+  }
+
+  /**
    * Table 8-9's second row also has "n/a" in its tie column, so two completable
    * series are each awarded the full +3 - completability is a property of one
    * series measured against its own maximum age date, not a comparison between
