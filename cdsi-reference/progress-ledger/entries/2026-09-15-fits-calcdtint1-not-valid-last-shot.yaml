@@ -1,0 +1,24 @@
+id: "2026-09-15-fits-calcdtint1-not-valid-last-shot"
+date: "2026-09-15"
+phase: 22
+title: "FITS - CALCDTINT-1 from a Not Valid last shot (SPEC-4.6-0058)"
+before:
+  commit: "d41bc8e"
+  engine_tests: {total: 813, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 4209, failed_assertions: 686, execution_errors: 1}
+after:
+  commit: "d4361e0"
+  engine_tests: {total: 816, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 4229, failed_assertions: 666, execution_errors: 1}
+  fits_runtime_seconds: 529
+summary: >
+  CALCDTINT-1 now reads evaluatedAgainstTargetDose when the previous shot
+  did not satisfy a target, so 7.5 measures the 6-month interval from a
+  Not Valid last shot instead of omitting it. Combined FITS 4209 to 4229
+  (net +20). POL-2013-0640 PASS (ED/RD 2027-03-01); PCV-2013-0597 and
+  MEN-B-2024-0069 also FAIL to PASS. Newly failing outside COVID: none.
+  COVID 2023-0053 PASS to FAIL (parked). Same two engine reds (8.1/8.7).
+  Allowlist not regenerated.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0058/finding.md"
+finding_ids: ["SPEC-4.6-0058"]
+status: reviewed

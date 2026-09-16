@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-15 17:05:08 - regenerate with
+  Dashboard generated 2026-09-15 19:12:26 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,7 +57,7 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">49</div>
+    <div class="value">50</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
@@ -207,6 +207,25 @@
   </div>
   <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0052/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0052/finding.md</a></p>
   <p class="muted">Findings: SPEC-4.6-0052, SPEC-4.6-0053</p>
+</section>
+<section>
+  <h2>2026-09-15 - Phase 22 - FITS - CALCDTINT-1 from a Not Valid last shot (SPEC-4.6-0058)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>CALCDTINT-1 now reads evaluatedAgainstTargetDose when the previous shot did not satisfy a target, so 7.5 measures the 6-month interval from a Not Valid last shot instead of omitting it. Combined FITS 4209 to 4229 (net +20). POL-2013-0640 PASS (ED/RD 2027-03-01); PCV-2013-0597 and MEN-B-2024-0069 also FAIL to PASS. Newly failing outside COVID: none. COVID 2023-0053 PASS to FAIL (parked). Same two engine reds (8.1/8.7). Allowlist not regenerated.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>d41bc8e</code></td></tr><tr><td>Engine tests</td><td>813 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4209 passed, 686 failed-assertion, 1 execution-error (86.0%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>d4361e0</code></td></tr><tr><td>Engine tests</td><td>816 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4229 passed, 666 failed-assertion, 1 execution-error (86.4%)</td></tr><tr><td>FITS runtime</td><td>529.0s (8.8m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0058/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0058/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0058</p>
 </section>
 <section>
   <h2>2026-09-15 - Phase 22 - FITS - 6.6 §3.3 and CALCDTINT-1 after skipped previous target (SPEC-4.6-0057)
