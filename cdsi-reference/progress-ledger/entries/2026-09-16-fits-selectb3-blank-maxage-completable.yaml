@@ -1,0 +1,22 @@
+id: "2026-09-16-fits-selectb3-blank-maxage-completable"
+date: "2026-09-16"
+phase: 22
+title: "FITS - blank last-dose maxAge is completable (SPEC-4.6-0066)"
+before:
+  commit: "09290d7"
+  engine_tests: {total: 832, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 4505, failed_assertions: 390, execution_errors: 1}
+after:
+  commit: "5b0c1c6"
+  engine_tests: {total: 834, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 4515, failed_assertions: 380, execution_errors: 1}
+  fits_runtime_seconds: 187
+summary: >
+  SELECTB-3 now treats a blank last-dose maxAge as no upper bound, so a
+  childhood default series is completable and can beat an adolescent
+  series that only looks better because it declares a 16-year cap.
+  Combined FITS 4505 to 4515 (net +10), all HepB 0211/0212. Newly
+  failing: none. COVID unchanged. Same two engine reds (8.1/8.7).
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0066/finding.md"
+finding_ids: ["SPEC-4.6-0066"]
+status: reviewed

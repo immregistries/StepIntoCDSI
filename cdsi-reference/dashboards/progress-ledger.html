@@ -49,7 +49,7 @@
   Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
   Every number here traces back to a reviewed entry under
   <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
-  Dashboard generated 2026-09-16 07:02:09 - regenerate with
+  Dashboard generated 2026-09-16 07:48:33 - regenerate with
   <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
   commit this file.
 </p>
@@ -57,24 +57,43 @@
 <div class="cards">
 
   <div class="card">
-    <div class="value">57</div>
+    <div class="value">58</div>
     <div class="label">Reviewed rounds</div>
   </div>
   <div class="card pass">
-    <div class="value">86.9%</div>
+    <div class="value">92.2%</div>
     <div class="label">FITS pass rate now</div>
   </div>
   <div class="card">
-    <div class="value">183.0s (3.0m)</div>
+    <div class="value">187.0s (3.1m)</div>
     <div class="label">FITS runtime now</div>
   </div>
   <div class="card">
-    <div class="value">60.0%</div>
+    <div class="value">59.1%</div>
     <div class="label">Runtime reduction since start</div>
   </div>
 </div>
 
 
+<section>
+  <h2>2026-09-16 - Phase 22 - FITS - blank last-dose maxAge is completable (SPEC-4.6-0066)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>SELECTB-3 now treats a blank last-dose maxAge as no upper bound, so a childhood default series is completable and can beat an adolescent series that only looks better because it declares a 16-year cap. Combined FITS 4505 to 4515 (net +10), all HepB 0211/0212. Newly failing: none. COVID unchanged. Same two engine reds (8.1/8.7).
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>09290d7</code></td></tr><tr><td>Engine tests</td><td>832 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4505 passed, 390 failed-assertion, 1 execution-error (92.0%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>5b0c1c6</code></td></tr><tr><td>Engine tests</td><td>834 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4515 passed, 380 failed-assertion, 1 execution-error (92.2%)</td></tr><tr><td>FITS runtime</td><td>187.0s (3.1m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0066/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0066/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0066</p>
+</section>
 <section>
   <h2>2026-09-16 - Phase 22 - FITS - MULTIANTVG-1 last-admin floor by antigen overlap (SPEC-4.6-0061)
     <span class="badge badge-green">reviewed</span>
