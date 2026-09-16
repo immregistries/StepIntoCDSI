@@ -1,0 +1,23 @@
+id: "2026-09-16-fits-live-virus-history-wide"
+date: "2026-09-16"
+phase: 22
+title: "FITS - live-virus conflict uses the full immunization history (SPEC-4.6-0065)"
+before:
+  commit: "3a5ef35"
+  engine_tests: {total: 829, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 4455, failed_assertions: 440, execution_errors: 1}
+after:
+  commit: "60a6abb"
+  engine_tests: {total: 832, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 4505, failed_assertions: 390, execution_errors: 1}
+  fits_runtime_seconds: 352
+summary: >
+  6.7 and 7.5 now apply live-virus conflict across the immunization
+  history, not one antigen, so MMR/LAIV can invalidate Varicella and a
+  Dose 1 forecast floors at conflict-end. Combined FITS 4455 to 4505
+  (net +50): VAR 183 to 218 (zero remaining), MMR +20. Explained leftover
+  ZOSTER-2015-0019 (5 copies) dropped from the allowlist. COVID unchanged.
+  Same two engine reds (8.1/8.7).
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0065/finding.md"
+finding_ids: ["SPEC-4.6-0065"]
+status: reviewed
