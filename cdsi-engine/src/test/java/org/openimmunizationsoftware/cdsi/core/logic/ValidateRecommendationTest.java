@@ -218,6 +218,7 @@ public class ValidateRecommendationTest {
     condition.setInterval(new TimePeriod(interval));
     AntigenAdministeredRecord previous = new AntigenAdministeredRecord();
     previous.setDateAdministered(date(previousDoseAdministered));
+    dataModel.setPreviousAntigenAdministeredRecord(previous);
     dataModel.setAntigenAdministeredRecordThatSatisfiedPreviousTargetDose(previous);
     return condition;
   }

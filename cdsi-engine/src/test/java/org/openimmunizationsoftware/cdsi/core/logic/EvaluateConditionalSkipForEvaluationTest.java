@@ -210,6 +210,11 @@ public class EvaluateConditionalSkipForEvaluationTest {
     if (previousDoseAdministered != null) {
       AntigenAdministeredRecord previous = new AntigenAdministeredRecord();
       previous.setDateAdministered(date(previousDoseAdministered));
+      // Production 4.4 stores the immediate previous VDA here. Isolated tests
+      // used to populate only the never-set-in-production "satisfied previous
+      // target" field; set both so CALCDTSKIP-5's production path is what
+      // these Table 6-8 fixtures actually exercise.
+      dataModel.setPreviousAntigenAdministeredRecord(previous);
       dataModel.setAntigenAdministeredRecordThatSatisfiedPreviousTargetDose(previous);
     }
     return condition;
@@ -601,6 +606,58 @@ public class EvaluateConditionalSkipForEvaluationTest {
     run();
 
     assertEquals(date("07/15/2016"), onlyConditionTable().caConditionalSkipIntervalDate.getFinalValue());
+  }
+
+  /**
+   * Production 4.4 never writes
+   * {@code antigenAdministeredRecordThatSatisfiedPreviousTargetDose}. CALCDTSKIP-5
+   * must still compute the interval date from the immediate previous AAR 4.4
+   * actually stores (SPEC-4.6-0059).
+   */
+  @Test
+  public void calcdtskipFiveUsesThePreviousAntigenAdministeredRecordFourFourStores()
+      throws Exception {
+    ConditionalSkipCondition condition = soleCondition(ConditionalSkipConditionType.INTERVAL);
+    condition.setInterval(new TimePeriod("6 months"));
+    AntigenAdministeredRecord previous = new AntigenAdministeredRecord();
+    previous.setDateAdministered(date("01/15/2016"));
+    dataModel.setPreviousAntigenAdministeredRecord(previous);
+
+    run();
+
+    assertEquals(date("07/15/2016"), onlyConditionTable().caConditionalSkipIntervalDate.getFinalValue());
+  }
+
+  /**
+   * Polio Dose 3 Evaluation skip (Supporting Data 4.65): skip if administered
+   * on or after 4 years, OR on or after 4 years - 4 days AND at least 6 months
+   * - 4 days from the previous dose. POL-2013-0639's third IPV is exactly
+   * 4 years - 4 days after DOB and 6 months - 4 days after dose 2, so Dose 3
+   * must be skipped and the same shot evaluated as Dose 4.
+   */
+  @Test
+  public void polioDoseThreeSkipAtFourYearsMinusFourDaysAndSixMonthsMinusFourDays()
+      throws Exception {
+    bornOn("09/05/2022");
+    administered("09/01/2026");
+    historicDose(vaccineType("10"), "02/05/2026", EvaluationStatus.VALID);
+    AntigenAdministeredRecord previous = new AntigenAdministeredRecord();
+    previous.setDateAdministered(date("02/05/2026"));
+    dataModel.setPreviousAntigenAdministeredRecord(previous);
+
+    conditionalSkip("OR");
+    ages(condition(set("n/a"), ConditionalSkipConditionType.AGE), "4 years", null);
+    ConditionalSkipSet graceSet = set("AND");
+    ages(condition(graceSet, ConditionalSkipConditionType.AGE), "4 years - 4 days", null);
+    ConditionalSkipCondition interval = condition(graceSet, ConditionalSkipConditionType.INTERVAL);
+    interval.setInterval(new TimePeriod("6 months - 4 days"));
+
+    run();
+
+    assertEquals("CALCDTSKIP-5: 02/05/2026 + 6 months - 4 days",
+        date("08/01/2026"), conditionTables().get(2).caConditionalSkipIntervalDate.getFinalValue());
+    assertEquals(TargetDoseStatus.SKIPPED, targetDose.getTargetDoseStatus());
+    assertEquals(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES, step.getNextLogicStepType());
   }
 
   /**
