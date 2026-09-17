@@ -1,0 +1,61 @@
+id: "SPEC-4.6-0011"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.6"]
+source_pages: [60]
+tables: ["Table 6-20", "Table 6-21"]
+business_rules: []
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateAllowableInterval"
+fits_cases: []
+summary: >
+  EvaluateAllowableInterval's attribute-table name was left as the
+  placeholder "Table ", and its per-interval decision tables shared one
+  ConditionAttribute instance for the absolute minimum interval date, so
+  every allowable interval on a target dose was checked against only the
+  last interval's date rather than its own.
+evidence: >
+  (1) setConditionTableName("Table ") - a placeholder never filled in,
+  where 6.3 and 6.4 name their own attribute tables in full (e.g. "Table
+  6-14 Age Attributes"). (2) EvaluateAllowableInterval declared
+  caDateAdministered, caAllowableIntervalElements, and
+  caAbsoluteMinimumIntervalDate as fields on the step class itself, then
+  looped over every AllowableInterval on the target dose calling
+  caAbsoluteMinimumIntervalDate.setInitialValue(...) and constructing a
+  new LT (LogicTable) per iteration - but each LT's condition 0 closure
+  read the *same* shared caAbsoluteMinimumIntervalDate field rather than
+  a value captured at that iteration, so by the time process() evaluated
+  every table in the list, all of them answered against whichever
+  interval's date was set last, not their own.
+interpretation: >
+  (1) is a pure transcription slip with no behavioural effect - the same
+  shape of defect 6.5's own attribute-table name has (theStepNamesTableSixSeventeenAsItsAttributeTable),
+  fixed the same way: filling in the real table name and number.
+  (2) is a genuine per-iteration state bug: EvaluatePreferableInterval
+  (6.5) avoids this exact mistake by giving each of its per-interval LT
+  instances its own ConditionAttribute objects, constructed fresh inside
+  the loop rather than shared on the outer step. The fix mirrors that
+  pattern for the two attributes each LT actually evaluates against
+  (date administered, absolute minimum interval date), passed into a new
+  LT(Date, Date) constructor and held as LT-local fields that shadow the
+  outer step's same-named fields - so each per-interval decision table
+  now evaluates against its own interval's own calculated date.
+  Deliberately not changed: 6.6's own convention (confirmed against
+  EvaluateAllowableIntervalTest's class javadoc) of publishing Table
+  6-20's three attributes once in getConditionAttributeList() rather
+  than per interval in getConditionAttributesAdditionalMap() the way 6.5
+  does - that is 6.6's own documented, already-tested design choice, not
+  part of this defect, so the step-level fields and conditionAttributesList
+  registration are untouched; only the per-table evaluation logic was
+  given its own state.
+  Materiality: the bundled Supporting Data release's 484 series doses
+  carry exactly one allowableInterval element each (465 bare/self-closing,
+  19 populated, no series dose with more than one populated interval), so
+  defect (2) has no effect on the bundled release as it stands - it was a
+  latent defect, not a live one, confirmed the same way 6.6's own
+  step-tests notes already recorded it before this fix. Both of unit
+  6.6's two red JUnit tests exercised exactly these:
+  theStepNamesTableSixTwentyAsItsAttributeTable (defect 1) and
+  eachAllowableIntervalIsCheckedAgainstItsOwnAbsoluteMinimumIntervalDate
+  (defect 2). Neither defect was expected to move any FITS case, and
+  none did.

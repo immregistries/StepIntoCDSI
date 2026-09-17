@@ -1,0 +1,22 @@
+id: "2026-09-15-fits-calcdtint1-skip-inadvertent"
+date: "2026-09-15"
+phase: 22
+title: "FITS - CALCDTINT-1 skips an inadvertent previous dose (SPEC-4.6-0060)"
+before:
+  commit: "5a587ec"
+  engine_tests: {total: 818, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 4239, failed_assertions: 656, execution_errors: 1}
+after:
+  commit: "f0484cd"
+  engine_tests: {total: 821, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 4248, failed_assertions: 647, execution_errors: 1}
+  fits_runtime_seconds: 143
+summary: >
+  CALCDTINT-1 no longer pairs a Valid previous-target evaluation with an
+  inadvertent previous AAR date. Combined FITS 4239 to 4248 (net +9).
+  POL-2024-0071 PASS (due-now); DTAP-2013-0060 also FAIL to PASS.
+  Newly failing: none. COVID unchanged. Same two engine reds (8.1/8.7).
+  Allowlist not regenerated.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0060/finding.md"
+finding_ids: ["SPEC-4.6-0060"]
+status: reviewed

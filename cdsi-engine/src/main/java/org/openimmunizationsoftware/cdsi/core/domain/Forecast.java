@@ -1,6 +1,8 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Forecast {
   private Date adjustedRecommendedDate = null;
@@ -16,6 +18,30 @@ public class Forecast {
   private TargetDose targetDose = null;
   private boolean bestPatientSeries = false;
   private Interval interval = null;
+  private Integer doseNumber = null;
+  private List<VaccineType> recommendedVaccineList = new ArrayList<VaccineType>();
+  // FORECASTGUIDANCE-1's three sources (antigen series regimen guidance,
+  // indication guidance, contraindication guidance) have no representation
+  // anywhere else in the domain model yet, so this stays structurally present
+  // but unpopulated until that Supporting Data is actually parsed - see
+  // SPEC-4.6-0042.
+  private List<String> administrativeGuidanceList = new ArrayList<String>();
+
+  public Integer getDoseNumber() {
+    return doseNumber;
+  }
+
+  public void setDoseNumber(Integer doseNumber) {
+    this.doseNumber = doseNumber;
+  }
+
+  public List<VaccineType> getRecommendedVaccineList() {
+    return recommendedVaccineList;
+  }
+
+  public List<String> getAdministrativeGuidanceList() {
+    return administrativeGuidanceList;
+  }
 
   public Interval getInterval() {
     return interval;

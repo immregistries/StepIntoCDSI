@@ -1,0 +1,31 @@
+id: "2026-09-08-role-b-round-8-vaccine-conflict"
+date: "2026-09-08"
+phase: 21
+title: "Role B Round 8 - EvaluateVaccineConflict's Dead Live-Virus Conflict Window"
+before:
+  commit: "7f3b782"
+  engine_tests: {total: 770, failures: 179, errors: 1}
+  fits: {total_cases: 4896, passed: 3364, failed_assertions: 1531, execution_errors: 1}
+  fits_runtime_seconds: 39.9
+after:
+  commit: "f741ad3"
+  engine_tests: {total: 770, failures: 171, errors: 1}
+  fits: {total_cases: 4896, passed: 3378, failed_assertions: 1517, execution_errors: 1}
+  fits_runtime_seconds: 39.9
+summary: >
+  The eighth Role B round, and the first in this whole pass to actually
+  move the FITS suite. EvaluateVaccineConflict's live-virus conflict
+  window was effectively dead code in any normal chronological history:
+  its per-previous-dose loop scanned doses after the current one
+  instead of before, a copy-paste bug always collapsed the conflict end
+  date to the begin date, the begin boundary was exclusive instead of
+  the documented inclusive, and matching ignored the conflicting
+  vaccine type. Fixing all four flipped 14 real FITS cases (3 distinct
+  scenarios - two MMR-after-MMR-too-soon, one Varicella - all from
+  standard age-based routine schedule test plans) from FAIL to PASS,
+  with 0 regressions. Full cdsi-engine suite: 179 -> 171 failures (down
+  exactly 8). FITS suite: 3364 -> 3378 passed (68.7% -> 69.0%). See
+  SPEC-4.6-0015.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0015/finding.md"
+finding_ids: ["SPEC-4.6-0015"]
+status: reviewed

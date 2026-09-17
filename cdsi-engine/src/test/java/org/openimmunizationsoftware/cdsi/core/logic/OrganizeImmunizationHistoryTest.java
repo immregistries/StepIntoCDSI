@@ -396,6 +396,23 @@ public class OrganizeImmunizationHistoryTest {
   }
 
   /**
+   * The exact boundary: a dose given on the patient's 50th birthday itself.
+   * Varicella's association ends at 50 years (exclusive) and Zoster's begins
+   * at 50 years (inclusive), so the boundary day itself belongs to Zoster
+   * alone - the same inclusive-begin/exclusive-end convention every other
+   * age window in the specification uses (e.g. Table 6-15).
+   */
+  @Test
+  public void zosterLiveGivenOnTheFiftiethBirthdayItselfIsAssociatedWithZosterOnly() throws Exception {
+    loadSupportingDataAndAdministerZosterLive(date(1965, 1, 15), date(2015, 1, 15));
+
+    process();
+
+    assertEquals("A Zoster live dose on the 50th birthday itself associates with Zoster alone",
+        Arrays.asList("Zoster"), antigenNames());
+  }
+
+  /**
    * Replaces the hand-built data model with one loaded from a bundled CDC
    * Supporting Data release - the Association Begin/End Age attributes note 2a
    * depends on live only there, not in any hand-buildable domain object - and

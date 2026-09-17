@@ -1,0 +1,83 @@
+id: "SPEC-4.6-0041"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["7.4"]
+source_pages: [78, 79, 80]
+tables: ["Table 7-9", "Table 7-10", "Table 7-11"]
+business_rules: ["FORECASTDTCAN-1"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.DetermineForecastNeed"
+fits_cases: []
+summary: >
+  Six reds in unit 7.4 (Determine Forecast Need), all fixed together.
+  Two are the consuming end of SPEC-4.6-0040's contraindication fix -
+  7.4's own condition 4 was reading the wrong field entirely, a defect
+  independent of and unblocked by 7.3's own fixes.
+
+  1. Table 7-10's fourth condition ("is the relevant patient series a
+  contraindicated patient series?") read
+  dataModel.getPatient().getMedicalHistory().getContraindicationSet().isEmpty()
+  - a patient-scoped set of the wrong, unrelated
+  Contraindication_TO_BE_REMOVED type that nothing anywhere populates
+  - instead of the per-series PatientSeriesStatus.CONTRAINDICATED that
+  7.3's Table 7-7 (SPEC-4.6-0040) now genuinely sets. This made Rule 5
+  permanently unreachable, and in the other direction, would have let
+  a contraindication recorded for one antigen silence every other
+  antigen's own series once the underlying set was ever populated.
+
+  2. Table 7-9's two "outcome of the previous step" attributes
+  (Evidence of Immunity, Contraindicated Patient Series) were created
+  and registered but never given an assumed value, so both published
+  null instead of Table 7-9's own documented defaults ("no evidence",
+  "not contraindicated") whenever 7.2/7.3 did not mark the series.
+
+  3. FORECASTDTCAN-1's fourth candidate date (the seasonal
+  recommendation start date) was commented out of computeEarliestDate()
+  entirely.
+
+  4. FORECASTDTCAN-1's sixth candidate date (the date administered of
+  the most recent vaccine dose administered evaluated against a
+  target dose) was absent from 7.4's computeEarliestDate() altogether
+  - present in 7.5's own copy of the same business rule, but never
+  ported to 7.4's.
+evidence: >
+  status.yaml's own pre-existing notes for unit 7.4 had already
+  root-caused all six precisely, including the important asymmetry
+  between 7.4's two upstream reads: the evidence-of-immunity condition
+  already correctly reads the per-series PatientSeriesStatus (7.2's
+  own state change works end to end and needed no fix), while the
+  contraindication condition reads an entirely different, always-empty
+  field - not merely blocked pending 7.3's fix, but its own,
+  independent defect that a 7.3 fix alone could not have resolved.
+interpretation: >
+  Fixed: condition 4 now reads
+  dataModel.getPatientSeriesStepper().getCurrent().getPatientSeriesStatus()
+  == PatientSeriesStatus.CONTRAINDICATED, the same per-series field
+  the evidence-of-immunity condition already used correctly.
+  caEvidenceOfImmunity and caContraindicatedPatientSeries now carry
+  Table 7-9's documented assumed values ("No evidence" / "Not
+  contraindicated"), with a real value published when the current
+  patient series actually is Immune or Contraindicated.
+  computeEarliestDate() now includes the seasonal recommendation start
+  date and, mirroring 7.5's own computeEarliestDate() exactly, folds
+  in the latest date administered of any inadvertent administration or
+  a target-dose-evaluated administration.
+
+  Verified via the standing Role B pipeline: unit 7.4's own suite
+  22/22 green (was 16/22). Full engine suite: sorted diff confirms
+  exactly those 6 tests flipped, plus one welcome bonus -
+  GenerateForecastDatesAndRecommendedVaccinesTest's own
+  forecastdtOneTheEarliestDateIsTheSameCandidateEarliestDateSevenFourTested,
+  a cross-unit consistency check between 7.4's and 7.5's two
+  computeEarliestDate() implementations that could not pass while they
+  disagreed - across all 783 tests, nothing else changed. Full FITS
+  run, case-by-case diffed: 3637 passed both before and after, 0
+  changed cases. The contraindication fix is FITS-inert for the same
+  reason SPEC-4.6-0040 is (the fixture format cannot encode a patient
+  observation, so PatientSeriesStatus.CONTRAINDICATED is never
+  actually set for any FITS case); the two new FORECASTDTCAN-1
+  candidate dates only affect Table 7-10's narrow Aged-Out boundary
+  conditions, and no bundled case happens to sit on that boundary.
+
+  Tenth consecutive unit-closing round today (4.4, 5.1, 6.1, 6.2, 6.3,
+  6.5, 6.7, 6.8, 6.10, 7.2, 7.3) with zero FITS regressions.

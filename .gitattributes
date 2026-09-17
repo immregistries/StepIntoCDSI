@@ -5,3 +5,12 @@
 # autocrlf setting than the one that originally staged them. Treat the whole
 # preserved source tree as binary so it round-trips byte-for-byte everywhere.
 cdsi-reference/supporting-data/versions/**/source/** binary
+
+# FITS fixture JSON files are checksummed byte-for-byte in reference-set.json
+# (see ReferenceSetVerifier.computeFixtureSet, kept in lockstep with
+# cdsi-reference's reference_sets.py) so a FITS run can trust it hasn't
+# silently drifted. Same autocrlf hazard as above - a fixture committed with
+# LF checks out as CRLF wherever core.autocrlf=true, which changes its
+# sha256 without changing its content and breaks that checksum. Treat these
+# as binary so they round-trip byte-for-byte on every machine.
+cdsi-fits-tests/src/test/resources/fits/** binary

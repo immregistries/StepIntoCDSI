@@ -76,6 +76,13 @@ public class LogicTable {
           // throw new IllegalStateException("Can only have 1 valid column in a logic
           // table found: " + validColumnCount);
         }
+
+        // Rules are priority-ordered left to right (e.g. Table 6-31's own Rule 2
+        // "comes before" Rule 4/5/6) - more than one column can validate at once when
+        // a later column's conditions are all ANY on the attribute that made an
+        // earlier column win, so the first match must decide the outcome rather than
+        // letting a later matching column's perform() overwrite it.
+        break;
       }
     }
     if (validColumnCount == 0 && logicOutcomeDefault != null) {

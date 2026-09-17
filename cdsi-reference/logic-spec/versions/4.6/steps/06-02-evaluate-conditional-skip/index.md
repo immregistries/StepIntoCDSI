@@ -26,7 +26,7 @@ Logic Specification for ACIP Recommendations v4.6, pages 47-51. Figure 6-3 (Cond
 
 **[SPEC]** Table 6-5: CALCDTSKIP-3/4/5 (begin/end age date, interval date calculations); CONDSKIP-1 (count of conditional doses administered meeting vaccine-type/date/evaluation-status criteria); CONDSKIP-2 (the reference date - date administered when evaluating, assessment date when forecasting, earliest date when validating).
 
-**[IMPLEMENTATION]** CALCDTSKIP-3/4/5 computed via `org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules` (`CALCDTSKIP_3/4/5.evaluate(...)`). CONDSKIP-1 via a dedicated `org.openimmunizationsoftware.cdsi.core.logic.businessRules.CONDSKIP_1` class. CONDSKIP-2 is implemented as a `switch` on `conditionalSkipType` (`EVALUATE`/`FORECAST`/`VALIDATING`) directly in the constructor, matching the spec's three cases exactly.
+**[IMPLEMENTATION]** CALCDTSKIP-3/4/5 computed via `org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules` (`CALCDTSKIP_3/4/5.evaluate(...)`). CALCDTSKIP-5 reads the immediate previous vaccine dose administered from `DataModel.previousAntigenAdministeredRecord` (what 4.4 actually stores when it advances past a consumed AAR) and falls back to the isolated-test-only `antigenAdministeredRecordThatSatisfiedPreviousTargetDose` field - see SPEC-4.6-0059. CONDSKIP-1 via a dedicated `org.openimmunizationsoftware.cdsi.core.logic.businessRules.CONDSKIP_1` class: Total counts a matching administered dose even with no `targetDose` (a Td shot belongs in Pertussis Dose 8/9's Td-after-7 skip); Valid prefers `evaluatedAgainstTargetDose` over `targetDose` - see SPEC-4.6-0062. When evaluating (6.2), the current `AntigenAdministeredRecord`'s VDA is not counted - skip asks whether other doses already make this target unnecessary; counting the shot under evaluation made start-at-12-months Dose 8's "more than 1 Valid" skip fire on the second catch-up dose (SPEC-4.6-0063). 7.1/7.6 still count every administered dose. CONDSKIP-2 is implemented as a `switch` on `conditionalSkipType` (`EVALUATE`/`FORECAST`/`VALIDATING`) directly in the constructor, matching the spec's three cases exactly.
 
 ## Decision Tables
 
@@ -59,7 +59,7 @@ The exact same code (`EvaluateConditionalSkip`) runs this whole tree again in Ch
 - `org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkipForEvaluation` (LogicStepType `EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION`) - a near-empty subclass that only sets the `ConditionalSkipType.EVALUATE` context and its two destination steps.
 - `org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkip` - the actual shared implementation (also used by 7.1's `EvaluateConditionalSkipForForecast`, a sibling subclass this pass didn't need to open since the base class is identical either way).
 - Code comments in the base class label some inner tables with a stale "Table 4-6" / "Table 4-7" chapter number (`LT66`, `LT68`) rather than the current spec's "Table 6-6" / "Table 6-8" - a documentation-only leftover from an earlier chapter-numbering revision, not a functional issue (the constructor-level `setConditionTableName` calls correctly say "Table 6.4").
-- Tests: no dedicated unit test.
+- Tests: `EvaluateConditionalSkipForEvaluationTest` (and the sibling 7.1 `EvaluateConditionalSkipForForecastTest` for the forecast reference-date arm).
 
 ## Review Findings
 

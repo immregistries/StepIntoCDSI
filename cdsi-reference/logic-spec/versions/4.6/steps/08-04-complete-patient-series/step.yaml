@@ -15,6 +15,7 @@ implementation:
     - "org.openimmunizationsoftware.cdsi.core.logic.CompletePatientSeries"
   logic_step_type: "COMPLETE_PATIENT_SERIES"
 tests:
-  - status: "test-gap"
-    note: "No dedicated unit test. See Review Findings for a verified tie-handling gap in this class's only scoring condition."
+  - status: "present"
+    class: "org.openimmunizationsoftware.cdsi.core.logic.CompletePatientSeriesTest"
+    note: "17 tests. Table 8-7 scoring plus Table 8-5 Rule 1 drop of in-process series (SPEC-4.6-0064)."
 review_status: "draft"

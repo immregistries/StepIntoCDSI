@@ -1,0 +1,58 @@
+id: "SPEC-4.6-0066"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["8.5", "8.6"]
+source_pages: [81, 90, 91]
+tables: ["Table 8-9", "Table 8-10", "Table 8-11", "Table 8-12"]
+business_rules: ["SELECTB-3", "SELECTB-11", "FORECASTDT-4"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.PatientSeriesScoring"
+  - "org.openimmunizationsoftware.cdsi.core.domain.PatientSeries"
+fits_cases:
+  - "689dc945e4b05decee50df54-HepB-2013-0211"
+  - "689dc945e4b05decee50df54-HepB-2013-0212"
+  - "689dc945e4b05decee50df54-HepB-2018-0020"
+summary: >
+  SELECTB-3 treated a blank last-dose maxAge as "not completable", so
+  childhood HepB 3-dose and 4-dose series (no upper bound) scored -3
+  while the adolescent 2-dose series (maxAge 16 years) scored +3 and
+  won SELECTBEST-2 at score 0. Blank maxAge means the series never
+  ages out; with a finish date it is completable.
+evidence: >
+  Table 8-10 / Table 8-12 SELECTB-3: "A patient series must be
+  considered completable if the forecast finish date is less than the
+  maximum age date of the last target dose." Table 8-9 awards +3 / n/a
+  / -3; Table 8-11 awards +1 / n/a / -1. SELECTB-11 only compares
+  completable series for finish-earliest.
+
+  FORECASTDT-4: "Blank if there is no maximum age date." Supporting
+  Data 4.65 HepB 3-dose and 4-dose last doses have empty <maxAge/>;
+  HepB adolescent 2-dose Dose 2 has maxAge 16 years. DataModelLoader
+  still constructs a TimePeriod for <maxAge/>; an empty/n/a period is
+  not valued and getDateFrom returns null.
+
+  PatientSeriesScoring.isCompletable previously required maximumAgeDate
+  != null, so every series with no upper bound fell in the "not true"
+  column. PatientSeries.hasMaximumAge treated a non-null empty
+  TimePeriod as present.
+
+  Live 689dc945e4b05decee50df54-HepB-2013-0211: two CVX 43 at 11 years,
+  4 months-5 days. FITS ED/RD 2026-10-27 (3-dose Dose 3 +8 weeks).
+  Engine published adolescent 2-dose 2027-01-01. Stepper: 3-dose
+  valid=2 score=-6 forecast 10-27; adolescent valid=1 score=0 TOO_SOON
+  forecast 2027-01-01; 4-dose valid=2 score=-8 ED=09-01. Live
+  HepB-2013-0212: 43, 43, 08. FITS 2026-08-26 (4-dose Dose 4). Engine
+  published adolescent 2026-12-21; 4-dose already had 08-26 at score=-4.
+interpretation: >
+  An empty last-dose maximum age is Supporting Data for no upper bound,
+  not a missing input. SELECTB-3 is then true whenever a finish date
+  exists. A missing finish date still cannot be shown completable.
+  hasMaximumAge must require TimePeriod.isValued() so <maxAge/> is not
+  treated as a real cap. Do not special-case HepB uids. Do not change
+  CALCDT-5. Do not drop 2013-0220 / 2013-0238 (recommended-date vs
+  CALCDT-5). 2018-0020 still selects Heplisav-B 2-dose (product +
+  completable outscores the 3-dose default) and is leftover.
+
+  FAIL to PASS: all five copies of HepB 2013-0211 and 2013-0212 (10
+  copies). Newly failing: none. COVID parked. Remaining HepB current-
+  plan: 2018-0020 (Heplisav product path), 2013-0220, 2013-0238.

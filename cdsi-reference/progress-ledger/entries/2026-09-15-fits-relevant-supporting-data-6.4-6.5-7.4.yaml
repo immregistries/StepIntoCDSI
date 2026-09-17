@@ -1,0 +1,23 @@
+id: "2026-09-15-fits-relevant-supporting-data-6.4-6.5-7.4"
+date: "2026-09-15"
+phase: 22
+title: "FITS - Wire RelevantSupportingData into 6.4, 6.5, and 7.4 (SPEC-4.6-0056)"
+before:
+  commit: "0af6461"
+  engine_tests: {total: 806, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 4046, failed_assertions: 849, execution_errors: 1}
+after:
+  commit: "c9c86b9"
+  engine_tests: {total: 809, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 4094, failed_assertions: 801, execution_errors: 1}
+summary: >
+  Extends SPEC-4.6-0055's RelevantSupportingData helper to evaluation (6.4 Age
+  and 6.5 Preferable Interval, date administered) and 7.4 forecast-need
+  (assessment date). Combined FITS 4046 to 4094 (net +48). POL 504 to 554
+  (+50); MenB 2024-0075/0076 +8. Oracle POL-2013-0640 still COMPLETE: 6.5 now
+  fails the current 6-month interval, then empty 6.6 allowable still accepts
+  the dose. Collateral COVID-19 -10 / 11 new allowlist reds; COVID parked,
+  allowlist not regenerated. Same two engine reds (8.1/8.7).
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0056/finding.md"
+finding_ids: ["SPEC-4.6-0056"]
+status: reviewed

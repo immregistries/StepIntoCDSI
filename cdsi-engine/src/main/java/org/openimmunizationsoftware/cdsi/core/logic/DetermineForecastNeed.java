@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.Age;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.Interval;
@@ -18,6 +19,8 @@ import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
+import org.openimmunizationsoftware.cdsi.core.logic.concepts.RelevantSupportingData;
+import org.openimmunizationsoftware.cdsi.core.logic.concepts.SeasonalRecommendationDates;
 import org.openimmunizationsoftware.cdsi.core.logic.items.ConditionAttribute;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
@@ -41,20 +44,43 @@ public class DetermineForecastNeed extends LogicStep {
     }
     SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
     if (referenceSeriesDose.getSeasonalRecommendationList().size() > 0) {
-      Date seasonalRecommendationEndDate = referenceSeriesDose.getSeasonalRecommendationList()
-          .get(0).getSeasonalRecommendationEndDate();
+      // Assessment-relative projection of the Supporting Data season template
+      // (documented deviation - see SeasonalRecommendationDates and 07-04).
+      Date seasonalRecommendationEndDate = SeasonalRecommendationDates
+          .effectiveEndDate(referenceSeriesDose, dataModel.getAssessmentDate());
       caSeasonalRecommendationEndDate.setInitialValue(seasonalRecommendationEndDate);
     } else {
       log("Recommendation End date is not referenced");
     }
   }
 
-  private void findMaximumAgeDate() {
+  private boolean isCurrentPatientSeries(PatientSeriesStatus status) {
+    return dataModel.getPatientSeriesStepper().getCurrent() != null
+        && status.equals(dataModel.getPatientSeriesStepper().getCurrent().getPatientSeriesStatus());
+  }
+
+  private Age relevantAge() {
     if (dataModel.getTargetDose() == null) {
+      return null;
+    }
+    return RelevantSupportingData.selectAge(dataModel.getTargetDose().getTrackedSeriesDose().getAgeList(),
+        dataModel.getAssessmentDate());
+  }
+
+  private List<Interval> relevantIntervals() {
+    if (dataModel.getTargetDose() == null) {
+      return RelevantSupportingData.selectIntervals(null, dataModel.getAssessmentDate());
+    }
+    return RelevantSupportingData.selectIntervals(
+        dataModel.getTargetDose().getTrackedSeriesDose().getIntervalList(), dataModel.getAssessmentDate());
+  }
+
+  private void findMaximumAgeDate() {
+    Age age = relevantAge();
+    if (age == null || age.getMaximumAge() == null) {
       return;
     }
-    SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-    TimePeriod timePeriod = referenceSeriesDose.getAgeList().get(0).getMaximumAge();
+    TimePeriod timePeriod = age.getMaximumAge();
 
     if (timePeriod.isValued()) {
       Date dob = dataModel.getPatient().getDateOfBirth();
@@ -82,6 +108,10 @@ public class DetermineForecastNeed extends LogicStep {
     caSeasonalRecommendationEndDate.setAssumedValue(FUTURE);
     caAssessmentDate.setAssumedValue(new Date());
     caCandidateEarliestDate.setAssumedValue(FUTURE);
+    // Table 7-9's assumed values for the outcomes of 7.2 and 7.3, published even
+    // when this patient series was never marked Immune or Contraindicated.
+    caEvidenceOfImmunity.setAssumedValue("No evidence");
+    caContraindicatedPatientSeries.setAssumedValue("Not contraindicated");
 
     caTargetDoseStatuses.setInitialValue(dataModel.getTargetDose());
     caMaximumAgeDate.setInitialValue(CALCDTAGE_1.evaluate(dataModel, this, null));
@@ -90,6 +120,12 @@ public class DetermineForecastNeed extends LogicStep {
     findMaximumAgeDate();
     findSeasonalRecommendationEndDate();
     caAssessmentDate.setInitialValue(dataModel.getAssessmentDate());
+    if (isCurrentPatientSeries(PatientSeriesStatus.IMMUNE)) {
+      caEvidenceOfImmunity.setInitialValue("Evidence of immunity");
+    }
+    if (isCurrentPatientSeries(PatientSeriesStatus.CONTRAINDICATED)) {
+      caContraindicatedPatientSeries.setInitialValue("Contraindicated");
+    }
 
     conditionAttributesList.add(caVaccineDoseAdministered);
     conditionAttributesList.add(caTargetDoseStatuses);
@@ -177,10 +213,8 @@ public class DetermineForecastNeed extends LogicStep {
           new LogicCondition("Is the relevant patient series a contraindicated patient series?") {
             @Override
             protected LogicResult evaluateInternal() {
-              if (dataModel.getPatient().getMedicalHistory().getContraindicationSet().isEmpty()) {
-                return LogicResult.NO;
-              }
-              return LogicResult.YES;
+              return isCurrentPatientSeries(PatientSeriesStatus.CONTRAINDICATED) ? LogicResult.YES
+                  : LogicResult.NO;
             }
           });
 
@@ -377,9 +411,9 @@ public class DetermineForecastNeed extends LogicStep {
     SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
     Date dob = dataModel.getPatient().getDateOfBirth();
 
-    {
-      TimePeriod timePeriod = referenceSeriesDose.getAgeList().get(0).getMinimumAge();
-      Date minimumAgeDate = timePeriod.getDateFrom(dob);
+    Age age = relevantAge();
+    if (age != null && age.getMinimumAge() != null) {
+      Date minimumAgeDate = age.getMinimumAge().getDateFrom(dob);
       list.add(minimumAgeDate);
     }
     Date latestMinimumIntervalDate = GenerateForecastDatesAndRecommendedVaccines
@@ -387,25 +421,43 @@ public class DetermineForecastNeed extends LogicStep {
     list.add(latestMinimumIntervalDate);
     // list.add(caLatestConflictEndIntervalDate.getFinalValue());// CALCDTLIVE-4 is
     // both used and removed?
-    // list.add(caSeasonalRecommendationStartDate.getFinalValue());
+    if (referenceSeriesDose.getSeasonalRecommendationList().size() > 0) {
+      list.add(SeasonalRecommendationDates.effectiveStartDate(referenceSeriesDose,
+          dataModel.getAssessmentDate()));
+    }
+    // FORECASTDTCAN-1's last two bullets, both folded into this one list the same
+    // way 7.5's own computeEarliestDate() does: (a) "latest of all dates
+    // administered of any inadvertent administration" and (b) "date administered
+    // of the most recent vaccine dose administered being evaluated against a
+    // target dose that is part of a patient series that is the basis of the
+    // patient series forecast".
+    List<Date> allDatesAdministered = new ArrayList<Date>();
+    if (dataModel.getSelectedAntigenAdministeredRecordList() != null) {
+      for (org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord aar : dataModel
+          .getSelectedAntigenAdministeredRecordList()) {
+        org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered vda =
+            aar.getVaccineDoseAdministered();
+        if (vda.isInadvertentAdministration() || vda.getEvaluatedAgainstTargetDose() != null
+            || vda.getTargetDose() != null) {
+          allDatesAdministered.add(vda.getDateAdministered());
+        }
+      }
+    }
+    list.add(GenerateForecastDatesAndRecommendedVaccines.getLatestDate(allDatesAdministered));
     Date earliestDate = GenerateForecastDatesAndRecommendedVaccines.getLatestDate(list);
     return earliestDate;
   }
 
   private List<Date> findMinimumIntervalDates() {
     List<Date> minimumIntervalList = new ArrayList<Date>();
-    SeriesDose referenceSeriesDose = dataModel.getTargetDose().getTrackedSeriesDose();
-
-    if (referenceSeriesDose.getIntervalList() != null) {
-      for (Interval minIn : referenceSeriesDose.getIntervalList()) {
-        Date patientReferenceDoseDate = minIn.getPatientReferenceDoseDate(dataModel, this);
-        if (patientReferenceDoseDate != null) {
-          TimePeriod minimalIntervalFromReferenceSeriesDose = minIn.getMinimumInterval();
-          if (minimalIntervalFromReferenceSeriesDose == null) {
-            continue;
-          }
-          minimumIntervalList.add(minimalIntervalFromReferenceSeriesDose.getDateFrom(patientReferenceDoseDate));
+    for (Interval minIn : relevantIntervals()) {
+      Date patientReferenceDoseDate = minIn.getPatientReferenceDoseDate(dataModel, this);
+      if (patientReferenceDoseDate != null) {
+        TimePeriod minimalIntervalFromReferenceSeriesDose = minIn.getMinimumInterval();
+        if (minimalIntervalFromReferenceSeriesDose == null) {
+          continue;
         }
+        minimumIntervalList.add(minimalIntervalFromReferenceSeriesDose.getDateFrom(patientReferenceDoseDate));
       }
     }
     return minimumIntervalList;

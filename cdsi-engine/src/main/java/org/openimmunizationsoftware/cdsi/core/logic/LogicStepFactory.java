@@ -113,6 +113,9 @@ public class LogicStepFactory {
     if (stepName.equals(LogicStepType.PRE_FILTER_PATIENT_SERIES)) {
       return new PreFilterPatientSeries(dataModel);
     }
+    if (stepName.equals(LogicStepType.SELECT_NEXT_SERIES_GROUP)) {
+      return new SelectNextSeriesGroup(dataModel);
+    }
     if (stepName.equals(LogicStepType.DETERMINE_CONTRAINDICATIONS)) {
       return new DetermineContraindications(dataModel);
     }
@@ -225,6 +228,9 @@ public class LogicStepFactory {
     }
     if (stepName.equals(LogicStepType.PRE_FILTER_PATIENT_SERIES)) {
       return new PreFilterPatientSeries(dataModel);
+    }
+    if (stepName.equals(LogicStepType.SELECT_NEXT_SERIES_GROUP)) {
+      return new SelectNextSeriesGroup(dataModel);
     }
     if (stepName.equals(LogicStepType.END)) {
       return new End(dataModel);

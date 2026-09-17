@@ -1,0 +1,54 @@
+id: "SPEC-4.6-0064"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["8.3", "8.4"]
+source_pages: [88, 89, 90]
+tables: ["Table 8-5", "Table 8-7"]
+business_rules: ["SELECTB-6", "SELECTB-19", "SELECTBEST-2"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.CompletePatientSeries"
+fits_cases:
+  - "689dc945e4b05decee50df54-HPV-2013-0409"
+  - "689dc945e4b05decee50df54-HPV-2013-0444"
+  - "689dc945e4b05decee50df54-HPV-2013-0465"
+  - "689dc945e4b05decee50df54-HPV-2013-0472"
+  - "689dc945e4b05decee50df54-HPV-2013-0475"
+summary: >
+  Table 8-5 Rule 1 says in-process series are not scored and are dropped
+  from consideration, but 8.4 left them on the scorable list at score 0.
+  SELECTBEST-2 then picked the default 2-dose series (preference 1) over
+  two complete 3-dose series tied at score 0 (preference 2).
+evidence: >
+  Table 8-5 Rule 1 outcome: "All complete patient series in the series
+  group should be scored. Apply the complete patient series scoring
+  business rules to these scorable patient series only. In-process
+  patient series and patient series with 0 valid doses are not scored
+  and dropped from consideration."
+
+  Table 8-7 scores only complete series: a lone series at the maximum
+  valid-dose count is +1; a tie at the maximum is 0; below the maximum
+  is -1. Non-complete series are outside that table.
+
+  SELECTBEST-2: the prioritized series is the highest score, then the
+  best-ranked seriesPreference.
+
+  HPV Supporting Data 4.65: "HPV 2-dose series" is default,
+  seriesPreference 1; "HPV 3-dose start under 15 years series" is
+  seriesPreference 2. Live 689dc945e4b05decee50df54-HPV-2013-0409: three
+  CVX 62 doses at about age 9 (4 weeks then 12 weeks). FITS wants
+  COMPLETE. Engine 2-dose Dose 2 was NOT_VALID/TOO_SOON (minInt 5
+  months) so that series was NOT_COMPLETE; both female and male 3-dose
+  start-under-15 series were COMPLETE with 3 valid doses, tied at
+  score 0. 8.7 picked 2-dose via preference 1.
+interpretation: >
+  8.3 is only a router. 8.4 must drop non-complete series from the
+  scorable list after Table 8-7 so 8.7 cannot prefer an in-process
+  default at the same score. Do not special-case HPV uids. Do not
+  parse series requiredGender in this round (SPEC-4.6-0029 still
+  needs F/M normalization). Do not change CALCDT-5.
+
+  FAIL to PASS: HPV 0409, 0413, 0444, 0445, 0450, 0459, 0465, 0466,
+  0472, 0473, 0475 (55 copies). Newly failing: none. Remaining HPV:
+  0423-0426/0430/0483 (Dose 1 absMin vs 9th birthday), 0437/0438
+  (engine COMPLETE on 3 Cervarix, FITS NOT_COMPLETE), 0467/0480/0481
+  (historical AGED_OUT vs current plan max age 45).

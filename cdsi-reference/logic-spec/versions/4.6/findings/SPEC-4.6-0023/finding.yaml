@@ -1,0 +1,78 @@
+id: "SPEC-4.6-0023"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["7.4", "7.5"]
+source_pages: [77, 79, 80]
+tables: ["Table 7-9", "Table 7-11", "Table 7-12"]
+business_rules: ["FORECASTDTCAN-1"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.data.DataModelLoader"
+  - "org.openimmunizationsoftware.cdsi.core.domain.SeasonalRecommendation"
+fits_cases:
+  - "675c41f8e4b089d2bdc0c483-RSV-2023-0028"
+summary: >
+  DataModelLoader.readAntigenSeries's <seasonalRecommendation> branch
+  created a SeasonalRecommendation record and added it to the series
+  dose's list, but never read the <startDate>/<endDate> children out of
+  the XML node - both fields stayed null forever, for every antigen that
+  declares a seasonal recommendation (RSV's main "1-dose series", and
+  presumably Influenza and COVID-19's own seasonal series doses too,
+  though this pass verified RSV specifically). FORECASTDTCAN-1's fourth
+  bullet ("Seasonal recommendation start date" as one of the dates the
+  candidate earliest date must be the latest of) and 7.4's Table 7-11
+  "Is the assessment date <= the seasonal recommendation end date?"
+  condition were therefore permanently inert - every forecast behaved as
+  though no antigen had ever declared a seasonal recommendation at all,
+  silently falling back to age/interval-only dates that could be months
+  earlier than the real recommendation (e.g. a newborn's RSV dose forecast
+  using their birth date instead of the start of RSV season).
+evidence: >
+  Direct inspection of DataModelLoader.java's <selectSeries> child-element
+  parsing: the "seasonalRecommendation" branch was
+  `SeasonalRecommendation seasonalRecommendation = new SeasonalRecommendation();
+  seasonalRecommendation.setSeriesDose(seriesDose);
+  seriesDose.getSeasonalRecommendationList().add(seasonalRecommendation);` -
+  no read of the node's own children at all, confirmed against
+  AntigenSupportingData-RSV-508.xml's "RSV 1-dose series", whose single
+  seriesDose declares `<seasonalRecommendation><startDate>20251001</startDate>
+  <endDate>20260331</endDate></seasonalRecommendation>`.
+  GenerateForecastDatesAndRecommendedVaccines.findSeasonalRecommendationStartDate()
+  and DetermineForecastNeed.findSeasonalRecommendationEndDate() both correctly
+  read referenceSeriesDose.getSeasonalRecommendationList().get(0).getSeasonalRecommendationStartDate()/EndDate()
+  - the consuming logic was already correct; only the loader's parsing was
+  missing. Traced from FITS case 675c41f8e4b089d2bdc0c483-RSV-2023-0028 (a
+  newborn, no doses, expected earliest/recommended date 2024-10-01 i.e. the
+  start of that fixture's own RSV season - actual was the birth date,
+  2024-08-21, with no seasonal constraint applied at all).
+interpretation: >
+  This is a loader defect, not a logic-step defect: both consuming steps
+  (7.4 and 7.5) already implement FORECASTDTCAN-1's seasonal bullet and
+  Table 7-11's end-date condition correctly, reading from the right
+  domain-model accessor - the accessor just never returned real data.
+  Fixed by parsing <startDate>/<endDate> in the loader's
+  seasonalRecommendation branch (reusing the existing parseDate(String)
+  helper, which already handles the yyyyMMdd format these elements use).
+
+  Verified with a new DataModelLoaderTest test
+  (testSeasonalRecommendationDatesAreParsed) that loads the real bundled
+  4.65 release and asserts RSV's "RSV 1-dose series" seasonal
+  recommendation carries non-null, correctly-ordered dates - deliberately
+  not asserting the exact literal dates, in keeping with this test class's
+  own stated intent to avoid breaking on routine CDC Supporting Data
+  updates.
+
+  Full FITS run, case-by-case diffed against the pre-fix baseline: fixing
+  this alone (with SPEC-4.6-0022 already merged) produced +214 improvements
+  (143 PCV, 37 COVID-19, 32 RSV, 2 FLU) but also 30 regressions, all in
+  FLU/COVID-19 cases dated 2013-2016/2020/2024 - old NIST fixtures now
+  correctly measured against the bundled Supporting Data's actual, current
+  (2025-2026) season window, which their own historical evalDate predates.
+  This is a test-data-staleness artifact inherent to replaying old,
+  absolute-dated fixtures against Supporting Data whose seasonal windows
+  have moved on - not something engine code can resolve without inventing
+  an unsupported "compute the nearest matching season" transformation the
+  specification never describes (FORECASTDTCAN-1 and Table 7-11 both refer
+  to a single literal date, not a recurring annual rule). Presented to the
+  project owner as an explicit choice, given the standing "FITS moves
+  forward, not backward" rule; decision was to ship, given the fix is
+  textually exact and the net effect is strongly positive (+184).

@@ -1,0 +1,49 @@
+id: "SPEC-4.6-0049"
+status: "resolved"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["9.3"]
+source_pages: [95, 96]
+tables: ["Table 9-5"]
+business_rules: ["MULTIANTVG-1", "FORECASTPRIORITY-1"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.MultipleAntigenVaccineGroup"
+fits_cases:
+  - "2013-0028"
+  - "2013-0008"
+  - "2013-0010"
+  - "AART-DTAP-6"
+summary: >
+  MultipleAntigenVaccineGroup chose the MULTIANTVG-1 branch one forecast
+  at a time by reading Forecast.interval.intervalPriority, rather than
+  deciding once for the vaccine group from FORECASTPRIORITY-1's target-dose
+  predicate. It also ignored MULTIANTVG-1's floor at the latest date
+  administered for a vaccine belonging to the vaccine group. Ported from
+  Codex Chapter 9 uncommitted commit 3 (originally SPEC-4.6-0047). Combined
+  FITS on the Chapter 8 rewrite is DTAP-only: 3749/4896 to 3691/4896, net
+  -58, every other group unchanged. Do not revert 9.3 to recover those
+  dates.
+evidence: >
+  MultipleAntigenVaccineGroupTest exposed four linked failures: one
+  priority forecast did not make the group use the earliest date across
+  all contained forecasts; a target dose with one flagged preferable
+  interval was missed when Forecast.interval was unset; a target dose
+  with one flagged and one unflagged preferable interval was incorrectly
+  treated as priority; and the priority branch ignored the latest
+  administered dose in the group. On the pre-Chapter-8 Codex branch this
+  moved 92 DTaP FITS cases (dates 2033 to 2029) by surfacing Diphtheria
+  or Tetanus 7-year override-interval targets that the old per-element
+  max had been covering up with a later Pertussis age-11 date.
+interpretation: >
+  Fixed by making priority a predicate over the forecast target dose's
+  tracked SeriesDose interval list: at least one interval must exist,
+  and every interval must have IntervalPriority.OVERRIDE. MULTIANTVG-1
+  now decides the branch once for the whole group, uses the latest
+  contained earliest date when no priority forecast exists, and otherwise
+  uses the later of the earliest contained earliest date and the latest
+  administered dose whose vaccine belongs to the current vaccine group.
+  Do not restore the old per-element min/max switch. Combined FITS after
+  this rebase onto the Chapter 8 rewrite is DTAP-only 3749 to 3691.
+  Project owner accepted that movement on 2026-09-14 and regenerated
+  known-passing-cases.txt from the 3691 PASS ids. Remaining 2033-to-2029
+  DTaP movement is treated as exposed upstream series selection or
+  forecast-time conditional skip of the 7-year dose, not a 9.3 rollback.

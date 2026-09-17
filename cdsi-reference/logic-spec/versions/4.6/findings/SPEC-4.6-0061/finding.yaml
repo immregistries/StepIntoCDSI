@@ -1,0 +1,48 @@
+id: "SPEC-4.6-0061"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["9.3"]
+source_pages: [95, 96]
+tables: ["Table 9-5"]
+business_rules: ["MULTIANTVG-1"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.MultipleAntigenVaccineGroup"
+fits_cases:
+  - "689dc945e4b05decee50df54-DTAP-2024-0058"
+  - "689dc945e4b05decee50df54-DTAP-2013-0035"
+summary: >
+  MULTIANTVG-1's priority-branch floor at the latest date administered of
+  any vaccine dose belonging to the vaccine group never fired in
+  production, because membership was matched against
+  VaccineGroup.vaccineList, which Schedule Supporting Data never populates.
+evidence: >
+  Table 9-5 MULTIANTVG-1: if any contained forecast is a priority patient
+  series forecast, the vaccine group earliest date is the later of the
+  earliest contained earliest date and the latest date administered of any
+  vaccine dose administered belonging to the vaccine group.
+
+  Schedule Supporting Data vaccineGroups entries name the group and set
+  administerFullVaccineGroup only. vaccineGroupToAntigenMap maps
+  DTaP/Tdap/Td to Diphtheria, Pertussis, and Tetanus. There is no vaccine
+  catalog on the group. DataModelLoader.readVaccineGroups therefore leaves
+  VaccineGroup.vaccineList empty. GatherNecessaryData puts every
+  administered dose on ImmunizationHistory with a VaccineType whose
+  antigen list comes from the CVX-to-antigen map.
+
+  Live 689dc945e4b05decee50df54-DTAP-2024-0058: DOB 2014-06-05; four DTaP
+  CVX 20 then DT CVX 28 on 2019-12-26; assessment 2019-12-26. Pertussis
+  Dose 5 (intervalPriority override, min age 4 years) is still due at
+  2018-06-05. Group earliest was 2018-06-05. FITS wants 2019-12-26. Live
+  dump after this fix: catalogVaccines=0, group earliest 2019-12-26.
+
+  Live 689dc945e4b05decee50df54-DTAP-2013-0035: five DTaP then Td CVX 09
+  on 2026-09-01. Pertussis Dose 11 override min age 11 years is 2024-12-24.
+  Group earliest was 2024-12-24. FITS wants due-now 2026-09-01. Live dump
+  after this fix: 2026-09-01.
+interpretation: >
+  A dose belongs to the vaccine group when its CVX-to-antigen associations
+  overlap the group's antigens. Catalog identity matching is kept for
+  isolated unit fixtures that fill vaccineList. DT CVX 28 and Td CVX 09
+  belong to DTaP/Tdap/Td because they contain Diphtheria and Tetanus.
+  Do not skip Dose 7 at age 7 to match FITS catch-up 4-week dates
+  (SPEC-4.6-0019 / Issue #65). Do not change CALCDT-5.

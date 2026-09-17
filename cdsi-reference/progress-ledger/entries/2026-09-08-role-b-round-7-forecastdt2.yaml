@@ -1,0 +1,31 @@
+id: "2026-09-08-role-b-round-7-forecastdt2"
+date: "2026-09-08"
+phase: 21
+title: "Role B Round 7 - Unadjusted Recommended Date Falling Back to Wall-Clock Now"
+before:
+  commit: "39a059b"
+  engine_tests: {total: 770, failures: 180, errors: 1}
+  fits: {total_cases: 4896, passed: 3364, failed_assertions: 1531, execution_errors: 1}
+  fits_runtime_seconds: 39.9
+after:
+  commit: "c17d3ca"
+  engine_tests: {total: 770, failures: 179, errors: 1}
+  fits: {total_cases: 4896, passed: 3364, failed_assertions: 1531, execution_errors: 1}
+  fits_runtime_seconds: 39.9
+summary: >
+  The seventh Role B round: FORECASTDT-2's ordinary no-earliest-age/
+  no-earliest-interval fallback read the wrong (empty) forecast list and
+  silently returned wall-clock "now" instead of the series' own earliest
+  date - the ordinary case for the majority of series doses, meaning the
+  recommended date changed every day the engine was run. Fixed by
+  calling the class's own already-correct computeEarliestDate() instead.
+  Confirmed against real FITS data: 25 real cases (5 distinct Polio
+  scenarios) had their computed output genuinely change from a
+  run-date-dependent value to a stable, patient-derived one - though
+  none flip pass/fail, since each has its own separate, unrelated
+  defect. Full cdsi-engine suite: 180 -> 179 failures (down exactly 1),
+  0 regressions. FITS aggregate counts unchanged (3364/1531/1), verified
+  case-by-case per the SPEC-4.6-0013 lesson. See SPEC-4.6-0014.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0014/finding.md"
+finding_ids: ["SPEC-4.6-0014"]
+status: reviewed

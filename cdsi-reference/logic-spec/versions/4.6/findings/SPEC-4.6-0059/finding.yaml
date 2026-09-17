@@ -1,0 +1,45 @@
+id: "SPEC-4.6-0059"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.2", "7.1"]
+source_pages: [47, 49, 69]
+tables: ["Table 6-5", "Table 6-8", "Table 6-11"]
+business_rules: ["CALCDTSKIP-5"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.concepts.DateRules"
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkip"
+fits_cases:
+  - "689dc945e4b05decee50df54-POL-2013-0639"
+  - "689dc945e4b05decee50df54-HIB-2013-0324"
+summary: >
+  CALCDTSKIP-5 read a DataModel field 4.4 never sets, so every Evaluation
+  skip that needs an interval (Polio Dose 3 grace at 4 years - 4 days AND
+  6 months - 4 days) failed Table 6-8 and left the target SATISFIED.
+evidence: >
+  Table 6-5 CALCDTSKIP-5: "A patient's conditional skip interval date must
+  be calculated as the vaccine date administered from the immediate previous
+  vaccine dose administered plus the Interval of the conditional skip
+  condition." DateRules.CALCDTSKIP_5 used
+  getAntigenAdministeredRecordThatSatisfiedPreviousTargetDose(), whose
+  setter is only called from isolated 6.2/7.1/7.6 unit tests. Production
+  4.4 stores that previous shot as previousAntigenAdministeredRecord.
+
+  Isolated 6.2 on loaded Polio 4-dose Dose 3 skipped (status SKIPPED) when
+  that previous AAR was supplied. The full pipeline left Dose 3 SATISFIED
+  VALID because the interval date was null, Table 6-8 returned No, and the
+  OR of (age >= 4 years) with the AND grace set was therefore not met.
+
+  POL-2013-0639 (DOB 2022-09-05; IPV 2023-09-05, 2026-02-05, 2026-09-01;
+  assessment 2026-09-01): expected COMPLETE. Engine NOT_COMPLETE, ED/RD
+  2027-03-01 (forecasting Dose 4 after treating Dose 3 as satisfied).
+  4 years - 4 days from DOB is 2026-09-01; 6 months - 4 days from dose 2
+  is 2026-08-01. The 09/01/2026 shot meets both, so Dose 3 should skip and
+  the same shot should evaluate Dose 4 (absolute minimum age 4 years - 4
+  days) as VALID.
+interpretation: >
+  CALCDTSKIP-5 names the immediate previous vaccine dose administered, not
+  a satisfied previous target. Read previousAntigenAdministeredRecord
+  first (4.4's production field) and keep the old field as a fallback for
+  isolated unit tests. Table 6-8 then has an interval date, the Polio Dose
+  3 Evaluation grace set is met, and 4.4 advances to Dose 4 without
+  consuming the current AAR.

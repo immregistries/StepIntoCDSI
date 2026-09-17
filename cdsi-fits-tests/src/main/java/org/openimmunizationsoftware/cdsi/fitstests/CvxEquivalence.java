@@ -14,14 +14,17 @@ public final class CvxEquivalence {
   }
 
   private static final String[][] EQUIVALENT_CVX = {
-      { "85", "52" },
+      { "85", "52", "82" }, // HepA: unspecified (85), pediatric (52), adult (82)
       { "45", "08", "189", "43" },
       { "163", "164", "162" },
       { "137", "165" },
       { "48", "17" },
       { "03", "05", "06", "07" }, // MMR (03), Measles (05), Rubella (06), Mumps (07)
-      { "107", "112", "20", "11", "112" }, // DTaP: Diphtheria (20), Pertussis (11), Tetanus (112)
-      { "304", "122", "303", "305", "306", "307" }, // RSV vaccines and monoclonal antibodies
+      { "107", "112", "20", "11" }, // DTaP: Diphtheria (20), Pertussis (11), Tetanus (112)
+      { "304", "303", "305", "306", "307", "314" }, // RSV vaccines and monoclonal antibodies (314 is
+                                                     // "unspecified", per the bundled Supporting Data's
+                                                     // inadvertentVaccine/allowableVaccine entries) - not 122
+                                                     // (Rotavirus - SPEC-4.6-0022's finding.md)
       { "109", "152", "133" }, { "188", "187" }, { "108", "147" } };
 
   public static boolean isSameVaccine(String cvx1, String cvx2) {

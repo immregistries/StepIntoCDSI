@@ -1,0 +1,111 @@
+id: "SPEC-4.6-0013"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.5"]
+source_pages: [57]
+tables: ["Table 6-19"]
+business_rules: ["CALCDTINT-8"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.domain.Interval"
+  - "org.openimmunizationsoftware.cdsi.core.data.DataModelLoader"
+  - "org.openimmunizationsoftware.cdsi.core.logic.SatisfyTargetDose"
+  - "org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered"
+fits_cases: []
+summary: >
+  CALCDTINT-8 ("most recent dose of a named vaccine type") was effectively
+  dead code - a missing null check threw a silently-swallowed
+  NullPointerException on every real invocation - and the Supporting
+  Data's own <fromMostRecent> element (a semicolon-delimited CVX list, not
+  a single code) was never even parsed into the domain model. Fixing it
+  surfaced two further defects along the way: the wrong dose's evaluation
+  was being checked for "inadvertent administration", and - the one that
+  actually mattered on real FITS data - the search for "the most recent
+  dose" had no lower bound preventing a dose from matching itself.
+evidence: >
+  Interval.getPatientReferenceDoseDate()'s CALCDTINT-8 block read
+  !previousVdaEvaluation.getEvaluationReason().equals(INADVERTENT_ADMINISTRATION)
+  with no null check, where previousVdaEvaluation is the evaluation of
+  whichever dose satisfied the *previous target dose in the series* - a
+  variable set up earlier in the same method for CALCDTINT-1/2's own,
+  different purpose. A plainly valid dose has no evaluation reason (null),
+  so this always threw, was caught by the method's own broad
+  catch (NullPointerException), and left the reference date null - falling
+  back to Table 6-17's assumed 01/01/1900 on every single invocation.
+  Separately, DataModelLoader.readSeriesDose's interval-parsing branch had
+  no case for <fromMostRecent> at all - it was silently dropped - and
+  Interval.fromMostRecentVaccineType was typed as a single VaccineType,
+  while the real Supporting Data XML always encodes this element as a
+  semicolon-delimited CVX list (e.g. COVID-19's own
+  "<fromMostRecent>208; 210; 211; ...517</fromMostRecent>", 33 codes; 54
+  of the release's 55 populated occurrences are multi-code lists, only 1
+  names a single code).
+interpretation: >
+  This finding's own history is part of its evidence, so it is recorded in
+  full rather than smoothed into only the final diff:
+
+  First pass: added the missing null check and multi-CVX list support
+  (loader parsing, Interval.fromMostRecentVaccineTypeList, matching
+  against any code in the list, tracking the latest date explicitly rather
+  than "whichever matches last in list order"). Verified by JUnit
+  (unit 6.5 tests written for this rule went green) and by a full FITS run
+  - which surfaced a real, reproducible 20-case regression (Meningococcal
+  and Pneumococcal groups only, exactly the two affected by this rule),
+  alongside 13 cases that appeared to newly pass.
+
+  Root cause of the regression, traced via a direct-inspection diagnostic
+  run of FITS case MCV-2023-0106 ("Patient... has been administered an
+  extraneous dose of the Meningococcal vaccine") against the actual
+  engine: the second, too-soon dose's own evaluation was NOT_VALID/
+  TOO_SOON (not EXTRANEOUS, which is reserved for a dose given after the
+  maximum age - the fixture's plain-English "extraneous" described the
+  clinical concept, not this specific enum value). An exclusion check
+  written against EvaluationStatus.EXTRANEOUS therefore had zero effect,
+  confirmed by re-running FITS and finding the regression completely
+  unchanged. The actual defect: CALCDTINT-8's search over
+  dataModel.getAntigenAdministeredRecordList() (the patient's whole
+  history, already fully built before any antigen is evaluated) had no
+  lower bound - nothing prevented a dose from matching itself as its own
+  "most recent" reference. For MCV-2023-0106, target dose 2 was being
+  evaluated against the second dose (2026-09-01) itself; with no date
+  bound, that same dose was found as "the most recent dose of type
+  316/328", giving a reference date of 2026-09-01, and CALCDTINT-8's own
+  6-month minInt produced 2027-03-01 - exactly the wrong value observed.
+  Adding an explicit "must be strictly before the dose currently being
+  evaluated" bound fixed this case, confirmed again by direct engine
+  inspection (CVX 108's forecast changed from Not Complete/2027-03-01 to
+  Complete, matching FITS exactly) before re-running the full suite.
+
+  The evaluation-status/reason exclusion (EXTRANEOUS, INADVERTENT_ADMINISTRATION)
+  was kept in the final fix even though it wasn't the cause of this
+  particular regression - it is still a correct, spec-grounded exclusion
+  (CALCDTINT-1 already established the same EXTRANEOUS/INADVERTENT
+  exclusion precedent for its own, different reference-date rule), and
+  implementing it required a genuine cross-cutting addition: the existing
+  TargetDose.satisfiedByVaccineDoseAdministered / VaccineDoseAdministered.
+  getTargetDose() links are only ever populated on 6.10 Satisfy Target
+  Dose's SATISFIED outcome - several other steps
+  (IdentifyOnePrioritizedPatientSeries, GenerateForecastDatesAndRecommendedVaccines,
+  CONDSKIP_1, BusinessRuleTable) rely on that null-ness as their own
+  signal for "this dose was not satisfied", so reusing those fields for a
+  general "which target dose was this dose ever evaluated against"
+  lookup would have silently broken them. A new, separate field -
+  VaccineDoseAdministered.evaluatedAgainstTargetDose - is instead set in
+  every one of Satisfy Target Dose's six outcomes (not just the satisfied
+  one), leaving the existing fields' semantics completely untouched. This
+  is the one part of this round's fix that reaches into a different
+  unit's class (6.10); it was proposed and explicitly approved by the
+  project owner before being made, per the standing cross-step rule that
+  a unit's own Role B round does not touch another unit's code
+  unilaterally.
+
+  With both fixes in place, the full FITS suite is a strict no-op against
+  the current 4896-case fixture set: 0 regressions and, notably, the 13
+  cases that appeared to improve during the intermediate (buggy,
+  self-referencing) state no longer do - that improvement was itself an
+  artifact of the self-reference bug coincidentally producing a value
+  FITS's expectation happened to match, not a genuine fix. This is
+  recorded plainly rather than claimed as progress: the corrected
+  CALCDTINT-8 is now provably right on real Supporting Data (55 populated
+  intervals across COVID-19, Pneumococcal, Pertussis, Zoster and
+  Meningococcal, previously always silently ignored) without moving any
+  FITS case in either direction.

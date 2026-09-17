@@ -1,0 +1,82 @@
+id: "2026-09-08-role-b-round-12-min-max-age-to-start"
+date: "2026-09-08"
+phase: 21
+title: "Role B Round 12 - Enforcing minAgeToStart/maxAgeToStart (SPEC-4.6-0021, Recovers Round 11's PCV Regression)"
+before:
+  commit: "b29bad0"
+  engine_tests: {total: 776, failures: 139, errors: 1}
+  fits: {total_cases: 4896, passed: 3253, failed_assertions: 1642, execution_errors: 1}
+  fits_runtime_seconds: 39.9
+after:
+  commit: "801ea67"
+  engine_tests: {total: 780, failures: 139, errors: 1}
+  fits: {total_cases: 4896, passed: 3396, failed_assertions: 1499, execution_errors: 1}
+  fits_runtime_seconds: 55.3
+summary: >
+  Follow-on to Round 11's explicit, project-owner-approved exception to
+  "FITS moves forward, not backward": Round 11 shipped Chapter 8's
+  series-group loop despite a 125-case net FITS regression, tracing the
+  cause to a separate, pre-existing defect (SPEC-4.6-0021) rather than an
+  error in that round's own fix. This round fixes that defect.
+
+  SelectPatientSeries.minAgeToStart and maxAgeToStart were declared on
+  the domain model (git history shows minAgeToStart's field/getter/setter
+  predate this whole campaign) but enforced nowhere: minAgeToStart was
+  not even parsed by DataModelLoader, and neither field had a single read
+  site anywhere in the engine. Table 8-2's SELECTSCORE-2 has an age-to-start
+  check, but it only fires for a series with at least one administered
+  dose - it cannot exclude a series the patient has never received any
+  dose toward. Once Round 11 correctly scoped Chapter 8 per series group,
+  an age-inappropriate solo-series group (e.g. Pneumococcal's "Standard
+  50+", RSV's "Standard 75+") could reach PreFilterPatientSeries's
+  default-series fallback with a trivially-zero within-group valid-dose
+  count and, being alone in its group, proceed straight into
+  bestPatientSeriesList regardless of the patient's actual age.
+
+  Two fix attempts inside PreFilterPatientSeries (8.1) were tried and
+  reverted: gating the default fallback on age broke HPV's zero-dose adult
+  forecast entirely (HPV splits one logical default pathway across an age
+  boundary into two series *within the same series group*, unlike PCV's
+  wholly separate group for its older population); promoting an
+  age-appropriate in-group alternate fixed PCV/MEN but produced dates
+  contradicting FITS's own reference behavior for HPV, confirmed by direct
+  inspection of fixture 675c41f8e4b089d2bdc0c483-HPV-2013-0480. The fix
+  instead lives in SelectBestPatientSeries (4.5)'s per-antigen
+  series-group enumeration (added by Round 11): a series group is now
+  excluded from the series-group stepper entirely - before Chapter 8 ever
+  runs for it - when none of its member series has an age-to-start window
+  including the patient's current age, and the patient has no
+  already-satisfied target dose toward any series in it. This leaves
+  HPV's within-group behavior untouched while correctly removing
+  PCV/RSV/MEN's structurally distinct, wholly separate age-gated groups.
+
+  DataModelLoader.readAntigenSeries gained the missing minAgeToStart
+  parsing. One incidental NullPointerException was found and fixed during
+  FITS verification (not caught by hand-built JUnit fixtures, which
+  always populate a target-dose list): the satisfied-dose check did not
+  guard against PatientSeries.getTargetDoseList() returning null, which
+  real pipeline data does for some series (e.g. COVID-19 case 2023-0071).
+
+  Verified via the standing Role B pipeline: 4 new SelectBestPatientSeriesTest
+  cases (22 total, all green); full cdsi-engine suite unchanged at 139
+  failures/1 error (confirmed identical with and without this change via
+  git stash A/B - all pre-existing, unrelated to this fix); full FITS run
+  case-by-case diffed against Round 11's exact baseline
+  (2026-09-08T195714-671589Z-18ba253-... , 3253 passed): +143 improvements,
+  0 regressions, every improvement in the PCV group - exactly the group
+  the project owner flagged as poorest-performing and asked to watch.
+  3253 -> 3396 passed, 18 short of the pre-Round-11 baseline of 3378 (RSV's
+  and other antigens' independently-tracked defects, not this one, account
+  for the remainder).
+
+  A distinct, related gap remains open: RSV defines a genuinely separate
+  second series group ("RSV 75 years+ 1-dose series") not declared
+  equivalentSeriesGroups to its main group, so a 75+ patient who has
+  completed the main series still gets a second, competing, wrongly-AGED_OUT
+  forecast from the older-population group. Recorded in SPEC-4.6-0021's
+  finding as a remaining gap, not fixed here - it needs its own
+  investigation into whether the Supporting Data or Chapter 8's
+  equivalence-fallback logic is the right place to close it.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0021/finding.md"
+finding_ids: ["SPEC-4.6-0021"]
+status: reviewed

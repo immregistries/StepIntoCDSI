@@ -31,7 +31,7 @@ Logic Specification for ACIP Recommendations v4.6, page 90. No figure. Table 8-9
 | Can finish earliest | +1 | 0 | -1 |
 
 **[IMPLEMENTATION]** Verified condition-by-condition:
-- **Product + all valid doses:** correctly scored +2/-2 for the whole group at once (no per-series tie concept applies here - "n/a" in the spec table, and the code doesn't attempt one).
+- **Product + all valid doses:** scored +2/-2 for the whole group at once (no per-series tie concept applies here - "n/a" in the spec table). SELECTB-2 is every evaluation on the series' target doses, not only the last one on each target; `hasAllValidAdministeredDoses` walks `evaluationList` (SPEC-4.6-0067).
 - **Completable:** correctly scored +3/-3 per series independently (also "n/a" for ties, matching the spec).
 - **Has the most valid doses:** correctly handles ties - `evaluate_ACandidatePatientSeriesHasTheMostValidDoses()` builds `greatestElementPosList` of every series at the max count and applies the tie treatment (net 0: +2 then -2 for everyone, or +2-only for a lone winner) to all of them. **This is the correctly-implemented sibling of 8.4's equivalent condition** - see 8.4's Review Findings, which cites this method as the reference implementation 8.4 should match.
 - **Is closest to completion:** same tie-safe pattern as above, correctly implemented.
@@ -48,9 +48,11 @@ For series that are actively in progress (some valid doses, not yet complete), f
 ## StepIntoCDSi Implementation
 
 - `org.openimmunizationsoftware.cdsi.core.logic.InProcessPatientSeries` (LogicStepType `IN_PROCESS_PATIENT_SERIES`) - `cdsi-engine`.
-- Tests: no dedicated unit test.
+- Tests: `InProcessPatientSeriesTest`.
 
 ## Review Findings
 
+- **SPEC-4.6-0067:** SELECTB-2 read only `TargetDose.getEvaluation()` (the last evaluation). A product series that later satisfied the same target with a Valid dose still scored +2. `hasAllValidAdministeredDoses` now walks `evaluationList`.
+- **SPEC-4.6-0066:** SELECTB-3 treated a blank last-dose `<maxAge/>` as "not completable." FORECASTDT-4's blank latest date is "no maximum age date": the series never ages out, so a finish date with no cap is completable. Shared `PatientSeriesScoring.isCompletable` now returns true in that shape; `hasMaximumAge` requires `TimePeriod.isValued()`.
 - **Verified bug, `IMPLEMENTATION_MISMATCH` (draft):** `evaluate_ACandidatePatientSeriesCanFinishEarliest()` compares forecast dates with `tmpDate == patientSeries.getForecast().getLatestDate()` and `patientSeries.getForecast().getLatestDate() != tmpDate` - Java reference equality on `java.util.Date` objects, not `.equals()`. Two different `PatientSeries` objects with forecasts computed to the identical calendar date will almost always be *different* `Date` instances in memory, so `==` will be `false` even when the dates genuinely match - meaning the tie-detection this method is supposed to perform (`j` counting how many series share the earliest date) essentially never counts a real tie as a tie in practice. Confirmed by inspecting `Forecast`'s date fields, which are ordinary `java.util.Date`, never a cached/interned/shared instance. This is a distinct bug from 8.4's tie-handling gap, in a different condition, but the same category of defect (spec says "treat ties specially," code fails to detect the tie).
-- The other four conditions in this class are correctly implemented, including proper tie handling for "has the most valid doses" - see 8.4's Review Findings, which references this class as the correct reference implementation for that specific condition.
+- Closest-to-completion and most-valid-doses still handle ties correctly - see 8.4's Review Findings, which references this class as the correct reference implementation for that specific condition.

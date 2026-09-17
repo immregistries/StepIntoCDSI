@@ -1,8 +1,13 @@
 package org.openimmunizationsoftware.cdsi.core.domain;
 
+import java.util.Date;
 import java.util.List;
 
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 
 public class PatientSeries {
   private PatientSeriesStatus patientSeriesStatus = null;
@@ -65,6 +70,122 @@ public class PatientSeries {
 
   public int getScorePatientSeries() {
     return scorePatientSeries;
+  }
+
+  public void resetScore() {
+    scorePatientSeries = 0;
+  }
+
+  public int getValidDoseCount() {
+    int validDoseCount = 0;
+    if (targetDoseList != null) {
+      for (TargetDose targetDose : targetDoseList) {
+        if (targetDose.getTargetDoseStatus() == TargetDoseStatus.SATISFIED) {
+          validDoseCount++;
+        }
+      }
+    }
+    return validDoseCount;
+  }
+
+  public int getNotSatisfiedDoseCount() {
+    int notSatisfiedDoseCount = 0;
+    if (targetDoseList != null) {
+      for (TargetDose targetDose : targetDoseList) {
+        if (targetDose.getTargetDoseStatus() == TargetDoseStatus.NOT_SATISFIED) {
+          notSatisfiedDoseCount++;
+        }
+      }
+    }
+    return notSatisfiedDoseCount;
+  }
+
+  public boolean isProductPatientSeries() {
+    return trackedAntigenSeries != null
+        && trackedAntigenSeries.getSelectPatientSeries() != null
+        && trackedAntigenSeries.getSelectPatientSeries().getProductPath() == YesNo.YES;
+  }
+
+  /**
+   * SELECTB-2: every evaluation recorded against this series' target doses is
+   * Valid. A later Valid evaluation on the same target does not erase an earlier
+   * Not Valid one (the last evaluation is only the one that satisfied the
+   * target). Remaining unevaluated target doses do not count against the series.
+   */
+  public boolean hasAllValidAdministeredDoses() {
+    boolean sawAnEvaluation = false;
+    if (targetDoseList != null) {
+      for (TargetDose targetDose : targetDoseList) {
+        if (targetDose.getEvaluationList() == null) {
+          continue;
+        }
+        for (Evaluation evaluation : targetDose.getEvaluationList()) {
+          if (evaluation == null || evaluation.getEvaluationStatus() == null) {
+            continue;
+          }
+          sawAnEvaluation = true;
+          if (evaluation.getEvaluationStatus() != EvaluationStatus.VALID) {
+            return false;
+          }
+        }
+      }
+    }
+    return sawAnEvaluation;
+  }
+
+  public Date getEarliestValidAdministeredDate() {
+    Date earliest = null;
+    if (targetDoseList != null) {
+      for (TargetDose targetDose : targetDoseList) {
+        if (targetDose.getTargetDoseStatus() != TargetDoseStatus.SATISFIED) {
+          continue;
+        }
+        Evaluation evaluation = targetDose.getEvaluation();
+        if (evaluation == null || evaluation.getEvaluationStatus() != EvaluationStatus.VALID) {
+          continue;
+        }
+        Date administered = null;
+        if (evaluation.getVaccineDoseAdministered() != null) {
+          administered = evaluation.getVaccineDoseAdministered().getDateAdministered();
+        }
+        if (administered == null && targetDose.getSatisfiedByVaccineDoseAdministered() != null) {
+          administered = targetDose.getSatisfiedByVaccineDoseAdministered().getDateAdministered();
+        }
+        if (administered != null && (earliest == null || administered.before(earliest))) {
+          earliest = administered;
+        }
+      }
+    }
+    return earliest;
+  }
+
+  public Date getMaximumAgeDateOfLastTargetDose(Date dateOfBirth) {
+    if (dateOfBirth == null) {
+      return null;
+    }
+    TargetDose lastTargetDose = null;
+    if (targetDoseList != null && !targetDoseList.isEmpty()) {
+      lastTargetDose = targetDoseList.get(targetDoseList.size() - 1);
+    }
+    if (!hasMaximumAge(lastTargetDose) && forecast != null) {
+      // SELECTB-3 names the last target dose. Fixtures that only stamp a
+      // maximum age on the forecast target dose (often the next dose, not the
+      // last) still need a date to compare against.
+      lastTargetDose = forecast.getTargetDose();
+    }
+    if (!hasMaximumAge(lastTargetDose)) {
+      return null;
+    }
+    return lastTargetDose.getTrackedSeriesDose().getAgeList().get(0).getMaximumAge().getDateFrom(dateOfBirth);
+  }
+
+  private static boolean hasMaximumAge(TargetDose targetDose) {
+    if (targetDose == null || targetDose.getTrackedSeriesDose() == null
+        || targetDose.getTrackedSeriesDose().getAgeList().isEmpty()) {
+      return false;
+    }
+    TimePeriod maximumAge = targetDose.getTrackedSeriesDose().getAgeList().get(0).getMaximumAge();
+    return maximumAge != null && maximumAge.isValued();
   }
 
   public void addScore(int value) {

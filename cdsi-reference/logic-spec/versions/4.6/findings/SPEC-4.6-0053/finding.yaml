@@ -1,0 +1,37 @@
+id: "SPEC-4.6-0053"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.2", "7.1"]
+source_pages: [51, 52]
+tables: ["Table 6-9"]
+business_rules: ["CONDSKIP-1"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.data.DataModelLoader"
+  - "org.openimmunizationsoftware.cdsi.core.logic.businessRules.CONDSKIP_1"
+fits_cases:
+  - "689dc945e4b05decee50df54-FLU-2013-0171"
+  - "689dc945e4b05decee50df54-FLU-2018-0025"
+  - "689dc945e4b05decee50df54-FLU-2019-0004"
+  - "689dc945e4b05decee50df54-FLU-2025-0020"
+summary: >
+  Conditional-skip vaccineTypes CVX lists were split without trim, so
+  "; "-separated Supporting Data tokens after the first failed CVX
+  lookup. Influenza Dose 2 season-completion skips never matched CVX
+  88/333/etc., so the recurring clone was forecast instead of SKIPPED.
+evidence: >
+  Influenza AntigenSupportingData vaccineTypes values are written as
+  "15; 16; 88; ...; 333". DataModelLoader vaccineTypes parsing called
+  getCvx on raw split tokens; only "15" resolved. fromMostRecent
+  interval parsing already trimmed. CONDSKIP_1 then counted 0 matching
+  doses. FITS FLU COMPLETE cluster (31 cases) stayed NOT_COMPLETE with
+  a 4-week earliest date after SPEC-4.6-0052.
+interpretation: >
+  Trim each CVX token and add only resolved VaccineType entries, matching
+  fromMostRecent. Together with SPEC-4.6-0052 (route last SKIPPED forecast
+  target through Table 7-10), season-complete Influenza reaches COMPLETE
+  when doses fall inside the literal Supporting Data season window.
+
+  Verified on run 2026-09-15T170211 with SPEC-4.6-0052: FLU 49 to 62
+  (+13 of the COMPLETE cluster on current-season fixtures). Remaining 18
+  COMPLETE mismatches are historical-plan uids whose administered dates
+  sit outside the bundled 20250701-20260630 Vaccine Count by Date window.

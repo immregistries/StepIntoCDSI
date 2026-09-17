@@ -30,8 +30,9 @@ implementation:
     6-4 through 6-11) and is shared verbatim with 7.1's
     EvaluateConditionalSkipForForecast - matching the specification's
     own statement that this logic "is defined here once, but used in
-    both Evaluation and Forecasting."
+    both Evaluation and Forecasting." 6.2 excludes the current VDA from
+    CONDSKIP-1; 7.1/7.6 count every administered dose (SPEC-4.6-0063).
 tests:
-  - status: "test-gap"
-    note: "No dedicated unit test."
+  - status: "present"
+    note: "EvaluateConditionalSkipForEvaluationTest covers Tables 6-4 through 6-11 and CALCDTSKIP-3/4/5, including the production previousAAR path for CALCDTSKIP-5 (SPEC-4.6-0059), CONDSKIP-1 Total without a targetDose (SPEC-4.6-0062), and CONDSKIP-1 excluding the dose currently being evaluated (SPEC-4.6-0063)."
 review_status: "draft"

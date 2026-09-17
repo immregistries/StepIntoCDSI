@@ -1,0 +1,60 @@
+id: "SPEC-4.6-0012"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.5"]
+source_pages: [57]
+tables: ["Table 6-17", "Table 6-18"]
+business_rules: []
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluatePreferableInterval"
+fits_cases: []
+summary: >
+  EvaluatePreferableInterval's Table 6-18 Rule 1 outcome recorded evaluation
+  reason GRACE_PERIOD instead of the documented TOO_SOON, its attribute
+  table name was left as an unfilled "Table " placeholder, and Table
+  6-17's fourth attribute name was misspelled "Mimium Interval Date".
+evidence: >
+  (1) Table 6-18 Rule 1's outcome text: "No. The vaccine dose administered
+  did not satisfy the preferable interval for the target dose. Evaluation
+  reason is 'Too Soon'." EvaluatePreferableInterval's outcome 0 perform()
+  logs that exact line but then calls
+  evaluation.setEvaluationReason(EvaluationReason.GRACE_PERIOD) - the
+  reason belonging to outcome 1 (Rule 2), not outcome 0 (Rule 1). (2)
+  setConditionTableName("Table ") - a placeholder never filled in, where
+  6.3 and 6.4 name their own attribute tables in full. (3) Table 6-17 row
+  4 is named "Minimum Interval Date" in the specification; the step
+  registers it as "Mimium Interval Date" - the attribute name only; the
+  attribute type and the calculated value itself are correct.
+interpretation: >
+  All three are transcription-level slips with no shared root cause,
+  bundled into one round because each is independently narrow and
+  none touches the other's code path. (1) is a copy-paste artifact:
+  outcome 0's log line already states the correct reason ('Too Soon'),
+  only the enum value passed to setEvaluationReason was wrong - the
+  same shape 6.6's own single-condition case gets right
+  (EvaluationReason.TOO_SOON). (2) and (3) mirror the identical defects
+  already fixed in 6.6 (SPEC-4.6-0011) and 6.9 (SPEC-4.6-0009)
+  respectively - the same category of oversight recurring across
+  independently-written step classes, fixed the same way each time:
+  filling in the real table name/number, and correcting the misspelled
+  word.
+  Three of unit 6.5's seven red JUnit tests exercised exactly these:
+  ruleOneRecordsEvaluationReasonTooSoon (defect 1),
+  theStepNamesTableSixSeventeenAsItsAttributeTable (defect 2), and
+  tableSixSeventeenNamesItsAttributesAsTheSpecificationDoes (defect 3).
+  The other four red tests in this unit (calcdtintEightMeasuresFromThe
+  MostRecentDoseOfANamedVaccineType, calcdtintNineMeasuresFromTheMost
+  RecentMatchingPatientObservation, theSupportingDatasFromMostRecent
+  VaccineTypeReachesTheInterval, theSupportingDatasFromRelevantObservation
+  CodeReachesTheInterval) are a separate, materially significant cluster
+  - CALCDTINT-8 and CALCDTINT-9 are each blocked twice over, in both the
+  Supporting Data loader and the reference-date rule body, and together
+  affect 61 real populated intervals in the bundled release spanning
+  COVID-19, Pneumococcal, Pertussis, Zoster, Meningococcal, Hib, Measles,
+  Mumps, RSV and Rubella - deliberately deferred to its own round rather
+  than folded in here, to be tracked in its own finding once that round
+  is scoped and reviewed.
+  This finding does not claim FITS impact - all three defects are pure
+  presentation/enum-selection slips - and the full-suite before/after
+  comparison recorded under "Fix merged" confirms the fix is a no-op
+  against the current 4896-case fixture set.

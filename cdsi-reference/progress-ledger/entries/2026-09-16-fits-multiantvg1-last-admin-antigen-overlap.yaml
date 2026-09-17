@@ -1,0 +1,21 @@
+id: "2026-09-16-fits-multiantvg1-last-admin-antigen-overlap"
+date: "2026-09-16"
+phase: 22
+title: "FITS - MULTIANTVG-1 last-admin floor by antigen overlap (SPEC-4.6-0061)"
+before:
+  commit: "7a2629c"
+  engine_tests: {total: 821, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 4248, failed_assertions: 647, execution_errors: 1}
+after:
+  commit: "88602b5"
+  engine_tests: {total: 823, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 4257, failed_assertions: 638, execution_errors: 1}
+  fits_runtime_seconds: 183
+summary: >
+  MULTIANTVG-1's last-administered floor now recognizes production doses by
+  CVX-to-antigen overlap. Combined FITS 4248 to 4257 (net +9), all DTAP
+  (2013-0035 and 2024-0058). Newly failing: none. COVID unchanged. Same two
+  engine reds (8.1/8.7). Allowlist not regenerated.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0061/finding.md"
+finding_ids: ["SPEC-4.6-0061"]
+status: reviewed

@@ -1,0 +1,30 @@
+id: "2026-09-08-role-b-round-2-evaluate-for-allowable-vaccine"
+date: "2026-09-08"
+phase: 21
+title: "Role B Round 2 - EvaluateForAllowableVaccine's Reference-Equality Bug and Calculated-Date Label Typos"
+before:
+  commit: "c3448df"
+  engine_tests: {total: 767, failures: 190, errors: 1}
+  fits: {total_cases: 4896, passed: 3364, failed_assertions: 1531, execution_errors: 1}
+  fits_runtime_seconds: 39.9
+after:
+  commit: "393332d"
+  engine_tests: {total: 767, failures: 188, errors: 1}
+  fits: {total_cases: 4896, passed: 3364, failed_assertions: 1531, execution_errors: 1}
+  fits_runtime_seconds: 39.9
+summary: >
+  The second Role B round, both closing unit 6.9 to fully green: (1) the
+  vaccine-type-match condition compared VaccineType instances by Java
+  reference (==) instead of deferring to VaccineType's own CVX-based
+  equals(), a latent divergence from the domain model's own contract;
+  (2) the two calculated-date attribute labels read "Calculated data"/
+  "Calculated Data" instead of "Calculated date", a pure presentation
+  typo. Bundled into one round since both are independent, equally
+  narrow, single-file fixes with no shared state or causal link. Unit
+  6.9: 29/2 -> 31/0 green/red. Full cdsi-engine suite: 190 -> 188
+  failures (down exactly 2), 0 regressions. FITS suite unchanged
+  (3364/1531/1 identical both sides, 0 status changes), as expected for
+  JUnit-targeted fixes not selected for FITS impact. See SPEC-4.6-0009.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0009/finding.md"
+finding_ids: ["SPEC-4.6-0009"]
+status: reviewed

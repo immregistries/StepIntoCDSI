@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
+import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.DoseCondition;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
@@ -97,6 +98,13 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
           log(LogLevel.STATE, "Setting evaluation status to \"sub-standard\"");
           log(LogLevel.CONTROL, "Setting next step: 4.4 Evaluate And Forecast All Patient Series");
+          // 4.4 hands this step a freshly built TargetDose with an empty
+          // evaluation list - create one to receive this outcome's status if
+          // none exists yet, rather than assuming EvaluateAge (6.4) has
+          // already run and attached one.
+          if (dataModel.getTargetDose().getEvaluation() == null) {
+            dataModel.getTargetDose().setEvaluation(new Evaluation());
+          }
           dataModel.getTargetDose().getEvaluation().setEvaluationStatus(EvaluationStatus.SUB_STANDARD);
           setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
         }
@@ -109,6 +117,13 @@ public class EvaluateDoseAdministeredCondition extends LogicStep {
           dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.NOT_SATISFIED);
           log(LogLevel.STATE, "Setting evaluation status to \"sub-standard\"");
           log(LogLevel.CONTROL, "Setting next step: 4.4 Evaluate And Forecast All Patient Series");
+          // 4.4 hands this step a freshly built TargetDose with an empty
+          // evaluation list - create one to receive this outcome's status if
+          // none exists yet, rather than assuming EvaluateAge (6.4) has
+          // already run and attached one.
+          if (dataModel.getTargetDose().getEvaluation() == null) {
+            dataModel.getTargetDose().setEvaluation(new Evaluation());
+          }
           dataModel.getTargetDose().getEvaluation().setEvaluationStatus(EvaluationStatus.SUB_STANDARD);
           setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
         }

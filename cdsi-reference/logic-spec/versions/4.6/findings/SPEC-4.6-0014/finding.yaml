@@ -1,0 +1,69 @@
+id: "SPEC-4.6-0014"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["7.5"]
+source_pages: [82]
+tables: ["Table 7-13"]
+business_rules: ["FORECASTDT-2"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.GenerateForecastDatesAndRecommendedVaccines"
+fits_cases: []
+summary: >
+  computeUnadjustedRecommendedDate()'s third bullet (no earliest
+  recommended age date, no earliest recommended interval date) read a
+  different patient series' forecast list - empty at this point in the
+  pipeline - instead of this series' own earliest date, and silently
+  fell back to today's date. This is the ordinary case for the majority
+  of series doses, so the recommended date for any such dose changed
+  every day the engine was run.
+evidence: >
+  FORECASTDT-2's third bullet: "The earliest date of the patient series
+  forecast if there is no earliest recommended age date or earliest
+  recommended interval date." computeUnadjustedRecommendedDate()'s
+  else branch read
+  dataModel.getVaccineGroupForecastList().get(dataModel.getVaccineGroupForecastList().size() - 1).getEarliestDate() -
+  the LAST element of a list of OTHER patient series' forecasts, built by
+  an entirely separate, later part of the pipeline
+  (SingleAntigenVaccineGroup/MultipleAntigenVaccineGroup), and still
+  empty at the point 7.5 runs for the current series. When that yielded
+  nothing, the method returned new Date() - literal wall-clock "now" -
+  rather than any date derived from the patient's own data. The same
+  class already computes exactly the value the rule asks for, in a
+  different method: computeEarliestDate(), used elsewhere in this same
+  class to set forecast.setEarliestDate(...) and as the floor
+  computeAdjustedRecommendedDate()/computeAdjustedPastDueDate() compare
+  against.
+interpretation: >
+  A straightforward wrong-variable defect: whoever wrote this branch
+  reached for "the patient series forecast's own earliest date" and
+  grabbed the wrong list entirely (a different, not-yet-populated
+  collection of forecasts for other antigens) instead of calling the
+  step's own computeEarliestDate(), which already exists in the same
+  class for exactly this purpose. The fix is to call it directly,
+  removing the dependency on dataModel.getVaccineGroupForecastList()
+  altogether for this computation.
+  Confirmed live by forecastdtTwoFallsBackToTheForecastsOwnEarliestDate,
+  which asserts step.computeEarliestDate() == step.computeUnadjustedRecommendedDate()
+  directly. Role A's own note called this "the ordinary case for the
+  majority of series doses (no earliest recommended age, no earliest
+  recommended interval), and it makes the same patient's recommended
+  date change every day the engine is run" - a materiality claim now
+  independently confirmed against real FITS data (see Fix merged below):
+  25 real FITS cases (5 distinct scenarios, all in the Polio group,
+  each appearing across 5 test-plan snapshots) had their actualHash
+  change between the before and after runs, and inspection of one
+  (POL-2013-0684) shows the "before" recommendedDate was literally the
+  date the FITS suite happened to be run on (2026-09-08), while "after"
+  is a stable value derived from the patient's own data (2026-09-01,
+  matching computeEarliestDate()).
+  None of the 25 changed cases flip from FAIL to PASS - each has a
+  separate, unrelated defect (in POL-2013-0684's case, the expected date
+  is 2030-03-21, years away from anything either the before or after
+  value produces, pointing at a different bug entirely in that scenario)
+  that this fix does not touch and does not claim to fix. What this fix
+  demonstrably does is remove a real nondeterminism: before it, any FITS
+  case landing on this ordinary no-earliest-age/no-earliest-interval
+  path would report a different recommended date depending solely on
+  what day the suite was run, which is not a property a deterministic
+  regression suite should have at all, independent of whether any
+  particular case happens to pass.

@@ -1,0 +1,80 @@
+id: "SPEC-4.6-0037"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.8"]
+source_pages: [52]
+tables: ["Table 6-25", "Table 6-26"]
+business_rules: []
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateForPreferableVaccine"
+fits_cases: ["675c41f8e4b089d2bdc0c483-HepB-2013-0208", "5eeca0522cc4517a96b0f417-HepB-2013-0208", "67ae7323e4b0687c58791680-HepB-2013-0208", "683d9fbee4b07196f3a1f7df-HepB-2013-0208", "689dc945e4b05decee50df54-HepB-2013-0208", "675c41f8e4b089d2bdc0c483-HepB-2013-0210", "5eeca0522cc4517a96b0f417-HepB-2013-0210", "67ae7323e4b0687c58791680-HepB-2013-0210", "683d9fbee4b07196f3a1f7df-HepB-2013-0210", "689dc945e4b05decee50df54-HepB-2013-0210"]
+summary: >
+  Unit 6.8's last three reds - two share a root cause the step
+  package's own Review Findings had already recorded as a known,
+  deliberate-looking limitation pending confirmation; the third is
+  presentation-only.
+
+  1. Table 6-26's third condition (trade name match) was hardcoded to
+  always return YES, with a comment noting trade name "is not passed
+  into the forecaster" - making Rule 5's "trade name mismatch"
+  outcome permanently unreachable.
+
+  2. Table 6-25's last two rows had their attribute type and name
+  swapped, and the name had lost its "Preferable" prefix
+  ("Vaccine Type Begin Age Date" instead of "Calculated date
+  (CALCDTPREF-1)" / "Preferable Vaccine Type Begin Age Date"). The
+  values themselves were already correct - presentation only.
+evidence: >
+  Investigation confirmed the "not passed into the forecaster" comment
+  was stale: both AntigenAdministeredRecord (via its production
+  constructor, which copies vda.getVaccine().getTradeName()) and
+  PreferrableVaccine (via DataModelLoader's own readVaccine, which
+  already parses <tradeName>) do carry real trade name data end to
+  end - the condition itself was simply never wired up to compare
+  them. status.yaml's own materiality note: of 1089 bundled
+  preferableVaccine entries, only 16 carry a non-empty trade name
+  (ENGERIX-B ADULT x6, RECOMBIVAX ADULT x2, four trivalent influenza
+  brands x2 each under CVX 140) - exactly the entries where the
+  condition could ever matter.
+
+  A first implementation (exact-match comparison with no fallback)
+  correctly fixed the two targeted JUnit tests but regressed 10 real
+  FITS cases (5 test-plan snapshots each of HepB-2013-0208 and
+  HepB-2013-0210, both explicitly titled around Recombivax Hep B).
+  Root cause: the official NIST/CDC FITS test-plan JSON's own
+  `vaccinations` schema has no trade name field at all (confirmed by
+  reading the raw source fixture files directly - only `date`, `cvx`,
+  `mvx`, `doseCondition`) - the brand is mentioned only in the human-
+  readable case title, never as structured input the engine can see.
+  So under a strict exact-match implementation, every FITS-driven
+  administered dose carries an empty trade name, which can never equal
+  a preferable vaccine's specific non-empty trade name requirement,
+  incorrectly failing the match for exactly the cases where a brand-
+  specific preferable vaccine exists (HepB's 8 branded entries).
+interpretation: >
+  Fixed both. Table 6-25's caVaccineTypeBeginAgeDate/EndAgeDate are
+  now constructed with type "Calculated date (CALCDTPREF-1/2)" and
+  name "Preferable Vaccine Type Begin/End Age Date", matching the
+  specification. Table 6-26's third condition now actually compares
+  the administered dose's trade name against the preferable vaccine's,
+  but - matching this same table's own existing convention for its
+  next condition (Rule 1/2's volume check already treats an empty
+  administered volume as automatically sufficient rather than
+  comparing it) - treats an empty trade name on either side as "no
+  constraint" rather than a mismatch: only two known, non-empty trade
+  names that actually differ produce NO. This is not merely a
+  workaround for the FITS gap; it is the more defensible reading of
+  "is the trade name the same" when one side is simply unrecorded,
+  and it is the same missing-data idiom the table already uses one
+  condition away.
+
+  Verified via the standing Role B pipeline: unit 6.8's own suite
+  30/30 green (was 27/30). Full engine suite: sorted diff confirms
+  exactly those 3 tests flipped and nothing else. Full FITS run,
+  case-by-case diffed: first implementation attempt regressed exactly
+  the 10 cases identified above (0 improvements) - rejected; final
+  implementation restores 3627 passed with 0 changed cases end to
+  end, since the FITS suite's own missing trade-name field means it
+  cannot exercise a genuine brand-mismatch scenario either way, the
+  same category as SPEC-4.6-0026, SPEC-4.6-0030, SPEC-4.6-0034,
+  SPEC-4.6-0035 and SPEC-4.6-0036.

@@ -1,0 +1,28 @@
+id: "2026-09-08-role-b-round-1-evaluate-for-preferable-vaccine"
+date: "2026-09-08"
+phase: 21
+title: "Role B Round 1 - EvaluateForPreferableVaccine's Exclusive Begin-Age Boundary"
+before:
+  commit: "2f6eb4e"
+  engine_tests: {total: 767, failures: 192, errors: 1}
+  fits: {total_cases: 4896, passed: 3364, failed_assertions: 1531, execution_errors: 1}
+  fits_runtime_seconds: 39.9
+after:
+  commit: "cb1f5ce"
+  engine_tests: {total: 767, failures: 190, errors: 1}
+  fits: {total_cases: 4896, passed: 3364, failed_assertions: 1531, execution_errors: 1}
+  fits_runtime_seconds: 39.9
+summary: >
+  The first Role B fix: unit 6.8's EvaluateForPreferableVaccine used a strict
+  "<" comparison for a boundary its own spec label documents as "<=",
+  excluding a dose administered exactly on the preferable vaccine's begin
+  age date (most visible on "0 days" begin-age windows, e.g. a HepB birth
+  dose). One-line fix to the codebase's existing inclusive-bound idiom
+  flips the two JUnit tests exercising that boundary from red to green
+  (25/5 -> 27/3 for the unit), with zero regressions across the full
+  cdsi-engine suite (192 -> 190 failures) and zero change to the FITS
+  suite (3364/1531/1 identical both sides - by design, this round targets
+  JUnit correctness, not FITS pass-rate movement). See SPEC-4.6-0008.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0008/finding.md"
+finding_ids: ["SPEC-4.6-0008"]
+status: reviewed

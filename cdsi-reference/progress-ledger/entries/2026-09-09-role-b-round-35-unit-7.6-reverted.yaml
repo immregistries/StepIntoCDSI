@@ -1,0 +1,65 @@
+id: "2026-09-09-role-b-round-35-unit-7.6-reverted"
+date: "2026-09-09"
+phase: 22
+title: "Role B Round 35 - Unit 7.6 Attempted and Reverted: JUnit-Clean Fix Triggers a Real Skip/Re-Forecast Infinite Loop (SPEC-4.6-0043)"
+before:
+  commit: "59e0c10"
+  engine_tests: {total: 783, failures: 68, errors: 0}
+  fits: {total_cases: 4896, passed: 3637, failed_assertions: 1258, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+after:
+  commit: "59e0c10"
+  engine_tests: {total: 783, failures: 68, errors: 0}
+  fits: {total_cases: 4896, passed: 3637, failed_assertions: 1258, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+summary: >
+  Moved to unit 7.6 after closing 7.5 (round 34). Attempted the two
+  fixes status.yaml's own pre-existing notes had already diagnosed:
+  deleting ValidateRecommendation's process() override (which never
+  called evaluateLogicTables(), so 7.6 has never validated anything
+  in this engine's history), and fixing EvaluateConditionalSkip's
+  shared CONDSKIP-2 reference-date switch, whose VALIDATING arm was a
+  placeholder always using the PAST sentinel instead of the forecast's
+  own earliest date.
+
+  Both fixes together took unit 7.6's own suite from 6/15 to 13/15
+  green (the remaining 2: the already-tracked SPEC-4.6-0027 context
+  landmine, and an unrelated test-fixture gap), with a fully clean
+  full-engine JUnit run - sorted diff across all 783 tests confirmed
+  exactly 6 tests flipped and nothing else, including 6.2's and 7.1's
+  own suites, deliberately re-run alongside 7.6's since all three
+  share this exact base class.
+
+  The full FITS suite caught what no JUnit test could: passedCases
+  dropped from 3637 to 3486 (-151) and executionErrors rose from 1 to
+  234, 233 of them a brand-new "Logic steps stuck in a loop at
+  7.1/7.2/7.3/7.4/7.5/7.6" exception - the engine's own loop guard
+  tripping on a genuine skip/re-forecast infinite loop that has been
+  completely latent until today, since 7.6's decision tables have
+  never actually executed before and no JUnit test in this file (or
+  6.2's or 7.1's) drives a real multi-target-dose series through
+  repeated skip cycles.
+
+  Reverted in full via git checkout on both files, confirmed via a
+  fresh build (ValidateRecommendationTest back to 8/15 failures,
+  matching the pre-attempt state) and a re-run FITS suite (3637
+  passed, 1 execution error, matching the last shipped state exactly).
+  No code committed this round; fix_status set to blocked rather than
+  merged.
+
+  Recorded as related to, but not confirmed identical to, SPEC-4.6-0027
+  (the ConditionalSkip context field, open pending GitHub Issue #65's
+  ACIP guidance) - both involve the same CONDSKIP-2 reference-date
+  machinery, and the same "DTaP catch-up interval" clinical question
+  may be why a target dose keeps re-qualifying for the same skip on
+  every re-forecast pass, but that connection has not been traced.
+
+  This breaks a streak of twelve consecutive unit-closing rounds today
+  - not because the diagnosis was wrong, but because the standing "any
+  FITS regression is an automatic stop" discipline caught a defect no
+  amount of unit-level JUnit coverage could have surfaced. Recorded in
+  full per that same discipline, as a normal and expected outcome of
+  Role B's review gate, not a failure to finish the task.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0043/finding.md"
+finding_ids: ["SPEC-4.6-0043"]
+status: reviewed

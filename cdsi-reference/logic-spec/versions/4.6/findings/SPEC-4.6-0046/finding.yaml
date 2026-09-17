@@ -1,0 +1,74 @@
+id: "SPEC-4.6-0046"
+status: confirmed
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["8.1", "8.2", "8.3", "8.5", "8.6", "8.7"]
+source_pages: [87, 88, 89, 90, 91]
+tables:
+  - "Table 8-2"
+  - "Table 8-3"
+  - "Table 8-5"
+  - "Table 8-9"
+  - "Table 8-11"
+  - "Table 8-13"
+business_rules:
+  - "SELECTB-24"
+  - "SELECTSCORE-2"
+  - "SELECTB-6"
+  - "SELECTB-7"
+  - "SELECTB-16"
+  - "SELECTB-21"
+  - "SELECTB-2"
+  - "SELECTB-3"
+  - "SELECTB-5"
+  - "SELECTB-11"
+  - "SELECTB-12"
+  - "SELECTB-14"
+  - "SELECTB-19"
+  - "SELECTB-23"
+  - "SELECTBEST-1"
+  - "SELECTBEST-2"
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.PreFilterPatientSeries"
+  - "org.openimmunizationsoftware.cdsi.core.logic.IdentifyOnePrioritizedPatientSeries"
+  - "org.openimmunizationsoftware.cdsi.core.logic.ClassifyScorablePatientSeries"
+  - "org.openimmunizationsoftware.cdsi.core.logic.InProcessPatientSeries"
+  - "org.openimmunizationsoftware.cdsi.core.logic.NoValidDoses"
+  - "org.openimmunizationsoftware.cdsi.core.logic.SelectPrioritizedPatientSeries"
+  - "org.openimmunizationsoftware.cdsi.core.logic.PatientSeriesScoring"
+  - "org.openimmunizationsoftware.cdsi.core.domain.PatientSeries"
+fits_cases:
+  - "HIB-2013-0281"
+summary: >
+  Rewrite Chapter 8 series selection (8.1-8.3, 8.5-8.7) against CDSi Logic
+  Spec v4.6. Consume the SPEC-4.6-0045 scoring foundation. Do not retry
+  Copilot commit 2 (null-status admit plus Yoda-equals produced a net -121
+  FITS swing). Leave 8.4, Chapter 9, 7.6, and 6.2 untouched. Honest FITS
+  vs the 2026-09-10 develop baseline: 3637/4896 (74.3%) to 3749/4896
+  (76.6%), net +112. HIB-2013-0281 now passes. DTAP has a documented +16
+  fail regression. Two Chapter 8 unit tests remain intentionally red.
+evidence: >
+  Engine suite after the rewrite: 783 tests, 26 failures, 0 errors (was 62
+  failures on the SPEC-4.6-0045 foundation). Chapter 8 unit counts: 8.1
+  23/24 green; 8.2 14/14; 8.3 17/17; 8.5 37/37; 8.6 26/26 plus 5
+  completable green; 8.7 20/21 green. Remaining Chapter 8 reds:
+  PreFilterPatientSeriesTest.selectscoreTwoRiskPriorityIsComparedAgainstEverySeriesInTheGroupNotOnlyTheRiskOnes
+  (SELECTSCORE-2 Risk priority still compared Risk-only) and
+  SelectPrioritizedPatientSeriesTest.selectbestOneTheScoreIsThePointsAwardedInThisSelectionNotOnesCarriedIn
+  (8.7 still compares raw integers; 8.1 resetScore() is the FITS-facing
+  boundary). Two identical FITS runs on commit 85234203 produced 0
+  statusChanged cases. Execution errors remain 1 (HepA-AART-EXTRA-10,
+  unrecognized CVX 143). known-passing-cases.txt was not regenerated.
+interpretation: >
+  The rewrite follows Tables 8-2, 8-3, 8-5, 8-9, 8-11, and 8-13 with the
+  minimum documented deviations needed to keep isolated unit tests and
+  FITS both honest. Table 8-5 has a partition gap (1 complete + 1
+  in-process matches no column); the default outcome stays NO_VALID_DOSES
+  and is not auto-routed to 8.5. Table 8-11's undocumented gender and
+  max-age conditions remain empty no-ops (SPEC-4.6-0007). SELECTSCORE-2
+  never says how a group's default series becomes scorable; the historical
+  fallback is kept as SPECIFICATION_AMBIGUITY. DTAP +16 is an allowed
+  documented regression, not a reason to revert. COVID-19, FLU, and POL
+  fail counts are unchanged (seasonal-date cluster SPEC-4.6-0023) and need
+  fixture refresh or FITS_DIFFERENCE, not a nearest-season hack. Codex
+  Chapter 9 work can land later on top of this branch; rebase that work
+  onto this Chapter 8 rewrite before judging combined FITS.

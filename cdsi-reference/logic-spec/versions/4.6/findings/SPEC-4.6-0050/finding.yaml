@@ -1,0 +1,44 @@
+id: "SPEC-4.6-0050"
+status: "resolved"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["9.1", "9.2", "9.3"]
+source_pages: [94, 95, 96]
+tables: ["Table 9-2", "Table 9-4"]
+business_rules: ["FORECASTVG-1", "FORECASTVG-7", "FORECASTVG-8", "FORECASTVG-9", "FORECASTDN-2"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.MultipleAntigenVaccineGroup"
+  - "org.openimmunizationsoftware.cdsi.core.logic.SingleAntigenVaccineGroup"
+fits_cases: []
+summary: >
+  Chapter 9's remaining Table 9-2 aggregation was incomplete after
+  SPEC-4.6-0049. MultipleAntigenVaccineGroup concatenated forecast reasons,
+  ran FORECASTVG-1..8 only when the group status was NOT_COMPLETE, never
+  wrote forecastList, collected the wrong type for FORECASTVG-9, and never
+  applied FORECASTDN-2. SingleAntigenVaccineGroup already recorded
+  containment and recommended vaccines; this round also copies dose number
+  and unions recommended vaccines across every contained forecast.
+evidence: >
+  MultipleAntigenVaccineGroupTest had three remaining reds after
+  SPEC-4.6-0049: a shared "Due Now" reason appeared twice as "Due NowDue
+  Now"; a Contraindicated MMR group with one Not Complete component left
+  antigensNeededList empty; and forecastList stayed empty even though
+  FORECASTVG-1 names that containment relation. Table 9-2 FORECASTVG-7
+  requires the forecast reasons of all contained forecasts; FORECASTVG-8
+  is defined over each contained forecast's own Not Complete status, not
+  the group's; FORECASTVG-9 is a union of recommended series dose vaccines;
+  FORECASTDN-2 is min of contained dose numbers when administerFullVaccineGroup
+  is Y (MMR) and max when it is N (DTaP/Tdap/Td).
+interpretation: >
+  Fixed 9.3 by aggregating FORECASTVG-1 through 9 and FORECASTDN-2 for
+  every Table 9-4 status, writing a de-duplicated reason union joined
+  with "; ", recording contained Forecasts on forecastList, unioning
+  recommended VaccineType values, and taking min or max dose number from
+  the group's administer-full flag. FORECASTVG-8's own Not Complete filter
+  on contained forecasts is unchanged. The previous MULTIANTVG-9 block
+  that built an unused List of VaccineGroup was deleted. 9.2 copies the
+  chosen forecast's dose number and unions recommended vaccines from every
+  contained forecast. Combined FITS vs the accepted 3691-case Chapter 9
+  baseline is unchanged: 3691 passed, 1204 failed assertions, 1 execution
+  error, statusChanged empty. Allowlist was not regenerated. Project
+  owner accepted the Chapter 9 remaining tests onto develop on 2026-09-14
+  without a code-review PR.

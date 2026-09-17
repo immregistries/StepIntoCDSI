@@ -1,0 +1,87 @@
+id: "SPEC-4.6-0025"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["8.1"]
+source_pages: [87]
+tables: ["Table 8-1"]
+business_rules: ["SELECTB-24"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.PreFilterPatientSeries"
+fits_cases:
+  - "675c41f8e4b089d2bdc0c483-COVID-19-2023-0071"
+summary: >
+  PreFilterPatientSeries's candidate-admission filter requires
+  patientSeries.getPatientSeriesStatus() != null AND not Contraindicated
+  - but SELECTB-24's own text is "does not have a patient series status
+  of 'Contraindicated'," which a null (not-yet-classified) status
+  trivially satisfies. A relevant patient series that reaches 8.1 with a
+  null status is currently excluded from BOTH the main candidate list
+  and its all-contraindicated fallback, so if every one of an antigen's
+  relevant patient series has a null status at this point, 8.1 admits
+  zero candidates and the antigen silently gets no best patient series
+  and no forecast at all - the exact mechanism behind 74 of COVID-19's
+  275 FITS failures ("No forecasted vaccine group matched CVX 213").
+  This is confirmed correct per spec text and already pinned by an
+  existing, previously-red unit test
+  (PreFilterPatientSeriesTest.selectbTwentyFourASeriesWithNoPatientSeriesStatusIsStillNotContraindicated),
+  but the straightforward fix (admit a null status as "not
+  Contraindicated") was attempted and reverted this round after it
+  caused a severe FITS regression: 270 execution errors (up from 1) and
+  a net 25 fewer passing cases, because multiple call sites downstream of
+  8.1 (in Chapter 8's later steps) call
+  patientSeries.getPatientSeriesStatus().equals(...) or otherwise assume
+  a non-null status without a guard, an invariant that has silently held
+  only because 8.1 has always filtered null-status series out before
+  they could reach those call sites.
+evidence: >
+  PreFilterPatientSeries.java: `if (patientSeries.getPatientSeriesStatus() != null
+  && !patientSeries.getPatientSeriesStatus().equals(PatientSeriesStatus.CONTRAINDICATED))`
+  for the main candidate loop, and a matching `status != null &&
+  status.equals(CONTRAINDICATED)` for the all-contraindicated fallback -
+  both exclude a null status from ever becoming a candidate at all.
+  Traced from FITS case 675c41f8e4b089d2bdc0c483-COVID-19-2023-0071 (a
+  9-month-old with two valid Moderna doses, expected COMPLETE): direct
+  instrumentation showed dataModel.getPatientSeriesStepper().getList()
+  correctly contained both of COVID-19's group-1 series with
+  patientSeriesStatus=null (not yet classified at this point in the
+  pipeline, apparently normal/expected for this antigen's shape), both
+  individually age-appropriate and unexcluded by SPEC-4.6-0021's group
+  gate, yet dataModel.getBestPatientSeriesList() ended up with zero
+  entries for COVID-19 - traced to 8.1 discarding both candidates outright
+  because of their null status.
+
+  Changing the guard to simply `patientSeries.getPatientSeriesStatus() !=
+  PatientSeriesStatus.CONTRAINDICATED` (matching SELECTB-24's literal
+  text) fixed PreFilterPatientSeriesTest's existing red test with no
+  other unit-test regressions (full cdsi-engine suite: 136 failures,
+  down from 137, confirmed via sorted diff to be exactly this one test
+  and nothing else). But the full FITS run told a very different story:
+  passedCases fell from 3451 to 3426 and executionErrors rose from 1 to
+  270, dominated by
+  "NullPointerException: ... PatientSeries.getPatientSeriesStatus() ...
+  is null" (48 cases), an unqualified "NullPointerException: null" (213
+  cases, likely a different null dereference further downstream reached
+  only once null-status series survive this far), and 8 recurrences of
+  the getTargetDoseList() null-guard gap SPEC-4.6-0022 fixed in a
+  different call site.
+interpretation: >
+  This is a genuine SELECTB-24 conformance defect, not a misreading -
+  the spec text is unambiguous and the existing unit test already proves
+  it. But it cannot be fixed in isolation: PreFilterPatientSeries has
+  been the de facto gatekeeper that every later Chapter 8 step
+  (8.2-8.9) implicitly relies on to never hand them a PatientSeries with
+  a null status, and that assumption is baked into call sites this round
+  did not have the scope to find and audit one at a time. Recorded as
+  open rather than attempting a narrower patch, per the standing
+  discipline of fixing SELECTB-24 correctly (admit null status) plus
+  auditing/hardening every downstream .getPatientSeriesStatus() call this
+  admits reachability to, rather than shipping a change verified only
+  against unit tests and reverted once FITS exposed the real blast
+  radius.
+
+  Materiality: at minimum COVID-19's 74 "no forecast at all" FITS
+  failures trace to this exact mechanism. Given the volume of downstream
+  NPEs this round's attempted fix surfaced (across 270 execution errors,
+  almost certainly spanning several antigens beyond COVID-19), the true
+  count of FITS cases affected - once every downstream null-status call
+  site is also hardened - is likely substantially larger than 74.

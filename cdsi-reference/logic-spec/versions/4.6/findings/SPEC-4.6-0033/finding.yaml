@@ -1,0 +1,83 @@
+id: "SPEC-4.6-0033"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["4.4", "6.2"]
+source_pages: [35, 51]
+tables: []
+business_rules: []
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkip"
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateAndForecastAllPatientSeries"
+fits_cases:
+  - "675c41f8e4b089d2bdc0c483-PCV-2023-0002"
+summary: >
+  A markRestAsExtraneous() placeholder TargetDose (4.4's bookkeeping
+  record for an extraneous administered dose beyond what a series
+  needed, introduced by SPEC-4.6-0028) still tracks the same SeriesDose
+  - and therefore the same ConditionalSkip data - as whichever real
+  target dose it duplicates. When forecast dispatch routes this
+  placeholder through EvaluateConditionalSkip (6.2/7.1/7.6, whichever
+  context applies), that step evaluates the SAME conditional skip data
+  again and, if it decides "skip," overwrites the placeholder's
+  explicit UNNECESSARY status back to SKIPPED - which sends control
+  back into EvaluateAndForecastAllPatientSeries instead of forward
+  through forecasting, so the whole series's PatientSeriesStatus never
+  gets assigned by DetermineForecastNeed (7.4). The series is left with
+  a null status, silently dropping out of contention in favor of
+  whichever other, unrelated series-group happens to have a properly-
+  set status - even an incorrect Aged Out one.
+evidence: >
+  Investigated while root-causing SPEC-4.6-0019's still-open PCV
+  regression (part B): an adult patient with a textbook-complete
+  Pneumococcal 50+ sequence (PCV13, PPSV23, PCV20) reported AGED_OUT
+  instead of COMPLETE for the antigen overall. Direct instrumentation
+  (a scratch diagnostic capturing every log/alert event across the
+  whole EvaluateAndForecastAllPatientSeries -> EvaluateConditionalSkip
+  cycle for this patient's "Pneumococcal 50+ 2-dose PCV13 series",
+  removed before this finding was written) traced the exact sequence:
+  the series' own dose 4 target dose is SKIPPED, 4.4's
+  markRestAsExtraneous() creates one placeholder (status UNNECESSARY,
+  evaluation EXTRANEOUS) for a leftover administered dose, and
+  4.4 dispatches straight into EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST
+  (7.1) for that same placeholder (since it still shares dose 4's own
+  SeriesDose object). 7.1 evaluates dose 4's real ConditionalSkip data
+  again, decides "skip" is met, and calls
+  dataModel.getTargetDose().setTargetDoseStatus(TargetDoseStatus.SKIPPED)
+  - overwriting the placeholder's UNNECESSARY status. Control routes
+  back to EvaluateAndForecastAllPatientSeries (7.1's own "skip"
+  destination in forecast context), which sees SKIPPED, tries to
+  advance again, finds nothing left, and gives up on the series -
+  moving to the next patient series entirely - without ever reaching
+  DetermineForecastNeed for this one. PatientSeriesStatus stays null.
+
+  This bug is independent of SPEC-4.6-0019's own "equal to" spelling
+  gap - it was found while investigating that finding, but reproduces
+  with or without that fix, whenever ANY series' own last target dose
+  is SKIPPED (for any reason) while a leftover administered AAR
+  triggers markRestAsExtraneous(). Verified by testing this fix in
+  complete isolation (equal-to spelling left untouched, still bare
+  "equal" only): full FITS run, case-by-case diffed: 3616 -> 3627
+  passed, 0 regressions, 11 improvements (6 COVID-19, 5 PCV) -
+  confirming the bug already fires on the current, unmodified codebase
+  for other cases too, not only the one this investigation started
+  from.
+interpretation: >
+  Fixed at the shared EvaluateConditionalSkip base class level (so it
+  applies uniformly to 6.2, 7.1, and 7.6): when the current target
+  dose's status is already UNNECESSARY, no conditional skip evaluation
+  is performed at all - the step falls straight through to its
+  noSkipLogicStep destination, exactly as if no ConditionalSkip data
+  existed for this dose. An UNNECESSARY target dose (today, only ever
+  a markRestAsExtraneous() placeholder) is definitively resolved
+  bookkeeping, not a real dose awaiting a skip/no-skip decision in any
+  of the three contexts this class serves.
+
+  Verified via the standing Role B pipeline: full cdsi-engine suite
+  confirmed via sorted diff to be unchanged (this fix affects zero
+  currently-tested unit scenarios, since no existing test drives an
+  UNNECESSARY-status target dose through EvaluateConditionalSkip); full
+  FITS run, case-by-case diffed against the true baseline: 0
+  regressions, 11 improvements. This closes part B of SPEC-4.6-0019 (the
+  PCV AGED_OUT defect) as its own, independently-shippable fix - part A
+  (the DTaP clinical-correctness question) remains open pending ACIP
+  input via GitHub Issue #65.

@@ -35,7 +35,7 @@ This is the **last chapter** in the overall processing model, and it loops - it 
 Recorded here for visibility; each is detailed with code citations in its own step's Review Findings. Nothing in this chapter approaches the severity of Chapter 7's missing-contraindication-logic finding (7.3 remains the single most significant finding across the whole documentation effort) - this chapter's issue is a traceability gap, not missing behavior:
 
 - **9.1**: implements only VACCINEGROUP-1/2 (the single-vs-multiple classification) from Table 9-2's twelve business rules. The other ten (FORECASTVG-1 through 9, FORECASTDN-2) describe vaccine-group-forecast date/reason aggregation that genuinely runs, but in `MultipleAntigenVaccineGroup` (9.3) and, trivially, `SingleAntigenVaccineGroup` (9.2) - under different or no rule-ID labels, not in the class this document's mapping assigns to Table 9-2's section. The *behavior* is present and exercised; the *traceability* from rule ID to implementing code is not, for those ten rules.
-- **9.3**: MULTIANTVG-1's "latest date administered" clause (part of its priority-forecast branch) wasn't traced to a specific line of code in this pass - flagged unconfirmed, not resolved by guessing.
+- **9.3**: MULTIANTVG-1's last-administered floor is `latestDateAdministeredInVaccineGroup()` (SPEC-4.6-0049). Production membership is CVX-to-antigen overlap, because Schedule Supporting Data never fills `VaccineGroup.vaccineList` (SPEC-4.6-0061).
 
 ## Extraction-tooling note
 

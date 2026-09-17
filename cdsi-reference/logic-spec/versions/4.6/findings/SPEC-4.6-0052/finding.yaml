@@ -1,0 +1,48 @@
+id: "SPEC-4.6-0052"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["4.4", "7.1", "7.4"]
+source_pages: [35, 36, 78, 79]
+tables: ["Table 7-10"]
+business_rules: []
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateAndForecastAllPatientSeries"
+  - "org.openimmunizationsoftware.cdsi.core.logic.DetermineForecastNeed"
+fits_cases:
+  - "689dc945e4b05decee50df54-FLU-2013-0171"
+  - "689dc945e4b05decee50df54-FLU-2018-0025"
+  - "689dc945e4b05decee50df54-FLU-2019-0004"
+  - "689dc945e4b05decee50df54-FLU-2025-0020"
+summary: >
+  When 7.1 skips the last forecast target dose and returns to 4.4, the
+  FORECAST neighborhood abandoned the series without running Table 7-10
+  (Determine Forecast Need). PatientSeriesStatus stayed null and the
+  vaccine group fell through to NOT_COMPLETE. Influenza "already
+  vaccinated this season" needs prior SATISFIED + recurring clone
+  SKIPPED → Rule 2 COMPLETE.
+evidence: >
+  After SPEC-4.6-0051, 31 FLU FITS cases still failed COMPLETE vs
+  NOT_COMPLETE across seven clinical uids (2013-0171, 2013-0184,
+  2018-0025, 2018-0026, 2019-0004, 2019-0016, 2025-0020) duplicated by
+  plan. Fixtures have current-season dose(s) and expect serieStatus
+  COMPLETE. Influenza standard series Dose 2 is recurring; after
+  satisfaction a clone is forecast and correctly SKIPPED by season-
+  window conditional skip. 7.1's skip destination is 4.4; 4.4 then
+  called setNextPatientSeries() when no further target remained,
+  never reaching DetermineForecastNeed. Related to the null-status
+  stranding class also seen in SPEC-4.6-0033, but triggered here by a
+  real last-dose SKIPPED (not an UNNECESSARY placeholder overwrite).
+interpretation: >
+  Fix: when FORECAST neighborhood sees SKIPPED with no next target and
+  PatientSeriesStatus is still null, route to Determine Evidence of
+  Immunity so Table 7-10 can assign status. Once status is set, a
+  second return with the same skipped last dose advances the series
+  loop as before.
+
+  Verified with SPEC-4.6-0053 on run 2026-09-15T170211: combined FITS
+  3765 to 3956 (net +191). COVID-19 81 to 135; PCV 217 to 332; FLU 49
+  to 62; MMR +9. Collateral allowlist drop: PCV-2013-0597 (5 plan
+  copies) now COMPLETE vs FITS NOT_COMPLETE - previously matched via
+  null-status fallback. 18 FLU COMPLETE mismatches remain on historical
+  plans whose season windows still need assessment-relative projection
+  of Vaccine Count by Date (beyond 7.4/7.5 seasonalRecommendation).

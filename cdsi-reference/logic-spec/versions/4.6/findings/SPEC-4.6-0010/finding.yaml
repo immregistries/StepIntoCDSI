@@ -1,0 +1,88 @@
+id: "SPEC-4.6-0010"
+status: "confirmed"
+category: "SPECIFICATION_DEFECT"
+spec_sections: ["6.4"]
+source_pages: [65]
+tables: ["Table 6-14", "Table 6-15", "Table 6-16"]
+business_rules: ["CALCDTAGE-1", "CALCDTAGE-4", "CALCDTAGE-5"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateAge"
+fits_cases: []
+summary: >
+  Table 6-14's per-attribute "Assumed Value if Empty" defaults for Minimum
+  Age Date and Absolute Minimum Age Date are both a flat 01/01/1900,
+  applied independently of each other. When a target dose defines an
+  absolute minimum age but no minimum age, that produces an assumed
+  minimum age date (1900) earlier than the real absolute minimum age
+  date, which Table 6-15's rule grid cannot resolve: two conditions
+  answer YES simultaneously, no rule column matches, and the engine
+  throws. This is a defect in how the specification's own tables compose,
+  not a case of the engine disagreeing with a single clear rule - it
+  needs review with CDC/CDSi, not just an internal code fix.
+evidence: >
+  Table 6-14's Assumed Value if Empty column: "Calculated date
+  (CALCDTAGE-4) / Minimum Age Date / 01/01/1900" and "Calculated date
+  (CALCDTAGE-5) / Absolute Minimum Age Date / 01/01/1900" - two
+  independent attributes, each defaulting to the same flat date with no
+  stated relationship between them. Table 6-15's four conditions are: (1)
+  date administered < absolute minimum age date; (2) absolute minimum age
+  date <= date administered < minimum age date; (3) minimum age date <=
+  date administered < maximum age date; (4) date administered >= maximum
+  age date - and its four rules each require exactly one of these YES and
+  the rest NO. When a target dose's <age> element carries a valued
+  <absMinAge> (a real, later date) but an empty <minAge/>, EvaluateAge
+  computes a real absolute minimum age date but lets the minimum age date
+  fall to the flat assumed 01/01/1900 - a date earlier than the real
+  absolute minimum. For any date administered before that absolute
+  minimum, condition (1) is YES (administered is before the real absolute
+  minimum) and condition (3) is also YES (administered is after the
+  assumed 1900 "minimum" and before the assumed-future maximum). No rule
+  column has that Yes/No pattern, so LogicTable.evaluate() records no
+  outcome and EvaluateAge.process()'s own guard throws
+  NullPointerException("Evaluation should not be null at this point").
+  This is not a constructed corner: the Supporting Data release bundled
+  with cdsi-engine has exactly 5 series doses of this shape - all
+  Pneumococcal - <absMinAge>19 years</absMinAge> with empty <minAge/> and
+  <maxAge/> (Dose 3 of the two "Pneumococcal risk 19+ years CSF Leaks or
+  Cochlear Implants" series, Dose 4 of the three "Pneumococcal risk 19+
+  years immunocompromised" series). Any dose administered before the
+  patient's 19th birthday against one of those target doses reaches this
+  path and previously crashed the engine.
+interpretation: >
+  Both Table 6-14 and Table 6-15 are individually clear and internally
+  consistent; the defect is in how they compose. Table 6-14 assigns each
+  calculated date's assumed value independently, with no stated rule that
+  the three dates (absolute minimum, minimum, maximum) must stay ordered
+  relative to one another when some are defined and others are not. Table
+  6-15's rule grid, however, implicitly assumes that ordering always
+  holds (absolute minimum <= minimum <= maximum) - it has no rule column
+  for the case where two conditions are simultaneously true, because the
+  table's authors evidently did not anticipate independent per-attribute
+  defaulting producing an out-of-order result. Neither table's text
+  alone flags this as ambiguous; the contradiction only appears once
+  their independently-clear defaults are combined for this specific
+  input shape (absolute minimum defined, minimum undefined). That is why
+  this is filed as SPECIFICATION_DEFECT rather than
+  SPECIFICATION_AMBIGUITY: taken alone, neither table leaves an
+  implementer unsure what to do; taken together, they leave no valid
+  outcome at all for a real, occurring input.
+  The already-written unit test (EvaluateAgeTest,
+  aDoseBeforeTheAbsoluteMinimumAgeIsTooYoungEvenWithNoMinimumAgeDefined)
+  had already committed to one resolution: a dose administered before the
+  absolute minimum age date must be "Too young" regardless of the
+  assumed-value artifact in the minimum age condition. The chosen fix
+  implements that by removing the contradiction at its source rather than
+  special-casing the decision table: when minimum age is unvalued but
+  absolute minimum age is valued, EvaluateAge now uses the absolute
+  minimum age date as the minimum age date's own fallback (instead of the
+  independent flat 1900), restoring the ordering Table 6-15 depends on.
+  Clinically this means a dose becomes fully VALID (no separate grace
+  period) the instant it clears the absolute minimum age, when no
+  distinct minimum age was ever defined to have a grace period toward.
+  This is a pragmatic, reviewed engineering decision made to keep the
+  engine from crashing on real Supporting Data, not a substitute for
+  CDC/CDSi's own authority over what Table 6-14's assumed values should
+  say when they interact this way. It is recorded here, with the project
+  owner's explicit sign-off on this specific resolution (2026-09-08), so
+  it can be raised with CDC/CDSi for their own determination rather than
+  quietly treated as settled.

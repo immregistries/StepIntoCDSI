@@ -1,193 +1,87 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.Forecast;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
-import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriodType;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 
+/**
+ * 8.6 No Valid Doses (Table 8-11). Method names are part of the Role A
+ * contract: tests invoke each row reflectively. Gender-match and maximum-age
+ * methods are retained as no-ops (SPEC-4.6-0007): Table 8-11 does not define
+ * them, and {@code evalTable()} does not call them.
+ */
 public class NoValidDoses extends LogicStep {
 
-  private List<PatientSeries> patientSeriesList = dataModel.getPatientSeriesStepper().getList();
-
-  public Date addTimePeriodtotoDate(Date date, TimePeriod timePeriod) {
-    int amount = timePeriod.getAmount();
-    TimePeriodType type = timePeriod.getType();
-    switch (type) {
-      case DAY:
-        date = DateUtils.addDays(date, amount);
-        break;
-      case WEEK:
-        date = DateUtils.addWeeks(date, amount);
-        break;
-      case MONTH:
-        date = DateUtils.addMonths(date, amount);
-        break;
-      case YEAR:
-        date = DateUtils.addYears(date, amount);
-        break;
-      default:
-        break;
-    }
-    return date;
+  public NoValidDoses(DataModel dataModel) {
+    super(LogicStepType.NO_VALID_DOSES, dataModel);
   }
 
-  private Date findMaximumAgeDate(PatientSeries patientSeries) {
-    Date dob = dataModel.getPatient().getDateOfBirth();
-    if (patientSeries.getForecast() == null || patientSeries.getForecast().getTargetDose() == null) {
-      return null;
-    }
-    SeriesDose referenceSeriesDose = patientSeries.getForecast().getTargetDose().getTrackedSeriesDose();
-    ;
-    TimePeriod timePeriod = referenceSeriesDose.getAgeList().get(0).getMaximumAge();
-    Date maximumAgeDate = addTimePeriodtotoDate(dob, timePeriod);
-    return maximumAgeDate;
+  private List<PatientSeries> scorablePatientSeriesList() {
+    return dataModel.getScorablePatientSeriesList();
   }
 
   /**
-   * cond1 A scorable patient series can start earliest
+   * Table 8-11 row 1: can start earliest (SELECTB-14) — forecast earliest date.
    */
-
   private void evaluate_AScorablePatientSeriesCanStartEarliest() {
-    int numOfEarliestDates = 0;
-    if (patientSeriesList.size() != 0 && patientSeriesList.get(0).getForecast() != null
-        && patientSeriesList.get(0).getForecast().getEarliestDate() != null) {
-      Date earliestDate = patientSeriesList.get(0).getForecast().getEarliestDate();
-      for (PatientSeries patientSeries : patientSeriesList) {
-        if (earliestDate == null) {
-          earliestDate = patientSeries.getForecast().getEarliestDate();
-          continue;
-        }
-        if (patientSeries.getForecast() == null || patientSeries.getForecast().getEarliestDate() == null) {
-          continue;
-        }
-        if (earliestDate == patientSeries.getForecast().getEarliestDate()) {
-          numOfEarliestDates++;
-        } else {
-          if (earliestDate.after(patientSeries.getForecast().getEarliestDate())) {
-            earliestDate = patientSeries.getForecast().getEarliestDate();
-            numOfEarliestDates = 0;
-          }
-        }
-      }
-      for (PatientSeries patientSeries : patientSeriesList) {
-        if (patientSeries.getForecast() == null) {
-          continue;
-        }
-        if (patientSeries.getForecast().getEarliestDate() != earliestDate) {
-          patientSeries.descPatientScoreSeries();
-        } else {
-          if (numOfEarliestDates == 1) {
-            patientSeries.incPatientScoreSeries();
-          }
-        }
-      }
-    } else {
-      log("Forecast is not set");
-    }
+    PatientSeriesScoring.<Date>scoreExtremum(scorablePatientSeriesList(), patientSeries -> {
+      Forecast forecast = patientSeries.getForecast();
+      return forecast == null ? null : forecast.getEarliestDate();
+    }, Comparator.<Date>reverseOrder(), 1);
   }
 
   /**
-   * cond2 A scorable patient series is completable.
+   * Table 8-11 row 2: completable (SELECTB-3 / SELECTB-12). A series with no
+   * forecast is not scored by this row at all ({@code NoValidDosesCompletableTest
+   * #seriesWithoutForecastIsNotScored}), unlike 8.5 which treats the same shape
+   * as "not true".
    */
-
   private void evaluate_ACandidatePatientSeriesIsCompletable() {
-    for (PatientSeries patientSeries : patientSeriesList) {
-      if (patientSeries.getForecast() != null) {
-        Date finishDate = patientSeries.getForecast().getAdjustedPastDueDate();
-        Date maximumAgeDate = findMaximumAgeDate(patientSeries);
-        if (finishDate != null && maximumAgeDate != null && finishDate.before(maximumAgeDate)) {
-          patientSeries.incPatientScoreSeries();
-        } else {
-          patientSeries.descPatientScoreSeries();
-        }
+    Date dateOfBirth = PatientSeriesScoring.dateOfBirth(dataModel);
+    for (PatientSeries patientSeries : scorablePatientSeriesList()) {
+      if (patientSeries.getForecast() == null) {
+        continue;
+      }
+      if (PatientSeriesScoring.isCompletable(patientSeries, dateOfBirth)) {
+        patientSeries.addScore(1);
+      } else {
+        patientSeries.addScore(-1);
       }
     }
   }
 
   /**
-   * cond3 A scorable patient series is a gender-specific patient series and the
-   * patient‘s gender
-   * matches a required gender specified on the first target dose.
+   * Retained for Role A reflection. Table 8-11 defines no gender-match
+   * condition (SPEC-4.6-0007); awarding points here would be a fourth row.
    */
-
   private void evaluate_ACandidatePatientSeriesGenderSpecific() {
-    for (PatientSeries patientSeries : patientSeriesList) {
-      if (patientSeries.getForecast() != null && patientSeries.getForecast().getTargetDose() != null) {
-        boolean patientSeriesIsGenderSpecefic = false;
-        SeriesDose referenceSeriesDose = patientSeries.getForecast().getTargetDose().getTrackedSeriesDose();
-        String gender = referenceSeriesDose.getRequiredGenderList().size() == 0 ? null
-            : referenceSeriesDose.getRequiredGenderList().get(0).getValue();
-        if (gender != null && !gender.isEmpty()) {
-          patientSeriesIsGenderSpecefic = true;
-        }
-        if (patientSeriesIsGenderSpecefic) {
-          String targetDoseGender = dataModel.getPatient().getGender();
-          if (gender != null && targetDoseGender.equals(gender)) {
-            patientSeries.incPatientScoreSeries();
-          }
-        }
-      }
-
-    }
+    // intentionally empty
   }
 
   /**
-   * cond4 A scorable patient series is a product patient series.
+   * Table 8-11 row 3: product patient series is a penalty (−1 / n/a / +1).
    */
-
   private void evaluate_ACandidatePatientSeriesIsAProductPatientSeries() {
-    boolean productPatientSeries = false;
-    for (PatientSeries patientSeries : patientSeriesList) {
-      if (patientSeries.getTrackedAntigenSeries().getSelectPatientSeries() != null &&
-          patientSeries.getTrackedAntigenSeries().getSelectPatientSeries()
-              .getProductPath() != null) {
-        if (patientSeries.getTrackedAntigenSeries().getSelectPatientSeries().getProductPath()
-            .equals(YesNo.YES)) {
-          productPatientSeries = true;
-        }
-
-      }
-      if (productPatientSeries) {
-        patientSeries.incPatientScoreSeries();
-      } else {
-        patientSeries.descPatientScoreSeries();
-      }
-    }
+    PatientSeriesScoring.scoreIndependent(scorablePatientSeriesList(),
+        patientSeries -> !patientSeries.isProductPatientSeries(), 1);
   }
 
   /**
-   * cond5 A scorable patient series exceeded maximum age to start
+   * Retained for Role A reflection. Table 8-11 defines no maximum-age-to-start
+   * condition (SPEC-4.6-0007).
    */
-
   private void evaluate_ACandidatePatientSeriesHasExceededTheMaximumAge() {
-    Date evalDate = dataModel.getAssessmentDate();
-    for (PatientSeries patientSeries : patientSeriesList) {
-      Date maximumAgeDate = findMaximumAgeDate(patientSeries);
-      if (maximumAgeDate != null && evalDate.after(maximumAgeDate)) {
-        patientSeries.descPatientScoreSeries();
-      } else {
-        patientSeries.incPatientScoreSeries();
-      }
-    }
-
+    // intentionally empty
   }
 
   private void evalTable() {
     evaluate_AScorablePatientSeriesCanStartEarliest();
     evaluate_ACandidatePatientSeriesIsCompletable();
-    evaluate_ACandidatePatientSeriesGenderSpecific();
     evaluate_ACandidatePatientSeriesIsAProductPatientSeries();
-    evaluate_ACandidatePatientSeriesHasExceededTheMaximumAge();
-  }
-
-  public NoValidDoses(DataModel dataModel) {
-    super(LogicStepType.NO_VALID_DOSES, dataModel);
   }
 
   @Override
@@ -197,5 +91,4 @@ public class NoValidDoses extends LogicStep {
     evalTable();
     return next();
   }
-
 }

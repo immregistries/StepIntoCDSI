@@ -42,3 +42,75 @@ table, th, td {border: 1px solid black}
 
 table.mainTable {border: 0px; }
 td.mainTable {border: 0px; margin-left: 5px;  margin-right: 5px;}
+
+.process-map-wrap {
+    max-width: 900px;
+    border: 1px solid #ccc;
+    background: #fff;
+    padding: 8px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.process-map-wrap svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.jump-fallback {
+    display: inline-block;
+    margin: 6px 0;
+    padding: 4px 6px;
+    border: 1px solid #ccc;
+    background: #F7F3E8;
+}
+.jump-fallback summary {
+    cursor: pointer;
+}
+
+.notice {
+    background: #FFF3CD;
+    border: 1px solid #E0C36A;
+    padding: 8px;
+    margin: 8px 0;
+    max-width: 900px;
+    box-sizing: border-box;
+}
+
+.saved-views-tray {
+    max-width: 900px;
+    border: 1px solid #ccc;
+    background: #fff;
+    padding: 8px;
+    margin-top: 8px;
+    box-sizing: border-box;
+}
+.saved-views-tray h3 {
+    margin: 0 0 6px 0;
+    font-size: 14px;
+}
+.saved-views-tray ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.saved-views-tray li {
+    margin: 0;
+}
+.saved-view-link {
+    display: inline-block;
+    padding: 3px 8px;
+    border: 1px solid #747E80;
+    background: #F7F3E8;
+    text-decoration: none;
+    color: #2B3E42;
+    font-size: 13px;
+}
+.saved-view-link.is-active {
+    background: #2d72d9;
+    border-color: #2d72d9;
+    color: #fff;
+}

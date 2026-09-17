@@ -1,0 +1,40 @@
+id: "SPEC-4.6-0051"
+status: "confirmed"
+category: "SPECIFICATION_AMBIGUITY"
+spec_sections: ["7.4", "7.5"]
+source_pages: [77, 79, 80]
+tables: ["Table 7-9", "Table 7-11", "Table 7-12"]
+business_rules: ["FORECASTDTCAN-1", "FORECASTDT-1"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.concepts.SeasonalRecommendationDates"
+  - "org.openimmunizationsoftware.cdsi.core.logic.DetermineForecastNeed"
+  - "org.openimmunizationsoftware.cdsi.core.logic.GenerateForecastDatesAndRecommendedVaccines"
+fits_cases: []
+summary: >
+  Documented deviation: Supporting Data seasonal recommendation start/end
+  dates are absolute one-season windows. CDC lag and multi-year FITS
+  fixtures make those literals the wrong flu year for many assessments.
+  The engine projects the loaded window as a template around the
+  assessment date (SeasonalRecommendationDates), used by 7.4 and 7.5.
+evidence: >
+  Influenza 4.65 ships 20250701-20260630. HISTORICAL FITS FLU cases with
+  evalDate in 2020/2024 expected season-local dates but the engine returned
+  2025-07-01. Live assessments after 2026-06-30 face the same staleness
+  until CDC publishes the next season file.
+interpretation: >
+  Not claimed as Logic Specification text. Implemented deliberately so
+  past and future assessment years reuse the latest season pattern for
+  testing and CDC-lag support. Inter-season gaps use the upcoming season
+  so the next start date can still be forecast. Table 7-11 Rule 6 is
+  effectively unreachable for normal annual templates under this
+  projection. Recorded 2026-09-15.
+
+  Verified FITS run 2026-09-15T161322: combined passed 3728 to 3765
+  (net +37, 0 allowlist regressions). FLU 20 to 49 (+29); RSV remaining
+  8 failures cleared (50/50). COVID-19 unchanged at 81/341. Allowlist
+  regenerated with the 37 new PASS ids.
+
+  Verified FITS run 2026-09-15T161322: combined passed 3728 to 3765
+  (net +37, 0 allowlist regressions). FLU 20 to 49 (+29); RSV remaining
+  8 failures cleared (50/50). COVID-19 unchanged at 81/341. Allowlist
+  regenerated with the 37 new PASS ids.

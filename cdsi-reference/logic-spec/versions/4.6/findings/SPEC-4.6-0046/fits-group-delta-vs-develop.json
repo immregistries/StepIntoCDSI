@@ -1,0 +1,195 @@
+{
+  "after": {
+    "commit": "85234203",
+    "total_cases": 4896,
+    "passed": 3749,
+    "failed_assertions": 1146,
+    "execution_errors": 1,
+    "pass_rate_pct": 76.6
+  },
+  "develop_baseline_2026_09_10": {
+    "passed": 3637,
+    "failed_assertions": 1258,
+    "execution_errors": 1,
+    "pass_rate_pct": 74.3
+  },
+  "net": {
+    "passed_delta": 112,
+    "failed_assertions_delta": -112,
+    "execution_errors_delta": 0
+  },
+  "groups": [
+    {
+      "group": "COVID-19",
+      "total": 341,
+      "passed": 81,
+      "failed": 260,
+      "errors": 0,
+      "pass_rate_pct": 23.8,
+      "develop_failed": 260,
+      "develop_pass_rate_pct": 23.8,
+      "fail_delta_vs_develop": 0
+    },
+    {
+      "group": "DTAP",
+      "total": 892,
+      "passed": 745,
+      "failed": 147,
+      "errors": 0,
+      "pass_rate_pct": 83.5,
+      "develop_failed": 131,
+      "develop_pass_rate_pct": 85.3,
+      "fail_delta_vs_develop": 16
+    },
+    {
+      "group": "Discovery Confidence",
+      "total": 12,
+      "passed": 12,
+      "failed": 0,
+      "errors": 0,
+      "pass_rate_pct": 100.0
+    },
+    {
+      "group": "FLU",
+      "total": 91,
+      "passed": 20,
+      "failed": 71,
+      "errors": 0,
+      "pass_rate_pct": 22.0,
+      "develop_failed": 71,
+      "develop_pass_rate_pct": 22.0,
+      "fail_delta_vs_develop": 0
+    },
+    {
+      "group": "HIB",
+      "total": 525,
+      "passed": 480,
+      "failed": 45,
+      "errors": 0,
+      "pass_rate_pct": 91.4,
+      "develop_failed": 90,
+      "develop_pass_rate_pct": 82.9,
+      "fail_delta_vs_develop": -45
+    },
+    {
+      "group": "HPV",
+      "total": 526,
+      "passed": 428,
+      "failed": 98,
+      "errors": 0,
+      "pass_rate_pct": 81.4,
+      "develop_failed": 138,
+      "develop_pass_rate_pct": 73.8,
+      "fail_delta_vs_develop": -40
+    },
+    {
+      "group": "HepA",
+      "total": 101,
+      "passed": 97,
+      "failed": 3,
+      "errors": 1,
+      "pass_rate_pct": 96.0
+    },
+    {
+      "group": "HepB",
+      "total": 387,
+      "passed": 362,
+      "failed": 25,
+      "errors": 0,
+      "pass_rate_pct": 93.5
+    },
+    {
+      "group": "MCV",
+      "total": 128,
+      "passed": 123,
+      "failed": 5,
+      "errors": 0,
+      "pass_rate_pct": 96.1
+    },
+    {
+      "group": "MEN B",
+      "total": 92,
+      "passed": 76,
+      "failed": 16,
+      "errors": 0,
+      "pass_rate_pct": 82.6
+    },
+    {
+      "group": "MMR",
+      "total": 248,
+      "passed": 204,
+      "failed": 44,
+      "errors": 0,
+      "pass_rate_pct": 82.3
+    },
+    {
+      "group": "PCV",
+      "total": 372,
+      "passed": 217,
+      "failed": 155,
+      "errors": 0,
+      "pass_rate_pct": 58.3,
+      "develop_failed": 179,
+      "develop_pass_rate_pct": 51.9,
+      "fail_delta_vs_develop": -24
+    },
+    {
+      "group": "POL",
+      "total": 638,
+      "passed": 417,
+      "failed": 221,
+      "errors": 0,
+      "pass_rate_pct": 65.4,
+      "develop_failed": 221,
+      "develop_pass_rate_pct": 65.4,
+      "fail_delta_vs_develop": 0
+    },
+    {
+      "group": "Polio",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "pass_rate_pct": 100.0
+    },
+    {
+      "group": "ROTA",
+      "total": 168,
+      "passed": 163,
+      "failed": 5,
+      "errors": 0,
+      "pass_rate_pct": 97.0
+    },
+    {
+      "group": "RSV",
+      "total": 50,
+      "passed": 42,
+      "failed": 8,
+      "errors": 0,
+      "pass_rate_pct": 84.0
+    },
+    {
+      "group": "VAR",
+      "total": 218,
+      "passed": 183,
+      "failed": 35,
+      "errors": 0,
+      "pass_rate_pct": 83.9
+    },
+    {
+      "group": "ZOSTER",
+      "total": 106,
+      "passed": 98,
+      "failed": 8,
+      "errors": 0,
+      "pass_rate_pct": 92.5
+    }
+  ],
+  "notes": [
+    "COVID-19, FLU, and POL fail counts are unchanged (seasonal-date cluster SPEC-4.6-0023).",
+    "HIB-2013-0281 now PASSES on all five fixture copies.",
+    "The single execution error is unchanged: HepA-AART-EXTRA-10 unrecognized CVX 143.",
+    "Two identical FITS runs on this commit produced 0 statusChanged cases.",
+    "known-passing-cases.txt was not regenerated."
+  ]
+}

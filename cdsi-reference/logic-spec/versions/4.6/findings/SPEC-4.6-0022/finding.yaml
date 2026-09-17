@@ -1,0 +1,83 @@
+id: "SPEC-4.6-0022"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["9.2"]
+source_pages: [95]
+tables: ["Table 9-3"]
+business_rules: ["SINGLEANTVG-1", "SINGLEANTVG-2"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.SingleAntigenVaccineGroup"
+fits_cases:
+  - "675c41f8e4b089d2bdc0c483-RSV-2023-0020"
+summary: >
+  SingleAntigenVaccineGroup built one VaccineGroupForecast before its loop
+  over dataModel.getBestPatientSeriesList() and mutated every field on that
+  same shared instance once per matching patient series, then added it to
+  vaccineGroupForecastList once per match. 9.2's own spec text and
+  SINGLEANTVG-1/2 assume exactly one matching patient series per antigen
+  ("the patient series forecast", singular), which was true before
+  SPEC-4.6-0020's series-group loop; once Chapter 8 legitimately produces
+  more than one best patient series for a single antigen (e.g. RSV's
+  general "RSV 1-dose series" and its "RSV 75 years+" alternate, not
+  declared equivalentSeriesGroups to each other), the shared, mutated
+  object meant vaccineGroupForecastList held duplicate references to the
+  same object, whose final field values reflected only whichever match was
+  evaluated last - silently discarding every earlier match's status and
+  dates rather than aggregating or choosing between them. Fixed by
+  selecting the most favorable-status match for SINGLEANTVG-1 (and the
+  fields SINGLEANTVG-3 through 8 copy) and taking the true minimum earliest
+  date across every match for SINGLEANTVG-2, per its own literal text.
+evidence: >
+  SingleAntigenVaccineGroupTest (already written, pinning 9.2's exact
+  spec text) had two known reds documenting this exact defect before this
+  fix: oneRunProducesAtMostOneVaccineGroupForecastForTheVaccineGroup
+  (expected 1 vaccine group forecast when two best patient series for one
+  antigen exist, actual 2 - the same object added twice) and
+  singleantvgTwoTheEarliestDateIsTheEarliestOfAllContainedPatientSeriesForecasts
+  (expected the minimum earliest date across both contained forecasts,
+  actual the later of the two, proving "last match wins" rather than a
+  true minimum). Direct instrumentation of the real FITS suite for case
+  675c41f8e4b089d2bdc0c483-RSV-2023-0020 (a 60-year-old with one RSV dose
+  administered) confirmed dataModel.getBestPatientSeriesList() correctly
+  contained two entries - "RSV 1-dose series" (Aged Out) and "RSV 75
+  years+ 1-dose series" (Complete) - and that SingleAntigenVaccineGroup's
+  pre-fix logic reported this antigen's vaccine group forecast using
+  whichever entry was evaluated last (Aged Out), discarding the genuinely
+  Complete result.
+interpretation: >
+  This is not a new defect introduced by SPEC-4.6-0020 - the shared,
+  mutated VaccineGroupForecast bug existed in this code as far back as it
+  can be traced - but it was invisible before SPEC-4.6-0020 corrected
+  Chapter 8 to loop per series group, because before that fix an antigen's
+  Chapter 8 processing produced at most one best patient series, so the
+  loop in SingleAntigenVaccineGroup only ever executed once per antigen
+  and "last match wins" and "true minimum" were indistinguishable.
+  SPEC-4.6-0020 exposed it the same way it exposed SPEC-4.6-0021.
+
+  The fix deliberately does not reuse MultipleAntigenVaccineGroup's own
+  Table 9-3 precedence (any Contraindicated/Aged Out anywhere overrides
+  Complete): that table answers "did the patient satisfy every antigen in
+  this bundle," appropriate when combining genuinely different antigens
+  (Diphtheria + Tetanus + Pertussis for DTaP). SINGLEANTVG-1/2 pose a
+  different question for one antigen with multiple alternative pathways:
+  "did the patient satisfy this antigen through any of them." Preferring
+  Complete/Immune over an actionable Not Complete over a dead-end status
+  is the more defensible reading of "the patient series status of the
+  patient series forecast contained in the vaccine group forecast" when
+  more than one candidate forecast exists, but Table 9-3 itself is silent
+  on this exact scenario (it was written assuming singularity) - this
+  precedence rule is this round's own judgment call, not literal spec
+  text, and should be reviewed by CDC/CDSi alongside the rest of this
+  campaign's similar judgment calls (SPEC-4.6-0018/0019/0021).
+
+  Verified via the standing Role B pipeline: SingleAntigenVaccineGroupTest
+  (22 tests; the 2 targeted here now green, the other 4 reds confirmed
+  identical before/after - pre-existing, unrelated field-plumbing gaps
+  already tracked in this unit's status.yaml notes); full cdsi-engine
+  suite (137 failures/1 error, down from 139/1 - this fix incidentally
+  also resolved these same 2 pre-existing failures counted there);
+  full FITS run case-by-case diffed against the SPEC-4.6-0021 baseline:
+  further RSV improvement once combined with the separate CVX-equivalence
+  data bug this same investigation found (see the progress-ledger entry
+  for this round - that second, unrelated bug was masking part of this
+  fix's own FITS-visible effect until both were fixed together).

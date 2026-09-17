@@ -1,0 +1,58 @@
+id: "SPEC-4.6-0062"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.2", "7.1"]
+source_pages: [47, 48, 49]
+tables: ["Table 6-5"]
+business_rules: ["CONDSKIP-1"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.businessRules.CONDSKIP_1"
+fits_cases:
+  - "689dc945e4b05decee50df54-DTAP-2020-0008"
+  - "689dc945e4b05decee50df54-DTAP-2013-0019"
+  - "689dc945e4b05decee50df54-DTAP-2020-0005"
+  - "689dc945e4b05decee50df54-DTAP-2013-0010"
+  - "689dc945e4b05decee50df54-DTAP-2013-0067"
+summary: >
+  CONDSKIP-1 Total required a targetDose before counting, so a Td shot
+  never evaluated against Pertussis was invisible to Pertussis Dose 8/9
+  "1 or more / 2 or more Td on or after 7 years" skips.
+evidence: >
+  Table 6-5 CONDSKIP-1: count vaccine doses administered where vaccine
+  type matches (or any type if unspecified), the date is in the age and
+  date windows, and Evaluation Status is Valid when dose type is Valid,
+  or any status when dose type is Total.
+
+  Pertussis standard and start-at-12-months Dose 8 Both set 2: "1 or
+  more doses of Td on or after 7 years", doseType Total, doseCount 0,
+  greater than, vaccineTypes 09;113;138;139;196. Dose 9 Both set 2:
+  the same list, doseCount 1 (2 or more Td).
+
+  CONDSKIP_1 skipped every VDA with a null targetDose before looking at
+  dose type. 6.10 only writes targetDose on SATISFIED. Td has no
+  pertussis, so it never received a Pertussis targetDose.
+
+  Live 689dc945e4b05decee50df54-DTAP-2020-0008: DOB 1995-02-01; Tdap
+  115 on 2026-02-01, Td 139 on 2026-03-01 and 2026-09-01. FITS wants
+  ED 2031-09-01 / RD 2036-09-01 (5-year booster). Engine had 2027-03-01
+  (6-month catch-up). After this fix: 2031-09-01.
+
+  Live 689dc945e4b05decee50df54-DTAP-2013-0010: DOB 2018-05-05; Td 09
+  on 2026-08-08, Tdap 115 on 2026-09-01. FITS wants 2027-03-01 (6-month
+  dose 3). Engine now 2029-05-05 (11th birthday). Dose 8's 1+ Td skip
+  is the Supporting Data text; FITS still wants the 6-month catch-up.
+interpretation: >
+  Total counts a matching administered dose even when it was never
+  evaluated against the current antigen. Valid still requires a Valid
+  evaluation, preferring evaluatedAgainstTargetDose (6.10 / 6.3 write
+  this for every outcome) over targetDose.
+
+  First-match Conditional Skip instance is unchanged. Evaluating every
+  matching instance (Both then Forecast-only) is spec-plausible but
+  lands DTaP catch-up on the 6-month track FITS still expects at 4
+  weeks (Issue #65 / SPEC-4.6-0019). 2013-0007 stayed PASS.
+
+  2013-0010 and 2013-0067 leave the allowlist: Dose 8's spec-correct
+  1+ Td Total skip walks the child series to Dose 10/11 min age 11.
+  That is the extra-skip-to-age-11 leftover, not the 4-week vs 6-month
+  question. Do not change CALCDT-5.

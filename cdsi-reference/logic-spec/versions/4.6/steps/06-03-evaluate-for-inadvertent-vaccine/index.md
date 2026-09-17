@@ -35,7 +35,7 @@ None (spec or implementation).
 
 ## State Changes
 
-**[IMPLEMENTATION]** Outcome 0 (Rule 1) sets exactly the three spec-stated values: `TargetDoseStatus.NOT_SATISFIED`, `EvaluationStatus.NOT_VALID`, `EvaluationReason.INADVERTENT_ADMINISTRATION`. Outcome 1 makes no state change.
+**[IMPLEMENTATION]** Outcome 0 (Rule 1) sets exactly the three spec-stated values: `TargetDoseStatus.NOT_SATISFIED`, `EvaluationStatus.NOT_VALID`, `EvaluationReason.INADVERTENT_ADMINISTRATION`. It also sets `VaccineDoseAdministered.inadvertentAdministration` (FORECASTDTCAN-1) and `evaluatedAgainstTargetDose` (CALCDTINT-1; 6.10 never runs on this path). Outcome 1 makes no state change.
 
 ## Next Steps
 
@@ -48,8 +48,8 @@ A short, single-condition check: was the vaccine given the wrong type for this s
 ## StepIntoCDSi Implementation
 
 - `org.openimmunizationsoftware.cdsi.core.logic.EvaluateForInadvertentVaccine` (LogicStepType `EVALUATE_FOR_INADVERTENT_VACCINE`) - `cdsi-engine`.
-- Tests: no dedicated unit test.
+- Tests: `EvaluateForInadvertentVaccineTest`.
 
 ## Review Findings
 
-None for this section - it matched the specification exactly on inspection.
+- **Documented fix (2026-09-15, SPEC-4.6-0060): write `evaluatedAgainstTargetDose` on an inadvertent VDA.** Figure 6-4 returns to 4.4 without 6.10, so CALCDTINT-1 could not see this VDA's own inadvertent evaluation and borrowed the previous target's Valid evaluation with this shot's date. Rule 1 now writes the same `evaluatedAgainstTargetDose` link 6.10 writes for every other outcome.

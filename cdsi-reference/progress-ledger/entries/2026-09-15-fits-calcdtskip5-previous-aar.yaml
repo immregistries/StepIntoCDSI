@@ -1,0 +1,22 @@
+id: "2026-09-15-fits-calcdtskip5-previous-aar"
+date: "2026-09-15"
+phase: 22
+title: "FITS - CALCDTSKIP-5 from the previous administered dose (SPEC-4.6-0059)"
+before:
+  commit: "bfc8173"
+  engine_tests: {total: 816, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 4229, failed_assertions: 666, execution_errors: 1}
+after:
+  commit: "83c8f78"
+  engine_tests: {total: 818, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 4239, failed_assertions: 656, execution_errors: 1}
+  fits_runtime_seconds: 184
+summary: >
+  CALCDTSKIP-5 now reads previousAntigenAdministeredRecord, the previous
+  shot 4.4 already stores, instead of a field production never set.
+  Combined FITS 4229 to 4239 (net +10). POL-2013-0639 PASS (COMPLETE);
+  HIB-2013-0324 also FAIL to PASS. Newly failing: none. COVID unchanged.
+  Same two engine reds (8.1/8.7). Allowlist not regenerated.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0059/finding.md"
+finding_ids: ["SPEC-4.6-0059"]
+status: reviewed

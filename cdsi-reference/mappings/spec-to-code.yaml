@@ -52,9 +52,24 @@ sections:
       module: "cdsi-engine"
       classes:
         - "org.openimmunizationsoftware.cdsi.core.logic.SelectBestPatientSeries"
+        - "org.openimmunizationsoftware.cdsi.core.logic.SelectNextSeriesGroup"
     tests:
       - "test-gap: no dedicated unit test; exercised indirectly by every cdsi-fits-tests fixture"
     mapping_status: "draft"
+    notes: >
+      SelectNextSeriesGroup (LogicStepType.SELECT_NEXT_SERIES_GROUP, labeled
+      with the bare chapter number "8" rather than a subsection) is new
+      infrastructure added 2026-09-08 to implement Chapter 8's own overview
+      text (sections/08-select-best-patient-series.txt, page 66): "Process
+      steps 8.1 through 8.7 are repeated for each series group to identify
+      one prioritized patient series per series group. Process step 8.8 is
+      then used to determine which prioritized patient series are selected
+      as a best patient series." That repetition previously did not exist -
+      see cdsi-reference/step-tests/cross-cutting-notes.md's 2026-09-05
+      "Chapter 8 has no series group" entry. SelectBestPatientSeries (4.5)
+      populates the series-group stepper once per antigen; SelectNextSeriesGroup
+      steps through it, dispatching to 8.1 for each group in turn and to 8.8
+      once an antigen's groups are exhausted.
   "4.6":
     title: "Identify and Evaluate Vaccine Group"
     implementation:
@@ -135,7 +150,7 @@ sections:
       classes:
         - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateVaccineConflict"
     tests:
-      - "test-gap: no dedicated unit test"
+      - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateVaccineConflictTest (26 tests; cross-antigen previous dose is SPEC-4.6-0065)"
     mapping_status: "draft"
   "6.8":
     title: "Evaluate for Preferable Vaccine"
@@ -208,7 +223,7 @@ sections:
       classes:
         - "org.openimmunizationsoftware.cdsi.core.logic.GenerateForecastDatesAndRecommendedVaccines"
     tests:
-      - "test-gap: no dedicated unit test isolating this class; exercised end-to-end by every cdsi-fits-tests fixture with a NOT_COMPLETE forecast"
+      - "org.openimmunizationsoftware.cdsi.core.logic.GenerateForecastDatesAndRecommendedVaccinesTest (44 tests; CALCDTLIVE-4 from history is SPEC-4.6-0065)"
     mapping_status: "draft"
   "7.6":
     title: "Validate Recommendation"
@@ -253,7 +268,7 @@ sections:
       classes:
         - "org.openimmunizationsoftware.cdsi.core.logic.CompletePatientSeries"
     tests:
-      - "test-gap: no dedicated unit test; verified tie-handling bug in its only scoring condition, see 08-04's Review Findings"
+      - "org.openimmunizationsoftware.cdsi.core.logic.CompletePatientSeriesTest (17 tests; Table 8-5 Rule 1 drop is SPEC-4.6-0064)"
     mapping_status: "draft"
   "8.5":
     title: "In-process Patient Series"
@@ -262,7 +277,7 @@ sections:
       classes:
         - "org.openimmunizationsoftware.cdsi.core.logic.InProcessPatientSeries"
     tests:
-      - "test-gap: no dedicated unit test; verified Date reference-equality bug in one scoring condition, see 08-05's Review Findings"
+      - "org.openimmunizationsoftware.cdsi.core.logic.InProcessPatientSeriesTest (39 tests; SELECTB-2 evaluationList walk is SPEC-4.6-0067)"
     mapping_status: "draft"
   "8.6":
     title: "No Valid Doses"
@@ -344,6 +359,23 @@ unmapped_classes:
       Tables 4-1 through 4-3) and logs "Setting next step: 4.10" where the
       real next step is 6.10. Tracked per standing instruction not to fix
       cdsi-engine logic until the documentation and testing system is complete.
+
+      Disposition guidance from the project owner (2026-09-05), for whenever
+      Phase 21's Role A pass reaches this unmapped class: treat it as
+      unmapped-engine-class inventory, not a normal numbered Logic
+      Specification step, and evaluate it enough to answer whether it is
+      reachable in the current processing flow, whether it duplicates logic
+      that now belongs in a numbered step, whether it contains behavior that
+      must be preserved elsewhere, and whether it can eventually be removed
+      or should instead be reclassified as non-spec infrastructure. Current
+      expectation, to be confirmed rather than assumed: this class is
+      probably leftover/dead logic, and gender handling, if still needed,
+      likely belongs under the documented series-relevance logic rather than
+      as its own pseudo-step. Long-term direction is one-for-one alignment
+      between documented Logic Specification steps and engine steps, so this
+      class should probably go away or be clearly separated from the
+      spec-step denominator rather than treated as a 37th unit to keep
+      forever.
   FORECAST_DATES_AND_REASONS:
     enum_name: "FORECAST_DATES_AND_REASONS"
     class: "org.openimmunizationsoftware.cdsi.core.logic.ForecastDatesAndReasons"
@@ -358,3 +390,21 @@ unmapped_classes:
       evaluate/forecast handoffs exceed that count, distinct from the two
       guards already documented in 4.4's step package. Worth cross-referencing
       from chapter-06-to-7-evaluate-and-forecast's loop diagram.
+
+      Disposition guidance from the project owner (2026-09-05), for whenever
+      Phase 21's Role A pass reaches this unmapped class: treat it as
+      unmapped-engine-class inventory, not a normal numbered Logic
+      Specification step, and evaluate it enough to answer whether it is
+      reachable in the current processing flow, whether it duplicates logic
+      that now belongs in a numbered step, whether it contains behavior that
+      must be preserved elsewhere, and whether it can eventually be removed
+      or should instead be reclassified as non-spec infrastructure. Current
+      expectation, to be confirmed rather than assumed: this class is
+      probably an old Chapter 7 routing shim; if its MAX_FORECAST_HANDOFF_CYCLES
+      loop guard still matters, that safeguard should be preserved or
+      relocated, but the bare chapter "7" label should not be treated as a
+      real spec step unless the document text actually supports it.
+      Long-term direction is one-for-one alignment between documented Logic
+      Specification steps and engine steps, so this class should probably go
+      away or be clearly separated from the spec-step denominator rather than
+      treated as a 37th unit to keep forever.

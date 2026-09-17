@@ -1,0 +1,34 @@
+id: "2026-09-08-role-b-round-6-calcdtint8"
+date: "2026-09-08"
+phase: 21
+title: "Role B Round 6 - CALCDTINT-8 Dead Code and Self-Referencing Regression"
+before:
+  commit: "34537c7"
+  engine_tests: {total: 767, failures: 182, errors: 1}
+  fits: {total_cases: 4896, passed: 3364, failed_assertions: 1531, execution_errors: 1}
+  fits_runtime_seconds: 39.9
+after:
+  commit: "1cd2b66"
+  engine_tests: {total: 770, failures: 180, errors: 1}
+  fits: {total_cases: 4896, passed: 3364, failed_assertions: 1531, execution_errors: 1}
+  fits_runtime_seconds: 39.9
+summary: >
+  The sixth Role B round, and the first attempted specifically to move a
+  FITS case - it didn't, but the investigation is the story worth
+  recording. CALCDTINT-8 was effectively dead code (a missing null check
+  threw a silently-swallowed NPE every time) and the loader never parsed
+  Supporting Data's multi-CVX <fromMostRecent> list. A first fix attempt
+  caused a real 20-case FITS regression; root-caused via direct engine
+  inspection to a missing lower bound letting a dose reference itself as
+  its own "most recent" reference date - not the extraneous-dose theory
+  first suspected, which had zero actual effect. Extended into unit 6.10
+  (SatisfyTargetDose) with explicit project-owner approval, adding a new
+  VaccineDoseAdministered.evaluatedAgainstTargetDose link rather than
+  reusing fields other steps depend on staying null. Net FITS effect: a
+  strict no-op (0 cases changed either direction) - the 13 cases that
+  appeared to improve mid-investigation were themselves an artifact of
+  the self-reference bug, not a real fix. Full cdsi-engine suite: 182 ->
+  180 failures (down exactly 2), 0 regressions. See SPEC-4.6-0013.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0013/finding.md"
+finding_ids: ["SPEC-4.6-0013"]
+status: reviewed

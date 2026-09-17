@@ -29,9 +29,9 @@ public class EvaluateForAllowableVaccine extends LogicStep {
       logicTable.caAllowableVaccineElements = new ConditionAttribute<AllowableVaccine>(
           "Supporting data", "Allowable Vaccine elements");
       logicTable.caAllowableVaccineTypeBeginAgeDate = new ConditionAttribute<Date>(
-          "Calculated data (CALCDTALLOW-1)", "Allowable Vaccine Type Begin Age Date");
+          "Calculated date (CALCDTALLOW-1)", "Allowable Vaccine Type Begin Age Date");
       logicTable.caAllowableVaccineTypeEndAgeDate = new ConditionAttribute<Date>(
-          "Calculated Data (CALCDTALLOW-2)", "Allowable Vaccine Type End Age Date");
+          "Calculated date (CALCDTALLOW-2)", "Allowable Vaccine Type End Age Date");
 
       logicTable.caAllowableVaccineTypeBeginAgeDate.setAssumedValue(PAST);
       logicTable.caAllowableVaccineTypeEndAgeDate.setAssumedValue(FUTURE);
@@ -94,7 +94,7 @@ public class EvaluateForAllowableVaccine extends LogicStep {
           VaccineType vt = caVaccineType.getFinalValue();
           AllowableVaccine av = caAllowableVaccineElements.getFinalValue();
           Date birthDate = dataModel.getPatient().getDateOfBirth();
-          if (vt == av.getVaccineType()) {
+          if (vt.equals(av.getVaccineType())) {
             caAllowableVaccineTypeBeginAgeDate
                 .setInitialValue(av.getVaccineTypeBeginAge().getDateFrom(birthDate));
             caAllowableVaccineTypeEndAgeDate

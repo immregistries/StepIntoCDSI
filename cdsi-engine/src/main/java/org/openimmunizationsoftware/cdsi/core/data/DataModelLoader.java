@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
@@ -31,6 +32,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.Age;
 import org.openimmunizationsoftware.cdsi.core.domain.AllowableInterval;
 import org.openimmunizationsoftware.cdsi.core.domain.AllowableVaccine;
 import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
+import org.openimmunizationsoftware.cdsi.core.domain.AntigenContraindication;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.BirthDateImmunity;
 import org.openimmunizationsoftware.cdsi.core.domain.ClinicalHistory;
@@ -60,8 +62,10 @@ import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.SeriesType;
 import org.openimmunizationsoftware.cdsi.core.domain.SubstituteDose;
 import org.openimmunizationsoftware.cdsi.core.domain.Vaccine;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineContraindication;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.ConditionalSkipContext;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 import org.w3c.dom.Document;
@@ -73,6 +77,12 @@ public class DataModelLoader {
   private static final String SCHEDULE_SUPPORTING_DATA_FILE_WITH_SPACE = "Schedule SupportingData.xml";
   private static final Pattern ANTIGEN_FILE_PATTERN = Pattern
       .compile("^AntigenSupportingData-\\s*(.+?)(?:-\\s*508)?\\.xml$", Pattern.CASE_INSENSITIVE);
+
+  // Phase 22: static Supporting Data is parsed once per selected data set and
+  // shared (read-only in practice - see SupportingDataModel's class Javadoc)
+  // across every DataModel built from it for the rest of this JVM's life,
+  // instead of being re-parsed from the zip on every createDataModel call.
+  private static final ConcurrentHashMap<String, SupportingDataModel> SUPPORTING_DATA_CACHE = new ConcurrentHashMap<>();
 
   /**
    * Lists the supporting-data zip file names bundled as classpath resources
@@ -132,12 +142,22 @@ public class DataModelLoader {
           "Supporting data set parameter cannot be null or empty. Provide a zip file name or ID.");
     }
 
-    DataModel dataModel = new DataModel();
-    loadZipData(dataModel, supportingDataSet.trim());
-    return dataModel;
+    SupportingDataModel supportingDataModel = loadCachedSupportingDataModel(supportingDataSet.trim());
+    return new DataModel(supportingDataModel);
   }
 
-  private static void loadZipData(DataModel dataModel, String supportingDataSet) throws Exception {
+  private static SupportingDataModel loadCachedSupportingDataModel(String supportingDataSet) throws Exception {
+    SupportingDataModel cached = SUPPORTING_DATA_CACHE.get(supportingDataSet);
+    if (cached != null) {
+      return cached;
+    }
+    SupportingDataModel loaded = loadSupportingDataModel(supportingDataSet);
+    SupportingDataModel existing = SUPPORTING_DATA_CACHE.putIfAbsent(supportingDataSet, loaded);
+    return existing != null ? existing : loaded;
+  }
+
+  private static SupportingDataModel loadSupportingDataModel(String supportingDataSet) throws Exception {
+    SupportingDataModel supportingDataModel = new SupportingDataModel();
     ZipSource zipSource = resolveSupportingDataZipSource(supportingDataSet);
 
     try (InputStream zipInputStream = zipSource.inputStream;
@@ -179,11 +199,11 @@ public class DataModelLoader {
                 + " or " + SCHEDULE_SUPPORTING_DATA_FILE_WITH_SPACE);
       }
 
-      readCvxToAntigenMap(dataModel, scheduleDoc);
-      readVaccineGroups(dataModel, scheduleDoc);
-      readVaccineGroupToAntigenMap(dataModel, scheduleDoc);
-      readLiveVirusConflicts(dataModel, scheduleDoc);
-      readObservations(dataModel, scheduleDoc);
+      readCvxToAntigenMap(supportingDataModel, scheduleDoc);
+      readVaccineGroups(supportingDataModel, scheduleDoc);
+      readVaccineGroupToAntigenMap(supportingDataModel, scheduleDoc);
+      readLiveVirusConflicts(supportingDataModel, scheduleDoc);
+      readObservations(supportingDataModel, scheduleDoc);
 
       if (scheduleDocList.isEmpty()) {
         throw new IllegalArgumentException(
@@ -194,12 +214,23 @@ public class DataModelLoader {
       for (ZipScheduleDocument zipScheduleDocument : scheduleDocList) {
         Schedule schedule = new Schedule();
         schedule.setScheduleName(zipScheduleDocument.scheduleName);
-        dataModel.getScheduleList().add(schedule);
-        readImmunity(schedule, dataModel, zipScheduleDocument.document);
-        readAntigenSeries(schedule, dataModel, zipScheduleDocument.document);
-        readContraindications(schedule, dataModel, zipScheduleDocument.document);
+        supportingDataModel.getScheduleList().add(schedule);
+        readImmunity(schedule, zipScheduleDocument.document);
+        if (schedule.getImmunity() != null) {
+          // readImmunity only stores the parsed element on the Schedule itself (kept
+          // there so DetermineEvidenceOfImmunityTest's reflective per-element reader
+          // test keeps working); Table 7-2's own attribute and Table 7-3's conditions
+          // both read it from the target disease Antigen's own immunityList, keyed by
+          // this schedule's own name (the same name <targetDisease> uses for this
+          // file's own antigen).
+          supportingDataModel.getOrCreateAntigen(schedule.getScheduleName()).getImmunityList()
+              .add(schedule.getImmunity());
+        }
+        readAntigenSeries(schedule, supportingDataModel, zipScheduleDocument.document);
+        readContraindications(schedule, zipScheduleDocument.document);
       }
     }
+    return supportingDataModel;
   }
 
   private static Document parseDocument(InputStream inputStream) throws Exception {
@@ -306,7 +337,7 @@ public class DataModelLoader {
     }
   }
 
-  private static void readImmunity(Schedule schedule, DataModel dataModel, Document doc) {
+  private static void readImmunity(Schedule schedule, Document doc) {
     NodeList parentList = doc.getElementsByTagName("immunity");
     for (int i = 0; i < parentList.getLength(); i++) {
       Immunity immunity = new Immunity();
@@ -384,16 +415,18 @@ public class DataModelLoader {
     }
   }
 
-  private static void readContraindications(Schedule schedule, DataModel dataModel, Document doc) {
+  private static void readContraindications(Schedule schedule, Document doc) {
     NodeList contraindicationsList = doc.getElementsByTagName("contraindications");
     NodeList parentList = contraindicationsList.item(0).getChildNodes();
     for (int i = 0; i < parentList.getLength(); i++) {
       Node childNode = parentList.item(i);
-      if (childNode.getNodeName().equals("vaccineGroup") || childNode.getNodeName().equals("vaccine")) {
+      boolean isVaccineLevel = childNode.getNodeName().equals("vaccine");
+      if (childNode.getNodeName().equals("vaccineGroup") || isVaccineLevel) {
         for (int ci = 0; ci < childNode.getChildNodes().getLength(); ci++) {
           Node contraindicationNode = childNode.getChildNodes().item(ci);
           if (contraindicationNode.getNodeType() == Node.ELEMENT_NODE) {
-            Contraindication contraindication = new Contraindication();
+            Contraindication contraindication =
+                isVaccineLevel ? new VaccineContraindication() : new AntigenContraindication();
             schedule.getContraindicationList().add(contraindication);
             for (int b = 0; b < contraindicationNode.getChildNodes().getLength(); b++) {
               Node grandChildNode = contraindicationNode.getChildNodes().item(b);
@@ -401,6 +434,35 @@ public class DataModelLoader {
                 contraindication.setObservationCode(DomUtils.getInternalValue(grandChildNode));
               } else if (grandChildNode.getNodeName().equals("observationTitle")) {
                 contraindication.setObservationTitle(DomUtils.getInternalValue(grandChildNode));
+              } else if (grandChildNode.getNodeName().equals("contraindicationText")) {
+                contraindication
+                    .setContraindicationTextDescription(DomUtils.getInternalValue(grandChildNode));
+              } else if (grandChildNode.getNodeName().equals("beginAge")) {
+                String beginAge = DomUtils.getInternalValue(grandChildNode);
+                if (!beginAge.equals("")) {
+                  contraindication.setContraindicationBeginAge(new TimePeriod(beginAge));
+                }
+              } else if (grandChildNode.getNodeName().equals("endAge")) {
+                String endAge = DomUtils.getInternalValue(grandChildNode);
+                if (!endAge.equals("")) {
+                  contraindication.setContraindicationEndAge(new TimePeriod(endAge));
+                }
+              } else if (grandChildNode.getNodeName().equals("contraindicatedVaccine")
+                  && contraindication instanceof VaccineContraindication) {
+                NodeList contraindicatedVaccineChildren = grandChildNode.getChildNodes();
+                String cvx = "";
+                for (int cv = 0; cv < contraindicatedVaccineChildren.getLength(); cv++) {
+                  Node contraindicatedVaccineChild = contraindicatedVaccineChildren.item(cv);
+                  if (contraindicatedVaccineChild.getNodeName().equals("cvx")) {
+                    cvx = DomUtils.getInternalValue(contraindicatedVaccineChild);
+                  }
+                }
+                if (!cvx.equals("")) {
+                  VaccineType vaccineType = new VaccineType();
+                  vaccineType.setCvxCode(cvx);
+                  ((VaccineContraindication) contraindication).getContraindicatedVaccineTypeList()
+                      .add(vaccineType);
+                }
               }
             }
           }
@@ -430,14 +492,14 @@ public class DataModelLoader {
     return concept;
   }
 
-  private static void readAntigenSeries(Schedule schedule, DataModel dataModel, Document doc) {
+  private static void readAntigenSeries(Schedule schedule, SupportingDataModel supportingDataModel, Document doc) {
     NodeList parentList = doc.getElementsByTagName("series");
     Map<String, SeriesDose> seriesDoseMap = new HashMap<String, SeriesDose>();
     for (int i = 0; i < parentList.getLength(); i++) {
       Node parentNode = parentList.item(i);
       AntigenSeries antigenSeries = new AntigenSeries();
       schedule.getAntigenSeriesList().add(antigenSeries);
-      dataModel.getAntigenSeriesList().add(antigenSeries);
+      supportingDataModel.getAntigenSeriesList().add(antigenSeries);
       NodeList childList = parentNode.getChildNodes();
       Antigen targetDisease = null;
       VaccineGroup vaccineGroup = null;
@@ -448,16 +510,21 @@ public class DataModelLoader {
             String seriesName = DomUtils.getInternalValue(childNode);
             antigenSeries.setSeriesName(seriesName);
           } else if (childNode.getNodeName().equals("targetDisease")) {
-            targetDisease = dataModel.getOrCreateAntigen(DomUtils.getInternalValue(childNode));
+            targetDisease = supportingDataModel.getOrCreateAntigen(DomUtils.getInternalValue(childNode));
             antigenSeries.setTargetDisease(targetDisease);
           } else if (childNode.getNodeName().equals("vaccineGroup")) {
             String nameValue = DomUtils.getInternalValue(childNode);
-            vaccineGroup = dataModel.getOrCreateVaccineGroup(nameValue);
+            vaccineGroup = supportingDataModel.getOrCreateVaccineGroup(nameValue);
             antigenSeries.setVaccineGroup(vaccineGroup);
           } else if (childNode.getNodeName().equals("seriesType")) {
             String nameValue = DomUtils.getInternalValue(childNode);
             SeriesType seriesType = SeriesType.getSeriestType(nameValue);
             antigenSeries.setSeriesType(seriesType);
+          } else if (childNode.getNodeName().equals("equivalentSeriesGroups")) {
+            String equivalentSeriesGroup = DomUtils.getInternalValue(childNode);
+            if (!equivalentSeriesGroup.isEmpty()) {
+              antigenSeries.addEquivalentSeriesGroup(equivalentSeriesGroup);
+            }
           } else if (childNode.getNodeName().equals("indication")) {
             Indication indication = new Indication();
             antigenSeries.getIndicationList().add(indication);
@@ -498,6 +565,9 @@ public class DataModelLoader {
                 } else if (grandchildNode.getNodeName().equals("seriesPreference")) {
                   selectPatientSeries
                       .setSeriesPreference(DomUtils.getInternalValue(grandchildNode));
+                } else if (grandchildNode.getNodeName().equals("minAgeToStart")) {
+                  selectPatientSeries
+                      .setMinAgeToStart(new TimePeriod(DomUtils.getInternalValue(grandchildNode)));
                 } else if (grandchildNode.getNodeName().equals("maxAgeToStart")) {
                   selectPatientSeries
                       .setMaxAgeToStart(new TimePeriod(DomUtils.getInternalValue(grandchildNode)));
@@ -507,7 +577,7 @@ public class DataModelLoader {
           } else if (childNode.getNodeName().equals("seriesDose")) {
             SeriesDose seriesDose = new SeriesDose();
             seriesDose.setAntigenSeries(antigenSeries);
-            readSeriesDose(seriesDose, seriesDoseMap, dataModel, childNode);
+            readSeriesDose(seriesDose, seriesDoseMap, supportingDataModel, childNode);
             antigenSeries.getSeriesDoseList().add(seriesDose);
           }
         }
@@ -521,7 +591,7 @@ public class DataModelLoader {
   }
 
   private static void readSeriesDose(SeriesDose seriesDose, Map<String, SeriesDose> seriesDoseMap,
-      DataModel dataModel, Node node) {
+      SupportingDataModel supportingDataModel, Node node) {
     NodeList parentList = node.getChildNodes();
     for (int i = 0; i < parentList.getLength(); i++) {
       Node parentNode = parentList.item(i);
@@ -554,6 +624,10 @@ public class DataModelLoader {
                 age.setLatestRecommendedAge(new TimePeriod(DomUtils.getInternalValue(childNode)));
               } else if (childNode.getNodeName().equals("maxAge")) {
                 age.setMaximumAge(new TimePeriod(DomUtils.getInternalValue(childNode)));
+              } else if (childNode.getNodeName().equals("effectiveDate")) {
+                age.setEffectiveDate(parseDate(DomUtils.getInternalValue(childNode)));
+              } else if (childNode.getNodeName().equals("cessationDate")) {
+                age.setCessationDate(parseDate(DomUtils.getInternalValue(childNode)));
               }
             }
           }
@@ -580,6 +654,47 @@ public class DataModelLoader {
                   interval.setFromTargetDoseNumberInSeries(fromTargetDose);
                   populated = true;
                 }
+              } else if (childNode.getNodeName().equals("fromMostRecent")) {
+                String fromMostRecent = DomUtils.getInternalValue(childNode);
+                if (!fromMostRecent.equalsIgnoreCase("n/a") && !fromMostRecent.equals("")) {
+                  List<VaccineType> fromMostRecentVaccineTypeList = new ArrayList<VaccineType>();
+                  for (String cvxCode : fromMostRecent.split(";")) {
+                    cvxCode = cvxCode.trim();
+                    if (cvxCode.length() == 0) {
+                      continue;
+                    }
+                    VaccineType cvx = supportingDataModel.getCvx(cvxCode);
+                    if (cvx != null) {
+                      fromMostRecentVaccineTypeList.add(cvx);
+                    }
+                  }
+                  if (fromMostRecentVaccineTypeList.size() > 0) {
+                    interval.setFromMostRecentVaccineTypeList(fromMostRecentVaccineTypeList);
+                    populated = true;
+                  }
+                }
+              } else if (childNode.getNodeName().equals("fromRelevantObs")) {
+                ObservationCode fromRelevantObservation = new ObservationCode();
+                NodeList observationChildList = childNode.getChildNodes();
+                boolean observationPopulated = false;
+                for (int k = 0; k < observationChildList.getLength(); k++) {
+                  Node observationChild = observationChildList.item(k);
+                  if (observationChild.getNodeType() == Node.ELEMENT_NODE) {
+                    if (observationChild.getNodeName().equals("code")) {
+                      String code = DomUtils.getInternalValue(observationChild);
+                      fromRelevantObservation.setCode(code);
+                      if (code.length() > 0) {
+                        observationPopulated = true;
+                      }
+                    } else if (observationChild.getNodeName().equals("text")) {
+                      fromRelevantObservation.setText(DomUtils.getInternalValue(observationChild));
+                    }
+                  }
+                }
+                if (observationPopulated) {
+                  interval.setFromRelevantObservation(fromRelevantObservation);
+                  populated = true;
+                }
               } else if (childNode.getNodeName().equals("absMinInt")) {
                 TimePeriod timePeriod = new TimePeriod(DomUtils.getInternalValue(childNode));
                 interval.setAbsoluteMinimumInterval(timePeriod);
@@ -597,6 +712,10 @@ public class DataModelLoader {
                 if (intervalPriority != null && intervalPriority.equalsIgnoreCase("override")) {
                   interval.setIntervalPriority(IntervalPriority.OVERRIDE);
                 }
+              } else if (childNode.getNodeName().equals("effectiveDate")) {
+                interval.setEffectiveDate(parseDate(DomUtils.getInternalValue(childNode)));
+              } else if (childNode.getNodeName().equals("cessationDate")) {
+                interval.setCessationDate(parseDate(DomUtils.getInternalValue(childNode)));
               }
             }
           }
@@ -643,7 +762,7 @@ public class DataModelLoader {
           PreferrableVaccine preferableVaccine = new PreferrableVaccine();
           preferableVaccine.setSeriesDose(seriesDose);
           Vaccine vaccine = preferableVaccine;
-          readVaccine(dataModel, parentNode, vaccine);
+          readVaccine(supportingDataModel, parentNode, vaccine);
           NodeList childNodeList = parentNode.getChildNodes();
           for (int j = 0; j < childNodeList.getLength(); j++) {
             Node childNode = childNodeList.item(j);
@@ -658,7 +777,7 @@ public class DataModelLoader {
           AllowableVaccine allowableVaccine = new AllowableVaccine();
           allowableVaccine.setSeriesDose(seriesDose);
           Vaccine vaccine = allowableVaccine;
-          readVaccine(dataModel, parentNode, vaccine);
+          readVaccine(supportingDataModel, parentNode, vaccine);
           seriesDose.getAllowableVaccineList().add(allowableVaccine);
         } else if (parentNode.getNodeName().equals("conditionalSkip")) {
           ConditionalSkip conditionalSkip = new ConditionalSkip();
@@ -667,7 +786,10 @@ public class DataModelLoader {
           for (int j = 0; j < childNodeList.getLength(); j++) {
             Node childNode = childNodeList.item(j);
             if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-              if (childNode.getNodeName().equals("setLogic")) {
+              if (childNode.getNodeName().equals("context")) {
+                conditionalSkip.setContext(
+                    ConditionalSkipContext.fromXml(DomUtils.getInternalValue(childNode)));
+              } else if (childNode.getNodeName().equals("setLogic")) {
                 String setLogic = DomUtils.getInternalValue(childNode);
                 conditionalSkip.setSetLogic(setLogic);
               } else if (childNode.getNodeName().equals("set")) {
@@ -688,7 +810,7 @@ public class DataModelLoader {
                       conditionalSkipSet
                           .setConditionLogic(DomUtils.getInternalValue(grandchildNode));
                     } else if (grandchildNode.getNodeName().equals("condition")) {
-                      readCondition(dataModel, conditionalSkipSet, grandchildNode, seriesDose);
+                      readCondition(supportingDataModel, conditionalSkipSet, grandchildNode, seriesDose);
                     }
                   }
                 }
@@ -696,7 +818,21 @@ public class DataModelLoader {
             }
           }
           if (populated) {
-            seriesDose.setConditionalSkip(conditionalSkip);
+            seriesDose.addConditionalSkip(conditionalSkip);
+          }
+        } else if (parentNode.getNodeName().equals("inadvertentVaccine")) {
+          NodeList childNodeList = parentNode.getChildNodes();
+          for (int j = 0; j < childNodeList.getLength(); j++) {
+            Node childNode = childNodeList.item(j);
+            if (childNode.getNodeType() == Node.ELEMENT_NODE && childNode.getNodeName().equals("cvx")) {
+              String cvxCode = DomUtils.getInternalValue(childNode);
+              if (cvxCode.length() > 0) {
+                VaccineType vaccineType = supportingDataModel.getCvx(cvxCode);
+                if (vaccineType != null) {
+                  seriesDose.getInadvertentVaccineList().add(vaccineType);
+                }
+              }
+            }
           }
         } else if (parentNode.getNodeName().equals("recurringDose")) {
           RecurringDose recurringDose = new RecurringDose();
@@ -710,6 +846,19 @@ public class DataModelLoader {
         } else if (parentNode.getNodeName().equals("seasonalRecommendation")) {
           SeasonalRecommendation seasonalRecommendation = new SeasonalRecommendation();
           seasonalRecommendation.setSeriesDose(seriesDose);
+          NodeList childNodeList = parentNode.getChildNodes();
+          for (int j = 0; j < childNodeList.getLength(); j++) {
+            Node childNode = childNodeList.item(j);
+            if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+              if (childNode.getNodeName().equals("startDate")) {
+                seasonalRecommendation.setSeasonalRecommendationStartDate(
+                    parseDate(DomUtils.getInternalValue(childNode)));
+              } else if (childNode.getNodeName().equals("endDate")) {
+                seasonalRecommendation.setSeasonalRecommendationEndDate(
+                    parseDate(DomUtils.getInternalValue(childNode)));
+              }
+            }
+          }
           seriesDose.getSeasonalRecommendationList().add(seasonalRecommendation);
         } else if (parentNode.getNodeName().equals("substituteDose")) {
           SubstituteDose substituteDose = new SubstituteDose();
@@ -750,7 +899,7 @@ public class DataModelLoader {
     }
   }
 
-  private static void readCondition(DataModel dataModel, ConditionalSkipSet conditionalSkipSet,
+  private static void readCondition(SupportingDataModel supportingDataModel, ConditionalSkipSet conditionalSkipSet,
       Node grandchildNode, SeriesDose seriesDose) {
     ConditionalSkipCondition condition = new ConditionalSkipCondition(seriesDose);
     conditionalSkipSet.getConditionList().add(condition);
@@ -796,10 +945,31 @@ public class DataModelLoader {
         } else if (greatgrandchildNode.getNodeName().equals("vaccineTypes")) {
           String vaccineTypeCvxCodeString = DomUtils.getInternalValue(greatgrandchildNode);
           if (vaccineTypeCvxCodeString.length() > 0) {
-            String[] vaccineTypeCvxCodes = vaccineTypeCvxCodeString.split("\\;");
-            for (String vaccineTypeCvx : vaccineTypeCvxCodes) {
-              VaccineType vaccineType = dataModel.getCvx(vaccineTypeCvx);
-              condition.getVaccineTypeSet().add(vaccineType);
+            // CDC Supporting Data uses "; "-separated CVX lists (space after the
+            // semicolon). Trim and skip unresolved codes, same as fromMostRecent
+            // interval parsing above - otherwise only the first token matches
+            // and Influenza season-completion skips never see CVX 88/333/etc.
+            // (SPEC-4.6-0053).
+            for (String vaccineTypeCvx : vaccineTypeCvxCodeString.split(";")) {
+              vaccineTypeCvx = vaccineTypeCvx.trim();
+              if (vaccineTypeCvx.length() == 0) {
+                continue;
+              }
+              VaccineType vaccineType = supportingDataModel.getCvx(vaccineTypeCvx);
+              if (vaccineType != null) {
+                condition.getVaccineTypeSet().add(vaccineType);
+              }
+            }
+          }
+        } else if (greatgrandchildNode.getNodeName().equals("seriesGroups")) {
+          String seriesGroupsString = DomUtils.getInternalValue(greatgrandchildNode);
+          if (seriesGroupsString.length() > 0) {
+            for (String seriesGroup : seriesGroupsString.split(";")) {
+              seriesGroup = seriesGroup.trim();
+              if (seriesGroup.length() == 0) {
+                continue;
+              }
+              condition.getSeriesGroupSet().add(seriesGroup);
             }
           }
         }
@@ -826,7 +996,7 @@ public class DataModelLoader {
     return date;
   }
 
-  private static void readVaccine(DataModel dataModel, Node parentNode, Vaccine vaccine) {
+  private static void readVaccine(SupportingDataModel supportingDataModel, Node parentNode, Vaccine vaccine) {
     NodeList childNodeList = parentNode.getChildNodes();
     for (int j = 0; j < childNodeList.getLength(); j++) {
       Node childNode = childNodeList.item(j);
@@ -834,7 +1004,7 @@ public class DataModelLoader {
         if (childNode.getNodeName().equals("vaccineType")) {
           // do nothing
         } else if (childNode.getNodeName().equals("cvx")) {
-          VaccineType vaccineType = dataModel.getCvx(DomUtils.getInternalValue(childNode));
+          VaccineType vaccineType = supportingDataModel.getCvx(DomUtils.getInternalValue(childNode));
           vaccine.setVaccineType(vaccineType);
         } else if (childNode.getNodeName().equals("beginAge")) {
           vaccine.setVaccineTypeBeginAge(new TimePeriod(DomUtils.getInternalValue(childNode)));
@@ -851,7 +1021,7 @@ public class DataModelLoader {
     }
   }
 
-  private static void readVaccineGroups(DataModel dataModel, Document doc) {
+  private static void readVaccineGroups(SupportingDataModel supportingDataModel, Document doc) {
     NodeList parentList = doc.getElementsByTagName("vaccineGroups");
     for (int i = 0; i < parentList.getLength(); i++) {
       Node parentNode = parentList.item(i);
@@ -867,7 +1037,7 @@ public class DataModelLoader {
             if (grandchildNode.getNodeType() == Node.ELEMENT_NODE) {
               if (grandchildNode.getNodeName().equals("name")) {
                 String nameValue = DomUtils.getInternalValue(grandchildNode);
-                vaccineGroup = dataModel.getOrCreateVaccineGroup(nameValue);
+                vaccineGroup = supportingDataModel.getOrCreateVaccineGroup(nameValue);
               } else if (vaccineGroup != null
                   && grandchildNode.getNodeName().equals("administerFullVaccineGroup")) {
                 String s = DomUtils.getInternalValue(grandchildNode);
@@ -886,7 +1056,7 @@ public class DataModelLoader {
     }
   }
 
-  private static void readVaccineGroupToAntigenMap(DataModel dataModel, Document doc) {
+  private static void readVaccineGroupToAntigenMap(SupportingDataModel supportingDataModel, Document doc) {
     NodeList parentList = doc.getElementsByTagName("vaccineGroupToAntigenMap");
     for (int i = 0; i < parentList.getLength(); i++) {
       Node parentNode = parentList.item(i);
@@ -902,10 +1072,10 @@ public class DataModelLoader {
             if (grandchildNode.getNodeType() == Node.ELEMENT_NODE) {
               if (grandchildNode.getNodeName().equals("name")) {
                 String nameValue = DomUtils.getInternalValue(grandchildNode);
-                vaccineGroup = dataModel.getOrCreateVaccineGroup(nameValue);
+                vaccineGroup = supportingDataModel.getOrCreateVaccineGroup(nameValue);
               } else if (vaccineGroup != null && grandchildNode.getNodeName().equals("antigen")) {
                 String antigenName = DomUtils.getInternalValue(grandchildNode);
-                Antigen antigen = dataModel.getOrCreateAntigen(antigenName);
+                Antigen antigen = supportingDataModel.getOrCreateAntigen(antigenName);
                 antigen.setVaccineGroup(vaccineGroup);
                 vaccineGroup.getAntigenList().add(antigen);
               }
@@ -916,7 +1086,7 @@ public class DataModelLoader {
     }
   }
 
-  private static void readCvxToAntigenMap(DataModel dataModel, Document doc) {
+  private static void readCvxToAntigenMap(SupportingDataModel supportingDataModel, Document doc) {
     NodeList parentList = doc.getElementsByTagName("cvxToAntigenMap");
     for (int i = 0; i < parentList.getLength(); i++) {
       Node parentNode = parentList.item(i);
@@ -926,14 +1096,14 @@ public class DataModelLoader {
         if (childNode.getNodeType() == Node.ELEMENT_NODE
             && childNode.getNodeName().equals("cvxMap")) {
           VaccineType cvx = new VaccineType();
-          readCvx(dataModel, cvx, childNode);
-          dataModel.getCvxMap().put(cvx.getCvxCode(), cvx);
+          readCvx(supportingDataModel, cvx, childNode);
+          supportingDataModel.getCvxMap().put(cvx.getCvxCode(), cvx);
         }
       }
     }
   }
 
-  private static void readCvx(DataModel dataModel, VaccineType cvx, Node parentNode) {
+  private static void readCvx(SupportingDataModel supportingDataModel, VaccineType cvx, Node parentNode) {
     NodeList childList = parentNode.getChildNodes();
     for (int j = 0; j < childList.getLength(); j++) {
       Node childNode = childList.item(j);
@@ -944,21 +1114,34 @@ public class DataModelLoader {
           cvx.setShortDescription(DomUtils.getInternalValue(childNode));
         } else if (childNode.getNodeName().equals("association")) {
           NodeList grandchildList = childNode.getChildNodes();
+          String antigenName = null;
+          TimePeriod associationBeginAge = new TimePeriod("");
+          TimePeriod associationEndAge = new TimePeriod("");
           for (int k = 0; k < grandchildList.getLength(); k++) {
             Node grandchildNode = grandchildList.item(k);
-            if (grandchildNode.getNodeName().equals("antigen")) {
-              String antigenName = DomUtils.getInternalValue(grandchildNode);
-              Antigen antigen = dataModel.getOrCreateAntigen(antigenName);
-              cvx.getAntigenList().add(antigen);
-              antigen.getCvxList().add(cvx);
+            if (grandchildNode.getNodeType() != Node.ELEMENT_NODE) {
+              continue;
             }
+            if (grandchildNode.getNodeName().equals("antigen")) {
+              antigenName = DomUtils.getInternalValue(grandchildNode);
+            } else if (grandchildNode.getNodeName().equals("associationBeginAge")) {
+              associationBeginAge = new TimePeriod(DomUtils.getInternalValue(grandchildNode));
+            } else if (grandchildNode.getNodeName().equals("associationEndAge")) {
+              associationEndAge = new TimePeriod(DomUtils.getInternalValue(grandchildNode));
+            }
+          }
+          if (antigenName != null) {
+            Antigen antigen = supportingDataModel.getOrCreateAntigen(antigenName);
+            cvx.getAntigenList().add(antigen);
+            antigen.getCvxList().add(cvx);
+            cvx.setAssociationAge(antigen, associationBeginAge, associationEndAge);
           }
         }
       }
     }
   }
 
-  private static void readLiveVirusConflicts(DataModel dataModel, Document doc) {
+  private static void readLiveVirusConflicts(SupportingDataModel supportingDataModel, Document doc) {
     NodeList parentList = doc.getElementsByTagName("liveVirusConflicts");
     for (int i = 0; i < parentList.getLength(); i++) {
       Node parentNode = parentList.item(i);
@@ -969,24 +1152,24 @@ public class DataModelLoader {
         if (childNode.getNodeType() == Node.ELEMENT_NODE
             && childNode.getNodeName().equals("liveVirusConflict")) {
           LiveVirusConflict liveVirusConflict = new LiveVirusConflict();
-          dataModel.getLiveVirusConflictList().add(liveVirusConflict);
-          readLiveVirusConfict(dataModel, liveVirusConflict, childNode);
+          supportingDataModel.getLiveVirusConflictList().add(liveVirusConflict);
+          readLiveVirusConfict(supportingDataModel, liveVirusConflict, childNode);
         }
       }
     }
   }
 
-  private static void readLiveVirusConfict(DataModel dataModel, LiveVirusConflict liveVirusConflict,
+  private static void readLiveVirusConfict(SupportingDataModel supportingDataModel, LiveVirusConflict liveVirusConflict,
       Node parentNode) {
     NodeList childList = parentNode.getChildNodes();
     for (int j = 0; j < childList.getLength(); j++) {
       Node childNode = childList.item(j);
       if (childNode.getNodeType() == Node.ELEMENT_NODE) {
         if (childNode.getNodeName().equals("previous")) {
-          VaccineType cvx = readVaccine(dataModel, childNode);
+          VaccineType cvx = readVaccine(supportingDataModel, childNode);
           liveVirusConflict.setPreviousVaccineType(cvx);
         } else if (childNode.getNodeName().equals("current")) {
-          VaccineType cvx = readVaccine(dataModel, childNode);
+          VaccineType cvx = readVaccine(supportingDataModel, childNode);
           liveVirusConflict.setCurrentVaccineType(cvx);
         } else if (childNode.getNodeName().equals("conflictBeginInterval")) {
           liveVirusConflict
@@ -1003,7 +1186,7 @@ public class DataModelLoader {
 
   }
 
-  private static void readObservations(DataModel dataModel, Document doc) {
+  private static void readObservations(SupportingDataModel supportingDataModel, Document doc) {
     NodeList parentList = doc.getElementsByTagName("observations");
     for (int i = 0; i < parentList.getLength(); i++) {
       Node parentNode = parentList.item(i);
@@ -1024,13 +1207,13 @@ public class DataModelLoader {
             }
           }
 
-          dataModel.getObservationMap().put(o.getObservationCode(), o);
+          supportingDataModel.getObservationMap().put(o.getObservationCode(), o);
         }
       }
     }
   }
 
-  private static VaccineType readVaccine(DataModel dataModel, Node childNode) {
+  private static VaccineType readVaccine(SupportingDataModel supportingDataModel, Node childNode) {
     NodeList grandchildList = childNode.getChildNodes();
     String vaccineType = "";
     String cvxCode = "";
@@ -1044,12 +1227,12 @@ public class DataModelLoader {
         }
       }
     }
-    VaccineType cvx = dataModel.getCvx(cvxCode);
+    VaccineType cvx = supportingDataModel.getCvx(cvxCode);
     if (cvx == null) {
       cvx = new VaccineType();
       cvx.setCvxCode(cvxCode);
       cvx.setShortDescription(vaccineType);
-      dataModel.getCvxMap().put(cvxCode, cvx);
+      supportingDataModel.getCvxMap().put(cvxCode, cvx);
     }
     return cvx;
   }

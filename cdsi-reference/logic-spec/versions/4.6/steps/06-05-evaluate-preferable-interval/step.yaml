@@ -24,6 +24,7 @@ implementation:
   classes:
     - "org.openimmunizationsoftware.cdsi.core.logic.EvaluatePreferableInterval"
 tests:
-  - status: "test-gap"
-    note: "No dedicated unit test."
+  - status: "present"
+    class: "org.openimmunizationsoftware.cdsi.core.logic.EvaluatePreferableIntervalTest"
+    note: "Covers Table 6-17/6-18/6-19, RELEVANT-1 selection, and CALCDTINT-1 after skip, Not Valid last shot, and inadvertent immediate previous dose."
 review_status: "draft"

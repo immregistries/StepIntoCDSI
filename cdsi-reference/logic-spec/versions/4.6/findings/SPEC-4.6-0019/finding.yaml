@@ -1,0 +1,146 @@
+id: "SPEC-4.6-0019"
+status: "resolved"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.2"]
+source_pages: [56]
+tables: ["Table 6-9"]
+business_rules: []
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateConditionalSkip"
+  - "org.openimmunizationsoftware.cdsi.core.domain.PatientSeries"
+fits_cases:
+  - "5eeca0522cc4517a96b0f417-HPV-2013-0395"
+  - "5eeca0522cc4517a96b0f417-DTAP-2013-0007"
+  - "675c41f8e4b089d2bdc0c483-PCV-2023-0002"
+summary: >
+  Table 6-9's Equal row matches the bare word "equal", but the bundled
+  Supporting Data spells every one of its 69 equality dose-count
+  conditions as "equal to" - so the row is currently unreachable on any
+  real forecast. Making it reachable (an additive fix - "equal" OR
+  "equal to", since an existing characterization test pins the bare
+  spelling as currently-working) is spec-correct.
+
+  Re-investigated 2026-09-09 (Role B round 23), per the project owner's
+  explicit request for a dedicated investigation and a proposed
+  solution. The original blocking concern (324 FITS execution errors)
+  is GONE - re-measured fresh against the current codebase, the fix now
+  produces 0 execution errors, net +20 (49 improvements, 29
+  regressions). The underlying PatientSeries.getForecast() NPE this
+  finding originally traced appears to have been resolved incidentally
+  by one or more of this session's intervening fixes (most likely unit
+  4.4's SPEC-4.6-0028).
+
+  However, deep-diving the 29 regressions surfaced two further,
+  DIFFERENT problems, at least one of which is a genuine, not-yet-
+  understood defect - so this is still not safe to merge. Left open.
+evidence: >
+  Table 6-9's row label in the extracted spec text is "Equal" (bare, no
+  "to"); LT69's code:
+  `caConditionalSkipElements.getFinalValue().getDoseCountLogic().equalsIgnoreCase("equal")`.
+  Grepping cdsi-engine's bundled Supporting Data XML for
+  <doseCountLogic> across the whole release: 303 total occurrences - 12
+  "Greater Than", 69 "equal to", 222 "greater than" - and zero bare
+  "equal" or any spelling of "less than" anywhere in the release. So the
+  Equal row, as coded, never fires on real data.
+  EvaluateConditionalSkipForEvaluationTest already carries two tests
+  pinning both spellings separately:
+  tableSixNineEqualRowAsTheSupportingDataSpellsIt ("equal to", currently
+  red) and tableSixNineEqualRowAsTheImplementationSpellsIt ("equal",
+  currently green) - the second is an existing characterization test
+  that must not regress, so the fix must be additive (support both
+  spellings) rather than a replacement.
+interpretation: >
+  Fix attempted: `.equalsIgnoreCase("equal") ||
+  .equalsIgnoreCase("equal to")`. Verified in isolation via full FITS
+  run (all other candidate changes from this round reverted first): the
+  fix causes 324 execution errors (up from the baseline's 1), while
+  producing no other visible change - the errors mask whatever the
+  correct effect would otherwise be.
+
+  Inspected one failure bundle
+  (5eeca0522cc4517a96b0f417-HPV-2013-0395): the exact exception is
+  `NullPointerException: Cannot invoke
+  "org.openimmunizationsoftware.cdsi.core.domain.Forecast.getLatestDate()"
+  because the return value of
+  "org.openimmunizationsoftware.cdsi.core.domain.PatientSeries.getForecast()"
+  is null`. This is not in EvaluateConditionalSkip at all - it is in
+  downstream forecast-assembly code that calls
+  PatientSeries.getForecast().getLatestDate() without a null check
+  (grepped call sites with this exact shape exist in
+  InProcessPatientSeries, among others). Making the "equal to" dose-count
+  branch reachable causes some target doses to be skipped that previously
+  were not, which apparently leaves some PatientSeries without a
+  Forecast having been assembled for it by the time this downstream code
+  runs - a pre-existing gap that the bare-"equal"-only bug had, until
+  now, coincidentally kept unreachable.
+
+  This finding is left open (not merged) because the dose-count fix
+  itself is correct and matches SPEC-4.6-0017/0018's identical pattern,
+  but merging it requires first fixing a separate, currently
+  undiagnosed NPE defect in the forecast-assembly path - out of scope
+  for this unit's (6.2's) bounded round. The NPE's root cause (why
+  PatientSeries.getForecast() can be null at the point
+  InProcessPatientSeries or its caller reads it) has not yet been
+  investigated; that investigation belongs to whichever unit owns
+  forecast assembly (Chapter 8 / PatientSeries forecast lifecycle), not
+  to 6.2.
+
+  Materiality if fixed cleanly: this is the largest of unit 6.2's
+  remaining reds by a wide margin - all 69 equality dose-count
+  conditions in the bundled release are spelled "equal to", so Table
+  6-9's Equal row is entirely dead code on any real forecast until this
+  is resolved.
+
+  2026-09-09 re-investigation findings (round 23), two distinct
+  regression mechanisms in the 29 cases, traced via direct fixture and
+  Supporting Data inspection rather than assumed:
+
+  (A) DTaP, 25 cases - a spec-vs-fixture correctness question, not
+  obviously a code bug. Traced one representative case
+  (5eeca0522cc4517a96b0f417-DTAP-2013-0007, title "Forecast #3 (Td) in
+  4 weeks", patient exactly 7 years old at assessment with 2 prior
+  valid doses) end to end via direct instrumentation. The fixture
+  expects the engine to forecast against series dose 3 (4-week minimum
+  interval from the previous dose, per that dose's own Supporting Data
+  <interval> element - matching the fixture's expected date exactly).
+  Once the Equal row becomes reachable, series doses 2-7 (each
+  independently carrying an "Age >= 7 years" skip condition already
+  present in the Supporting Data, unrelated to this fix, that a 7-year-
+  old now satisfies) plus dose 7's own "2 or more valid doses" Equal-
+  row condition (now reachable) correctly skip per their own literal
+  Supporting Data encoding, advancing the walk to dose 8 (satisfied by
+  the patient's Tdap dose) then dose 9 (a 6-month interval from dose 8,
+  per ITS OWN <interval> element) - which the engine now (also
+  correctly, per that dose's own data) forecasts for 2027-03-01 instead
+  of the fixture's expected 2026-09-29. Both the fixture's expectation
+  and the engine's new answer are individually well-supported by
+  different pieces of the Supporting Data; adjudicating which is
+  clinically correct requires ACIP domain expertise this investigation
+  does not have - the same category of open question as HepA's already-
+  documented "Extra Test Cases" spec-vs-fixture conflict (SPEC-4.6-0026).
+
+  (B) PCV, 4 cases - **root-caused and fixed** as its own finding,
+  SPEC-4.6-0033 (Role B round 24, same day): a markRestAsExtraneous()
+  placeholder target dose still tracks the same SeriesDose - and
+  therefore the same ConditionalSkip data - as whichever real target
+  dose it duplicates, so routing it through EvaluateConditionalSkip
+  again can overwrite its UNNECESSARY status back to SKIPPED and
+  strand the whole series without a PatientSeriesStatus ever being
+  assigned. Fixed at the shared base class level: an UNNECESSARY
+  target dose now skips conditional-skip evaluation entirely. This bug
+  is independent of the Equal-row spelling gap itself - verified by
+  shipping it alone (equal-to still unfixed): 0 regressions, 11
+  improvements (6 COVID-19, 5 PCV) - confirming it already fires on
+  the current, unmodified codebase for other cases too.
+
+  Recommendation, updated: with (B) now fixed and merged separately,
+  only (A) - the DTaP clinical-correctness question - still blocks
+  merging this specific "equal to" spelling fix. Filed as GitHub Issue
+  #65 for ACIP/CDSi domain-expert input (see the "Open ACIP/CDSi
+  Clinical Questions" dashboard). Re-attempt this fix once that
+  question is answered; re-measure fresh at that point, since SPEC-4.6-0033
+  and other intervening fixes may have further changed the numbers.
+
+  2026-09-15: Project owner accepted the 6.2/7.1/7.6 cluster, including
+  this Equal-row spelling, onto develop. Combined FITS 3728/1167/1.
+  Allowlist regenerated from run 2026-09-15T024959-174434Z-6e894db.

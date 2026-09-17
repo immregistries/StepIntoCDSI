@@ -1,0 +1,23 @@
+id: "2026-09-14-role-b-round-40-chapter-9-remaining"
+date: "2026-09-14"
+phase: 22
+title: "Role B Round 40 - Finish Chapter 9 Table 9-2 aggregation (SPEC-4.6-0050)"
+before:
+  commit: "15541a2"
+  engine_tests: {total: 783, failures: 18, errors: 0}
+  fits: {total_cases: 4896, passed: 3691, failed_assertions: 1204, execution_errors: 1}
+after:
+  commit: "978ed8c"
+  engine_tests: {total: 786, failures: 15, errors: 0}
+  fits: {total_cases: 4896, passed: 3691, failed_assertions: 1204, execution_errors: 1}
+  fits_runtime_seconds: 427.0
+summary: >
+  Finished Chapter 9 remaining Table 9-2 aggregation on 9.3 (reason union,
+  aggregation for every Table 9-4 status, forecastList, recommended-vaccine
+  union, FORECASTDN-2 min/max) and the matching 9.2 dose-number copy.
+  Engine failures 18 to 15; unit 9.3 is 37/37. Combined FITS is unchanged
+  at 3691/1204/1 (statusChanged empty). Allowlist not regenerated.
+  Project owner accepted the tests onto develop without a code-review PR.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0050/finding.md"
+finding_ids: ["SPEC-4.6-0050"]
+status: reviewed

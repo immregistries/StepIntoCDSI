@@ -1,0 +1,25 @@
+id: "2026-09-15-fits-complete-status-routing"
+date: "2026-09-15"
+phase: 22
+title: "FITS - Last skipped forecast target routes to Table 7-10; trim conditional-skip CVX tokens"
+before:
+  commit: "1e42c88"
+  engine_tests: {total: 793, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 3765, failed_assertions: 1130, execution_errors: 1}
+after:
+  commit: "e26ab7d"
+  engine_tests: {total: 795, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 3956, failed_assertions: 939, execution_errors: 1}
+summary: >
+  SPEC-4.6-0052: when 7.1 skips the last forecast target, 4.4 routes through
+  Determine Forecast Need so Table 7-10 can assign COMPLETE instead of leaving
+  PatientSeriesStatus null. SPEC-4.6-0053: DataModelLoader trims "; "-separated
+  conditional-skip vaccineTypes CVX tokens so Influenza season-completion skips
+  match CVX 88/333. Combined FITS 3765 to 3956 (net +191). FLU 49 to 62; COVID-19
+  81 to 135; PCV 217 to 332; MMR +9. Collateral: PCV-2013-0597 (5 plan copies)
+  flipped PASS to FAIL (COMPLETE vs expected NOT_COMPLETE) and left the allowlist.
+  18 FLU COMPLETE mismatches remain (mostly historical season windows). Allowlist
+  regenerated from run 2026-09-15T170211.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0052/finding.md"
+finding_ids: ["SPEC-4.6-0052", "SPEC-4.6-0053"]
+status: reviewed

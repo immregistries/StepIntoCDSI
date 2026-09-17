@@ -1,0 +1,37 @@
+id: "2026-09-08-role-b-round-10-conditional-skip-label-and-interval"
+date: "2026-09-08"
+phase: 21
+title: "Role B Round 10 - Table 6-6 Label and Table 6-8 Interval Boundary"
+before:
+  commit: "21f0d1f"
+  engine_tests: {total: 771, failures: 169, errors: 1}
+  fits: {total_cases: 4896, passed: 3378, failed_assertions: 1517, execution_errors: 1}
+  fits_runtime_seconds: 39.9
+after:
+  commit: "aa5628b"
+  engine_tests: {total: 771, failures: 167, errors: 1}
+  fits: {total_cases: 4896, passed: 3378, failed_assertions: 1517, execution_errors: 1}
+  fits_runtime_seconds: 39.9
+summary: >
+  The tenth Role B round, on unit 6.2's EvaluateConditionalSkip (shared
+  base class also used by 7.1 and 7.6). Fixed two narrow, verified-safe
+  mismatches: Table 6-6's stale "Table 4-6" label, and Table 6-8's
+  interval condition excluding its own documented equality boundary
+  (SPEC-4.6-0017). cdsi-engine: 169 -> 167 failures (down exactly 2),
+  0 regressions. FITS: strict no-op (3378/1517/1 both sides, 0 cases
+  changed by strict case-by-case diff).
+
+  This round also investigated two further candidate fixes of the
+  identical shape and found both to be real spec mismatches whose fixes
+  are correct in isolation but not safe to merge yet: Table 6-6's
+  age-window lower bound (SPEC-4.6-0018 - fix produces a net +101 FITS
+  improvement but a 14-case regression traced to the already-documented
+  "Chapter 8 has no series group" defect) and Table 6-9's "equal to"
+  dose-count comparator (SPEC-4.6-0019 - fix is correct but exposes a
+  separate, pre-existing NPE in PatientSeries.getForecast() downstream,
+  324 FITS execution errors). Both recorded as open findings for a
+  future round rather than merged, per the standing rule that FITS must
+  move forward, not backward.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0017/finding.md"
+finding_ids: ["SPEC-4.6-0017", "SPEC-4.6-0018", "SPEC-4.6-0019"]
+status: reviewed

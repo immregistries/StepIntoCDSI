@@ -1,0 +1,39 @@
+id: "SPEC-4.6-0057"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["3.3", "6.5", "6.6"]
+source_pages: [25, 26, 54, 58, 59, 60]
+tables: ["Table 3-5", "Table 6-19", "Table 6-20", "Table 6-21", "Table 6-22"]
+business_rules: ["RELEVANT-1", "CALCDTINT-1", "CALCDTINT-3"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateAllowableInterval"
+  - "org.openimmunizationsoftware.cdsi.core.domain.Interval"
+  - "org.openimmunizationsoftware.cdsi.core.logic.concepts.RelevantSupportingData"
+fits_cases:
+  - "689dc945e4b05decee50df54-POL-2013-0640"
+  - "689dc945e4b05decee50df54-POL-2013-0655"
+summary: >
+  6.6 did not apply §3.3 to allowable-interval rows. Separately, CALCDTINT-1
+  took evaluation status from the previous target dose, so a skipped target
+  made the preferable-interval dates assumed 01/01/1900 and 6.6 never ran.
+evidence: >
+  EvaluateAllowableInterval looped seriesDose.getAllowableintervalList() with
+  no RelevantSupportingData.selectAllowableIntervals. Interval.getPatientReferenceDoseDate
+  returned null when previousTargetDose.getEvaluation() was null.
+
+  POL-2013-0640 (DOB 2022-09-01; IPV 2023-09-01, 2026-05-01, 2026-09-01):
+  Polio 4-dose series Dose 3 SKIPPED (age >= 4y), Dose 4 SATISFIED;
+  6.5 ran with prevTd=SKIPPED/no-eval; 6.6 did not run.
+
+  POL-2013-0655 (four IPV doses, last at 6m-5 days): Polio 4-dose Dose 4
+  NOT_SATISFIED NOT_VALID/TOO_SOON and 6.6 did run; Polio 5-dose series
+  skipped Dose 4 and SATISFIED Dose 5 (same skipped-previous PRDD hole),
+  so chapter 8 selected Complete.
+interpretation: >
+  Empty allowable already fails 6.6 when the step is reached (0655 4-dose).
+  0640/0655 COMPLETE was CALCDTINT-1 after skip, not a 6.6 empty-accept bug.
+  Measure CALCDTINT-1 from the previous administered dose's satisfied
+  evaluation when the previous target was skipped; select 6.6 rows with
+  RELEVANT-1. Do not always-run 6.6 when preferable is satisfied: empty
+  allowable as 'not valid' would fail the 465 series doses with a bare
+  <allowableInterval/>.

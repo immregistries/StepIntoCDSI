@@ -5,6 +5,7 @@ import java.util.Date;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.Age;
 import org.openimmunizationsoftware.cdsi.core.domain.AllowableVaccine;
+import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.ConditionalSkipCondition;
 import org.openimmunizationsoftware.cdsi.core.domain.Contraindication;
 import org.openimmunizationsoftware.cdsi.core.domain.Indication;
@@ -84,15 +85,15 @@ public class DateRules {
       @Override
       protected Date evaluateInternal(DataModel dataModel, LogicStep logicStep,
           ConditionalSkipCondition conditionalSkipCondition) {
-        if (dataModel.getAntigenAdministeredRecordThatSatisfiedPreviousTargetDose() == null) {
-          return null;
-        }
         if (conditionalSkipCondition.getInterval() == null
             || !conditionalSkipCondition.getInterval().isValued()) {
           return null;
         }
-        return conditionalSkipCondition.getInterval().getDateFrom(dataModel
-            .getAntigenAdministeredRecordThatSatisfiedPreviousTargetDose().getDateAdministered());
+        Date previousAdministered = dateOfImmediatePreviousVaccineDoseAdministered(dataModel);
+        if (previousAdministered == null) {
+          return null;
+        }
+        return conditionalSkipCondition.getInterval().getDateFrom(previousAdministered);
       }
     };
     CALCDTSKIP_5.setBusinessRuleId("CALCDTSKIP-5");
@@ -469,5 +470,26 @@ public class DateRules {
     CALCDTIND_2.setBusinessRule(
         "A patient's indication end age date must be calculated as the patient's date of birth plus the indication end age of an indication.");
     CALCDTIND_2.setLogicalComponent("Indication");
+  }
+
+  /**
+   * CALCDTSKIP-5's "immediate previous vaccine dose administered." 4.4 stores
+   * that as {@code previousAntigenAdministeredRecord} when it advances past a
+   * consumed AAR. Isolated 6.2/7.1/7.6 unit tests historically populated the
+   * never-set-in-production
+   * {@code antigenAdministeredRecordThatSatisfiedPreviousTargetDose} field
+   * instead; keep that as a fallback so those fixtures still name the same date.
+   */
+  private static Date dateOfImmediatePreviousVaccineDoseAdministered(DataModel dataModel) {
+    AntigenAdministeredRecord previous = dataModel.getPreviousAntigenAdministeredRecord();
+    if (previous != null && previous.getDateAdministered() != null) {
+      return previous.getDateAdministered();
+    }
+    AntigenAdministeredRecord satisfiedPrevious =
+        dataModel.getAntigenAdministeredRecordThatSatisfiedPreviousTargetDose();
+    if (satisfiedPrevious != null) {
+      return satisfiedPrevious.getDateAdministered();
+    }
+    return null;
   }
 }

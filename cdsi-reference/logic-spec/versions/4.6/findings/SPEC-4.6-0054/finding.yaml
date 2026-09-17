@@ -1,0 +1,35 @@
+id: "SPEC-4.6-0054"
+status: "open"
+category: "SPECIFICATION_AMBIGUITY"
+spec_sections: ["7.4", "7.5"]
+source_pages: [77, 79, 80]
+tables: ["Table 7-9", "Table 7-12"]
+business_rules: ["FORECASTDTCAN-1", "FORECASTDT-1"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.concepts.SeasonalRecommendationDates"
+fits_cases:
+  - "675c41f8e4b089d2bdc0c483-COVID-19-2023-0037"
+summary: >
+  Extends SPEC-4.6-0051's assessment-relative season projection to open-ended
+  seasonalRecommendation templates (start date only, empty end) used by
+  COVID-19 Supporting Data 4.65. Previously project() returned the literal
+  start unchanged when end was null, so historical COVID assessments waited
+  for 2025-08-27.
+evidence: >
+  COVID-19 4.65 declares seasonalRecommendation startDate 20250827 with empty
+  endDate on every series dose. After SPEC-4.6-0051, 93 COVID FITS field diffs
+  showed earliest/recommended expected 2024-08 vs actual 2025-08. Fixture
+  2023-0037 (eval 2024-08-22, prior Pfizer 2023-08-08) expects earliest
+  2024-08-22; engine returned 2025-08-27. SeasonalRecommendationDates.project
+  short-circuited when templateEnd was null.
+interpretation: >
+  Documented deviation (same family as SPEC-4.6-0051): for start-only templates,
+  roll the start back by whole years until the assessment is on or after it;
+  do not roll forward (open-ended season stays open). Closed Flu/RSV windows
+  unchanged.
+
+  Verified on run 2026-09-15T172723: combined FITS 3956 to 3962 (net +6, all
+  COVID-19, 0 regressions). Dominant remaining COVID date cluster expects
+  assessment-date "due now" while FORECASTDT still reports a past earliest -
+  a blanket assessment floor at vaccine-group output regressed 170 cases and
+  was not kept.

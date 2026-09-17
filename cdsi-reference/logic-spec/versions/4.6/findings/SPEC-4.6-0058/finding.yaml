@@ -1,0 +1,34 @@
+id: "SPEC-4.6-0058"
+status: "open"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.5", "6.6", "7.5"]
+source_pages: [54, 58, 80]
+tables: ["Table 6-19", "Table 6-22", "Table 7-12", "Table 7-13"]
+business_rules: ["CALCDTINT-1", "CALCDTINT-4", "FORECASTDT-1", "FORECASTDT-5"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.domain.Interval"
+  - "org.openimmunizationsoftware.cdsi.core.logic.GenerateForecastDatesAndRecommendedVaccines"
+fits_cases:
+  - "689dc945e4b05decee50df54-POL-2013-0640"
+summary: >
+  After SPEC-4.6-0057, CALCDTINT-1 still missed a Not Valid last shot when
+  that VDA had no satisfied targetDose link. Forecast then omitted the
+  6-month minimum interval and reported due-now dates instead of last-shot
+  plus 6 months.
+evidence: >
+  6.10 Satisfy Target Dose sets VaccineDoseAdministered.targetDose only on
+  SATISFIED; every outcome sets evaluatedAgainstTargetDose. After a Dose 4
+  NOT_VALID too-soon shot, forecast previousAAR is that shot (targetDose
+  null) and previousTargetDose is still the skipped Dose 3 (no evaluation).
+  Interval.evaluationOfImmediatePreviousDoseAdministered returned null, so
+  7.5 findMinimumIntervalDates skipped CALCDTINT-4.
+
+  POL-2013-0640 (DOB 2022-09-01; IPV 2023-09-01, 2026-05-01, 2026-09-01;
+  assessment 2026-09-01): status NOT_COMPLETE after 0057, but ED/RD were
+  2026-09-01 vs expected 2027-03-01 (2026-09-01 plus 6 months).
+interpretation: >
+  Table 6-19 CALCDTINT-1 measures from the immediate previous vaccine dose
+  administered when that dose is Valid or Not Valid and not inadvertent.
+  The too-soon Dose 4 attempt is Not Valid, so the reference date is
+  2026-09-01. Prefer evaluatedAgainstTargetDose when targetDose is null.
+  FORECASTDT-5 then pulls the recommended date to that earliest date.

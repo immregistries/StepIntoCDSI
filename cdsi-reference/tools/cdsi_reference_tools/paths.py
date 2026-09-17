@@ -86,6 +86,10 @@ def fits_dashboard_path() -> Path:
     return dashboards_dir() / "fits-results.html"
 
 
+def dashboard_index_path() -> Path:
+    return dashboards_dir() / "index.html"
+
+
 def fits_runs_dir() -> Path:
     return reference_root().parent / "cdsi-fits-tests" / "target" / "fits-runs"
 
@@ -148,3 +152,22 @@ def fits_tests_fixtures_dir() -> Path:
 
 def fits_tests_reference_set_export_path() -> Path:
     return reference_root().parent / "cdsi-fits-tests" / "src" / "test" / "resources" / "reference-set.json"
+
+
+# --- Phase B progress ledger (Phase 23) ---
+
+
+def progress_ledger_dir() -> Path:
+    return reference_root() / "progress-ledger"
+
+
+def progress_ledger_entries_dir() -> Path:
+    return progress_ledger_dir() / "entries"
+
+
+def progress_ledger_entry_path(entry_id: str) -> Path:
+    return progress_ledger_entries_dir() / f"{entry_id}.yaml"
+
+
+def progress_ledger_dashboard_path() -> Path:
+    return dashboards_dir() / "progress-ledger.html"

@@ -1,0 +1,30 @@
+id: "2026-09-08-role-b-round-5-evaluate-preferable-interval"
+date: "2026-09-08"
+phase: 21
+title: "Role B Round 5 - EvaluatePreferableInterval's Misassigned Reason, Placeholder Name, and Typo"
+before:
+  commit: "7761b1d"
+  engine_tests: {total: 767, failures: 185, errors: 1}
+  fits: {total_cases: 4896, passed: 3364, failed_assertions: 1531, execution_errors: 1}
+  fits_runtime_seconds: 39.9
+after:
+  commit: "d6bb174"
+  engine_tests: {total: 767, failures: 182, errors: 1}
+  fits: {total_cases: 4896, passed: 3364, failed_assertions: 1531, execution_errors: 1}
+  fits_runtime_seconds: 39.9
+summary: >
+  The fifth Role B round, a deliberately partial pass at unit 6.5: fixed
+  three independent, narrow transcription-level defects (a Rule 1
+  outcome that recorded GRACE_PERIOD instead of the documented TOO_SOON,
+  an unfilled attribute-table-name placeholder, and a misspelled
+  attribute name), closing 3 of the unit's 7 red tests (20/7 -> 23/4).
+  The remaining 4 reds are a separate, materially significant
+  CALCDTINT-8/CALCDTINT-9 cluster - blocked in both the Supporting Data
+  loader and the reference-date rule body, affecting 61 real populated
+  intervals across 10 vaccine groups - deliberately scoped as its own
+  round rather than bundled in here. Full cdsi-engine suite: 185 -> 182
+  failures (down exactly 3), 0 regressions. FITS suite unchanged
+  (3364/1531/1 identical both sides). See SPEC-4.6-0012.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0012/finding.md"
+finding_ids: ["SPEC-4.6-0012"]
+status: reviewed

@@ -1,0 +1,33 @@
+id: "2026-09-08-role-b-round-3-evaluate-age-npe"
+date: "2026-09-08"
+phase: 21
+title: "Role B Round 3 - EvaluateAge's Absolute-Minimum-Only Age Window Crash"
+before:
+  commit: "dc973a2"
+  engine_tests: {total: 767, failures: 188, errors: 1}
+  fits: {total_cases: 4896, passed: 3364, failed_assertions: 1531, execution_errors: 1}
+  fits_runtime_seconds: 39.9
+after:
+  commit: "5dbff7e"
+  engine_tests: {total: 767, failures: 187, errors: 1}
+  fits: {total_cases: 4896, passed: 3364, failed_assertions: 1531, execution_errors: 1}
+  fits_runtime_seconds: 39.9
+summary: >
+  The third Role B round, and the first to surface a genuine
+  specification-level gap rather than a code/spec mismatch: Table 6-14
+  gives Minimum Age Date and Absolute Minimum Age Date the same flat
+  01/01/1900 default, applied independently, which Table 6-15's rule
+  grid cannot always resolve - a target dose with an absolute minimum
+  age but no minimum age crashed the engine with an NPE on 5 real
+  bundled Pneumococcal series doses. Filed as SPECIFICATION_DEFECT and
+  explicitly flagged for CDC/CDSi review rather than treated as settled
+  by this project's own fix. Reviewed and approved a pragmatic
+  resolution: fall the minimum age date back to the absolute minimum age
+  date when only the latter is defined. Unit 6.4: 19/1 -> 20/0 green/red.
+  Full cdsi-engine suite: 188 -> 187 failures (down exactly 1), 0
+  regressions. FITS suite unchanged (3364/1531/1 identical both sides) -
+  none of the 4896 bundled fixtures reaches the affected input shape.
+  See SPEC-4.6-0010.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0010/finding.md"
+finding_ids: ["SPEC-4.6-0010"]
+status: reviewed

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>StepIntoCDSi Progress Dashboards</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #f7f7f8; --fg: #1a1a1a; --card-bg: #ffffff; --border: #e0e0e0;
+    --muted: #6b6b6b; --blue: #2563eb; --green: #15803d;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #16171a; --fg: #e6e6e6; --card-bg: #1f2023; --border: #33343a; --muted: #9a9a9a; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 32px; background: var(--bg); color: var(--fg);
+          font-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size: 14px; }
+  h1 { font-size: 22px; margin: 0 0 6px; }
+  .subtitle { color: var(--muted); margin: 0 0 28px; font-size: 13px; }
+  .cards { display: flex; gap: 20px; flex-wrap: wrap; }
+  a.tile { display: block; background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px;
+            padding: 22px 26px; text-decoration: none; color: var(--fg); flex: 1; min-width: 280px; }
+  a.tile:hover { border-color: var(--blue); }
+  a.tile h2 { margin: 0 0 8px; font-size: 16px; }
+  a.tile p.desc { color: var(--muted); margin: 0 0 4px; font-size: 13px; }
+  .stat { font-size: 34px; font-weight: 700; margin-top: 14px; color: var(--green); }
+  .stat-label { color: var(--muted); font-size: 12px; }
+  .muted { color: var(--muted); }
+  code { background: var(--border); padding: 1px 5px; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<h1>StepIntoCDSi Progress Dashboards</h1>
+<p class="subtitle">Generated 2026-09-16 08:21:06. Regenerate with
+  <code>python -m cdsi_reference_tools dashboards index</code> after refreshing either dashboard below, then commit.</p>
+
+<div class="cards">
+  <a class="tile" href="step-tests.html">
+    <h2>Per-Step Spec-Conformance Coverage (Phase 21)</h2>
+    <p class="desc">Every executable step class (Logic Specification v4.6), tested against its own
+      specification section directly - independent of FITS.</p>
+    <div class="stat">34/36</div>
+    <div class="stat-label">units with tests written - 29 fixed and merged, 0 blocked</div>
+  </a>
+  <a class="tile" href="fits-results.html">
+    <h2>FITS Conformance (Phase 17)</h2>
+    <p class="desc">The NIST FITS end-to-end conformance suite, broken down by vaccine group.</p>
+    <div class="stat">92.5%</div>
+    <div class="stat-label">4529/4896 FITS cases passing - reference set acip-4.6-sd-4.65-fits-222cc1c7</div>
+  </a>
+  <a class="tile" href="progress-ledger.html">
+    <h2>Phase B Progress Ledger (Phase 23)</h2>
+    <p class="desc">Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.</p>
+    <div class="stat">59</div>
+    <div class="stat-label">reviewed rounds - 59.1% FITS runtime reduction since the start - latest: FITS - blank last-dose maxAge is completable (SPEC-4.6-0066)</div>
+  </a>
+  <a class="tile" href="acip-review.html">
+    <h2>Open ACIP/CDSi Clinical Questions</h2>
+    <p class="desc">Places where the specification text (or Supporting Data) genuinely disagrees with a historical reference
+      test case, or leaves no stated rule at all - written up for a domain expert to weigh in on, not a software bug.</p>
+    <div class="stat">6</div>
+    <div class="stat-label">open items - 2 blocking, 3 shipped pending confirmation, 1 flagged</div>
+  </a>
+</div>
+
+</body>
+</html>

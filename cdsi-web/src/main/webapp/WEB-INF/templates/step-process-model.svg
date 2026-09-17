@@ -1,0 +1,391 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 760" role="img" aria-labelledby="process-model-title process-model-desc">
+  <title id="process-model-title">CDSi Step Process Model</title>
+  <desc id="process-model-desc">
+    Process model for the Step Into CDSi step-through view. Each process box is a distinct group with a stable
+    step ID, and each transition is a distinct path that can be styled by the step servlet UI.
+  </desc>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M 0 0 L 10 5 L 0 10 z" class="arrow-head" />
+    </marker>
+  </defs>
+
+  <style>
+    .canvas {
+      fill: #ffffff;
+    }
+
+    .edge {
+      fill: none;
+      stroke: #5f6870;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      marker-end: url(#arrow);
+      opacity: 0.75;
+    }
+
+    .edge.loop {
+      stroke-dasharray: 6 6;
+    }
+
+    .arrow-head {
+      fill: #5f6870;
+    }
+
+    .step-box {
+      stroke: rgba(0, 0, 0, 0.25);
+      stroke-width: 1;
+      rx: 5;
+      ry: 5;
+    }
+
+    .step-node {
+      cursor: pointer;
+    }
+
+    .step-node:hover .step-box {
+      filter: brightness(0.93);
+    }
+
+    .step-node text {
+      fill: #000;
+      font-family: Tahoma, Arial, sans-serif;
+      font-size: 16px;
+      pointer-events: none;
+      text-anchor: middle;
+      dominant-baseline: middle;
+    }
+
+    .step-node text.small {
+      font-size: 15px;
+    }
+
+    .phase-main .step-box {
+      fill: #c8ced5;
+    }
+
+    .phase-evaluation .step-box {
+      fill: #91cbea;
+    }
+
+    .phase-forecast .step-box {
+      fill: #fff69a;
+    }
+
+    .phase-series .step-box,
+    .phase-relevant .step-box {
+      fill: #ff8177;
+    }
+
+    .phase-vaccine-group .step-box {
+      fill: #9fdb7d;
+    }
+
+    .phase-end .step-box {
+      fill: #9aa1aa;
+    }
+
+    .step-node.is-current .step-box {
+      stroke: #d9480f;
+      stroke-width: 4;
+      filter: drop-shadow(0 0 6px rgba(217, 72, 15, 0.55));
+    }
+
+    .step-node.is-previous .step-box {
+      stroke: #2d72d9;
+      stroke-width: 3;
+    }
+
+    .step-node.is-saved .step-box {
+      stroke: #25a46a;
+      stroke-width: 4;
+    }
+
+    .edge.is-active-edge {
+      stroke: #d9480f;
+      stroke-width: 4;
+      opacity: 1;
+    }
+
+    .step-node.is-disabled {
+      cursor: default;
+      opacity: 0.45;
+    }
+  </style>
+
+  <rect class="canvas" x="0" y="0" width="1400" height="760" />
+
+  <g id="process-edges" aria-hidden="true">
+    <path id="edge-4_1-4_2" class="edge" d="M 194 70 H 240" />
+    <path id="edge-4_2-4_3" class="edge" d="M 394 70 H 440" />
+    <path id="edge-4_3-5_1" class="edge" d="M 517 99 V 116" />
+    <path id="edge-5_1-4_3" class="edge loop" d="M 440 145 H 410 V 70 H 440" />
+    <path id="edge-4_3-4_4" class="edge" d="M 594 70 H 668 V 194" />
+    <path id="edge-4_4-6_1" class="edge" d="M 561 248 H 390 V 206 H 254" />
+    <path id="edge-6_1-6_2" class="edge" d="M 148 225 V 260" />
+    <path id="edge-6_2-6_3" class="edge" d="M 130 300 V 335" />
+    <path id="edge-6_3-6_4" class="edge" d="M 130 374 V 409" />
+    <path id="edge-6_4-6_5" class="edge" d="M 130 448 V 484" />
+    <path id="edge-6_5-6_6" class="edge" d="M 219 523 H 244 V 540" />
+    <path id="edge-6_6-6_7" class="edge" d="M 244 577 H 130 V 607" />
+    <path id="edge-6_7-6_8" class="edge" d="M 130 645 V 676" />
+    <path id="edge-6_8-6_9" class="edge" d="M 212 695 H 263" />
+    <path id="edge-6_9-6_10" class="edge" d="M 351 676 V 645" />
+    <path id="edge-6_10-4_4" class="edge loop" d="M 438 626 H 668 V 304" />
+    <path id="edge-4_4-7" class="edge" d="M 561 278 H 489 V 351" />
+    <path id="edge-7-7_1" class="edge" d="M 567 403 V 434" />
+    <path id="edge-7_1-7_2" class="edge" d="M 567 473 V 505" />
+    <path id="edge-7_2-7_3" class="edge" d="M 567 574 V 607" />
+    <path id="edge-7_3-7_4" class="edge" d="M 567 645 V 676" />
+    <path id="edge-7_4-7_5" class="edge" d="M 680 695 H 721" />
+    <path id="edge-7_5-7_6" class="edge" d="M 786 600 V 574" />
+    <path id="edge-7_6-4_5" class="edge loop" d="M 851 540 H 930 V 70" />
+    <path id="edge-4_4-4_5" class="edge" d="M 774 248 H 783 V 70" />
+    <path id="edge-4_5-8_1" class="edge" d="M 856 99 V 133" />
+    <path id="edge-8_1-8_2" class="edge" d="M 918 192 V 228" />
+    <path id="edge-8_2-8_3" class="edge" d="M 970 269 V 307" />
+    <path id="edge-8_3-8_4" class="edge" d="M 970 346 V 384" />
+    <path id="edge-8_3-8_5" class="edge" d="M 1000 346 V 435" />
+    <path id="edge-8_3-8_6" class="edge" d="M 1030 346 V 484" />
+    <path id="edge-8_4-8_7" class="edge" d="M 970 422 V 555" />
+    <path id="edge-8_5-8_7" class="edge" d="M 1025 472 V 555" />
+    <path id="edge-8_6-8_7" class="edge" d="M 1069 523 V 555" />
+    <path id="edge-8_7-8_8" class="edge" d="M 1050 605 V 645" />
+    <path id="edge-8_8-4_5" class="edge loop" d="M 933 670 H 825 V 99" />
+    <path id="edge-4_5-4_6" class="edge" d="M 930 70 H 1041" />
+    <path id="edge-4_6-9_1" class="edge" d="M 1118 99 V 125" />
+    <path id="edge-9_1-9_2" class="edge" d="M 1177 185 V 194" />
+    <path id="edge-9_2-9_3" class="edge" d="M 1241 253 V 265" />
+    <path id="edge-9_3-4_6" class="edge loop" d="M 1199 333 H 1118 V 99" />
+    <path id="edge-4_6-end" class="edge" d="M 1195 70 H 1313" />
+  </g>
+
+  <g id="process-steps">
+    <g id="step-GATHER_NECESSARY_DATA" class="step-node phase-main" data-step-type="GATHER_NECESSARY_DATA" data-step-name="Gather Necessary Data" data-chapter="4.1">
+      <rect class="step-box" x="40" y="41" width="154" height="58" />
+      <text x="117" y="61">4.1 Gather</text>
+      <text x="117" y="80">Necessary Data</text>
+    </g>
+
+    <g id="step-ORGANIZE_IMMUNIZATION_HISTORY" class="step-node phase-main" data-step-type="ORGANIZE_IMMUNIZATION_HISTORY" data-step-name="Organize Immunization History" data-chapter="4.2">
+      <rect class="step-box" x="240" y="41" width="154" height="58" />
+      <text x="317" y="53">4.2 Organize</text>
+      <text x="317" y="72">Immunization</text>
+      <text x="317" y="91">History</text>
+    </g>
+
+    <g id="step-CREATE_RELEVANT_PATIENT_SERIES" class="step-node phase-main" data-step-type="CREATE_RELEVANT_PATIENT_SERIES" data-step-name="Create Relevant Patient Series" data-chapter="4.3">
+      <rect class="step-box" x="440" y="41" width="154" height="58" />
+      <text x="517" y="53">4.3 Create</text>
+      <text x="517" y="72">Relevant Patient</text>
+      <text x="517" y="91">Series</text>
+    </g>
+
+    <g id="step-SELECT_RELEVANT_PATIENT_SERIES" class="step-node phase-relevant" data-step-type="SELECT_RELEVANT_PATIENT_SERIES" data-step-name="Select Relevant Patient Series" data-chapter="5.1">
+      <rect class="step-box" x="440" y="116" width="154" height="58" />
+      <text x="517" y="128">5.1 Select</text>
+      <text x="517" y="147">Relevant Patient</text>
+      <text x="517" y="166">Series</text>
+    </g>
+
+    <g id="step-EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES" class="step-node phase-main" data-step-type="EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES" data-step-name="Evaluate and Forecast all Patient Series" data-chapter="4.4">
+      <rect class="step-box" x="561" y="193" width="214" height="111" />
+      <text x="668" y="226">4.4 Evaluate and</text>
+      <text x="668" y="248">Forecast all Patient</text>
+      <text x="668" y="270">Series</text>
+    </g>
+
+    <g id="step-SELECT_BEST_PATIENT_SERIES" class="step-node phase-main" data-step-type="SELECT_BEST_PATIENT_SERIES" data-step-name="Select Best Patient Series" data-chapter="4.5">
+      <rect class="step-box" x="783" y="41" width="148" height="58" />
+      <text x="857" y="61">4.5 Select Best</text>
+      <text x="857" y="80">Patient Series</text>
+    </g>
+
+    <g id="step-IDENTIFY_AND_EVALUATE_VACCINE_GROUP" class="step-node phase-main" data-step-type="IDENTIFY_AND_EVALUATE_VACCINE_GROUP" data-step-name="Identify and Evaluate Vaccine Group" data-chapter="4.6">
+      <rect class="step-box" x="1041" y="41" width="154" height="58" />
+      <text x="1118" y="53">4.6 Identify and</text>
+      <text x="1118" y="72">Evaluate</text>
+      <text x="1118" y="91">Vaccine Group</text>
+    </g>
+
+    <g id="step-END" class="step-node phase-end" data-step-type="END" data-step-name="End" data-chapter="End">
+      <rect class="step-box" x="1313" y="45" width="48" height="38" rx="14" ry="14" />
+      <text x="1337" y="64" class="small">End</text>
+    </g>
+
+    <g id="step-EVALUATE_DOSE_ADMINISTERED_CONDITION" class="step-node phase-evaluation" data-step-type="EVALUATE_DOSE_ADMINISTERED_CONDITION" data-step-name="Evaluate Dose Administered Condition" data-chapter="6.1">
+      <rect class="step-box" x="41" y="187" width="213" height="38" />
+      <text x="148" y="198" class="small">6.1 Evaluate Dose</text>
+      <text x="148" y="217" class="small">Administered Condition</text>
+    </g>
+
+    <g id="step-EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION" class="step-node phase-evaluation" data-step-type="EVALUATE_CONDITIONAL_SKIP_FOR_EVALUATION" data-step-name="Evaluate Conditional Skip" data-chapter="6.2">
+      <rect class="step-box" x="42" y="261" width="176" height="38" />
+      <text x="130" y="272" class="small">6.2 Evaluate</text>
+      <text x="130" y="291" class="small">Conditional Skip</text>
+    </g>
+
+    <g id="step-EVALUATE_FOR_INADVERTENT_VACCINE" class="step-node phase-evaluation" data-step-type="EVALUATE_FOR_INADVERTENT_VACCINE" data-step-name="Evaluate For Inadvertent Vaccine" data-chapter="6.3">
+      <rect class="step-box" x="42" y="335" width="176" height="38" />
+      <text x="130" y="346" class="small">6.3 Evaluate For</text>
+      <text x="130" y="365" class="small">Inadvertent Vaccine</text>
+    </g>
+
+    <g id="step-EVALUATE_AGE" class="step-node phase-evaluation" data-step-type="EVALUATE_AGE" data-step-name="Evaluate Age" data-chapter="6.4">
+      <rect class="step-box" x="42" y="410" width="176" height="38" />
+      <text x="130" y="429">6.4 Evaluate Age</text>
+    </g>
+
+    <g id="step-EVALUATE_PREFERABLE_INTERVAL" class="step-node phase-evaluation" data-step-type="EVALUATE_PREFERABLE_INTERVAL" data-step-name="Evaluate Preferable Interval" data-chapter="6.5">
+      <rect class="step-box" x="42" y="484" width="176" height="38" />
+      <text x="130" y="495" class="small">6.5 Evaluate</text>
+      <text x="130" y="514" class="small">Preferable Interval</text>
+    </g>
+
+    <g id="step-EVALUATE_ALLOWABLE_INTERVAL" class="step-node phase-evaluation" data-step-type="EVALUATE_ALLOWABLE_INTERVAL" data-step-name="Evaluate Allowable Interval" data-chapter="6.6">
+      <rect class="step-box" x="144" y="539" width="178" height="38" />
+      <text x="233" y="550" class="small">6.6 Evaluate</text>
+      <text x="233" y="569" class="small">Allowable Interval</text>
+    </g>
+
+    <g id="step-EVALUATE_VACCINE_CONFLICT" class="step-node phase-evaluation" data-step-type="EVALUATE_VACCINE_CONFLICT" data-step-name="Evaluate Vaccine Conflict" data-chapter="6.7">
+      <rect class="step-box" x="42" y="607" width="176" height="38" />
+      <text x="130" y="618" class="small">6.7 Evaluate</text>
+      <text x="130" y="637" class="small">Vaccine Conflict</text>
+    </g>
+
+    <g id="step-EVALUATE_FOR_PREFERABLE_VACCINE" class="step-node phase-evaluation" data-step-type="EVALUATE_FOR_PREFERABLE_VACCINE" data-step-name="Evaluate For Preferable Vaccine" data-chapter="6.8">
+      <rect class="step-box" x="41" y="676" width="171" height="38" />
+      <text x="127" y="687" class="small">6.8 Evaluate For</text>
+      <text x="127" y="706" class="small">Preferable Vaccine</text>
+    </g>
+
+    <g id="step-EVALUATE_FOR_ALLOWABLE_VACCINE" class="step-node phase-evaluation" data-step-type="EVALUATE_FOR_ALLOWABLE_VACCINE" data-step-name="Evaluate For Allowable Vaccine" data-chapter="6.9">
+      <rect class="step-box" x="264" y="676" width="174" height="38" />
+      <text x="351" y="687" class="small">6.9 Evaluate For</text>
+      <text x="351" y="706" class="small">Allowable Vaccine</text>
+    </g>
+
+    <g id="step-SATISFY_TARGET_DOSE" class="step-node phase-evaluation" data-step-type="SATISFY_TARGET_DOSE" data-step-name="Satisfy Target Dose" data-chapter="6.10">
+      <rect class="step-box" x="301" y="607" width="137" height="38" />
+      <text x="370" y="618" class="small">6.10 Satisfy</text>
+      <text x="370" y="637" class="small">Target Dose</text>
+    </g>
+
+    <g id="step-FORECAST_DATES_AND_REASONS" class="step-node phase-forecast" data-step-type="FORECAST_DATES_AND_REASONS" data-step-name="Forecast Dates and Reasons" data-chapter="7">
+      <rect class="step-box" x="489" y="335" width="159" height="68" />
+      <text x="568" y="358">7 Forecast Dates</text>
+      <text x="568" y="380">and Reasons</text>
+    </g>
+
+    <g id="step-EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST" class="step-node phase-forecast" data-step-type="EVALUATE_CONDITIONAL_SKIP_FOR_FORECAST" data-step-name="Evaluate Conditional Skip" data-chapter="7.1">
+      <rect class="step-box" x="486" y="435" width="158" height="38" />
+      <text x="565" y="446" class="small">7.1 Evaluate</text>
+      <text x="565" y="465" class="small">Conditional Skip</text>
+    </g>
+
+    <g id="step-DETERMINE_EVIDENCE_OF_IMMUNITY" class="step-node phase-forecast" data-step-type="DETERMINE_EVIDENCE_OF_IMMUNITY" data-step-name="Determine Evidence of Immunity" data-chapter="7.2">
+      <rect class="step-box" x="486" y="505" width="158" height="68" />
+      <text x="565" y="520" class="small">7.2 Determine</text>
+      <text x="565" y="539" class="small">Evidence of</text>
+      <text x="565" y="558" class="small">Immunity</text>
+    </g>
+
+    <g id="step-DETERMINE_CONTRAINDICATIONS" class="step-node phase-forecast" data-step-type="DETERMINE_CONTRAINDICATIONS" data-step-name="Determine Contraindications" data-chapter="7.3">
+      <rect class="step-box" x="486" y="607" width="158" height="38" />
+      <text x="565" y="618" class="small">7.3 Determine</text>
+      <text x="565" y="637" class="small">Contraindications</text>
+    </g>
+
+    <g id="step-DETERMINE_FORECAST_NEED" class="step-node phase-forecast" data-step-type="DETERMINE_FORECAST_NEED" data-step-name="Determine Forecast Need" data-chapter="7.4">
+      <rect class="step-box" x="486" y="676" width="194" height="38" />
+      <text x="583" y="687" class="small">7.4 Determine</text>
+      <text x="583" y="706" class="small">Forecast Need</text>
+    </g>
+
+    <g id="step-GENERATE_FORECAST_DATES_AND_RECOMMENDED_VACCINES" class="step-node phase-forecast" data-step-type="GENERATE_FORECAST_DATES_AND_RECOMMENDED_VACCINES" data-step-name="Generate Forecast Dates and Recommended Vaccines" data-chapter="7.5">
+      <rect class="step-box" x="721" y="600" width="129" height="114" />
+      <text x="786" y="618" class="small">7.5 Generate</text>
+      <text x="786" y="637" class="small">Forecast</text>
+      <text x="786" y="656" class="small">Dates and</text>
+      <text x="786" y="675" class="small">Recommended</text>
+      <text x="786" y="694" class="small">Vaccines</text>
+    </g>
+
+    <g id="step-VALIDATE_RECOMMENDATION" class="step-node phase-forecast" data-step-type="VALIDATE_RECOMMENDATION" data-step-name="Validate Recommendation" data-chapter="7.6">
+      <rect class="step-box" x="721" y="516" width="129" height="48" />
+      <text x="786" y="531" class="small">7.6 Validate</text>
+      <text x="786" y="550" class="small">Recommendation</text>
+    </g>
+
+    <g id="step-PRE_FILTER_PATIENT_SERIES" class="step-node phase-series" data-step-type="PRE_FILTER_PATIENT_SERIES" data-step-name="Pre-Filter Patient Series" data-chapter="8.1">
+      <rect class="step-box" x="841" y="133" width="154" height="58" />
+      <text x="918" y="153" class="small">8.1 Pre-Filter</text>
+      <text x="918" y="172" class="small">Patient Series</text>
+    </g>
+
+    <g id="step-IDENTIFY_ONE_PRIORITIZED_PATIENT_SERIES" class="step-node phase-series" data-step-type="IDENTIFY_ONE_PRIORITIZED_PATIENT_SERIES" data-step-name="Identify One Prioritized Patient Series" data-chapter="8.2">
+      <rect class="step-box" x="861" y="226" width="218" height="43" />
+      <text x="970" y="238" class="small">8.2 Identify One</text>
+      <text x="970" y="257" class="small">Prioritized Patient Series</text>
+    </g>
+
+    <g id="step-CLASSIFY_SCORABLE_PATIENT_SERIES" class="step-node phase-series" data-step-type="CLASSIFY_SCORABLE_PATIENT_SERIES" data-step-name="Classify Scorable Patient Series" data-chapter="8.3">
+      <rect class="step-box" x="863" y="307" width="275" height="39" />
+      <text x="1001" y="318" class="small">8.3 Classify Scorable Patient</text>
+      <text x="1001" y="337" class="small">Series</text>
+    </g>
+
+    <g id="step-COMPLETE_PATIENT_SERIES" class="step-node phase-series" data-step-type="COMPLETE_PATIENT_SERIES" data-step-name="Complete Patient Series" data-chapter="8.4">
+      <rect class="step-box" x="901" y="384" width="138" height="38" />
+      <text x="970" y="395" class="small">8.4 Complete</text>
+      <text x="970" y="414" class="small">Patient Series</text>
+    </g>
+
+    <g id="step-IN_PROCESS_PATIENT_SERIES" class="step-node phase-series" data-step-type="IN_PROCESS_PATIENT_SERIES" data-step-name="In-Process Patient Series" data-chapter="8.5">
+      <rect class="step-box" x="950" y="434" width="149" height="38" />
+      <text x="1025" y="445" class="small">8.5 In-Process</text>
+      <text x="1025" y="464" class="small">Patient Series</text>
+    </g>
+
+    <g id="step-NO_VALID_DOSES" class="step-node phase-series" data-step-type="NO_VALID_DOSES" data-step-name="No Valid Doses" data-chapter="8.6">
+      <rect class="step-box" x="1000" y="484" width="138" height="38" />
+      <text x="1069" y="495" class="small">8.6 No Valid</text>
+      <text x="1069" y="514" class="small">Doses</text>
+    </g>
+
+    <g id="step-SELECT_PRIORITIZED_PATIENT_SERIES" class="step-node phase-series" data-step-type="SELECT_PRIORITIZED_PATIENT_SERIES" data-step-name="Select Prioritized Patient Series" data-chapter="8.7">
+      <rect class="step-box" x="934" y="555" width="233" height="50" />
+      <text x="1051" y="572" class="small">8.7 Select Prioritized Patient</text>
+      <text x="1051" y="591" class="small">Series</text>
+    </g>
+
+    <g id="step-DETERMINE_BEST_PATIENT_SERIES" class="step-node phase-series" data-step-type="DETERMINE_BEST_PATIENT_SERIES" data-step-name="Determine Best Patient Series" data-chapter="8.8">
+      <rect class="step-box" x="933" y="645" width="321" height="50" />
+      <text x="1094" y="670">8.8 Determine Best Patient Series</text>
+    </g>
+
+    <g id="step-APPLY_GENERAL_VACCINE_GROUP_RULES" class="step-node phase-vaccine-group" data-step-type="APPLY_GENERAL_VACCINE_GROUP_RULES" data-step-name="Apply General Vaccine Group Rules" data-chapter="9.1">
+      <rect class="step-box" x="1101" y="125" width="153" height="60" />
+      <text x="1178" y="139" class="small">9.1 Apply</text>
+      <text x="1178" y="158" class="small">General Vaccine</text>
+      <text x="1178" y="177" class="small">Group Rules</text>
+    </g>
+
+    <g id="step-SINGLE_ANTIGEN_VACCINE_GROUP" class="step-node phase-vaccine-group" data-step-type="SINGLE_ANTIGEN_VACCINE_GROUP" data-step-name="Single Antigen Vaccine Group" data-chapter="9.2">
+      <rect class="step-box" x="1161" y="193" width="160" height="60" />
+      <text x="1241" y="207" class="small">9.2 Single</text>
+      <text x="1241" y="226" class="small">Antigen Vaccine</text>
+      <text x="1241" y="245" class="small">Group</text>
+    </g>
+
+    <g id="step-MULTIPLE_ANTIGEN_VACCINE_GROUP" class="step-node phase-vaccine-group" data-step-type="MULTIPLE_ANTIGEN_VACCINE_GROUP" data-step-name="Multiple Antigen Vaccine Group" data-chapter="9.3">
+      <rect class="step-box" x="1199" y="265" width="160" height="68" />
+      <text x="1279" y="279" class="small">9.3 Multiple</text>
+      <text x="1279" y="298" class="small">Antigen Vaccine</text>
+      <text x="1279" y="317" class="small">Group</text>
+    </g>
+  </g>
+</svg>

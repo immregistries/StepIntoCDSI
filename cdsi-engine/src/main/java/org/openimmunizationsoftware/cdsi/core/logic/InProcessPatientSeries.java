@@ -1,326 +1,109 @@
 package org.openimmunizationsoftware.cdsi.core.logic;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
-import org.openimmunizationsoftware.cdsi.core.domain.SeriesDose;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
+import org.openimmunizationsoftware.cdsi.core.domain.datatypes.PatientSeriesStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriod;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TimePeriodType;
-import org.openimmunizationsoftware.cdsi.core.domain.datatypes.YesNo;
 
+/**
+ * 8.5 In-process Patient Series (Table 8-9). Method names are part of the
+ * Role A contract: tests invoke each row reflectively.
+ */
 public class InProcessPatientSeries extends LogicStep {
 
-  // private ConditionAttribute<Date> caDateAdministered = null;
+  public InProcessPatientSeries(DataModel dataModel) {
+    super(LogicStepType.IN_PROCESS_PATIENT_SERIES, dataModel);
+    setConditionTableName("Table 8-9");
+  }
 
-  private List<PatientSeries> patientSeriesList = dataModel.getPatientSeriesStepper().getList();
+  private List<PatientSeries> scorablePatientSeriesList() {
+    return dataModel.getScorablePatientSeriesList();
+  }
 
-  /***
-   * cond1 A candidate patient series is a product patient series and has all
-   * valid doses.
-   * 
+  /**
+   * Table 8-9 is applied to in-process patient series only (SELECTB-16). A
+   * scorable sibling with no satisfied target dose is outside this table and
+   * keeps the score 8.1 left it holding.
    */
+  private List<PatientSeries> inProcessScorablePatientSeriesList() {
+    List<PatientSeries> inProcess = new ArrayList<PatientSeries>();
+    for (PatientSeries patientSeries : scorablePatientSeriesList()) {
+      if (isInProcess(patientSeries)) {
+        inProcess.add(patientSeries);
+      }
+    }
+    return inProcess;
+  }
 
+  private static boolean isInProcess(PatientSeries patientSeries) {
+    if (!PatientSeriesStatus.NOT_COMPLETE.equals(patientSeries.getPatientSeriesStatus())) {
+      return false;
+    }
+    if (patientSeries.getTargetDoseList() == null) {
+      return false;
+    }
+    for (TargetDose targetDose : patientSeries.getTargetDoseList()) {
+      if (targetDose.getTargetDoseStatus() == TargetDoseStatus.SATISFIED) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Table 8-9 row 1: product patient series AND all administered doses Valid.
+   * Remaining unevaluated target doses do not fail SELECTB-2.
+   */
   private void evaluate_ACandidatePatientSeriesIsAProductPatientSeriesAndHasAllValidDoses() {
-    boolean productPatientSeries = false;
-    boolean hasAllValidDoses = true;
-
-    for (PatientSeries patientSeries : patientSeriesList) {
-      if (patientSeries.getTrackedAntigenSeries().getSelectPatientSeries()
-          .getProductPath() != null) {
-        if (patientSeries.getTrackedAntigenSeries().getSelectPatientSeries().getProductPath()
-            .equals(YesNo.YES)) {
-          productPatientSeries = true;
-        }
-
-      }
-
-      if (patientSeries.getTargetDoseList() != null) {
-        for (TargetDose target : patientSeries.getTargetDoseList()) {
-          if (target.getTargetDoseStatus() != null) {
-            if (target.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
-
-            } else {
-              hasAllValidDoses = false;
-            }
-          }
-
-        }
-      }
-      if (productPatientSeries && hasAllValidDoses) {
-        patientSeries.incPatientScoreSeries();
-        patientSeries.incPatientScoreSeries();
-        log(patientSeries.getTrackedAntigenSeries().getSeriesName()
-            + " is a product patient series and has all valid doses");
-      } else {
-        patientSeries.descPatientScoreSeries();
-        patientSeries.descPatientScoreSeries();
-        log(patientSeries.getTrackedAntigenSeries().getSeriesName()
-            + " is not a product patient series or does not have all valid doses");
-      }
-    }
+    PatientSeriesScoring.scoreIndependent(inProcessScorablePatientSeriesList(),
+        patientSeries -> patientSeries.isProductPatientSeries() && patientSeries.hasAllValidAdministeredDoses(), 2);
   }
 
   /**
-   * Cond2 A candidate patient series is completable.
+   * Table 8-9 row 2: completable (SELECTB-3 / SELECTB-12).
    */
-
   private void evaluate_ACandidatePatientSeriesIsCompletable() {
-    for (PatientSeries patientSeries : patientSeriesList) {
-      if (patientSeries.getForecast() != null) {
-        Date finishDate = patientSeries.getForecast().getAdjustedPastDueDate();
-        Date maximumAgeDate = findMaximumAgeDate(patientSeries);
-        if (finishDate != null && finishDate.before(maximumAgeDate)) {
-          patientSeries.incPatientScoreSeries();
-          patientSeries.incPatientScoreSeries();
-          patientSeries.incPatientScoreSeries();
-          log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " is completable");
-        } else {
-          patientSeries.descPatientScoreSeries();
-          patientSeries.descPatientScoreSeries();
-          patientSeries.descPatientScoreSeries();
-          log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " is not completable");
-        }
-      }
-    }
-  }
-
-  private Date findMaximumAgeDate(PatientSeries patientSeries) {
-    Date dob = dataModel.getPatient().getDateOfBirth();
-    SeriesDose referenceSeriesDose = patientSeries.getForecast().getTargetDose().getTrackedSeriesDose();
-    ;
-    TimePeriod timePeriod = referenceSeriesDose.getAgeList().get(0).getMaximumAge();
-    Date maximumAgeDate = addTimePeriodtotoDate(dob, timePeriod);
-    return maximumAgeDate;
-  }
-
-  public Date addTimePeriodtotoDate(Date date, TimePeriod timePeriod) {
-    int amount = timePeriod.getAmount();
-    TimePeriodType type = timePeriod.getType();
-    switch (type) {
-      case DAY:
-        date = DateUtils.addDays(date, amount);
-        break;
-      case WEEK:
-        date = DateUtils.addWeeks(date, amount);
-        break;
-      case MONTH:
-        date = DateUtils.addMonths(date, amount);
-        break;
-      case YEAR:
-        date = DateUtils.addYears(date, amount);
-        break;
-      default:
-        break;
-    }
-    return date;
+    Date dateOfBirth = PatientSeriesScoring.dateOfBirth(dataModel);
+    PatientSeriesScoring.scoreIndependent(inProcessScorablePatientSeriesList(),
+        patientSeries -> PatientSeriesScoring.isCompletable(patientSeries, dateOfBirth), 3);
   }
 
   /**
-   * cond3 A candidate patient series has the most valid doses
+   * Table 8-9 row 3: most valid doses (SELECTB-19).
    */
-
-  private int numberOfValidDoses(PatientSeries patientSeries) {
-    int nbOfValidDoses = 0;
-    if (patientSeries.getTargetDoseList() != null) {
-      for (TargetDose target : patientSeries.getTargetDoseList()) {
-        if (target.getTargetDoseStatus() != null) {
-          if (target.getTargetDoseStatus().equals(TargetDoseStatus.SATISFIED)) {
-            nbOfValidDoses++;
-          }
-        }
-
-      }
-    }
-    return nbOfValidDoses;
-  }
-
-  private Map<Integer, Integer> sortByComparator(Map<Integer, Integer> unsortMap) {
-
-    List<Entry<Integer, Integer>> list = new LinkedList<Entry<Integer, Integer>>(unsortMap.entrySet());
-
-    // Sorting the list based on values
-    Collections.sort(list, new Comparator<Entry<Integer, Integer>>() {
-
-      @Override
-      public int compare(Entry<Integer, Integer> o1, Entry<Integer, Integer> o2) {
-        // Sort Desc
-        return o2.getValue().compareTo(o1.getValue());
-      }
-    });
-
-    // Maintaining insertion order with the help of LinkedList
-    Map<Integer, Integer> sortedMap = new LinkedHashMap<Integer, Integer>();
-    for (Entry<Integer, Integer> entry : list) {
-
-      sortedMap.put(entry.getKey(), entry.getValue());
-
-    }
-
-    return sortedMap;
-  }
-
   private void evaluate_ACandidatePatientSeriesHasTheMostValidDoses() {
-    HashMap<Integer, Integer> condMap = new HashMap<Integer, Integer>();
-    for (int i = 0; i < patientSeriesList.size(); i++) {
-      condMap.put(i, numberOfValidDoses(patientSeriesList.get(i)));
-    }
-    condMap = (HashMap<Integer, Integer>) sortByComparator(condMap);
-    int j = 0;
-    int greatestElementVal = 0;
-    int greatestElementPos = 0;
-    ArrayList<Integer> greatestElementPosList = new ArrayList<Integer>();
-    boolean twoOrMore = false;
-    for (Entry<Integer, Integer> entry : condMap.entrySet()) {
-      if (j > 0) {
-        if (greatestElementVal == entry.getValue()) {
-          twoOrMore = true;
-          greatestElementPosList.add(entry.getKey());
-        }
-      }
-      if (j == 0) {
-        greatestElementVal = entry.getValue();
-        greatestElementPos = entry.getKey();
-        greatestElementPosList.add(greatestElementPos);
-        j++;
-      }
-    }
-
-    if (!twoOrMore) {
-      patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
-      patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
-      log(patientSeriesList.get(greatestElementPos).getTrackedAntigenSeries().getSeriesName()
-          + " has the most valid doses");
-      if (patientSeriesList.size() > 1) {
-        patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
-        patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
-        log(patientSeriesList.get(greatestElementPos).getTrackedAntigenSeries().getSeriesName()
-            + " has the most valid doses");
-        for (PatientSeries patientSeries : patientSeriesList) {
-          patientSeries.descPatientScoreSeries();
-          patientSeries.descPatientScoreSeries();
-          log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " does not have the most valid doses");
-        }
-      }
-    } else {
-      for (PatientSeries patientSeries : patientSeriesList) {
-        patientSeries.descPatientScoreSeries();
-        patientSeries.descPatientScoreSeries();
-        log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " does not have the most valid doses");
-      }
-      for (int i : greatestElementPosList) {
-        patientSeriesList.get(i).incPatientScoreSeries();
-        patientSeriesList.get(i).incPatientScoreSeries();
-        log(patientSeriesList.get(i).getTrackedAntigenSeries().getSeriesName() + " has the most valid doses");
-      }
-    }
-
+    PatientSeriesScoring.scoreExtremum(inProcessScorablePatientSeriesList(), PatientSeries::getValidDoseCount,
+        Comparator.naturalOrder(), 2);
   }
 
   /**
-   * Cond4 A candidate patient series is closest to completion.
+   * Table 8-9 row 4: closest to completion is fewest not-satisfied target doses
+   * (SELECTB-5), not most valid doses.
    */
-
   private void evaluate_ACandidatePatientSeriesIsClosestToCompletion() {
-    HashMap<Integer, Integer> condMap = new HashMap<Integer, Integer>();
-    for (int i = 0; i < patientSeriesList.size(); i++) {
-      condMap.put(i, numberOfValidDoses(patientSeriesList.get(i)));
-    }
-    condMap = (HashMap<Integer, Integer>) sortByComparator(condMap);
-    int j = 0;
-    int greatestElementVal = 0;
-    int greatestElementPos = 0;
-    ArrayList<Integer> greatestElementPosList = new ArrayList<Integer>();
-    boolean twoOrMore = false;
-    for (Entry<Integer, Integer> entry : condMap.entrySet()) {
-      if (j == 0) {
-        greatestElementVal = entry.getValue();
-        greatestElementPos = entry.getKey();
-        greatestElementPosList.add(greatestElementPos);
-        j++;
-      }
-      if (j > 0) {
-        if (greatestElementVal == entry.getValue()) {
-          twoOrMore = true;
-          greatestElementPosList.add(entry.getKey());
-        }
-      }
-
-    }
-
-    if (!twoOrMore) {
-      patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
-      patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
-      log(patientSeriesList.get(greatestElementPos).getTrackedAntigenSeries().getSeriesName() + " can finish earliest");
-      if (patientSeriesList.size() > 1) {
-        patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
-        patientSeriesList.get(greatestElementPos).incPatientScoreSeries();
-        log(patientSeriesList.get(greatestElementPos).getTrackedAntigenSeries().getSeriesName()
-            + " can finish earliest");
-        for (PatientSeries patientSeries : patientSeriesList) {
-          patientSeries.descPatientScoreSeries();
-          patientSeries.descPatientScoreSeries();
-          log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " cannot finish earliest");
-        }
-      }
-    } else {
-      for (PatientSeries patientSeries : patientSeriesList) {
-        patientSeries.descPatientScoreSeries();
-        patientSeries.descPatientScoreSeries();
-        log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " cannot finish earliest");
-      }
-      for (int i : greatestElementPosList) {
-        patientSeriesList.get(i).incPatientScoreSeries();
-        patientSeriesList.get(i).incPatientScoreSeries();
-        log(patientSeriesList.get(i).getTrackedAntigenSeries().getSeriesName() + " can finish earliest");
-      }
-    }
-
+    PatientSeriesScoring.scoreExtremum(inProcessScorablePatientSeriesList(), PatientSeries::getNotSatisfiedDoseCount,
+        Comparator.reverseOrder(), 2);
   }
 
   /**
-   * Cond5 A candidate patient series can finish earliest.
+   * Table 8-9 row 5: can finish earliest. SELECTB-11 only compares completable
+   * series; a non-completable series is "not true" (-1) and does not compete.
+   * The date compared is SELECTB-12's forecast finish date, not latestDate.
    */
-
   private void evaluate_ACandidatePatientSeriesCanFinishEarliest() {
-    int j = 0;
-    if (patientSeriesList.get(0).getForecast() != null) {
-      Date tmpDate = patientSeriesList.get(0).getForecast().getLatestDate();
-      if (tmpDate != null) {
-        for (int i = 0; i < patientSeriesList.size(); i++) {
-          PatientSeries patientSeries = patientSeriesList.get(i);
-          if (tmpDate == patientSeries.getForecast().getLatestDate()) {
-            j++;
-          } else {
-            if (tmpDate.after(patientSeries.getForecast().getLatestDate())) {
-              tmpDate = patientSeries.getForecast().getLatestDate();
-              j = 0;
-            }
-          }
-        }
+    Date dateOfBirth = PatientSeriesScoring.dateOfBirth(dataModel);
+    PatientSeriesScoring.<Date>scoreExtremum(inProcessScorablePatientSeriesList(), patientSeries -> {
+      if (!PatientSeriesScoring.isCompletable(patientSeries, dateOfBirth)) {
+        return null;
       }
-      for (PatientSeries patientSeries : patientSeriesList) {
-        if (patientSeries.getForecast().getLatestDate() != tmpDate) {
-          patientSeries.descPatientScoreSeries();
-        } else {
-          if (j == 1)
-            patientSeries.incPatientScoreSeries();
-          log(patientSeries.getTrackedAntigenSeries().getSeriesName() + " can finish earliest");
-        }
-      }
-    }
+      return PatientSeriesScoring.forecastFinishDate(patientSeries);
+    }, Comparator.<Date>reverseOrder(), 1);
   }
 
   private void evaluateTable() {
@@ -331,17 +114,10 @@ public class InProcessPatientSeries extends LogicStep {
     evaluate_ACandidatePatientSeriesCanFinishEarliest();
   }
 
-  public InProcessPatientSeries(DataModel dataModel) {
-    super(LogicStepType.IN_PROCESS_PATIENT_SERIES, dataModel);
-    setConditionTableName("Table ");
-
-  }
-
   @Override
   public LogicStep process() throws Exception {
     setNextLogicStepType(LogicStepType.SELECT_PRIORITIZED_PATIENT_SERIES);
     evaluateTable();
     return next();
   }
-
 }

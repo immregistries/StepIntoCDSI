@@ -26,6 +26,7 @@ public enum LogicStepType {
   DETERMINE_FORECAST_NEED("7.4", "Determine Forecast Need", true),
   GENERATE_FORECAST_DATES_AND_RECOMMENDED_VACCINES("7.5", "Generate Forecast Dates and Recommended Vaccines", true),
   VALIDATE_RECOMMENDATION("7.6", "Validate Recommendation", true),
+  SELECT_NEXT_SERIES_GROUP("8", "Select Next Series Group", true),
   PRE_FILTER_PATIENT_SERIES("8.1", "Pre-Filter Patient Series", true),
   IDENTIFY_ONE_PRIORITIZED_PATIENT_SERIES("8.2", "Identify One Prioritized Patient Series", true),
   CLASSIFY_SCORABLE_PATIENT_SERIES("8.3", "Classify Scorable Patient Series", true),

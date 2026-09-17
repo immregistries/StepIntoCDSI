@@ -1,0 +1,62 @@
+id: "SPEC-4.6-0030"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.1"]
+source_pages: [46, 47]
+tables: ["Table 6-3"]
+business_rules: []
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateDoseAdministeredCondition"
+fits_cases: []
+summary: >
+  Table 6-3's Rule 1 and Rule 2 outcomes both require setting "Evaluation
+  status is 'sub-standard'", and the code did so via
+  dataModel.getTargetDose().getEvaluation().setEvaluationStatus(...) -
+  but 4.4 builds each fresh TargetDose with an empty evaluation list,
+  and nothing between 4.4 and 6.1 (the first evaluation step run
+  against a vaccine dose administered) ever attaches one; 6.4 Evaluate
+  Age is the first step that does. On the very first vaccine dose
+  administered against a fresh target dose, getEvaluation() returns
+  null and both rejecting outcomes throw NullPointerException.
+evidence: >
+  status.yaml's own pre-existing notes for unit 6.1 (from an earlier
+  research pass, alongside a from-scratch rewrite of this unit's
+  previously-broken test class - see the "What replaced the previous
+  test class" context in EvaluateDoseAdministeredConditionTest's own
+  javadoc) had already diagnosed this precisely and named the two red
+  tests pinning it: ruleOneSetsEvaluationStatusSubStandardOnATargetDoseThatHasNoEvaluationYet,
+  ruleTwoSetsEvaluationStatusSubStandardOnATargetDoseThatHasNoEvaluationYet.
+  Both assert a target dose with targetDose.getEvaluation() == null
+  before run(), expect no NullPointerException, and expect
+  EvaluationStatus.SUB_STANDARD to be readable afterward.
+
+  The same tests (in different, pre-existing test methods) pass when an
+  Evaluation is already attached, confirming the "sub-standard" write
+  itself was always correct - only the object it writes to was missing.
+
+  Two independent reasons this NPE has never surfaced in the FITS suite
+  or in cdsi-web: nothing in cdsi-engine or cdsi-web ever calls
+  Vaccine.setLotExpirationDate and ForecastInput.VaccinationInput
+  carries no lot expiration field, so the assumed 12/31/2999 always
+  applies and Rule 1 can never fire in practice; and every one of the
+  bundled FITS fixtures records "doseCondition": null, so Rule 2 never
+  fires either.
+interpretation: >
+  Fixed by lazily creating an Evaluation on the target dose if
+  getEvaluation() returns null, immediately before setting its status -
+  preserving the existing mutate-in-place behavior when an Evaluation
+  is already attached (both rejecting outcomes still write to whichever
+  Evaluation getEvaluation() returns, new or pre-existing), so Rule 3's
+  "adds no evaluation" guarantee and every other already-passing test
+  are unaffected.
+
+  Verified via the standing Role B pipeline: unit 6.1's own suite 15/15
+  green (was 13/15); full engine suite 125 failures/1 error (down from
+  127/1, sorted-diff-confirmed as exactly those 2 tests); full FITS run:
+  3511 passed both before and after, 0 changed cases - exactly as
+  predicted, since neither rejecting rule is reachable by any current
+  production or FITS input path (see evidence above). This is a
+  genuine crash-prevention fix for a currently-unreachable path, not a
+  behavior change for any case the fixture set or current cdsi-web
+  input plumbing can produce today - the same category as
+  SPEC-4.6-0026's CALCDT-5 fix.

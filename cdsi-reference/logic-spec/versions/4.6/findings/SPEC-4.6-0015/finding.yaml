@@ -1,0 +1,104 @@
+id: "SPEC-4.6-0015"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.7"]
+source_pages: [62]
+tables: ["Table 6-24"]
+business_rules: ["CALCDTCONFLICT-1", "CALCDTCONFLICT-2", "CONFLICT-3"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateVaccineConflict"
+fits_cases:
+  - "MMR-2013-0554"
+  - "MMR-2013-0556"
+  - "VAR-2013-0831"
+summary: >
+  EvaluateVaccineConflict's live-virus-conflict window was effectively
+  dead code in any normal, chronologically-ascending immunization
+  history: its per-previous-dose loop scanned doses administered AFTER
+  the current one instead of before, so the "previous vaccine dose
+  administered" every CALCDTCONFLICT rule names was almost never found.
+  Where the loop did execute, a copy-paste bug always computed the
+  conflict end date from the begin interval, collapsing the window to
+  zero width; the begin boundary was also implemented exclusive instead
+  of the documented inclusive; and matching ignored the conflicting
+  (previous) vaccine type, so an impacted type with several distinct
+  conflict intervals could pick the wrong one. Fixing all four flipped
+  14 real FITS cases (3 distinct scenarios) from FAIL to PASS with zero
+  regressions - the first round in this Role B pass to move the FITS
+  suite.
+evidence: >
+  CALCDTCONFLICT-1 and CALCDTCONFLICT-2 both anchor on "the date
+  administered of the previous vaccine dose administered"; CONFLICT-3
+  requires the current dose's date to be "on or after the conflict
+  begin interval date" (inclusive) "and before the conflict end
+  interval date" (exclusive). The constructor's loop read
+  `for (int i = dataModel.getSelectedAntigenAdministeredRecordPos() + 1;
+  i < ...size(); i++)` over a list 4.2 sorts ascending by date
+  administered - scanning doses after the current position, not before
+  it. `LT422.setIntervalDate()` computed both
+  `beginAgeAmount`/`endAgeAmount` from
+  `liveVirusConflict.getConflictBeginInterval()` - the same field twice
+  - never reading `getMinimalConflictEndInterval()` or
+  `getConflictEndInterval()`, the two fields CALCDTCONFLICT-2 actually
+  names. `LT422`'s condition 0 read
+  `caDateAdministered.getFinalValue().after(caConflictBeginIntervalDate...)`
+  - strict, excluding the begin date itself. `setIntervalDate()` matched
+  a `LiveVirusConflict` entry on `getCurrentVaccineType()` alone, not
+  also `getPreviousVaccineType()`, unlike `LT421`'s own condition two
+  lines above it in the same file, which already matches on both.
+interpretation: >
+  Four defects in the same small area of one class, all confirmed by
+  Role A's own detailed test writeup (status.yaml unit 6.7) before this
+  round began - none required new investigation to find, only to fix.
+  The loop-direction and end-interval defects are the two Role A's own
+  materiality note already flagged as the load-bearing pair ("Reds (2)
+  through (9) all trace to two things in the same class"); the
+  begin-boundary and multi-conflict-matching defects were smaller,
+  found while rewriting the same methods to fix the first two, and
+  fixed alongside since they're the same causal cluster (the begin
+  boundary is the specific defect status.yaml's own red (8) isolates;
+  the matching defect is what its "Materiality" paragraph calls
+  "latent behind the two defects above").
+  The rewrite also replaces a manual amount/type switch-statement
+  duplicate of `TimePeriod.getDateFrom()` with a direct call to it -
+  removing, as a side effect, the already-documented "compound conflict
+  intervals lose their second term" gap (status.yaml's "Deliberately
+  not covered" item 4), though no case in the current fixture set
+  exercises a compound interval, so this is confirmed correct by
+  construction rather than by a new failing test.
+  Determining whether a given previous dose counts as "no evaluation
+  status or Valid" versus "an evaluation status that is not Valid"
+  (CALCDTCONFLICT-2's branch condition) reuses the
+  `VaccineDoseAdministered.evaluatedAgainstTargetDose` link introduced
+  in SPEC-4.6-0013 - set by every one of 6.10 Satisfy Target Dose's six
+  outcomes, not only the satisfied one - rather than
+  `TargetDose.satisfiedByVaccineDoseAdministered`, which stays null for
+  anything but a genuinely satisfied dose and would have left this
+  branch just as unreachable as the original defect did. No new
+  cross-step change was needed this round; SPEC-4.6-0013's own addition
+  already covers it.
+  Fixed live by 8 of unit 6.7's 11 red tests
+  (calcdtconflictOneCalculatesTheConflictBeginIntervalDate and its three
+  CALCDTCONFLICT-2 siblings, theConflictEndIntervalDateIsLaterThanTheConflictBeginIntervalDate,
+  conflictThreeReportsADoseInsideTheConflictWindow,
+  conflictThreeIncludesTheConflictBeginIntervalDateItself, and
+  aDetectedConflictIsAppendedToTheExistingStatusCause). The remaining 3
+  reds (a presentation-only attribute-type label, and a separate,
+  already-documented-as-latent LT420 constructor side effect that only
+  reaches a live code path when the antigen-administered-record list is
+  empty, which never happens in a real engine run) are a different,
+  unrelated defect in the same class and are deliberately left for a
+  later round.
+  Confirmed against real FITS data: 14 cases (5eeca0522cc4517a96b0f417,
+  675c41f8e4b089d2bdc0c483, 67ae7323e4b0687c58791680,
+  683d9fbee4b07196f3a1f7df and 689dc945e4b05decee50df54's snapshots of
+  MMR-2013-0554, MMR-2013-0556 and VAR-2013-0831) flip from FAIL to
+  PASS, with 0 regressions anywhere in the 4896-case suite. MMR-2013-0554
+  ("Dose 1 to 2 MMRV interval 28-4 days", from the "HISTORICAL: CDSi
+  Test Cases: Age-Based Routine Childhood, Adolescent, and Adult
+  Recommendations" plan - a standard, non-risk scenario) is representative:
+  two CVX 94 (MMRV) doses 24 days apart. Before the fix, the second dose
+  was wrongly treated as a valid, series-completing dose (status
+  COMPLETE); after, the conflict is correctly detected, the dose does
+  not count, and the forecast (NOT_COMPLETE, earliestDate 2026-09-29,
+  recommendedDate 2029-07-08) matches FITS's expectation exactly.

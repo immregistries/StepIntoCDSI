@@ -1,0 +1,1312 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phase B Progress Ledger</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #f7f7f8; --fg: #1a1a1a; --card-bg: #ffffff; --border: #e0e0e0;
+    --muted: #6b6b6b; --gray: #6b7280; --blue: #2563eb; --amber: #b45309;
+    --green: #15803d; --red: #b91c1c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #16171a; --fg: #e6e6e6; --card-bg: #1f2023; --border: #33343a; --muted: #9a9a9a; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 24px; background: var(--bg); color: var(--fg);
+          font-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-size: 14px; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  .subtitle { color: var(--muted); margin: 0 0 20px; font-size: 13px; }
+  .cards { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+  .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px;
+           padding: 14px 18px; min-width: 140px; flex: 1; }
+  .card .value { font-size: 26px; font-weight: 600; }
+  .card .label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+  .card.pass .value { color: var(--green); }
+  section { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px;
+             padding: 16px 18px; margin-bottom: 20px; }
+  section h2 { font-size: 15px; margin: 0 0 10px; }
+  .before-after { display: flex; gap: 16px; flex-wrap: wrap; }
+  .before-after table { flex: 1; min-width: 260px; border-collapse: collapse; }
+  table { width: 100%; }
+  th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { font-size: 11px; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); }
+  .muted { color: var(--muted); }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600;
+            color: #fff; white-space: nowrap; vertical-align: middle; }
+  .badge-gray { background: var(--gray); }
+  .badge-green { background: var(--green); }
+  .badge-amber { background: var(--amber); }
+  code { background: var(--border); padding: 1px 5px; border-radius: 4px; }
+  a { color: var(--blue); }
+</style>
+</head>
+<body>
+
+<h1>Phase B Progress Ledger</h1>
+<p class="subtitle">
+  Reviewed before/after record of each Phase B round - where the project started, each change, where it is now.
+  Every number here traces back to a reviewed entry under
+  <code>cdsi-reference/progress-ledger/entries/</code>; nothing is measured live.<br>
+  Dashboard generated 2026-09-16 08:21:04 - regenerate with
+  <code>python -m cdsi_reference_tools progress-ledger dashboard</code> after adding or updating an entry, then
+  commit this file.
+</p>
+
+<div class="cards">
+
+  <div class="card">
+    <div class="value">59</div>
+    <div class="label">Reviewed rounds</div>
+  </div>
+  <div class="card pass">
+    <div class="value">92.2%</div>
+    <div class="label">FITS pass rate now</div>
+  </div>
+  <div class="card">
+    <div class="value">187.0s (3.1m)</div>
+    <div class="label">FITS runtime now</div>
+  </div>
+  <div class="card">
+    <div class="value">59.1%</div>
+    <div class="label">Runtime reduction since start</div>
+  </div>
+</div>
+
+
+<section>
+  <h2>2026-09-16 - Phase 22 - FITS - blank last-dose maxAge is completable (SPEC-4.6-0066)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>SELECTB-3 now treats a blank last-dose maxAge as no upper bound, so a childhood default series is completable and can beat an adolescent series that only looks better because it declares a 16-year cap. Combined FITS 4505 to 4515 (net +10), all HepB 0211/0212. Newly failing: none. COVID unchanged. Same two engine reds (8.1/8.7).
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>09290d7</code></td></tr><tr><td>Engine tests</td><td>832 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4505 passed, 390 failed-assertion, 1 execution-error (92.0%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>5b0c1c6</code></td></tr><tr><td>Engine tests</td><td>834 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4515 passed, 380 failed-assertion, 1 execution-error (92.2%)</td></tr><tr><td>FITS runtime</td><td>187.0s (3.1m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0066/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0066/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0066</p>
+</section>
+<section>
+  <h2>2026-09-16 - Phase 22 - FITS - SELECTB-2 walks every evaluation on a target (SPEC-4.6-0067)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>SELECTB-2 now walks every evaluation on a target dose, so a product series cannot keep +2 after an earlier Not Valid dose on the same target. Combined FITS 4515 to 4529 (net +14): HIB 0348, HepB 2018-0020, MEN B 2024-0081. Newly failing: none. COVID unchanged. Same two engine reds (8.1/8.7).
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>9adbc15</code></td></tr><tr><td>Engine tests</td><td>834 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4515 passed, 380 failed-assertion, 1 execution-error (92.2%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>12af043</code></td></tr><tr><td>Engine tests</td><td>835 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4529 passed, 366 failed-assertion, 1 execution-error (92.5%)</td></tr><tr><td>FITS runtime</td><td>205.0s (3.4m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0067/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0067/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0067</p>
+</section>
+<section>
+  <h2>2026-09-16 - Phase 22 - FITS - MULTIANTVG-1 last-admin floor by antigen overlap (SPEC-4.6-0061)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>MULTIANTVG-1&#x27;s last-administered floor now recognizes production doses by CVX-to-antigen overlap. Combined FITS 4248 to 4257 (net +9), all DTAP (2013-0035 and 2024-0058). Newly failing: none. COVID unchanged. Same two engine reds (8.1/8.7). Allowlist not regenerated.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>7a2629c</code></td></tr><tr><td>Engine tests</td><td>821 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4248 passed, 647 failed-assertion, 1 execution-error (86.8%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>88602b5</code></td></tr><tr><td>Engine tests</td><td>823 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4257 passed, 638 failed-assertion, 1 execution-error (86.9%)</td></tr><tr><td>FITS runtime</td><td>183.0s (3.0m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0061/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0061/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0061</p>
+</section>
+<section>
+  <h2>2026-09-16 - Phase 22 - FITS - live-virus conflict uses the full immunization history (SPEC-4.6-0065)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>6.7 and 7.5 now apply live-virus conflict across the immunization history, not one antigen, so MMR/LAIV can invalidate Varicella and a Dose 1 forecast floors at conflict-end. Combined FITS 4455 to 4505 (net +50): VAR 183 to 218 (zero remaining), MMR +20. Explained leftover ZOSTER-2015-0019 (5 copies) dropped from the allowlist. COVID unchanged. Same two engine reds (8.1/8.7).
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>3a5ef35</code></td></tr><tr><td>Engine tests</td><td>829 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4455 passed, 440 failed-assertion, 1 execution-error (91.0%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>60a6abb</code></td></tr><tr><td>Engine tests</td><td>832 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4505 passed, 390 failed-assertion, 1 execution-error (92.0%)</td></tr><tr><td>FITS runtime</td><td>352.0s (5.9m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0065/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0065/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0065</p>
+</section>
+<section>
+  <h2>2026-09-16 - Phase 22 - FITS - CONDSKIP-1 Total counts doses with no targetDose (SPEC-4.6-0062)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>CONDSKIP-1 Total now counts a matching administered dose with no targetDose, so Pertussis Dose 8/9 Td-after-7 skips see Td. Combined FITS 4257 to 4301 (net +44), all DTAP. Newly failing: 2013-0010 and 2013-0067 (10 copies, extra skip to age 11); dropped from the allowlist. COVID unchanged. Same two engine reds (8.1/8.7). Newly passing ids are not added to the allowlist.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>7c08d39</code></td></tr><tr><td>Engine tests</td><td>823 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4257 passed, 638 failed-assertion, 1 execution-error (86.9%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>46a584f</code></td></tr><tr><td>Engine tests</td><td>824 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4301 passed, 594 failed-assertion, 1 execution-error (87.8%)</td></tr><tr><td>FITS runtime</td><td>116.0s (1.9m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0062/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0062/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0062</p>
+</section>
+<section>
+  <h2>2026-09-16 - Phase 22 - FITS - CONDSKIP-1 does not count the dose under evaluation (SPEC-4.6-0063)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>CONDSKIP-1 evaluation no longer counts the current VDA, so Pertussis Dose 8&#x27;s &quot;more than 1 Valid&quot; skip no longer fires on the second catch-up shot. Combined FITS 4301 to 4400 (net +99): DTAP +60, COVID-19 +39 parked. Newly failing: 2020-0005 and 2020-0006 (10 copies, Issue #65 6-month vs interval-from-Tdap); never on the allowlist. COVID newly passing ids are not added. Same two engine reds (8.1/8.7).
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>62b38b6</code></td></tr><tr><td>Engine tests</td><td>824 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4301 passed, 594 failed-assertion, 1 execution-error (87.8%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>6f5eca7</code></td></tr><tr><td>Engine tests</td><td>827 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4400 passed, 495 failed-assertion, 1 execution-error (89.9%)</td></tr><tr><td>FITS runtime</td><td>117.0s (1.9m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0063/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0063/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0063</p>
+</section>
+<section>
+  <h2>2026-09-16 - Phase 22 - FITS - 8.4 drops in-process series from consideration (SPEC-4.6-0064)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Table 8-5 Rule 1 now drops in-process series after 8.4 scores complete ones, so SELECTBEST-2 cannot pick a default Not Complete series on a score-0 preference tie. Combined FITS 4400 to 4455 (net +55), all HPV. Newly failing: none. COVID unchanged. Same two engine reds (8.1/8.7).
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>6ff0804</code></td></tr><tr><td>Engine tests</td><td>827 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4400 passed, 495 failed-assertion, 1 execution-error (89.9%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>e9d65aa</code></td></tr><tr><td>Engine tests</td><td>829 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4455 passed, 440 failed-assertion, 1 execution-error (91.0%)</td></tr><tr><td>FITS runtime</td><td>179.0s (3.0m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0064/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0064/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0064</p>
+</section>
+<section>
+  <h2>2026-09-15 - Phase 22 - Role B Round 42 - Units 7.2/7.3 fixture rewrites (UNDETERMINED reds closed)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Rewrote the two remaining UNDETERMINED fixture assertions in units 7.2 and 7.3. Neither was an engine defect: each called readImmunity / readContraindications on a Schedule and then asserted on an unrelated DataModel. Loader signatures unchanged. 7.2 now mirrors the production Antigen handoff after readImmunity; 7.3 adds the parsed Schedule to dataModel.getScheduleList() like production. Units 7.2 and 7.3 are 16/16 and 24/24. Full engine suite 787 tests, 2 failures left (8.1 Risk-only priority, 8.7 carried-in score). FITS unchanged (test-only change).
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>9ae3c94</code></td></tr><tr><td>Engine tests</td><td>787 total, 4 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3728 passed, 1167 failed-assertion, 1 execution-error (76.1%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>pending</code></td></tr><tr><td>Engine tests</td><td>787 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3728 passed, 1167 failed-assertion, 1 execution-error (76.1%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0039/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0039/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0039, SPEC-4.6-0040</p>
+</section>
+<section>
+  <h2>2026-09-15 - Phase 22 - Role B Round 41 - Conditional skip cluster 6.2/7.1/7.6
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Implemented 6.2/7.1/7.6 as one cluster: ConditionalSkip context list, Table 6-9 &quot;equal to&quot;, live 7.6 validation, CONDSKIP-2 earliest date, and 7.1 returning an already-SKIPPED dose to 4.4 (the skip/re-forecast loop is gone). Units 6.2/7.1/7.6 all green. Engine 15 to 4 failures. Combined FITS 3691 to 3728 (net +37, DTAP+MCV only). MCV-2013-0511 and DTAP-2013-0028 now pass. Project owner accepted the 74 allowlisted DTaP PASS-to-FAIL cases; known-passing-cases.txt regenerated from run 2026-09-15T024959-174434Z-6e894db (3728 PASS ids).
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>6e894db</code></td></tr><tr><td>Engine tests</td><td>786 total, 15 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3691 passed, 1204 failed-assertion, 1 execution-error (75.4%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>9ae3c94</code></td></tr><tr><td>Engine tests</td><td>787 total, 4 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3728 passed, 1167 failed-assertion, 1 execution-error (76.1%)</td></tr><tr><td>FITS runtime</td><td>407.0s (6.8m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0027/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0027/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0019, SPEC-4.6-0027, SPEC-4.6-0043</p>
+</section>
+<section>
+  <h2>2026-09-15 - Phase 22 - FITS - Assessment-relative seasonal recommendation projection (SPEC-4.6-0051)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Documented deviation: project Supporting Data seasonal start/end dates around the assessment date (SeasonalRecommendationDates), wired into 7.4 and 7.5. Inter-season gaps use the upcoming season. Combined FITS 3728 to 3765 (net +37, 0 regressions). FLU 20 to 49; RSV 42 to 50. COVID-19 unchanged. Allowlist regenerated from run 2026-09-15T161322.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>b8618e4</code></td></tr><tr><td>Engine tests</td><td>787 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3728 passed, 1167 failed-assertion, 1 execution-error (76.1%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>511370b</code></td></tr><tr><td>Engine tests</td><td>793 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3765 passed, 1130 failed-assertion, 1 execution-error (76.9%)</td></tr><tr><td>FITS runtime</td><td>153.4s (2.6m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0051/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0051/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0051</p>
+</section>
+<section>
+  <h2>2026-09-15 - Phase 22 - FITS - Select relevant Age/Interval rows when forecasting (SPEC-4.6-0055)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Forecast dates used Age list index 0, so Polio Dose 4&#x27;s ceased 18-week minAge overrode the current 4-year row. DataModelLoader now parses Effective/Cessation Dates; RelevantSupportingData selects Age and Preferable Interval rows for 7.5 by assessment date. Combined FITS 3962 to 4046 (net +84). POL 417 to 504 (+87); oracle POL-2013-0632 PASS. Collateral: three allowlisted COVID-19-2024-0067 copies (COVID parked, allowlist not regenerated). Evaluation-path §3.3 (6.4/6.5/7.4) left to SPEC-4.6-0056.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>65b442f</code></td></tr><tr><td>Engine tests</td><td>797 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3962 passed, 933 failed-assertion, 1 execution-error (80.9%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>3aafa97</code></td></tr><tr><td>Engine tests</td><td>806 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4046 passed, 849 failed-assertion, 1 execution-error (82.6%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0055/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0055/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0055</p>
+</section>
+<section>
+  <h2>2026-09-15 - Phase 22 - FITS - Wire RelevantSupportingData into 6.4, 6.5, and 7.4 (SPEC-4.6-0056)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Extends SPEC-4.6-0055&#x27;s RelevantSupportingData helper to evaluation (6.4 Age and 6.5 Preferable Interval, date administered) and 7.4 forecast-need (assessment date). Combined FITS 4046 to 4094 (net +48). POL 504 to 554 (+50); MenB 2024-0075/0076 +8. Oracle POL-2013-0640 still COMPLETE: 6.5 now fails the current 6-month interval, then empty 6.6 allowable still accepts the dose. Collateral COVID-19 -10 / 11 new allowlist reds; COVID parked, allowlist not regenerated. Same two engine reds (8.1/8.7).
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>0af6461</code></td></tr><tr><td>Engine tests</td><td>806 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4046 passed, 849 failed-assertion, 1 execution-error (82.6%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>c9c86b9</code></td></tr><tr><td>Engine tests</td><td>809 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4094 passed, 801 failed-assertion, 1 execution-error (83.6%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0056/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0056/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0056</p>
+</section>
+<section>
+  <h2>2026-09-15 - Phase 22 - FITS - Open-ended seasonal start projection for COVID-19 (SPEC-4.6-0054)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Extends SeasonalRecommendationDates to open-ended templates (start only, empty end) used by COVID-19 SD 4.65. Combined FITS 3956 to 3962 (net +6, all COVID-19, 0 regressions). A blanket assessment-date floor for overdue earliest/recommended was tried and rejected (net -92 with 170 allowlist regressions). Remaining COVID: ~200 fails, dominated by COMPLETE status (67) and date mismatches that expect assessment-date due-now.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>946221a</code></td></tr><tr><td>Engine tests</td><td>795 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3956 passed, 939 failed-assertion, 1 execution-error (80.8%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>0c3cbbb</code></td></tr><tr><td>Engine tests</td><td>797 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3962 passed, 933 failed-assertion, 1 execution-error (80.9%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0054/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0054/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0054</p>
+</section>
+<section>
+  <h2>2026-09-15 - Phase 22 - FITS - Last skipped forecast target routes to Table 7-10; trim conditional-skip CVX tokens
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>SPEC-4.6-0052: when 7.1 skips the last forecast target, 4.4 routes through Determine Forecast Need so Table 7-10 can assign COMPLETE instead of leaving PatientSeriesStatus null. SPEC-4.6-0053: DataModelLoader trims &quot;; &quot;-separated conditional-skip vaccineTypes CVX tokens so Influenza season-completion skips match CVX 88/333. Combined FITS 3765 to 3956 (net +191). FLU 49 to 62; COVID-19 81 to 135; PCV 217 to 332; MMR +9. Collateral: PCV-2013-0597 (5 plan copies) flipped PASS to FAIL (COMPLETE vs expected NOT_COMPLETE) and left the allowlist. 18 FLU COMPLETE mismatches remain (mostly historical season windows). Allowlist regenerated from run 2026-09-15T170211.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>1e42c88</code></td></tr><tr><td>Engine tests</td><td>793 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3765 passed, 1130 failed-assertion, 1 execution-error (76.9%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>e26ab7d</code></td></tr><tr><td>Engine tests</td><td>795 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3956 passed, 939 failed-assertion, 1 execution-error (80.8%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0052/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0052/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0052, SPEC-4.6-0053</p>
+</section>
+<section>
+  <h2>2026-09-15 - Phase 22 - FITS - CALCDTSKIP-5 from the previous administered dose (SPEC-4.6-0059)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>CALCDTSKIP-5 now reads previousAntigenAdministeredRecord, the previous shot 4.4 already stores, instead of a field production never set. Combined FITS 4229 to 4239 (net +10). POL-2013-0639 PASS (COMPLETE); HIB-2013-0324 also FAIL to PASS. Newly failing: none. COVID unchanged. Same two engine reds (8.1/8.7). Allowlist not regenerated.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>bfc8173</code></td></tr><tr><td>Engine tests</td><td>816 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4229 passed, 666 failed-assertion, 1 execution-error (86.4%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>83c8f78</code></td></tr><tr><td>Engine tests</td><td>818 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4239 passed, 656 failed-assertion, 1 execution-error (86.6%)</td></tr><tr><td>FITS runtime</td><td>184.0s (3.1m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0059/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0059/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0059</p>
+</section>
+<section>
+  <h2>2026-09-15 - Phase 22 - FITS - CALCDTINT-1 skips an inadvertent previous dose (SPEC-4.6-0060)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>CALCDTINT-1 no longer pairs a Valid previous-target evaluation with an inadvertent previous AAR date. Combined FITS 4239 to 4248 (net +9). POL-2024-0071 PASS (due-now); DTAP-2013-0060 also FAIL to PASS. Newly failing: none. COVID unchanged. Same two engine reds (8.1/8.7). Allowlist not regenerated.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>5a587ec</code></td></tr><tr><td>Engine tests</td><td>818 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4239 passed, 656 failed-assertion, 1 execution-error (86.6%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>f0484cd</code></td></tr><tr><td>Engine tests</td><td>821 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4248 passed, 647 failed-assertion, 1 execution-error (86.8%)</td></tr><tr><td>FITS runtime</td><td>143.0s (2.4m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0060/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0060/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0060</p>
+</section>
+<section>
+  <h2>2026-09-15 - Phase 22 - FITS - CALCDTINT-1 from a Not Valid last shot (SPEC-4.6-0058)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>CALCDTINT-1 now reads evaluatedAgainstTargetDose when the previous shot did not satisfy a target, so 7.5 measures the 6-month interval from a Not Valid last shot instead of omitting it. Combined FITS 4209 to 4229 (net +20). POL-2013-0640 PASS (ED/RD 2027-03-01); PCV-2013-0597 and MEN-B-2024-0069 also FAIL to PASS. Newly failing outside COVID: none. COVID 2023-0053 PASS to FAIL (parked). Same two engine reds (8.1/8.7). Allowlist not regenerated.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>d41bc8e</code></td></tr><tr><td>Engine tests</td><td>813 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4209 passed, 686 failed-assertion, 1 execution-error (86.0%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>d4361e0</code></td></tr><tr><td>Engine tests</td><td>816 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4229 passed, 666 failed-assertion, 1 execution-error (86.4%)</td></tr><tr><td>FITS runtime</td><td>529.0s (8.8m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0058/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0058/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0058</p>
+</section>
+<section>
+  <h2>2026-09-15 - Phase 22 - FITS - 6.6 §3.3 and CALCDTINT-1 after skipped previous target (SPEC-4.6-0057)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>6.6 now selects allowable-interval rows by date administered (RELEVANT-1). CALCDTINT-1 measures from the previous administered dose when the previous target was skipped, so 6.5 can fail and empty 6.6 allowable can record Interval. Combined FITS 4094 to 4209 (net +115). POL 554 to 609 (+55); DTAP +30, Hib +20, PCV +5, COVID-19 +5. Newly failing: none. Oracle POL-2013-0655 PASS. POL-2013-0640 status now NOT_COMPLETE; ED/RD still due-now vs expected +6 months. Same two engine reds (8.1/8.7). COVID parked, allowlist not regenerated.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>cb85a18</code></td></tr><tr><td>Engine tests</td><td>809 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4094 passed, 801 failed-assertion, 1 execution-error (83.6%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>64d32ed</code></td></tr><tr><td>Engine tests</td><td>813 total, 2 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 4209 passed, 686 failed-assertion, 1 execution-error (86.0%)</td></tr><tr><td>FITS runtime</td><td>254.0s (4.2m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0057/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0057/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0057</p>
+</section>
+<section>
+  <h2>2026-09-14 - Phase 22 - Role B Round 40 - Finish Chapter 9 Table 9-2 aggregation (SPEC-4.6-0050)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Finished Chapter 9 remaining Table 9-2 aggregation on 9.3 (reason union, aggregation for every Table 9-4 status, forecastList, recommended-vaccine union, FORECASTDN-2 min/max) and the matching 9.2 dose-number copy. Engine failures 18 to 15; unit 9.3 is 37/37. Combined FITS is unchanged at 3691/1204/1 (statusChanged empty). Allowlist not regenerated. Project owner accepted the tests onto develop without a code-review PR.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>15541a2</code></td></tr><tr><td>Engine tests</td><td>783 total, 18 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3691 passed, 1204 failed-assertion, 1 execution-error (75.4%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>978ed8c</code></td></tr><tr><td>Engine tests</td><td>786 total, 15 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3691 passed, 1204 failed-assertion, 1 execution-error (75.4%)</td></tr><tr><td>FITS runtime</td><td>427.0s (7.1m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0050/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0050/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0050</p>
+</section>
+<section>
+  <h2>2026-09-14 - Phase 22 - Role B Round 39 - Port Chapter 9 Codex work onto the Chapter 8 rewrite
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Took over issue #71&#x27;s Chapter 9 sequence from the Codex worktree and replayed it onto develop after SPEC-4.6-0046, remapping findings to SPEC-4.6-0047/0048/0049. Combined FITS vs the Chapter 8 baseline is DTAP-only: 3749 to 3691 passed (net -58); every other group is unchanged. That movement is accepted as spec-correct MULTIANTVG-1 aggregation exposing a 7-year DTaP target FITS still wants at age 11, not a reason to restore the old per-element switch.   Engine tests 26 to 18 failures. Project owner accepted the DTAP-only FITS movement and regenerated known-passing-cases.txt from run 2026-09-14T201255-673843200Z-130d206 (3691 PASS ids).
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>d6aff99</code></td></tr><tr><td>Engine tests</td><td>783 total, 26 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3749 passed, 1146 failed-assertion, 1 execution-error (76.6%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>130d206</code></td></tr><tr><td>Engine tests</td><td>783 total, 18 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3691 passed, 1204 failed-assertion, 1 execution-error (75.4%)</td></tr><tr><td>FITS runtime</td><td>455.4s (7.6m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0049/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0049/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0047, SPEC-4.6-0048, SPEC-4.6-0049</p>
+</section>
+<section>
+  <h2>2026-09-10 - Phase 22 - Role B Round 38 - Chapter 8 Series Selection Rewrite (SPEC-4.6-0046)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Rewrote Chapter 8 series selection (8.1-8.3, 8.5-8.7) against CDSi Logic Spec v4.6, consuming the SPEC-4.6-0045 scoring foundation and not retrying Copilot commit 2. Engine failures dropped from 62 to 26 (Chapter 8 intended remaining reds: 2). Honest FITS vs the 2026-09-10 develop baseline moved from 3637/4896 (74.3%) to 3749/4896 (76.6%), net +112, with HIB-2013-0281 now passing and a documented DTAP +16 fail regression. Chapter 9, 8.4, 7.6, and 6.2 were not touched; Codex can rebase Chapter 9 onto this rewrite later. known-passing-cases.txt was not regenerated.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>36106fb5</code></td></tr><tr><td>Engine tests</td><td>783 total, 62 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3637 passed, 1258 failed-assertion, 1 execution-error (74.3%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>85234203</code></td></tr><tr><td>Engine tests</td><td>783 total, 26 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3749 passed, 1146 failed-assertion, 1 execution-error (76.6%)</td></tr><tr><td>FITS runtime</td><td>51.3s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0046/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0046/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0046, SPEC-4.6-0045, SPEC-4.6-0025</p>
+</section>
+<section>
+  <h2>2026-09-10 - Phase 22 - Role B Round 37 - Chapter 8 Scoring Foundation (SPEC-4.6-0045)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Added PatientSeries scoring and series-metric helpers, an explicit score reset, and a shared N-way extremum scorer. Wired reset at the two PreFilterPatientSeries insertion points. The scorer is not consumed yet, so this foundation preserves behavior exactly. PreFilterPatientSeriesTest retains its four pre-existing failures; the full engine suite retains 62 failures and 0 errors; FITS case-level comparison reports 0 added, removed, or status-changed cases.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>711e5fb</code></td></tr><tr><td>Engine tests</td><td>783 total, 62 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3637 passed, 1258 failed-assertion, 1 execution-error (74.3%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>36106fb5</code></td></tr><tr><td>Engine tests</td><td>783 total, 62 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3637 passed, 1258 failed-assertion, 1 execution-error (74.3%)</td></tr><tr><td>FITS runtime</td><td>-</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0045/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0045/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0045</p>
+</section>
+<section>
+  <h2>2026-09-10 - Phase 22 - Role B Round 36 - Unit 8.4 Closed: A Break Statement Defeated Tie-Inclusive Scoring (SPEC-4.6-0044)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>After 7.6&#x27;s revert, checked the standing Chapter 8 plan against the actual current repository state before proceeding - the series- group loop itself (the plan&#x27;s own core architectural change) was already implemented and merged in an earlier part of this session (SPEC-4.6-0020, accepted despite a net FITS regression on an explicit project-owner decision, per that finding). The plan document in front of this round was stale; the real remaining work is a set of already-individually-diagnosed residual defects across 6 Chapter 8/9 test classes (30 reds total), most already recorded in status.yaml from that earlier work.
+Started with unit 8.4 (Complete Patient Series), the smallest and most clearly diagnosed of the six: status.yaml&#x27;s own notes had already root-caused 5 of its 6 reds to one shared cause (evaluate_ACandidatePatientSeriesHasTheMostValidDoses()&#x27;s scoring loop breaking after the first series it found at the maximum, defeating both the tie column and the below-max column for every series listed after the winner) and named the correct reference implementation already sitting in InProcessPatientSeries&#x27;s own copy of the identical pattern. Fixing that surfaced a 6th, previously- masked gap: a Not Complete series was being scored -1 even though Table 8-7 is scoped to Complete series only.
+Final verification: unit 8.4&#x27;s own suite 15/15 green (up from 9/15); full engine suite 62 failures/0 errors (down from 68/0, sorted-diff-confirmed as exactly those 6 tests and nothing else across all 783 tests); full FITS run, case-by-case diffed: 3637 passed both before and after, 0 changed cases - 8.4&#x27;s narrow entry condition (2+ Complete series in one group) means the corrected tie/exclusion handling doesn&#x27;t change any of the 4896 bundled cases&#x27; outcomes.
+Five more Chapter 8/9 units remain with reds (8.1, 8.2, 8.3, 8.5, 8.7, plus partial Chapter 9 residuals) - a substantial remaining body of work, most of it already scoped in status.yaml from earlier sessions, to be worked unit by unit as this pass continues.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>d6b26b4</code></td></tr><tr><td>Engine tests</td><td>783 total, 68 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3637 passed, 1258 failed-assertion, 1 execution-error (74.3%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>711e5fb</code></td></tr><tr><td>Engine tests</td><td>783 total, 62 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3637 passed, 1258 failed-assertion, 1 execution-error (74.3%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0044/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0044/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0044</p>
+</section>
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 35 - Unit 7.6 Attempted and Reverted: JUnit-Clean Fix Triggers a Real Skip/Re-Forecast Infinite Loop (SPEC-4.6-0043)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Moved to unit 7.6 after closing 7.5 (round 34). Attempted the two fixes status.yaml&#x27;s own pre-existing notes had already diagnosed: deleting ValidateRecommendation&#x27;s process() override (which never called evaluateLogicTables(), so 7.6 has never validated anything in this engine&#x27;s history), and fixing EvaluateConditionalSkip&#x27;s shared CONDSKIP-2 reference-date switch, whose VALIDATING arm was a placeholder always using the PAST sentinel instead of the forecast&#x27;s own earliest date.
+Both fixes together took unit 7.6&#x27;s own suite from 6/15 to 13/15 green (the remaining 2: the already-tracked SPEC-4.6-0027 context landmine, and an unrelated test-fixture gap), with a fully clean full-engine JUnit run - sorted diff across all 783 tests confirmed exactly 6 tests flipped and nothing else, including 6.2&#x27;s and 7.1&#x27;s own suites, deliberately re-run alongside 7.6&#x27;s since all three share this exact base class.
+The full FITS suite caught what no JUnit test could: passedCases dropped from 3637 to 3486 (-151) and executionErrors rose from 1 to 234, 233 of them a brand-new &quot;Logic steps stuck in a loop at 7.1/7.2/7.3/7.4/7.5/7.6&quot; exception - the engine&#x27;s own loop guard tripping on a genuine skip/re-forecast infinite loop that has been completely latent until today, since 7.6&#x27;s decision tables have never actually executed before and no JUnit test in this file (or 6.2&#x27;s or 7.1&#x27;s) drives a real multi-target-dose series through repeated skip cycles.
+Reverted in full via git checkout on both files, confirmed via a fresh build (ValidateRecommendationTest back to 8/15 failures, matching the pre-attempt state) and a re-run FITS suite (3637 passed, 1 execution error, matching the last shipped state exactly). No code committed this round; fix_status set to blocked rather than merged.
+Recorded as related to, but not confirmed identical to, SPEC-4.6-0027 (the ConditionalSkip context field, open pending GitHub Issue #65&#x27;s ACIP guidance) - both involve the same CONDSKIP-2 reference-date machinery, and the same &quot;DTaP catch-up interval&quot; clinical question may be why a target dose keeps re-qualifying for the same skip on every re-forecast pass, but that connection has not been traced.
+This breaks a streak of twelve consecutive unit-closing rounds today - not because the diagnosis was wrong, but because the standing &quot;any FITS regression is an automatic stop&quot; discipline caught a defect no amount of unit-level JUnit coverage could have surfaced. Recorded in full per that same discipline, as a normal and expected outcome of Role B&#x27;s review gate, not a failure to finish the task.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>59e0c10</code></td></tr><tr><td>Engine tests</td><td>783 total, 68 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3637 passed, 1258 failed-assertion, 1 execution-error (74.3%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>59e0c10</code></td></tr><tr><td>Engine tests</td><td>783 total, 68 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3637 passed, 1258 failed-assertion, 1 execution-error (74.3%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0043/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0043/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0043</p>
+</section>
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 34 - Unit 7.5 Closed: Generate Forecast Dates and Recommended Vaccines Gets Its Missing Half (SPEC-4.6-0042)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Moved to unit 7.5 after closing 7.4 (round 33), which had already fixed one of 7.5&#x27;s own reds as a bonus (the cross-unit FORECASTDTCAN-1 consistency test). status.yaml&#x27;s own pre-existing notes had already root-caused the remaining seven precisely, framing five of them as &quot;one story&quot;: the section is titled &quot;Generate Forecast Dates and Recommended Vaccines&quot; and only the date half was ever implemented.
+Fixed: an unguarded null dereference in computeUnadjustedPastDueDate() (NullPointerException for any interval defining no latest recommended interval); two dead Table 7-12 attributes (Vaccine Type, Forecast Vaccine Type Flag) via a new findVaccineType(); computeDates() discarding the two unadjusted dates FORECASTDT-2/3 already compute, despite Forecast already having fields for both. Also implemented genuine representations for two of the section&#x27;s three previously entirely-missing business rules: Forecast.doseNumber (FORECASTDN-1) and Forecast.getRecommendedVaccineList() (FORECASTRECVAC-1&#x27;s identifying bullet). The third, FORECASTGUIDANCE-1, got its accessor but stays unpopulated - its three guidance sources have no representation anywhere else in the domain model or loader yet, a separate, larger effort left open.
+Final verification: unit 7.5&#x27;s own suite 39/39 green (up from 32/39); full engine suite 68 failures/0 errors (down from 79/1, sorted-diff-confirmed as exactly those 7 tests plus five welcome collateral fixes across three different Chapter 9 test classes - ApplyGeneralVaccineGroupRulesTest, MultipleAntigenVaccineGroupTest, SingleAntigenVaccineGroupTest - that depend on Forecast actually carrying a dose number and recommended-vaccine list); full FITS run, case-by-case diffed: 3637 passed both before and after, 0 changed cases, exactly as predicted since the bundled fixtures assert forecast dates and series status only.
+Twelfth consecutive unit-closing round today (4.4, 5.1, 6.1, 6.2, 6.3, 6.5, 6.7, 6.8, 6.10, 7.2, 7.3, 7.4) with zero FITS regressions - the third round in a row to produce collateral fixes beyond its own unit&#x27;s test class.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>d3395e6</code></td></tr><tr><td>Engine tests</td><td>783 total, 79 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3637 passed, 1258 failed-assertion, 1 execution-error (74.3%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>382851b</code></td></tr><tr><td>Engine tests</td><td>783 total, 68 failures, 0 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3637 passed, 1258 failed-assertion, 1 execution-error (74.3%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0042/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0042/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0042</p>
+</section>
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 33 - Unit 7.4 Closed: Determine Forecast Need&#x27;s Contraindication Read Fixed, Closing the SPEC-4.6-0040 Chain (SPEC-4.6-0041)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Moved to unit 7.4 after closing 7.3 (round 32). status.yaml&#x27;s own pre-existing notes had already root-caused all six reds, including the key asymmetry: 7.4&#x27;s evidence-of-immunity condition already correctly reads the per-series PatientSeriesStatus 7.2 sets (no defect there), but its contraindication condition read an entirely different, always-empty, wrongly-scoped field - an independent defect on 7.4&#x27;s own side that round 32&#x27;s 7.3 fix alone could not have resolved.
+Fixed: condition 4 now reads the same per-series PatientSeriesStatus field the evidence-of-immunity condition already used, closing the chain SPEC-4.6-0040 opened. Also fixed: two Table 7-9 attributes missing their documented assumed values, and two FORECASTDTCAN-1 candidate dates missing from computeEarliestDate() entirely (the seasonal recommendation start date, and the most recent date administered - present in 7.5&#x27;s own copy of the identical rule but never ported to 7.4&#x27;s).
+Final verification: unit 7.4&#x27;s own suite 22/22 green (up from 16/22); full engine suite 79 failures/1 error (down from 86/1, sorted-diff-confirmed as exactly those 6 tests plus one welcome bonus - a cross-unit consistency test in GenerateForecastDatesAndRecommendedVaccinesTest that checks 7.4&#x27;s and 7.5&#x27;s two computeEarliestDate() implementations agree, which could not pass while they disagreed); full FITS run, case-by-case diffed: 3637 passed both before and after, 0 changed cases - the contraindication fix is FITS-inert for the same reason SPEC-4.6-0040 is, and the two new candidate dates only affect a narrow boundary condition no bundled case sits on.
+Eleventh consecutive unit-closing round today (4.4, 5.1, 6.1, 6.2, 6.3, 6.5, 6.7, 6.8, 6.10, 7.2, 7.3) with zero FITS regressions.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>316dfad</code></td></tr><tr><td>Engine tests</td><td>783 total, 86 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3637 passed, 1258 failed-assertion, 1 execution-error (74.3%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>17b2a78</code></td></tr><tr><td>Engine tests</td><td>783 total, 79 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3637 passed, 1258 failed-assertion, 1 execution-error (74.3%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0041/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0041/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0041</p>
+</section>
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 32 - Unit 7.3 Closed: Determine Contraindications Built From Scratch (SPEC-4.6-0040)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Moved to unit 7.3 after closing 7.2 (round 31) - by far the least complete unit tackled so far (8/24 green). status.yaml&#x27;s own pre- existing notes had already root-caused all sixteen reds into four groups, all anticipated by the step package&#x27;s Review Findings.
+Fixed four compounding gaps together, since none was independently useful without the others: (1) DetermineContraindications built zero decision tables at all - its own header comment read &quot;Write the logic for logic tables 7-5 to 7-7&quot;; (2) DataModel.contraindicationList was typed for an unrelated, wrong domain class, so the step&#x27;s own commented-out read line would not have compiled even if uncommented; (3) the loader discarded almost every field of each contraindication (age window, clinician text, contraindicated vaccine types, and the antigen-versus-vaccine distinction itself); (4) Table 7-4&#x27;s two assumed values were swapped, which alone would have silently defeated 387 of the release&#x27;s 392 contraindications even after everything else was fixed.
+Built all three decision tables (7-5, 7-6, 7-7) as single reusable instances re-evaluated once per relevant contraindication candidate from process()&#x27;s own loop - deliberately not a looser &quot;OR across all contraindications per condition&quot; design, which would risk false positives against the release&#x27;s 392 real entries by combining unrelated contraindications&#x27; own attributes.
+Final verification: unit 7.3&#x27;s own suite 23/24 green (up from 8/24; the 24th is left red, classified UNDETERMINED - the same structurally-unsatisfiable-test shape as unit 7.2&#x27;s equivalent); full engine suite 86 failures/1 error (down from 101/1, sorted-diff- confirmed as exactly those 15 tests across all 783 tests); full FITS run, case-by-case diffed: 3637 passed both before and after, 0 changed cases - the FITS fixture format has no way to encode a patient&#x27;s own recorded clinical observations at all, and every one of the release&#x27;s 392 contraindications requires exactly that to ever apply, so this substantial correctness fix is entirely FITS-inert by construction, the same category as SPEC-4.6-0035 and SPEC-4.6-0039.
+Ninth consecutive unit-closing round today (4.4, 5.1, 6.1, 6.2, 6.3, 6.5, 6.7, 6.8, 6.10, 7.2) with zero FITS regressions.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>528737f</code></td></tr><tr><td>Engine tests</td><td>783 total, 101 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3637 passed, 1258 failed-assertion, 1 execution-error (74.3%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>8eefce2</code></td></tr><tr><td>Engine tests</td><td>783 total, 86 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3637 passed, 1258 failed-assertion, 1 execution-error (74.3%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0040/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0040/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0040</p>
+</section>
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 31 - Unit 7.2 Closed: Evidence of Immunity Was Completely Unreachable in Production (SPEC-4.6-0039)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Moved forward to unit 7.2 after closing 6.10 (round 30) and documenting 7.1&#x27;s remaining red as the shared, already-tracked SPEC-4.6-0027 gap (no code change, no round needed there). status.yaml&#x27;s own pre-existing notes had already root-caused all six of unit 7.2&#x27;s reds precisely, including the exact materiality (six immunity-bearing antigens in the bundled release).
+Fixed five together: (1) DataModelLoader.readImmunity parsed &lt;immunity&gt; correctly but only stored it on a transient Schedule object, never on the Antigen or DataModel - so Table 7-3&#x27;s conditions always saw an empty list in every real run, making the whole determination inert; (2) all three implemented conditions read a single schedule-wide index instead of the per-antigen attribute Table 7-2 declares - masked by (1) but distinct; (3) condition 1 (clinical-history path) was a placeholder that always returned NO; (4) condition 3 (exclusion) asked the Supporting Data whether it defined an exclusion at all rather than asking the patient; (5) condition 4 (country of birth) dereferenced before its own null guard, throwing NullPointerException. A latent forecast- reason capitalization typo surfaced by fixing (3) was corrected alongside. The sixth red - an assertion on a DataModel object structurally disconnected from the method it claims to test - was investigated in depth and classified UNDETERMINED rather than forced: no implementation change can satisfy it without breaking a sibling passing test that pins the same method&#x27;s signature.
+Final verification: unit 7.2&#x27;s own suite 15/16 green (up from 10/16); full engine suite 101 failures/1 error (down from 106/1, sorted-diff-confirmed as exactly those 5 tests); full FITS run, case-by-case diffed: 3637 passed (up from 3632), 5 real cases improved (all 5 snapshots of MMR-2015-0024, &quot;Patient is born before 01/01/1957&quot; with no vaccinations administered - the birth-date immunity path this defect made completely unreachable), 0 regressions.
+Second genuinely broad, cross-cutting FITS-moving fix in a row, after SPEC-4.6-0038&#x27;s decision-table engine fix - both rounds today closed units whose defects reached well beyond their own step&#x27;s isolated test coverage.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>ab61354</code></td></tr><tr><td>Engine tests</td><td>783 total, 106 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3632 passed, 1263 failed-assertion, 1 execution-error (74.2%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>f314ae3</code></td></tr><tr><td>Engine tests</td><td>783 total, 101 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3637 passed, 1258 failed-assertion, 1 execution-error (74.3%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0039/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0039/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0039</p>
+</section>
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 30 - Unit 6.10 Closed: Shared Decision-Table Engine Fixed to Honor Rule Priority (SPEC-4.6-0038)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Moved forward to unit 6.10&#x27;s last three reds after closing 6.8 (round 29) - 6.9 was already green. status.yaml&#x27;s own pre-existing notes had already root-caused all three precisely as a single defect, and unusually, flagged it as reaching beyond 6.10 itself: Table 6-31&#x27;s six rules are priority-ordered (Rule 2 &quot;Extraneous&quot; must win over Rules 4/5/6&#x27;s three &quot;Not Valid&quot; reasons whenever more than one applies at once), but the shared LogicTable.evaluate() - used by every decision table across the whole engine - ran perform() on every matching column instead of stopping at the first, so a later-indexed NOT_VALID rule silently overwrote an earlier EXTRANEOUS one whenever both matched in the same pass.
+Fixed at the shared engine level rather than locally: added a break after the first matching column&#x27;s perform() runs in LogicTable.evaluate(), restoring standard priority-ordered decision- table semantics everywhere. Given the blast radius of a shared-class change, verified with extra weight on the full regression suite rather than relying on unit 6.10&#x27;s own tests alone.
+Final verification: unit 6.10&#x27;s own suite 25/25 green (up from 22/25); full engine suite across all 783 tests sorted-diff-confirmed exactly those 3 tests flipped and nothing else - no other decision table in the engine currently depends on more than one column validating at once; full FITS run, case-by-case diffed: 3632 passed (up from 3627), 5 real cases improved (all 5 test-plan snapshots of HIB-2013-0356, a too-old Hib dose that also triggers another status- cause marker - exactly the overlap this defect predicted), 0 regressions.
+Eighth consecutive unit-closing round today (4.4, 5.1, 6.1, 6.2, 6.3, 6.5, 6.7, 6.8) - and the first genuinely broad, cross-cutting fix of this Role B pass to move real FITS cases since SPEC-4.6-0032&#x27;s series-group fix.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>c331619</code></td></tr><tr><td>Engine tests</td><td>783 total, 109 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3627 passed, 1268 failed-assertion, 1 execution-error (74.1%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>c7ceafa</code></td></tr><tr><td>Engine tests</td><td>783 total, 106 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3632 passed, 1263 failed-assertion, 1 execution-error (74.2%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0038/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0038/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0038</p>
+</section>
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 29 - Unit 6.8 Closed: Trade-Name Matching Wired Up and a Mislabeled Attribute Pair Fixed, With a FITS-Caught Course Correction (SPEC-4.6-0037)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Moved forward to unit 6.8&#x27;s last three reds after closing 6.7 (round 28) - two shared a root cause this step package&#x27;s own Review Findings had already flagged as a known, deliberate-looking limitation pending confirmation (Table 6-26&#x27;s trade-name condition, hardcoded to always return YES); the third was a presentation-only mislabeled attribute pair in Table 6-25.
+Confirmed the &quot;trade name is not passed into the forecaster&quot; comment was stale - both AntigenAdministeredRecord (via its production constructor) and PreferrableVaccine (via DataModelLoader&#x27;s existing readVaccine) already carry real trade name data; the condition just never compared them.
+A first exact-match implementation fixed both targeted JUnit tests but regressed 10 real FITS cases (5 snapshots each of HepB-2013-0208 and HepB-2013-0210, both Recombivax-titled) - caught by this round&#x27;s own case-by-case diff discipline before committing. Root cause: the official NIST/CDC FITS test-plan JSON has no trade name field at all (confirmed by reading the raw source fixture), so every FITS-driven administered dose&#x27;s trade name is empty and could never equal a preferable vaccine&#x27;s specific brand requirement. Corrected by treating an empty trade name on either side as &quot;no constraint&quot; - the same missing-data idiom this table&#x27;s own volume condition already uses one row away - rather than reverting the fix or accepting the regression.
+Final verification: unit 6.8&#x27;s own suite 30/30 green (up from 27/30); full engine suite 109 failures/1 error (down from 113/1, sorted-diff-confirmed as exactly those 3 tests); full FITS run (final version): 3627 passed both before and after, 0 changed cases - the fixture format&#x27;s own missing trade-name field means it cannot exercise a genuine brand mismatch either way, the same category as SPEC-4.6-0026, SPEC-4.6-0030, SPEC-4.6-0034, SPEC-4.6-0035 and SPEC-4.6-0036.
+Seventh consecutive unit-closing round today (4.4, 5.1, 6.1, 6.2, 6.3, 6.5, 6.7) with zero FITS regressions in what was actually committed - the intermediate wrong turn was caught and corrected before merging, not shipped.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>676dbc7</code></td></tr><tr><td>Engine tests</td><td>783 total, 113 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3627 passed, 1268 failed-assertion, 1 execution-error (74.1%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>c331619</code></td></tr><tr><td>Engine tests</td><td>783 total, 109 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3627 passed, 1268 failed-assertion, 1 execution-error (74.1%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0037/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0037/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0037</p>
+</section>
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 28 - Unit 6.7 Closed: Mislabeled Attribute and a Doubling Constructor Side Effect Fixed, Closing a 6.6 Cross-Step Landmine (SPEC-4.6-0036)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Moved forward to the next unit in spec order after fully closing out 6.5 (round 27) - 6.6 (EvaluateAllowableIntervalTest) is already fully green, so unit 6.7&#x27;s last three reds, deliberately left open by the earlier SPEC-4.6-0015 round as a separate defect from the loop/interval bugs it fixed.
+Fixed two root causes: (1) Table 6-23 row 2&#x27;s attribute was mislabeled &quot;Supporting Data (Live Virus Conflict)&quot; instead of &quot;Vaccine dose administered&quot; - a copy-paste artifact, presentation- only, the value it published was already correct; (2) EvaluateVaccineConflict&#x27;s constructor eagerly evaluates its own logic tables to determine loop bounds (documented in this step package&#x27;s own test javadoc as unusual for chapter 6), and one outcome column - &quot;no vaccine dose administered on or before the current one, nothing to conflict with&quot; - incorrectly appended &quot;VirusConflict&quot; to the shared status cause instead of doing nothing, the same mistake its &quot;not impacted type&quot; sibling correctly avoids. Because process() also unconditionally re-evaluates the same table instances, a full process() call fired this side effect twice, producing a doubled &quot;VirusConflictVirusConflict&quot;.
+Fixing (2) also closes a cross-step landmine status.yaml&#x27;s own notes had already flagged from unit 6.6: EvaluateAllowableIntervalTest&#x27;s fixtures leave antigenAdministeredRecordList empty, which used to make every one of its runs silently append a spurious &quot;VirusConflict&quot; through 6.7&#x27;s constructor - invisible to 6.6&#x27;s own tests (they only assert on their own &quot;Interval&quot; marker), but a latent hazard for anything else built on 6.6 in isolation. That can no longer happen.
+Final verification: unit 6.7&#x27;s own suite 25/25 green (up from 22/25); full engine suite 113 failures/1 error (down from 116/1, sorted-diff-confirmed as exactly those 3 tests); full FITS run: 3627 passed both before and after, 0 changed cases - a genuine correctness fix (including closing the 6.6 landmine) the current fixture set doesn&#x27;t happen to exercise, the same category as SPEC-4.6-0026, SPEC-4.6-0030, SPEC-4.6-0034, and SPEC-4.6-0035.
+Sixth consecutive unit-closing round today (4.4, 5.1, 6.1, 6.2, 6.3, 6.5) with zero FITS regressions.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>48adab8</code></td></tr><tr><td>Engine tests</td><td>783 total, 116 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3627 passed, 1268 failed-assertion, 1 execution-error (74.1%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>676dbc7</code></td></tr><tr><td>Engine tests</td><td>783 total, 113 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3627 passed, 1268 failed-assertion, 1 execution-error (74.1%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0036/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0036/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0036</p>
+</section>
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 27 - Unit 6.5 Closed: CALCDTINT-9, the Last of the Four Reference-Date Rules, Fixed (SPEC-4.6-0035)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Moved forward to the next unit in spec order after fully closing out 6.3 (round 26) - unit 6.5, Evaluate Preferable Interval&#x27;s last two reds. status.yaml&#x27;s pre-existing notes had already diagnosed both precisely as one cluster: CALCDTINT-9 (Table 6-19&#x27;s fourth reference-date business rule), blocked in three separate places at once and deliberately deferred out of the earlier SPEC-4.6-0013 round.
+Fixed all three together, since none is independently useful without the others: (1) DataModelLoader.readSeriesDose&#x27;s interval branch had no case for &lt;fromRelevantObs&gt; at all, so no interval loaded from real Supporting Data ever carried one; (2) ObservationCode had no equals()/hashCode(), so even loaded data could never successfully match the patient&#x27;s own recorded observation history (two independently-constructed instances that can never be reference-equal); (3) Interval.getPatientReferenceDoseDate&#x27;s own CALCDTINT-9 branch only logged its own use and never assigned a date, so even a successful match would have had no effect.
+Final verification: unit 6.5&#x27;s own suite 30/30 green (up from 28/30, the last two reds in the unit); full engine suite 116 failures/1 error (down from 118/1, sorted-diff-confirmed as exactly those 2 tests); full FITS run: 3627 passed both before and after, 0 changed cases - exactly as status.yaml&#x27;s own note predicted, since the bundled FITS fixture format has no observation field at all and cannot exercise this rule under any circumstances. A genuine correctness fix the current fixture set doesn&#x27;t happen to exercise, the same category as SPEC-4.6-0026, SPEC-4.6-0030, and SPEC-4.6-0034.
+Noted but deliberately left open: all 6 real &lt;fromRelevantObs&gt; intervals in the bundled Supporting Data sit on Dose 1, and getPatientReferenceDoseDate returns null outright whenever the previous target dose is null - a separate, cross-rule gap (affecting every CALCDTINT rule alike on Dose 1) that means this fix, while now provably correct, still cannot take effect against any real Supporting Data occurrence today.
+Fifth consecutive unit-closing round today (following 4.4, 5.1, 6.1, 6.2, 6.3) with zero FITS regressions. All four CALCDTINT reference- date rules (1, 2, 8, 9) in Table 6-19 are now correctly implemented.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>4ab22d2</code></td></tr><tr><td>Engine tests</td><td>783 total, 118 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3627 passed, 1268 failed-assertion, 1 execution-error (74.1%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>25698b4</code></td></tr><tr><td>Engine tests</td><td>783 total, 116 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3627 passed, 1268 failed-assertion, 1 execution-error (74.1%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0035/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0035/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0035</p>
+</section>
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 26 - Unit 6.3 Closed: Inadvertent Vaccine Data, Attribute, and NPE Fixed Together (SPEC-4.6-0034)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Moved forward to the next unit in spec order after fully closing out 6.2&#x27;s actionable work (rounds 24-25) - unit 6.3, Evaluate for Inadvertent Vaccine. status.yaml&#x27;s pre-existing notes had already diagnosed all three of its reds precisely, including the exact materiality count and the observation that two of them mask each other in production today.
+Fixed all three together, per the note&#x27;s own analysis that they couldn&#x27;t be split (fixing the loader gap alone would have turned a silent miss into a crash): (1) DataModelLoader never parsed the Supporting Data&#x27;s &lt;inadvertentVaccine&gt; element at all - 307 real entries across 8 antigens (COVID-19, Polio, Tetanus, Diphtheria, RSV, Pneumococcal, HPV, Pertussis) were silently discarded at load time, making Table 6-13&#x27;s Rule 1 unreachable on any real forecast; (2) Table 6-12&#x27;s own second attribute was dead code - constructed, registered, mistyped, and never assigned, though the step&#x27;s actual decision never read it either, so this only affected what the step publishes for display; (3) Rule 1&#x27;s outcome could NullPointerException writing to a target dose&#x27;s not-yet-created Evaluation - the identical shape already fixed for 6.1 in SPEC-4.6-0030, reapplied here.
+Final verification: unit 6.3&#x27;s own suite 11/11 green (up from 8/11); full engine suite 118 failures/1 error (down from 121/1, sorted-diff-confirmed as exactly those 3 tests); full FITS run: 3627 passed both before and after, 0 changed cases - none of the bundled fixtures happens to record an administered dose matching one of the 307 real inadvertent-vaccine entries against the specific target dose it&#x27;s declared on. A genuine correctness fix the current fixture set doesn&#x27;t happen to exercise, the same category as SPEC-4.6-0026&#x27;s CALCDT-5 fix and SPEC-4.6-0030&#x27;s 6.1 NPE guard.
+Fourth consecutive unit-closing round today (following 4.4, 5.1, 6.1, 6.2) with zero FITS regressions.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>2e54c0b</code></td></tr><tr><td>Engine tests</td><td>783 total, 121 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3627 passed, 1268 failed-assertion, 1 execution-error (74.1%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>b2b07c9</code></td></tr><tr><td>Engine tests</td><td>783 total, 118 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3627 passed, 1268 failed-assertion, 1 execution-error (74.1%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0034/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0034/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0034</p>
+</section>
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 25 - SPEC-4.6-0027 Re-Attempted: Worse Than Before, But Connected to the Open DTaP Question
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Continuing straight into the last of 6.2&#x27;s remaining reds per the project owner&#x27;s explicit direction to keep working while ACIP feedback (filed as GitHub Issues in round 23) is pending - SPEC-4.6-0027, the ConditionalSkip context-tracking gap, previously attempted in round 17 and reverted (0 improvement to MCV&#x27;s own target case, net -14 FITS regression, two unconfirmed hypotheses left for whoever picked it up next).
+Reconstructed the round-17 implementation identically (nothing had survived in git history to reuse - the revert was full) and re-tested it fresh against everything rounds 18-24 have changed since (unit 4.4&#x27;s recurring-dose fix, 5.1, 6.1, Table 6-6&#x27;s inclusive boundary, Table 6-7&#x27;s series-group check, and this same day&#x27;s own SPEC-4.6-0033 placeholder guard).
+Result: worse, not better. Full FITS run, case-by-case diffed: 3627 -&gt; 3597 passed, 0 improvements, 30 regressions, all DTaP. MCV&#x27;s own target case still did not change at all - dose 2&#x27;s Evaluation object is still entirely null, confirming (a second time, independently, weeks apart, on a substantially different codebase) that this scenario needs a genuinely separate cross-dose cascade the context fix alone cannot supply.
+The DTaP regression was traced far enough this time to connect it directly to already-filed work: every one of the 30 regressions (6 distinct scenarios) shows the identical one-directional shape already traced in detail in this same day&#x27;s SPEC-4.6-0019 investigation (round 23) - the historical fixture expects the longer (~6-month) DTaP catch-up interval track, and the context-corrected engine computes the shorter (~4-week) one instead, because excluding the Forecast-only ConditionalSkip instance from 6.2&#x27;s own evaluation changes which target doses skip during evaluation. This is very likely the same clinical question as GitHub Issue #65, reached through a second, independent code path rather than a new, separate mystery. Posted a comment on Issue #65 connecting the two findings, and updated the &quot;Open ACIP/CDSi Clinical Questions&quot; dashboard&#x27;s DTaP item to note the connection, so a single ACIP answer can resolve both findings&#x27; regressions at once once it arrives.
+Reverted in full again; confirmed via a fresh FITS run that the revert restores the exact pre-attempt baseline (3627 passed, 0 changed cases). No code shipped this round, but SPEC-4.6-0027&#x27;s finding is substantially more useful to whoever (or whichever ACIP answer) picks it up next.
+This closes out 6.2&#x27;s currently-actionable work: both of its remaining reds (this one, and SPEC-4.6-0019&#x27;s part A) are now understood to be blocked on the same external ACIP input (Issue #65), and MCV&#x27;s cross-dose cascade is confirmed to need its own, fully separate investigation whenever someone picks it up.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>cc8622b</code></td></tr><tr><td>Engine tests</td><td>783 total, 121 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3627 passed, 1268 failed-assertion, 1 execution-error (74.1%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>cfd4a9a</code></td></tr><tr><td>Engine tests</td><td>783 total, 121 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3627 passed, 1268 failed-assertion, 1 execution-error (74.1%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0027/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0027/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0027</p>
+</section>
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 24 - Extraneous-Dose Placeholder Losing Its Series&#x27; Completion Status (SPEC-4.6-0033)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Continuing straight into 6.2&#x27;s remaining work per the project owner&#x27;s explicit direction to keep going while ACIP feedback (filed as GitHub Issues in round 23) is pending - both remaining reds (context tracking, SPEC-4.6-0027; the Equal-row NPE gap, SPEC-4.6-0019) are independent of that feedback, so there was real, unblocked work available. Chose SPEC-4.6-0019&#x27;s part B (the PCV AGED_OUT defect found but not root-caused in round 23) as the more concrete, better-scoped lead.
+Root-caused via direct instrumentation (a scratch diagnostic capturing every log/alert event across the whole EvaluateAndForecastAllPatientSeries &lt;-&gt; EvaluateConditionalSkip cycle for the motivating case, removed before committing): a markRestAsExtraneous() placeholder target dose (4.4&#x27;s bookkeeping record for an extraneous administered dose, introduced by SPEC-4.6-0028) still tracks the same SeriesDose - and therefore the same ConditionalSkip data - as whichever real target dose it duplicates. When forecast dispatch routes that placeholder through EvaluateConditionalSkip again, the step re-evaluates the same skip data, decides &quot;skip&quot; is met again, and overwrites the placeholder&#x27;s explicit UNNECESSARY status back to SKIPPED - sending control back into 4.4 instead of forward through forecasting, so the whole series&#x27;s PatientSeriesStatus never gets assigned by DetermineForecastNeed. The series silently drops out of contention with a null status, letting an unrelated, incorrect series-group win by default.
+Fixed at the shared EvaluateConditionalSkip base class level (one guard clause, applying uniformly to 6.2/7.1/7.6): an UNNECESSARY target dose now skips conditional-skip evaluation entirely rather than being re-processed as if it were a real dose. Deliberately tested and shipped independent of SPEC-4.6-0019&#x27;s own &quot;equal to&quot; spelling gap (left unfixed) to confirm this defect&#x27;s own materiality on its own terms, not as a side effect of that other fix: full FITS run, case-by-case diffed, 3616 -&gt; 3627 passed, 0 regressions, 11 improvements (6 COVID-19, 5 PCV) - confirming the bug was already firing on the current, unmodified codebase for cases beyond the one this investigation started from.
+This closes part B of SPEC-4.6-0019 cleanly. Part A of that same finding (the DTaP clinical-correctness question) remains open, filed as GitHub Issue #65, awaiting ACIP/CDSi input. Unit 6.2&#x27;s own red/green count is unchanged by this round (no existing 6.2 test pins this scenario), but the underlying defect it closes is real and now fixed regardless.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>c99859f</code></td></tr><tr><td>Engine tests</td><td>783 total, 121 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3616 passed, 1279 failed-assertion, 1 execution-error (73.9%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>be496b8</code></td></tr><tr><td>Engine tests</td><td>783 total, 121 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3627 passed, 1268 failed-assertion, 1 execution-error (74.1%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0033/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0033/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0033</p>
+</section>
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 23 - Dedicated Investigation of SPEC-4.6-0019 (Table 6-9 Equal Row): Blocker Resolved, Two New Problems Found, Not Merged
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Per the project owner&#x27;s explicit request for &quot;a dedicated investigation&quot; and &quot;a proposed solution&quot; on unit 6.2&#x27;s remaining red (3) - SPEC-4.6-0019, Table 6-9&#x27;s Equal row matching only the bare word &quot;equal&quot; when the bundled Supporting Data spells every one of its 69 equality conditions &quot;equal to&quot; - rather than re-attempting the already-written fix on the strength of its old numbers.
+Re-measured the fix fresh against the current codebase rather than trusting the original finding&#x27;s numbers (recorded weeks earlier, well before rounds 18-22&#x27;s fixes). Good news first: the original blocker - 324 FITS execution errors from a NullPointerException in PatientSeries.getForecast() - is gone. 0 execution errors now. The underlying gap was almost certainly closed incidentally by unit 4.4&#x27;s SPEC-4.6-0028 (round 18), which touched exactly the &quot;every patient series gets a forecast assembled&quot; guarantee this NPE depended on.
+With the crash risk resolved, the fix produces a net +20 FITS change (49 improvements, 29 regressions) - but investigating the regressions directly (fixture inspection plus targeted scratch instrumentation, removed before committing, matching this project&#x27;s standing practice) found they are not one problem, but two:
+(A) 25 DTaP cases are a genuine spec-vs-fixture correctness question, not a code bug. Traced one case end to end: the fixture (from CDC&#x27;s own historical test plan, titled &quot;Forecast #3 (Td) in 4 weeks&quot;) expects the engine to forecast series dose 3, whose own Supporting Data &lt;interval&gt; element gives exactly the fixture&#x27;s expected date. Once the Equal row becomes reachable, several intervening series doses (2 through 8) each skip for their own, independently-justified reasons already present in the Supporting Data (an age-&gt;=7 skip condition unrelated to this fix, plus dose 7&#x27;s own now-reachable dose-count exemption) - landing the forecast on dose 9&#x27;s own 6-month interval instead of dose 3&#x27;s 4-week one. Both answers are genuinely well-supported by different pieces of the Supporting Data; deciding which is clinically correct needs ACIP domain expertise this investigation doesn&#x27;t have - the same category of open question as HepA&#x27;s already-documented SPEC-4.6-0026 &quot;Extra Test Cases&quot; conflict.
+(B) 4 PCV cases are a genuine, unexplained defect: a textbook-complete adult pneumococcal sequence (PCV13, then PPSV23, then PCV20 five years later) now reads AGED_OUT instead of COMPLETE. No Supporting-Data justification was found for this one - it looks like a real bug in how PatientSeriesStatus gets decided once some other target dose is newly SKIPPED for a dose-count reason, most likely in DetermineForecastNeed or wherever AGED_OUT gets assigned. Not root-caused to a specific line within this round&#x27;s time budget.
+Proposed solution / recommendation, per the project owner&#x27;s request: do not merge yet. Unlike SPEC-4.6-0018 (round 21&#x27;s precedent for accepting a regression), this one contains a genuinely unexplained defect (B), not just a regression traceable to an already-understood, separately-owned gap - so it doesn&#x27;t meet the &quot;mechanism is understood&quot; bar this project&#x27;s revised tolerance actually requires. Fix (B) first (it looks self-contained and mechanical, not a clinical judgment call); get a domain-expert read on (A) separately. The one-line additive fix itself needs no further work and is ready to reapply once both are resolved. Reverted the fix and the scratch diagnostics used to investigate it; no code shipped this round, but the finding (SPEC-4.6-0019) is substantially more useful to whoever picks it up next than it was this morning.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>6bf19dc</code></td></tr><tr><td>Engine tests</td><td>783 total, 121 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3616 passed, 1279 failed-assertion, 1 execution-error (73.9%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>5b9f92b</code></td></tr><tr><td>Engine tests</td><td>783 total, 121 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3616 passed, 1279 failed-assertion, 1 execution-error (73.9%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0019/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0019/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0019</p>
+</section>
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 22 - Unit 6.2: Table 6-7&#x27;s Series-Group Completion Check (SPEC-4.6-0032)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Direct continuation of round 21, per the project owner&#x27;s explicit request to keep going on unit 6.2&#x27;s remaining reds rather than move on - specifically red (2), Table 6-7&#x27;s series-group completion check, the one of the three remaining reds judged most tractable as a bounded fix (unlike red (1)&#x27;s already-once-reverted cross-dose gap, or red (3)&#x27;s NPE-blocked gap).
+Table 6-7&#x27;s single condition (&quot;does this series group have a Complete relevant patient series?&quot;) was hardcoded `return LogicResult.NO`. Fixed by adding a seriesGroups field to ConditionalSkipCondition, parsing the Supporting Data&#x27;s &lt;seriesGroups&gt; element in DataModelLoader (25 occurrences across HepB, Pneumococcal, and Polio - previously silently dropped), and implementing a real condition body.
+A first implementation scanned dataModel.getSelectedPatientSeriesList(), which looked right but is actually Chapter 8&#x27;s own per-series-group list (populated by SelectNextSeriesGroup, already merged this session as SPEC-4.6-0020) - populated only after 4.4 finishes evaluating every series for the current antigen, i.e. after 6.2 has already run for all of them. Caught by reading SelectNextSeriesGroup.java directly rather than assuming the list was live; switched to dataModel.getPatientSeriesStepper().getList() (4.4&#x27;s own full per-antigen list, correctly live and populated throughout the antigen&#x27;s own evaluation loop).
+Verified the fix&#x27;s real-world materiality directly rather than assuming it: a scratch diagnostic (removed before committing) drove every PCV, HepB, and Polio FITS case through the real pipeline and confirmed none of them ever has more than one relevant patient series for the antigen at all - the cross-series scenario this condition exists to check cannot currently arise, so the fix is FITS-inert today (3616 passed before and after, 0 changed cases) for a fully understood, directly-confirmed reason, the same category as SPEC-4.6-0026&#x27;s CALCDT-5 fix.
+Final verification: unit 6.2&#x27;s own suite 42/44 green (up from 41/44); full engine suite 121 failures/1 error (down from 122/1, sorted-diff-confirmed as exactly this one test); full FITS run: 0 changed cases. Unit 6.2 now has 2 reds remaining (SPEC-4.6-0027&#x27;s context gap, SPEC-4.6-0019&#x27;s NPE-blocked gap), both requiring dedicated investigation rather than a bounded fix.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>a7fddff</code></td></tr><tr><td>Engine tests</td><td>783 total, 122 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3616 passed, 1279 failed-assertion, 1 execution-error (73.9%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>3d0a727</code></td></tr><tr><td>Engine tests</td><td>783 total, 121 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3616 passed, 1279 failed-assertion, 1 execution-error (73.9%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0032/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0032/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0032</p>
+</section>
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 21 - Unit 6.2: 3 of 6 Reds Fixed, First Deliberate FITS-Regression Merge (SPEC-4.6-0018, SPEC-4.6-0031)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Fourth unit tackled under the JUnit-first strategy, and the first one the project owner flagged in advance as entangled/risky - unit 6.2 (EvaluateConditionalSkip, shared by 6.2/7.1/7.6) carries three previously-investigated, previously-open findings (SPEC-4.6-0018, SPEC-4.6-0019, SPEC-4.6-0027) plus one never-classified gap, all interacting. Explicitly scoped this round to fix what could be fixed cleanly, ship one deliberate, well-understood FITS regression under the project owner&#x27;s revised tolerance, and leave the rest open rather than force everything through at once.
+Fixed two small, independent gaps as SPEC-4.6-0031: Table 6-4&#x27;s &quot;Administered Dose Count&quot; was sourced from the per-antigen selected- record list instead of the whole patient&#x27;s ImmunizationHistory (Table 6-4 explicitly types it &quot;Patient Immunization History&quot;); and caEarliestDate was declared but never constructed, leaving a null entry in the published attribute list. Both confirmed FITS-inert (3511 passed before and after this pair, 0 changed cases) - neither attribute is read by any decision that changes a real outcome today. The dose-count fix required companion fixture fixes in four other, previously-green tests across two test classes (their own setUp() never mirrored the default administered record into ImmunizationHistory, a fixture completeness gap, not a real production discrepancy) and a null-guard for dataModel.getImmunizationHistory() being null in roughly 20 unrelated hand-built test DataModels engine-wide.
+Merged SPEC-4.6-0018 (Table 6-6&#x27;s begin-age-date boundary, exclusive when the spec&#x27;s own &quot;&gt;=&quot; requires inclusive) - a fix that was written and confirmed spec-correct back when this finding was first investigated, but left open because it caused a 14-case FITS regression tracing to the already-documented &quot;Chapter 8 has no series group&quot; defect. This is the first fix merged under the project owner&#x27;s revised tolerance for a well-understood regression: re-measured fresh against the current codebase, 3511 -&gt; 3616 passed, net +105 (115 improvements, 10 regressions - down from 14, since round 18&#x27;s unit 4.4 fix independently resolved part of the original regression set). Same root cause confirmed via the same cited case (675c41f8e4b089d2bdc0c483-HIB-2013-0308) still present in the smaller regression set - the mechanism is unchanged, just smaller.
+Left open, deliberately not attempted this round: red (1)&#x27;s ConditionalSkip context-tracking gap (SPEC-4.6-0027, already tried once and reverted - a cross-dose mechanism the fix&#x27;s own target case needs is still not located); red (2), Table 6-7&#x27;s series-group COMPLETED_SERIES condition (hardcoded NO; needs a new seriesGroups field on ConditionalSkipCondition, DataModelLoader parsing for the Supporting Data&#x27;s &lt;seriesGroups&gt; element, and a real implementation reading tracked patient series by group - new data-model wiring, not a bounded fix); and red (3), Table 6-9&#x27;s &quot;equal to&quot; spelling gap (SPEC-4.6-0019 - the dose-count fix itself is trivial, but making the branch reachable exposes 324 FITS execution errors from an unrelated, undiagnosed NullPointerException in PatientSeries.getForecast(), which is crash risk, not a wrong-answer regression, and stays out of scope until that&#x27;s understood on its own).
+Final verification: full engine suite 122 failures/1 error (down from 125/1); full FITS run case-by-case diffed: 0 unexplained regressions, 115 improvements, 10 deliberately-accepted regressions with a fully understood, already-documented cause. Unit 6.2 goes from 38/44 to 41/44 green; 3 reds remain, each individually re-scoped as future work rather than left as an undifferentiated backlog.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>610865d</code></td></tr><tr><td>Engine tests</td><td>783 total, 125 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3511 passed, 1384 failed-assertion, 1 execution-error (71.7%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>6c8df14</code></td></tr><tr><td>Engine tests</td><td>783 total, 122 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3616 passed, 1279 failed-assertion, 1 execution-error (73.9%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0031/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0031/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0018, SPEC-4.6-0031</p>
+</section>
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 20 - Unit 6.1 Closed: NPE on a Target Dose&#x27;s First Evaluation (SPEC-4.6-0030)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Third unit tackled under the JUnit-first strategy, continuing forward from 4.4 (round 18) and 5.1 (round 19). status.yaml&#x27;s pre-existing notes for 6.1 (EvaluateDoseAdministeredCondition) had already diagnosed its single remaining gap precisely.
+Table 6-3&#x27;s Rule 1 and Rule 2 outcomes both write &quot;Evaluation status is sub-standard&quot; via dataModel.getTargetDose().getEvaluation().setEvaluationStatus(...) - but 4.4 builds every fresh TargetDose with an empty evaluation list, and 6.1 is the first evaluation step run against a newly administered dose; nothing before it ever attaches an Evaluation (6.4 EvaluateAge is the first step that does). On the very first vaccine dose administered against a fresh target dose, getEvaluation() returns null and both rejecting outcomes threw NullPointerException.
+Fixed by lazily creating an Evaluation on the target dose when getEvaluation() is null, immediately before setting its status - preserving the existing mutate-in-place behavior for every test that pre-attaches one, so Rule 3&#x27;s &quot;adds no evaluation&quot; guarantee and every other already-passing test stayed unaffected.
+Final verification: unit 6.1&#x27;s own suite 15/15 green (up from 13/15); full engine suite 125 failures/1 error (down from 127/1, sorted-diff- confirmed as exactly those 2 tests); full FITS run: 3511 passed both before and after, 0 changed cases - exactly as status.yaml&#x27;s own notes predicted, since neither rejecting rule is reachable through any current production or FITS input path (nothing ever calls Vaccine.setLotExpirationDate, and every FITS fixture records doseCondition: null). A genuine crash-prevention fix for a currently- unreachable path, the same category as SPEC-4.6-0026&#x27;s CALCDT-5 fix - not a behavior change for any case today&#x27;s data can produce, but a real defect that would surface the moment lot-expiration or dose-condition data starts flowing through either input path.
+Third consecutive round with zero FITS regressions.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>54fe4c6</code></td></tr><tr><td>Engine tests</td><td>783 total, 127 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3511 passed, 1384 failed-assertion, 1 execution-error (71.7%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>fcb8959</code></td></tr><tr><td>Engine tests</td><td>783 total, 125 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3511 passed, 1384 failed-assertion, 1 execution-error (71.7%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0030/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0030/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0030</p>
+</section>
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 19 - Unit 5.1 Closed: 3 of 4 Gaps Fixed, 4th Deferred With Measured Evidence (SPEC-4.6-0029)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Second unit tackled under the JUnit-first strategy, continuing forward from unit 4.4 (round 18). status.yaml&#x27;s pre-existing notes for 5.1 (SelectRelevantPatientSeries) had already diagnosed all four gaps driving its 7 red tests precisely enough to act on directly.
+Fixed three cleanly: (1) Table 5-4 condition 0 (&quot;does the indication describe any active patient observations?&quot;) was a hardcoded NO stub - now reads the patient&#x27;s MedicalHistory for a matching ObservationCode. (2) Table 5-4 Rule 3 was encoded with its first condition as ANY instead of UNKNOWN, making the &quot;flag for clinician&quot; outcome a strictly weaker copy of Rule 2&#x27;s ordinary &quot;does not apply&quot; outcome - fixed by encoding UNKNOWN, which the (now-implemented) condition never returns, correctly making Rule 3 unreachable via this path. (3) Table 5-5&#x27;s own gender-check condition read caGender/caRequiredGender attributes that were only ever populated on its LT54 children, never on LT55 itself - both stayed null, so the condition always took its &quot;no required genders&quot; early Yes regardless of the series&#x27; actual restriction. Now LT55 gets its own copies, populated the same way.
+The fourth gap - AntigenSeries.getRequiredGenderList() never being populated by DataModelLoader from the series-level &lt;requiredGender&gt; element - was confirmed and a fix written, but measured (not assumed) to be unsafe to ship alone: Patient.getGender() carries ForecastInput&#x27;s raw &quot;F&quot;/&quot;M&quot; vocabulary with zero normalization, while Supporting Data&#x27;s &lt;requiredGender&gt; values are &quot;Female&quot;/&quot;Male&quot;/&quot;Unknown&quot;. Adding the missing parsing branch alone caused a 388-case FITS regression - 100% in HPV, 0 improvements - because every gender-restricted series (all 4 of the bundled release&#x27;s HPV series) flipped to &quot;not relevant&quot; for every patient, including the correct gender, once the comparison actually started running against never-matching strings. Reverted in full; a fresh FITS run confirmed the revert restores the exact 3-gaps-fixed baseline (3511 passed, 0 changed cases).
+This is deliberately NOT bundled into the same round: fixing it safely requires deciding where &quot;F&quot;/&quot;M&quot; &lt;-&gt; &quot;Female&quot;/&quot;Male&quot;/&quot;Unknown&quot; normalization belongs, a cross-cutting question that also touches 4.10 EvaluateGender&#x27;s own separate (and separately flagged as likely dead) gender comparison over a third domain type. Recorded as SPEC-4.6-0029 (open) with the regression already measured, so whoever picks it up next has the exact blast radius in hand rather than needing to rediscover it.
+Final verification: unit 5.1&#x27;s own suite 23/23 green (up from 16/23); full engine suite 127 failures/1 error (down from 134/1, sorted-diff- confirmed as exactly those 7 tests); full FITS run for what was actually shipped: 3511 passed both before and after, 0 changed cases - the fixture format carries no PatientObservation/MedicalHistory data at all, so fix (1) is FITS-inert for the same reason SPEC-4.6-0026&#x27;s CALCDT-5 fix was, and fixes (2)/(3) are inert only because of the deferred fourth gap.
+Second consecutive round with zero regressions in what actually shipped, and the second round in a row where a mid-flight discovery (a second, unrelated defect one level deeper) was investigated, measured, and explicitly deferred with evidence rather than either blindly shipped or silently dropped.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>fa715d5</code></td></tr><tr><td>Engine tests</td><td>783 total, 134 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3511 passed, 1384 failed-assertion, 1 execution-error (71.7%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>981a85e</code></td></tr><tr><td>Engine tests</td><td>783 total, 127 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3511 passed, 1384 failed-assertion, 1 execution-error (71.7%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0029/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0029/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0029</p>
+</section>
+<section>
+  <h2>2026-09-09 - Phase 22 - Role B Round 18 - Strategic Pivot to JUnit-First, and Unit 4.4 Closed Clean (SPEC-4.6-0028)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>After three consecutive investigation rounds (HepA, ROTA, MCV) each surfaced a genuine, well-evidenced defect without any of them reaching a clean 100% FITS group, the project owner called a strategic pivot: stop hunting for FITS-group wins and instead work forward through the Logic Specification unit by unit, clearing every failing JUnit test starting at 4.4 (the first unit with reds). Cross-section changes are now explicitly permitted (no longer confined to one unit&#x27;s own files) as long as each round stays bounded and understandable, and a FITS regression is now acceptable *if the team is confident the underlying fix is correct* - explicitly citing Chapter 8&#x27;s SPEC-4.6-0020 rewrite as precedent, where the old behavior was accepted to be replaced despite a transitional regression because it was &quot;all wrong.&quot;
+Unit 4.4 (EvaluateAndForecastAllPatientSeriesTest) was the first target. status.yaml&#x27;s own pre-existing notes had already diagnosed two defects precisely enough to fix directly: (1) moveToNextTargetDoseIfAvailable() only checked &quot;is this dose recurring?&quot; once the target dose list was exhausted, using whichever dose was last rather than the one just satisfied, so nine mid-series recurring COVID-19 doses never got their duplicate; (2) markRestAsExtraneous() looped from aarPos + 1 rather than aarPos, silently dropping the first genuinely leftover antigen administered record instead of marking it EXTRANEOUS.
+Fixing both passed all 3 targeted JUnits cleanly (a sorted diff of the full 783-test suite showed exactly those 3 tests flip and nothing else), but the following full FITS run produced a severe regression: 3451 -&gt; 3211 passed (-245 regressions against only 19 improvements), with HIB/VAR losing their forecasts entirely (&quot;No forecasted vaccine group matched CVX n&quot;) and DTaP/HepB/MMR keeping a forecast but with wrong dates/status.
+Per this round&#x27;s own new discipline - a regression this size needs its mechanism explained before being accepted or reverted, not just measured - the cause was root-caused by direct code reading rather than reverting on the strength of the number alone: the recurring-dose check fired unconditionally on every call to moveToNextTargetDoseIfAvailable(), including for SKIPPED doses (which never consumed an AAR). A SKIPPED dose with recurringDose=Yes whose duplicate is *also* SKIPPED on its own turn re-triggers the same check forever, tripping EvaluateAndForecastAllPatientSeries&#x27;s own MAX_TOTAL_CYCLES/MAX_REPEATED_STATE_CYCLES loop guards and forcing an early, incomplete transition to SELECT_BEST_PATIENT_SERIES - exactly matching HIB/VAR&#x27;s symptom. Gating the check to only fire for SATISFIED/SUBSTITUTED/UNNECESSARY outcomes fixed it.
+That in turn exposed a third, pre-existing defect that had been invisible until now: markRestAsExtraneous()&#x27;s placeholder TargetDose objects get their Evaluation set to EXTRANEOUS but never get their own TargetDoseStatus set, leaving it at the class default of NOT_SATISFIED. Table 7-10&#x27;s completion check (DetermineForecastNeed) scans the whole target dose list for any NOT_SATISFIED entry, so every leftover-AAR placeholder wrongly forced its series to NOT_COMPLETE. This was invisible before because the off-by-one bug (fix #2) meant a series with exactly one leftover AAR created zero placeholders - fixing the off-by-one is what first exercised it. Fixed by explicitly setting each placeholder&#x27;s TargetDoseStatus to UNNECESSARY - the closest existing value (Table 3-2 defines no target-dose-level &quot;extraneous&quot; status at all, confirmed via this project&#x27;s own statuses.md concept doc) and otherwise dead code in the current implementation.
+Final verification: unit 4.4&#x27;s own suite 21/21 green (0 red, down from 3); full engine suite 134 failures/1 error (down from 137/1, sorted-diff-confirmed as exactly the 3 targeted tests and nothing else); full FITS run case-by-case diffed against the true pre-fix baseline (not the intermediate, loop-guard-tripping attempt): 3451 -&gt; 3511 passed, **0 regressions, 60 improvements** (51 DTaP, 9 COVID-19). The HIB/VAR/HepB/MMR cases that regressed under the first, incomplete attempt show zero net change against the true baseline once defect 1 was correctly gated - that regression was entirely self-inflicted by an incomplete first pass within this same round, not a pre-existing condition, and was fully resolved before merging.
+This is the cleanest round of the whole campaign so far by the new standard: zero regressions, meaningful net improvement, and a self-inflicted mid-round regression caught, explained, and corrected rather than either shipped blindly or reverted reflexively.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>fe98006</code></td></tr><tr><td>Engine tests</td><td>783 total, 137 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3451 passed, 1444 failed-assertion, 1 execution-error (70.5%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>1c1c1bc</code></td></tr><tr><td>Engine tests</td><td>783 total, 134 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3511 passed, 1384 failed-assertion, 1 execution-error (71.7%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0028/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0028/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0028</p>
+</section>
+<section>
+  <h2>2026-09-09 - Phase 21 - Role B Round 17 - MCV Investigation: ConditionalSkip Context Fix Confirmed Real, Attempted, Reverted (SPEC-4.6-0027, Open)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Continuing the search for a FITS group that can reach 100%: after HepA and ROTA both turned out to be blocked by the same systematic CALCDT-5- vs-fixture conflict (SPEC-4.6-0026), the project owner chose to pursue MCV&#x27;s 2 remaining failures next, despite them tracing to an already- documented, more involved gap (ConditionalSkip&#x27;s missing context tracking) shared with two already-deferred findings in the same unit (SPEC-4.6-0018, SPEC-4.6-0019).
+Confirmed the defect exactly as status.yaml&#x27;s own pre-existing notes described it: ConditionalSkip carries no context field, SeriesDose holds exactly one instance (last-write-wins), and 67 series doses in the bundled Supporting Data declare two (an Evaluation-or-Both instance 6.2 must use, followed by a Forecast-only one that actually survives) - so 6.2 evaluates a conditional skip the specification says it must not, and never sees the one it must. MCV&#x27;s own target case (5eeca0522cc4517a96b0f417-MCV-2013-0511/0512, a single MenACWY dose given at exactly 16 years, expected COMPLETE per ACIP&#x27;s &quot;no booster needed if given at 16+&quot; rule) has exactly this shape: two sibling conditionalSkip elements on dose 1, one of each context.
+Implemented the fix already sketched in status.yaml&#x27;s own notes: ConditionalSkipContext enum, a context field on ConditionalSkip, a list on SeriesDose (with backward-compatible single-instance accessors kept for every existing hand-built test fixture), context parsing in DataModelLoader, and context-based selection in EvaluateConditionalSkip. All three &quot;can context be expressed&quot; probe tests (6.2, 7.1, 7.6) went green; a full sorted diff of the engine suite showed zero other unit-test changes.
+The full FITS run told a different story. MCV&#x27;s own target case did not change at all - dose 2&#x27;s Evaluation stayed entirely null both before and after, meaning some separate, not-yet-located cross-dose mechanism is also needed for the &quot;16+&quot; rule to actually cascade from dose 1 to dose 2; fixing the context bug was necessary but evidently not sufficient. Worse, the fix caused a net FITS regression elsewhere: 19 cases newly failed (15 DTaP, 4 PCV), 5 newly passed (all DTaP), net -14 - traced to one specific DTaP case (an earliest/recommended date regressing from the correct 03/01/2027 to 09/29/2026, a much earlier date) but not fully root-caused within this round&#x27;s scope.
+Reverted in full - confirmed via a fresh FITS run that the revert restores the exact pre-fix baseline (3451 passed, 1 execution error; engine suite failure set sorted-diff-identical). Recorded as SPEC-4.6-0027 (open), per the same discipline already applied to SPEC-4.6-0018/0019 in this same unit: a textually-correct fix that regresses FITS needs its interaction fully traced before merging, not shipped on the strength of unit tests alone. Two live hypotheses are recorded for whoever picks this up next - most concretely, that some DTaP series dose&#x27;s Forecast-context-only conditional skip was, before this fix, incorrectly but load-bearing-ly being read by 6.2 (since nothing excluded it), with 7.1/7.6&#x27;s own forecast-side processing not independently supplying the same constraint in practice.
+Net effect: zero code shipped this round (fully reverted). Neither HepA, ROTA, nor MCV reached 100% across this investigation arc; all three surfaced genuine, well-evidenced findings (SPEC-4.6-0026, SPEC-4.6-0027) rather than a quick win. This unit (6.2) now has three open, interacting findings (SPEC-4.6-0018, 0019, 0027) that likely need to be resolved together rather than one at a time, given how each fix&#x27;s own regression traces back into the others&#x27; territory.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>8893075</code></td></tr><tr><td>Engine tests</td><td>783 total, 137 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3451 passed, 1444 failed-assertion, 1 execution-error (70.5%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>b51535b</code></td></tr><tr><td>Engine tests</td><td>783 total, 137 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3451 passed, 1444 failed-assertion, 1 execution-error (70.5%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0027/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0027/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0027</p>
+</section>
+<section>
+  <h2>2026-09-09 - Phase 21 - Role B Round 16 - HepA Investigation: CALCDT-5 Date-Math Bug Fixed (SPEC-4.6-0026), Two Remaining Failures Are a Spec-vs-Fixture Conflict and a Supporting-Data Gap
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Requested directly: get one FITS group to pass completely, starting with HepA (a simple schedule, only 4 failures at the time). Found and fixed a genuine, real date-arithmetic bug (SPEC-4.6-0026), plus a third CVX-equivalence gap in the same family as Round 13/14&#x27;s - but HepA cannot reach 100% without either a project-owner ruling on a spec-vs- fixture conflict or new CDC Supporting Data content, neither of which is something engine code can resolve.
+All 4 of HepA&#x27;s failures traced back to the exact same underlying computation - a dose administered 08/29/2026, HepA&#x27;s minInt of &quot;6 months,&quot; landing on a nonexistent 02/29/2027 (2027 is not a leap year) - split across two genuinely different problems:
+1. SPEC-4.6-0026 (fixed): TimePeriod.getDateFrom()&#x27;s CALCDT-5 handling (&quot;a computed date which is not a real date must be moved forward to first day of the next month&quot;) read the day-of-month back from the Calendar object *after* already setting its month/year fields with the original day still in place - but Calendar.set(MONTH, ...) doesn&#x27;t clamp an out-of-range day, it silently rolls the excess forward (day 31 landing on a 28-day February becomes March 3rd, not February 28th or March 1st). The dedicated CALCDT-5 check could therefore never fire correctly; the answer produced was whatever Calendar&#x27;s own overflow arithmetic happened to compute, which only coincidentally matches CALCDT-5 for a 1-day overflow (like this HepA case, and like the smaller of the specification&#x27;s own two worked examples) and not for a larger one (the specification&#x27;s other worked example, 08/31 + 6 months, was actually wrong by 2 days before this fix - 03/03/2001 instead of the specified 03/01/2001). Fixed by capturing the day-of- month before any month/year mutation and only then checking it against the target month&#x27;s real maximum. Two new TestTimePeriod tests pin the specification&#x27;s own worked examples plus the HepA-observed case; full cdsi-engine suite unchanged (identical failure set via sorted diff); full FITS run: 0 regressions, 0 improvements - the multi-day- overflow case this fix actually corrects does not occur anywhere in the current fixture set, only in the hand-authored test pinning the spec&#x27;s own example. A real, worthwhile correctness fix regardless.
+2. Not fixed - a genuine spec-vs-fixture conflict: three HepA fixtures (AART-EXTRA-3/5/7) all expect 02/28/2027 for this exact computation, directly contradicting CALCDT-5&#x27;s own literal text and worked examples (both of which compute 03/01/2027, correctly, both before and after this round&#x27;s fix). This cannot be resolved by further engine changes - the specification text is unambiguous, and these fixtures disagree with it. Needs a project-owner or CDC/CDSi decision about whether these &quot;Extra Test Cases&quot; fixtures are authoritative for this scenario, not something Role B can decide unilaterally.
+3. Not fixed - a Supporting Data completeness gap: HepA&#x27;s fourth failure (AART-EXTRA-10) throws IllegalArgumentException: Unrecognized cvx code &#x27;143&#x27; - confirmed absent from every antigen file and the schedule-level CVX map in the entire bundled 4.65 Supporting Data release, not just HepA&#x27;s own file. This is correct, defensive engine behavior given the input; the gap is in the Supporting Data content itself (a future CDC/ACIP release, or a fixture ahead of what&#x27;s bundled), not something engine code or a CvxEquivalence table entry can fix without fabricating vaccine registry data.
+Also fixed while investigating: CvxEquivalence&#x27;s HepA group was missing CVX 82 (adult formulation) alongside its existing 85 (unspecified) and 52 (pediatric) - the same class of gap as Round 13/14&#x27;s CVX 122/314 fixes. Added to both cdsi-fits-tests&#x27; CvxEquivalence.java and cdsi-web&#x27;s FitsServlet.java. This alone did not flip AART-EXTRA-10&#x27;s outcome, since that case fails earlier (the CVX-143 exception above), before the equivalence table is ever consulted.
+Net effect: HepA remains at 4 failures (96/100 passing, 96%), unchanged from before this round in raw pass count, but for well-understood, fully-documented reasons rather than an open question - one is a real, now-fixed engine bug with no FITS-visible effect yet, one needs a project-owner ruling, and one needs new Supporting Data. No FITS group reached 100% this round; the closest remaining candidates are worth a fresh survey once SPEC-4.6-0026&#x27;s sibling question is resolved.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>9c1f6df</code></td></tr><tr><td>Engine tests</td><td>781 total, 137 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3451 passed, 1444 failed-assertion, 1 execution-error (70.5%)</td></tr><tr><td>FITS runtime</td><td>61.1s (1.0m)</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>ef26c13</code></td></tr><tr><td>Engine tests</td><td>783 total, 137 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3451 passed, 1444 failed-assertion, 1 execution-error (70.5%)</td></tr><tr><td>FITS runtime</td><td>54.2s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0026/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0026/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0026</p>
+</section>
+<section>
+  <h2>2026-09-09 - Phase 21 - Role B Round 15 - COVID-19 Investigation: SELECTB-24&#x27;s Null-Status Gap Found, Fix Attempted and Reverted (SPEC-4.6-0025, Open)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Requested directly, following RSV&#x27;s close-out: investigate COVID-19, now the worst-performing FITS group (275/341 failing, 80.65%). Broke down the 275 failures by pattern: 78 are the already-reviewed SPEC-4.6-0023 season-staleness exception (COVID-19 also declares seasonal recommendations); the remaining ~197 split into three buckets, the largest of which (74 cases, &quot;No forecasted vaccine group matched CVX 213&quot; - no COVID-19 forecast produced at all) was traced to its root cause this round.
+Direct instrumentation of FITS case 675c41f8e4b089d2bdc0c483-COVID-19-2023-0071 (a 9-month-old with two valid Moderna doses, expected COMPLETE) found dataModel.getBestPatientSeriesList() entirely empty for COVID-19, despite both of its group-1 series being present, age-appropriate, and unexcluded by SPEC-4.6-0020/0021&#x27;s series-group gating. Traced further upstream to PreFilterPatientSeries (8.1): both series reached it with patientSeriesStatus == null (not yet classified), and 8.1&#x27;s candidate-admission guard - `status != null &amp;&amp; status != CONTRAINDICATED` - excludes a null status from both its main pass and its all-contraindicated fallback, leaving zero candidates and therefore no forecast at all. SELECTB-24&#x27;s own text is &quot;does not have a patient series status of &#x27;Contraindicated,&#x27;&quot; a negative condition a null status trivially satisfies - already pinned by an existing (previously red) unit test whose earlier-recorded &quot;low materiality&quot; assessment this round&#x27;s tracing disproves.
+The textually-correct one-line fix (`status != CONTRAINDICATED`, dropping the redundant/incorrect null exclusion) was implemented and initially looked clean: it fixed the target unit test with no other unit-test regressions (136 failures, down from 137, confirmed via a sorted diff to be exactly that one test). The full FITS run told a different story: passedCases fell from 3451 to 3426 and executionErrors rose from 1 to 270, because multiple call sites downstream in Chapter 8 (8.2 onward) assume - and directly dereference - a non-null PatientSeriesStatus, an invariant that has silently held only because 8.1 has always filtered null-status series out before they could reach those call sites. Reverted immediately; confirmed via a fresh full FITS run that the revert restores the exact pre-attempt baseline (3451 passed, 1 execution error) and the exact pre-attempt engine-suite failure set (137 failures, sorted-diff-identical).
+Recorded as SPEC-4.6-0025 (open, not fixed): a confirmed, real defect whose correct fix requires two coordinated pieces of work rather than one - SELECTB-24&#x27;s own fix, plus auditing and null-guarding every downstream Chapter 8 call site the fix newly exposes to a null status - which is a larger, more careful undertaking than this round&#x27;s scope should attempt as a single patch. This is the same discipline applied to SPEC-4.6-0018/0019&#x27;s earlier deferrals: a genuine, well-evidenced finding, held rather than shipped as a partial, regression-causing change.
+Net effect this round: zero code shipped (the attempted fix was fully reverted), engine and FITS state unchanged from Round 14&#x27;s end state. The investigation and its documented, open finding are this round&#x27;s deliverable. COVID-19 remains the worst-performing FITS group and will need SPEC-4.6-0025&#x27;s fuller fix, plus separate investigation of its remaining two failure buckets (67 status-mismatch cases, 15 status- flipped-the-other-way cases), before it can be meaningfully improved.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>60c3faf</code></td></tr><tr><td>Engine tests</td><td>781 total, 137 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3451 passed, 1444 failed-assertion, 1 execution-error (70.5%)</td></tr><tr><td>FITS runtime</td><td>61.1s (1.0m)</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>d884a0f</code></td></tr><tr><td>Engine tests</td><td>781 total, 137 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3451 passed, 1444 failed-assertion, 1 execution-error (70.5%)</td></tr><tr><td>FITS runtime</td><td>61.1s (1.0m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0025/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0025/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0025</p>
+</section>
+<section>
+  <h2>2026-09-09 - Phase 21 - Role B Round 14 - Closing Out RSV: Seasonal Recommendation Parsing and FORECASTDTCAN-1&#x27;s Missing Sixth Bullet (SPEC-4.6-0023, SPEC-4.6-0024)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Requested directly, following on from Round 13: close out RSV&#x27;s four remaining FITS failures before moving to COVID-19. Found and fixed two more previously-hidden engine defects, plus a second CVX-equivalence data gap, all four remaining cases traced to precisely:
+1. SPEC-4.6-0023: DataModelLoader&#x27;s &lt;seasonalRecommendation&gt; parsing branch created the record and linked it to its series dose but never read the node&#x27;s own &lt;startDate&gt;/&lt;endDate&gt; children - both fields stayed null forever, for every antigen that declares a seasonal recommendation (confirmed for RSV; likely also Influenza and COVID-19). The two consuming steps (7.4&#x27;s Table 7-11 end-date check, 7.5&#x27;s FORECASTDTCAN-1 start-date bullet) were already correctly written, reading from the right accessor - it just never returned real data. Fixed by parsing the dates in the loader (reusing the existing parseDate(String) helper), with a new DataModelLoaderTest asserting the bundled release&#x27;s RSV series carries non-null, correctly-ordered dates without pinning the exact literal values (matching that test class&#x27;s own stated policy of not breaking on routine CDC data updates).
+This fix alone: +214 FITS improvements (143 PCV, 37 COVID-19, 32 RSV, 2 FLU) and 30 regressions, all old NIST fixtures (dated 2013-2016, 2020, 2024) now correctly measured against the bundled Supporting Data&#x27;s actual, current 2025-2026 season window - a window their own historical evalDate predates. Not fixable without inventing an unsupported &quot;nearest matching season&quot; computation the specification never describes; presented to the project owner as an explicit choice per the standing &quot;FITS moves forward, not backward&quot; rule, given the net effect (+184) - decision was to ship.
+2. SPEC-4.6-0024: a full-text extraction pass earlier in this campaign missed that FORECASTDTCAN-1 has six bullets, not five - the sixth, &quot;date administered of the most recent vaccine dose administered being evaluated against a target dose&quot; (any outcome), was implemented far too narrowly: computeEarliestDate() only checked vda.getTargetDose() != null, a field 6.10 Satisfy Target Dose sets on its one VALID outcome alone. The fifth bullet (inadvertent administrations specifically) was not implemented at all - Table 6-13&#x27;s &quot;yes, inadvertent&quot; outcome shortcuts straight back to 4.4 without ever reaching 6.10, so no existing link field gets set for it either. Fixed with a new, dedicated VaccineDoseAdministered.inadvertentAdministration flag (a fact about that one administration, not a pointer to the shared, mutable target dose an earlier or later administered dose could overwrite), set by 6.3 and read by 7.5 alongside the existing (now also broadened) checks. An already-written unit test regressed on the first attempt (its hand-built fixture predates the evaluatedAgainstTargetDose convention and only sets targetDose directly) and was fixed by keeping both checks rather than replacing one with the other.
+3. A second CVX-equivalence data bug in the same family as Round 13&#x27;s CVX 122/Rotavirus mixup: CVX 314 (&quot;Respiratory syncytial virus (RSV) vaccine, unspecified,&quot; confirmed against the bundled Supporting Data&#x27;s own inadvertentVaccine/allowableVaccine entries) was missing from CvxEquivalence&#x27;s RSV group in both cdsi-fits-tests and cdsi-web, causing a fully-correct engine forecast to be reported as &quot;No forecasted vaccine group matched CVX 314.&quot; Added alongside the earlier 122 removal.
+Verified via the standing Role B pipeline throughout: full cdsi-engine suite confirmed as an identical failure *set* before/after (not just count) via sorted diff at each step; full FITS run, case-by-case diffed against the pre-fix baseline: +228 improvements total this round (143 PCV, 40 COVID-19, 38 RSV, 5 HepB, 2 FLU), 30 regressions (all the already-reviewed SPEC-4.6-0023 season-staleness set, unchanged in count from the intermediate fix), net +198.
+RSV: of 50 FITS cases, only 4 remain failing - the SPEC-4.6-0023 season-staleness cases themselves (2023-0028/0031/0032/0033, all old fixtures whose expected 2024-season dates cannot be reproduced against the bundled release&#x27;s 2025-2026 season data). RSV&#x27;s failure rate: 92% before Round 13 -&gt; 36% after Round 13 -&gt; 16% now, and it has dropped out of the worst-10 list entirely. Considered closed for this campaign&#x27;s purposes; the 4 remaining cases are a known, accepted, documented exception, not a live defect.
+COVID-19 is now the clear worst-performing group (275/341 failing, 80.65%) - next requested target. FLU is now second-worst (71/91, 78.02%), almost entirely the same SPEC-4.6-0023 season-staleness pattern (FLU declares its own seasonal recommendations) rather than a new defect - worth confirming before spending investigation time there.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>fe60916</code></td></tr><tr><td>Engine tests</td><td>780 total, 137 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3424 passed, 1471 failed-assertion, 1 execution-error (69.9%)</td></tr><tr><td>FITS runtime</td><td>60.6s (1.0m)</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>6dcfb6c</code></td></tr><tr><td>Engine tests</td><td>781 total, 137 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3451 passed, 1444 failed-assertion, 1 execution-error (70.5%)</td></tr><tr><td>FITS runtime</td><td>61.1s (1.0m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0024/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0024/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0023, SPEC-4.6-0024</p>
+</section>
+<section>
+  <h2>2026-09-09 - Phase 21 - Role B Round 13 - SingleAntigenVaccineGroup Aggregation (SPEC-4.6-0022) and a CVX-Equivalence Data Bug (RSV Was the Worst-Performing FITS Group)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Requested directly: with SPEC-4.6-0020/0021 shipped, RSV had become the single worst-performing FITS group (92% failure rate, 46/50 cases), worse even after those two rounds&#x27; PCV recovery. Investigated why.
+Two independent, previously-hidden defects were found and fixed, both exposed (not caused) by SPEC-4.6-0020&#x27;s series-group loop the same way SPEC-4.6-0021 was:
+1. SPEC-4.6-0022: SingleAntigenVaccineGroup (9.2) built one VaccineGroupForecast before its loop over the best patient series list and mutated that same shared object once per matching series, so whichever match was evaluated last silently overwrote every earlier match - both the status and, separately, the earliest date (which SINGLEANTVG-2 explicitly requires as a minimum across ALL matches, not a copy from one). Before SPEC-4.6-0020, an antigen never had more than one best patient series, so this was invisible. RSV&#x27;s general &quot;RSV 1-dose series&quot; (no age bounds) and its &quot;RSV 75 years+&quot; alternate are not declared equivalentSeriesGroups to each other, so both routinely survive as separate best patient series for the same antigen - exactly the shape this bug needed. Fixed by collecting every match, choosing the most favorable status (Complete/Immune over an actionable Not Complete over a dead-end Contraindicated/Aged Out/Not Recommended - deliberately not MultipleAntigenVaccineGroup&#x27;s own &quot;any Aged Out wins&quot; precedence, which answers a different question), and taking the true minimum earliest date across every match per SINGLEANTVG-2&#x27;s literal text. SingleAntigenVaccineGroupTest already had both defects pinned as red tests from an earlier Role A pass (20/22 now green, was 16/22); the full engine suite incidentally dropped from 139 to 137 failures because those same two tests are counted there too.
+2. A second, unrelated bug the same investigation surfaced while verifying fix 1 had zero FITS effect on its own: cdsi-fits-tests&#x27; CvxEquivalence.java (and cdsi-web&#x27;s FitsServlet.java, the source it was copied from) declared CVX 122 - Rotavirus&#x27;s own code, confirmed against the bundled Supporting Data - as equivalent to RSV&#x27;s CVX 304. FITS&#x27;s comparator returns the first vaccine-group forecast whose CVX is &quot;the same vaccine&quot; as expected; because Rotavirus&#x27;s forecast happened to sit earlier in the forecast list than RSV&#x27;s own corrected entry, the comparison silently graded RSV cases against Rotavirus&#x27;s unrelated status. Not a Logic Specification conformance defect (it lives outside cdsi-engine, in the FITS harness and the interactive FITS servlet) so it isn&#x27;t its own SPEC-4.6-00NN finding, but it directly masked fix 1&#x27;s own FITS-visible effect until both were fixed together - fixed by removing &quot;122&quot; from the RSV equivalence group in both files (a harmless duplicate &quot;112&quot; in the neighboring DTaP group was also removed).
+Verified via the standing Role B pipeline: SingleAntigenVaccineGroupTest (20/22 green, the remaining 4 confirmed identical before/after - pre-existing, unrelated field-plumbing gaps already tracked in this unit&#x27;s status.yaml notes); full cdsi-engine suite (137 failures/1 error, down from 139/1, confirmed via diffing the exact failure list rather than just the count); full FITS run case-by-case diffed against SPEC-4.6-0021&#x27;s exact baseline (2026-09-08T195714-671589Z-18ba253-..., 3253 passed): +171 improvements (143 PCV, 28 RSV), 0 regressions.
+RSV&#x27;s FITS failure rate: 92% (46/50) before this session&#x27;s work on it, 36% (18/50) after both fixes - moved from the worst-performing group to well below several others (COVID-19 91.5%, PCV 50.8%, FLU 50.6% are now all worse). Remaining RSV failures are two further, distinct, unrelated defects not addressed here: an interval/date-calculation gap (NOT_COMPLETE cases forecasting a date roughly a month earlier than expected, similar in shape to PCV&#x27;s own remaining residual failures) and one case entirely missing a forecast for CVX 314 (a newer RSV product code with no matching Supporting Data or CvxEquivalence entry) - both would need their own investigation.
+COVID-19&#x27;s now-worst 91.5% failure rate was not investigated this round (out of scope - RSV was the specific request) but is a promising next lead: COVID-19 is one of the antigens with populated equivalentSeriesGroups data per SPEC-4.6-0020&#x27;s materiality notes, so it may share SPEC-4.6-0022&#x27;s exact shape.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>07faaa9</code></td></tr><tr><td>Engine tests</td><td>780 total, 139 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3396 passed, 1499 failed-assertion, 1 execution-error (69.4%)</td></tr><tr><td>FITS runtime</td><td>55.3s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>c2e1fc4</code></td></tr><tr><td>Engine tests</td><td>780 total, 137 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3424 passed, 1471 failed-assertion, 1 execution-error (69.9%)</td></tr><tr><td>FITS runtime</td><td>60.6s (1.0m)</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0022/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0022/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0022</p>
+</section>
+<section>
+  <h2>2026-09-08 - Phase 21 - Role B Round 9 - Note 2a&#x27;s Age-Based CVX-to-Antigen Association
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>The ninth Role B round: section 4.2&#x27;s note 2a (age-based CVX-to-antigen association - e.g. CVX 121 Zoster live associates with Varicella under 50 years, Zoster from 50 on) was entirely unimplemented, a complete gap rather than a logic bug. The Supporting Data&#x27;s Association Begin/End Age attributes were read by nothing and stored nowhere, so a Zoster-live dose always produced both a Varicella and a Zoster record at any age. Fixed across VaccineType (new per-antigen age maps), DataModelLoader (reads the two fields), and OrganizeImmunizationHistory (filters by patient age at administration, begin inclusive/end exclusive). Unit 4.2 fully closed (12/12, +1 new boundary test). Full cdsi-engine suite: 171 -&gt; 169 failures (down exactly 2), 0 regressions. FITS suite unchanged (3378/1517/1, 0 cases changed, not even a hidden output change) - none of the bundled fixtures exercises this exact scenario. See SPEC-4.6-0016.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>6ebd4c0</code></td></tr><tr><td>Engine tests</td><td>770 total, 171 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3378 passed, 1517 failed-assertion, 1 execution-error (69.0%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>87db5e5</code></td></tr><tr><td>Engine tests</td><td>771 total, 169 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3378 passed, 1517 failed-assertion, 1 execution-error (69.0%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0016/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0016/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0016</p>
+</section>
+<section>
+  <h2>2026-09-08 - Phase 21 - Role B Round 8 - EvaluateVaccineConflict&#x27;s Dead Live-Virus Conflict Window
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>The eighth Role B round, and the first in this whole pass to actually move the FITS suite. EvaluateVaccineConflict&#x27;s live-virus conflict window was effectively dead code in any normal chronological history: its per-previous-dose loop scanned doses after the current one instead of before, a copy-paste bug always collapsed the conflict end date to the begin date, the begin boundary was exclusive instead of the documented inclusive, and matching ignored the conflicting vaccine type. Fixing all four flipped 14 real FITS cases (3 distinct scenarios - two MMR-after-MMR-too-soon, one Varicella - all from standard age-based routine schedule test plans) from FAIL to PASS, with 0 regressions. Full cdsi-engine suite: 179 -&gt; 171 failures (down exactly 8). FITS suite: 3364 -&gt; 3378 passed (68.7% -&gt; 69.0%). See SPEC-4.6-0015.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>7f3b782</code></td></tr><tr><td>Engine tests</td><td>770 total, 179 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>f741ad3</code></td></tr><tr><td>Engine tests</td><td>770 total, 171 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3378 passed, 1517 failed-assertion, 1 execution-error (69.0%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0015/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0015/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0015</p>
+</section>
+<section>
+  <h2>2026-09-08 - Phase 21 - Role B Round 7 - Unadjusted Recommended Date Falling Back to Wall-Clock Now
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>The seventh Role B round: FORECASTDT-2&#x27;s ordinary no-earliest-age/ no-earliest-interval fallback read the wrong (empty) forecast list and silently returned wall-clock &quot;now&quot; instead of the series&#x27; own earliest date - the ordinary case for the majority of series doses, meaning the recommended date changed every day the engine was run. Fixed by calling the class&#x27;s own already-correct computeEarliestDate() instead. Confirmed against real FITS data: 25 real cases (5 distinct Polio scenarios) had their computed output genuinely change from a run-date-dependent value to a stable, patient-derived one - though none flip pass/fail, since each has its own separate, unrelated defect. Full cdsi-engine suite: 180 -&gt; 179 failures (down exactly 1), 0 regressions. FITS aggregate counts unchanged (3364/1531/1), verified case-by-case per the SPEC-4.6-0013 lesson. See SPEC-4.6-0014.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>39a059b</code></td></tr><tr><td>Engine tests</td><td>770 total, 180 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>c17d3ca</code></td></tr><tr><td>Engine tests</td><td>770 total, 179 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0014/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0014/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0014</p>
+</section>
+<section>
+  <h2>2026-09-08 - Phase 21 - Role B Round 6 - CALCDTINT-8 Dead Code and Self-Referencing Regression
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>The sixth Role B round, and the first attempted specifically to move a FITS case - it didn&#x27;t, but the investigation is the story worth recording. CALCDTINT-8 was effectively dead code (a missing null check threw a silently-swallowed NPE every time) and the loader never parsed Supporting Data&#x27;s multi-CVX &lt;fromMostRecent&gt; list. A first fix attempt caused a real 20-case FITS regression; root-caused via direct engine inspection to a missing lower bound letting a dose reference itself as its own &quot;most recent&quot; reference date - not the extraneous-dose theory first suspected, which had zero actual effect. Extended into unit 6.10 (SatisfyTargetDose) with explicit project-owner approval, adding a new VaccineDoseAdministered.evaluatedAgainstTargetDose link rather than reusing fields other steps depend on staying null. Net FITS effect: a strict no-op (0 cases changed either direction) - the 13 cases that appeared to improve mid-investigation were themselves an artifact of the self-reference bug, not a real fix. Full cdsi-engine suite: 182 -&gt; 180 failures (down exactly 2), 0 regressions. See SPEC-4.6-0013.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>34537c7</code></td></tr><tr><td>Engine tests</td><td>767 total, 182 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>1cd2b66</code></td></tr><tr><td>Engine tests</td><td>770 total, 180 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0013/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0013/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0013</p>
+</section>
+<section>
+  <h2>2026-09-08 - Phase 21 - Role B Round 5 - EvaluatePreferableInterval&#x27;s Misassigned Reason, Placeholder Name, and Typo
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>The fifth Role B round, a deliberately partial pass at unit 6.5: fixed three independent, narrow transcription-level defects (a Rule 1 outcome that recorded GRACE_PERIOD instead of the documented TOO_SOON, an unfilled attribute-table-name placeholder, and a misspelled attribute name), closing 3 of the unit&#x27;s 7 red tests (20/7 -&gt; 23/4). The remaining 4 reds are a separate, materially significant CALCDTINT-8/CALCDTINT-9 cluster - blocked in both the Supporting Data loader and the reference-date rule body, affecting 61 real populated intervals across 10 vaccine groups - deliberately scoped as its own round rather than bundled in here. Full cdsi-engine suite: 185 -&gt; 182 failures (down exactly 3), 0 regressions. FITS suite unchanged (3364/1531/1 identical both sides). See SPEC-4.6-0012.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>7761b1d</code></td></tr><tr><td>Engine tests</td><td>767 total, 185 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>d6bb174</code></td></tr><tr><td>Engine tests</td><td>767 total, 182 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0012/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0012/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0012</p>
+</section>
+<section>
+  <h2>2026-09-08 - Phase 21 - Role B Round 4 - EvaluateAllowableInterval&#x27;s Placeholder Table Name and Shared Per-Interval State
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>The fourth Role B round, both closing unit 6.6 to fully green: (1) an unfilled &quot;Table &quot; placeholder attribute-table name, filled in to &quot;Table 6-20 Allowable Interval Attributes&quot;; (2) each per-interval decision table shared one ConditionAttribute instance for the absolute minimum interval date, so every allowable interval on a target dose was checked against only the last interval&#x27;s date - fixed by giving each per-interval table its own copies, mirroring the pattern 6.5 already uses correctly. Latent against the bundled Supporting Data (no series dose carries more than one populated allowable interval). Unit 6.6: 23/2 -&gt; 25/0 green/red. Full cdsi-engine suite: 187 -&gt; 185 failures (down exactly 2), 0 regressions. FITS suite unchanged (3364/1531/1 identical both sides). See SPEC-4.6-0011.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>5f39e80</code></td></tr><tr><td>Engine tests</td><td>767 total, 187 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>a177829</code></td></tr><tr><td>Engine tests</td><td>767 total, 185 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0011/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0011/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0011</p>
+</section>
+<section>
+  <h2>2026-09-08 - Phase 21 - Role B Round 3 - EvaluateAge&#x27;s Absolute-Minimum-Only Age Window Crash
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>The third Role B round, and the first to surface a genuine specification-level gap rather than a code/spec mismatch: Table 6-14 gives Minimum Age Date and Absolute Minimum Age Date the same flat 01/01/1900 default, applied independently, which Table 6-15&#x27;s rule grid cannot always resolve - a target dose with an absolute minimum age but no minimum age crashed the engine with an NPE on 5 real bundled Pneumococcal series doses. Filed as SPECIFICATION_DEFECT and explicitly flagged for CDC/CDSi review rather than treated as settled by this project&#x27;s own fix. Reviewed and approved a pragmatic resolution: fall the minimum age date back to the absolute minimum age date when only the latter is defined. Unit 6.4: 19/1 -&gt; 20/0 green/red. Full cdsi-engine suite: 188 -&gt; 187 failures (down exactly 1), 0 regressions. FITS suite unchanged (3364/1531/1 identical both sides) - none of the 4896 bundled fixtures reaches the affected input shape. See SPEC-4.6-0010.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>dc973a2</code></td></tr><tr><td>Engine tests</td><td>767 total, 188 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>5dbff7e</code></td></tr><tr><td>Engine tests</td><td>767 total, 187 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0010/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0010/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0010</p>
+</section>
+<section>
+  <h2>2026-09-08 - Phase 21 - Role B Round 2 - EvaluateForAllowableVaccine&#x27;s Reference-Equality Bug and Calculated-Date Label Typos
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>The second Role B round, both closing unit 6.9 to fully green: (1) the vaccine-type-match condition compared VaccineType instances by Java reference (==) instead of deferring to VaccineType&#x27;s own CVX-based equals(), a latent divergence from the domain model&#x27;s own contract; (2) the two calculated-date attribute labels read &quot;Calculated data&quot;/ &quot;Calculated Data&quot; instead of &quot;Calculated date&quot;, a pure presentation typo. Bundled into one round since both are independent, equally narrow, single-file fixes with no shared state or causal link. Unit 6.9: 29/2 -&gt; 31/0 green/red. Full cdsi-engine suite: 190 -&gt; 188 failures (down exactly 2), 0 regressions. FITS suite unchanged (3364/1531/1 identical both sides, 0 status changes), as expected for JUnit-targeted fixes not selected for FITS impact. See SPEC-4.6-0009.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>c3448df</code></td></tr><tr><td>Engine tests</td><td>767 total, 190 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>393332d</code></td></tr><tr><td>Engine tests</td><td>767 total, 188 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0009/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0009/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0009</p>
+</section>
+<section>
+  <h2>2026-09-08 - Phase 21 - Role B Round 12 - Enforcing minAgeToStart/maxAgeToStart (SPEC-4.6-0021, Recovers Round 11&#x27;s PCV Regression)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Follow-on to Round 11&#x27;s explicit, project-owner-approved exception to &quot;FITS moves forward, not backward&quot;: Round 11 shipped Chapter 8&#x27;s series-group loop despite a 125-case net FITS regression, tracing the cause to a separate, pre-existing defect (SPEC-4.6-0021) rather than an error in that round&#x27;s own fix. This round fixes that defect.
+SelectPatientSeries.minAgeToStart and maxAgeToStart were declared on the domain model (git history shows minAgeToStart&#x27;s field/getter/setter predate this whole campaign) but enforced nowhere: minAgeToStart was not even parsed by DataModelLoader, and neither field had a single read site anywhere in the engine. Table 8-2&#x27;s SELECTSCORE-2 has an age-to-start check, but it only fires for a series with at least one administered dose - it cannot exclude a series the patient has never received any dose toward. Once Round 11 correctly scoped Chapter 8 per series group, an age-inappropriate solo-series group (e.g. Pneumococcal&#x27;s &quot;Standard 50+&quot;, RSV&#x27;s &quot;Standard 75+&quot;) could reach PreFilterPatientSeries&#x27;s default-series fallback with a trivially-zero within-group valid-dose count and, being alone in its group, proceed straight into bestPatientSeriesList regardless of the patient&#x27;s actual age.
+Two fix attempts inside PreFilterPatientSeries (8.1) were tried and reverted: gating the default fallback on age broke HPV&#x27;s zero-dose adult forecast entirely (HPV splits one logical default pathway across an age boundary into two series *within the same series group*, unlike PCV&#x27;s wholly separate group for its older population); promoting an age-appropriate in-group alternate fixed PCV/MEN but produced dates contradicting FITS&#x27;s own reference behavior for HPV, confirmed by direct inspection of fixture 675c41f8e4b089d2bdc0c483-HPV-2013-0480. The fix instead lives in SelectBestPatientSeries (4.5)&#x27;s per-antigen series-group enumeration (added by Round 11): a series group is now excluded from the series-group stepper entirely - before Chapter 8 ever runs for it - when none of its member series has an age-to-start window including the patient&#x27;s current age, and the patient has no already-satisfied target dose toward any series in it. This leaves HPV&#x27;s within-group behavior untouched while correctly removing PCV/RSV/MEN&#x27;s structurally distinct, wholly separate age-gated groups.
+DataModelLoader.readAntigenSeries gained the missing minAgeToStart parsing. One incidental NullPointerException was found and fixed during FITS verification (not caught by hand-built JUnit fixtures, which always populate a target-dose list): the satisfied-dose check did not guard against PatientSeries.getTargetDoseList() returning null, which real pipeline data does for some series (e.g. COVID-19 case 2023-0071).
+Verified via the standing Role B pipeline: 4 new SelectBestPatientSeriesTest cases (22 total, all green); full cdsi-engine suite unchanged at 139 failures/1 error (confirmed identical with and without this change via git stash A/B - all pre-existing, unrelated to this fix); full FITS run case-by-case diffed against Round 11&#x27;s exact baseline (2026-09-08T195714-671589Z-18ba253-... , 3253 passed): +143 improvements, 0 regressions, every improvement in the PCV group - exactly the group the project owner flagged as poorest-performing and asked to watch. 3253 -&gt; 3396 passed, 18 short of the pre-Round-11 baseline of 3378 (RSV&#x27;s and other antigens&#x27; independently-tracked defects, not this one, account for the remainder).
+A distinct, related gap remains open: RSV defines a genuinely separate second series group (&quot;RSV 75 years+ 1-dose series&quot;) not declared equivalentSeriesGroups to its main group, so a 75+ patient who has completed the main series still gets a second, competing, wrongly-AGED_OUT forecast from the older-population group. Recorded in SPEC-4.6-0021&#x27;s finding as a remaining gap, not fixed here - it needs its own investigation into whether the Supporting Data or Chapter 8&#x27;s equivalence-fallback logic is the right place to close it.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>b29bad0</code></td></tr><tr><td>Engine tests</td><td>776 total, 139 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3253 passed, 1642 failed-assertion, 1 execution-error (66.4%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>801ea67</code></td></tr><tr><td>Engine tests</td><td>780 total, 139 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3396 passed, 1499 failed-assertion, 1 execution-error (69.4%)</td></tr><tr><td>FITS runtime</td><td>55.3s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0021/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0021/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0021</p>
+</section>
+<section>
+  <h2>2026-09-08 - Phase 21 - Role B Round 11 - Chapter 8&#x27;s Series-Group Loop (Merged Despite a FITS Regression)
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>The eleventh Role B round, and the largest of this campaign: Chapter 8 (8.1-8.8) never implemented the per-series-group repetition its own overview text requires, and the eight steps disagreed about which of three different lists was &quot;the series in scope&quot; - the 2026-09-05 &quot;Chapter 8 has no series group&quot; cross-cutting entry. Implemented a new SelectNextSeriesGroup step (dispatched from 4.5, looped back to by every 8.1-8.7 scoring-phase exit), corrected the pipeline-stage list every affected step reads, and parsed the previously-unread &lt;equivalentSeriesGroups&gt; Supporting Data element 8.8&#x27;s Table 8-14 needs. Two independent unit-local bugs (8.5/8.6&#x27;s sticky-boolean defect, 8.6&#x27;s tie-counter reset) were fixed alongside.
+Verified against all nine affected units&#x27; own JUnit suites - every remaining red in each reconciles exactly against an already-documented, unrelated, pre-existing defect (confirmed by cross-referencing this round&#x27;s failures against each unit&#x27;s own status.yaml red-test enumeration). Full cdsi-engine suite: 167 -&gt; 139 failures (-28), 0 new errors.
+FITS regresses: 3378 -&gt; 3253 passed (net -125: 175 cases regress, mostly Pneumococcal/RSV/Meningococcal; 50 improve, mostly HepA/Polio/MMR). Traced via direct engine instrumentation to a second, separate, upstream defect - SelectPatientSeries.minAgeToStart/maxAgeToStart are enforced nowhere in the engine, so an age-inappropriate solo-series series group (e.g. &quot;Pneumococcal 50+&quot;, minAgeToStart 50 years) can now become a &quot;best patient series&quot; once Chapter 8 is correctly scoped, where before it simply lost an undivided antigen-wide scoring competition. Recorded as SPEC-4.6-0021, not yet fixed - its most likely home is upstream of Chapter 8 entirely (4.3/5.1&#x27;s determination of what counts as a relevant patient series in the first place).
+Presented to the project owner as a genuine choice (hold pending SPEC-4.6-0021, keep investigating a same-session fix, or merge despite the regression); the explicit decision was to merge now, accepting the regression, because the fix is independently verified correct, the regression&#x27;s cause is fully traced to a separate pre-existing defect rather than an error in this fix, and the 50-case improvement it also produces is real forward progress expected to combine cleanly with SPEC-4.6-0021&#x27;s eventual fix. Recorded as a deliberate, informed exception to the standing &quot;FITS moves forward, not backward&quot; rule, for CDC/CDSi review.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>18ba253</code></td></tr><tr><td>Engine tests</td><td>771 total, 167 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3378 passed, 1517 failed-assertion, 1 execution-error (69.0%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>343aea7</code></td></tr><tr><td>Engine tests</td><td>776 total, 139 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3253 passed, 1642 failed-assertion, 1 execution-error (66.4%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0020/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0020/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0020, SPEC-4.6-0021</p>
+</section>
+<section>
+  <h2>2026-09-08 - Phase 21 - Role B Round 10 - Table 6-6 Label and Table 6-8 Interval Boundary
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>The tenth Role B round, on unit 6.2&#x27;s EvaluateConditionalSkip (shared base class also used by 7.1 and 7.6). Fixed two narrow, verified-safe mismatches: Table 6-6&#x27;s stale &quot;Table 4-6&quot; label, and Table 6-8&#x27;s interval condition excluding its own documented equality boundary (SPEC-4.6-0017). cdsi-engine: 169 -&gt; 167 failures (down exactly 2), 0 regressions. FITS: strict no-op (3378/1517/1 both sides, 0 cases changed by strict case-by-case diff).
+This round also investigated two further candidate fixes of the identical shape and found both to be real spec mismatches whose fixes are correct in isolation but not safe to merge yet: Table 6-6&#x27;s age-window lower bound (SPEC-4.6-0018 - fix produces a net +101 FITS improvement but a 14-case regression traced to the already-documented &quot;Chapter 8 has no series group&quot; defect) and Table 6-9&#x27;s &quot;equal to&quot; dose-count comparator (SPEC-4.6-0019 - fix is correct but exposes a separate, pre-existing NPE in PatientSeries.getForecast() downstream, 324 FITS execution errors). Both recorded as open findings for a future round rather than merged, per the standing rule that FITS must move forward, not backward.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>21f0d1f</code></td></tr><tr><td>Engine tests</td><td>771 total, 169 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3378 passed, 1517 failed-assertion, 1 execution-error (69.0%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>aa5628b</code></td></tr><tr><td>Engine tests</td><td>771 total, 167 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3378 passed, 1517 failed-assertion, 1 execution-error (69.0%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0017/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0017/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0017, SPEC-4.6-0018, SPEC-4.6-0019</p>
+</section>
+<section>
+  <h2>2026-09-08 - Phase 21 - Role B Round 1 - EvaluateForPreferableVaccine&#x27;s Exclusive Begin-Age Boundary
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>The first Role B fix: unit 6.8&#x27;s EvaluateForPreferableVaccine used a strict &quot;&lt;&quot; comparison for a boundary its own spec label documents as &quot;&lt;=&quot;, excluding a dose administered exactly on the preferable vaccine&#x27;s begin age date (most visible on &quot;0 days&quot; begin-age windows, e.g. a HepB birth dose). One-line fix to the codebase&#x27;s existing inclusive-bound idiom flips the two JUnit tests exercising that boundary from red to green (25/5 -&gt; 27/3 for the unit), with zero regressions across the full cdsi-engine suite (192 -&gt; 190 failures) and zero change to the FITS suite (3364/1531/1 identical both sides - by design, this round targets JUnit correctness, not FITS pass-rate movement). See SPEC-4.6-0008.
+</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>2f6eb4e</code></td></tr><tr><td>Engine tests</td><td>767 total, 192 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>cb1f5ce</code></td></tr><tr><td>Engine tests</td><td>767 total, 190 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0008/finding.md">Full record: cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0008/finding.md</a></p>
+  <p class="muted">Findings: SPEC-4.6-0008</p>
+</section>
+<section>
+  <h2>2026-09-07 - Phase 22 - Separate Static Supporting Data From Per-Run Forecast State
+    <span class="badge badge-green">reviewed</span>
+  </h2>
+  <p>Split DataModel into a shared, cached SupportingDataModel (static Supporting Data, loaded once) and a slimmed DataModel (per-run mutable state only), so DataModelLoader.createDataModel no longer re-parses the Supporting Data ZIP on every FITS case. Every cdsi-engine test and every FITS case (3,364 passed / 1,531 failed-assertion / 1 execution-error, on both sides) is byte-for-byte identical before and after - the three new engine_tests total came from three added regression tests, not a behavior change. Full FITS suite runtime dropped 11.5x, from 457.5s to 39.9s.</p>
+  <div class="before-after">
+    <table>
+      <thead><tr><th colspan="2">Before</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>b9f3f4f</code></td></tr><tr><td>Engine tests</td><td>764 total, 192 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>457.5s (7.6m)</td></tr></tbody>
+    </table>
+    <table>
+      <thead><tr><th colspan="2">After</th></tr></thead>
+      <tbody><tr><td>Commit</td><td><code>9ccbf22</code></td></tr><tr><td>Engine tests</td><td>767 total, 192 failures, 1 errors</td></tr><tr><td>FITS cases</td><td>4896 total, 3364 passed, 1531 failed-assertion, 1 execution-error (68.7%)</td></tr><tr><td>FITS runtime</td><td>39.9s</td></tr></tbody>
+    </table>
+  </div>
+  <p><a href="../../docs/29-phase-22-before-after.md">Full record: docs/29-phase-22-before-after.md</a></p>
+  
+</section>
+
+</body>
+</html>

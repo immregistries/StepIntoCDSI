@@ -1,0 +1,70 @@
+id: "SPEC-4.6-0034"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.3"]
+source_pages: [48]
+tables: ["Table 6-12", "Table 6-13"]
+business_rules: []
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.data.DataModelLoader"
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateForInadvertentVaccine"
+fits_cases: []
+summary: >
+  Three compounding gaps in unit 6.3 (Evaluate for Inadvertent Vaccine),
+  fixed together as one bounded round.
+
+  1. DataModelLoader.readSeriesDose had no branch for the
+  <inadvertentVaccine> element at all - every one of the 307
+  occurrences in the bundled Supporting Data (across 8 antigens:
+  COVID-19, Polio, Tetanus, Diphtheria, RSV, Pneumococcal, HPV,
+  Pertussis) was silently dropped at load time, leaving
+  SeriesDose.getInadvertentVaccineList() empty for every real series
+  dose and making Table 6-13's Rule 1 unreachable on any real
+  forecast.
+
+  2. Table 6-12's second attribute (caInadvertentVaccine) was
+  constructed and registered but never assigned a value - and was
+  mistyped as ConditionAttribute<VaccineDoseAdministered> when it
+  should represent the target dose's own inadvertent vaccine type
+  list. The step's own decision condition bypasses this attribute
+  entirely, reading targetDose.getTrackedSeriesDose().getInadvertentVaccineList()
+  directly - so this gap only affected the attribute the step
+  publishes/renders, not any actual decision.
+
+  3. Rule 1's "yes, inadvertent" outcome writes to
+  dataModel.getTargetDose().getEvaluation() without checking it exists
+  first - and on the path that reaches 6.3 (4.4 dispatches to 6.1
+  without creating one; neither 6.1's Rule 3 nor 6.2's cannot-be-skipped
+  outcome record anything), it doesn't yet, throwing
+  NullPointerException. The same shape as SPEC-4.6-0030's fix for 6.1.
+evidence: >
+  status.yaml's own pre-existing notes for unit 6.3 had already
+  diagnosed all three gaps precisely, including the exact materiality
+  count (307 entries, 8 antigens, from a direct grep of the bundled
+  Supporting Data) and the observation that gaps (1) and (3) mask each
+  other in production today - since no inadvertent vaccine type ever
+  loads, Rule 1 never fires, so the NPE in gap (3) is never actually
+  reached either. Fixing (1) alone would have turned this silent gap
+  into a crash; both needed fixing together, matching the note's own
+  analysis.
+interpretation: >
+  Fixed all three: DataModelLoader now parses <inadvertentVaccine>
+  (resolving its <cvx> child to a shared VaccineType via
+  supportingDataModel.getCvx(...), the same pattern used elsewhere for
+  CVX-referencing elements) into SeriesDose.getInadvertentVaccineList().
+  caInadvertentVaccine is now correctly typed
+  ConditionAttribute<List<VaccineType>> and set from the same list.
+  Rule 1's outcome now lazily creates an Evaluation on the target dose
+  when none exists yet, before setting its status - preserving the
+  existing mutate-in-place behavior when one is already attached.
+
+  Verified via the standing Role B pipeline: unit 6.3's own suite
+  11/11 green (was 8/11); full engine suite confirmed via sorted diff
+  to have flipped exactly those 3 tests and nothing else; full FITS
+  run, case-by-case diffed: 3627 passed both before and after, 0
+  changed cases - none of the bundled FITS fixtures happens to record
+  an administered dose matching one of the 307 real inadvertent-vaccine
+  entries against the specific target dose it's declared on, so this
+  is a genuine correctness fix the current fixture set doesn't happen
+  to exercise, the same category as SPEC-4.6-0026's CALCDT-5 fix and
+  SPEC-4.6-0030's 6.1 NPE guard.

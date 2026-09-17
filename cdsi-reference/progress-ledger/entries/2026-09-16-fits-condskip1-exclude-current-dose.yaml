@@ -1,0 +1,24 @@
+id: "2026-09-16-fits-condskip1-exclude-current-dose"
+date: "2026-09-16"
+phase: 22
+title: "FITS - CONDSKIP-1 does not count the dose under evaluation (SPEC-4.6-0063)"
+before:
+  commit: "62b38b6"
+  engine_tests: {total: 824, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 4301, failed_assertions: 594, execution_errors: 1}
+after:
+  commit: "6f5eca7"
+  engine_tests: {total: 827, failures: 2, errors: 0}
+  fits: {total_cases: 4896, passed: 4400, failed_assertions: 495, execution_errors: 1}
+  fits_runtime_seconds: 117
+summary: >
+  CONDSKIP-1 evaluation no longer counts the current VDA, so Pertussis
+  Dose 8's "more than 1 Valid" skip no longer fires on the second
+  catch-up shot. Combined FITS 4301 to 4400 (net +99): DTAP +60,
+  COVID-19 +39 parked. Newly failing: 2020-0005 and 2020-0006 (10
+  copies, Issue #65 6-month vs interval-from-Tdap); never on the
+  allowlist. COVID newly passing ids are not added. Same two engine
+  reds (8.1/8.7).
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0063/finding.md"
+finding_ids: ["SPEC-4.6-0063"]
+status: reviewed

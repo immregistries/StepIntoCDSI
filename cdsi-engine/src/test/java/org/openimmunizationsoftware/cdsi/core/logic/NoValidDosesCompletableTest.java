@@ -3,6 +3,7 @@ package org.openimmunizationsoftware.cdsi.core.logic;
 import static org.junit.Assert.assertEquals;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -80,8 +81,10 @@ public class NoValidDosesCompletableTest {
     DataModel dataModel = new DataModel();
     dataModel.setPatient(patient);
     dataModel.setAssessmentDate(date(2024, 6, 1));
+    dataModel.setScorablePatientSeriesList(new ArrayList<PatientSeries>());
     for (PatientSeries patientSeries : patientSeriesList) {
       dataModel.getPatientSeriesStepper().add(patientSeries);
+      dataModel.getScorablePatientSeriesList().add(patientSeries);
     }
     return dataModel;
   }
@@ -129,6 +132,18 @@ public class NoValidDosesCompletableTest {
     evaluateIsCompletable(dataModelFor(completable, notCompletable));
     assertEquals(1, completable.getScorePatientSeries());
     assertEquals(-1, notCompletable.getScorePatientSeries());
+  }
+
+  /**
+   * A blank last-dose maximum age is Supporting Data for "no upper bound",
+   * not a missing input. SELECTB-3 is then true: the series can finish
+   * because it never ages out.
+   */
+  @Test
+  public void seriesWithNoMaximumAgeIsCompletable() throws Exception {
+    PatientSeries noMaximumAge = patientSeries(date(2024, 1, 1), null);
+    evaluateIsCompletable(dataModelFor(noMaximumAge));
+    assertEquals(1, noMaximumAge.getScorePatientSeries());
   }
 
   /**

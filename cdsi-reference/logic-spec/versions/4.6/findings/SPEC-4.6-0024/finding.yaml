@@ -1,0 +1,72 @@
+id: "SPEC-4.6-0024"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.3", "7.5"]
+source_pages: [80]
+tables: ["Table 6-13"]
+business_rules: ["FORECASTDTCAN-1"]
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateForInadvertentVaccine"
+  - "org.openimmunizationsoftware.cdsi.core.logic.GenerateForecastDatesAndRecommendedVaccines"
+  - "org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered"
+fits_cases:
+  - "683d9fbee4b07196f3a1f7df-RSV-2025-0010"
+summary: >
+  FORECASTDTCAN-1 has six bullets, not five - a full-text extraction pass
+  earlier in this campaign's own reading missed the sixth. The candidate
+  earliest date must be the latest of: minimum age date; latest of all
+  minimum interval dates; latest of all forecast conflict end dates;
+  seasonal recommendation start date; latest of all dates administered of
+  any inadvertent administration being evaluated against a target dose;
+  and (separately) the date administered of the most recent vaccine dose
+  administered being evaluated against a target dose, any outcome.
+  GenerateForecastDatesAndRecommendedVaccines.computeEarliestDate()
+  implemented only a narrow slice of the last bullet, checking
+  vda.getTargetDose() != null - a field that is only ever set when a dose
+  actually satisfied a target dose (SatisfyTargetDose's one VALID
+  outcome). Every other administered dose - inadvertent, extraneous, or
+  otherwise not valid - was invisible to this computation, so its own
+  administered date never became a floor for the next forecast, even
+  though it plainly should (the next dose can't sensibly be recommended
+  before an already-known administration, valid or not).
+evidence: >
+  Table 6-13's "yes, this is an inadvertent administration" outcome
+  (EvaluateForInadvertentVaccine.java) sets the target dose's evaluation
+  status/reason and shortcuts straight back to 4.4, entirely bypassing
+  6.10 Satisfy Target Dose - so neither
+  VaccineDoseAdministered.targetDose nor its sibling
+  evaluatedAgainstTargetDose (the general "evaluated regardless of
+  outcome" link 6.10's other outcomes do set) is ever populated for an
+  inadvertent administration. Traced from FITS case
+  683d9fbee4b07196f3a1f7df-RSV-2025-0010 (an infant given Abrysvo - an
+  inadvertent vaccine type for the pediatric RSV series per Supporting
+  Data - at 1 month old): expected earliest/recommended date 2025-12-01
+  (the administered dose's own date), actual 2025-11-01 (the birth date -
+  the administered dose contributed nothing to the computation at all).
+interpretation: >
+  Fixed with a dedicated boolean, VaccineDoseAdministered.inadvertentAdministration,
+  set by EvaluateForInadvertentVaccine's inadvertent-yes outcome - a fact
+  about that one administration, deliberately not inferred after the fact
+  from the shared, mutable TargetDose.evaluation object, since the same
+  target dose can be evaluated against several administered doses in
+  sequence and a later one's outcome would silently overwrite what an
+  earlier vda's own evaluation had been. computeEarliestDate() now
+  includes a dose's date when isInadvertentAdministration() is true
+  (the fifth bullet) or getEvaluatedAgainstTargetDose() != null or
+  getTargetDose() != null (the sixth bullet, any outcome reaching 6.10 -
+  kept both checks since an already-written unit test's hand-built
+  fixture predates the evaluatedAgainstTargetDose convention and only
+  sets targetDose directly).
+
+  Verified via the standing Role B pipeline: full cdsi-engine suite
+  (confirmed identical failure set before/after via diff, not just
+  count - one test, GenerateForecastDatesAndRecommendedVaccinesTest's
+  forecastdtOneTheEarliestDateAccountsForTheMostRecentDateAdministered,
+  regressed on the first attempt using only getEvaluatedAgainstTargetDose(),
+  fixed by also keeping the getTargetDose() check); full FITS run,
+  case-by-case diffed against the pre-fix baseline (which already
+  included SPEC-4.6-0022/0023): RSV's CVX-314 case
+  (675c41f8e4b089d2bdc0c483-RSV-2024-0012, a separate, unrelated CVX
+  equivalence gap also fixed this round) and RSV-2025-0010 both moved
+  from FAIL to PASS, plus 5 incidental HepB improvements, with 0 further
+  regressions beyond the already-accepted SPEC-4.6-0023 set.

@@ -1,0 +1,78 @@
+id: "2026-09-09-role-b-round-17-mcv-and-conditionalskip-context"
+date: "2026-09-09"
+phase: 21
+title: "Role B Round 17 - MCV Investigation: ConditionalSkip Context Fix Confirmed Real, Attempted, Reverted (SPEC-4.6-0027, Open)"
+before:
+  commit: "8893075"
+  engine_tests: {total: 783, failures: 137, errors: 1}
+  fits: {total_cases: 4896, passed: 3451, failed_assertions: 1444, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+after:
+  commit: "b51535b"
+  engine_tests: {total: 783, failures: 137, errors: 1}
+  fits: {total_cases: 4896, passed: 3451, failed_assertions: 1444, execution_errors: 1}
+  fits_runtime_seconds: 54.2
+summary: >
+  Continuing the search for a FITS group that can reach 100%: after HepA
+  and ROTA both turned out to be blocked by the same systematic CALCDT-5-
+  vs-fixture conflict (SPEC-4.6-0026), the project owner chose to pursue
+  MCV's 2 remaining failures next, despite them tracing to an already-
+  documented, more involved gap (ConditionalSkip's missing context
+  tracking) shared with two already-deferred findings in the same unit
+  (SPEC-4.6-0018, SPEC-4.6-0019).
+
+  Confirmed the defect exactly as status.yaml's own pre-existing notes
+  described it: ConditionalSkip carries no context field, SeriesDose
+  holds exactly one instance (last-write-wins), and 67 series doses in
+  the bundled Supporting Data declare two (an Evaluation-or-Both instance
+  6.2 must use, followed by a Forecast-only one that actually survives) -
+  so 6.2 evaluates a conditional skip the specification says it must not,
+  and never sees the one it must. MCV's own target case
+  (5eeca0522cc4517a96b0f417-MCV-2013-0511/0512, a single MenACWY dose
+  given at exactly 16 years, expected COMPLETE per ACIP's "no booster
+  needed if given at 16+" rule) has exactly this shape: two sibling
+  conditionalSkip elements on dose 1, one of each context.
+
+  Implemented the fix already sketched in status.yaml's own notes:
+  ConditionalSkipContext enum, a context field on ConditionalSkip, a list
+  on SeriesDose (with backward-compatible single-instance accessors kept
+  for every existing hand-built test fixture), context parsing in
+  DataModelLoader, and context-based selection in EvaluateConditionalSkip.
+  All three "can context be expressed" probe tests (6.2, 7.1, 7.6) went
+  green; a full sorted diff of the engine suite showed zero other
+  unit-test changes.
+
+  The full FITS run told a different story. MCV's own target case did not
+  change at all - dose 2's Evaluation stayed entirely null both before
+  and after, meaning some separate, not-yet-located cross-dose mechanism
+  is also needed for the "16+" rule to actually cascade from dose 1 to
+  dose 2; fixing the context bug was necessary but evidently not
+  sufficient. Worse, the fix caused a net FITS regression elsewhere: 19
+  cases newly failed (15 DTaP, 4 PCV), 5 newly passed (all DTaP), net -14
+  - traced to one specific DTaP case (an earliest/recommended date
+  regressing from the correct 03/01/2027 to 09/29/2026, a much earlier
+  date) but not fully root-caused within this round's scope.
+
+  Reverted in full - confirmed via a fresh FITS run that the revert
+  restores the exact pre-fix baseline (3451 passed, 1 execution error;
+  engine suite failure set sorted-diff-identical). Recorded as
+  SPEC-4.6-0027 (open), per the same discipline already applied to
+  SPEC-4.6-0018/0019 in this same unit: a textually-correct fix that
+  regresses FITS needs its interaction fully traced before merging, not
+  shipped on the strength of unit tests alone. Two live hypotheses are
+  recorded for whoever picks this up next - most concretely, that some
+  DTaP series dose's Forecast-context-only conditional skip was, before
+  this fix, incorrectly but load-bearing-ly being read by 6.2 (since
+  nothing excluded it), with 7.1/7.6's own forecast-side processing not
+  independently supplying the same constraint in practice.
+
+  Net effect: zero code shipped this round (fully reverted). Neither
+  HepA, ROTA, nor MCV reached 100% across this investigation arc; all
+  three surfaced genuine, well-evidenced findings (SPEC-4.6-0026,
+  SPEC-4.6-0027) rather than a quick win. This unit (6.2) now has three
+  open, interacting findings (SPEC-4.6-0018, 0019, 0027) that likely need
+  to be resolved together rather than one at a time, given how each
+  fix's own regression traces back into the others' territory.
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0027/finding.md"
+finding_ids: ["SPEC-4.6-0027"]
+status: reviewed

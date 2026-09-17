@@ -13,11 +13,4 @@ public class ValidateRecommendation extends EvaluateConditionalSkip {
 
     }
 
-    @Override
-    public LogicStep process() throws Exception {
-        // setNextLogicStepType(LogicStepType.FORECAST_DATES_AND_REASONS);
-        setNextLogicStepType(LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES);
-        return next();
-    }
-
 }
