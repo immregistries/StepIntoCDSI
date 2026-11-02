@@ -60,7 +60,7 @@ public final class EvaluationComparator {
   }
 
   public static List<DoseEvaluationComparison> compare(FitsTestCase testCase, DataModel dataModel) {
-    Map<String, Map<Integer, EvaluationStatus>> byAntigenThenDoseId = collectEngineEvaluations(dataModel);
+    Map<String, Map<Integer, Evaluation>> byAntigenThenDoseId = collectEngineEvaluations(dataModel);
     List<DoseEvaluationComparison> comparisons = new ArrayList<>();
     List<FitsTestCase.Vaccination> vaccinations = testCase.getVaccinations();
     for (int i = 0; i < vaccinations.size(); i++) {
@@ -75,33 +75,38 @@ public final class EvaluationComparator {
 
   private static DoseEvaluationComparison compareOne(int doseId, FitsTestCase.Vaccination vaccination,
       FitsTestCase.ExpectedEvaluation expected, DataModel dataModel,
-      Map<String, Map<Integer, EvaluationStatus>> byAntigenThenDoseId) {
+      Map<String, Map<Integer, Evaluation>> byAntigenThenDoseId) {
     Set<String> groupAntigens = antigensForTarget(expected.getVaccineCvx(), dataModel);
     if (groupAntigens.isEmpty()) {
-      return new DoseEvaluationComparison(doseId, vaccination, expected, null, Map.of(),
+      return new DoseEvaluationComparison(doseId, vaccination, expected, null, Map.of(), Map.of(),
           "No vaccine group found for FITS relatedTo CVX " + expected.getVaccineCvx());
     }
     Set<String> doseAntigens = antigenNames(cvxAntigens(vaccination.getCvx(), dataModel));
     Set<String> compared = new LinkedHashSet<>(groupAntigens);
     compared.retainAll(doseAntigens);
     if (compared.isEmpty()) {
-      return new DoseEvaluationComparison(doseId, vaccination, expected, null, Map.of(),
+      return new DoseEvaluationComparison(doseId, vaccination, expected, null, Map.of(), Map.of(),
           "Administered CVX " + vaccination.getCvx() + " carries no antigen of the vaccine group for relatedTo CVX "
               + expected.getVaccineCvx() + " (" + String.join(", ", groupAntigens) + ")");
     }
 
     Map<String, String> perAntigen = new LinkedHashMap<>();
+    Map<String, String> perAntigenReason = new LinkedHashMap<>();
     List<EvaluationStatus> statuses = new ArrayList<>();
     for (String antigen : compared) {
-      Map<Integer, EvaluationStatus> evaluations = byAntigenThenDoseId.get(antigen);
-      EvaluationStatus status = evaluations == null ? null : evaluations.get(doseId);
+      Map<Integer, Evaluation> evaluations = byAntigenThenDoseId.get(antigen);
+      Evaluation evaluation = evaluations == null ? null : evaluations.get(doseId);
+      EvaluationStatus status = evaluation == null ? null : evaluation.getEvaluationStatus();
       perAntigen.put(antigen, status == null ? NOT_EVALUATED : status.name());
+      if (evaluation != null && evaluation.getEvaluationReason() != null) {
+        perAntigenReason.put(antigen, evaluation.getEvaluationReason().name());
+      }
       if (status != null) {
         statuses.add(status);
       }
     }
     String actual = statuses.isEmpty() ? NOT_EVALUATED : rollUp(statuses).name();
-    return new DoseEvaluationComparison(doseId, vaccination, expected, actual, perAntigen, null);
+    return new DoseEvaluationComparison(doseId, vaccination, expected, actual, perAntigen, perAntigenReason, null);
   }
 
   static EvaluationStatus rollUp(Collection<EvaluationStatus> statuses) {
@@ -115,14 +120,14 @@ public final class EvaluationComparator {
   }
 
   /**
-   * antigen name -> (dose id -> status) from every best patient series.
+   * antigen name -> (dose id -> evaluation) from every best patient series.
    * A dose is evaluated against at most one target dose per series, so one
    * status per antigen per dose; if a series somehow recorded two, the
    * rollup precedence picks between them the same way it does across
-   * antigens.
+   * antigens (and the winning evaluation's reason is the one kept).
    */
-  private static Map<String, Map<Integer, EvaluationStatus>> collectEngineEvaluations(DataModel dataModel) {
-    Map<String, Map<Integer, EvaluationStatus>> result = new LinkedHashMap<>();
+  private static Map<String, Map<Integer, Evaluation>> collectEngineEvaluations(DataModel dataModel) {
+    Map<String, Map<Integer, Evaluation>> result = new LinkedHashMap<>();
     List<PatientSeries> bestSeries = dataModel.getBestPatientSeriesList();
     if (bestSeries == null) {
       return result;
@@ -133,7 +138,7 @@ public final class EvaluationComparator {
         continue;
       }
       String antigen = series.getTrackedAntigenSeries().getTargetDisease().getName();
-      Map<Integer, EvaluationStatus> byDose = result.computeIfAbsent(antigen, k -> new LinkedHashMap<>());
+      Map<Integer, Evaluation> byDose = result.computeIfAbsent(antigen, k -> new LinkedHashMap<>());
       for (TargetDose targetDose : series.getTargetDoseList()) {
         if (targetDose.getEvaluationList() == null) {
           continue;
@@ -143,8 +148,9 @@ public final class EvaluationComparator {
           if (vda == null || evaluation.getEvaluationStatus() == null) {
             continue;
           }
-          byDose.merge(vda.getId(), evaluation.getEvaluationStatus(),
-              (a, b) -> rollUp(List.of(a, b)));
+          byDose.merge(vda.getId(), evaluation,
+              (a, b) -> rollUp(List.of(a.getEvaluationStatus(), b.getEvaluationStatus())) == a.getEvaluationStatus()
+                  ? a : b);
         }
       }
     }
@@ -196,16 +202,18 @@ public final class EvaluationComparator {
     private final FitsTestCase.ExpectedEvaluation expected;
     private final String actualStatus;
     private final Map<String, String> perAntigen;
+    private final Map<String, String> perAntigenReason;
     private final String problem;
 
     DoseEvaluationComparison(int doseNumber, FitsTestCase.Vaccination vaccination,
         FitsTestCase.ExpectedEvaluation expected, String actualStatus, Map<String, String> perAntigen,
-        String problem) {
+        Map<String, String> perAntigenReason, String problem) {
       this.doseNumber = doseNumber;
       this.vaccination = vaccination;
       this.expected = expected;
       this.actualStatus = actualStatus;
       this.perAntigen = perAntigen;
+      this.perAntigenReason = perAntigenReason;
       this.problem = problem;
     }
 
@@ -232,6 +240,15 @@ public final class EvaluationComparator {
       return perAntigen;
     }
 
+    /**
+     * antigen name -> the engine's EvaluationReason (TOO_YOUNG, TOO_SOON,
+     * INADVERTENT_ADMINISTRATION, ...) for antigens whose evaluation carries
+     * one. Antigens with no reason (typically VALID) are absent.
+     */
+    public Map<String, String> getPerAntigenReason() {
+      return perAntigenReason;
+    }
+
     /** True when the compared antigens didn't all reach the same status - the rollup made a choice. */
     public boolean isAntigenDisagreement() {
       return new LinkedHashSet<>(perAntigen.values()).size() > 1;
@@ -251,7 +268,8 @@ public final class EvaluationComparator {
       if (problem != null) {
         return label + ": " + problem;
       }
-      return label + ": expected " + expected.getStatus() + ", got " + actualStatus + " " + perAntigen;
+      return label + ": expected " + expected.getStatus() + ", got " + actualStatus + " " + perAntigen
+          + (perAntigenReason.isEmpty() ? "" : " reasons " + perAntigenReason);
     }
   }
 }

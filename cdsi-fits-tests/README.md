@@ -41,7 +41,7 @@ target/fits-runs/<run-id>/
 ├── run.json            # git commit/branch/dirty, Java/Maven versions, reference set + checksums, test filter
 ├── summary.json         # discovered/executed/passed/failed/error counts, plus an `evaluation` block (dose-level totals + confusion matrix)
 ├── results.jsonl        # one compact JSON object per case: forecast status, evaluationStatus, per-dose evaluations, expected/actual hashes and values, field differences, duration
-├── changed-cases.json   # diff against the most recent *previous* local run, if one exists
+├── changed-cases.json   # diff against the most recent *previous* local run: forecast status, evaluation status, and doses newly matched/mismatched
 └── failures/<case-id>/  # written when the forecast OR the evaluation didn't pass
     ├── input.json        # the FITS fixture's patient/history/eval-date input
     ├── expected.json     # what FITS expected, per vaccine group
@@ -63,8 +63,14 @@ Each case is scored twice, independently:
 FITS judges a dose against one vaccine group; CDSi evaluates it per antigen. `EvaluationComparator` maps FITS'
 `relatedTo` CVX to its vaccine group through the Supporting Data, compares the antigens of that group the administered
 vaccine carries, and rolls them up with precedence NOT_VALID > SUB_STANDARD > VALID > EXTRANEOUS (its class Javadoc
-explains why). Each dose entry keeps the per-antigen statuses and an `antigenDisagreement` flag so the rollup is
-never hidden. `NOT_EVALUATED` means no antigen in the group evaluated the dose at all.
+explains why). Each dose entry keeps the per-antigen statuses, the engine's own reason per antigen
+(`perAntigenReason`: TOO_YOUNG, TOO_SOON, INADVERTENT_ADMINISTRATION, ...; next to FITS' `expectedReason` letter
+code) and an `antigenDisagreement` flag, so the rollup is never hidden. `NOT_EVALUATED` means no antigen in the group
+has an evaluation linked to the dose at all.
+
+Work on the remaining evaluation mismatches is organized as a campaign: see
+`campaigns/2026-11-evaluation/README.md` (baseline, cluster order, and one prompt per cluster) and the Cursor rule
+`.cursor/rules/fits-evaluation.mdc`.
 
 `target/` is Maven's own build directory and already gitignored - nothing here is ever committed automatically. `<run-id>` is `<timestamp>-<abbreviated-git-commit>-<reference-set-id>`, sanitized for use as a directory name on both Windows and POSIX filesystems.
 

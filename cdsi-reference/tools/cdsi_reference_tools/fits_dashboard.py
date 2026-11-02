@@ -52,6 +52,16 @@ STATUS_LABELS = {
 # NIST FITS EvaluationReason letter codes (fixtures keep the raw code, as
 # FITS sends it) - wording shortened from the enum's own descriptions in
 # cds-base-domain 1.0.1.
+# cdsi-engine EvaluationReason names, shown next to each antigen's verdict.
+ENGINE_REASONS = {
+    "TOO_YOUNG": "too young",
+    "TOO_OLD": "too old",
+    "TOO_SOON": "too soon",
+    "GRACE_PERIOD": "within grace period",
+    "INADVERTENT_ADMINISTRATION": "inadvertent",
+    "LESS_THAN_RECOMMENDED_VOLUME": "less than recommended volume",
+}
+
 FITS_REASONS = {
     "A": "given after lot expiration",
     "B": "ineffective or sub-potent dose",
@@ -345,7 +355,11 @@ def _render_evaluation(cases: list) -> str:
     for name in sorted(mismatch_by_group):
         rows = []
         for c, d in sorted(mismatch_by_group[name], key=lambda x: (x[0]["caseId"], x[1].get("dose", 0))):
-            per = ", ".join(f"{_esc(k)}: {_esc(STATUS_LABELS.get(v, v))}" for k, v in (d.get("perAntigen") or {}).items())
+            reasons = d.get("perAntigenReason") or {}
+            per = ", ".join(
+                f"{_esc(k)}: {_esc(STATUS_LABELS.get(v, v))}"
+                + (f' <span class="muted">({_esc(ENGINE_REASONS.get(reasons[k], reasons[k]))})</span>' if k in reasons else "")
+                for k, v in (d.get("perAntigen") or {}).items())
             if d.get("problem"):
                 per = f'<span class="diff-error">{_esc(d["problem"])}</span>'
             fc = "PASS" if c["status"] == "PASS" else c["status"]

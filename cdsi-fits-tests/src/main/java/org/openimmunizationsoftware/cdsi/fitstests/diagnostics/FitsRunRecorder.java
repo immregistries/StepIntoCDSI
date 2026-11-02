@@ -156,14 +156,22 @@ public final class FitsRunRecorder {
       changedCases.put("note", "No previous run found under " + runsRoot() + " to compare against.");
       summary.put("addedCases", null);
       summary.put("removedCases", null);
+      summary.put("dosesNewlyMatched", null);
+      summary.put("dosesNewlyMismatched", null);
     } else {
       ChangedCases diff = compareAgainst(previousRun);
       changedCases.put("comparedAgainst", previousRun.getFileName().toString());
       changedCases.put("added", diff.added());
       changedCases.put("removed", diff.removed());
       changedCases.put("statusChanged", diff.statusChanged());
+      changedCases.put("evaluationStatusChanged", diff.evaluationStatusChanged());
+      changedCases.put("dosesNewlyMatched", diff.dosesNewlyMatched());
+      changedCases.put("dosesNewlyMismatched", diff.dosesNewlyMismatched());
+      changedCases.put("dosesStillMismatchedButChanged", diff.dosesStillMismatchedButChanged());
       summary.put("addedCases", diff.added().size());
       summary.put("removedCases", diff.removed().size());
+      summary.put("dosesNewlyMatched", diff.dosesNewlyMatched().size());
+      summary.put("dosesNewlyMismatched", diff.dosesNewlyMismatched().size());
     }
 
     MAPPER.writeValue(runDir.resolve("summary.json").toFile(), summary);
@@ -229,19 +237,45 @@ public final class FitsRunRecorder {
     return latest;
   }
 
-  private record ChangedCases(List<String> added, List<String> removed, List<String> statusChanged) {
+  /**
+   * statusChanged is the forecast status; evaluationStatusChanged the case's
+   * evaluation status. The three dose lists compare individual dose
+   * evaluations (keyed by case, dose position and FITS target CVX) present
+   * in both runs - a previous run from before dose evaluations were recorded
+   * simply contributes none.
+   */
+  private record ChangedCases(List<String> added, List<String> removed, List<String> statusChanged,
+      List<String> evaluationStatusChanged, List<String> dosesNewlyMatched, List<String> dosesNewlyMismatched,
+      List<String> dosesStillMismatchedButChanged) {
+  }
+
+  private static String doseKey(String caseId, Object dose, Object targetCvx) {
+    return caseId + " dose " + dose + " vs " + targetCvx;
   }
 
   private ChangedCases compareAgainst(Path previousRunDir) throws IOException {
     Path previousResults = previousRunDir.resolve("results.jsonl");
     Map<String, String> previousStatusByCaseId = new LinkedHashMap<>();
+    Map<String, String> previousEvaluationStatusByCaseId = new LinkedHashMap<>();
+    Map<String, Map<?, ?>> previousDoses = new LinkedHashMap<>();
     if (Files.exists(previousResults)) {
       for (String line : Files.readAllLines(previousResults, StandardCharsets.UTF_8)) {
         if (line.isBlank()) {
           continue;
         }
         Map<?, ?> entry = MAPPER.readValue(line, Map.class);
-        previousStatusByCaseId.put((String) entry.get("caseId"), (String) entry.get("status"));
+        String caseId = (String) entry.get("caseId");
+        previousStatusByCaseId.put(caseId, (String) entry.get("status"));
+        if (entry.get("evaluationStatus") != null) {
+          previousEvaluationStatusByCaseId.put(caseId, (String) entry.get("evaluationStatus"));
+        }
+        if (entry.get("evaluations") instanceof List<?> evaluations) {
+          for (Object o : evaluations) {
+            if (o instanceof Map<?, ?> dose) {
+              previousDoses.put(doseKey(caseId, dose.get("dose"), dose.get("targetCvx")), dose);
+            }
+          }
+        }
       }
     }
     Set<String> currentCaseIds = new TreeSet<>();
@@ -270,7 +304,39 @@ public final class FitsRunRecorder {
         statusChanged.add(caseId + ": " + previousStatus + " -> " + currentStatusByCaseId.get(caseId));
       }
     }
-    return new ChangedCases(added, removed, statusChanged);
+    List<String> evaluationStatusChanged = new ArrayList<>();
+    List<String> newlyMatched = new ArrayList<>();
+    List<String> newlyMismatched = new ArrayList<>();
+    List<String> stillMismatchedButChanged = new ArrayList<>();
+    for (CaseRecord record : records) {
+      String caseId = record.caseId();
+      String previousEvaluationStatus = previousEvaluationStatusByCaseId.get(caseId);
+      if (previousEvaluationStatus != null && !previousEvaluationStatus.equals(record.evaluationStatus())) {
+        evaluationStatusChanged.add(caseId + ": " + previousEvaluationStatus + " -> " + record.evaluationStatus());
+      }
+      for (var c : record.evaluationComparisons()) {
+        String key = doseKey(caseId, c.getDoseNumber(), c.getExpected().getVaccineCvx());
+        Map<?, ?> before = previousDoses.get(key);
+        if (before == null) {
+          continue;
+        }
+        boolean wasMatch = Boolean.TRUE.equals(before.get("match"));
+        String previousActual = String.valueOf(before.get("actual"));
+        String actual = String.valueOf(c.getActualStatus());
+        String line = key + " (cvx " + c.getVaccination().getCvx() + "): " + previousActual + " -> " + actual
+            + ", expected " + c.getExpected().getStatus();
+        if (!wasMatch && c.isMatch()) {
+          newlyMatched.add(line);
+        } else if (wasMatch && !c.isMatch()) {
+          newlyMismatched.add(line);
+        } else if (!c.isMatch() && (!previousActual.equals(actual)
+            || !String.valueOf(before.get("perAntigen")).equals(String.valueOf(c.getPerAntigen())))) {
+          stillMismatchedButChanged.add(line + " " + before.get("perAntigen") + " -> " + c.getPerAntigen());
+        }
+      }
+    }
+    return new ChangedCases(added, removed, statusChanged, evaluationStatusChanged, newlyMatched, newlyMismatched,
+        stillMismatchedButChanged);
   }
 
   private void writeFailureBundles(Path runDir) throws IOException {

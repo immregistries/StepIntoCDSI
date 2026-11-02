@@ -148,6 +148,7 @@ final class CaseRecord {
       entry.put("actual", c.getActualStatus());
       entry.put("match", c.isMatch());
       entry.put("perAntigen", c.getPerAntigen());
+      entry.put("perAntigenReason", c.getPerAntigenReason());
       entry.put("antigenDisagreement", c.isAntigenDisagreement());
       entry.put("problem", c.getProblem());
       entries.add(entry);
