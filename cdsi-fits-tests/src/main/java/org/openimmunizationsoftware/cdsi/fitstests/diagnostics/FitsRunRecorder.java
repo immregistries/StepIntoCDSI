@@ -138,6 +138,7 @@ public final class FitsRunRecorder {
     summary.put("failedAssertions", failedAssertions);
     summary.put("executionErrors", executionErrors);
     summary.put("skippedCases", discoveredCount - records.size());
+    summary.put("evaluation", evaluationSummary());
     summary.put("knownFailures", null);
     summary.put("newRegressions", null);
     summary.put("newlyPassingCases", null);
@@ -167,6 +168,47 @@ public final class FitsRunRecorder {
 
     MAPPER.writeValue(runDir.resolve("summary.json").toFile(), summary);
     MAPPER.writeValue(runDir.resolve("changed-cases.json").toFile(), changedCases);
+  }
+
+  /**
+   * Dose-level evaluation totals, kept separate from the case-level forecast
+   * counts above (different unit: one entry per expected dose evaluation).
+   * confusion is expected status -> actual status -> count, where actual can
+   * also be NOT_EVALUATED, or UNMAPPED when no vaccine group could be found
+   * to compare (see EvaluationComparator).
+   */
+  private Map<String, Object> evaluationSummary() {
+    int casesWithEvaluations = 0, casesPassed = 0, casesFailed = 0;
+    int doses = 0, matched = 0, disagreements = 0;
+    Map<String, Map<String, Integer>> confusion = new java.util.TreeMap<>();
+    for (CaseRecord record : records) {
+      switch (record.evaluationStatus()) {
+        case "PASS" -> { casesWithEvaluations++; casesPassed++; }
+        case "FAIL" -> { casesWithEvaluations++; casesFailed++; }
+        default -> { }
+      }
+      for (var c : record.evaluationComparisons()) {
+        doses++;
+        if (c.isMatch()) {
+          matched++;
+        }
+        if (c.isAntigenDisagreement()) {
+          disagreements++;
+        }
+        String actual = c.getActualStatus() == null ? "UNMAPPED" : c.getActualStatus();
+        confusion.computeIfAbsent(c.getExpected().getStatus(), k -> new java.util.TreeMap<>())
+            .merge(actual, 1, Integer::sum);
+      }
+    }
+    Map<String, Object> evaluation = new LinkedHashMap<>();
+    evaluation.put("casesWithExpectedEvaluations", casesWithEvaluations);
+    evaluation.put("casesAllDosesMatched", casesPassed);
+    evaluation.put("casesWithAMismatch", casesFailed);
+    evaluation.put("dosesCompared", doses);
+    evaluation.put("dosesMatched", matched);
+    evaluation.put("dosesWithAntigenDisagreement", disagreements);
+    evaluation.put("confusion", confusion);
+    return evaluation;
   }
 
   private Path findPreviousRun(Path currentRunDir) throws IOException {
@@ -234,7 +276,7 @@ public final class FitsRunRecorder {
   private void writeFailureBundles(Path runDir) throws IOException {
     Path failuresDir = runDir.resolve("failures");
     for (CaseRecord record : records) {
-      if (record.status().equals("PASS")) {
+      if (!record.needsFailureBundle()) {
         continue;
       }
       Path caseDir = failuresDir.resolve(record.caseId());
@@ -243,6 +285,7 @@ public final class FitsRunRecorder {
       MAPPER.writeValue(caseDir.resolve("expected.json").toFile(), record.expectedSummary());
       MAPPER.writeValue(caseDir.resolve("actual.json").toFile(), record.actualSummary());
       MAPPER.writeValue(caseDir.resolve("difference.json").toFile(), record.fieldDifferences());
+      MAPPER.writeValue(caseDir.resolve("evaluations.json").toFile(), record.evaluationEntries());
     }
   }
 

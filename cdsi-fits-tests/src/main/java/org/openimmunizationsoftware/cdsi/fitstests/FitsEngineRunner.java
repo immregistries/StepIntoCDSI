@@ -45,7 +45,7 @@ public final class FitsEngineRunner {
       for (FitsTestCase.ExpectedForecast expected : testCase.getExpectedForecasts()) {
         comparisons.add(compare(expected, vaccineGroupForecastList));
       }
-      return new FitsRunResult(testCase, comparisons, null);
+      return new FitsRunResult(testCase, comparisons, EvaluationComparator.compare(testCase, dataModel), null);
     } catch (Exception e) {
       return new FitsRunResult(testCase, List.of(), e);
     }
@@ -85,11 +85,18 @@ public final class FitsEngineRunner {
   public static final class FitsRunResult {
     private final FitsTestCase testCase;
     private final List<ForecastComparison> comparisons;
+    private final List<EvaluationComparator.DoseEvaluationComparison> evaluations;
     private final Exception exception;
 
     FitsRunResult(FitsTestCase testCase, List<ForecastComparison> comparisons, Exception exception) {
+      this(testCase, comparisons, List.of(), exception);
+    }
+
+    FitsRunResult(FitsTestCase testCase, List<ForecastComparison> comparisons,
+        List<EvaluationComparator.DoseEvaluationComparison> evaluations, Exception exception) {
       this.testCase = testCase;
       this.comparisons = comparisons;
+      this.evaluations = evaluations;
       this.exception = exception;
     }
 
@@ -101,10 +108,32 @@ public final class FitsEngineRunner {
       return comparisons;
     }
 
+    /** One entry per FITS expected dose evaluation, in dose order; empty if the case has none or the engine threw. */
+    public List<EvaluationComparator.DoseEvaluationComparison> getEvaluations() {
+      return evaluations;
+    }
+
     public Exception getException() {
       return exception;
     }
 
+    /**
+     * Evaluation verdict for the case, separate from {@link #isPass()} (which
+     * stays forecast-only - it's what the known-passing allowlist gates on):
+     * ERROR if the engine threw, NONE if FITS expects no dose evaluations,
+     * else PASS only if every expected dose evaluation matched.
+     */
+    public String getEvaluationStatus() {
+      if (exception != null) {
+        return "ERROR";
+      }
+      if (evaluations.isEmpty()) {
+        return "NONE";
+      }
+      return evaluations.stream().allMatch(EvaluationComparator.DoseEvaluationComparison::isMatch) ? "PASS" : "FAIL";
+    }
+
+    /** Forecast verdict only - see {@link #getEvaluationStatus()} for evaluations. */
     public boolean isPass() {
       if (exception != null) {
         return false;

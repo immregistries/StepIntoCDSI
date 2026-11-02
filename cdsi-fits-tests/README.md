@@ -1,12 +1,12 @@
 # cdsi-fits-tests
 
-Runs the NIST FITS conformance suite against `cdsi-engine` directly and offline - no servlet container, no live NIST connection once fixtures are downloaded (`org.openimmunizationsoftware.cdsi.fitstests.download.FitsDownloader`, run once against a live NIST FITS account; see its class Javadoc).
+Runs the NIST FITS conformance suite against `cdsi-engine` directly and offline - no servlet container, no live NIST connection once fixtures are downloaded (`org.openimmunizationsoftware.cdsi.fitstests.download.FitsDownloader`, run once against a live FITS account at https://tools.valitheus.com/fits/; see its class Javadoc).
 
 ```bash
 mvn -pl cdsi-fits-tests test
 ```
 
-`FitsFixtureTest` is a `@TestFactory` that turns every fixture under `src/test/resources/fits/` into a dynamic test. The fixtures themselves are committed, so a normal checkout already has all 4896 of them - `FitsDownloader` is only for refreshing them from a live NIST FITS account, not a prerequisite for a first run.
+`FitsFixtureTest` is a `@TestFactory` that turns every fixture under `src/test/resources/fits/` into a dynamic test. The fixtures themselves are committed, so a normal checkout already has all of them (see `src/test/resources/fits/README.md` for which FITS plans are in scope) - `FitsDownloader` is only for refreshing them from a live FITS account, not a prerequisite for a first run.
 
 ## Which supporting data set the suite runs against
 
@@ -39,15 +39,32 @@ Every run of `FitsFixtureTest` writes a complete, disposable diagnostic bundle t
 ```text
 target/fits-runs/<run-id>/
 ├── run.json            # git commit/branch/dirty, Java/Maven versions, reference set + checksums, test filter
-├── summary.json         # discovered/executed/passed/failed/error counts
-├── results.jsonl        # one compact JSON object per case: status, expected/actual hashes and values, field differences, duration
+├── summary.json         # discovered/executed/passed/failed/error counts, plus an `evaluation` block (dose-level totals + confusion matrix)
+├── results.jsonl        # one compact JSON object per case: forecast status, evaluationStatus, per-dose evaluations, expected/actual hashes and values, field differences, duration
 ├── changed-cases.json   # diff against the most recent *previous* local run, if one exists
-└── failures/<case-id>/
+└── failures/<case-id>/  # written when the forecast OR the evaluation didn't pass
     ├── input.json        # the FITS fixture's patient/history/eval-date input
     ├── expected.json     # what FITS expected, per vaccine group
     ├── actual.json       # what the engine actually forecasted
-    └── difference.json   # the specific field(s) that diverged, or "no forecasted vaccine group matched"
+    ├── difference.json   # the specific field(s) that diverged, or "no forecasted vaccine group matched"
+    └── evaluations.json  # every dose: FITS expected vs. engine evaluation, per antigen
 ```
+
+### Forecast vs. evaluation
+
+Each case is scored twice, independently:
+
+- **`status`** (PASS/FAIL/ERROR) is the **forecast** verdict - every expected vaccine-group forecast matched. This is
+  the only thing `known-passing-cases.txt` gates the build on.
+- **`evaluationStatus`** (PASS/FAIL/NONE/ERROR) is the **dose-evaluation** verdict - every administered dose's FITS
+  expected evaluation (VALID / NOT_VALID / EXTRANEOUS / SUB_STANDARD) matched the engine's. NONE means FITS gave no
+  dose evaluations (no doses administered). It's recorded and reported, never asserted - it doesn't affect the build.
+
+FITS judges a dose against one vaccine group; CDSi evaluates it per antigen. `EvaluationComparator` maps FITS'
+`relatedTo` CVX to its vaccine group through the Supporting Data, compares the antigens of that group the administered
+vaccine carries, and rolls them up with precedence NOT_VALID > SUB_STANDARD > VALID > EXTRANEOUS (its class Javadoc
+explains why). Each dose entry keeps the per-antigen statuses and an `antigenDisagreement` flag so the rollup is
+never hidden. `NOT_EVALUATED` means no antigen in the group evaluated the dose at all.
 
 `target/` is Maven's own build directory and already gitignored - nothing here is ever committed automatically. `<run-id>` is `<timestamp>-<abbreviated-git-commit>-<reference-set-id>`, sanitized for use as a directory name on both Windows and POSIX filesystems.
 
