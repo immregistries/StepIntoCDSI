@@ -1,0 +1,39 @@
+{
+  "uid" : "2026-0026",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HepA",
+  "title" : "Patient is an adult that is 28 years and was administered two doses of a HepA vaccine (Unspecified and CVX 52) at an interval of 6 months - 5 days.",
+  "patientSex" : "F",
+  "birthDate" : "1998-05-07",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ {
+    "date" : "2026-05-07",
+    "cvx" : "52",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "52",
+      "vaccineName" : "Hep A, adult",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2026-11-02",
+    "cvx" : "85",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "85",
+      "vaccineName" : "Hep A, unspecified formulation",
+      "status" : "NOT_VALID",
+      "reason" : "D"
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "85",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2027-05-02",
+    "recommendedDate" : "2027-05-02"
+  } ]
+}

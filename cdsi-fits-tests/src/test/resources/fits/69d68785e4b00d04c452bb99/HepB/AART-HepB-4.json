@@ -5,23 +5,41 @@
   "groupName" : "HepB",
   "title" : "Dose 3 at 6 months",
   "patientSex" : "F",
-  "birthDate" : "2026-03-01",
-  "evalDate" : "2026-09-01",
+  "birthDate" : "2026-05-02",
+  "evalDate" : "2026-11-02",
   "vaccinations" : [ {
-    "date" : "2026-03-01",
+    "date" : "2026-05-02",
     "cvx" : "45",
     "mvx" : "",
-    "doseCondition" : null
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "45",
+      "vaccineName" : "Hep B, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
   }, {
-    "date" : "2026-05-01",
+    "date" : "2026-07-02",
     "cvx" : "45",
     "mvx" : "",
-    "doseCondition" : null
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "45",
+      "vaccineName" : "Hep B, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
   }, {
-    "date" : "2026-09-01",
+    "date" : "2026-11-02",
     "cvx" : "45",
     "mvx" : "",
-    "doseCondition" : null
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "45",
+      "vaccineName" : "Hep B, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
   } ],
   "expectedForecasts" : [ {
     "vaccineCvx" : "45",

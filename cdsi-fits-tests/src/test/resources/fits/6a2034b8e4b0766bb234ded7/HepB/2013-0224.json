@@ -1,0 +1,50 @@
+{
+  "uid" : "2013-0224",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HepB",
+  "title" : "Dose 1 to dose 3 interval of Comvax is 16 weeks.   Series complete for Hep B. ",
+  "patientSex" : "F",
+  "birthDate" : "2006-08-08",
+  "evalDate" : "2007-02-20",
+  "vaccinations" : [ {
+    "date" : "2006-10-31",
+    "cvx" : "51",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "45",
+      "vaccineName" : "Hep B, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2006-12-22",
+    "cvx" : "51",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "45",
+      "vaccineName" : "Hep B, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2007-02-20",
+    "cvx" : "51",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "45",
+      "vaccineName" : "Hep B, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "45",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

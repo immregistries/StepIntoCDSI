@@ -163,6 +163,15 @@ public class FitsTestCase {
     private String cvx;
     private String mvx;
     private String doseCondition;
+    private List<ExpectedEvaluation> expectedEvaluations = new ArrayList<>();
+
+    public List<ExpectedEvaluation> getExpectedEvaluations() {
+      return expectedEvaluations;
+    }
+
+    public void setExpectedEvaluations(List<ExpectedEvaluation> expectedEvaluations) {
+      this.expectedEvaluations = expectedEvaluations;
+    }
 
     public String getDate() {
       return date;
@@ -194,6 +203,54 @@ public class FitsTestCase {
 
     public void setDoseCondition(String doseCondition) {
       this.doseCondition = doseCondition;
+    }
+  }
+
+  /**
+   * FITS' expected evaluation of one administered dose against one vaccine
+   * group. vaccineCvx/vaccineName identify the vaccine group FITS judged the
+   * dose against (NIST's ExpectedEvaluation.relatedTo - in practice every
+   * FITS dose has exactly one). status is the engine's own EvaluationStatus
+   * name (VALID, NOT_VALID, EXTRANEOUS, SUB_STANDARD) - FitsDownloader maps
+   * NIST's EvaluationStatus into it at download time. reason is NIST's
+   * EvaluationReason name when FITS gives one, else null.
+   */
+  public static class ExpectedEvaluation {
+    private String vaccineCvx;
+    private String vaccineName;
+    private String status;
+    private String reason;
+
+    public String getVaccineCvx() {
+      return vaccineCvx;
+    }
+
+    public void setVaccineCvx(String vaccineCvx) {
+      this.vaccineCvx = vaccineCvx;
+    }
+
+    public String getVaccineName() {
+      return vaccineName;
+    }
+
+    public void setVaccineName(String vaccineName) {
+      this.vaccineName = vaccineName;
+    }
+
+    public String getStatus() {
+      return status;
+    }
+
+    public void setStatus(String status) {
+      this.status = status;
+    }
+
+    public String getReason() {
+      return reason;
+    }
+
+    public void setReason(String reason) {
+      this.reason = reason;
     }
   }
 

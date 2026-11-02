@@ -5,13 +5,13 @@
   "groupName" : "MMR",
   "title" : "No doses",
   "patientSex" : "F",
-  "birthDate" : "2026-01-01",
-  "evalDate" : "2026-09-01",
+  "birthDate" : "2026-03-02",
+  "evalDate" : "2026-11-02",
   "vaccinations" : [ ],
   "expectedForecasts" : [ {
     "vaccineCvx" : "03",
     "serieStatus" : "NOT_COMPLETE",
-    "earliestDate" : "2027-01-01",
-    "recommendedDate" : "2027-01-01"
+    "earliestDate" : "2027-03-02",
+    "recommendedDate" : "2027-03-02"
   } ]
 }

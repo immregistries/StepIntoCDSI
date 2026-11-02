@@ -1,0 +1,39 @@
+{
+  "uid" : "2026-0035",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HepB",
+  "title" : "Patient is 12 months old and has been administered two doses of the Twinrix Jr vaccine at an interval of 4 weeks - 4 days.",
+  "patientSex" : "F",
+  "birthDate" : "2025-10-09",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ {
+    "date" : "2026-10-09",
+    "cvx" : "193",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "45",
+      "vaccineName" : "Hep B, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2026-11-02",
+    "cvx" : "193",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "45",
+      "vaccineName" : "Hep B, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "45",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2027-01-29",
+    "recommendedDate" : "2027-01-29"
+  } ]
+}

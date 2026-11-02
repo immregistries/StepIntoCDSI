@@ -1,0 +1,39 @@
+{
+  "uid" : "2026-0065",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HPV",
+  "title" : "Adult, male, 24 years of age administered a previous dose of the HPV (CVX 62) vaccine at 10 years old and a second dose (CVX 165) as an adult.",
+  "patientSex" : "F",
+  "birthDate" : "2002-11-02",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ {
+    "date" : "2013-02-02",
+    "cvx" : "62",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "137",
+      "vaccineName" : "HPV, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2026-11-02",
+    "cvx" : "165",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "137",
+      "vaccineName" : "HPV, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "137",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

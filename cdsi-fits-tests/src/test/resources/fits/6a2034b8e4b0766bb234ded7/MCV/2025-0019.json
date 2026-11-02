@@ -1,0 +1,39 @@
+{
+  "uid" : "2025-0019",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "MCV",
+  "title" : "Patient is 16 years of age and has been administered two doses of Meningococcal vaccine one dose Penbraya and another dose as Penmenvy",
+  "patientSex" : "F",
+  "birthDate" : "2010-10-30",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ {
+    "date" : "2026-08-30",
+    "cvx" : "316",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "108",
+      "vaccineName" : "meningococcal ACWY, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2026-11-02",
+    "cvx" : "328",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "108",
+      "vaccineName" : "meningococcal ACWY, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "108",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

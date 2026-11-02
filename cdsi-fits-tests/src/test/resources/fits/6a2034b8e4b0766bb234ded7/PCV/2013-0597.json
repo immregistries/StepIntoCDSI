@@ -1,0 +1,50 @@
+{
+  "uid" : "2013-0597",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "PCV",
+  "title" : "Dose # 1 PCV 20 at 6 mo; # 2 at 11 mo, # 3 at 12 mo",
+  "patientSex" : "F",
+  "birthDate" : "2025-11-02",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ {
+    "date" : "2026-05-02",
+    "cvx" : "216",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "152",
+      "vaccineName" : "Pneumococcal Conjugate, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2026-10-02",
+    "cvx" : "216",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "152",
+      "vaccineName" : "Pneumococcal Conjugate, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2026-11-02",
+    "cvx" : "216",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "152",
+      "vaccineName" : "Pneumococcal Conjugate, unspecified formulation",
+      "status" : "NOT_VALID",
+      "reason" : "D"
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "152",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-12-28",
+    "recommendedDate" : "2026-12-28"
+  } ]
+}

@@ -1,0 +1,50 @@
+{
+  "uid" : "2026-0028",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HepA",
+  "title" : "Patient is an adult and has been administered three doses of the Twinrix vaccine at intervals of 0, 7, and 14 days.",
+  "patientSex" : "F",
+  "birthDate" : "1964-10-12",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ {
+    "date" : "2026-10-12",
+    "cvx" : "104",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "85",
+      "vaccineName" : "Hep A, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2026-10-19",
+    "cvx" : "104",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "85",
+      "vaccineName" : "Hep A, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2026-11-02",
+    "cvx" : "104",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "85",
+      "vaccineName" : "Hep A, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "85",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2027-10-12",
+    "recommendedDate" : "2027-10-12"
+  } ]
+}

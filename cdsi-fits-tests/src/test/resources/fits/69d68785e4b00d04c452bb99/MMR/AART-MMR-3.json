@@ -5,18 +5,30 @@
   "groupName" : "MMR",
   "title" : "Dose 2 at 4 years",
   "patientSex" : "F",
-  "birthDate" : "2022-09-01",
-  "evalDate" : "2026-09-01",
+  "birthDate" : "2022-11-02",
+  "evalDate" : "2026-11-02",
   "vaccinations" : [ {
-    "date" : "2023-09-01",
+    "date" : "2023-11-02",
     "cvx" : "03",
     "mvx" : "",
-    "doseCondition" : null
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "03",
+      "vaccineName" : "MMR",
+      "status" : "VALID",
+      "reason" : null
+    } ]
   }, {
-    "date" : "2026-09-01",
+    "date" : "2026-11-02",
     "cvx" : "03",
     "mvx" : "",
-    "doseCondition" : null
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "03",
+      "vaccineName" : "MMR",
+      "status" : "VALID",
+      "reason" : null
+    } ]
   } ],
   "expectedForecasts" : [ {
     "vaccineCvx" : "03",

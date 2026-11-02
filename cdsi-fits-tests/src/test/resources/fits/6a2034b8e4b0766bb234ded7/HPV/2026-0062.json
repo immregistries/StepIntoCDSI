@@ -1,0 +1,39 @@
+{
+  "uid" : "2026-0062",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HPV",
+  "title" : "Adult, male, 19 years of age administered a second dose of the HPV Gardasil 4 vaccine at 4 weeks - 4 days",
+  "patientSex" : "F",
+  "birthDate" : "1996-09-03",
+  "evalDate" : "2016-12-28",
+  "vaccinations" : [ {
+    "date" : "2015-11-28",
+    "cvx" : "62",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "137",
+      "vaccineName" : "HPV, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2015-12-22",
+    "cvx" : "62",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "137",
+      "vaccineName" : "HPV, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "137",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2016-04-28",
+    "recommendedDate" : "2016-05-28"
+  } ]
+}

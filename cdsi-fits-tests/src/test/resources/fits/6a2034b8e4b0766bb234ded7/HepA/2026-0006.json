@@ -1,0 +1,28 @@
+{
+  "uid" : "2026-0006",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HepA",
+  "title" : "Dose #1 of Twinrix vaccine administered at 27 years.",
+  "patientSex" : "F",
+  "birthDate" : "1999-11-02",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ {
+    "date" : "2026-11-02",
+    "cvx" : "104",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "52",
+      "vaccineName" : "Hep A, adult",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "85",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-11-30",
+    "recommendedDate" : "2026-11-30"
+  } ]
+}

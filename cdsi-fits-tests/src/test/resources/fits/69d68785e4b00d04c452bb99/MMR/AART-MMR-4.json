@@ -5,13 +5,13 @@
   "groupName" : "MMR",
   "title" : "Adult with no doses of MMR",
   "patientSex" : "F",
-  "birthDate" : "2001-09-01",
-  "evalDate" : "2026-09-01",
+  "birthDate" : "2001-11-02",
+  "evalDate" : "2026-11-02",
   "vaccinations" : [ ],
   "expectedForecasts" : [ {
     "vaccineCvx" : "03",
     "serieStatus" : "NOT_COMPLETE",
-    "earliestDate" : "2002-09-01",
-    "recommendedDate" : "2002-09-01"
+    "earliestDate" : "2002-11-02",
+    "recommendedDate" : "2002-11-02"
   } ]
 }

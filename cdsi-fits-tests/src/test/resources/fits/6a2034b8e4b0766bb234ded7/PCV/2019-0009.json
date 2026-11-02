@@ -1,0 +1,39 @@
+{
+  "uid" : "2019-0009",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "PCV",
+  "title" : "Adult Patient 65 years with a dose of PPSV23 vaccine and PCV",
+  "patientSex" : "F",
+  "birthDate" : "1960-11-02",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ {
+    "date" : "2025-11-02",
+    "cvx" : "33",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "33",
+      "vaccineName" : "pneumococcal polysaccharide PPV23",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2026-11-02",
+    "cvx" : "216",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "216",
+      "vaccineName" : "Pneumococcal conjugate PCV20, polysaccharide CRM197 conjugate, adjuvant, PF",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "109",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

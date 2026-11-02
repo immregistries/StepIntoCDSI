@@ -1,0 +1,14 @@
+id: acip-4.6-sd-4.65-fits-315f9d11
+logic_spec:
+  version: '4.6'
+  source_sha256: 9b00d92d90629832d82fc41855847b03c8548d9564480cab68cc391a7b824a9e
+supporting_data:
+  release_id: '4.65'
+  source_filename: supporting-data-4.65-508.zip
+  bundle_sha256: 741b8fd21c77887c4d2dc9ce1119a58d2659152007bda6791ffc57fdc098ce3d
+fits_fixture_set:
+  sha256: 315f9d11623b7f48c3c120d88e2f86f11d0c0d114ca05207df3395066ab0a660
+  case_count: 1137
+created_at: '2026-11-02T16:36:50Z'
+status: active
+notes: ''

@@ -1,0 +1,28 @@
+{
+  "uid" : "2023-0105",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "MCV",
+  "title" : "Patient is 11 years of age and has been administered CVX 316 as a first dose",
+  "patientSex" : "F",
+  "birthDate" : "2015-11-02",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ {
+    "date" : "2026-11-02",
+    "cvx" : "316",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "108",
+      "vaccineName" : "meningococcal ACWY, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "108",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2031-11-02",
+    "recommendedDate" : "2031-11-02"
+  } ]
+}

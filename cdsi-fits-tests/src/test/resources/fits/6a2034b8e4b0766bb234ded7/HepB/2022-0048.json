@@ -1,0 +1,39 @@
+{
+  "uid" : "2022-0048",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HepB",
+  "title" : "Hep B: Patient is 62 years and has been administered the first and second dose of a Hep B vaccine",
+  "patientSex" : "F",
+  "birthDate" : "1964-10-05",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ {
+    "date" : "2026-10-05",
+    "cvx" : "43",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "43",
+      "vaccineName" : "Hep B, adult",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2026-11-02",
+    "cvx" : "43",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "43",
+      "vaccineName" : "Hep B, adult",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "45",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2027-01-25",
+    "recommendedDate" : "2027-04-05"
+  } ]
+}

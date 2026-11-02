@@ -1,21 +1,32 @@
 package org.openimmunizationsoftware.cdsi.fitstests.download;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.fasterxml.jackson.core.util.DefaultIndenter;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 import org.openimmunizationsoftware.cdsi.fitstests.FitsDates;
 import org.openimmunizationsoftware.cdsi.fitstests.FitsTestCase;
 
 import gov.nist.healthcare.cds.domain.Event;
+import gov.nist.healthcare.cds.domain.ExpectedEvaluation;
 import gov.nist.healthcare.cds.domain.ExpectedForecast;
 import gov.nist.healthcare.cds.domain.FixedDate;
 import gov.nist.healthcare.cds.domain.RelativeDate;
@@ -44,19 +55,36 @@ import gov.nist.hit.resources.deploy.client.SSLFITSClient;
  * in the main project) - re-run this only when NIST publishes a new suite
  * revision, not as part of routine development.
  *
+ * FITS moved from fits.nist.gov to tools.valitheus.com/fits/ in 2026; the
+ * API paths are unchanged (the fits-client appends "fits/api/..." to the
+ * base URL itself), so only the base URL differs.
+ *
+ * Which test plans are downloaded is controlled by cdsi-fits-tests/fits-plans.txt
+ * (one FITS test-plan id per line, '#' comments). FITS keeps every earlier
+ * revision of the CDSi suite as a "HISTORICAL" plan, and most cases carry
+ * forward from one revision to the next, so pulling every plan would run
+ * the same case several times over. Only the listed plans are written, and
+ * every other plan folder under the output root (except sample/) is
+ * removed, so a refresh leaves exactly the listed plans on disk.
+ *
  * Usage (credentials via environment variables, never as command-line args -
  * those end up in shell history and process listings):
  * <pre>
- *   NIST_FITS_URL=https://fits.nist.gov/ \
- *   NIST_FITS_USERNAME=yourUsername \
- *   NIST_FITS_PASSWORD=yourPassword \
+ *   FITS_USERNAME=yourUsername \
+ *   FITS_PASSWORD=yourPassword \
  *   mvn -pl cdsi-fits-tests exec:java \
  *     -Dexec.mainClass=org.openimmunizationsoftware.cdsi.fitstests.download.FitsDownloader
  * </pre>
- * or run this class's main() directly from an IDE with those three
- * environment variables set.
+ * FITS_URL optionally overrides the base URL (default {@value #DEFAULT_FITS_URL}).
+ * The older NIST_FITS_URL/NIST_FITS_USERNAME/NIST_FITS_PASSWORD names are
+ * still accepted as fallbacks. Or run this class's main() directly from an
+ * IDE with those environment variables set.
  */
 public final class FitsDownloader {
+
+  static final String DEFAULT_FITS_URL = "https://tools.valitheus.com/";
+  private static final String PLANS_FILE = "fits-plans.txt";
+  private static final String SAMPLE_DIR = "sample";
 
   private static final SimpleDateFormat NIST_DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
 
@@ -64,19 +92,52 @@ public final class FitsDownloader {
   }
 
   public static void main(String[] args) throws Exception {
-    String url = requireEnv("NIST_FITS_URL");
-    String username = requireEnv("NIST_FITS_USERNAME");
-    String password = requireEnv("NIST_FITS_PASSWORD");
+    String url = firstEnv("FITS_URL", "NIST_FITS_URL");
+    if (url == null || url.contains("fits.nist.gov")) {
+      url = DEFAULT_FITS_URL; // the old NIST host no longer serves FITS
+    }
+    String username = requireEnv("FITS_USERNAME", "NIST_FITS_USERNAME");
+    String password = requireEnv("FITS_PASSWORD", "NIST_FITS_PASSWORD");
     File outputRoot = new File(args.length > 0 ? args[0] : defaultOutputDir());
+    Set<String> planIds = loadPlanIds();
 
+    System.out.println("Fetching test plans from " + url + " ...");
     SSLFITSClient client = new SSLFITSClient(url, username, password);
     java.util.List<TestPlan> testPlans = client.getTestPlans().getBody();
+    if (testPlans == null) {
+      throw new IllegalStateException("FITS returned no test plans");
+    }
+
+    Set<String> found = new LinkedHashSet<>();
+    for (TestPlan testPlan : testPlans) {
+      String marker = planIds.contains(testPlan.getId()) ? "  [in scope]  " : "  [ignored]   ";
+      System.out.println(marker + testPlan.getId() + " " + testPlan.getName());
+      if (planIds.contains(testPlan.getId())) {
+        found.add(testPlan.getId());
+      }
+    }
+    Set<String> missing = new LinkedHashSet<>(planIds);
+    missing.removeAll(found);
+    if (!missing.isEmpty()) {
+      // Fail before touching anything on disk - a partial refresh would
+      // silently drop a whole plan from the suite.
+      throw new IllegalStateException("Test plan(s) listed in " + PLANS_FILE + " not found on FITS: " + missing);
+    }
+
+    removePlanFolders(outputRoot);
 
     int written = 0;
     int skipped = 0;
-    ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+    // Always LF, never the platform separator: fixtures are checksummed
+    // byte-for-byte (reference-set.json), so a refresh on Windows must
+    // produce the same bytes as one on macOS/Linux.
+    ObjectWriter mapper = new ObjectMapper().writer(
+        new DefaultPrettyPrinter().withObjectIndenter(new DefaultIndenter("  ", "\n")));
 
     for (TestPlan testPlan : testPlans) {
+      if (!planIds.contains(testPlan.getId())) {
+        continue;
+      }
       for (TestCaseGroup group : testPlan.getTestCaseGroups()) {
         for (TestCase testCase : group.getTestCases()) {
           try {
@@ -113,10 +174,61 @@ public final class FitsDownloader {
     return "src/test/resources/fits";
   }
 
-  private static String requireEnv(String name) {
-    String value = System.getenv(name);
-    if (value == null || value.trim().isEmpty()) {
-      throw new IllegalStateException("Environment variable " + name + " is required");
+  /** cdsi-fits-tests/fits-plans.txt, found the same way defaultOutputDir() finds the fixtures. */
+  private static Set<String> loadPlanIds() throws IOException {
+    File fromRoot = new File("cdsi-fits-tests/" + PLANS_FILE);
+    File file = fromRoot.isFile() ? fromRoot : new File(PLANS_FILE);
+    if (!file.isFile()) {
+      throw new IllegalStateException(PLANS_FILE + " not found (looked in cdsi-fits-tests/ and the current directory)");
+    }
+    Set<String> ids = new LinkedHashSet<>();
+    for (String line : Files.readAllLines(file.toPath(), StandardCharsets.UTF_8)) {
+      String trimmed = line.trim();
+      int hash = trimmed.indexOf('#');
+      if (hash >= 0) {
+        trimmed = trimmed.substring(0, hash).trim();
+      }
+      if (!trimmed.isEmpty()) {
+        ids.add(trimmed);
+      }
+    }
+    if (ids.isEmpty()) {
+      throw new IllegalStateException(PLANS_FILE + " lists no test plans");
+    }
+    return ids;
+  }
+
+  /** Removes every plan folder (all but sample/) so the refresh leaves only the in-scope plans, with no stale cases. */
+  private static void removePlanFolders(File outputRoot) throws IOException {
+    File[] children = outputRoot.listFiles(File::isDirectory);
+    if (children == null) {
+      return;
+    }
+    for (File child : children) {
+      if (child.getName().equals(SAMPLE_DIR)) {
+        continue;
+      }
+      try (Stream<Path> walk = Files.walk(child.toPath())) {
+        walk.sorted(Comparator.reverseOrder()).forEach(p -> p.toFile().delete());
+      }
+    }
+  }
+
+  private static String firstEnv(String... names) {
+    for (String name : names) {
+      String value = System.getenv(name);
+      if (value != null && !value.trim().isEmpty()) {
+        return value.trim();
+      }
+    }
+    return null;
+  }
+
+  private static String requireEnv(String... names) {
+    String value = firstEnv(names);
+    if (value == null) {
+      throw new IllegalStateException("Environment variable " + String.join(" (or ", names)
+          + (names.length > 1 ? ")" : "") + " is required");
     }
     return value;
   }
@@ -192,6 +304,25 @@ public final class FitsDownloader {
       vaccination.setDate(FitsDates.format(vaccineDate));
       vaccination.setCvx(cvx);
       vaccination.setMvx("");
+      if (vaccinationEvent.getEvaluations() != null) {
+        for (ExpectedEvaluation evaluation : vaccinationEvent.getEvaluations()) {
+          if (evaluation.getStatus() == null) {
+            continue;
+          }
+          FitsTestCase.ExpectedEvaluation expected = new FitsTestCase.ExpectedEvaluation();
+          if (evaluation.getRelatedTo() != null) {
+            expected.setVaccineCvx(evaluation.getRelatedTo().getCvx());
+            expected.setVaccineName(evaluation.getRelatedTo().getName());
+          }
+          expected.setStatus(toEngineEvaluationStatus(evaluation.getStatus().name()));
+          expected.setReason(evaluation.getReason() == null ? null : evaluation.getReason().name());
+          vaccination.getExpectedEvaluations().add(expected);
+        }
+        // HashSet order from the client - sort so a re-download produces an identical file.
+        vaccination.getExpectedEvaluations().sort(Comparator.comparing(
+            (FitsTestCase.ExpectedEvaluation e) -> String.valueOf(e.getVaccineCvx()))
+            .thenComparing(e -> String.valueOf(e.getStatus())));
+      }
       fixture.getVaccinations().add(vaccination);
     }
 
@@ -234,6 +365,22 @@ public final class FitsDownloader {
         return "AGED_OUT";
       default:
         throw new IllegalArgumentException("Unrecognized NIST SerieStatus: " + nistSerieStatusName);
+    }
+  }
+
+  /** NIST's EvaluationStatus enum -> the engine's own EvaluationStatus name. */
+  private static String toEngineEvaluationStatus(String nistEvaluationStatusName) {
+    switch (nistEvaluationStatusName) {
+      case "VALID":
+        return "VALID";
+      case "INVALID":
+        return "NOT_VALID";
+      case "EXTRANEOUS":
+        return "EXTRANEOUS";
+      case "SUBSTANDARD":
+        return "SUB_STANDARD";
+      default:
+        throw new IllegalArgumentException("Unrecognized NIST EvaluationStatus: " + nistEvaluationStatusName);
     }
   }
 

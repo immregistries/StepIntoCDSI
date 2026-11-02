@@ -5,18 +5,30 @@
   "groupName" : "MCV",
   "title" : "Dose 2 at 16 years",
   "patientSex" : "F",
-  "birthDate" : "2010-09-01",
-  "evalDate" : "2026-09-01",
+  "birthDate" : "2010-11-02",
+  "evalDate" : "2026-11-02",
   "vaccinations" : [ {
-    "date" : "2021-09-01",
+    "date" : "2021-11-02",
     "cvx" : "108",
     "mvx" : "",
-    "doseCondition" : null
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "108",
+      "vaccineName" : "meningococcal ACWY, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
   }, {
-    "date" : "2026-09-01",
+    "date" : "2026-11-02",
     "cvx" : "108",
     "mvx" : "",
-    "doseCondition" : null
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "108",
+      "vaccineName" : "meningococcal ACWY, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
   } ],
   "expectedForecasts" : [ {
     "vaccineCvx" : "108",

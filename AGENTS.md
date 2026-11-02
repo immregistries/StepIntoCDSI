@@ -36,9 +36,10 @@ dependency and a web module built on it:
   - `src/test/resources/fits/` - one JSON fixture per FITS test case (see the
     README.md there); a fresh checkout has none until `FitsDownloader` is run
   - `src/main/java/.../fitstests/download/FitsDownloader.java` - the
-    dev-time tool that refreshes those fixtures from a live NIST FITS
-    account (needs `NIST_FITS_URL`/`NIST_FITS_USERNAME`/`NIST_FITS_PASSWORD`
-    env vars - see its class Javadoc)
+    dev-time tool that refreshes those fixtures from a live FITS account
+    at https://tools.valitheus.com/fits/ (needs `FITS_USERNAME`/`FITS_PASSWORD`
+    env vars - see its class Javadoc); only the plans listed in
+    `cdsi-fits-tests/fits-plans.txt` are downloaded
 - `cdsi-reference/` - Python tooling and versioned, agent-readable copies
   of the Logic Specification and Supporting Data, mapped to `cdsi-engine`
   classes/tests. NOT a Maven module and never a runtime dependency of the
