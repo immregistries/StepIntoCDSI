@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "HepA",
   "title" : "Dose #3 of a HepA vaccine, is administered at 25-years, at an interval of 6 months - 4 days",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2001-05-02",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

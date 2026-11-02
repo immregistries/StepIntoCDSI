@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "HepA",
   "title" : "Dose #1 of Twinrix vaccine administered at 27 years.",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "1999-11-02",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

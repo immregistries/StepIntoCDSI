@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "PCV",
   "title" : "Dose 1 of PCV 13 at 2 months",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2023-06-04",
   "evalDate" : "2023-08-04",
   "vaccinations" : [ {

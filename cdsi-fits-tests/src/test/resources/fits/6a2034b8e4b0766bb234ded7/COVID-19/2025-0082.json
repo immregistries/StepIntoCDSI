@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "COVID-19",
   "title" : "Patient is 4 years old and was administered a dose of the 2024-2025 Pfizer Covid-19 ",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2021-08-01",
   "evalDate" : "2025-09-24",
   "vaccinations" : [ {

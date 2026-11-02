@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "PCV",
   "title" : "Adult Patient 66 years has received PCV13 and PCV20",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "1960-11-02",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "HPV",
   "title" : "Adult, male, 44 years of age administered three doses of the Gardasil vaccine as CVX137 (unspecified) at appropriate intervals.",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "1982-11-02",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "HPV",
   "title" : "Female, age 46 years - 4 days no doses of HPV",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "1980-11-06",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ ],

@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "COVID-19",
   "title" : "Patient is 3 years of age and was administered a Fall 2025-2026 Covid-19 vaccine at 8 weeks - 5 days from previous vaccine dose",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2022-08-04",
   "evalDate" : "2025-10-10",
   "vaccinations" : [ {

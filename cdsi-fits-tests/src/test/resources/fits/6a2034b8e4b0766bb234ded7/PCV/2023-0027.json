@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "PCV",
   "title" : "Patient is a child with four doses of PCV20.  Series complete. ",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2025-11-02",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

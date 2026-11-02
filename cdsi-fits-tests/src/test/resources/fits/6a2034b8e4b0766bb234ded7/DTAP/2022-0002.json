@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "DTAP",
   "title" : "Dose #1 Tdap at 9 years, Dose #2 Td at 4 weeks, Dose #3 Tdap at 10 years",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2016-11-02",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

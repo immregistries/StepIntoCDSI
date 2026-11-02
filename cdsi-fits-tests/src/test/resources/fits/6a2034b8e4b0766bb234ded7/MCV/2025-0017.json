@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "MCV",
   "title" : "Patient is 12 years of age and has been administered a dose of Penmenvy vaccine",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2014-10-02",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

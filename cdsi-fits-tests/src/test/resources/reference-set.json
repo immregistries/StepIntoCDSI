@@ -1,10 +1,10 @@
 {
-  "id": "acip-4.6-sd-4.65-fits-315f9d11",
+  "id": "acip-4.6-sd-4.65-fits-4f705ec9",
   "logicSpecVersion": "4.6",
   "supportingDataRelease": "4.65",
   "supportingDataZipName": "supporting-data-4.65-508.zip",
   "supportingDataBundleSha256": "741b8fd21c77887c4d2dc9ce1119a58d2659152007bda6791ffc57fdc098ce3d",
-  "fitsFixtureSetSha256": "315f9d11623b7f48c3c120d88e2f86f11d0c0d114ca05207df3395066ab0a660",
+  "fitsFixtureSetSha256": "4f705ec9d40c30afea2b6520a55559934f7369c8fb0c5ea05d6e07e40cc261eb",
   "fitsFixtureSetCaseCount": 1137,
-  "createdAt": "2026-11-02T16:36:50Z"
+  "createdAt": "2026-11-02T19:09:12Z"
 }

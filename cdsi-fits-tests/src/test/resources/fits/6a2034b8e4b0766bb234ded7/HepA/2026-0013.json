@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "HepA",
   "title" : "Dose #1 as Twinrix, dose #2 as Unspecified HepA, and dose #3 as Hep A (Havrix) vaccine, is administered, at 58 years, at an interval of 5 months",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "1968-04-28",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

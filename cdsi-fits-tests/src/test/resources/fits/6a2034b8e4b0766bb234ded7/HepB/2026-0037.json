@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "HepB",
   "title" : "Patient is 8 years old and has been administered a third dose of HepB vaccine (CVX 193) at an interval of 8 weeks - 4 days.",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2018-08-02",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

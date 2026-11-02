@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "HPV",
   "title" : "Adolescent, male, 11 years of age administered a second dose of Gardasil 4 at an interval of 5 months - 5 days ",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2004-05-03",
   "evalDate" : "2016-01-17",
   "vaccinations" : [ {

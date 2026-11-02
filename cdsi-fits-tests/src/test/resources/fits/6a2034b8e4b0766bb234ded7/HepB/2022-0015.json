@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "HepB",
   "title" : "Hep B: Patient is 41 years and has received a fourth dose of the Hep B vaccine",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "1985-07-02",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

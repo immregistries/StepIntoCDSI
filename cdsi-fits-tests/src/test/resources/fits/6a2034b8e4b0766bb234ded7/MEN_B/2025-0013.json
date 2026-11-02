@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "MEN B",
   "title" : "Patient is 23 years and has been administered three doses of the MenB (2 Bexsero & Penmenvy) vaccine",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2003-04-07",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

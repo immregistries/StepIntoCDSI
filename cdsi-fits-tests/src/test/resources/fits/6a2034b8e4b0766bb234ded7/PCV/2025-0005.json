@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "PCV",
   "title" : " Patient is 54 years of age and has been administered two doses of Pneumococcal (PCV13 and a dose of PCV20)  vaccine",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "1972-08-26",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "HPV",
   "title" : "Male age 27. Forecast  HPV dose ",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "1999-11-02",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ ],

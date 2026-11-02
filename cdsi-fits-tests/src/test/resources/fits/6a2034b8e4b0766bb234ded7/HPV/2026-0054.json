@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "HPV",
   "title" : "Adolescent, male, 13 years of age administered two doses of the HPV vaccine (CVX 137 and CVX165) ",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2013-01-22",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

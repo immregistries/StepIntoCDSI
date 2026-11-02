@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "HPV",
   "title" : "Adolescent child 15 years -1 days with no previous history of HPV vaccine",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2011-11-03",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ ],

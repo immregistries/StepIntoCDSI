@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "COVID-19",
   "title" : "Patient is 13 years of age and has been administered two doses of a Covid-19 vaccine in a previous season",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2012-07-21",
   "evalDate" : "2025-08-27",
   "vaccinations" : [ {

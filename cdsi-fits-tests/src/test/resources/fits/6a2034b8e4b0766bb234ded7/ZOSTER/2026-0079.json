@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "ZOSTER",
   "title" : "Patient is 18 years administered a second dose of the Zoster vaccine at an interval of 4 weeks - 5 days.",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2008-10-10",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

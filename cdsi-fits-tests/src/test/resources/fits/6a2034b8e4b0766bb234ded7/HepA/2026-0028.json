@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "HepA",
   "title" : "Patient is an adult and has been administered three doses of the Twinrix vaccine at intervals of 0, 7, and 14 days.",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "1964-10-12",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

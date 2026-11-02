@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "MMR",
   "title" : "Adult with no previous doses of the MMR vaccine",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "1991-11-02",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ ],

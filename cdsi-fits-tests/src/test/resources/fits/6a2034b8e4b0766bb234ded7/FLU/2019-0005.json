@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "FLU",
   "title" : "Child entered season at 8 years of age, received dose before 9. Forecast another dose",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2016-09-01",
   "evalDate" : "2025-09-01",
   "vaccinations" : [ {

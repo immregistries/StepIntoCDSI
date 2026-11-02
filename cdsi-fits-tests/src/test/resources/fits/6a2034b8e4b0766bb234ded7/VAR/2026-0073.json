@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "VAR",
   "title" : "Adult patient with one dose of the MMRV vaccine.",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2003-11-02",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

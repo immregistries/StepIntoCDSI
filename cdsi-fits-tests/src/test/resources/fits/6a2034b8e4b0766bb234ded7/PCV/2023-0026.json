@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "PCV",
   "title" : "Dose # 1 PCV 20 at age 6 weeks-4 days",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2026-09-25",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

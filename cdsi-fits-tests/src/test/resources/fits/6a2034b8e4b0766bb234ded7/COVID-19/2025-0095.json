@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "COVID-19",
   "title" : "Patient is 7 years of age and was administered three doses of Moderna Covid-19 vaccine in previous seasons",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2018-02-22",
   "evalDate" : "2025-10-06",
   "vaccinations" : [ {

@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "MCV",
   "title" : "Patient is 16 years of age and has been administered two doses of the Meningococcal vaccine (CVX 316) ",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2010-09-28",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

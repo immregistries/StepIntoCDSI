@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "COVID-19",
   "title" : "Patient is 4 years of age and was administered two previous Pfizer Covid-19 vaccine and one previous Fall 2023-2024 Novavax Covid-19 vaccine",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2021-02-07",
   "evalDate" : "2025-09-25",
   "vaccinations" : [ {

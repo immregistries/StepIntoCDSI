@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "HPV",
   "title" : "Male, age 34 years with three doses of the HPV vaccine at an interval of 6 months",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "1992-04-04",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

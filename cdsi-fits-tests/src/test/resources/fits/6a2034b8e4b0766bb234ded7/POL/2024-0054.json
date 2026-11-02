@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "POL",
   "title" : "Patient is 19 months of age has been administered 2 doses of fIPV vaccine and 1 dose of IPV vaccine",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2025-04-02",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

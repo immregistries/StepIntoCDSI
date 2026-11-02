@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "HPV",
   "title" : "Adult, male, 19 years of age administered a second dose of the HPV Gardasil 4 vaccine at 4 weeks - 4 days",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "1996-09-03",
   "evalDate" : "2016-12-28",
   "vaccinations" : [ {

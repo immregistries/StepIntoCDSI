@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "FLU",
   "title" : "Adult with no previous dose of the Influenza vaccine",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "1988-09-01",
   "evalDate" : "2025-09-01",
   "vaccinations" : [ ],

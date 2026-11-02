@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "HepB",
   "title" : "Patient is 12 months old and has been administered two doses of the Twinrix Jr vaccine at an interval of 4 weeks - 4 days.",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2025-10-09",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

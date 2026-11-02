@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "HPV",
   "title" : "#2 @ 9 yrs, 4 wks - 4 days, male, gardasil ",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2017-10-09",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "HPV",
   "title" : "#2 @ 9 yrs, 4 wks - 4 days, male, Cervarix ",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2002-05-01",
   "evalDate" : "2011-05-22",
   "vaccinations" : [ {

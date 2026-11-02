@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "HPV",
   "title" : "Adolescent, male, 12 years of age administered a second dose of the HPV vaccine at an interval of 6 months",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2005-05-12",
   "evalDate" : "2017-06-03",
   "vaccinations" : [ {

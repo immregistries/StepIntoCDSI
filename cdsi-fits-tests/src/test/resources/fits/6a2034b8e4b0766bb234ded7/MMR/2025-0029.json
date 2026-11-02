@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "MMR",
   "title" : "Dose 1 of Varicella at 4 years and dose 2 MMRV at interval of 4 weeks",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2022-10-05",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

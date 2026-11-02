@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "MEN B",
   "title" : "Patient is 17 years of age and has been administered an unspecified dose of the Men B vaccine",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2009-09-02",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

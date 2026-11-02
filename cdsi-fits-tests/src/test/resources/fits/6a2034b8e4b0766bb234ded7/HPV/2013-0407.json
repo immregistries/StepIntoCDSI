@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "HPV",
   "title" : "#2 @ 11 yrs + 2 mo, male, gardasil",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2015-09-02",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

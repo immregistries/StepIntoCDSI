@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "HPV",
   "title" : "Adolescent, male, 14 years of age with a third dose of the HPV (Gardasil 9) vaccine at an interval of 5 months.",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2012-11-02",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

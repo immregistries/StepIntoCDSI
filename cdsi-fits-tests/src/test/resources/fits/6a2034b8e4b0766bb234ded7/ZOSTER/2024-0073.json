@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "ZOSTER",
   "title" : "Zoster: Dose #1 of Shingrix at 18 years - 5 days ",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2008-11-07",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

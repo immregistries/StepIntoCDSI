@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "HepB",
   "title" : "Patient is almost 18 years old and has been administered a first dose of HepB vaccine as Twinrix Jr (CVX 193).",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2008-11-07",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

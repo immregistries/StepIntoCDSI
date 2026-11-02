@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "HPV",
   "title" : "Adolescent, male, 16 years of age administered a third dose of the HPV Gardasil 4 vaccine at 16 weeks -4 days",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "1999-11-03",
   "evalDate" : "2016-04-01",
   "vaccinations" : [ {

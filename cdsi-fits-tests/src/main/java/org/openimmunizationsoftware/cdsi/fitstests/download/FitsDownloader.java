@@ -37,6 +37,7 @@ import gov.nist.healthcare.cds.domain.TestCaseGroup;
 import gov.nist.healthcare.cds.domain.TestPlan;
 import gov.nist.healthcare.cds.domain.VaccinationEvent;
 import gov.nist.healthcare.cds.domain.VaccineDateReference;
+import gov.nist.healthcare.cds.enumeration.Gender;
 import gov.nist.hit.resources.deploy.client.SSLFITSClient;
 
 /**
@@ -284,7 +285,9 @@ public final class FitsDownloader {
     fixture.setTestPlanName(testPlan.getName());
     fixture.setGroupName(group.getName());
     fixture.setTitle(testCase.getName());
-    fixture.setPatientSex("F");
+    // FITS' Gender has only M and F; a case with no gender recorded keeps the
+    // engine's historical default of F (the same rule FitsServlet applies).
+    fixture.setPatientSex(testCase.getPatient().getGender() == Gender.M ? "M" : "F");
     fixture.setBirthDate(FitsDates.format(birthDate));
     fixture.setEvalDate(FitsDates.format(evalDate));
 

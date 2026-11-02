@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "HepA",
   "title" : "Patient is an adult that was administered two doses of a Hep A (CVX 52 & CVX 85) vaccine at an interval of 4 weeks.",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "1979-10-05",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

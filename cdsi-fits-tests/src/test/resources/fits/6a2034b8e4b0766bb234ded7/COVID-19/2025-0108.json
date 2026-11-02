@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "COVID-19",
   "title" : "Patient is 67 years of age and has been administered three doses of the Novavax Covid-19 vaccine in previous seasons",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "1958-06-02",
   "evalDate" : "2025-10-06",
   "vaccinations" : [ {

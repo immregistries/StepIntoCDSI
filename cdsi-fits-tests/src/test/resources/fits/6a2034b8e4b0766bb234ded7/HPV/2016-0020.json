@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "HPV",
   "title" : "Adolescent child with a history of 2 doses of the HPV vaccine 1st dose given at 11 years and the 2nd dose give at 2 months later.",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2014-07-31",
   "evalDate" : "2026-11-02",
   "vaccinations" : [ {

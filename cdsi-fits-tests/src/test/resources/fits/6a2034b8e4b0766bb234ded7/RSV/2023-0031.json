@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "RSV",
   "title" : "Patient is an infant born in April with an assessment date in October and hasn't received a RSV vaccine",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "2025-04-23",
   "evalDate" : "2025-10-01",
   "vaccinations" : [ ],

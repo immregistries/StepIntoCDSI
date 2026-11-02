@@ -4,7 +4,7 @@
   "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
   "groupName" : "COVID-19",
   "title" : "Patient is 46 years of age and has been administered a previous doses of the Moderna Covid-19 vaccine and one dose of the Novavax Fall 2024-2025 vaccine.",
-  "patientSex" : "F",
+  "patientSex" : "M",
   "birthDate" : "1979-02-20",
   "evalDate" : "2025-09-24",
   "vaccinations" : [ {
