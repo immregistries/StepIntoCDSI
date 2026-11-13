@@ -1,0 +1,25 @@
+id: "2026-11-02-fits-inadvertent-evaluation-link"
+date: "2026-11-02"
+phase: 22
+title: "FITS - link the inadvertent evaluation to the administered dose (SPEC-4.6-0068)"
+before:
+  commit: "38f3eb04"
+  engine_tests: {total: 835, failures: 2, errors: 0}
+  fits: {total_cases: 1137, passed: 1107, failed_assertions: 29, execution_errors: 1}
+after:
+  commit: "38f3eb04"
+  engine_tests: {total: 836, failures: 2, errors: 0}
+  fits: {total_cases: 1137, passed: 1107, failed_assertions: 29, execution_errors: 1}
+  fits_runtime_seconds: 60
+summary: >
+  Table 6-13 now ties its Not Valid / inadvertent evaluation to the
+  administered dose. The six A1 doses match. Forecast passing stays
+  1107 and statusChanged is empty. The harness rollup then prefers
+  that inadvertent evaluation over a Valid evaluation of the same dose
+  on another best series of the antigen, so ten previously matching
+  doses (five PCV, five RSV) are called not valid. Doses matched
+  2505 to 2501. Owner accepted the link on 2026-11-13 (correct engine
+  record; the ten rollup mismatches are a harness question).
+details_doc: "cdsi-reference/logic-spec/versions/4.6/findings/SPEC-4.6-0068/finding.md"
+finding_ids: ["SPEC-4.6-0068"]
+status: reviewed

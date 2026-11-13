@@ -29,7 +29,7 @@ change cases later in the list, and you want to see that before starting the nex
 
 | # | Prompt | Doses | Symptom | Status |
 |---|---|---|---|---|
-| A1 | [A1-inadvertent-dose-not-linked.md](A1-inadvertent-dose-not-linked.md) | 6 | Inadvertent doses (Tdap to infants, bOPV, Abrysvo to an infant) come out "never evaluated" | not started |
+| A1 | [A1-inadvertent-dose-not-linked.md](A1-inadvertent-dose-not-linked.md) | 6 | Inadvertent doses (Tdap to infants, bOPV, Abrysvo to an infant) come out "never evaluated" | done (2026-11-13) |
 | A2 | [A2-cervarix-to-males.md](A2-cervarix-to-males.md) | 13 | Cervarix given to males called valid; FITS says inadvertent | not started |
 | B | [B-td-tdap-age-7-plus.md](B-td-tdap-age-7-plus.md) | 15 | Td/Tdap catch-up at 7+ and adults called not valid (too soon / too young) | not started |
 | C | [C-covid-19.md](C-covid-19.md) | 12 | Seasonal COVID-19 doses called extraneous (65+) or too soon (children) | not started |
@@ -41,6 +41,14 @@ finding only (no code change), deferred.
 
 A1 and A2 together are 19 of the 20 missed not-valid doses; B is 15 of the 21 valid
 doses called not valid. Those three move the two error rates the most.
+
+A1 (SPEC-4.6-0068, committed 2026-11-13): the six target doses match, and forecast
+passing stays 1107. Linking the evaluation also makes the harness call ten
+previously valid doses not valid (five adult PCV, five adult RSV), because
+those doses are inadvertent on a second best series of the same antigen and
+Not Valid wins the rollup. Doses matched 2505 to 2501. The owner accepted
+the link; the ten rollup mismatches are a harness question for
+`EvaluationComparator`. A2 is next.
 
 ## Measuring
 

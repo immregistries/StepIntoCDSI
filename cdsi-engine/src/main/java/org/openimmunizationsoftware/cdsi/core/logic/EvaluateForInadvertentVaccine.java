@@ -89,15 +89,31 @@ public class EvaluateForInadvertentVaccine extends LogicStep {
                     log(LogLevel.STATE, "Setting evaluation status to \"not valid\"");
                     log(LogLevel.STATE, "Setting evaluation reason to \"inadvertent administration\"");
                     // 4.4 hands 6.3 a target dose with no evaluation recorded yet
-                    // (6.1's/6.2's own non-rejecting outcomes record nothing) -
-                    // create one to receive this outcome's status if none exists,
-                    // rather than assuming a later step has already attached one.
-                    if (dataModel.getTargetDose().getEvaluation() == null) {
-                        dataModel.getTargetDose().setEvaluation(new Evaluation());
+                    // (6.1's/6.2's own non-rejecting outcomes record nothing).
+                    // 6.4's setEvaluationForCurrentTargetDose ties the new
+                    // evaluation to this antigen and this administered dose.
+                    // An evaluation that names neither cannot be reported
+                    // against the dose (the status is recorded, then skipped).
+                    // An evaluation already on this target is updated in place
+                    // so Rule 1 does not append a second record. If that
+                    // evaluation does not yet name a dose, it is tied to this
+                    // administered dose. An evaluation that already names a
+                    // dose keeps that dose.
+                    VaccineDoseAdministered administered = caVaccineDoseAdministered.getFinalValue();
+                    Evaluation evaluation = dataModel.getTargetDose().getEvaluation();
+                    if (evaluation == null) {
+                        dataModel.setEvaluationForCurrentTargetDose(EvaluationStatus.NOT_VALID,
+                                EvaluationReason.INADVERTENT_ADMINISTRATION);
+                    } else {
+                        evaluation.setEvaluationStatus(EvaluationStatus.NOT_VALID);
+                        evaluation.setEvaluationReason(EvaluationReason.INADVERTENT_ADMINISTRATION);
+                        if (evaluation.getVaccineDoseAdministered() == null) {
+                            evaluation.setVaccineDoseAdministered(administered);
+                        }
+                        if (evaluation.getAntigen() == null) {
+                            evaluation.setAntigen(dataModel.getAntigen());
+                        }
                     }
-                    dataModel.getTargetDose().getEvaluation().setEvaluationStatus(EvaluationStatus.NOT_VALID);
-                    dataModel.getTargetDose().getEvaluation()
-                            .setEvaluationReason(EvaluationReason.INADVERTENT_ADMINISTRATION);
                     // FORECASTDTCAN-1 needs this administered dose's own date as a
                     // floor for the next earliest forecast date; this is a fact about
                     // this one administration (see the field's own Javadoc), not a
