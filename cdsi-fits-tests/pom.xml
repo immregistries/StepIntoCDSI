@@ -62,11 +62,11 @@
 		the dev-time tool that talks to a live NIST FITS account and writes the
 		JSON fixtures below. Not needed at all to run the JUnit tests themselves.
 		-->
-		<dependency>
-			<groupId>gov.nist.healthcare.cds.client</groupId>
-			<artifactId>fits-client</artifactId>
-			<version>1.2.1-AIRA-1.1</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>gov.nist.healthcare.cds.client</groupId>-->
+<!--			<artifactId>fits-client</artifactId>-->
+<!--			<version>1.2.1-AIRA-1.1</version>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>gov.nist.healthcare.cds</groupId>
 			<artifactId>cds-base-domain</artifactId>

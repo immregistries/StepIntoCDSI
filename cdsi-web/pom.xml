@@ -91,11 +91,11 @@
 			</exclusions>
 		</dependency>
 
-		<dependency>
-			<groupId>gov.nist.healthcare.cds.client</groupId>
-			<artifactId>fits-client</artifactId>
-			<version>1.2.1-AIRA-1.1</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>gov.nist.healthcare.cds.client</groupId>-->
+<!--			<artifactId>fits-client</artifactId>-->
+<!--			<version>1.2.1-AIRA-1.1</version>-->
+<!--		</dependency>-->
 
 		<!-- Apache HttpClient 5 - required by fits-client -->
 		<dependency>
