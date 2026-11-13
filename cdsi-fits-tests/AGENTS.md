@@ -16,6 +16,11 @@ Not built yet - work around their absence as noted, don't block on them:
 - **Structured per-decision engine trace** (Phase 18): `trace.jsonl` is not written today. Use `results.jsonl`'s `fieldDifferences` plus the step package for the mapped section, and re-run the single case by hand with a debugger or added logging if you need finer-grained evidence.
 - **Case-level regression baseline** (Phase 19): there is no `cdsi-fits-tests/history/baseline.yaml` yet distinguishing "known, already-investigated failure" from "new regression." Until it exists, treat every failing case as needing investigation, and rely on git history plus existing findings' `fits_cases` lists to tell whether a case has already been looked at.
 
+For dose-evaluation mismatches (rather than forecast failures), start from
+`campaigns/2026-11-evaluation/README.md`: it holds the baseline, the clusters in the
+order to work them, and a prompt per cluster with where to look first. The same
+workflow below applies.
+
 ## The workflow
 
 1. **Confirm a clean repository and a valid reference set.** `git status` should be clean (or you should know exactly what's uncommitted and why). Run `mvn -pl cdsi-fits-tests test -Dtest=ReferenceSetVerifierTest` - if it fails, stop and fix the reference set binding first (see `cdsi-reference/reference-sets/README.md`), don't investigate FITS cases against a state nobody can reproduce.

@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.openimmunizationsoftware.cdsi</groupId>
 		<artifactId>cdsi-parent</artifactId>
-		<version>5.3.4</version>
+		<version>5.4.0</version>
 	</parent>
 
 	<artifactId>cdsi-engine</artifactId>
@@ -42,5 +42,50 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- The engine is consumed as a plain dependency by other Java projects, at least
+			     one of which runs on Java 8, so the engine alone targets Java 8. cdsi-web and
+			     cdsi-fits-tests stay on the parent's Java 17. release=8 makes javac check
+			     against the Java 8 API, so a Java 9+ language feature or library call is a
+			     compile error rather than a runtime surprise. -Xlint:-options silences
+			     JDK 21+'s "release 8 is deprecated" warning. -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<release>8</release>
+					<compilerArgs>
+						<arg>-Xlint:-options</arg>
+					</compilerArgs>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<!-- Run the engine's unit tests on a real Java 8 JVM (the build itself still runs
+		     on JDK 17+): mvn -pl cdsi-engine test -Djava8.home="C:\Program Files\Java\jdk1.8.0_202" -->
+		<profile>
+			<id>java8-runtime-tests</id>
+			<activation>
+				<property>
+					<name>java8.home</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<jvm>${java8.home}/bin/java</jvm>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>

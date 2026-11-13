@@ -44,6 +44,7 @@ def _fits_summary() -> Optional[dict]:
         "total": total,
         "passed": passed,
         "pass_pct": round(100 * passed / total, 1),
+        "evaluation": fits_dashboard.evaluation_metrics(data["cases"]),
     }
 
 
@@ -72,7 +73,12 @@ def render_index() -> str:
 
     if fits:
         fits_stat = f"""<div class="stat">{fits['pass_pct']}%</div>
-    <div class="stat-label">{fits['passed']}/{fits['total']} FITS cases passing - reference set {_esc(fits['reference_set'])}</div>"""
+    <div class="stat-label">{fits['passed']}/{fits['total']} FITS cases passing the forecast - reference set {_esc(fits['reference_set'])}</div>"""
+        ev = fits.get("evaluation")
+        if ev:
+            fits_stat += f"""
+    <div class="stat">{ev['match_pct']}%</div>
+    <div class="stat-label">{ev['matched']}/{ev['doses']} dose evaluations matching - {ev['false_invalid_pct']}% of valid doses called not valid, {ev['missed_invalid_pct']}% of not-valid doses missed</div>"""
     else:
         fits_stat = '<p class="muted">No FITS run bundle found yet.</p>'
 
@@ -133,7 +139,7 @@ def render_index() -> str:
   </a>
   <a class="tile" href="fits-results.html">
     <h2>FITS Conformance (Phase 17)</h2>
-    <p class="desc">The NIST FITS end-to-end conformance suite, broken down by vaccine group.</p>
+    <p class="desc">The NIST FITS end-to-end conformance suite: dose evaluations and forecasts, by vaccine group.</p>
     {fits_stat}
   </a>
   <a class="tile" href="progress-ledger.html">

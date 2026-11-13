@@ -7,7 +7,14 @@
 - `mvn -pl <module> -am install` - Build just one module (and whatever it depends on)
 
 ## Requirements
-- Java 17
+- JDK 17+ to build (Java 17 for `cdsi-web` and `cdsi-fits-tests`)
+- `cdsi-engine` targets **Java 8** (`<release>8</release>` in its own pom) because
+  other Java 8 projects consume it as a dependency. Engine code must not use
+  Java 9+ language features or APIs (`var`, records, switch expressions, text
+  blocks, `List.of`/`Map.of`, `Stream.toList()`, `Optional.isEmpty()`,
+  `String.isBlank()`/`strip()`/`repeat()`, etc.); the build fails if it does.
+  To run the engine's tests on a real Java 8 JVM:
+  `mvn -pl cdsi-engine test -Djava8.home="C:\Program Files\Java\jdk1.8.0_202"`
 - Maven 3.x
 
 ## Project Structure
@@ -36,9 +43,10 @@ dependency and a web module built on it:
   - `src/test/resources/fits/` - one JSON fixture per FITS test case (see the
     README.md there); a fresh checkout has none until `FitsDownloader` is run
   - `src/main/java/.../fitstests/download/FitsDownloader.java` - the
-    dev-time tool that refreshes those fixtures from a live NIST FITS
-    account (needs `NIST_FITS_URL`/`NIST_FITS_USERNAME`/`NIST_FITS_PASSWORD`
-    env vars - see its class Javadoc)
+    dev-time tool that refreshes those fixtures from a live FITS account
+    at https://tools.valitheus.com/fits/ (needs `FITS_USERNAME`/`FITS_PASSWORD`
+    env vars - see its class Javadoc); only the plans listed in
+    `cdsi-fits-tests/fits-plans.txt` are downloaded
 - `cdsi-reference/` - Python tooling and versioned, agent-readable copies
   of the Logic Specification and Supporting Data, mapped to `cdsi-engine`
   classes/tests. NOT a Maven module and never a runtime dependency of the

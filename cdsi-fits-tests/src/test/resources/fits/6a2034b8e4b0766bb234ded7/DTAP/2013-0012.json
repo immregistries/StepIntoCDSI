@@ -1,0 +1,17 @@
+{
+  "uid" : "2013-0012",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "DTAP",
+  "title" : "Age 6.  No vaccinations. Forecast DTaP.",
+  "patientSex" : "F",
+  "birthDate" : "2020-11-02",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "107",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2020-12-14",
+    "recommendedDate" : "2021-01-02"
+  } ]
+}

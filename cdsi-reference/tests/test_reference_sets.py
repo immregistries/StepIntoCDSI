@@ -26,7 +26,7 @@ def test_compute_fixture_set_is_deterministic():
     first = rs.compute_fixture_set(paths.fits_tests_fixtures_dir())
     second = rs.compute_fixture_set(paths.fits_tests_fixtures_dir())
     assert first == second
-    assert first["case_count"] == 4896
+    assert first["case_count"] == 1137  # plans in cdsi-fits-tests/fits-plans.txt + sample/
 
 
 def test_create_reference_set_is_idempotent_for_identical_inputs():

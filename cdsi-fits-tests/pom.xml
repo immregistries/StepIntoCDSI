@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.openimmunizationsoftware.cdsi</groupId>
 		<artifactId>cdsi-parent</artifactId>
-		<version>5.3.4</version>
+		<version>5.4.0</version>
 	</parent>
 
 	<artifactId>cdsi-fits-tests</artifactId>

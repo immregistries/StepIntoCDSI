@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.openimmunizationsoftware.cdsi.fitstests.EvaluationComparator;
 import org.openimmunizationsoftware.cdsi.fitstests.FitsEngineRunner;
 import org.openimmunizationsoftware.cdsi.fitstests.FitsTestCase;
 
@@ -119,11 +120,51 @@ final class CaseRecord {
     return entry;
   }
 
+  /** PASS / FAIL / NONE (FITS expects no dose evaluations) / ERROR - independent of {@link #status()}, which is forecast-only. */
+  String evaluationStatus() {
+    return result.getEvaluationStatus();
+  }
+
+  List<EvaluationComparator.DoseEvaluationComparison> evaluationComparisons() {
+    return result.getEvaluations();
+  }
+
+  /** A failure bundle is written when either the forecast or the evaluation didn't pass. */
+  boolean needsFailureBundle() {
+    return !status().equals("PASS") || evaluationStatus().equals("FAIL");
+  }
+
+  List<Map<String, Object>> evaluationEntries() {
+    List<Map<String, Object>> entries = new ArrayList<>();
+    for (EvaluationComparator.DoseEvaluationComparison c : result.getEvaluations()) {
+      Map<String, Object> entry = new LinkedHashMap<>();
+      entry.put("dose", c.getDoseNumber());
+      entry.put("date", c.getVaccination().getDate());
+      entry.put("cvx", c.getVaccination().getCvx());
+      entry.put("targetCvx", c.getExpected().getVaccineCvx());
+      entry.put("targetName", c.getExpected().getVaccineName());
+      entry.put("expected", c.getExpected().getStatus());
+      entry.put("expectedReason", c.getExpected().getReason());
+      entry.put("actual", c.getActualStatus());
+      entry.put("match", c.isMatch());
+      entry.put("perAntigen", c.getPerAntigen());
+      entry.put("perAntigenReason", c.getPerAntigenReason());
+      entry.put("antigenDisagreement", c.isAntigenDisagreement());
+      entry.put("problem", c.getProblem());
+      entries.add(entry);
+    }
+    return entries;
+  }
+
   Map<String, Object> toResultEntry() {
     Map<String, Object> entry = new LinkedHashMap<>();
     entry.put("caseId", caseId());
     entry.put("group", testCase.getGroupName());
+    entry.put("testPlanId", testCase.getTestPlanId());
+    entry.put("title", testCase.getTitle());
     entry.put("status", status());
+    entry.put("evaluationStatus", evaluationStatus());
+    entry.put("evaluations", evaluationEntries());
     String expectedJson = FitsRunRecorder.mapper().valueToTree(expectedSummary()).toString();
     String actualJson = FitsRunRecorder.mapper().valueToTree(actualSummary()).toString();
     entry.put("expectedHash", FitsRunRecorder.sha256(expectedJson));
@@ -133,7 +174,7 @@ final class CaseRecord {
     entry.put("fieldDifferences", fieldDifferences());
     entry.put("durationMs", durationMs);
     entry.put("baselineComparison", null);
-    entry.put("failureBundlePath", status().equals("PASS") ? null : "failures/" + caseId() + "/");
+    entry.put("failureBundlePath", needsFailureBundle() ? "failures/" + caseId() + "/" : null);
     if (result.getException() != null) {
       entry.put("exception", result.getException().getClass().getSimpleName() + ": " + result.getException().getMessage());
     }

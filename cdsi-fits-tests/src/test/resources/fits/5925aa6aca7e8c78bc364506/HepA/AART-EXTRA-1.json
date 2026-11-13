@@ -5,13 +5,13 @@
   "groupName" : "HepA",
   "title" : "2 years 6 months old - no doses administered",
   "patientSex" : "F",
-  "birthDate" : "2024-03-01",
-  "evalDate" : "2026-09-01",
+  "birthDate" : "2024-05-02",
+  "evalDate" : "2026-11-02",
   "vaccinations" : [ ],
   "expectedForecasts" : [ {
     "vaccineCvx" : "85",
     "serieStatus" : "NOT_COMPLETE",
-    "earliestDate" : "2025-03-01",
-    "recommendedDate" : "2025-03-01"
+    "earliestDate" : "2025-05-02",
+    "recommendedDate" : "2025-05-02"
   } ]
 }

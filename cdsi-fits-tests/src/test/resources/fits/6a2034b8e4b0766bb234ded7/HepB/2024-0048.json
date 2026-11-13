@@ -1,0 +1,61 @@
+{
+  "uid" : "2024-0048",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HepB",
+  "title" : "Patient is an adult who has been administered four doses of a HepB (CVX 104) vaccine",
+  "patientSex" : "F",
+  "birthDate" : "1991-10-12",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ {
+    "date" : "2025-10-12",
+    "cvx" : "104",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "43",
+      "vaccineName" : "Hep B, adult",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2025-10-19",
+    "cvx" : "104",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "43",
+      "vaccineName" : "Hep B, adult",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2025-11-02",
+    "cvx" : "104",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "43",
+      "vaccineName" : "Hep B, adult",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2026-10-12",
+    "cvx" : "104",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "43",
+      "vaccineName" : "Hep B, adult",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "43",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

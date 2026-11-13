@@ -19,7 +19,7 @@ class ReferenceSetVerifierTest {
   void loadAndVerifySucceedsAgainstTheRealExportedReferenceSet() {
     ReferenceSetVerifier.ReferenceSet referenceSet = ReferenceSetVerifier.loadAndVerify();
     assertTrue(referenceSet.id().startsWith("acip-"));
-    assertEquals(4896, referenceSet.fitsFixtureSetCaseCount());
+    assertEquals(1137, referenceSet.fitsFixtureSetCaseCount());
   }
 
   @Test

@@ -1,0 +1,28 @@
+{
+  "uid" : "2013-0687",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "POL",
+  "title" : "# 1 Pediarix at 6 wks-5 days",
+  "patientSex" : "F",
+  "birthDate" : "2026-09-26",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ {
+    "date" : "2026-11-02",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "89",
+      "vaccineName" : "polio, unspecified formulation",
+      "status" : "NOT_VALID",
+      "reason" : "C"
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "89",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-11-07",
+    "recommendedDate" : "2026-11-26"
+  } ]
+}

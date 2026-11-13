@@ -5,18 +5,24 @@
   "groupName" : "HepA",
   "title" : "11 years - 1 dose at 11 years",
   "patientSex" : "F",
-  "birthDate" : "2015-09-01",
-  "evalDate" : "2026-09-01",
+  "birthDate" : "2015-11-02",
+  "evalDate" : "2026-11-02",
   "vaccinations" : [ {
-    "date" : "2026-08-29",
+    "date" : "2026-10-30",
     "cvx" : "85",
     "mvx" : "",
-    "doseCondition" : null
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "85",
+      "vaccineName" : "Hep A, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
   } ],
   "expectedForecasts" : [ {
     "vaccineCvx" : "85",
     "serieStatus" : "NOT_COMPLETE",
-    "earliestDate" : "2027-02-28",
-    "recommendedDate" : "2027-02-28"
+    "earliestDate" : "2027-04-30",
+    "recommendedDate" : "2027-04-30"
   } ]
 }

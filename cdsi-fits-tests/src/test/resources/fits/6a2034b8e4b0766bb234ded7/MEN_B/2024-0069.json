@@ -1,0 +1,28 @@
+{
+  "uid" : "2024-0069",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "MEN B",
+  "title" : "Patient is 17 years of age and has been administered an unspecified dose of the Men B vaccine",
+  "patientSex" : "M",
+  "birthDate" : "2009-09-02",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ {
+    "date" : "2026-11-02",
+    "cvx" : "164",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "164",
+      "vaccineName" : "meningococcal B, unspecified",
+      "status" : "NOT_VALID",
+      "reason" : "G"
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "164",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-11-30",
+    "recommendedDate" : "2026-11-30"
+  } ]
+}

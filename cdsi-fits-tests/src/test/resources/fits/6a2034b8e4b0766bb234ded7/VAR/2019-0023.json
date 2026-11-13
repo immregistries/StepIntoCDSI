@@ -1,0 +1,17 @@
+{
+  "uid" : "2019-0023",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "VAR",
+  "title" : "Adult patient with no doses of the Varicella vaccine.",
+  "patientSex" : "F",
+  "birthDate" : "2004-11-02",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "21",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2005-11-02",
+    "recommendedDate" : "2005-11-02"
+  } ]
+}

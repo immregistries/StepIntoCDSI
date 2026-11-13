@@ -5,18 +5,24 @@
   "groupName" : "MCV",
   "title" : "Dose 1 at 11 years",
   "patientSex" : "F",
-  "birthDate" : "2015-09-01",
-  "evalDate" : "2026-09-01",
+  "birthDate" : "2015-11-02",
+  "evalDate" : "2026-11-02",
   "vaccinations" : [ {
-    "date" : "2026-09-01",
+    "date" : "2026-11-02",
     "cvx" : "108",
     "mvx" : "",
-    "doseCondition" : null
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "108",
+      "vaccineName" : "meningococcal ACWY, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
   } ],
   "expectedForecasts" : [ {
     "vaccineCvx" : "108",
     "serieStatus" : "NOT_COMPLETE",
-    "earliestDate" : "2031-09-01",
-    "recommendedDate" : "2031-09-01"
+    "earliestDate" : "2031-11-02",
+    "recommendedDate" : "2031-11-02"
   } ]
 }

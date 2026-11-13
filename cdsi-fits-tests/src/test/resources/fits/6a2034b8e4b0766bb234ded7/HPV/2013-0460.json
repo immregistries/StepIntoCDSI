@@ -1,0 +1,17 @@
+{
+  "uid" : "2013-0460",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HPV",
+  "title" : "Adolescent male, no HPV yet given.",
+  "patientSex" : "M",
+  "birthDate" : "2017-12-07",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "137",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-12-07",
+    "recommendedDate" : "2028-12-07"
+  } ]
+}

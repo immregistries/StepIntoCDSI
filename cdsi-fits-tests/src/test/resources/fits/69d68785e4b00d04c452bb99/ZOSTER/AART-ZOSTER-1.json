@@ -5,13 +5,13 @@
   "groupName" : "ZOSTER",
   "title" : "No Doses",
   "patientSex" : "F",
-  "birthDate" : "1977-03-01",
-  "evalDate" : "2026-09-01",
+  "birthDate" : "1977-05-02",
+  "evalDate" : "2026-11-02",
   "vaccinations" : [ ],
   "expectedForecasts" : [ {
     "vaccineCvx" : "188",
     "serieStatus" : "NOT_COMPLETE",
-    "earliestDate" : "2027-03-01",
-    "recommendedDate" : "2027-03-01"
+    "earliestDate" : "2027-05-02",
+    "recommendedDate" : "2027-05-02"
   } ]
 }

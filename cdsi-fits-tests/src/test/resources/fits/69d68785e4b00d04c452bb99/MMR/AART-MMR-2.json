@@ -5,18 +5,24 @@
   "groupName" : "MMR",
   "title" : "Dose 1 at 12 months",
   "patientSex" : "F",
-  "birthDate" : "2025-09-01",
-  "evalDate" : "2026-09-01",
+  "birthDate" : "2025-11-02",
+  "evalDate" : "2026-11-02",
   "vaccinations" : [ {
-    "date" : "2026-09-01",
+    "date" : "2026-11-02",
     "cvx" : "03",
     "mvx" : "",
-    "doseCondition" : null
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "03",
+      "vaccineName" : "MMR",
+      "status" : "VALID",
+      "reason" : null
+    } ]
   } ],
   "expectedForecasts" : [ {
     "vaccineCvx" : "03",
     "serieStatus" : "NOT_COMPLETE",
-    "earliestDate" : "2026-10-01",
-    "recommendedDate" : "2029-09-01"
+    "earliestDate" : "2026-12-02",
+    "recommendedDate" : "2029-11-02"
   } ]
 }

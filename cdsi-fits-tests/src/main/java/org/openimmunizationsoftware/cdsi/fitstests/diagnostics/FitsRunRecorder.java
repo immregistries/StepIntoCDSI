@@ -138,6 +138,7 @@ public final class FitsRunRecorder {
     summary.put("failedAssertions", failedAssertions);
     summary.put("executionErrors", executionErrors);
     summary.put("skippedCases", discoveredCount - records.size());
+    summary.put("evaluation", evaluationSummary());
     summary.put("knownFailures", null);
     summary.put("newRegressions", null);
     summary.put("newlyPassingCases", null);
@@ -155,18 +156,67 @@ public final class FitsRunRecorder {
       changedCases.put("note", "No previous run found under " + runsRoot() + " to compare against.");
       summary.put("addedCases", null);
       summary.put("removedCases", null);
+      summary.put("dosesNewlyMatched", null);
+      summary.put("dosesNewlyMismatched", null);
     } else {
       ChangedCases diff = compareAgainst(previousRun);
       changedCases.put("comparedAgainst", previousRun.getFileName().toString());
       changedCases.put("added", diff.added());
       changedCases.put("removed", diff.removed());
       changedCases.put("statusChanged", diff.statusChanged());
+      changedCases.put("evaluationStatusChanged", diff.evaluationStatusChanged());
+      changedCases.put("dosesNewlyMatched", diff.dosesNewlyMatched());
+      changedCases.put("dosesNewlyMismatched", diff.dosesNewlyMismatched());
+      changedCases.put("dosesStillMismatchedButChanged", diff.dosesStillMismatchedButChanged());
       summary.put("addedCases", diff.added().size());
       summary.put("removedCases", diff.removed().size());
+      summary.put("dosesNewlyMatched", diff.dosesNewlyMatched().size());
+      summary.put("dosesNewlyMismatched", diff.dosesNewlyMismatched().size());
     }
 
     MAPPER.writeValue(runDir.resolve("summary.json").toFile(), summary);
     MAPPER.writeValue(runDir.resolve("changed-cases.json").toFile(), changedCases);
+  }
+
+  /**
+   * Dose-level evaluation totals, kept separate from the case-level forecast
+   * counts above (different unit: one entry per expected dose evaluation).
+   * confusion is expected status -> actual status -> count, where actual can
+   * also be NOT_EVALUATED, or UNMAPPED when no vaccine group could be found
+   * to compare (see EvaluationComparator).
+   */
+  private Map<String, Object> evaluationSummary() {
+    int casesWithEvaluations = 0, casesPassed = 0, casesFailed = 0;
+    int doses = 0, matched = 0, disagreements = 0;
+    Map<String, Map<String, Integer>> confusion = new java.util.TreeMap<>();
+    for (CaseRecord record : records) {
+      switch (record.evaluationStatus()) {
+        case "PASS" -> { casesWithEvaluations++; casesPassed++; }
+        case "FAIL" -> { casesWithEvaluations++; casesFailed++; }
+        default -> { }
+      }
+      for (var c : record.evaluationComparisons()) {
+        doses++;
+        if (c.isMatch()) {
+          matched++;
+        }
+        if (c.isAntigenDisagreement()) {
+          disagreements++;
+        }
+        String actual = c.getActualStatus() == null ? "UNMAPPED" : c.getActualStatus();
+        confusion.computeIfAbsent(c.getExpected().getStatus(), k -> new java.util.TreeMap<>())
+            .merge(actual, 1, Integer::sum);
+      }
+    }
+    Map<String, Object> evaluation = new LinkedHashMap<>();
+    evaluation.put("casesWithExpectedEvaluations", casesWithEvaluations);
+    evaluation.put("casesAllDosesMatched", casesPassed);
+    evaluation.put("casesWithAMismatch", casesFailed);
+    evaluation.put("dosesCompared", doses);
+    evaluation.put("dosesMatched", matched);
+    evaluation.put("dosesWithAntigenDisagreement", disagreements);
+    evaluation.put("confusion", confusion);
+    return evaluation;
   }
 
   private Path findPreviousRun(Path currentRunDir) throws IOException {
@@ -187,19 +237,45 @@ public final class FitsRunRecorder {
     return latest;
   }
 
-  private record ChangedCases(List<String> added, List<String> removed, List<String> statusChanged) {
+  /**
+   * statusChanged is the forecast status; evaluationStatusChanged the case's
+   * evaluation status. The three dose lists compare individual dose
+   * evaluations (keyed by case, dose position and FITS target CVX) present
+   * in both runs - a previous run from before dose evaluations were recorded
+   * simply contributes none.
+   */
+  private record ChangedCases(List<String> added, List<String> removed, List<String> statusChanged,
+      List<String> evaluationStatusChanged, List<String> dosesNewlyMatched, List<String> dosesNewlyMismatched,
+      List<String> dosesStillMismatchedButChanged) {
+  }
+
+  private static String doseKey(String caseId, Object dose, Object targetCvx) {
+    return caseId + " dose " + dose + " vs " + targetCvx;
   }
 
   private ChangedCases compareAgainst(Path previousRunDir) throws IOException {
     Path previousResults = previousRunDir.resolve("results.jsonl");
     Map<String, String> previousStatusByCaseId = new LinkedHashMap<>();
+    Map<String, String> previousEvaluationStatusByCaseId = new LinkedHashMap<>();
+    Map<String, Map<?, ?>> previousDoses = new LinkedHashMap<>();
     if (Files.exists(previousResults)) {
       for (String line : Files.readAllLines(previousResults, StandardCharsets.UTF_8)) {
         if (line.isBlank()) {
           continue;
         }
         Map<?, ?> entry = MAPPER.readValue(line, Map.class);
-        previousStatusByCaseId.put((String) entry.get("caseId"), (String) entry.get("status"));
+        String caseId = (String) entry.get("caseId");
+        previousStatusByCaseId.put(caseId, (String) entry.get("status"));
+        if (entry.get("evaluationStatus") != null) {
+          previousEvaluationStatusByCaseId.put(caseId, (String) entry.get("evaluationStatus"));
+        }
+        if (entry.get("evaluations") instanceof List<?> evaluations) {
+          for (Object o : evaluations) {
+            if (o instanceof Map<?, ?> dose) {
+              previousDoses.put(doseKey(caseId, dose.get("dose"), dose.get("targetCvx")), dose);
+            }
+          }
+        }
       }
     }
     Set<String> currentCaseIds = new TreeSet<>();
@@ -228,13 +304,45 @@ public final class FitsRunRecorder {
         statusChanged.add(caseId + ": " + previousStatus + " -> " + currentStatusByCaseId.get(caseId));
       }
     }
-    return new ChangedCases(added, removed, statusChanged);
+    List<String> evaluationStatusChanged = new ArrayList<>();
+    List<String> newlyMatched = new ArrayList<>();
+    List<String> newlyMismatched = new ArrayList<>();
+    List<String> stillMismatchedButChanged = new ArrayList<>();
+    for (CaseRecord record : records) {
+      String caseId = record.caseId();
+      String previousEvaluationStatus = previousEvaluationStatusByCaseId.get(caseId);
+      if (previousEvaluationStatus != null && !previousEvaluationStatus.equals(record.evaluationStatus())) {
+        evaluationStatusChanged.add(caseId + ": " + previousEvaluationStatus + " -> " + record.evaluationStatus());
+      }
+      for (var c : record.evaluationComparisons()) {
+        String key = doseKey(caseId, c.getDoseNumber(), c.getExpected().getVaccineCvx());
+        Map<?, ?> before = previousDoses.get(key);
+        if (before == null) {
+          continue;
+        }
+        boolean wasMatch = Boolean.TRUE.equals(before.get("match"));
+        String previousActual = String.valueOf(before.get("actual"));
+        String actual = String.valueOf(c.getActualStatus());
+        String line = key + " (cvx " + c.getVaccination().getCvx() + "): " + previousActual + " -> " + actual
+            + ", expected " + c.getExpected().getStatus();
+        if (!wasMatch && c.isMatch()) {
+          newlyMatched.add(line);
+        } else if (wasMatch && !c.isMatch()) {
+          newlyMismatched.add(line);
+        } else if (!c.isMatch() && (!previousActual.equals(actual)
+            || !String.valueOf(before.get("perAntigen")).equals(String.valueOf(c.getPerAntigen())))) {
+          stillMismatchedButChanged.add(line + " " + before.get("perAntigen") + " -> " + c.getPerAntigen());
+        }
+      }
+    }
+    return new ChangedCases(added, removed, statusChanged, evaluationStatusChanged, newlyMatched, newlyMismatched,
+        stillMismatchedButChanged);
   }
 
   private void writeFailureBundles(Path runDir) throws IOException {
     Path failuresDir = runDir.resolve("failures");
     for (CaseRecord record : records) {
-      if (record.status().equals("PASS")) {
+      if (!record.needsFailureBundle()) {
         continue;
       }
       Path caseDir = failuresDir.resolve(record.caseId());
@@ -243,6 +351,7 @@ public final class FitsRunRecorder {
       MAPPER.writeValue(caseDir.resolve("expected.json").toFile(), record.expectedSummary());
       MAPPER.writeValue(caseDir.resolve("actual.json").toFile(), record.actualSummary());
       MAPPER.writeValue(caseDir.resolve("difference.json").toFile(), record.fieldDifferences());
+      MAPPER.writeValue(caseDir.resolve("evaluations.json").toFile(), record.evaluationEntries());
     }
   }
 

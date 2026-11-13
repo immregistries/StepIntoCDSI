@@ -1,0 +1,17 @@
+{
+  "uid" : "2020-0003",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "DTAP",
+  "title" : "Adult with no previous dose of the Tdap vaccine",
+  "patientSex" : "F",
+  "birthDate" : "1995-11-02",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "107",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2002-11-02",
+    "recommendedDate" : "2002-11-02"
+  } ]
+}
