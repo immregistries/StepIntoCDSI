@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>org.openimmunizationsoftware.cdsi</groupId>
 		<artifactId>cdsi-parent</artifactId>
-		<version>5.3.4</version>
+		<version>5.4.0</version>
 	</parent>
 
 	<artifactId>cdsi-web</artifactId>
@@ -16,7 +16,7 @@
 	<description>The Step Into CDSi web application: interactive step-through UI, FITS test-case runner, and FHIR ImmDS+HALO endpoints, built on cdsi-engine.</description>
 
 	<properties>
-		<software.version>5.3.3</software.version>
+		<software.version>5.4.0</software.version>
 		<base.url>https://informatics.immregistries.org</base.url>
 		<step.external.url>${base.url}/step</step.external.url>
 		<hub.external.url>${base.url}/hub</hub.external.url>

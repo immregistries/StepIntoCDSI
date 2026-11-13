@@ -7,7 +7,14 @@
 - `mvn -pl <module> -am install` - Build just one module (and whatever it depends on)
 
 ## Requirements
-- Java 17
+- JDK 17+ to build (Java 17 for `cdsi-web` and `cdsi-fits-tests`)
+- `cdsi-engine` targets **Java 8** (`<release>8</release>` in its own pom) because
+  other Java 8 projects consume it as a dependency. Engine code must not use
+  Java 9+ language features or APIs (`var`, records, switch expressions, text
+  blocks, `List.of`/`Map.of`, `Stream.toList()`, `Optional.isEmpty()`,
+  `String.isBlank()`/`strip()`/`repeat()`, etc.); the build fails if it does.
+  To run the engine's tests on a real Java 8 JVM:
+  `mvn -pl cdsi-engine test -Djava8.home="C:\Program Files\Java\jdk1.8.0_202"`
 - Maven 3.x
 
 ## Project Structure
