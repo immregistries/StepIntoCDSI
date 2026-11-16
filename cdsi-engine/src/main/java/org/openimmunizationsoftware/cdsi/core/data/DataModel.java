@@ -21,6 +21,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.Patient;
 import org.openimmunizationsoftware.cdsi.core.domain.PatientSeries;
 import org.openimmunizationsoftware.cdsi.core.domain.Schedule;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroup;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineGroupForecast;
 import org.openimmunizationsoftware.cdsi.core.domain.VaccineType;
@@ -47,6 +48,15 @@ public class DataModel {
 
   // Input mechanism
   private ForecastInput forecastInput = null;
+
+  // PR: track which ForecastInput.VaccinationInput entries satisfied a target dose,
+  // so callers can retrieve them after the engine run. See SatisfyTargetDose.process().
+  private List<ForecastInput.VaccinationInput> satisfiedVaccinationInputList =
+      new ArrayList<ForecastInput.VaccinationInput>();
+  // PR: bridge between engine-internal VaccineDoseAdministered and the original
+  // ForecastInput.VaccinationInput, populated in GatherNecessaryData.process().
+  private Map<VaccineDoseAdministered, ForecastInput.VaccinationInput> vaccinationInputMap =
+      new HashMap<VaccineDoseAdministered, ForecastInput.VaccinationInput>();
 
   private List<Antigen> antigenSelectedList = null;
   private List<String> antigenLabelFilterList = null;
@@ -228,6 +238,24 @@ public class DataModel {
 
   public ForecastInput getForecastInput() {
     return forecastInput;
+  }
+
+  public List<ForecastInput.VaccinationInput> getSatisfiedVaccinationInputList() {
+    return satisfiedVaccinationInputList;
+  }
+
+  public void setSatisfiedVaccinationInputList(
+      List<ForecastInput.VaccinationInput> satisfiedVaccinationInputList) {
+    this.satisfiedVaccinationInputList = satisfiedVaccinationInputList;
+  }
+
+  public Map<VaccineDoseAdministered, ForecastInput.VaccinationInput> getVaccinationInputMap() {
+    return vaccinationInputMap;
+  }
+
+  public void setVaccinationInputMap(
+      Map<VaccineDoseAdministered, ForecastInput.VaccinationInput> vaccinationInputMap) {
+    this.vaccinationInputMap = vaccinationInputMap;
   }
 
   private Map<String, ClinicalGuidelineObservation> clinicalGuidelineObservationMap = new HashMap<String, ClinicalGuidelineObservation>();

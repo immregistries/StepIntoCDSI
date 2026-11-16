@@ -5,7 +5,9 @@ import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.data.ForecastInput;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
@@ -32,6 +34,13 @@ public class SatisfyTargetDose extends LogicStep {
     TargetDoseStatus status = dataModel.getTargetDose().getTargetDoseStatus();
     if (status == TargetDoseStatus.SATISFIED) {
       log(LogLevel.CONTROL, "TARGET DOSE SATISFIED - All conditions met");
+      // PR: track the original VaccinationInput that satisfied this target dose,
+      // so callers can retrieve satisfied inputs after the engine run.
+      VaccineDoseAdministered vda = dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered();
+      ForecastInput.VaccinationInput vi = dataModel.getVaccinationInputMap().get(vda);
+      if (vi != null && !dataModel.getSatisfiedVaccinationInputList().contains(vi)) {
+        dataModel.getSatisfiedVaccinationInputList().add(vi);
+      }
     } else if (status == TargetDoseStatus.NOT_SATISFIED) {
       log(LogLevel.CONTROL, "TARGET DOSE NOT SATISFIED - Requirements not met");
     } else if (status == TargetDoseStatus.SKIPPED) {

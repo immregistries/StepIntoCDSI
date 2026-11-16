@@ -45,6 +45,9 @@ public class GatherNecessaryData extends LogicStep {
       vda.setImmunizationHistory(immunizationHistory);
       immunizationHistory.getVaccineDoseAdministeredList().add(vda);
       patient.getReceivesList().add(vda);
+      // PR: record mapping so SatisfyTargetDose can attribute a satisfied/not-satisfied
+      // outcome back to the original ForecastInput.VaccinationInput.
+      dataModel.getVaccinationInputMap().put(vda, v);
       vda.setDateAdministered(v.getDateAdministered());
       if (v.getDoseCondition() != null) {
         vda.setDoseCondition(v.getDoseCondition());
