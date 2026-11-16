@@ -1,0 +1,28 @@
+{
+  "uid" : "2013-0819",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "VAR",
+  "title" : "# 1 MMRV at 12 m-4 days",
+  "patientSex" : "F",
+  "birthDate" : "2025-11-06",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ {
+    "date" : "2026-11-02",
+    "cvx" : "94",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "21",
+      "vaccineName" : "varicella",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "21",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2027-02-06",
+    "recommendedDate" : "2029-11-06"
+  } ]
+}

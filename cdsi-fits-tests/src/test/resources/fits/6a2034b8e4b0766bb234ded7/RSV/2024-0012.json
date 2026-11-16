@@ -1,0 +1,28 @@
+{
+  "uid" : "2024-0012",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "RSV",
+  "title" : "Patient is 52 years of age and has been administered a RSV (Arexvy) vaccine dose",
+  "patientSex" : "F",
+  "birthDate" : "1974-10-02",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ {
+    "date" : "2026-11-02",
+    "cvx" : "303",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "314",
+      "vaccineName" : "Respiratory syncytial virus (RSV) vaccine, unspecified",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "314",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

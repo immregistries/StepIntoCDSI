@@ -5,23 +5,35 @@
   "groupName" : "HIB",
   "title" : "Dose 2 at 4 months",
   "patientSex" : "F",
-  "birthDate" : "2026-05-01",
-  "evalDate" : "2026-09-01",
+  "birthDate" : "2026-07-02",
+  "evalDate" : "2026-11-02",
   "vaccinations" : [ {
-    "date" : "2026-07-01",
+    "date" : "2026-09-02",
     "cvx" : "17",
     "mvx" : "",
-    "doseCondition" : null
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "17",
+      "vaccineName" : "Hib, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
   }, {
-    "date" : "2026-09-01",
+    "date" : "2026-11-02",
     "cvx" : "17",
     "mvx" : "",
-    "doseCondition" : null
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "17",
+      "vaccineName" : "Hib, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
   } ],
   "expectedForecasts" : [ {
     "vaccineCvx" : "17",
     "serieStatus" : "NOT_COMPLETE",
-    "earliestDate" : "2026-09-29",
-    "recommendedDate" : "2026-11-01"
+    "earliestDate" : "2026-11-30",
+    "recommendedDate" : "2027-01-02"
   } ]
 }

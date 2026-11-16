@@ -68,7 +68,7 @@ public abstract class LogicCondition implements LogSink {
    * @param logLevel The log level
    * @deprecated Use {@link #log(LogLevel, String)} with correct parameter order
    */
-  @Deprecated(since = "2026-02-16", forRemoval = false)
+  @Deprecated // since 2026-02-16; the since=/forRemoval= attributes need Java 9+, and the engine targets Java 8
   protected void log(String s, LogLevel logLevel) {
     log(logLevel, s);
   }

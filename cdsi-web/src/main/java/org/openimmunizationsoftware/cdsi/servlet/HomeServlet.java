@@ -247,7 +247,7 @@ public class HomeServlet extends HttpServlet {
                 out.println("  <p>");
                 out.println(
                                 "    Step Into CDSi works directly with the <strong>Forecasting for Immunization Test Suite (FITS)</strong> maintained by NIST:");
-                out.println("    <a href=\"https://fits.nist.gov/fits/\">https://fits.nist.gov/fits/</a>");
+                out.println("    <a href=\"https://tools.valitheus.com/fits/\">https://tools.valitheus.com/fits/</a>");
                 out.println(
                                 "    CDC publishes official CDSi test cases through FITS, and the platform supports bidirectional testing workflows.");
                 out.println(

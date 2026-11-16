@@ -1,0 +1,39 @@
+{
+  "uid" : "2013-0831",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "VAR",
+  "title" : "Interval of < 24 days between an invalid VZ and a subsequent MMRV=not valid VZ",
+  "patientSex" : "F",
+  "birthDate" : "2025-10-14",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ {
+    "date" : "2026-10-09",
+    "cvx" : "21",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "21",
+      "vaccineName" : "varicella",
+      "status" : "NOT_VALID",
+      "reason" : "C"
+    } ]
+  }, {
+    "date" : "2026-11-02",
+    "cvx" : "94",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "21",
+      "vaccineName" : "varicella",
+      "status" : "NOT_VALID",
+      "reason" : "E"
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "21",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-11-30",
+    "recommendedDate" : "2026-11-30"
+  } ]
+}

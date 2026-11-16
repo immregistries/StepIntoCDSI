@@ -1,5 +1,12 @@
 # cdsi-engine - per-step spec-conformance test workflow
 
+> **Java 8 module.** `cdsi-engine` compiles with `<release>8</release>` (the rest of the
+> reactor is Java 17) because other Java 8 projects consume it as a dependency. Do not
+> use Java 9+ language features or APIs here - `var`, records, switch expressions, text
+> blocks, `List.of`/`Set.of`/`Map.of`, `Stream.toList()`, `Optional.isEmpty()`,
+> `String.isBlank()`/`strip()`/`repeat()`/`lines()`, `@Deprecated(since=...)`, etc. The
+> build fails if you do; write the Java 8 equivalent rather than raising the release.
+
 This is the runbook for Phase 21 of the reference-module plan: bringing every executable step class in `cdsi-engine` under a dedicated, spec-conformance JUnit test, one step at a time, tracked in `cdsi-reference/step-tests/status.yaml`. It is a separate effort from `cdsi-fits-tests/AGENTS.md`'s FITS-case investigations - **do not confuse the two**. FITS tests whether the whole engine produces the right end-to-end forecast for a real patient scenario; this workflow tests whether one step's class does what its own specification section says, in isolation, independent of whether that currently changes any FITS outcome. Read `cdsi-reference/AGENTS.md` and `cdsi-fits-tests/AGENTS.md` first regardless - the finding taxonomy, the review gate, and the "don't guess, investigate" discipline are the same everywhere in this repository.
 
 ## The unit of work

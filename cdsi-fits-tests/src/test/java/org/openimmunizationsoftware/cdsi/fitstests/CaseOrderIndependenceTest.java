@@ -22,8 +22,8 @@ import org.openimmunizationsoftware.cdsi.fitstests.FitsEngineRunner.ForecastComp
  */
 class CaseOrderIndependenceTest {
 
-  private static final String DTAP_CASE_ID = "5eeca0522cc4517a96b0f417-DTAP-2013-0001";
-  private static final String MMR_CASE_ID = "5eeca0522cc4517a96b0f417-MMR-2013-0523";
+  private static final String DTAP_CASE_ID = "6a2034b8e4b0766bb234ded7-DTAP-2013-0001";
+  private static final String MMR_CASE_ID = "6a2034b8e4b0766bb234ded7-MMR-2013-0523";
 
   @Test
   void twoDifferentCasesProduceTheSameResultRegardlessOfRunOrder() {

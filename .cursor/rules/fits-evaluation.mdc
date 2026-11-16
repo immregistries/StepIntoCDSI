@@ -1,0 +1,92 @@
+---
+description: Ground rules for fixing CDSi dose-evaluation mismatches found by the FITS suite (the 2026-11 evaluation campaign). Use when working in cdsi-engine or cdsi-fits-tests on a FITS case, a dose evaluation, or a campaign prompt under cdsi-fits-tests/campaigns/.
+globs:
+  - cdsi-engine/src/main/java/**
+  - cdsi-fits-tests/**
+alwaysApply: false
+---
+
+# Fixing FITS dose-evaluation mismatches
+
+You are helping fix cases where cdsi-engine's dose evaluation (VALID / NOT_VALID /
+EXTRANEOUS / SUB_STANDARD per administered dose) disagrees with what NIST FITS expects.
+These evaluations matter on their own: they will be used to flag production patient
+records with many invalid doses as possible mis-merges. So a dose wrongly called
+NOT_VALID and a NOT_VALID dose that is missed are equally serious.
+
+## Read before changing anything
+
+- `cdsi-fits-tests/AGENTS.md`: the repair workflow (steps 1-12), stop conditions and
+  "must not" list. Follow it; this rule only adds what is specific to evaluation work.
+- `cdsi-reference/AGENTS.md` and the step package for the step you are in:
+  `cdsi-reference/logic-spec/versions/4.6/steps/<NN-NN-step-name>/index.md`.
+- `cdsi-fits-tests/README.md`, section "Forecast vs. evaluation": how FITS' one verdict
+  per dose is compared with CDSi's per-antigen evaluations.
+- The campaign prompt you were given, under `cdsi-fits-tests/campaigns/2026-11-evaluation/`.
+
+## Hard rules
+
+- Never edit a FITS fixture (`cdsi-fits-tests/src/test/resources/fits/**`), its expected
+  values, `reference-set.json`, or `known-passing-cases.txt` by hand.
+- Never change `EvaluationComparator`, its rollup precedence, or how a dose is scored in
+  order to make a case pass. If you believe the comparison itself is misreading the
+  engine, stop and explain it with evidence; that is a separate decision for the owner.
+- Never special-case a FITS case id, uid, test plan id, CVX list or patient date in
+  engine code. Fixes must follow the Logic Specification text and Supporting Data.
+- Classify every discrepancy before editing (IMPLEMENTATION_MISMATCH,
+  SPECIFICATION_DEFECT, FITS_DIFFERENCE, UNDETERMINED, ...; see
+  `cdsi-reference/templates/finding.md`). A FITS expectation that looks wrong is a
+  finding, not something to code around.
+- Do not commit. Stop and present the finding plus the proposed diff for the owner's
+  review (clinical-logic changes in cdsi-engine always need that review).
+
+## How to run and measure
+
+Always from the repository root:
+
+```bash
+mvn -pl cdsi-engine -am install -DskipTests    # after any engine change
+mvn -pl cdsi-fits-tests clean test             # full FITS run, about 30-60 s
+python cdsi-fits-tests/campaigns/2026-11-evaluation/eval_report.py --cases <ids>
+python cdsi-fits-tests/campaigns/2026-11-evaluation/eval_report.py   # all mismatches + deltas
+mvn -pl cdsi-engine test                       # baseline: 835 tests, 2 known failures (8.1/8.7)
+```
+
+- Use `clean test`: stale fixtures in `target/test-classes` otherwise inflate the case count.
+- `clean` also deletes earlier run bundles, so `changed-cases.json` then has nothing to
+  compare against. To see dose-level deltas, run once without `clean` before your change
+  and once after; or save the "before" run directory outside `target/`.
+- Each run writes `cdsi-fits-tests/target/fits-runs/<run-id>/`. `results.jsonl` has every
+  dose with `expected`, `expectedReason` (FITS letter code), `actual`, `perAntigen` and
+  `perAntigenReason` (the engine's own reason: TOO_YOUNG, TOO_SOON,
+  INADVERTENT_ADMINISTRATION, ...). `changed-cases.json` lists `dosesNewlyMatched`,
+  `dosesNewlyMismatched` and forecast `statusChanged` against the previous run.
+- To watch the engine's decisions for a single patient, the web app's step-through UI
+  (`cdsi-web`, `/step`) shows every logic table. Build an input from the case's
+  `failures/<case-id>/input.json`.
+
+FITS reason letter codes: C too young, D too soon, E live-virus conflict, G not an
+allowable vaccine, H too old, I schedule complete (extraneous), J inadvertent vaccine.
+
+## Definition of done for one cluster
+
+1. The target doses in the prompt now match, or each one that doesn't has a recorded
+   reason (finding) for why not.
+2. No new dose mismatches anywhere: `dosesNewlyMismatched` is empty, or every entry is
+   explained and accepted by the owner.
+3. No forecast regression: `FitsFixtureTest` still has 0 failures (allowlisted cases
+   all pass). Any `statusChanged` entry is explained.
+4. `mvn -pl cdsi-engine test` still shows only the 2 known failures, plus a new focused
+   unit test for the defect where one is practical.
+5. A finding is written or updated under
+   `cdsi-reference/logic-spec/versions/4.6/findings/` (allocate the id with
+   `findings.py next_finding_id()`; run `logic-spec validate`), and a progress-ledger entry
+   is drafted under `cdsi-reference/progress-ledger/entries/` with before/after numbers.
+   Leave the ledger `status` for the owner to set after review.
+6. Update the status table in the campaign README.
+7. Stop and summarize: what was wrong, the spec text that decides it, the diff, and the
+   before/after numbers from `eval_report.py`.
+
+Existing findings name cases with older plan ids (`689dc945...`, `675c41f8...`,
+`5eeca052...`). The same case now lives under plan `6a2034b8e4b0766bb234ded7`; match on
+group plus uid (e.g. `DTAP-2013-0010`).

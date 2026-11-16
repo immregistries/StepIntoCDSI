@@ -28,7 +28,7 @@ import org.openimmunizationsoftware.cdsi.core.domain.Schedule;
  */
 class SupportingDataModelUnmutatedAfterRunTest {
 
-  private static final String FIXTURE_TEST_PLAN_ID = "5eeca0522cc4517a96b0f417";
+  private static final String FIXTURE_TEST_PLAN_ID = "6a2034b8e4b0766bb234ded7";
 
   @Test
   void aSharedSupportingDataModelIsUnchangedAfterRunningABatchOfRealCases() throws Exception {

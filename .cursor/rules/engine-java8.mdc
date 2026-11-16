@@ -1,0 +1,23 @@
+---
+description: cdsi-engine is a Java 8 module - no Java 9+ language features or APIs.
+globs:
+  - cdsi-engine/**
+alwaysApply: false
+---
+
+# cdsi-engine targets Java 8
+
+`cdsi-engine` compiles with `<release>8</release>` because other Java 8 projects use it
+as a dependency. The rest of the repository (`cdsi-web`, `cdsi-fits-tests`) is Java 17,
+so code that is fine there is not fine here.
+
+Do not use, in `cdsi-engine/src/**`:
+- `var`, records, sealed classes, switch expressions / arrow cases, text blocks,
+  pattern-matching `instanceof`
+- `List.of` / `Set.of` / `Map.of` / `copyOf`, `Stream.toList()`, `Collectors.toUnmodifiable*`
+- `Optional.isEmpty()` / `orElseThrow()` (no-arg) / `ifPresentOrElse` / `stream()`
+- `String.isBlank()` / `strip()` / `repeat()` / `lines()`, `@Deprecated(since=..., forRemoval=...)`
+
+The build fails on these. Write the Java 8 equivalent (`Arrays.asList`,
+`Collections.unmodifiableList`, `collect(Collectors.toList())`, `trim().isEmpty()`, ...).
+Never raise the engine's `<release>` to make code compile.

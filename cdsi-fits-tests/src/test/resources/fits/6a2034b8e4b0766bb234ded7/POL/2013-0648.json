@@ -1,0 +1,61 @@
+{
+  "uid" : "2013-0648",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "POL",
+  "title" : "Invalid dose 3 (age) in midst of others.  No additional dose required. The next dose  was at age 4 and ≥ 6 months since previous dose.  Series complete.",
+  "patientSex" : "F",
+  "birthDate" : "2022-11-02",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ {
+    "date" : "2022-12-14",
+    "cvx" : "10",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "89",
+      "vaccineName" : "polio, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2023-01-08",
+    "cvx" : "10",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "89",
+      "vaccineName" : "polio, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2023-02-03",
+    "cvx" : "10",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "89",
+      "vaccineName" : "polio, unspecified formulation",
+      "status" : "NOT_VALID",
+      "reason" : "C"
+    } ]
+  }, {
+    "date" : "2026-11-02",
+    "cvx" : "10",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "89",
+      "vaccineName" : "polio, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "89",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}
