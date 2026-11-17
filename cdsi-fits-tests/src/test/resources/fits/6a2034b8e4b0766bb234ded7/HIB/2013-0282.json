@@ -1,0 +1,28 @@
+{
+  "uid" : "2013-0282",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HIB",
+  "title" : "#1 at 15m -drop to 1 dose schedule",
+  "patientSex" : "F",
+  "birthDate" : "2025-08-02",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ {
+    "date" : "2026-11-02",
+    "cvx" : "48",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "17",
+      "vaccineName" : "Hib, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "17",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

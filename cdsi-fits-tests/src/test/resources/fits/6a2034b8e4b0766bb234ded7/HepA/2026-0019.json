@@ -1,0 +1,39 @@
+{
+  "uid" : "2026-0019",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HepA",
+  "title" : "Dose #2 of a Hep A vaccine, is administered at 42 years, at an interval of 4 weeks - 4 days ",
+  "patientSex" : "M",
+  "birthDate" : "1984-10-09",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ {
+    "date" : "2026-10-09",
+    "cvx" : "52",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "52",
+      "vaccineName" : "Hep A, adult",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2026-11-02",
+    "cvx" : "104",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "52",
+      "vaccineName" : "Hep A, adult",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "85",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2027-04-09",
+    "recommendedDate" : "2027-04-09"
+  } ]
+}

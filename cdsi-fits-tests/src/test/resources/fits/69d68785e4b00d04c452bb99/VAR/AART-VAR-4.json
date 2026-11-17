@@ -5,13 +5,13 @@
   "groupName" : "VAR",
   "title" : "Adult with no doses of Varicella",
   "patientSex" : "F",
-  "birthDate" : "2006-09-01",
-  "evalDate" : "2026-09-01",
+  "birthDate" : "2006-11-02",
+  "evalDate" : "2026-11-02",
   "vaccinations" : [ ],
   "expectedForecasts" : [ {
     "vaccineCvx" : "21",
     "serieStatus" : "NOT_COMPLETE",
-    "earliestDate" : "2007-09-01",
-    "recommendedDate" : "2007-09-01"
+    "earliestDate" : "2007-11-02",
+    "recommendedDate" : "2007-11-02"
   } ]
 }

@@ -1,0 +1,87 @@
+id: "SPEC-4.6-0068"
+status: "confirmed"
+category: "IMPLEMENTATION_MISMATCH"
+spec_sections: ["6.3"]
+source_pages: [52]
+tables: ["Table 6-13"]
+business_rules: []
+code_locations:
+  - "org.openimmunizationsoftware.cdsi.core.logic.EvaluateForInadvertentVaccine"
+  - "org.openimmunizationsoftware.cdsi.core.data.DataModel"
+  - "org.openimmunizationsoftware.cdsi.fitstests.EvaluationComparator"
+fits_cases:
+  - "6a2034b8e4b0766bb234ded7-DTAP-2013-0058"
+  - "6a2034b8e4b0766bb234ded7-DTAP-2013-0059"
+  - "6a2034b8e4b0766bb234ded7-DTAP-2013-0060"
+  - "6a2034b8e4b0766bb234ded7-DTAP-2013-0069"
+  - "6a2034b8e4b0766bb234ded7-POL-2024-0071"
+  - "6a2034b8e4b0766bb234ded7-RSV-2025-0010"
+  - "6a2034b8e4b0766bb234ded7-PCV-2015-0023"
+  - "6a2034b8e4b0766bb234ded7-PCV-2019-0009"
+  - "6a2034b8e4b0766bb234ded7-PCV-2023-0001"
+  - "6a2034b8e4b0766bb234ded7-PCV-2024-0063"
+  - "6a2034b8e4b0766bb234ded7-PCV-2024-0102"
+  - "6a2034b8e4b0766bb234ded7-RSV-2023-0020"
+  - "6a2034b8e4b0766bb234ded7-RSV-2024-0012"
+  - "6a2034b8e4b0766bb234ded7-RSV-2024-0056"
+  - "6a2034b8e4b0766bb234ded7-RSV-2024-0057"
+  - "6a2034b8e4b0766bb234ded7-RSV-2025-0009"
+summary: >
+  Table 6-13's inadvertent outcome recorded Not Valid on an Evaluation
+  that named no administered dose, so the dose could not be reported.
+  Linking that evaluation the way 6.4 does makes the six inadvertent
+  doses visible, and also makes an inadvertent evaluation on a second
+  best series of the same antigen win the harness rollup over a Valid
+  evaluation of the same dose.
+evidence: >
+  Table 6-13 Rule 1 (page 52): target dose status Not Satisfied,
+  evaluation status Not Valid, reason Inadvertent Administration.
+  Figure 6-4 returns to 4.4, so 6.4 never runs.
+  DataModel.setEvaluationForCurrentTargetDose sets the evaluation's
+  antigen and VaccineDoseAdministered. EvaluateForInadvertentVaccine
+  Rule 1 instead did `new Evaluation()` and set only status and reason.
+  EvaluationComparator.collectEngineEvaluations skips an evaluation
+  whose VaccineDoseAdministered is null, then merges whatever remains
+  for one antigen by dose id, with NOT_VALID ahead of VALID.
+
+  Live 6a2034b8e4b0766bb234ded7-DTAP-2013-0058 before the link, best
+  Diphtheria standard series target 1: NOT_VALID /
+  INADVERTENT_ADMINISTRATION with vaccineDoseAdministered null, then
+  VALID cvx 107. The comparator reported dose 1 NOT_EVALUATED.
+  After the link the same evaluation is vda 1, cvx 115.
+
+  The same shape on POL-2024-0071 (Polio target 2, cvx 178, vda 2) and
+  RSV-2025-0010 (RSV 1-dose series, cvx 305, vda 1).
+
+  Live 6a2034b8e4b0766bb234ded7-PCV-2015-0023 after the link, two best
+  Pneumococcal series both carry vda 1 cvx 33: 4-dose series
+  NOT_VALID / INADVERTENT_ADMINISTRATION, and 50+ 2-dose PPSV23-PCV
+  SATISFIED / VALID. FITS expects VALID. The comparator's merge
+  returns NOT_VALID. Forecast status and dates did not change.
+
+  Live 6a2034b8e4b0766bb234ded7-RSV-2024-0012 after the link, two best
+  RSV series both carry vda 1 cvx 303: RSV 1-dose series NOT_VALID /
+  INADVERTENT_ADMINISTRATION (aged out), and RSV 75 years+ 1-dose
+  series SATISFIED / VALID / GRACE_PERIOD, patient series Complete.
+  FITS expects VALID and COMPLETE.
+interpretation: >
+  The missing administered-dose link is an implementation mismatch.
+  When the target has no evaluation yet, Rule 1 calls
+  setEvaluationForCurrentTargetDose, which is the evaluation 6.4 would
+  have recorded. When an evaluation is already there, Rule 1 writes
+  Not Valid / Inadvertent Administration onto it and sets the
+  administered dose only when that evaluation does not already name
+  one. It does not add a second evaluation. The six A1 doses then
+  match, and forecast statusChanged is empty (1107 passing forecasts
+  either way).
+
+  The ten new mismatches are the harness rollup, not a change of which
+  series forecasts. A dose can be inadvertent for one best series of an
+  antigen and valid for another. Before the link, the inadvertent
+  evaluation was skipped and only the valid one was counted. After the
+  link, NOT_VALID wins. EvaluationComparator was not changed.
+  Keeping the link is the right engine record and a worse single-verdict
+  rollup for those ten doses (valid doses called not valid: 21 to 31;
+  doses matched: 2505 to 2501). The owner accepted the link on
+  2026-11-13; the ten rollup mismatches stay open as a harness question
+  for EvaluationComparator, not an engine change.

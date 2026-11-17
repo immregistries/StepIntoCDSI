@@ -1,0 +1,61 @@
+{
+  "uid" : "2013-0081",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "DTAP",
+  "title" : "Pentavalente (Mexico) DTaP/IPV/HIB counts as valid. ",
+  "patientSex" : "F",
+  "birthDate" : "2025-08-24",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ {
+    "date" : "2025-12-24",
+    "cvx" : "170",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "107",
+      "vaccineName" : "DTaP, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2026-02-24",
+    "cvx" : "170",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "107",
+      "vaccineName" : "DTaP, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2026-04-24",
+    "cvx" : "170",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "107",
+      "vaccineName" : "DTaP, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2026-11-02",
+    "cvx" : "170",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "107",
+      "vaccineName" : "DTaP, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "107",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2029-08-24",
+    "recommendedDate" : "2029-08-24"
+  } ]
+}

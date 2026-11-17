@@ -1,0 +1,39 @@
+{
+  "uid" : "2024-0071",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "POL",
+  "title" : "OPV bivalent administered after April 2016",
+  "patientSex" : "F",
+  "birthDate" : "2015-09-13",
+  "evalDate" : "2016-05-06",
+  "vaccinations" : [ {
+    "date" : "2016-02-06",
+    "cvx" : "02",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "02",
+      "vaccineName" : "OPV, trivalent",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2016-05-06",
+    "cvx" : "178",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "89",
+      "vaccineName" : "polio, unspecified formulation",
+      "status" : "NOT_VALID",
+      "reason" : "J"
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "89",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2016-05-06",
+    "recommendedDate" : "2016-05-06"
+  } ]
+}

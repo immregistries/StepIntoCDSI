@@ -1,0 +1,50 @@
+{
+  "uid" : "2013-0020",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "DTAP",
+  "title" : "1 Tdap, 2 Td to child ≥ 7 years old with 6 mo-5 day interval between doses 2 and 3.",
+  "patientSex" : "F",
+  "birthDate" : "2018-04-02",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ {
+    "date" : "2026-04-02",
+    "cvx" : "115",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "115",
+      "vaccineName" : "Tdap",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2026-05-02",
+    "cvx" : "09",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "09",
+      "vaccineName" : "Td (adult), 2 Lf tetanus toxoid, preservative free, adsorbed",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2026-10-28",
+    "cvx" : "09",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "09",
+      "vaccineName" : "Td (adult), 2 Lf tetanus toxoid, preservative free, adsorbed",
+      "status" : "NOT_VALID",
+      "reason" : "D"
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "107",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2027-04-28",
+    "recommendedDate" : "2027-04-28"
+  } ]
+}

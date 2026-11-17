@@ -1,0 +1,61 @@
+{
+  "uid" : "2013-0122",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "DTAP",
+  "title" : "invalid dose 2-3 interval in midst of others",
+  "patientSex" : "F",
+  "birthDate" : "2025-11-02",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ {
+    "date" : "2026-01-02",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "107",
+      "vaccineName" : "DTaP, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2026-03-02",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "107",
+      "vaccineName" : "DTaP, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2026-03-25",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "107",
+      "vaccineName" : "DTaP, unspecified formulation",
+      "status" : "NOT_VALID",
+      "reason" : "D"
+    } ]
+  }, {
+    "date" : "2026-11-02",
+    "cvx" : "110",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "107",
+      "vaccineName" : "DTaP, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "107",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2027-05-02",
+    "recommendedDate" : "2027-05-02"
+  } ]
+}

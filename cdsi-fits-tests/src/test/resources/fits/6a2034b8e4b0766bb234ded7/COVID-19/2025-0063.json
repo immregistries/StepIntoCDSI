@@ -1,0 +1,39 @@
+{
+  "uid" : "2025-0063",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "COVID-19",
+  "title" : "Patient is 19 years of age with a Fall 2025-2026 Pfizer COVID-19 vaccine administered at 8 weeks - 4 days after previous dose",
+  "patientSex" : "F",
+  "birthDate" : "2006-03-08",
+  "evalDate" : "2025-09-19",
+  "vaccinations" : [ {
+    "date" : "2025-07-29",
+    "cvx" : "309",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "213",
+      "vaccineName" : "SARS-COV-2 (COVID-19) vaccine, UNSPECIFIED",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2025-09-19",
+    "cvx" : "309",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "213",
+      "vaccineName" : "SARS-COV-2 (COVID-19) vaccine, UNSPECIFIED",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "213",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

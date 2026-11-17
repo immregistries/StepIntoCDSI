@@ -1,0 +1,50 @@
+{
+  "uid" : "2024-0013",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "HepB",
+  "title" : "Patient is 24 years of age and has received Twinrix and single antigen mixed administration.",
+  "patientSex" : "F",
+  "birthDate" : "2002-03-29",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ {
+    "date" : "2026-03-29",
+    "cvx" : "104",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "45",
+      "vaccineName" : "Hep B, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2026-04-26",
+    "cvx" : "220",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "45",
+      "vaccineName" : "Hep B, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  }, {
+    "date" : "2026-10-28",
+    "cvx" : "220",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "45",
+      "vaccineName" : "Hep B, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "45",
+    "serieStatus" : "COMPLETE",
+    "earliestDate" : null,
+    "recommendedDate" : null
+  } ]
+}

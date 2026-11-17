@@ -5,18 +5,24 @@
   "groupName" : "HepA",
   "title" : "18 years - 1 dose at 18 years",
   "patientSex" : "F",
-  "birthDate" : "2008-09-01",
-  "evalDate" : "2026-09-01",
+  "birthDate" : "2008-11-02",
+  "evalDate" : "2026-11-02",
   "vaccinations" : [ {
-    "date" : "2019-08-29",
+    "date" : "2019-10-30",
     "cvx" : "85",
     "mvx" : "",
-    "doseCondition" : null
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "85",
+      "vaccineName" : "Hep A, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
   } ],
   "expectedForecasts" : [ {
     "vaccineCvx" : "85",
     "serieStatus" : "NOT_COMPLETE",
-    "earliestDate" : "2020-02-29",
-    "recommendedDate" : "2020-02-29"
+    "earliestDate" : "2020-04-30",
+    "recommendedDate" : "2020-04-30"
   } ]
 }

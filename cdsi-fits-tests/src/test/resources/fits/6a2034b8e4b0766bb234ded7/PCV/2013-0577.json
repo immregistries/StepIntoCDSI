@@ -1,0 +1,28 @@
+{
+  "uid" : "2013-0577",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "PCV",
+  "title" : "Dose # 1 of PCV 7 at age 24 months.  Need one dose PCV 13. ",
+  "patientSex" : "F",
+  "birthDate" : "2008-03-01",
+  "evalDate" : "2010-03-01",
+  "vaccinations" : [ {
+    "date" : "2010-03-01",
+    "cvx" : "100",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "152",
+      "vaccineName" : "Pneumococcal Conjugate, unspecified formulation",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "152",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2010-04-26",
+    "recommendedDate" : "2010-04-26"
+  } ]
+}

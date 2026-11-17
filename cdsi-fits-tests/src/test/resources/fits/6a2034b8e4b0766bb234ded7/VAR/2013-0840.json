@@ -1,0 +1,28 @@
+{
+  "uid" : "2013-0840",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "VAR",
+  "title" : "# 1 MMR at 12.5 mo; VZ not given=need 28 day interval for VZ",
+  "patientSex" : "F",
+  "birthDate" : "2025-10-17",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ {
+    "date" : "2026-11-01",
+    "cvx" : "03",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "03",
+      "vaccineName" : "MMR",
+      "status" : "VALID",
+      "reason" : null
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "21",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2026-11-29",
+    "recommendedDate" : "2026-11-29"
+  } ]
+}

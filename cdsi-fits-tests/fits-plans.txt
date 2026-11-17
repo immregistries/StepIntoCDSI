@@ -1,0 +1,13 @@
+# FITS test plans FitsDownloader pulls into src/test/resources/fits/.
+# One FITS test-plan id per line; text after '#' is a comment.
+#
+# Scope: the current CDSi suite plus the AIRA supplemental cases - no
+# repeated cases. FITS keeps each earlier revision of the CDSi suite as a
+# "HISTORICAL" plan and most cases carry forward between revisions, so only
+# the newest CDSi plan is listed. When NIST publishes a new CDSi plan,
+# replace the CDSi line below with its id, re-run FitsDownloader, and create
+# and export a new reference set (cdsi-reference reference-set create/export).
+
+6a2034b8e4b0766bb234ded7   # CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations (current)
+69d68785e4b00d04c452bb99   # AIRA Test Cases for CDS v3 (supersedes v2, 671785f8e4b038904646e53a)
+5925aa6aca7e8c78bc364506   # Extra Test Cases (AART-EXTRA)

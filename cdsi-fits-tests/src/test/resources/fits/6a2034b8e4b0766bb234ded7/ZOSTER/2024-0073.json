@@ -1,0 +1,28 @@
+{
+  "uid" : "2024-0073",
+  "testPlanId" : "6a2034b8e4b0766bb234ded7",
+  "testPlanName" : "CDSi Test Cases: Age-Based Routine Childhood, Adolescent, and Adult Recommendations",
+  "groupName" : "ZOSTER",
+  "title" : "Zoster: Dose #1 of Shingrix at 18 years - 5 days ",
+  "patientSex" : "M",
+  "birthDate" : "2008-11-07",
+  "evalDate" : "2026-11-02",
+  "vaccinations" : [ {
+    "date" : "2026-11-02",
+    "cvx" : "187",
+    "mvx" : "",
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "187",
+      "vaccineName" : "zoster recombinant",
+      "status" : "NOT_VALID",
+      "reason" : "C"
+    } ]
+  } ],
+  "expectedForecasts" : [ {
+    "vaccineCvx" : "187",
+    "serieStatus" : "NOT_COMPLETE",
+    "earliestDate" : "2058-11-07",
+    "recommendedDate" : "2058-11-07"
+  } ]
+}

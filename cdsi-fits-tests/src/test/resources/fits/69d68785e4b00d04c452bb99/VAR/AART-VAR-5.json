@@ -5,18 +5,24 @@
   "groupName" : "VAR",
   "title" : "Adult with one dose of Varicella",
   "patientSex" : "F",
-  "birthDate" : "2006-09-01",
-  "evalDate" : "2026-09-01",
+  "birthDate" : "2006-11-02",
+  "evalDate" : "2026-11-02",
   "vaccinations" : [ {
-    "date" : "2026-09-01",
+    "date" : "2026-11-02",
     "cvx" : "21",
     "mvx" : "",
-    "doseCondition" : null
+    "doseCondition" : null,
+    "expectedEvaluations" : [ {
+      "vaccineCvx" : "21",
+      "vaccineName" : "varicella",
+      "status" : "VALID",
+      "reason" : null
+    } ]
   } ],
   "expectedForecasts" : [ {
     "vaccineCvx" : "21",
     "serieStatus" : "NOT_COMPLETE",
-    "earliestDate" : "2026-09-29",
-    "recommendedDate" : "2026-09-29"
+    "earliestDate" : "2026-11-30",
+    "recommendedDate" : "2026-11-30"
   } ]
 }
