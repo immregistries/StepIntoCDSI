@@ -50,10 +50,10 @@
         <servlet-name>run</servlet-name>
         <servlet-class>org.openimmunizationsoftware.cdsi.servlet.RunServlet</servlet-class>
     </servlet>
-<!--    <servlet>-->
-<!--        <servlet-name>fits</servlet-name>-->
-<!--        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.FitsServlet</servlet-class>-->
-<!--    </servlet>-->
+    <servlet>
+        <servlet-name>fits</servlet-name>
+        <servlet-class>org.openimmunizationsoftware.cdsi.servlet.FitsServlet</servlet-class>
+    </servlet>
 	<servlet>
         <servlet-name>dataModelView</servlet-name>
         <servlet-class>org.openimmunizationsoftware.cdsi.servlet.dataModelView.MainServlet</servlet-class>

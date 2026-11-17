@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
 import org.openimmunizationsoftware.cdsi.core.data.DataModelLoader;
 import org.openimmunizationsoftware.cdsi.core.data.SupportingDataModel;
+import org.openimmunizationsoftware.cdsi.core.domain.Antigen;
 import org.openimmunizationsoftware.cdsi.core.domain.AntigenAdministeredRecord;
 import org.openimmunizationsoftware.cdsi.core.domain.Evaluation;
 import org.openimmunizationsoftware.cdsi.core.domain.Patient;
@@ -343,6 +344,8 @@ public class EvaluateForInadvertentVaccineTest {
     assertEquals("an inadvertent dose returns to 4.4 Evaluate and Forecast All Patient Series",
         LogicStepType.EVALUATE_AND_FORECAST_ALL_PATIENT_SERIES, step.getNextLogicStepType());
     assertEquals("Rule 1 adds no second evaluation", 1, targetDose.getEvaluationList().size());
+    assertSame("an evaluation that did not yet name a dose is tied to this administered dose",
+        vaccineDoseAdministered, evaluation.getVaccineDoseAdministered());
     assertTrue("FORECASTDTCAN-1 needs this VDA's own inadvertent flag",
         vaccineDoseAdministered.isInadvertentAdministration());
     assertSame("6.10 never runs on this path, so 6.3 writes evaluatedAgainstTargetDose "
@@ -433,6 +436,42 @@ public class EvaluateForInadvertentVaccineTest {
     assertEquals(EvaluationStatus.NOT_VALID, targetDose.getEvaluation().getEvaluationStatus());
     assertEquals(EvaluationReason.INADVERTENT_ADMINISTRATION,
         targetDose.getEvaluation().getEvaluationReason());
+    assertSame("the evaluation 6.3 creates is the one for this administered dose",
+        vaccineDoseAdministered, targetDose.getEvaluation().getVaccineDoseAdministered());
+    assertEquals(1, targetDose.getEvaluationList().size());
+  }
+
+  /**
+   * The evaluation Rule 1 records has to name the administered dose and the
+   * antigen. Downstream reporting walks each best patient series' evaluation
+   * list and keeps only evaluations whose {@code VaccineDoseAdministered} is
+   * set; an evaluation that carries status and reason but no dose is skipped,
+   * and the dose is then reported as never evaluated. 6.4 already records
+   * that link through {@code DataModel.setEvaluationForCurrentTargetDose}.
+   * 6.3 creates the evaluation itself, because it returns to 4.4 before 6.4
+   * runs, so it has to record the same link.
+   */
+  @Test
+  public void ruleOneLinksTheNewEvaluationToTheAdministeredDoseAndItsAntigen() throws Exception {
+    Antigen antigen = new Antigen();
+    antigen.setName("Polio");
+    dataModel.setAntigen(antigen);
+    inadvertentVaccineTypes("178");
+    administered("178");
+
+    assertEquals(0, targetDose.getEvaluationList().size());
+
+    run();
+
+    Evaluation evaluation = targetDose.getEvaluation();
+    assertNotNull(evaluation);
+    assertEquals(EvaluationStatus.NOT_VALID, evaluation.getEvaluationStatus());
+    assertEquals(EvaluationReason.INADVERTENT_ADMINISTRATION, evaluation.getEvaluationReason());
+    assertSame(vaccineDoseAdministered, evaluation.getVaccineDoseAdministered());
+    assertSame(antigen, evaluation.getAntigen());
+    assertEquals("Rule 1 records one evaluation for this dose", 1, targetDose.getEvaluationList().size());
+    assertTrue(vaccineDoseAdministered.isInadvertentAdministration());
+    assertSame(targetDose, vaccineDoseAdministered.getEvaluatedAgainstTargetDose());
   }
 
   // ======================================================== Table 6-13 Rule 2

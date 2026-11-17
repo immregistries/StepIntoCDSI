@@ -704,7 +704,7 @@ public class FitsServlet extends ForecastServlet {
     private String setupUrlString(HttpServletRequest req) {
         String urlString = req.getParameter("url");
         if (urlString == null) {
-            urlString = "https://fits.nist.gov/";
+            urlString = "https://tools.valitheus.com/";
         }
         return urlString;
     }
