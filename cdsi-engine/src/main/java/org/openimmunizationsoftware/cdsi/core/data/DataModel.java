@@ -53,9 +53,6 @@ public class DataModel {
   // so callers can retrieve them after the engine run. See SatisfyTargetDose.process().
   private List<ForecastInput.VaccinationInput> satisfiedVaccinationInputList =
       new ArrayList<ForecastInput.VaccinationInput>();
-  // PR: track which ForecastInput.VaccinationInput entries did not satisfy a target dose.
-  private List<ForecastInput.VaccinationInput> unsatisfiedVaccinationInputList =
-      new ArrayList<ForecastInput.VaccinationInput>();
   // PR: bridge between engine-internal VaccineDoseAdministered and the original
   // ForecastInput.VaccinationInput, populated in GatherNecessaryData.process().
   private Map<VaccineDoseAdministered, ForecastInput.VaccinationInput> vaccinationInputMap =
@@ -250,15 +247,6 @@ public class DataModel {
   public void setSatisfiedVaccinationInputList(
       List<ForecastInput.VaccinationInput> satisfiedVaccinationInputList) {
     this.satisfiedVaccinationInputList = satisfiedVaccinationInputList;
-  }
-
-  public List<ForecastInput.VaccinationInput> getUnsatisfiedVaccinationInputList() {
-    return unsatisfiedVaccinationInputList;
-  }
-
-  public void setUnsatisfiedVaccinationInputList(
-      List<ForecastInput.VaccinationInput> unsatisfiedVaccinationInputList) {
-    this.unsatisfiedVaccinationInputList = unsatisfiedVaccinationInputList;
   }
 
   public Map<VaccineDoseAdministered, ForecastInput.VaccinationInput> getVaccinationInputMap() {

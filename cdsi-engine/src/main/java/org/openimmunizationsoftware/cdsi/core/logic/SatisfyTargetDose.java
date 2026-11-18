@@ -47,16 +47,19 @@ public class SatisfyTargetDose extends LogicStep {
       }
     } else if (status == TargetDoseStatus.NOT_SATISFIED) {
       log(LogLevel.CONTROL, "TARGET DOSE NOT SATISFIED - Requirements not met");
-      // PR: track the original VaccinationInput that did not satisfy this target dose.
-      VaccineDoseAdministered vda = dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered();
-      ForecastInput.VaccinationInput vi = dataModel.getVaccinationInputMap().get(vda);
-      // PR: detect copies by comparing every field (not identity/equals), so a
-      // duplicate VaccinationInput with identical values is not added twice.
-      if (vi != null && !containsVaccinationInput(dataModel.getUnsatisfiedVaccinationInputList(), vi)) {
-        dataModel.getUnsatisfiedVaccinationInputList().add(vi);
-      }
     } else if (status == TargetDoseStatus.SKIPPED) {
       log(LogLevel.CONTROL, "TARGET DOSE SKIPPED - Conditional skip applied");
+//      VaccineDoseAdministered vda = dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered();
+//      ForecastInput.VaccinationInput vi = dataModel.getVaccinationInputMap().get(vda);
+//      if (vi != null && !dataModel.getSatisfiedVaccinationInputList().contains(vi)) {
+//        dataModel.getSatisfiedVaccinationInputList().add(vi);
+//      }
+//    } else {
+//      VaccineDoseAdministered vda = dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered();
+//      ForecastInput.VaccinationInput vi = dataModel.getVaccinationInputMap().get(vda);
+//      if (vi != null && !dataModel.getSatisfiedVaccinationInputList().contains(vi)) {
+//        dataModel.getSatisfiedVaccinationInputList().add(vi);
+//      }
     }
     dataModel.getTargetDose().setStatusCause("");
     return next(true);
