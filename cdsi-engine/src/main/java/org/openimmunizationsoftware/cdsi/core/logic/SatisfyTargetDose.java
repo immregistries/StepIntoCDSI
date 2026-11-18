@@ -5,7 +5,9 @@ import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.NO;
 import static org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult.YES;
 
 import org.openimmunizationsoftware.cdsi.core.data.DataModel;
+import org.openimmunizationsoftware.cdsi.core.data.ForecastInput;
 import org.openimmunizationsoftware.cdsi.core.domain.TargetDose;
+import org.openimmunizationsoftware.cdsi.core.domain.VaccineDoseAdministered;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.EvaluationStatus;
 import org.openimmunizationsoftware.cdsi.core.domain.datatypes.TargetDoseStatus;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicCondition;
@@ -13,6 +15,8 @@ import org.openimmunizationsoftware.cdsi.core.logic.items.LogLevel;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicOutcome;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicResult;
 import org.openimmunizationsoftware.cdsi.core.logic.items.LogicTable;
+
+import java.util.List;
 
 public class SatisfyTargetDose extends LogicStep {
 
@@ -32,13 +36,58 @@ public class SatisfyTargetDose extends LogicStep {
     TargetDoseStatus status = dataModel.getTargetDose().getTargetDoseStatus();
     if (status == TargetDoseStatus.SATISFIED) {
       log(LogLevel.CONTROL, "TARGET DOSE SATISFIED - All conditions met");
+      // PR: track the original VaccinationInput that satisfied this target dose,
+      // so callers can retrieve satisfied inputs after the engine run.
+      VaccineDoseAdministered vda = dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered();
+      ForecastInput.VaccinationInput vi = dataModel.getVaccinationInputMap().get(vda);
+      // PR: detect copies by comparing every field (not identity/equals), so a
+      // duplicate VaccinationInput with identical values is not added twice.
+      if (vi != null && !containsVaccinationInput(dataModel.getSatisfiedVaccinationInputList(), vi)) {
+        dataModel.getSatisfiedVaccinationInputList().add(vi);
+      }
     } else if (status == TargetDoseStatus.NOT_SATISFIED) {
       log(LogLevel.CONTROL, "TARGET DOSE NOT SATISFIED - Requirements not met");
     } else if (status == TargetDoseStatus.SKIPPED) {
       log(LogLevel.CONTROL, "TARGET DOSE SKIPPED - Conditional skip applied");
+//      VaccineDoseAdministered vda = dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered();
+//      ForecastInput.VaccinationInput vi = dataModel.getVaccinationInputMap().get(vda);
+//      if (vi != null && !dataModel.getSatisfiedVaccinationInputList().contains(vi)) {
+//        dataModel.getSatisfiedVaccinationInputList().add(vi);
+//      }
+//    } else {
+//      VaccineDoseAdministered vda = dataModel.getAntigenAdministeredRecord().getVaccineDoseAdministered();
+//      ForecastInput.VaccinationInput vi = dataModel.getVaccinationInputMap().get(vda);
+//      if (vi != null && !dataModel.getSatisfiedVaccinationInputList().contains(vi)) {
+//        dataModel.getSatisfiedVaccinationInputList().add(vi);
+//      }
     }
     dataModel.getTargetDose().setStatusCause("");
     return next(true);
+  }
+
+  // PR: field-by-field comparison so value-equal copies are detected (default
+  // equals is identity-based and would miss duplicates with identical fields).
+  private boolean containsVaccinationInput(
+      List<ForecastInput.VaccinationInput> list, ForecastInput.VaccinationInput vi) {
+    for (ForecastInput.VaccinationInput existing : list) {
+      if (existing == vi) {
+        return true;
+      }
+      if (existing == null || vi == null) {
+        continue;
+      }
+      if (eq(existing.getDateAdministered(), vi.getDateAdministered())
+          && eq(existing.getVaccineCvx(), vi.getVaccineCvx())
+          && eq(existing.getVaccineMvx(), vi.getVaccineMvx())
+          && eq(existing.getDoseCondition(), vi.getDoseCondition())) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private boolean eq(Object a, Object b) {
+    return (a == null) ? (b == null) : a.equals(b);
   }
 
   private class LT extends LogicTable {
